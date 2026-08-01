@@ -1,0 +1,358 @@
+/* ==========================================================
+   KEYON UI Design System
+   File: 14-dropdown.css
+   Version: 1.0
+   ========================================================== */
+
+/* ==========================================================
+   DROPDOWN
+   ========================================================== */
+
+.dropdown{
+
+    position:relative;
+
+    display:inline-block;
+
+}
+
+/* ==========================================================
+   TOGGLE
+   ========================================================== */
+
+.dropdown-toggle{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:var(--space-3);
+
+    width:100%;
+
+    min-height:var(--input-height);
+
+    padding:0 var(--space-4);
+
+    background:var(--bg-surface);
+
+    border:1px solid var(--border-color);
+
+    border-radius:var(--input-radius);
+
+    cursor:pointer;
+
+    transition:
+        border-color var(--transition),
+        box-shadow var(--transition);
+
+}
+
+.dropdown-toggle:hover{
+
+    border-color:var(--border-hover);
+
+}
+
+.dropdown-toggle:focus{
+
+    border-color:var(--color-primary);
+
+    box-shadow:0 0 0 4px rgba(14,165,164,.12);
+
+}
+
+/* ==========================================================
+   ICON
+   ========================================================== */
+
+.dropdown-icon{
+
+    width:18px;
+
+    height:18px;
+
+    color:var(--color-muted);
+
+    transition:transform var(--transition);
+
+}
+
+.dropdown.open .dropdown-icon{
+
+    transform:rotate(180deg);
+
+}
+
+/* ==========================================================
+   MENU
+   ========================================================== */
+
+.dropdown-menu{
+
+    position:absolute;
+
+    top:calc(100% + 8px);
+
+    left:0;
+
+    min-width:240px;
+
+    padding:var(--space-2);
+
+    background:var(--bg-surface);
+
+    border:1px solid var(--border-color);
+
+    border-radius:var(--radius-lg);
+
+    box-shadow:var(--shadow-lg);
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transform:translateY(8px);
+
+    transition:
+        opacity var(--transition),
+        transform var(--transition),
+        visibility var(--transition);
+
+    z-index:var(--z-dropdown);
+
+}
+
+/* ==========================================================
+   OPEN
+   ========================================================== */
+
+.dropdown.open .dropdown-menu{
+
+    opacity:1;
+
+    visibility:visible;
+
+    transform:translateY(0);
+
+}
+
+/* ==========================================================
+   ITEM
+   ========================================================== */
+
+.dropdown-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:var(--space-3);
+
+    width:100%;
+
+    min-height:44px;
+
+    padding:0 var(--space-4);
+
+    border-radius:var(--radius-md);
+
+    cursor:pointer;
+
+    color:var(--color-body);
+
+    transition:
+        background var(--transition),
+        color var(--transition);
+
+}
+
+.dropdown-item:hover{
+
+    background:var(--bg-light);
+
+    color:var(--color-heading);
+
+}
+
+.dropdown-item.active{
+
+    background:var(--color-primary-light);
+
+    color:var(--color-primary);
+
+    font-weight:600;
+
+}
+
+/* ==========================================================
+   ICON
+   ========================================================== */
+
+.dropdown-item-icon{
+
+    width:18px;
+
+    height:18px;
+
+    color:inherit;
+
+}
+
+/* ==========================================================
+   TITLE
+   ========================================================== */
+
+.dropdown-title{
+
+    padding:
+
+        var(--space-2)
+
+        var(--space-4);
+
+    font-size:13px;
+
+    font-weight:600;
+
+    color:var(--color-muted);
+
+    text-transform:uppercase;
+
+    letter-spacing:.06em;
+
+}
+
+/* ==========================================================
+   DIVIDER
+   ========================================================== */
+
+.dropdown-divider{
+
+    height:1px;
+
+    margin:var(--space-2) 0;
+
+    background:var(--border-color);
+
+}
+
+/* ==========================================================
+   BADGE
+   ========================================================== */
+
+.dropdown-badge{
+
+    margin-left:auto;
+
+    padding:
+
+        2px
+
+        8px;
+
+    border-radius:999px;
+
+    background:var(--bg-light);
+
+    font-size:12px;
+
+}
+
+/* ==========================================================
+   DANGER
+   ========================================================== */
+
+.dropdown-item-danger{
+
+    color:var(--danger);
+
+}
+
+.dropdown-item-danger:hover{
+
+    background:var(--danger-bg);
+
+}
+
+/* ==========================================================
+   RIGHT
+   ========================================================== */
+
+.dropdown-right .dropdown-menu{
+
+    left:auto;
+
+    right:0;
+
+}
+
+/* ==========================================================
+   WIDTH
+   ========================================================== */
+
+.dropdown-menu-sm{
+
+    min-width:180px;
+
+}
+
+.dropdown-menu-lg{
+
+    min-width:320px;
+
+}
+
+.dropdown-menu-xl{
+
+    min-width:420px;
+
+}
+
+/* ==========================================================
+   SCROLL
+   ========================================================== */
+
+.dropdown-scroll{
+
+    max-height:320px;
+
+    overflow-y:auto;
+
+}
+
+/* ==========================================================
+   EMPTY
+   ========================================================== */
+
+.dropdown-empty{
+
+    padding:var(--space-8);
+
+    text-align:center;
+
+    color:var(--color-muted);
+
+}
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+
+@media(max-width:768px){
+
+    .dropdown-menu{
+
+        position:fixed;
+
+        left:16px;
+
+        right:16px;
+
+        min-width:auto;
+
+    }
+
+}

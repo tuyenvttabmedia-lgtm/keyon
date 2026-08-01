@@ -1,0 +1,10 @@
+-- PDP CMS fields: gallery, category, features/specs/faqs, compare-at price
+ALTER TABLE "Product" ADD COLUMN IF NOT EXISTS "shortDescription" TEXT;
+ALTER TABLE "Product" ADD COLUMN IF NOT EXISTS "categoryKey" TEXT;
+ALTER TABLE "Product" ADD COLUMN IF NOT EXISTS "badgeLabel" TEXT;
+ALTER TABLE "Product" ADD COLUMN IF NOT EXISTS "galleryUrls" JSONB NOT NULL DEFAULT '[]';
+ALTER TABLE "Product" ADD COLUMN IF NOT EXISTS "features" JSONB NOT NULL DEFAULT '[]';
+ALTER TABLE "Product" ADD COLUMN IF NOT EXISTS "specs" JSONB NOT NULL DEFAULT '[]';
+ALTER TABLE "Product" ADD COLUMN IF NOT EXISTS "faqs" JSONB NOT NULL DEFAULT '[]';
+
+ALTER TABLE "ProductVariant" ADD COLUMN IF NOT EXISTS "compareAtPriceVnd" INTEGER;

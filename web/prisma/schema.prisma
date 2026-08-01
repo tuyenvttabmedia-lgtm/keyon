@@ -1,0 +1,565 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  CUSTOMER
+  ADMIN
+  FULFILLMENT
+  CS
+}
+
+enum LicenseModel {
+  PERPETUAL
+  SUBSCRIPTION
+  MAINTENANCE
+}
+
+enum FulfillmentStrategy {
+  MANUAL
+  INSTANT
+  SEMI_AUTOMATED
+  MANAGED_SUBSCRIPTION
+}
+
+enum DeliverableType {
+  KEY
+  ACCOUNT
+  SUBSCRIPTION
+  DIGITAL_FILE
+  EXTERNAL_PORTAL
+}
+
+enum SalesMotion {
+  SELF_SERVE
+  QUOTE_REQUIRED
+}
+
+enum SupplierType {
+  INTERNAL
+  EXTERNAL
+  DISTRIBUTOR
+  MARKETPLACE
+}
+
+enum IntegrationMode {
+  NONE
+  MANUAL_OPS
+  API
+}
+
+enum OrderStatus {
+  DRAFT
+  PENDING_PAYMENT
+  PAID
+  FULFILLING
+  COMPLETED
+  CANCELLED
+  PAYMENT_FAILED
+}
+
+enum PaymentStatus {
+  CREATED
+  AWAITING
+  SUCCEEDED
+  FAILED
+  EXPIRED
+  CANCELLED
+  REFUNDED
+}
+
+enum FulfillmentJobStatus {
+  QUEUED
+  RESERVED
+  PROCESSING
+  SUCCEEDED
+  FAILED
+  WAITING_HUMAN
+  WAITING_STOCK
+  RELEASED
+}
+
+/// License Pool v1.0 — đúng 4 status (không EXPIRED durable)
+enum LicenseItemStatus {
+  AVAILABLE
+  RESERVED
+  CONSUMED
+  DISABLED
+}
+
+enum LicenseEventType {
+  RESERVED
+  CONSUMED
+  RELEASED
+  DISABLED
+}
+
+model User {
+  id           String   @id @default(cuid()) // public id — không dùng autoincrement
+  email        String   @unique
+  passwordHash String
+  name         String?
+  /// Customer profile (account portal)
+  phone            String?
+  dateOfBirth      DateTime?
+  address          String?
+  /// Set when password changes; null → treat as account createdAt for “last updated”
+  passwordChangedAt DateTime?
+  /// Email ownership proof (soft-gate license view)
+  emailVerifiedAt   DateTime?
+  /// Pending email change (verify before swap)
+  pendingEmail      String?
+  /// TOTP 2FA — secret AES-GCM encrypted; null when disabled
+  totpSecretEnc     String?
+  totpEnabledAt     DateTime?
+  role         UserRole @default(CUSTOMER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  orders        Order[]
+  audits        AuditLog[] @relation("AuditActor")
+  orderNotes    OrderNote[] @relation("OrderNoteAuthor")
+  notifications UserNotification[]
+  tickets       SupportTicket[]
+  authSessions  AuthSession[]
+  totpBackupCodes TotpBackupCode[]
+}
+
+/// Browser/device session registry (JWT jti ↔ row).
+model AuthSession {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jti         String    @unique
+  userAgent   String?
+  ip          String?
+  deviceLabel String?
+  createdAt   DateTime  @default(now())
+  lastSeenAt  DateTime  @default(now())
+  revokedAt   DateTime?
+
+  @@index([userId, revokedAt])
+}
+
+/// One-time TOTP backup codes (bcrypt hashed, like passwords).
+model TotpBackupCode {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  codeHash  String
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model Supplier {
+  id              String          @id @default(cuid())
+  name            String          @unique
+  supplierType    SupplierType
+  integrationMode IntegrationMode @default(NONE)
+  /// Ops flag — ẩn/đánh dấu trên Admin; không chặn Core fulfillment
+  active          Boolean         @default(true)
+  contactName     String?
+  contactEmail    String?
+  website         String?
+  notes           String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  brands   Brand[]
+  variants ProductVariant[]
+}
+
+/// Admin Media Library catalog — objects live in StorageService (local/Wasabi)
+model MediaAsset {
+  id            String   @id @default(cuid())
+  filename      String
+  originalName  String
+  mimeType      String
+  size          Int
+  width         Int?
+  height        Int?
+  storageDriver String
+  storageKey    String   @unique
+  publicUrl     String
+  altText       String?
+  caption       String?
+  /// Optional ops tag: product | blog | brand | ui
+  purpose       String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([createdAt])
+  @@index([mimeType])
+  @@index([purpose])
+}
+
+model Brand {
+  id                 String    @id @default(cuid())
+  name               String    @unique
+  slug               String    @unique
+  supplierId         String?
+  supplier           Supplier? @relation(fields: [supplierId], references: [id])
+  /// Storefront logo URL
+  logoUrl            String?
+  bannerDesktopUrl   String?
+  bannerMobileUrl    String?
+  shortDescription   String?
+  description        String?
+  seoTitle           String?
+  seoDescription     String?
+  ogImageUrl         String?
+  canonicalUrl       String?
+  featured           Boolean   @default(false)
+  /// Lower = earlier on brand listings
+  sortOrder          Int       @default(0)
+  /// false = archived (not deleted)
+  active             Boolean   @default(true)
+  products           Product[]
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@index([active, sortOrder])
+  @@index([featured, active])
+}
+
+model Product {
+  id               String           @id @default(cuid())
+  brandId          String
+  brand            Brand            @relation(fields: [brandId], references: [id])
+  name             String
+  slug             String           @unique
+  description      String?
+  /// Short lead under PDP title (optional)
+  shortDescription String?
+  /// Storefront category key: windows|office|adobe|cloud|security|other
+  categoryKey      String?
+  /// Override badge on PDP (e.g. HỆ ĐIỀU HÀNH); empty → derive from categoryKey
+  badgeLabel       String?
+  /// Gallery image URLs (JSON string[]) — main + thumbs
+  galleryUrls      Json             @default("[]")
+  /// Feature bullets (JSON string[])
+  features         Json             @default("[]")
+  /// Spec rows (JSON { label, value }[])
+  specs            Json             @default("[]")
+  /// FAQ items (JSON { id, question, answer }[])
+  faqs             Json             @default("[]")
+  /// SEO meta title (fallback: product name)
+  seoTitle         String?
+  /// SEO meta description
+  seoDescription   String?
+  /// Open Graph / social share image URL (fallback: first gallery image)
+  ogImageUrl       String?
+  /// Curated related product IDs for PDP (JSON string[], max ~8)
+  relatedProductIds Json            @default("[]")
+  active           Boolean          @default(true)
+  variants         ProductVariant[]
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+}
+
+model ProductVariant {
+  id                   String               @id @default(cuid())
+  productId            String
+  product              Product              @relation(fields: [productId], references: [id])
+  sku                  String               @unique
+  name                 String
+  licenseModel         LicenseModel
+  fulfillmentStrategy  FulfillmentStrategy
+  deliverableType      DeliverableType
+  salesMotion          SalesMotion          @default(SELF_SERVE)
+  slaPromise           String?
+  supplierId           String?
+  supplier             Supplier?            @relation(fields: [supplierId], references: [id])
+  upstreamProductRef   String?
+  priceVnd             Int
+  /// Compare-at / list price for strikethrough + discount % on PDP
+  compareAtPriceVnd    Int?
+  costVnd              Int                  @default(0)
+  /// Instant low-stock alert threshold (Inventory Read Model)
+  lowStockThreshold    Int                  @default(10)
+  active               Boolean              @default(true)
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+
+  orderItems   OrderItem[]
+  licenseItems LicenseItem[]
+}
+
+/// License Item — trái tim Instant pool (không DELETE, chỉ DISABLED)
+model LicenseItem {
+  id        String            @id @default(cuid())
+  variantId String
+  variant   ProductVariant    @relation(fields: [variantId], references: [id])
+  /// AES-GCM encrypted payload (key/account secret)
+  payloadEnc String
+  status    LicenseItemStatus @default(AVAILABLE)
+  /// Optimistic lock — tăng mỗi update thành công
+  version   Int               @default(0)
+
+  reservedOrderId     String?
+  reservedOrder       Order?     @relation("LicenseReservedByOrder", fields: [reservedOrderId], references: [id])
+  reservedOrderItemId String?
+  reservedOrderItem   OrderItem? @relation("LicenseReservedOrderItem", fields: [reservedOrderItemId], references: [id])
+  reservationToken    String?    @unique
+  reservedAt          DateTime?
+  expiresAt           DateTime?
+
+  /// Sau consume — liên kết dòng hàng (qty>1: nhiều item cùng orderItemId)
+  orderItemId String?
+  orderItem   OrderItem? @relation("LicenseConsumedOrderItem", fields: [orderItemId], references: [id])
+  consumedAt  DateTime?
+
+  disabledAt     DateTime?
+  disabledReason String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  events LicenseEvent[]
+
+  @@index([variantId, status])
+  @@index([status, expiresAt])
+  @@index([reservedOrderItemId])
+  @@index([orderItemId])
+}
+
+model LicenseEvent {
+  id               String           @id @default(cuid())
+  type             LicenseEventType
+  licenseItemId    String
+  licenseItem      LicenseItem      @relation(fields: [licenseItemId], references: [id])
+  variantId        String
+  orderId          String?
+  orderItemId      String?
+  reservationToken String?
+  reason           String?
+  meta             Json?
+  createdAt        DateTime         @default(now())
+
+  @@index([type, createdAt])
+  @@index([licenseItemId, createdAt])
+  @@index([variantId, type])
+  @@index([reason, createdAt])
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  code            String      @unique
+  userId          String?
+  user            User?       @relation(fields: [userId], references: [id])
+  email           String
+  status          OrderStatus @default(PENDING_PAYMENT)
+  totalVnd        Int
+  currency        String      @default("VND")
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  paidAt          DateTime?
+  completedAt     DateTime?
+
+  items            OrderItem[]
+  payments         Payment[]
+  fulfillmentJobs  FulfillmentJob[]
+  reservedLicenses LicenseItem[] @relation("LicenseReservedByOrder")
+  internalNotes    OrderNote[]
+}
+
+/// Staff-only internal notes on an order (ops workspace)
+model OrderNote {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  authorId  String?
+  author    User?    @relation("OrderNoteAuthor", fields: [authorId], references: [id])
+  body      String
+  createdAt DateTime @default(now())
+
+  @@index([orderId, createdAt])
+}
+
+model OrderItem {
+  id          String         @id @default(cuid())
+  orderId     String
+  order       Order          @relation(fields: [orderId], references: [id])
+  variantId   String
+  variant     ProductVariant @relation(fields: [variantId], references: [id])
+  quantity    Int            @default(1)
+  unitPriceVnd Int
+  title       String
+
+  /// Token lần reserve gần nhất (qty=1). Batch: đọc từ LicenseItem.reservationToken
+  reservationToken String?
+
+  reservedLicenses LicenseItem[] @relation("LicenseReservedOrderItem")
+  consumedLicenses LicenseItem[] @relation("LicenseConsumedOrderItem")
+  fulfillmentJobs  FulfillmentJob[]
+  deliveries       Delivery[]
+}
+
+model Payment {
+  id               String        @id @default(cuid())
+  orderId          String
+  order            Order         @relation(fields: [orderId], references: [id])
+  provider         String        @default("stub")
+  /// Globally unique payment reference (Layer 2 idempotency)
+  paymentReference String        @unique
+  amountVnd        Int
+  currency         String        @default("VND")
+  status           PaymentStatus @default(CREATED)
+  /// SePay / bank reconcile fields
+  providerReference      String?
+  providerTransactionId  String?
+  providerEventId        String?  @unique
+  providerPaidAt         DateTime?
+  rawPayload       Json?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  succeededAt      DateTime?
+  expiresAt        DateTime?
+
+  events PaymentDomainEvent[]
+
+  @@index([orderId])
+  @@index([status])
+}
+
+/// Layer 1 — unique webhook / provider event id
+model PaymentWebhookReceipt {
+  id                 String   @id @default(cuid())
+  providerEventId    String   @unique
+  paymentReference   String
+  provider           String   @default("sepay")
+  rawPayload         Json?
+  createdAt          DateTime @default(now())
+
+  @@index([paymentReference])
+}
+
+enum PaymentDomainEventType {
+  CREATED
+  SUCCEEDED
+  FAILED
+  EXPIRED
+  CANCELLED
+}
+
+model PaymentDomainEvent {
+  id        String                 @id @default(cuid())
+  type      PaymentDomainEventType
+  paymentId String
+  payment   Payment                @relation(fields: [paymentId], references: [id])
+  reason    String?
+  meta      Json?
+  createdAt DateTime               @default(now())
+
+  @@index([type, createdAt])
+  @@index([paymentId])
+}
+
+model FulfillmentJob {
+  id           String               @id @default(cuid())
+  orderId      String
+  order        Order                @relation(fields: [orderId], references: [id])
+  orderItemId  String
+  orderItem    OrderItem            @relation(fields: [orderItemId], references: [id])
+  strategy     FulfillmentStrategy
+  status       FulfillmentJobStatus @default(QUEUED)
+  notes        String?
+  /// Idempotent provision key (Supplier / Pax8) — Outer Layer
+  upstreamRequestId   String? @unique
+  upstreamProvisionId String?
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  startedAt    DateTime?
+  finishedAt   DateTime?
+
+  deliveries Delivery[]
+
+  @@index([status, strategy])
+}
+
+model Delivery {
+  id               String          @id @default(cuid())
+  orderItemId      String
+  orderItem        OrderItem       @relation(fields: [orderItemId], references: [id])
+  fulfillmentJobId String?
+  fulfillmentJob   FulfillmentJob? @relation(fields: [fulfillmentJobId], references: [id])
+  deliverableType  DeliverableType
+  /// Encrypted sensitive fields (key, password, etc.)
+  payloadEnc       String
+  /// Non-sensitive display hints (masked key prefix, username, portal URL public part)
+  displayHint      String?
+  resendCount      Int             @default(0)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  resends DeliveryResend[]
+}
+
+model DeliveryResend {
+  id         String   @id @default(cuid())
+  deliveryId String
+  delivery   Delivery @relation(fields: [deliveryId], references: [id])
+  actorId    String?
+  reason     String?
+  createdAt  DateTime @default(now())
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  actor      User?    @relation("AuditActor", fields: [actorId], references: [id])
+  action     String
+  entityType String
+  entityId   String?
+  meta       Json?
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, entityId])
+}
+
+enum SupportTicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+/// Customer support request (portal + admin)
+model SupportTicket {
+  id        String              @id @default(cuid())
+  userId    String
+  user      User                @relation(fields: [userId], references: [id])
+  orderId   String?
+  subject   String
+  body      String
+  status    SupportTicketStatus @default(OPEN)
+  adminNote String?
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+  @@index([orderId])
+}
+
+/// In-app notification for customer portal
+model UserNotification {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  title     String
+  body      String
+  href      String?
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, createdAt])
+  @@index([userId, readAt])
+}

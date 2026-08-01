@@ -1,0 +1,368 @@
+/* ==========================================================
+   KEYON UI Design System
+   File: 01-reset.css
+   Version: 1.0
+   ========================================================== */
+
+/* ---------- Box Model ---------- */
+
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+}
+
+/* ---------- Reset ---------- */
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,h2,h3,h4,h5,h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video{
+
+    margin:0;
+    padding:0;
+    border:0;
+
+    font:inherit;
+
+    vertical-align:baseline;
+
+}
+
+/* ---------- HTML5 ---------- */
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section{
+
+    display:block;
+
+}
+
+/* ---------- Root ---------- */
+
+html{
+
+    scroll-behavior:smooth;
+
+    -webkit-text-size-adjust:100%;
+
+    text-rendering:optimizeLegibility;
+
+}
+
+/* ---------- Body ---------- */
+
+body{
+
+    min-height:100vh;
+
+    background:#ffffff;
+
+    color:#0F172A;
+
+    font-family:
+    Inter,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
+
+    font-size:16px;
+
+    line-height:1.6;
+
+    font-weight:400;
+
+    overflow-x:hidden;
+
+    -webkit-font-smoothing:antialiased;
+
+    -moz-osx-font-smoothing:grayscale;
+
+}
+
+/* ---------- Media ---------- */
+
+img,
+picture,
+svg,
+canvas,
+video{
+
+    display:block;
+
+    max-width:100%;
+
+    height:auto;
+
+}
+
+/* ---------- SVG ---------- */
+
+svg{
+
+    overflow:hidden;
+
+    vertical-align:middle;
+
+}
+
+/* ---------- Form ---------- */
+
+input,
+textarea,
+select,
+button{
+
+    font:inherit;
+
+    color:inherit;
+
+    background:none;
+
+    border:none;
+
+    outline:none;
+
+}
+
+/* ---------- Button ---------- */
+
+button{
+
+    cursor:pointer;
+
+    appearance:none;
+
+    -webkit-appearance:none;
+
+}
+
+/* ---------- Textarea ---------- */
+
+textarea{
+
+    resize:vertical;
+
+}
+
+/* ---------- Input ---------- */
+
+input::-ms-clear{
+
+    display:none;
+
+}
+
+input::-webkit-search-decoration,
+input::-webkit-search-cancel-button{
+
+    display:none;
+
+}
+
+/* ---------- Links ---------- */
+
+a{
+
+    color:inherit;
+
+    text-decoration:none;
+
+}
+
+/* ---------- Lists ---------- */
+
+ul,
+ol{
+
+    list-style:none;
+
+}
+
+/* ---------- Table ---------- */
+
+table{
+
+    border-collapse:collapse;
+
+    border-spacing:0;
+
+}
+
+/* ---------- Quote ---------- */
+
+blockquote,
+q{
+
+    quotes:none;
+
+}
+
+blockquote::before,
+blockquote::after,
+q::before,
+q::after{
+
+    content:"";
+
+}
+
+/* ---------- Strong ---------- */
+
+strong{
+
+    font-weight:700;
+
+}
+
+/* ---------- Selection ---------- */
+
+::selection{
+
+    background:#0EA5A4;
+
+    color:#ffffff;
+
+}
+
+/* ---------- Focus ---------- */
+
+:focus-visible{
+
+    outline:2px solid #0EA5A4;
+
+    outline-offset:2px;
+
+}
+
+/* ---------- Hidden ---------- */
+
+[hidden]{
+
+    display:none !important;
+
+}
+
+/* ---------- Disabled ---------- */
+
+:disabled{
+
+    cursor:not-allowed;
+
+}
+
+/* ---------- Horizontal Rule ---------- */
+
+hr{
+
+    border:none;
+
+    height:1px;
+
+    background:#E2E8F0;
+
+}
+
+/* ---------- Iframe ---------- */
+
+iframe{
+
+    border:none;
+
+}
+
+/* ---------- Utility ---------- */
+
+.clearfix::after{
+
+    content:"";
+
+    display:block;
+
+    clear:both;
+
+}

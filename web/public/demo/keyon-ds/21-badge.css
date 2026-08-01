@@ -1,0 +1,369 @@
+/* ==========================================================
+   KEYON UI Design System
+   File: 21-badge.css
+   Version: 1.0
+   ========================================================== */
+
+/* ==========================================================
+   BASE BADGE
+   ========================================================== */
+
+.badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:6px;
+
+    min-height:24px;
+
+    padding:0 10px;
+
+    border-radius:999px;
+
+    border:1px solid transparent;
+
+    font-size:12px;
+
+    font-weight:600;
+
+    line-height:1;
+
+    white-space:nowrap;
+
+    user-select:none;
+
+}
+
+/* ==========================================================
+   SIZE
+   ========================================================== */
+
+.badge-sm{
+
+    min-height:20px;
+
+    padding:0 8px;
+
+    font-size:11px;
+
+}
+
+.badge-md{
+
+    min-height:24px;
+
+    padding:0 10px;
+
+}
+
+.badge-lg{
+
+    min-height:30px;
+
+    padding:0 14px;
+
+    font-size:13px;
+
+}
+
+/* ==========================================================
+   SOLID
+   ========================================================== */
+
+.badge-primary{
+
+    background:var(--color-primary);
+
+    color:#fff;
+
+}
+
+.badge-success{
+
+    background:var(--success);
+
+    color:#fff;
+
+}
+
+.badge-warning{
+
+    background:var(--warning);
+
+    color:#fff;
+
+}
+
+.badge-danger{
+
+    background:var(--danger);
+
+    color:#fff;
+
+}
+
+.badge-info{
+
+    background:var(--info);
+
+    color:#fff;
+
+}
+
+.badge-secondary{
+
+    background:var(--color-secondary);
+
+    color:#fff;
+
+}
+
+/* ==========================================================
+   SOFT
+   ========================================================== */
+
+.badge-soft-primary{
+
+    background:var(--color-primary-light);
+
+    color:var(--color-primary);
+
+}
+
+.badge-soft-success{
+
+    background:var(--success-bg);
+
+    color:var(--success);
+
+}
+
+.badge-soft-warning{
+
+    background:var(--warning-bg);
+
+    color:var(--warning);
+
+}
+
+.badge-soft-danger{
+
+    background:var(--danger-bg);
+
+    color:var(--danger);
+
+}
+
+.badge-soft-info{
+
+    background:var(--info-bg);
+
+    color:var(--info);
+
+}
+
+/* ==========================================================
+   OUTLINE
+   ========================================================== */
+
+.badge-outline{
+
+    background:transparent;
+
+}
+
+.badge-outline-primary{
+
+    border-color:var(--color-primary);
+
+    color:var(--color-primary);
+
+}
+
+.badge-outline-success{
+
+    border-color:var(--success);
+
+    color:var(--success);
+
+}
+
+.badge-outline-warning{
+
+    border-color:var(--warning);
+
+    color:var(--warning);
+
+}
+
+.badge-outline-danger{
+
+    border-color:var(--danger);
+
+    color:var(--danger);
+
+}
+
+.badge-outline-info{
+
+    border-color:var(--info);
+
+    color:var(--info);
+
+}
+
+/* ==========================================================
+   DOT
+   ========================================================== */
+
+.badge-dot{
+
+    width:8px;
+
+    height:8px;
+
+    border-radius:50%;
+
+    flex-shrink:0;
+
+}
+
+.badge-dot-primary{
+
+    background:var(--color-primary);
+
+}
+
+.badge-dot-success{
+
+    background:var(--success);
+
+}
+
+.badge-dot-warning{
+
+    background:var(--warning);
+
+}
+
+.badge-dot-danger{
+
+    background:var(--danger);
+
+}
+
+.badge-dot-info{
+
+    background:var(--info);
+
+}
+
+/* ==========================================================
+   ICON
+   ========================================================== */
+
+.badge-icon{
+
+    width:14px;
+
+    height:14px;
+
+    flex-shrink:0;
+
+}
+
+/* ==========================================================
+   REMOVABLE
+   ========================================================== */
+
+.badge-close{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    width:16px;
+
+    height:16px;
+
+    margin-right:-4px;
+
+    border-radius:50%;
+
+    cursor:pointer;
+
+    opacity:.7;
+
+    transition:opacity var(--transition);
+
+}
+
+.badge-close:hover{
+
+    opacity:1;
+
+}
+
+/* ==========================================================
+   STATUS BADGE
+   ========================================================== */
+
+.badge-status{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+/* ==========================================================
+   PILL
+   ========================================================== */
+
+.badge-pill{
+
+    border-radius:999px;
+
+}
+
+/* ==========================================================
+   SQUARE
+   ========================================================== */
+
+.badge-square{
+
+    border-radius:var(--radius-sm);
+
+}
+
+/* ==========================================================
+   NUMBER BADGE
+   ========================================================== */
+
+.badge-count{
+
+    min-width:22px;
+
+    height:22px;
+
+    padding:0 6px;
+
+}
+
+/* ==========================================================
+   EMPTY
+   ========================================================== */
+
+.badge:empty{
+
+    display:none;
+
+}

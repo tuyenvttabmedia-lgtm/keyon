@@ -1,0 +1,59 @@
+# Production stack — VPS (không expose DB/Redis ra public nếu reverse-proxy cùng host)
+# Usage: docker compose -f compose.prod.yaml --env-file .env.production up -d
+# App Next.js + worker thường chạy container riêng hoặc systemd; file này = infra phụ thuộc.
+
+name: keyon-prod
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: keyon-prod-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - keyon_prod_pg:/var/lib/postgresql/data
+    networks:
+      - keyon_internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    # Không publish 5432 ra host công khai — chỉ mạng nội bộ
+
+  redis:
+    image: redis:7-alpine
+    container_name: keyon-prod-redis
+    restart: always
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - keyon_prod_redis:/data
+    networks:
+      - keyon_internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  # Mailpit chỉ bật khi DEBUG_MAIL=1 (staging). Production thật dùng SMTP provider.
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: keyon-prod-mailpit
+    profiles: ["debug-mail"]
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8025:8025"
+    networks:
+      - keyon_internal
+
+networks:
+  keyon_internal:
+    driver: bridge
+
+volumes:
+  keyon_prod_pg:
+  keyon_prod_redis:

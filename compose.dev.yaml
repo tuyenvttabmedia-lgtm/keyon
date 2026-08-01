@@ -1,0 +1,52 @@
+# Dev stack — localhost
+# Usage: docker compose -f compose.dev.yaml up -d
+
+name: keyon-dev
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: keyon-dev-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: keyon
+      POSTGRES_PASSWORD: keyon
+      POSTGRES_DB: keyon
+    ports:
+      - "5432:5432"
+    volumes:
+      - keyon_dev_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keyon -d keyon"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: keyon-dev-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - keyon_dev_redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: keyon-dev-mailpit
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+
+volumes:
+  keyon_dev_pg:
+  keyon_dev_redis:

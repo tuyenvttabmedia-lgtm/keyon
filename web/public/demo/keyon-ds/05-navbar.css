@@ -1,0 +1,475 @@
+/* ==========================================================
+   KEYON UI Design System
+   File: 05-navbar.css
+   Version: 1.0
+   ========================================================== */
+
+/* ==========================================================
+   HEADER
+   ========================================================== */
+
+.header{
+
+    position:sticky;
+
+    top:0;
+
+    left:0;
+
+    right:0;
+
+    z-index:1000;
+
+    height:82px;
+
+    background:#FFFFFF;
+
+    border-bottom:1px solid #EEF2F7;
+
+}
+
+.header.scrolled{
+
+    box-shadow:
+
+    0 8px 24px rgba(15,23,42,.04);
+
+}
+
+/* ==========================================================
+   INNER
+   ========================================================== */
+
+.header-inner{
+
+    height:82px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+}
+
+/* ==========================================================
+   LOGO
+   ========================================================== */
+
+.logo{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    flex-shrink:0;
+
+}
+
+.logo img{
+
+    height:36px;
+
+    width:auto;
+
+}
+
+.logo-text{
+
+    font-size:22px;
+
+    font-weight:700;
+
+    color:#0F172A;
+
+}
+
+/* ==========================================================
+   NAV
+   ========================================================== */
+
+.nav{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:36px;
+
+}
+
+.nav-item{
+
+    position:relative;
+
+}
+
+.nav-link{
+
+    display:flex;
+
+    align-items:center;
+
+    height:82px;
+
+    font-size:15px;
+
+    font-weight:500;
+
+    color:#334155;
+
+    transition:.25s;
+
+}
+
+.nav-link:hover{
+
+    color:#0EA5A4;
+
+}
+
+.nav-link.active{
+
+    color:#0EA5A4;
+
+}
+
+/* underline */
+
+.nav-link::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+
+    bottom:0;
+
+    width:0;
+
+    height:2px;
+
+    background:#0EA5A4;
+
+    transition:.25s;
+
+}
+
+.nav-link:hover::after,
+
+.nav-link.active::after{
+
+    width:100%;
+
+}
+
+/* ==========================================================
+   RIGHT
+   ========================================================== */
+
+.header-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+}
+
+/* ==========================================================
+   SEARCH
+   ========================================================== */
+
+.header-search{
+
+    position:relative;
+
+    width:260px;
+
+}
+
+.header-search input{
+
+    width:100%;
+
+    height:44px;
+
+    padding:0 44px 0 18px;
+
+    background:#F8FAFC;
+
+    border:1px solid #E5E7EB;
+
+    border-radius:12px;
+
+    transition:.25s;
+
+}
+
+.header-search input:focus{
+
+    border-color:#0EA5A4;
+
+    background:#FFFFFF;
+
+}
+
+.header-search svg{
+
+    position:absolute;
+
+    right:16px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    width:18px;
+
+    height:18px;
+
+    color:#64748B;
+
+}
+
+/* ==========================================================
+   ACTIONS
+   ========================================================== */
+
+.header-actions{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+/* ==========================================================
+   LOGIN
+   ========================================================== */
+
+.login-link{
+
+    font-size:15px;
+
+    font-weight:500;
+
+    color:#334155;
+
+    transition:.25s;
+
+}
+
+.login-link:hover{
+
+    color:#0EA5A4;
+
+}
+
+/* ==========================================================
+   CART
+   ========================================================== */
+
+.cart-button{
+
+    position:relative;
+
+    width:46px;
+
+    height:46px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border:1px solid #E5E7EB;
+
+    border-radius:12px;
+
+    transition:.25s;
+
+}
+
+.cart-button:hover{
+
+    border-color:#0EA5A4;
+
+    color:#0EA5A4;
+
+}
+
+.cart-count{
+
+    position:absolute;
+
+    top:-5px;
+
+    right:-5px;
+
+    min-width:20px;
+
+    height:20px;
+
+    padding:0 5px;
+
+    border-radius:999px;
+
+    background:#EF4444;
+
+    color:#FFFFFF;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+/* ==========================================================
+   MEGA MENU
+   ========================================================== */
+
+.mega-menu{
+
+    position:absolute;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    top:100%;
+
+    width:860px;
+
+    padding:32px;
+
+    background:#FFFFFF;
+
+    border:1px solid #E5E7EB;
+
+    border-radius:18px;
+
+    display:none;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:28px;
+
+}
+
+.nav-item:hover .mega-menu{
+
+    display:grid;
+
+}
+
+.mega-title{
+
+    margin-bottom:12px;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    color:#0F172A;
+
+}
+
+.mega-link{
+
+    display:block;
+
+    padding:8px 0;
+
+    font-size:14px;
+
+    color:#64748B;
+
+    transition:.2s;
+
+}
+
+.mega-link:hover{
+
+    color:#0EA5A4;
+
+}
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+
+.mobile-toggle{
+
+    display:none;
+
+}
+
+@media(max-width:1024px){
+
+    .nav{
+
+        display:none;
+
+    }
+
+    .header-search{
+
+        display:none;
+
+    }
+
+    .mobile-toggle{
+
+        display:flex;
+
+        align-items:center;
+
+        justify-content:center;
+
+        width:44px;
+
+        height:44px;
+
+        border-radius:10px;
+
+        border:1px solid #E5E7EB;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .header{
+
+        height:72px;
+
+    }
+
+    .header-inner{
+
+        height:72px;
+
+    }
+
+    .logo img{
+
+        height:32px;
+
+    }
+
+}

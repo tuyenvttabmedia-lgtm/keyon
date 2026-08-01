@@ -1,0 +1,296 @@
+/* ==========================================================
+   KEYON UI Design System
+   File: 04-buttons.css
+   Version: 1.0
+   ========================================================== */
+
+/* ==========================================================
+   BASE
+   ========================================================== */
+
+.btn{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:10px;
+
+    min-width:140px;
+
+    height:52px;
+
+    padding:0 28px;
+
+    border-radius:14px;
+
+    border:1px solid transparent;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    line-height:1;
+
+    transition:
+    background .25s,
+    border-color .25s,
+    color .25s,
+    box-shadow .25s,
+    transform .25s;
+
+    user-select:none;
+
+    white-space:nowrap;
+
+}
+
+.btn:active{
+
+    transform:translateY(1px);
+
+}
+
+.btn:disabled{
+
+    opacity:.5;
+
+    pointer-events:none;
+
+}
+
+/* ==========================================================
+   PRIMARY
+   ========================================================== */
+
+.btn-primary{
+
+    background:#0EA5A4;
+
+    color:#FFFFFF;
+
+}
+
+.btn-primary:hover{
+
+    background:#0B8D8D;
+
+    box-shadow:
+
+    0 12px 24px rgba(14,165,164,.18);
+
+}
+
+/* ==========================================================
+   SECONDARY
+   ========================================================== */
+
+.btn-secondary{
+
+    background:#0F172A;
+
+    color:#FFFFFF;
+
+}
+
+.btn-secondary:hover{
+
+    background:#1E293B;
+
+}
+
+/* ==========================================================
+   OUTLINE
+   ========================================================== */
+
+.btn-outline{
+
+    background:#FFFFFF;
+
+    border:1px solid #DCE3EB;
+
+    color:#0F172A;
+
+}
+
+.btn-outline:hover{
+
+    border-color:#0EA5A4;
+
+    color:#0EA5A4;
+
+}
+
+/* ==========================================================
+   GHOST
+   ========================================================== */
+
+.btn-ghost{
+
+    background:transparent;
+
+    color:#0F172A;
+
+}
+
+.btn-ghost:hover{
+
+    background:#F8FAFC;
+
+}
+
+/* ==========================================================
+   LINK
+   ========================================================== */
+
+.btn-link{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    color:#0EA5A4;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+.btn-link:hover{
+
+    gap:12px;
+
+}
+
+/* ==========================================================
+   SIZE
+   ========================================================== */
+
+.btn-sm{
+
+    height:42px;
+
+    padding:0 18px;
+
+    font-size:14px;
+
+}
+
+.btn-md{
+
+    height:52px;
+
+}
+
+.btn-lg{
+
+    height:58px;
+
+    padding:0 36px;
+
+    font-size:17px;
+
+}
+
+/* ==========================================================
+   FULL
+   ========================================================== */
+
+.btn-block{
+
+    width:100%;
+
+}
+
+/* ==========================================================
+   ICON
+   ========================================================== */
+
+.btn-icon{
+
+    width:52px;
+
+    height:52px;
+
+    padding:0;
+
+}
+
+.btn svg{
+
+    width:18px;
+
+    height:18px;
+
+}
+
+/* ==========================================================
+   GROUP
+   ========================================================== */
+
+.btn-group{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+
+    flex-wrap:wrap;
+
+}
+
+/* ==========================================================
+   HERO BUTTONS
+   ========================================================== */
+
+.hero-buttons{
+
+    display:flex;
+
+    gap:18px;
+
+    margin-top:36px;
+
+}
+
+/* ==========================================================
+   PRODUCT BUTTON
+   ========================================================== */
+
+.product-buy{
+
+    width:100%;
+
+    margin-top:20px;
+
+}
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+
+@media(max-width:768px){
+
+    .hero-buttons{
+
+        flex-direction:column;
+
+        align-items:stretch;
+
+    }
+
+    .btn{
+
+        width:100%;
+
+    }
+
+}

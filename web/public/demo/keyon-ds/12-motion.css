@@ -1,0 +1,376 @@
+/* ==========================================================
+   KEYON UI Design System
+   File: 12-motion.css
+   Version: 1.0
+   ========================================================== */
+
+/* ==========================================================
+   MOTION TOKENS
+   ========================================================== */
+
+:root{
+
+    --motion-fast:150ms;
+
+    --motion-normal:250ms;
+
+    --motion-slow:350ms;
+
+    --ease-standard:cubic-bezier(.2,.8,.2,1);
+
+    --ease-emphasized:cubic-bezier(.16,1,.3,1);
+
+}
+
+/* ==========================================================
+   GLOBAL TRANSITION
+   ========================================================== */
+
+.transition{
+
+    transition:all var(--motion-normal) var(--ease-standard);
+
+}
+
+.transition-fast{
+
+    transition:all var(--motion-fast) var(--ease-standard);
+
+}
+
+.transition-slow{
+
+    transition:all var(--motion-slow) var(--ease-standard);
+
+}
+
+/* ==========================================================
+   FADE
+   ========================================================== */
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+    }
+
+    to{
+
+        opacity:1;
+
+    }
+
+}
+
+.fade-in{
+
+    animation:fadeIn .35s ease both;
+
+}
+
+/* ==========================================================
+   FADE UP
+   ========================================================== */
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(20px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+.fade-up{
+
+    animation:fadeUp .45s ease both;
+
+}
+
+/* ==========================================================
+   FADE DOWN
+   ========================================================== */
+
+@keyframes fadeDown{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(-20px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:none;
+
+    }
+
+}
+
+.fade-down{
+
+    animation:fadeDown .45s ease both;
+
+}
+
+/* ==========================================================
+   SCALE
+   ========================================================== */
+
+@keyframes scaleIn{
+
+    from{
+
+        opacity:0;
+
+        transform:scale(.96);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:scale(1);
+
+    }
+
+}
+
+.scale-in{
+
+    animation:scaleIn .3s ease both;
+
+}
+
+/* ==========================================================
+   SLIDE LEFT
+   ========================================================== */
+
+@keyframes slideLeft{
+
+    from{
+
+        opacity:0;
+
+        transform:translateX(32px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:none;
+
+    }
+
+}
+
+.slide-left{
+
+    animation:slideLeft .45s ease both;
+
+}
+
+/* ==========================================================
+   SLIDE RIGHT
+   ========================================================== */
+
+@keyframes slideRight{
+
+    from{
+
+        opacity:0;
+
+        transform:translateX(-32px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:none;
+
+    }
+
+}
+
+.slide-right{
+
+    animation:slideRight .45s ease both;
+
+}
+
+/* ==========================================================
+   HOVER LIFT
+   ========================================================== */
+
+.hover-lift{
+
+    transition:
+        transform var(--motion-normal) var(--ease-standard),
+        box-shadow var(--motion-normal) var(--ease-standard);
+
+}
+
+.hover-lift:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:var(--shadow-lg);
+
+}
+
+/* ==========================================================
+   HOVER SCALE
+   ========================================================== */
+
+.hover-scale{
+
+    transition:
+        transform var(--motion-normal) var(--ease-standard);
+
+}
+
+.hover-scale:hover{
+
+    transform:scale(1.03);
+
+}
+
+/* ==========================================================
+   SPINNER
+   ========================================================== */
+
+@keyframes spin{
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+.spinner{
+
+    width:24px;
+
+    height:24px;
+
+    border:2px solid var(--border-color);
+
+    border-top-color:var(--color-primary);
+
+    border-radius:50%;
+
+    animation:spin .8s linear infinite;
+
+}
+
+/* ==========================================================
+   PULSE
+   ========================================================== */
+
+@keyframes pulse{
+
+    0%,100%{
+
+        opacity:1;
+
+    }
+
+    50%{
+
+        opacity:.45;
+
+    }
+
+}
+
+.pulse{
+
+    animation:pulse 1.5s infinite;
+
+}
+
+/* ==========================================================
+   SKELETON
+   ========================================================== */
+
+@keyframes skeleton{
+
+    0%{
+
+        background-position:-200px 0;
+
+    }
+
+    100%{
+
+        background-position:calc(200px + 100%) 0;
+
+    }
+
+}
+
+.skeleton{
+
+    border-radius:var(--radius-md);
+
+    background:
+
+        linear-gradient(
+
+            90deg,
+
+            #F1F5F9 25%,
+
+            #E2E8F0 37%,
+
+            #F1F5F9 63%
+
+        );
+
+    background-size:400px 100%;
+
+    animation:skeleton 1.4s infinite linear;
+
+}
+
+/* ==========================================================
+   REDUCED MOTION
+   ========================================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+    *{
+
+        animation:none!important;
+
+        transition:none!important;
+
+        scroll-behavior:auto!important;
+
+    }
+
+}

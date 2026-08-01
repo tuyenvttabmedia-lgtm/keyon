@@ -1,0 +1,223 @@
+@import "tailwindcss";
+
+:root {
+  /* Digital License Home audit — tokens from demo / keyon-ds */
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --muted: #475569;
+  --muted-soft: #64748b;
+  --card: #ffffff;
+  --accent: #0ea5a4;
+  --accent-soft: #ecfeff;
+  --accent-hover: #0b8d8d;
+  --navy: #0f172a;
+  --navy-soft: #f1f5f9;
+  --border: #e5e7eb;
+  --danger: #dc2626;
+  --footer: #071f3b;
+  --surface: #f8fafc;
+  --step-num: #ecfeff;
+  --date: #94a3b8;
+  --price: #e11d48;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-soft: var(--muted-soft);
+  --color-card: var(--card);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-hover: var(--accent-hover);
+  --color-navy: var(--navy);
+  --color-navy-soft: var(--navy-soft);
+  --color-border: var(--border);
+  --color-danger: var(--danger);
+  --color-footer: var(--footer);
+  --color-surface: var(--surface);
+  --color-step-num: var(--step-num);
+  --color-date: var(--date);
+  --color-price: var(--price);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-inter);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  min-height: 100vh;
+}
+
+/* Prevent horizontal jump when scrollbar appears/disappears (short vs long pages). */
+html {
+  scrollbar-gutter: stable;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/*
+ * Base link styles MUST stay in @layer base.
+ * Unlayered `a { color: inherit }` beats Tailwind utilities (hover:text-*),
+ * so hover color changes never appeared on the storefront.
+ */
+@layer base {
+  a {
+    text-decoration: none;
+  }
+}
+
+/* Storefront container — synced to Home audit (1200) */
+.home-container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1200px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+@media (min-width: 768px) {
+  .home-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* Home motion — PRODUCTION-UI-SPEC §2.11 (fast/normal/slow + standard easing) */
+:root {
+  --motion-fast: 120ms;
+  --motion-normal: 200ms;
+  --motion-slow: 320ms;
+  --motion-enter: 420ms;
+  --motion-ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@keyframes home-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes home-spark-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.home-hero-panel {
+  /* backwards only — `both`/`forwards` locks transform and blocks hover lift */
+  animation: home-fade-up var(--motion-enter) var(--motion-ease) backwards;
+}
+
+.home-hero-spark {
+  animation: home-spark-in var(--motion-slow) var(--motion-ease) 200ms both;
+}
+
+.home-reveal:not(.home-reveal-stagger) {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity var(--motion-slow) var(--motion-ease),
+    transform var(--motion-slow) var(--motion-ease);
+}
+
+.home-reveal:not(.home-reveal-stagger).is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.home-reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity var(--motion-slow) var(--motion-ease),
+    transform var(--motion-slow) var(--motion-ease);
+}
+
+.home-reveal.is-visible.home-reveal-stagger > *:nth-child(1) {
+  transition-delay: 0ms;
+}
+.home-reveal.is-visible.home-reveal-stagger > *:nth-child(2) {
+  transition-delay: 40ms;
+}
+.home-reveal.is-visible.home-reveal-stagger > *:nth-child(3) {
+  transition-delay: 80ms;
+}
+.home-reveal.is-visible.home-reveal-stagger > *:nth-child(4) {
+  transition-delay: 120ms;
+}
+.home-reveal.is-visible.home-reveal-stagger > *:nth-child(5) {
+  transition-delay: 160ms;
+}
+.home-reveal.is-visible.home-reveal-stagger > *:nth-child(6) {
+  transition-delay: 200ms;
+}
+.home-reveal.is-visible.home-reveal-stagger > *:nth-child(n + 7) {
+  transition-delay: 220ms;
+}
+
+.home-reveal.is-visible.home-reveal-stagger > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero-panel,
+  .home-hero-spark {
+    animation: none !important;
+  }
+
+  .home-reveal:not(.home-reveal-stagger),
+  .home-reveal-stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Mobile / tablet: snap carousels */
+.home-snap-x {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 1rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.home-snap-x::-webkit-scrollbar {
+  display: none;
+}
+
+.home-snap-x > * {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}

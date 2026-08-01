@@ -1,0 +1,415 @@
+/* ==========================================================
+   KEYON UI Design System
+   File: 06-hero.css
+   Version: 1.0
+   ========================================================== */
+
+/* ==========================================================
+   HERO
+   ========================================================== */
+
+.hero{
+
+    position:relative;
+
+    overflow:hidden;
+
+    background:#FFFFFF;
+
+}
+
+.hero::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-220px;
+
+    right:-180px;
+
+    width:520px;
+
+    height:520px;
+
+    border-radius:50%;
+
+    background:radial-gradient(
+        rgba(14,165,164,.08),
+        transparent 70%
+    );
+
+    pointer-events:none;
+
+}
+
+.hero::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:-160px;
+
+    bottom:-180px;
+
+    width:420px;
+
+    height:420px;
+
+    border-radius:50%;
+
+    background:radial-gradient(
+        rgba(59,130,246,.05),
+        transparent 70%
+    );
+
+    pointer-events:none;
+
+}
+
+/* ==========================================================
+   CONTENT
+   ========================================================== */
+
+.hero-content{
+
+    position:relative;
+
+    z-index:2;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+}
+
+.hero-badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    width:max-content;
+
+    padding:10px 18px;
+
+    border:1px solid #DCE3EB;
+
+    border-radius:999px;
+
+    background:#F8FAFC;
+
+    color:#0EA5A4;
+
+    font-size:14px;
+
+    font-weight:600;
+
+}
+
+.hero-badge svg{
+
+    width:16px;
+
+    height:16px;
+
+}
+
+/* ==========================================================
+   CTA
+   ========================================================== */
+
+.hero-actions{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+
+    margin-top:36px;
+
+}
+
+/* ==========================================================
+   STATS
+   ========================================================== */
+
+.hero-stats{
+
+    display:flex;
+
+    gap:48px;
+
+    margin-top:52px;
+
+}
+
+.hero-stat{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.hero-stat-number{
+
+    font-size:34px;
+
+    font-weight:700;
+
+    color:#0F172A;
+
+    line-height:1;
+
+}
+
+.hero-stat-label{
+
+    margin-top:8px;
+
+    font-size:14px;
+
+    color:#64748B;
+
+}
+
+/* ==========================================================
+   MEDIA
+   ========================================================== */
+
+.hero-media{
+
+    position:relative;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+.hero-dashboard{
+
+    width:100%;
+
+    max-width:620px;
+
+    border-radius:24px;
+
+    overflow:hidden;
+
+    border:1px solid #E5E7EB;
+
+    background:#FFFFFF;
+
+    box-shadow:
+
+        0 24px 64px rgba(15,23,42,.08);
+
+}
+
+.hero-dashboard img{
+
+    width:100%;
+
+    display:block;
+
+}
+
+/* ==========================================================
+   FLOATING CARD
+   ========================================================== */
+
+.hero-card{
+
+    position:absolute;
+
+    padding:18px;
+
+    background:#FFFFFF;
+
+    border:1px solid #E5E7EB;
+
+    border-radius:18px;
+
+    box-shadow:
+
+        0 12px 36px rgba(15,23,42,.08);
+
+}
+
+.hero-card-top{
+
+    top:24px;
+
+    left:-30px;
+
+}
+
+.hero-card-bottom{
+
+    right:-20px;
+
+    bottom:36px;
+
+}
+
+.hero-card-title{
+
+    font-size:15px;
+
+    font-weight:600;
+
+    color:#0F172A;
+
+}
+
+.hero-card-value{
+
+    margin-top:6px;
+
+    font-size:22px;
+
+    font-weight:700;
+
+    color:#0EA5A4;
+
+}
+
+/* ==========================================================
+   TRUST
+   ========================================================== */
+
+.hero-trust{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    margin-top:44px;
+
+    flex-wrap:wrap;
+
+}
+
+.hero-trust-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    color:#475569;
+
+    font-size:14px;
+
+}
+
+.hero-trust-item svg{
+
+    width:18px;
+
+    height:18px;
+
+    color:#10B981;
+
+}
+
+/* ==========================================================
+   RESPONSIVE
+   ========================================================== */
+
+@media(max-width:1024px){
+
+    .hero{
+
+        text-align:center;
+
+    }
+
+    .hero-content{
+
+        align-items:center;
+
+    }
+
+    .hero-actions{
+
+        justify-content:center;
+
+    }
+
+    .hero-stats{
+
+        justify-content:center;
+
+    }
+
+    .hero-trust{
+
+        justify-content:center;
+
+    }
+
+    .hero-card{
+
+        display:none;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .hero-dashboard{
+
+        max-width:100%;
+
+    }
+
+    .hero-stats{
+
+        flex-wrap:wrap;
+
+        gap:28px;
+
+    }
+
+    .hero-actions{
+
+        flex-direction:column;
+
+        width:100%;
+
+    }
+
+}
+
+@media(max-width:576px){
+
+    .hero-badge{
+
+        font-size:13px;
+
+        padding:8px 14px;
+
+    }
+
+    .hero-stat-number{
+
+        font-size:28px;
+
+    }
+
+}

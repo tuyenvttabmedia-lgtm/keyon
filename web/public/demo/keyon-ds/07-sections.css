@@ -1,0 +1,435 @@
+/* ==========================================================
+   KEYON UI Design System
+   File: 07-sections.css
+   Version: 1.0
+   ========================================================== */
+
+/* ==========================================================
+   SECTION HEADER
+   ========================================================== */
+
+.section-header{
+
+    display:flex;
+
+    align-items:flex-end;
+
+    justify-content:space-between;
+
+    gap:32px;
+
+    margin-bottom:56px;
+
+}
+
+.section-header-center{
+
+    flex-direction:column;
+
+    align-items:center;
+
+    text-align:center;
+
+}
+
+.section-header-left{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+}
+
+.section-header-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+
+}
+
+/* ==========================================================
+   SECTION LABEL
+   ========================================================== */
+
+.section-label{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:8px 16px;
+
+    margin-bottom:18px;
+
+    background:#F8FAFC;
+
+    border:1px solid #E2E8F0;
+
+    border-radius:999px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    color:#0EA5A4;
+
+    text-transform:uppercase;
+
+    letter-spacing:.08em;
+
+}
+
+/* ==========================================================
+   SECTION BACKGROUND
+   ========================================================== */
+
+.section-light{
+
+    background:#FFFFFF;
+
+}
+
+.section-gray{
+
+    background:#F8FAFC;
+
+}
+
+.section-dark{
+
+    background:#0F172A;
+
+    color:#FFFFFF;
+
+}
+
+.section-dark .section-title,
+
+.section-dark .section-description{
+
+    color:#FFFFFF;
+
+}
+
+/* ==========================================================
+   FEATURE SECTION
+   ========================================================== */
+
+.feature-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:64px;
+
+    align-items:center;
+
+}
+
+.feature-content{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.feature-media{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.feature-image{
+
+    width:100%;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+}
+
+/* ==========================================================
+   TRUST SECTION
+   ========================================================== */
+
+.trust-list{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:28px;
+
+}
+
+.trust-item{
+
+    padding:28px;
+
+    background:#FFFFFF;
+
+    border:1px solid #E5E7EB;
+
+    border-radius:18px;
+
+    transition:.25s;
+
+}
+
+.trust-item:hover{
+
+    border-color:#0EA5A4;
+
+    transform:translateY(-4px);
+
+}
+
+.trust-icon{
+
+    width:56px;
+
+    height:56px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:14px;
+
+    background:#ECFEFF;
+
+    margin-bottom:20px;
+
+}
+
+/* ==========================================================
+   LOGO CLOUD
+   ========================================================== */
+
+.logo-cloud{
+
+    display:grid;
+
+    grid-template-columns:repeat(6,1fr);
+
+    gap:24px;
+
+    align-items:center;
+
+}
+
+.logo-cloud-item{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    height:72px;
+
+    border:1px solid #E5E7EB;
+
+    border-radius:14px;
+
+    background:#FFFFFF;
+
+    transition:.25s;
+
+}
+
+.logo-cloud-item:hover{
+
+    border-color:#CBD5E1;
+
+    background:#F8FAFC;
+
+}
+
+/* ==========================================================
+   CTA SECTION
+   ========================================================== */
+
+.cta-section{
+
+    padding:72px;
+
+    border-radius:28px;
+
+    background:linear-gradient(
+        135deg,
+        #0EA5A4,
+        #0891B2
+    );
+
+    color:#FFFFFF;
+
+    text-align:center;
+
+}
+
+.cta-section .section-title,
+
+.cta-section .section-description{
+
+    color:#FFFFFF;
+
+}
+
+.cta-actions{
+
+    margin-top:36px;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:18px;
+
+}
+
+/* ==========================================================
+   FAQ SECTION
+   ========================================================== */
+
+.faq{
+
+    max-width:900px;
+
+    margin-inline:auto;
+
+}
+
+.faq-item{
+
+    border-bottom:1px solid #E5E7EB;
+
+}
+
+.faq-question{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:24px 0;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+    font-weight:600;
+
+}
+
+.faq-answer{
+
+    padding-bottom:24px;
+
+    color:#64748B;
+
+    line-height:1.8;
+
+}
+
+/* ==========================================================
+   RESPONSIVE
+   ========================================================== */
+
+@media(max-width:1024px){
+
+    .feature-grid{
+
+        grid-template-columns:1fr;
+
+        gap:48px;
+
+    }
+
+    .trust-list{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+    .logo-cloud{
+
+        grid-template-columns:repeat(3,1fr);
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .section-header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        margin-bottom:40px;
+
+    }
+
+    .section-header-center{
+
+        align-items:center;
+
+        text-align:center;
+
+    }
+
+    .trust-list{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .logo-cloud{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+    .cta-section{
+
+        padding:48px 24px;
+
+    }
+
+    .cta-actions{
+
+        flex-direction:column;
+
+    }
+
+}
+
+@media(max-width:576px){
+
+    .logo-cloud{
+
+        grid-template-columns:1fr;
+
+    }
+
+}

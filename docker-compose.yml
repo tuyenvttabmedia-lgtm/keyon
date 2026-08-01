@@ -1,0 +1,6 @@
+# DEPRECATED — dùng compose.dev.yaml / compose.prod.yaml
+# Giữ file này để tương thích lệnh cũ: docker compose up -d
+# Thực tế include stack DEV.
+
+include:
+  - path: compose.dev.yaml

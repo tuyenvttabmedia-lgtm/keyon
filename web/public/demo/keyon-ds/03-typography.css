@@ -1,0 +1,510 @@
+/* ==========================================================
+   KEYON UI Design System
+   File: 03-typography.css
+   Version: 1.0
+   ========================================================== */
+
+/* ==========================================================
+   ROOT
+   ========================================================== */
+
+body{
+
+    font-family:
+    Inter,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
+
+    color:#0F172A;
+
+    font-size:16px;
+
+    line-height:1.65;
+
+    font-weight:400;
+
+}
+
+/* ==========================================================
+   DISPLAY
+   ========================================================== */
+
+.display{
+
+    font-size:56px;
+
+    line-height:68px;
+
+    font-weight:700;
+
+    letter-spacing:-1.5px;
+
+    color:#0F172A;
+
+}
+
+/* ==========================================================
+   H1
+   ========================================================== */
+
+h1,
+.h1{
+
+    font-size:48px;
+
+    line-height:60px;
+
+    font-weight:700;
+
+    letter-spacing:-1px;
+
+    color:#0F172A;
+
+}
+
+/* ==========================================================
+   H2
+   ========================================================== */
+
+h2,
+.h2{
+
+    font-size:36px;
+
+    line-height:46px;
+
+    font-weight:700;
+
+    letter-spacing:-0.6px;
+
+    color:#0F172A;
+
+}
+
+/* ==========================================================
+   H3
+   ========================================================== */
+
+h3,
+.h3{
+
+    font-size:28px;
+
+    line-height:38px;
+
+    font-weight:700;
+
+    color:#0F172A;
+
+}
+
+/* ==========================================================
+   H4
+   ========================================================== */
+
+h4,
+.h4{
+
+    font-size:22px;
+
+    line-height:32px;
+
+    font-weight:600;
+
+    color:#0F172A;
+
+}
+
+/* ==========================================================
+   H5
+   ========================================================== */
+
+h5,
+.h5{
+
+    font-size:18px;
+
+    line-height:28px;
+
+    font-weight:600;
+
+    color:#0F172A;
+
+}
+
+/* ==========================================================
+   BODY
+   ========================================================== */
+
+.body-lg{
+
+    font-size:18px;
+
+    line-height:30px;
+
+    color:#475569;
+
+}
+
+body,
+.body{
+
+    font-size:16px;
+
+    line-height:28px;
+
+    color:#475569;
+
+}
+
+.body-sm{
+
+    font-size:14px;
+
+    line-height:24px;
+
+    color:#64748B;
+
+}
+
+.caption{
+
+    font-size:13px;
+
+    line-height:22px;
+
+    color:#94A3B8;
+
+}
+
+/* ==========================================================
+   HERO
+   ========================================================== */
+
+.hero-title{
+
+    max-width:560px;
+
+    font-size:58px;
+
+    line-height:70px;
+
+    font-weight:700;
+
+    letter-spacing:-1.6px;
+
+    color:#0F172A;
+
+}
+
+.hero-description{
+
+    max-width:540px;
+
+    margin-top:24px;
+
+    font-size:19px;
+
+    line-height:34px;
+
+    color:#475569;
+
+}
+
+/* ==========================================================
+   SECTION
+   ========================================================== */
+
+.section-title{
+
+    font-size:38px;
+
+    line-height:48px;
+
+    font-weight:700;
+
+    color:#0F172A;
+
+}
+
+.section-description{
+
+    margin-top:18px;
+
+    max-width:720px;
+
+    font-size:18px;
+
+    line-height:32px;
+
+    color:#64748B;
+
+}
+
+/* ==========================================================
+   PRODUCT
+   ========================================================== */
+
+.product-title{
+
+    font-size:18px;
+
+    line-height:28px;
+
+    font-weight:600;
+
+    color:#0F172A;
+
+}
+
+.product-meta{
+
+    margin-top:6px;
+
+    font-size:14px;
+
+    line-height:24px;
+
+    color:#64748B;
+
+}
+
+.product-price{
+
+    margin-top:18px;
+
+    font-size:24px;
+
+    line-height:30px;
+
+    font-weight:700;
+
+    color:#0EA5A4;
+
+}
+
+/* ==========================================================
+   CATEGORY
+   ========================================================== */
+
+.category-title{
+
+    font-size:18px;
+
+    line-height:28px;
+
+    font-weight:600;
+
+    color:#0F172A;
+
+}
+
+.category-description{
+
+    margin-top:8px;
+
+    font-size:14px;
+
+    line-height:24px;
+
+    color:#64748B;
+
+}
+
+/* ==========================================================
+   NEWS
+   ========================================================== */
+
+.news-title{
+
+    font-size:18px;
+
+    line-height:30px;
+
+    font-weight:600;
+
+    color:#0F172A;
+
+}
+
+.news-date{
+
+    margin-top:10px;
+
+    font-size:13px;
+
+    color:#94A3B8;
+
+}
+
+/* ==========================================================
+   LINK
+   ========================================================== */
+
+.link{
+
+    color:#0EA5A4;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+.link:hover{
+
+    color:#089191;
+
+}
+
+/* ==========================================================
+   TEXT
+   ========================================================== */
+
+.text-center{
+
+    text-align:center;
+
+}
+
+.text-left{
+
+    text-align:left;
+
+}
+
+.text-right{
+
+    text-align:right;
+
+}
+
+.text-primary{
+
+    color:#0EA5A4;
+
+}
+
+.text-dark{
+
+    color:#0F172A;
+
+}
+
+.text-body{
+
+    color:#475569;
+
+}
+
+.text-light{
+
+    color:#94A3B8;
+
+}
+
+/* ==========================================================
+   RESPONSIVE
+   ========================================================== */
+
+@media(max-width:1024px){
+
+    .hero-title{
+
+        font-size:46px;
+
+        line-height:58px;
+
+    }
+
+    h1{
+
+        font-size:40px;
+
+        line-height:50px;
+
+    }
+
+    .section-title{
+
+        font-size:34px;
+
+        line-height:42px;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .hero-title{
+
+        font-size:38px;
+
+        line-height:48px;
+
+    }
+
+    h1{
+
+        font-size:34px;
+
+        line-height:44px;
+
+    }
+
+    h2{
+
+        font-size:30px;
+
+        line-height:40px;
+
+    }
+
+    .section-title{
+
+        font-size:30px;
+
+        line-height:40px;
+
+    }
+
+    .hero-description{
+
+        font-size:17px;
+
+        line-height:30px;
+
+    }
+
+}
+
+@media(max-width:576px){
+
+    .hero-title{
+
+        font-size:32px;
+
+        line-height:42px;
+
+    }
+
+    h1{
+
+        font-size:30px;
+
+        line-height:40px;
+
+    }
+
+    h2{
+
+        font-size:26px;
+
+        line-height:36px;
+
+    }
+
+}

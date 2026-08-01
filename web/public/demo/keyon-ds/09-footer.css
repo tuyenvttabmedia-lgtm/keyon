@@ -1,0 +1,369 @@
+/* ==========================================================
+   KEYON UI Design System
+   File: 09-footer.css
+   Version: 1.0
+   ========================================================== */
+
+/* ==========================================================
+   FOOTER
+   ========================================================== */
+
+.footer{
+
+    background:#0F172A;
+
+    color:#CBD5E1;
+
+}
+
+.footer-top{
+
+    padding:72px 0 56px;
+
+}
+
+.footer-bottom{
+
+    border-top:1px solid rgba(255,255,255,.08);
+
+    padding:24px 0;
+
+}
+
+/* ==========================================================
+   GRID
+   ========================================================== */
+
+.footer-grid{
+
+    display:grid;
+
+    grid-template-columns:2fr 1fr 1fr 1fr 1.4fr;
+
+    gap:48px;
+
+}
+
+/* ==========================================================
+   BRAND
+   ========================================================== */
+
+.footer-brand{
+
+    max-width:360px;
+
+}
+
+.footer-logo{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    margin-bottom:20px;
+
+}
+
+.footer-logo img{
+
+    height:40px;
+
+    width:auto;
+
+}
+
+.footer-description{
+
+    margin-bottom:24px;
+
+    color:#94A3B8;
+
+    line-height:1.8;
+
+}
+
+/* ==========================================================
+   SOCIAL
+   ========================================================== */
+
+.footer-social{
+
+    display:flex;
+
+    gap:12px;
+
+}
+
+.footer-social a{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:12px;
+
+    background:rgba(255,255,255,.05);
+
+    transition:.25s;
+
+}
+
+.footer-social a:hover{
+
+    background:#0EA5A4;
+
+}
+
+.footer-social svg{
+
+    width:18px;
+
+    height:18px;
+
+}
+
+/* ==========================================================
+   COLUMN
+   ========================================================== */
+
+.footer-title{
+
+    margin-bottom:22px;
+
+    font-size:17px;
+
+    font-weight:600;
+
+    color:#FFFFFF;
+
+}
+
+.footer-links{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
+
+}
+
+.footer-links a{
+
+    color:#94A3B8;
+
+    transition:.25s;
+
+}
+
+.footer-links a:hover{
+
+    color:#FFFFFF;
+
+    padding-left:6px;
+
+}
+
+/* ==========================================================
+   CONTACT
+   ========================================================== */
+
+.footer-contact{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:16px;
+
+}
+
+.footer-contact-item{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:12px;
+
+}
+
+.footer-contact-item svg{
+
+    width:18px;
+
+    height:18px;
+
+    margin-top:2px;
+
+    color:#0EA5A4;
+
+}
+
+.footer-contact-text{
+
+    color:#94A3B8;
+
+    line-height:1.7;
+
+}
+
+/* ==========================================================
+   PAYMENT
+   ========================================================== */
+
+.footer-payment{
+
+    margin-top:32px;
+
+}
+
+.payment-list{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+}
+
+.payment-item{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    width:64px;
+
+    height:40px;
+
+    background:#FFFFFF;
+
+    border-radius:10px;
+
+}
+
+/* ==========================================================
+   CERTIFICATIONS
+   ========================================================== */
+
+.footer-certifications{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:16px;
+
+    margin-top:32px;
+
+}
+
+.footer-certifications img{
+
+    height:42px;
+
+    width:auto;
+
+}
+
+/* ==========================================================
+   COPYRIGHT
+   ========================================================== */
+
+.footer-bottom-inner{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:24px;
+
+}
+
+.footer-copyright{
+
+    color:#64748B;
+
+    font-size:14px;
+
+}
+
+.footer-bottom-links{
+
+    display:flex;
+
+    gap:24px;
+
+}
+
+.footer-bottom-links a{
+
+    color:#94A3B8;
+
+    font-size:14px;
+
+    transition:.25s;
+
+}
+
+.footer-bottom-links a:hover{
+
+    color:#FFFFFF;
+
+}
+
+/* ==========================================================
+   RESPONSIVE
+   ========================================================== */
+
+@media(max-width:1024px){
+
+    .footer-grid{
+
+        grid-template-columns:repeat(2,1fr);
+
+        gap:40px;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .footer-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .footer-bottom-inner{
+
+        flex-direction:column;
+
+        text-align:center;
+
+    }
+
+    .footer-bottom-links{
+
+        flex-wrap:wrap;
+
+        justify-content:center;
+
+    }
+
+}

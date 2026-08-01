@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KEYON Home Demo v7 — Digital License</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/demo/keyon-ds/10-variables.css" />
+  <link rel="stylesheet" href="/demo/keyon-ds/01-reset.css" />
+  <link rel="stylesheet" href="/demo/keyon-ds/02-layout.css" />
+  <link rel="stylesheet" href="/demo/keyon-ds/03-typography.css" />
+  <link rel="stylesheet" href="/demo/keyon-ds/04-buttons.css" />
+  <link rel="stylesheet" href="/demo/keyon-ds/05-navbar.css" />
+  <link rel="stylesheet" href="/demo/keyon-ds/06-hero.css" />
+  <link rel="stylesheet" href="/demo/keyon-ds/07-sections.css" />
+  <link rel="stylesheet" href="/demo/keyon-ds/08-cards.css" />
+  <link rel="stylesheet" href="/demo/keyon-ds/09-footer.css" />
+  <link rel="stylesheet" href="/demo/keyon-ds/11-utilities.css" />
+  <link rel="stylesheet" href="/demo/keyon-ds/12-motion.css" />
+  <link rel="stylesheet" href="/demo/keyon-ds/21-badge.css" />
+  <link rel="stylesheet" href="./demo-home.css" />
+</head>
+<body>
+  <div class="demo-banner">
+    Archive demo — Home chính thức đã áp dụng tại
+    <a href="/">/</a> ·
+    <a href="/demo/home">/demo/home</a>
+  </div>
+
+  <!-- ========== HEADER ========== -->
+  <header class="header">
+    <div class="container header-inner">
+      <a class="logo" href="/demo/home">
+        <span class="logo-mark">K</span>
+        <span class="logo-stack">
+          <span class="logo-text">KEYON</span>
+          <small>Digital License Platform</small>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Main">
+        <div class="nav-item"><a class="nav-link" href="#">Nền tảng</a></div>
+        <div class="nav-item"><a class="nav-link" href="#">Sản phẩm <span class="chev">▾</span></a></div>
+        <div class="nav-item"><a class="nav-link" href="#">Giải pháp <span class="chev">▾</span></a></div>
+        <div class="nav-item"><a class="nav-link" href="#">Bảng giá</a></div>
+        <div class="nav-item"><a class="nav-link" href="#">Tin tức</a></div>
+        <div class="nav-item"><a class="nav-link" href="#">Hỗ trợ <span class="chev">▾</span></a></div>
+      </nav>
+
+      <div class="header-actions" style="display:flex;align-items:center;gap:10px">
+        <div class="header-utils">
+          <button class="icon-btn" type="button" aria-label="Tìm kiếm">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+          </button>
+          <button class="icon-btn" type="button" aria-label="Giỏ hàng">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1"/><circle cx="17" cy="20" r="1"/><path d="M3 4h2l2.4 11h9.6l2-8H7"/></svg>
+            <span class="cart-badge">1</span>
+          </button>
+        </div>
+        <a class="btn btn-ghost btn-sm" href="#">Đăng nhập</a>
+        <a class="btn btn-primary btn-sm" href="#">Đăng ký</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <div class="hero-badge">DIGITAL LICENSE PLATFORM</div>
+        <h1 class="h1 mt-24">
+          Nền tảng phân phối bản quyền số
+          <span class="accent-text">toàn diện</span>
+        </h1>
+        <p class="text-lg text-muted mt-24" style="max-width:480px">
+          Cung cấp công cụ mua và quản lý giấy phép phần mềm chính hãng — thanh toán rõ, giao đúng loại nhận, lưu trong Tài khoản.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#">Khám phá sản phẩm →</a>
+          <a class="btn btn-outline" href="#">Dành cho doanh nghiệp</a>
+        </div>
+        <div class="hero-trust">
+          <div class="hero-trust-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="m5 13 4 4L19 7"/></svg>
+            100% Chính hãng
+          </div>
+          <div class="hero-trust-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg>
+            Giao hàng tức thì
+          </div>
+          <div class="hero-trust-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 22a8 8 0 0 0 8-8V7l-8-4-8 4v7a8 8 0 0 0 8 8Z"/></svg>
+            Hỗ trợ 24/7
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-media">
+        <div class="dash">
+          <div class="dash-head">
+            <strong>Tổng quan</strong>
+            <span class="text-sm text-muted">Hôm nay</span>
+          </div>
+          <div class="dash-body">
+            <div class="dash-stats">
+              <div class="dash-stat">
+                <div class="label">Tổng license</div>
+                <div class="value">12.584</div>
+                <div class="delta">↑ 12%</div>
+              </div>
+              <div class="dash-stat">
+                <div class="label">Đã kích hoạt</div>
+                <div class="value">8.921</div>
+                <div class="delta">↑ 8%</div>
+              </div>
+              <div class="dash-stat">
+                <div class="label">Sắp hết hạn</div>
+                <div class="value">1.243</div>
+                <div class="delta down">↓ 3%</div>
+              </div>
+            </div>
+            <div class="dash-flow-title">License Lifecycle</div>
+            <div class="dash-flow">
+              <div class="dash-step">Mua</div>
+              <span class="dash-arrow">→</span>
+              <div class="dash-step">Nhận</div>
+              <span class="dash-arrow">→</span>
+              <div class="dash-step">Kích hoạt</div>
+              <span class="dash-arrow">→</span>
+              <div class="dash-step">Quản lý</div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-card hero-card-bottom">
+          <div class="hero-card-title">Trusted by</div>
+          <div class="hero-card-value">10.000+</div>
+          <div class="text-sm text-muted">doanh nghiệp</div>
+          <div class="hero-card-avatars">
+            <span class="avatar" style="background:#0ea5a4"></span>
+            <span class="avatar" style="background:#2563eb"></span>
+            <span class="avatar" style="background:#7c3aed"></span>
+            <span class="avatar" style="background:#ea580c"></span>
+            <span class="text-sm text-muted" style="margin-left:8px">xem thêm →</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PARTNERS ========== -->
+  <div class="container">
+    <div class="trust-section">
+      <p class="trust-title">Đối tác tin cậy của KEYON</p>
+      <div class="trust-bar">
+        <div class="partners" aria-label="Đối tác">
+          <span class="partner" title="Microsoft" aria-label="Microsoft">
+            <svg viewBox="0 0 120 24" xmlns="http://www.w3.org/2000/svg" fill="#64748B">
+              <rect x="0" y="2" width="9" height="9"/><rect x="11" y="2" width="9" height="9"/>
+              <rect x="0" y="13" width="9" height="9"/><rect x="11" y="13" width="9" height="9"/>
+              <text x="28" y="17" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600">Microsoft</text>
+            </svg>
+          </span>
+          <span class="partner" title="Adobe" aria-label="Adobe">
+            <svg viewBox="0 0 72 24" xmlns="http://www.w3.org/2000/svg" fill="#64748B">
+              <path d="M12.5 2.5 2 21.5h4.2l1.9-4.2h7.8l1.9 4.2H22L12.5 2.5Zm.1 5.2 2.5 5.4H10.1l2.5-5.4Z"/>
+              <text x="28" y="17" font-family="Arial, sans-serif" font-size="13" font-weight="700">Adobe</text>
+            </svg>
+          </span>
+          <span class="partner" title="Autodesk" aria-label="Autodesk">
+            <svg viewBox="0 0 100 24" xmlns="http://www.w3.org/2000/svg" fill="#64748B">
+              <path d="M8 3.5 1 20.5h3.6l1.4-3.2h6.6l1.4 3.2H17L10 3.5H8Zm1.8 4.2 2.2 4.8H7.6l2.2-4.8Z"/>
+              <text x="22" y="17" font-family="Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="0.5">AUTODESK</text>
+            </svg>
+          </span>
+          <span class="partner" title="VMware" aria-label="VMware">
+            <svg viewBox="0 0 84 24" xmlns="http://www.w3.org/2000/svg" fill="#64748B">
+              <text x="0" y="17" font-family="Arial, sans-serif" font-size="14" font-weight="700" font-style="italic">vmware</text>
+            </svg>
+          </span>
+          <span class="partner" title="Kaspersky" aria-label="Kaspersky">
+            <svg viewBox="0 0 100 24" xmlns="http://www.w3.org/2000/svg" fill="#64748B">
+              <path d="M3 4h3.2v6.4L11.8 4H16L10 10.4 16.4 20h-4.2L8.2 13.2V20H3V4Z"/>
+              <text x="20" y="17" font-family="Arial, sans-serif" font-size="12" font-weight="600">kaspersky</text>
+            </svg>
+          </span>
+          <span class="partner" title="Acronis" aria-label="Acronis">
+            <svg viewBox="0 0 84 24" xmlns="http://www.w3.org/2000/svg" fill="#64748B">
+              <circle cx="8" cy="12" r="6" fill="none" stroke="#64748B" stroke-width="2"/>
+              <path d="M8 7.5v9M5.2 9.2l5.6 5.6M5.2 14.8l5.6-5.6" stroke="#64748B" stroke-width="1.4"/>
+              <text x="20" y="17" font-family="Arial, sans-serif" font-size="13" font-weight="600">Acronis</text>
+            </svg>
+          </span>
+        </div>
+        <div class="sec-pills">
+          <span class="sec-pill"><i></i> ISO 27001 · GDPR</span>
+          <span class="sec-pill"><i></i> PCI DSS Compliant</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== CATEGORIES ========== -->
+  <section class="section section-sm">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="section-kicker">Catalog</div>
+          <h2 class="h2">Danh mục sản phẩm</h2>
+        </div>
+        <a class="section-link" href="#">Xem tất cả danh mục →</a>
+      </div>
+      <div class="category-grid">
+        <article class="card category-card">
+          <div class="category-icon win">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5 10.5 4.4v6.7H3V5.5Zm0 7.4h7.5v6.7L3 18.5v-5.6Zm8.7-8.3L21 3v8.1h-9.3V4.6Zm0 9.5H21V21l-9.3-1.3v-5.6Z"/></svg>
+          </div>
+          <h3>Hệ điều hành</h3>
+          <p>Windows 11, Windows Server, SQL Server…</p>
+          <a class="section-link" href="#">Xem thêm →</a>
+        </article>
+        <article class="card category-card">
+          <div class="category-icon office">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+          </div>
+          <h3>Microsoft Office</h3>
+          <p>Microsoft 365, Office 2021, Visio, Project…</p>
+          <a class="section-link" href="#">Xem thêm →</a>
+        </article>
+        <article class="card category-card">
+          <div class="category-icon adobe">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 4 21h4.2l1.5-3.8h4.6L16 21h4L12 3Zm.1 6.4 1.7 4.4h-3.4l1.7-4.4Z"/></svg>
+          </div>
+          <h3>Adobe</h3>
+          <p>Creative Cloud, Acrobat Pro, Photoshop…</p>
+          <a class="section-link" href="#">Xem thêm →</a>
+        </article>
+        <article class="card category-card">
+          <div class="category-icon cloud">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 18h10a4 4 0 0 0 0-8 5.5 5.5 0 0 0-10.5 1.5A3.5 3.5 0 0 0 7 18Z"/></svg>
+          </div>
+          <h3>Cloud &amp; Server</h3>
+          <p>VMware, Windows Server, hosting tools…</p>
+          <a class="section-link" href="#">Xem thêm →</a>
+        </article>
+        <article class="card category-card">
+          <div class="category-icon sec">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 4.5 6v5.5c0 4.5 3.2 7.8 7.5 9 4.3-1.2 7.5-4.5 7.5-9V6L12 3Z"/><path d="m9 12 2 2 4-4"/></svg>
+          </div>
+          <h3>Bảo mật</h3>
+          <p>Defender, Kaspersky, Acronis…</p>
+          <a class="section-link" href="#">Xem thêm →</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FEATURED PRODUCTS ========== -->
+  <section class="section section-sm section-gray">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="section-kicker">Featured</div>
+          <h2 class="h2">Sản phẩm nổi bật</h2>
+        </div>
+        <a class="section-link" href="#">Xem tất cả sản phẩm →</a>
+      </div>
+      <div class="product-grid-4">
+        <article class="card product-card">
+          <div class="product-thumbnail"><div class="product-art art-win">W11</div></div>
+          <div class="product-body">
+            <div class="product-category">Windows</div>
+            <h3 class="product-title">Windows 11 Professional</h3>
+            <p class="product-description">Retail · 1 PC</p>
+            <div class="product-footer">
+              <span class="product-price">499.000 đ</span>
+              <button class="cart-fab" type="button" aria-label="Thêm giỏ">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1"/><circle cx="17" cy="20" r="1"/><path d="M3 4h2l2.4 11h9.6l2-8H7"/></svg>
+              </button>
+            </div>
+          </div>
+        </article>
+        <article class="card product-card">
+          <div class="product-thumbnail"><div class="product-art art-office">365</div></div>
+          <div class="product-body">
+            <div class="product-category">Office</div>
+            <h3 class="product-title">Microsoft 365 Personal</h3>
+            <p class="product-description">1 năm · 1 user</p>
+            <div class="product-footer">
+              <span class="product-price">1.290.000 đ</span>
+              <button class="cart-fab" type="button" aria-label="Thêm giỏ">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1"/><circle cx="17" cy="20" r="1"/><path d="M3 4h2l2.4 11h9.6l2-8H7"/></svg>
+              </button>
+            </div>
+          </div>
+        </article>
+        <article class="card product-card">
+          <div class="product-thumbnail"><div class="product-art art-def">MD</div></div>
+          <div class="product-body">
+            <div class="product-category">Security</div>
+            <h3 class="product-title">Microsoft Defender</h3>
+            <p class="product-description">Kích hoạt · hướng dẫn</p>
+            <div class="product-footer">
+              <span class="product-price">199.000 đ</span>
+              <button class="cart-fab" type="button" aria-label="Thêm giỏ">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1"/><circle cx="17" cy="20" r="1"/><path d="M3 4h2l2.4 11h9.6l2-8H7"/></svg>
+              </button>
+            </div>
+          </div>
+        </article>
+        <article class="card product-card">
+          <div class="product-thumbnail"><div class="product-art art-adobe">Aa</div></div>
+          <div class="product-body">
+            <div class="product-category">Adobe</div>
+            <h3 class="product-title">Adobe Acrobat Pro</h3>
+            <p class="product-description">Subscription · 1 năm</p>
+            <div class="product-footer">
+              <span class="product-price">2.490.000 đ</span>
+              <button class="cart-fab" type="button" aria-label="Thêm giỏ">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1"/><circle cx="17" cy="20" r="1"/><path d="M3 4h2l2.4 11h9.6l2-8H7"/></svg>
+              </button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== WHY KEYON ========== -->
+  <section class="section">
+    <div class="container">
+      <div class="why-layout">
+        <div class="feature-content">
+          <div class="section-kicker">Why KEYON</div>
+          <h2 class="h2">Vì sao chọn KEYON?</h2>
+          <p class="text-muted mt-24">
+            Minh bạch đơn hàng, đúng loại nhận, lưu giấy phép trong Tài khoản — vận hành rõ ràng cho cá nhân và doanh nghiệp.
+          </p>
+          <a class="btn btn-outline mt-32" href="#">Tìm hiểu thêm →</a>
+        </div>
+
+        <div class="why-grid">
+          <div class="why-item">
+            <div class="why-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 4.5 6v5.5c0 4.5 3.2 7.8 7.5 9 4.3-1.2 7.5-4.5 7.5-9V6L12 3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+            <div><h4>Bản quyền chính hãng</h4><p>Nguồn cung rõ ràng, hóa đơn đầy đủ.</p></div>
+          </div>
+          <div class="why-item">
+            <div class="why-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg></div>
+            <div><h4>Giao hàng tức thì</h4><p>Key / tài khoản / kích hoạt sau thanh toán.</p></div>
+          </div>
+          <div class="why-item">
+            <div class="why-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+            <div><h4>Giá tốt nhất</h4><p>So sánh gói và loại nhận trước khi mua.</p></div>
+          </div>
+          <div class="why-item">
+            <div class="why-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg></div>
+            <div><h4>Thanh toán an toàn</h4><p>PCI DSS · nhiều cổng thanh toán.</p></div>
+          </div>
+          <div class="why-item">
+            <div class="why-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 13.5v-2a7.5 7.5 0 0 1 15 0v2"/><path d="M4.5 13.5a2 2 0 0 0 2 2H8v-5H6.5a2 2 0 0 0-2 2v1Z"/><path d="M19.5 13.5a2 2 0 0 1-2 2H16v-5h1.5a2 2 0 0 1 2 2v1Z"/></svg></div>
+            <div><h4>Hỗ trợ 24/7</h4><p>Kênh hỗ trợ khi kích hoạt gặp sự cố.</p></div>
+          </div>
+          <div class="why-item">
+            <div class="why-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9"/><path d="M3 4v8h8"/></svg></div>
+            <div><h4>Hoàn tiền linh hoạt</h4><p>Chính sách rõ — xem điều khoản chi tiết.</p></div>
+          </div>
+        </div>
+
+        <div class="shield-art" aria-hidden="true">
+          <span class="shield-orbit a">API</span>
+          <span class="shield-orbit b">SSL</span>
+          <span class="shield-orbit c">ISO</span>
+          <svg class="shield-svg" viewBox="0 0 120 140" fill="none">
+            <path d="M60 8 12 28v36c0 36 26 58 48 66 22-8 48-30 48-66V28L60 8Z" fill="#0EA5A4"/>
+            <path d="M60 22 28 36v26c0 26 18 42 32 48 14-6 32-22 32-48V36L60 22Z" fill="#14B8A6"/>
+            <text x="60" y="88" text-anchor="middle" fill="#fff" font-size="42" font-weight="800" font-family="Inter,sans-serif">K</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== BUSINESS ========== -->
+  <section class="section section-sm section-gray">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="section-kicker">Enterprise</div>
+          <h2 class="h2">Giải pháp cho doanh nghiệp</h2>
+        </div>
+      </div>
+      <div class="cards cards-4">
+        <article class="card solution-card">
+          <h3>Quản lý tập trung</h3>
+          <p>Theo dõi giấy phép theo đơn vị, dự án và vòng đời sử dụng.</p>
+          <div class="solution-art sol-a">
+            <svg width="64" height="48" viewBox="0 0 64 48" fill="none"><rect x="4" y="20" width="14" height="24" rx="3" fill="#0EA5A4" opacity=".85"/><rect x="25" y="8" width="14" height="36" rx="3" fill="#0EA5A4"/><rect x="46" y="14" width="14" height="30" rx="3" fill="#0EA5A4" opacity=".7"/></svg>
+          </div>
+        </article>
+        <article class="card solution-card">
+          <h3>Tối ưu chi phí</h3>
+          <p>Báo cáo ngân sách phần mềm, tránh mua trùng và lãng phí license.</p>
+          <div class="solution-art sol-b">
+            <svg width="64" height="48" viewBox="0 0 64 48" fill="none"><path d="M6 38 22 24 34 30 58 10" stroke="#2563EB" stroke-width="3" stroke-linecap="round"/><circle cx="58" cy="10" r="4" fill="#2563EB"/></svg>
+          </div>
+        </article>
+        <article class="card solution-card">
+          <h3>Tích hợp API linh hoạt</h3>
+          <p>Kết nối hệ thống nội bộ, tự động hóa cấp phát (roadmap).</p>
+          <div class="solution-art sol-c">
+            <svg width="64" height="48" viewBox="0 0 64 48" fill="none"><rect x="8" y="14" width="20" height="20" rx="4" stroke="#7C3AED" stroke-width="2.5"/><rect x="36" y="14" width="20" height="20" rx="4" stroke="#7C3AED" stroke-width="2.5"/><path d="M28 24h8" stroke="#7C3AED" stroke-width="2.5"/></svg>
+          </div>
+        </article>
+        <article class="card solution-card">
+          <h3>Hỗ trợ chuyên nghiệp</h3>
+          <p>Kênh CS ưu tiên, SLA rõ ràng cho tài khoản doanh nghiệp.</p>
+          <div class="solution-art sol-d">
+            <svg width="64" height="48" viewBox="0 0 64 48" fill="none"><path d="M18 28v-4a14 14 0 0 1 28 0v4" stroke="#16A34A" stroke-width="2.5"/><rect x="12" y="28" width="10" height="12" rx="3" fill="#16A34A"/><rect x="42" y="28" width="10" height="12" rx="3" fill="#16A34A"/></svg>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== NEWS ========== -->
+  <section class="section section-sm">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="section-kicker">Blog</div>
+          <h2 class="h2">Tin tức &amp; cập nhật</h2>
+        </div>
+        <a class="section-link" href="#">Xem tất cả bài viết →</a>
+      </div>
+      <div class="news-grid">
+        <article class="card news-card">
+          <div class="news-image thumb-1"></div>
+          <div class="news-body">
+            <span class="news-tag tag-win">Windows</span>
+            <div class="news-meta">20/05/2024</div>
+            <h3 class="h6" style="margin:0 0 8px;font-size:14px;font-weight:700;line-height:1.35">5 lý do nên mua phần mềm bản quyền</h3>
+            <a class="section-link" href="#">Đọc thêm →</a>
+          </div>
+        </article>
+        <article class="card news-card">
+          <div class="news-image thumb-2"></div>
+          <div class="news-body">
+            <span class="news-tag tag-ms">Microsoft</span>
+            <div class="news-meta">15/05/2024</div>
+            <h3 class="h6" style="margin:0 0 8px;font-size:14px;font-weight:700;line-height:1.35">Windows 11: tính năng mới nổi bật</h3>
+            <a class="section-link" href="#">Đọc thêm →</a>
+          </div>
+        </article>
+        <article class="card news-card">
+          <div class="news-image thumb-3"></div>
+          <div class="news-body">
+            <span class="news-tag tag-sec">Bảo mật</span>
+            <div class="news-meta">10/05/2024</div>
+            <h3 class="h6" style="margin:0 0 8px;font-size:14px;font-weight:700;line-height:1.35">Bảo vệ thiết bị với Microsoft Defender</h3>
+            <a class="section-link" href="#">Đọc thêm →</a>
+          </div>
+        </article>
+        <article class="card news-card">
+          <div class="news-image thumb-4"></div>
+          <div class="news-body">
+            <span class="news-tag tag-adobe">Adobe</span>
+            <div class="news-meta">05/05/2024</div>
+            <h3 class="h6" style="margin:0 0 8px;font-size:14px;font-weight:700;line-height:1.35">Chọn gói Creative Cloud phù hợp</h3>
+            <a class="section-link" href="#">Đọc thêm →</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CTA ========== -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="cta-banner">
+        <div>
+          <h3>Sẵn sàng trải nghiệm giải pháp số tối ưu?</h3>
+          <p>Hàng nghìn khách hàng đã tin dùng KEYON để mua và quản lý giấy phép.</p>
+        </div>
+        <a class="btn btn-primary" href="#">Tạo tài khoản ngay →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="container footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <span class="logo-mark">K</span>
+            <strong style="color:#fff;font-size:20px">KEYON</strong>
+          </div>
+          <p class="footer-description">Nền tảng phân phối bản quyền số — thanh toán rõ, nhận hàng rõ, quản lý trong Tài khoản.</p>
+          <div class="footer-social">
+            <a href="#" aria-label="Facebook">f</a>
+            <a href="#" aria-label="YouTube">▶</a>
+            <a href="#" aria-label="LinkedIn">in</a>
+            <a href="#" aria-label="Email">✉</a>
+          </div>
+        </div>
+        <div>
+          <p class="footer-col-title">Sản phẩm</p>
+          <ul class="footer-list">
+            <li><a href="#">Windows</a></li>
+            <li><a href="#">Microsoft Office</a></li>
+            <li><a href="#">Adobe</a></li>
+            <li><a href="#">Bảo mật</a></li>
+            <li><a href="#">Autodesk</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Về KEYON</p>
+          <ul class="footer-list">
+            <li><a href="#">Giới thiệu</a></li>
+            <li><a href="#">Tin tức</a></li>
+            <li><a href="#">Chính sách</a></li>
+            <li><a href="#">Điều khoản</a></li>
+            <li><a href="#">Liên hệ</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Hỗ trợ</p>
+          <ul class="footer-list">
+            <li><a href="#">Trung tâm hỗ trợ</a></li>
+            <li><a href="#">Hướng dẫn nhận hàng</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Yêu cầu hỗ trợ</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-col-title">Liên hệ</p>
+          <ul class="footer-list">
+            <li><a href="tel:+84900000000">+84 900 000 000</a></li>
+            <li><a href="mailto:support@keyon.vn">support@keyon.vn</a></li>
+            <li><span style="color:#94a3b8;font-size:14px;line-height:1.6">Đà Nẵng, Việt Nam</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;align-items:center">
+        <span style="font-size:13px;color:#64748b">© 2024 KEYON. All rights reserved.</span>
+        <div class="pay-row">
+          <span class="pay-chip">PCI DSS</span>
+          <span class="pay-chip">ISO</span>
+          <span class="pay-chip">SSL</span>
+          <span class="pay-chip">VISA</span>
+          <span class="pay-chip">Mastercard</span>
+          <span class="pay-chip">MoMo</span>
+          <span class="pay-chip">ZaloPay</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
