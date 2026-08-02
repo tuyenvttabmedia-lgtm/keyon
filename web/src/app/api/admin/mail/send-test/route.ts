@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { isStaff, readSession } from "@/lib/auth";
+import { staffHasCapability } from "@/lib/staff-access";
 import { getMailSettingsPublic } from "@/server/mail/config";
 import { sendMail } from "@/server/mail";
 
 async function requireAdmin() {
   const session = await readSession();
   if (!session || !isStaff(session.role)) return null;
-  if (session.role === "CS") return null;
+  if (!staffHasCapability(session.role, "settings")) return null;
   return session;
 }
 
@@ -20,11 +21,11 @@ export async function POST(req: Request) {
   try {
     const body = z
       .object({
-        to: z.string().email().optional(),
+        to: z.string().trim().email("Email nhận thử không hợp lệ"),
       })
       .parse(await req.json().catch(() => ({})));
 
-    const to = body.to?.trim() || session.email;
+    const to = body.to;
     await sendMail({
       to,
       subject: "[KEYON] Test SMTP",
@@ -38,10 +39,16 @@ export async function POST(req: Request) {
       data: await getMailSettingsPublic(),
     });
   } catch (e) {
+    const error =
+      e instanceof z.ZodError
+        ? (e.issues[0]?.message ?? "Email nhận thử không hợp lệ")
+        : e instanceof Error
+          ? e.message
+          : "Gửi thất bại";
     return NextResponse.json(
       {
         ok: false,
-        error: e instanceof Error ? e.message : "Gửi thất bại",
+        error,
         data: await getMailSettingsPublic(),
       },
       { status: 400 },

@@ -4,6 +4,7 @@ import { isStaff, readSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { audit } from "@/lib/audit";
 import { AppError, toErrorResponse } from "@/lib/errors";
+import { assertStaffCapability } from "@/lib/staff-access";
 import { LicensePoolService } from "@/server/license-pool";
 
 const schema = z.object({ orderId: z.string().min(1) });
@@ -14,6 +15,7 @@ export async function POST(req: Request) {
     if (!session || !isStaff(session.role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    assertStaffCapability(session.role, "orders", "Không có quyền hủy đơn");
     const { orderId } = schema.parse(await req.json());
     const order = await prisma.order.findUnique({
       where: { id: orderId },

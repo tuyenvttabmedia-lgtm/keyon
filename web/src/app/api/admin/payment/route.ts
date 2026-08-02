@@ -42,6 +42,13 @@ export async function PUT(req: Request) {
     })
     .parse(body);
 
+  if (parsed.provider === "payos" || parsed.provider === "megapay") {
+    return NextResponse.json(
+      { error: "PayOS / MegaPay chưa được hỗ trợ — chọn Stub hoặc SePay" },
+      { status: 400 },
+    );
+  }
+
   if (parsed.provider === "sepay") {
     if (!parsed.sepay.accountNumber.trim() || !parsed.sepay.bankBin.trim()) {
       return NextResponse.json(

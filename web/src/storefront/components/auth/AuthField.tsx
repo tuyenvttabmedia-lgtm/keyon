@@ -1,29 +1,43 @@
 "use client";
 
-import type {
-  InputHTMLAttributes,
-  ReactNode,
-  TextareaHTMLAttributes,
+import {
+  forwardRef,
+  type InputHTMLAttributes,
+  type ReactNode,
+  type TextareaHTMLAttributes,
 } from "react";
-import { FORM_LABEL_CLASS, INPUT_TEXT_CLASS } from "@/storefront/typography";
+import { FORM_ERROR_CLASS, FORM_LABEL_CLASS, INPUT_TEXT_CLASS } from "@/storefront/typography";
 import { TRANSITION_UI } from "@/storefront/effects";
 
 type Props = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   leftIcon?: ReactNode;
   rightSlot?: ReactNode;
+  error?: string | null;
+  describedBy?: string;
 };
 
 /** Auth inputs — Home color tokens, mockup rounded-xl + icons. */
-export function AuthField({
-  label,
-  leftIcon,
-  rightSlot,
-  className = "",
-  ...input
-}: Props) {
+export const AuthField = forwardRef<HTMLInputElement, Props>(function AuthField(
+  {
+    label,
+    leftIcon,
+    rightSlot,
+    className = "",
+    error,
+    describedBy,
+    id,
+    ...input
+  },
+  ref,
+) {
+  const fieldId = id ?? input.name;
+  const errorId = error && fieldId ? `${fieldId}-error` : undefined;
+  const described =
+    [describedBy, errorId].filter(Boolean).join(" ") || undefined;
+
   return (
-    <label className="block">
+    <label className="block" htmlFor={fieldId}>
       <span className={FORM_LABEL_CLASS}>{label}</span>
       <div className="relative mt-1.5">
         {leftIcon ? (
@@ -33,9 +47,13 @@ export function AuthField({
         ) : null}
         <input
           {...input}
-          className={`h-11 w-full rounded-lg border border-border bg-card outline-none ${TRANSITION_UI} placeholder:text-muted/70 focus:border-accent ${INPUT_TEXT_CLASS} ${
-            leftIcon ? "pl-10" : "pl-3"
-          } ${rightSlot ? "pr-11" : "pr-3"} ${className}`}
+          ref={ref}
+          id={fieldId}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={described}
+          className={`h-11 w-full rounded-lg border bg-card outline-none ${TRANSITION_UI} placeholder:text-muted/70 focus:border-accent ${INPUT_TEXT_CLASS} ${
+            error ? "border-red-400 focus:border-red-500" : "border-border"
+          } ${leftIcon ? "pl-10" : "pl-3"} ${rightSlot ? "pr-11" : "pr-3"} ${className}`}
         />
         {rightSlot ? (
           <span className="absolute right-2.5 top-1/2 -translate-y-1/2">
@@ -43,9 +61,14 @@ export function AuthField({
           </span>
         ) : null}
       </div>
+      {error ? (
+        <p id={errorId} role="alert" className={`mt-1.5 ${FORM_ERROR_CLASS}`}>
+          {error}
+        </p>
+      ) : null}
     </label>
   );
-}
+});
 
 export function IconMail() {
   return (
@@ -123,14 +146,19 @@ export function AuthTextarea({
   label,
   leftIcon,
   className = "",
+  error,
+  id,
   ...input
 }: {
   label: string;
   leftIcon?: ReactNode;
   className?: string;
+  error?: string | null;
 } & TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  const fieldId = id ?? input.name;
+  const errorId = error && fieldId ? `${fieldId}-error` : undefined;
   return (
-    <label className="block">
+    <label className="block" htmlFor={fieldId}>
       <span className={FORM_LABEL_CLASS}>{label}</span>
       <div className="relative mt-1.5">
         {leftIcon ? (
@@ -140,11 +168,19 @@ export function AuthTextarea({
         ) : null}
         <textarea
           {...input}
-          className={`min-h-[4.5rem] w-full rounded-lg border border-border bg-card py-2.5 outline-none ${TRANSITION_UI} placeholder:text-muted/70 focus:border-accent ${INPUT_TEXT_CLASS} ${
-            leftIcon ? "pl-10" : "pl-3"
-          } pr-3 ${className}`}
+          id={fieldId}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={errorId}
+          className={`min-h-[4.5rem] w-full rounded-lg border bg-card py-2.5 outline-none ${TRANSITION_UI} placeholder:text-muted/70 focus:border-accent ${INPUT_TEXT_CLASS} ${
+            error ? "border-red-400 focus:border-red-500" : "border-border"
+          } ${leftIcon ? "pl-10" : "pl-3"} pr-3 ${className}`}
         />
       </div>
+      {error ? (
+        <p id={errorId} role="alert" className={`mt-1.5 ${FORM_ERROR_CLASS}`}>
+          {error}
+        </p>
+      ) : null}
     </label>
   );
 }

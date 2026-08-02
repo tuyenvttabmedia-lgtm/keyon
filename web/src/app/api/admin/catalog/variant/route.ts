@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import type { Prisma, SalesMotion } from "@prisma/client";
 import { isStaff, readSession } from "@/lib/auth";
+import { assertStaffCapability } from "@/lib/staff-access";
 import { prisma } from "@/lib/db";
 import { audit } from "@/lib/audit";
 import { toErrorResponse, AppError } from "@/lib/errors";
@@ -75,9 +76,11 @@ export async function POST(req: Request) {
     if (!session || !isStaff(session.role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    if (session.role === "CS") {
-      throw new AppError("CS không được tạo variant", 403);
-    }
+    assertStaffCapability(
+      session.role,
+      "catalog_mutate",
+      "Không có quyền tạo variant",
+    );
     const body = createSchema.parse(await req.json());
 
     const product = await prisma.product.findUnique({ where: { id: body.productId } });
@@ -141,9 +144,11 @@ export async function PATCH(req: Request) {
     if (!session || !isStaff(session.role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    if (session.role === "CS") {
-      throw new AppError("CS không được sửa catalog", 403);
-    }
+    assertStaffCapability(
+      session.role,
+      "catalog_mutate",
+      "Không có quyền sửa catalog",
+    );
     const body = patchSchema.parse(await req.json());
 
     const variant = await prisma.productVariant.findUnique({

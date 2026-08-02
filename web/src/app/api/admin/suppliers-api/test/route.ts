@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isStaff, readSession } from "@/lib/auth";
+import { staffHasCapability } from "@/lib/staff-access";
 import { resolveSupplierApi } from "@/server/supplier/config";
 import {
   getSupplierProvisioner,
@@ -9,7 +10,7 @@ import {
 async function requireAdmin() {
   const session = await readSession();
   if (!session || !isStaff(session.role)) return null;
-  if (session.role === "CS") return null;
+  if (!staffHasCapability(session.role, "settings")) return null;
   return session;
 }
 

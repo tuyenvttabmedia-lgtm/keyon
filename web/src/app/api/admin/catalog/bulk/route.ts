@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { isStaff, readSession } from "@/lib/auth";
+import { assertStaffCapability } from "@/lib/staff-access";
 import { prisma } from "@/lib/db";
 import { audit } from "@/lib/audit";
 import { toErrorResponse, AppError } from "@/lib/errors";
@@ -35,9 +36,11 @@ export async function POST(req: Request) {
     if (!session || !isStaff(session.role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    if (session.role === "CS") {
-      throw new AppError("CS không được bulk catalog", 403);
-    }
+    assertStaffCapability(
+      session.role,
+      "catalog_mutate",
+      "Không có quyền bulk catalog",
+    );
     const body = schema.parse(await req.json());
 
     const variants = await prisma.productVariant.findMany({

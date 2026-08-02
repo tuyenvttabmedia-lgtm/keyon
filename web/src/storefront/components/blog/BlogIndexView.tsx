@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { BlogPost, CmsBlog } from "@/server/cms/types";
 import {
   authorOf,
@@ -65,9 +65,30 @@ export function BlogIndexView({
   const [category, setCategory] =
     useState<BlogCategoryFilter>(initialCategory);
   const [visible, setVisible] = useState(PAGE_SIZE);
-  const [emailFooter, setEmailFooter] = useState("");
-  const [footerMsg, setFooterMsg] = useState<string | null>(null);
   const [saved, setSaved] = useState<Record<string, boolean>>({});
+  const [bookmarksReady, setBookmarksReady] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("keyon_blog_saved");
+      if (raw) {
+        const parsed = JSON.parse(raw) as Record<string, boolean>;
+        if (parsed && typeof parsed === "object") setSaved(parsed);
+      }
+    } catch {
+      /* ignore */
+    }
+    setBookmarksReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!bookmarksReady) return;
+    try {
+      localStorage.setItem("keyon_blog_saved", JSON.stringify(saved));
+    } catch {
+      /* ignore */
+    }
+  }, [saved, bookmarksReady]);
 
   const featured = useMemo(() => pickFeatured(posts, 3), [posts]);
 
@@ -131,21 +152,12 @@ export function BlogIndexView({
   }, [posts]);
 
   function toggleSave(id: string) {
-    setSaved((prev) => ({ ...prev, [id]: !prev[id] }));
-  }
-
-  function submitNewsletter(
-    email: string,
-    setMsg: (v: string | null) => void,
-    clear: () => void,
-  ) {
-    const v = email.trim();
-    if (!v || !v.includes("@")) {
-      setMsg("Vui lòng nhập email hợp lệ.");
-      return;
-    }
-    setMsg("Cảm ơn bạn! KEYON sẽ gửi bản tin sớm.");
-    clear();
+    setSaved((prev) => {
+      const next = { ...prev };
+      if (next[id]) delete next[id];
+      else next[id] = true;
+      return next;
+    });
   }
 
   return (
@@ -388,7 +400,7 @@ export function BlogIndexView({
         </div>
       </div>
 
-      {/* Newsletter — own section above footer (Home CTA pattern) */}
+      {/* CTA liên hệ — chưa có API newsletter thật */}
       <section className="pb-8 pt-4 md:pb-10 md:pt-6 lg:pb-12">
         <div className="home-container">
           <div className="overflow-hidden rounded-2xl bg-gradient-to-br from-navy via-[#0f2a4a] to-accent px-5 py-7 text-white sm:px-7 sm:py-8 md:px-8">
@@ -396,59 +408,29 @@ export function BlogIndexView({
               <div className="hidden shrink-0 sm:block" aria-hidden>
                 <NewsletterArt />
               </div>
-
               <div className="min-w-0 flex-1">
                 <h2 className={`${SECTION_TITLE_CLASS} !text-white`}>
-                  {cms.newsletterTitle}
+                  Cần hỗ trợ hoặc cập nhật từ KEYON?
                 </h2>
-                <p className={`mt-2 max-w-xl text-sm leading-relaxed text-white/75 md:text-[15px]`}>
-                  {cms.newsletterBody}
+                <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/75 md:text-[15px]">
+                  Bản tin email chưa mở. Liên hệ trực tiếp hoặc theo dõi bài viết mới trên
+                  trang Blog.
                 </p>
-                <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2">
-                  {[
-                    cms.newsletterPerk1,
-                    cms.newsletterPerk2,
-                    cms.newsletterPerk3,
-                  ].map((perk) => (
-                    <li
-                      key={perk}
-                      className="inline-flex items-center gap-2 text-sm text-white/85"
-                    >
-                      <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent/30 text-accent">
-                        ✓
-                      </span>
-                      {perk}
-                    </li>
-                  ))}
-                </ul>
               </div>
-
-              <form
-                className="flex w-full shrink-0 flex-col gap-2 sm:max-w-sm lg:w-[18.5rem] lg:max-w-none"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  submitNewsletter(emailFooter, setFooterMsg, () =>
-                    setEmailFooter(""),
-                  );
-                }}
-              >
-                <input
-                  type="email"
-                  value={emailFooter}
-                  onChange={(e) => setEmailFooter(e.target.value)}
-                  placeholder={cms.newsletterEmailPlaceholder}
-                  className={`h-12 w-full rounded-xl border-0 bg-white px-4 ${INPUT_TEXT_CLASS} outline-none ring-2 ring-transparent focus:ring-accent`}
-                />
-                <button
-                  type="submit"
+              <div className="flex w-full shrink-0 flex-col gap-2 sm:max-w-sm lg:w-[18.5rem] lg:max-w-none">
+                <Link
+                  href="/contact"
                   className={`inline-flex h-12 w-full items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover`}
                 >
-                  {cms.newsletterCta}
-                </button>
-                {footerMsg ? (
-                  <p className="text-sm text-white/80">{footerMsg}</p>
-                ) : null}
-              </form>
+                  Liên hệ KEYON
+                </Link>
+                <Link
+                  href="/faq"
+                  className={`inline-flex h-12 w-full items-center justify-center rounded-xl border border-white/25 bg-white/10 px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-white/15`}
+                >
+                  Xem FAQ
+                </Link>
+              </div>
             </div>
           </div>
         </div>

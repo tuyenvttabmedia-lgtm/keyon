@@ -14,13 +14,11 @@ import {
   computeSocialSold,
 } from "@/storefront/lib/social-proof";
 import {
-  defaultFeatures,
   defaultGuides,
   PDP_CATEGORY_BADGE,
 } from "@/storefront/components/pdp/pdp-utils";
 import type { ShopCategoryId, ShopProduct } from "@/storefront/components/shop/types";
 import {
-  CATEGORY_LABELS,
   discountPercent,
   inferCategory,
   inferMark,
@@ -162,7 +160,10 @@ export default async function ProductPage({
   );
 
   const soldCount = computeSocialSold(product.slug);
-  const reviewCount = computeSocialReviews(product.slug, soldCount);
+  const reviewCount =
+    soldCount != null
+      ? computeSocialReviews(product.slug, soldCount)
+      : null;
   const rating = computeSocialRating(product.slug);
 
   const curatedIds = parseStringList(product.relatedProductIds).slice(0, 8);
@@ -252,60 +253,6 @@ export default async function ProductPage({
     ].slice(0, 4);
   }
 
-  const defaultSpecs = [
-    { label: "Nhà phát hành", value: product.brand.name },
-    { label: "Danh mục", value: CATEGORY_LABELS[categoryId] },
-    { label: "Kích hoạt", value: "Toàn cầu" },
-    { label: "Thiết bị", value: "Theo mô tả gói" },
-    { label: "Ngôn ngữ", value: "Đa ngôn ngữ" },
-    { label: "Loại nhận", value: receive.label },
-    {
-      label: "Giao hàng",
-      value: activeVariant.fulfillmentInstant ? "Tự động (1–5 phút)" : "KEYON xử lý",
-    },
-    { label: "Lưu trữ", value: "Tài sản trong Tài khoản" },
-  ];
-
-  const defaultFaqs = [
-    {
-      id: "1",
-      question: "Sản phẩm này là gì?",
-      answer:
-        product.description ||
-        `${product.name} — giấy phép bản quyền số trên KEYON.`,
-    },
-    {
-      id: "2",
-      question: "Tôi sẽ nhận được gì sau khi thanh toán?",
-      answer: `Loại nhận: ${receive.label}. Đã thanh toán chưa đồng nghĩa đã giao — theo dõi trong Đơn hàng / Tài sản.`,
-    },
-    {
-      id: "3",
-      question: "Cách kích hoạt như thế nào?",
-      answer:
-        "Sau khi giao, mở Tài sản trong Tài khoản để xem key / tài khoản / hướng dẫn kích hoạt.",
-    },
-    {
-      id: "4",
-      question: "Có mua nhiều sản phẩm khác nhau trong một đơn không?",
-      answer:
-        "Mỗi lần thanh toán là một giao dịch cho một gói (có thể chọn số lượng cùng gói). Muốn mua gói khác hãy tạo đơn riêng.",
-    },
-    {
-      id: "5",
-      question: "Thanh toán xong bao lâu thì nhận được?",
-      answer: activeVariant.fulfillmentInstant
-        ? "Thường giao trong 1–5 phút sau khi hệ thống xác nhận thanh toán."
-        : "KEYON xử lý theo SLA gói — theo dõi trong Đơn hàng / Tài sản.",
-    },
-    {
-      id: "6",
-      question: "Nếu kích hoạt lỗi thì sao?",
-      answer:
-        "Liên hệ hỗ trợ từ Tài khoản. Hoàn / gửi lại khi giao sai loại hoặc không kích hoạt được theo mô tả gói.",
-    },
-  ];
-
   const data: PdpProductData = {
     slug: product.slug,
     name: product.name,
@@ -324,10 +271,23 @@ export default async function ProductPage({
     imageUrl: cmsGallery[0] ?? null,
     variants,
     initialVariantId: activeVariant.id,
-    features: cmsFeatures.length ? cmsFeatures : defaultFeatures(categoryId, product.name),
-    specs: cmsSpecs.length ? cmsSpecs : defaultSpecs,
+    features: cmsFeatures.length
+      ? cmsFeatures
+      : [
+          `${product.name} — bản quyền số chính hãng, giao qua Tài khoản KEYON sau thanh toán.`,
+        ],
+    specs: cmsSpecs.length
+      ? cmsSpecs
+      : [
+          { label: "Thương hiệu", value: product.brand.name },
+          { label: "Gói", value: activeVariant.name },
+          {
+            label: "Loại nhận",
+            value: receive.label,
+          },
+        ],
     guides: defaultGuides(activeVariant.fulfillmentInstant),
-    faqs: cmsFaqs.length ? cmsFaqs : defaultFaqs,
+    faqs: cmsFaqs,
     related,
     defaultEmail: session?.email ?? "",
     loggedIn: Boolean(session),

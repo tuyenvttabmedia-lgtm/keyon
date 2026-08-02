@@ -77,6 +77,15 @@ export function assertStaffCapability(
   }
 }
 
+/** Settings / mail / payment / storage / NCC API — ADMIN only. */
+export function assertSettingsAdmin(role: UserRole) {
+  assertStaffCapability(
+    role,
+    "settings",
+    "Không có quyền cấu hình hệ thống",
+  );
+}
+
 /** Sidebar / page path visibility (UX only — APIs still enforce). */
 export function staffCanSeeAdminPath(role: UserRole, href: string): boolean {
   if (role === "ADMIN") return true;

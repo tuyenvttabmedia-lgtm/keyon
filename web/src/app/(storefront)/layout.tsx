@@ -28,6 +28,8 @@ export default async function StorefrontLayout({
         columns={home.footer.columns}
         copyright={home.footer.copyright}
         legalLinks={home.footer.legalLinks}
+        supportEmail={home.footer.supportEmail}
+        paymentBadges={home.footer.paymentBadges}
       />
     </>
   );

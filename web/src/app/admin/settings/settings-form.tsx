@@ -80,6 +80,7 @@ export function SettingsForm({
   const [supplierApi, setSupplierApi] = useState(initialSupplierApi);
   const [mail, setMail] = useState(initialMail);
   const [mailPass, setMailPass] = useState("");
+  const [mailTestTo, setMailTestTo] = useState("");
   const [wasabiSecret, setWasabiSecret] = useState("");
   const [apiKey, setApiKey] = useState("");
   const [webhookSecret, setWebhookSecret] = useState("");
@@ -350,13 +351,18 @@ export function SettingsForm({
   }
 
   async function testMailSend() {
+    const to = mailTestTo.trim();
+    if (!to) {
+      setMsg("Nhập email nhận thử trước khi gửi");
+      return;
+    }
     setLoading(true);
     setMsg(null);
     try {
       const res = await fetch("/api/admin/mail/send-test", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}),
+        body: JSON.stringify({ to }),
       });
       const data = await res.json();
       if (data.data) setMail(data.data);
@@ -659,12 +665,16 @@ export function SettingsForm({
               >
                 <option value="stub">Stub (dev)</option>
                 <option value="sepay">SePay</option>
-                <option value="payos">PayOS</option>
-                <option value="megapay">MegaPay</option>
+                <option value="payos" disabled>
+                  PayOS (chưa hỗ trợ)
+                </option>
+                <option value="megapay" disabled>
+                  MegaPay (chưa hỗ trợ)
+                </option>
               </select>
               <span className="mt-1 block text-xs text-muted">
-                Chọn SePay/PayOS/MegaPay ở đây sẽ ưu tiên hơn ENV. Để Stub thì ENV vẫn có thể bật
-                SePay.
+                Chọn SePay ở đây sẽ ưu tiên hơn ENV. PayOS/MegaPay chưa có adapter — không chọn được.
+                Stub chỉ dùng để giả lập thanh toán khi phát triển.
               </span>
             </label>
 
@@ -1112,6 +1122,17 @@ export function SettingsForm({
               >
                 Kiểm tra kết nối
               </button>
+              <label className="flex min-w-[220px] flex-1 items-center gap-2 text-sm sm:max-w-sm">
+                <span className="sr-only">Email nhận thử</span>
+                <input
+                  type="email"
+                  className="w-full rounded-lg border border-border px-3 py-2"
+                  placeholder="Email nhận thử (vd. ban@gmail.com)"
+                  value={mailTestTo}
+                  onChange={(e) => setMailTestTo(e.target.value)}
+                  autoComplete="email"
+                />
+              </label>
               <button
                 type="button"
                 disabled={loading}

@@ -3,6 +3,7 @@ import { isStaff, readSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { audit } from "@/lib/audit";
 import { toErrorResponse, AppError } from "@/lib/errors";
+import { assertStaffCapability } from "@/lib/staff-access";
 import {
   brandCreateSchema,
   pickBrandContent,
@@ -15,9 +16,11 @@ export async function POST(req: Request) {
     if (!session || !isStaff(session.role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    if (session.role === "CS") {
-      throw new AppError("CS không được tạo brand", 403);
-    }
+    assertStaffCapability(
+      session.role,
+      "brands_mutate",
+      "Không có quyền tạo brand",
+    );
 
     const body = brandCreateSchema.parse(await req.json());
     const slug = (body.slug?.trim() || slugifyBrand(body.name)).slice(0, 80);

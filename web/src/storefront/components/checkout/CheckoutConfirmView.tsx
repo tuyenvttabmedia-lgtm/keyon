@@ -321,7 +321,12 @@ export function CheckoutConfirmView({
                   hint={cms.payCtaHint}
                 />
               </div>
-            ) : null}
+            ) : (
+              <p className={`mt-5 border-t border-border pt-4 text-sm text-muted`}>
+                {cms.payCtaHint ||
+                  "Sau khi chuyển khoản đúng, hệ thống sẽ cập nhật trạng thái tự động. Bạn không cần bấm xác nhận thủ công."}
+              </p>
+            )}
           </section>
         </div>
 

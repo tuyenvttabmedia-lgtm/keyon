@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { readSession } from "@/lib/auth";
+import { isStaff, readSession } from "@/lib/auth";
+import { prisma } from "@/lib/db";
 import { resendDelivery } from "@/server/fulfillment";
 import { toErrorResponse } from "@/lib/errors";
 import { rateLimit } from "@/lib/rate-limit";
@@ -16,10 +17,34 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Too many requests" }, { status: 429 });
     }
     const body = schema.parse(await req.json());
+
+    const delivery = await prisma.delivery.findUnique({
+      where: { id: body.deliveryId },
+      select: {
+        id: true,
+        orderItem: {
+          select: {
+            order: { select: { userId: true, email: true } },
+          },
+        },
+      },
+    });
+    if (!delivery) {
+      return NextResponse.json({ error: "Delivery not found" }, { status: 404 });
+    }
+
+    const order = delivery.orderItem.order;
+    const ownsOrder =
+      (order.userId && order.userId === session.id) ||
+      order.email.toLowerCase() === session.email.toLowerCase();
+    if (!ownsOrder && !isStaff(session.role)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     const result = await resendDelivery({
       deliveryId: body.deliveryId,
       actorId: session.id,
-      reason: "customer_or_staff_resend",
+      reason: isStaff(session.role) ? "staff_resend" : "customer_resend",
     });
     return NextResponse.json(result);
   } catch (e) {

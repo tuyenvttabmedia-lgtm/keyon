@@ -6,7 +6,9 @@ import { CategoriesSection } from "./CategoriesSection";
 import { FeaturedSection } from "./FeaturedSection";
 import { WhyKeyonSection } from "./WhyKeyonSection";
 import { SolutionsSection } from "./SolutionsSection";
+import { HowItWorksSection } from "./HowItWorksSection";
 import { NewsSection } from "./NewsSection";
+import { FaqHomeSection } from "./FaqHomeSection";
 import { CtaBannerSection } from "./CtaBannerSection";
 
 export function HomeView({
@@ -22,9 +24,11 @@ export function HomeView({
       <TrustPartnersSection data={content.partners} className="hidden lg:block" />
       <CategoriesSection data={content.categories} />
       <FeaturedSection data={content.featured} />
+      <HowItWorksSection data={content.howItWorks} />
       <WhyKeyonSection data={content.why} />
       <SolutionsSection data={content.solutions} />
       <NewsSection data={content.news} />
+      {content.faqHome ? <FaqHomeSection data={content.faqHome} /> : null}
       <CtaBannerSection data={content.ctaBanner} />
     </>
   );

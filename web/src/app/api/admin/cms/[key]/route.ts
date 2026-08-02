@@ -126,7 +126,15 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     const { key } = await ctx.params;
-    if (key === "settings") requireSettingsAdmin(session);
+    if (key === "settings") {
+      requireSettingsAdmin(session);
+    } else {
+      assertStaffCapability(
+        session.role,
+        "cms_mutate",
+        "Không có quyền xem CMS",
+      );
+    }
     const entry = FILES[key];
     if (!entry) return NextResponse.json({ error: "Unknown key" }, { status: 404 });
     if (key === "settings") {
@@ -153,6 +161,15 @@ export async function PUT(
 
   if (key === "settings") {
     requireSettingsAdmin(session);
+  } else {
+    assertStaffCapability(
+      session.role,
+      "cms_mutate",
+      "Không có quyền sửa CMS",
+    );
+  }
+
+  if (key === "settings") {
     const cleanedBody = {
       ...body,
       ogImageUrl:

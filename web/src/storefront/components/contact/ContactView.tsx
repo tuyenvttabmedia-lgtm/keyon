@@ -203,6 +203,8 @@ export function ContactView({ cms }: { cms: CmsContact }) {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     autoComplete="name"
+                    aria-invalid={err ? true : undefined}
+                    aria-describedby={err ? "contact-form-error" : undefined}
                   />
                 </Field>
                 <Field label={cms.formEmailLabel} icon={<MailIcon />}>
@@ -214,6 +216,8 @@ export function ContactView({ cms }: { cms: CmsContact }) {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     autoComplete="email"
+                    aria-invalid={err ? true : undefined}
+                    aria-describedby={err ? "contact-form-error" : undefined}
                   />
                 </Field>
                 <Field label={cms.formPhoneLabel} icon={<PhoneIcon />}>
@@ -278,8 +282,16 @@ export function ContactView({ cms }: { cms: CmsContact }) {
                 </span>
               </label>
 
-              {err ? <p className={FORM_ERROR_CLASS}>{err}</p> : null}
-              {ok ? <p className={FORM_SUCCESS_CLASS}>{ok}</p> : null}
+              {err ? (
+                <p id="contact-form-error" role="alert" className={FORM_ERROR_CLASS}>
+                  {err}
+                </p>
+              ) : null}
+              {ok ? (
+                <p id="contact-form-success" role="status" className={FORM_SUCCESS_CLASS}>
+                  {ok}
+                </p>
+              ) : null}
 
               <button
                 type="submit"

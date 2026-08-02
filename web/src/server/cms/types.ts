@@ -502,14 +502,9 @@ export type CmsProductRatings = {
   items: CmsProductRating[];
 };
 
+/** Empty by default — do not invent storefront ratings. */
 export const defaultCmsProductRatings: CmsProductRatings = {
-  items: [
-    { productKey: "f1", ratingAvg: 5, reviewCount: 128 },
-    { productKey: "f2", ratingAvg: 5, reviewCount: 98 },
-    { productKey: "f3", ratingAvg: 5, reviewCount: 76 },
-    { productKey: "f4", ratingAvg: 5, reviewCount: 34 },
-    { productKey: "f5", ratingAvg: 5, reviewCount: 62 },
-  ],
+  items: [],
 };
 
 export const defaultSettings: SiteSettings = {
@@ -816,7 +811,7 @@ export const defaultCmsCheckout: CmsCheckout = {
   reloadQrLabel: "Tải lại mã QR",
   backToMethodLabel: "Quay lại chọn phương thức khác",
   payCtaLabel: "Tôi đã chuyển khoản",
-  payCtaHint: "Sau khi chuyển đúng nội dung, bấm để hệ thống kiểm tra (dev/stub).",
+  payCtaHint: "Sau khi chuyển đúng số tiền và nội dung, hệ thống sẽ cập nhật khi nhận được xác nhận thanh toán.",
   comingSoonNote:
     "Phương thức này sắp ra mắt. Vui lòng chọn VietQR / chuyển khoản để thanh toán ngay.",
   whyTitle: "Vì sao chọn KEYON?",

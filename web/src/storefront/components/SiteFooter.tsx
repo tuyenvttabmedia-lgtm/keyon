@@ -10,12 +10,25 @@ type Props = {
   columns: FooterColumn[];
   copyright: string;
   legalLinks: NavItem[];
+  supportEmail?: string;
+  paymentBadges?: string[];
 };
 
 const footerLink = `inline-block text-slate-400 ${TRANSITION_COLORS} ${MOTION_NORMAL} ${EASE_STANDARD} hover:text-white hover:underline hover:underline-offset-4`;
 
 /** Digital Home footer — navy · accordion on mobile · multi-col on desktop */
-export function SiteFooter({ blurb, columns, copyright, legalLinks }: Props) {
+export function SiteFooter({
+  blurb,
+  columns,
+  copyright,
+  legalLinks,
+  supportEmail = "support@keyon.vn",
+  paymentBadges = ["VietQR", "Chuyển khoản"],
+}: Props) {
+  const social = [
+    { label: "Email", href: `mailto:${supportEmail}`, letter: "✉" },
+    { label: "Liên hệ", href: "/contact", letter: "?" },
+  ];
   return (
     <footer className="mt-auto bg-footer text-slate-400">
       <div className="home-container">
@@ -29,12 +42,7 @@ export function SiteFooter({ blurb, columns, copyright, legalLinks }: Props) {
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-400">{blurb}</p>
             <div className="mt-5 flex gap-2">
-              {[
-                { label: "Facebook", href: "https://facebook.com", letter: "f" },
-                { label: "YouTube", href: "https://youtube.com", letter: "▶" },
-                { label: "LinkedIn", href: "https://linkedin.com", letter: "in" },
-                { label: "Email", href: "mailto:support@keyon.vn", letter: "✉" },
-              ].map((s) => (
+              {social.map((s) => (
                 <a
                   key={s.label}
                   href={s.href}
@@ -73,7 +81,7 @@ export function SiteFooter({ blurb, columns, copyright, legalLinks }: Props) {
         <div className="home-container flex flex-col gap-4 py-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <span className="text-xs text-slate-500">{copyright}</span>
           <div className="flex flex-wrap items-center gap-2">
-            {["Visa", "Mastercard", "MoMo", "VNPay"].map((p) => (
+            {paymentBadges.map((p) => (
               <span
                 key={p}
                 className={`rounded-md border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-slate-400 ${TRANSITION_UI} hover:border-white/25 hover:text-white`}

@@ -4,6 +4,7 @@ import { isStaff, readSession } from "@/lib/auth";
 import { completeManualDelivery } from "@/server/fulfillment";
 import { toErrorResponse } from "@/lib/errors";
 import { rateLimit } from "@/lib/rate-limit";
+import { assertStaffCapability } from "@/lib/staff-access";
 
 const schema = z.object({
   jobId: z.string().min(1),
@@ -16,6 +17,11 @@ export async function POST(req: Request) {
     if (!session || !isStaff(session.role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    assertStaffCapability(
+      session.role,
+      "fulfillment",
+      "Không có quyền hoàn tất giao hàng thủ công",
+    );
     const rl = rateLimit(`fulfill-complete:${session.id}`, 60);
     if (!rl.ok) {
       return NextResponse.json({ error: "Too many requests" }, { status: 429 });

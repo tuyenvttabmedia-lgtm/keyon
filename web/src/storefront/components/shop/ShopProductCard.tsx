@@ -95,9 +95,17 @@ export function ShopProductCard({ item }: { item: ShopProduct }) {
           </h3>
         </Link>
         <p className={`mt-1 line-clamp-1 ${CARD_META_CLASS}`}>{item.packageName}</p>
-        <div className="mt-2">
-          <StarRating rating={item.rating || 5} reviewCount={item.reviewCount || 0} size="sm" />
-        </div>
+        {typeof item.rating === "number" &&
+        typeof item.reviewCount === "number" &&
+        item.reviewCount > 0 ? (
+          <div className="mt-2">
+            <StarRating
+              rating={item.rating}
+              reviewCount={item.reviewCount}
+              size="sm"
+            />
+          </div>
+        ) : null}
         <div className="mt-2.5 flex flex-wrap items-baseline gap-2">
           <p className={CARD_PRICE_CLASS}>{formatVnd(item.priceVnd)}</p>
           {compare && compare > item.priceVnd ? (
@@ -154,9 +162,17 @@ export function ShopProductListItem({ item }: { item: ShopProduct }) {
           </h3>
         </Link>
         <p className={`mt-1 line-clamp-1 ${CARD_META_CLASS}`}>{item.packageName}</p>
-        <div className="mt-2">
-          <StarRating rating={item.rating || 5} reviewCount={item.reviewCount || 0} size="sm" />
-        </div>
+        {typeof item.rating === "number" &&
+        typeof item.reviewCount === "number" &&
+        item.reviewCount > 0 ? (
+          <div className="mt-2">
+            <StarRating
+              rating={item.rating}
+              reviewCount={item.reviewCount}
+              size="sm"
+            />
+          </div>
+        ) : null}
         <div className="mt-auto flex flex-wrap items-end justify-between gap-3 pt-3">
           <div className="flex flex-wrap items-baseline gap-2">
             <p className={CARD_PRICE_CLASS}>{formatVnd(item.priceVnd)}</p>

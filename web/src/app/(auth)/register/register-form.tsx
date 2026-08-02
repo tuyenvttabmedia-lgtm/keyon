@@ -181,7 +181,11 @@ export function RegisterForm() {
           </Link>
         </span>
       </label>
-      {error && <p className={FORM_ERROR_CLASS}>{error}</p>}
+      {error ? (
+        <p id="register-form-error" role="alert" className={FORM_ERROR_CLASS}>
+          {error}
+        </p>
+      ) : null}
       <AuthSubmitButton loading={loading} loadingLabel="Đang tạo…">
         Đăng ký
       </AuthSubmitButton>

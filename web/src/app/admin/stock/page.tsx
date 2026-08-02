@@ -172,7 +172,7 @@ export default async function AdminStockPage({
         <div>
           <h2 className={ADMIN_PAGE_TITLE_CLASS}>Kho License</h2>
           <p className="text-sm text-muted">
-            Ops Instant · tồn từ Read Model · nhập key · drill-down
+            Giao Instant · tồn kho License · nhập key · xem chi tiết SKU
           </p>
         </div>
         <Link

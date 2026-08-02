@@ -3,6 +3,7 @@ import { isStaff, readSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { audit } from "@/lib/audit";
 import { toErrorResponse, AppError } from "@/lib/errors";
+import { assertStaffCapability } from "@/lib/staff-access";
 import { brandPatchSchema, pickBrandContent } from "@/lib/brand-admin";
 
 export async function PATCH(
@@ -14,9 +15,11 @@ export async function PATCH(
     if (!session || !isStaff(session.role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    if (session.role === "CS") {
-      throw new AppError("CS không được sửa brand", 403);
-    }
+    assertStaffCapability(
+      session.role,
+      "brands_mutate",
+      "Không có quyền sửa brand",
+    );
 
     const { id } = await params;
     const body = brandPatchSchema.parse(await req.json());

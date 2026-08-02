@@ -55,7 +55,7 @@ export default async function AdminHomePage() {
       warn: inv.low_stock_skus > 0,
     },
     {
-      label: "Worker",
+      label: "Tiến trình giao hàng",
       value: mon.worker.ok ? "OK" : "DOWN",
       href: "/admin/monitoring",
       warn: !mon.worker.ok,
@@ -94,7 +94,7 @@ export default async function AdminHomePage() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="rounded-2xl border border-border bg-card p-5">
-          <p className={CARD_TITLE_CLASS}>Kho License (Read Model)</p>
+          <p className={CARD_TITLE_CLASS}>Tồn kho License</p>
           <p className={`mt-2 ${BODY_MUTED_CLASS}`}>
             Available {inv.available} · Reserved {inv.reserved} · Consumed {inv.consumed} ·
             Disabled {inv.disabled}

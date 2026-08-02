@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AuthSubmitButton } from "@/storefront/components/auth/AuthCard";
 import {
   AuthField,
@@ -26,6 +26,14 @@ export function LoginForm() {
   const [remember, setRemember] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const totpRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!error) return;
+    if (needsTotp) totpRef.current?.focus();
+    else emailRef.current?.focus();
+  }, [error, needsTotp]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -65,8 +73,11 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
+    <form onSubmit={onSubmit} className="space-y-4" noValidate>
       <AuthField
+        ref={emailRef}
+        id="login-email"
+        name="email"
         label="Email"
         type="email"
         value={email}
@@ -75,8 +86,12 @@ export function LoginForm() {
         required
         autoComplete="email"
         leftIcon={<IconMail />}
+        aria-invalid={error && !needsTotp ? true : undefined}
+        describedBy={error && !needsTotp ? "login-form-error" : undefined}
       />
       <AuthField
+        id="login-password"
+        name="password"
         label="Mật khẩu"
         type={showPw ? "text" : "password"}
         value={password}
@@ -98,6 +113,9 @@ export function LoginForm() {
       />
       {needsTotp ? (
         <AuthField
+          ref={totpRef}
+          id="login-totp"
+          name="totp"
           label="Mã 2FA / backup code"
           type="text"
           value={totpCode}
@@ -106,6 +124,8 @@ export function LoginForm() {
           required
           autoComplete="one-time-code"
           leftIcon={<IconLock />}
+          aria-invalid={error ? true : undefined}
+          describedBy={error ? "login-form-error" : undefined}
         />
       ) : null}
       <div className={`flex items-center justify-between gap-3 pt-0.5 ${BODY_MUTED_CLASS}`}>
@@ -122,7 +142,11 @@ export function LoginForm() {
           Quên mật khẩu?
         </Link>
       </div>
-      {error && <p className={FORM_ERROR_CLASS}>{error}</p>}
+      {error ? (
+        <p id="login-form-error" role="alert" className={FORM_ERROR_CLASS}>
+          {error}
+        </p>
+      ) : null}
       <AuthSubmitButton loading={loading} loadingLabel="Đang đăng nhập…">
         Đăng nhập
       </AuthSubmitButton>

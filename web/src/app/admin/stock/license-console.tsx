@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ImportPanel, type ImportVariantOpt } from "./import-panel";
 import { SkuTable, type StockSkuRow } from "./sku-table";
@@ -151,9 +152,9 @@ export function LicenseConsole({
           ) : (
             <p className="text-sm text-muted">
               Cảnh báo tồn kho chi tiết:{" "}
-              <a href="/admin/inventory" className="font-medium text-accent hover:underline">
+              <Link href="/admin/inventory" className="font-medium text-accent hover:underline">
                 Tồn kho
-              </a>
+              </Link>
             </p>
           )}
         </div>

@@ -29,6 +29,8 @@ import {
 } from "@/storefront/components/shop/shop-utils";
 import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
 import type { ShopCategoryId } from "@/storefront/components/shop/types";
+import { mapProductsToShopCards } from "@/storefront/lib/related-products";
+import type { FeaturedProduct, FaqItem } from "./types";
 
 /**
  * Home content: fixture + overlay CMS (hero, nav, footer, news, partners, categories, ratings, why banner).
@@ -45,6 +47,7 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
     ratingMap,
     banner,
     catalogRows,
+    faqRaw,
   ] = await Promise.all([
     readJsonFile("home.json", defaultCmsHome),
     readJsonFile<BlogPost[]>("blog.json", defaultBlog),
@@ -57,16 +60,30 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
     prisma.product.findMany({
       where: { active: true },
       select: {
+        id: true,
         name: true,
+        slug: true,
         categoryKey: true,
+        galleryUrls: true,
         brand: { select: { name: true } },
         variants: {
           where: { active: true },
-          select: { id: true },
+          orderBy: { priceVnd: "asc" },
+          select: {
+            id: true,
+            name: true,
+            priceVnd: true,
+            compareAtPriceVnd: true,
+            deliverableType: true,
+            fulfillmentStrategy: true,
+          },
           take: 1,
         },
       },
+      orderBy: { updatedAt: "desc" },
+      take: 40,
     }),
+    readJsonFile<CmsFaqItem[]>("faq.json", defaultCmsFaq),
   ]);
 
   const published = posts.filter((p) => p.status === "published").slice(0, 4);
@@ -122,10 +139,82 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
       };
     });
 
+  const shopCards = mapProductsToShopCards(
+    catalogRows.filter((p) => p.variants.length > 0).slice(0, 8),
+  );
+  const featuredFromCatalog: FeaturedProduct[] = shopCards.map((c) => {
+    const gal = c.imageUrl;
+    return {
+      id: c.id,
+      brandName: c.brandName,
+      productName: c.productName,
+      packageName: c.packageName,
+      priceVnd: c.priceVnd,
+      receiveLabel: c.receiveLabel,
+      receiveKind: c.receiveKind,
+      deliveryLabel: c.deliveryLabel,
+      mark: c.mark,
+      imageUrl: gal,
+      href: c.href,
+      ctaLabel: "Thanh toán ngay",
+      rating: undefined,
+      reviewCount: undefined,
+    };
+  });
   const featuredItems = ProductRatingsService.applyToFeatured(
-    homeFixture.featured.items,
+    featuredFromCatalog.length
+      ? featuredFromCatalog
+      : homeFixture.featured.items.map((i) => ({
+          ...i,
+          rating: undefined,
+          reviewCount: undefined,
+        })),
     ratingMap,
   );
+
+  const faqHome: FaqItem[] = faqRaw
+    .filter((f) => f.showOnHome)
+    .slice(0, 6)
+    .map((f) => ({
+      id: f.id,
+      question: f.question,
+      answer: f.answer,
+      category: f.category ?? "general",
+    }));
+
+  const solutions = {
+    ...homeFixture.solutions,
+    items: homeFixture.solutions.items.map((s) =>
+      s.id === "sol3"
+        ? {
+            ...s,
+            title: "Tích hợp API (sắp có)",
+            description:
+              "Roadmap kết nối hệ thống nội bộ — chưa mở self-serve trên KEYON hiện tại.",
+          }
+        : s,
+    ),
+  };
+
+  const why = {
+    ...homeFixture.why,
+    items: homeFixture.why.items.map((w) =>
+      w.id === "w3"
+        ? {
+            ...w,
+            title: "Giá rõ ràng",
+            description: "So sánh gói và loại nhận trước khi mua — không ẩn phí lạ.",
+          }
+        : w,
+    ),
+    sideBanner: {
+      title: banner.title,
+      ctaLabel: banner.ctaLabel,
+      ctaHref: banner.ctaHref,
+      imageUrl: banner.imageUrl,
+      visible: banner.visible,
+    },
+  };
 
   return {
     ...homeFixture,
@@ -153,31 +242,29 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
     featured: {
       ...homeFixture.featured,
       items: featuredItems,
+      visible: featuredItems.length > 0,
     },
-    why: {
-      ...homeFixture.why,
-      sideBanner: {
-        title: banner.title,
-        ctaLabel: banner.ctaLabel,
-        ctaHref: banner.ctaHref,
-        imageUrl: banner.imageUrl,
-        visible: banner.visible,
-      },
+    why,
+    solutions,
+    faqHome: {
+      visible: faqHome.length > 0,
+      title: "Câu hỏi thường gặp",
+      items: faqHome,
     },
     news: {
       ...homeFixture.news,
-      items:
-        published.length >= 4
-          ? published.map((p, i) => ({
-              id: p.id,
-              title: p.title,
-              excerpt: p.excerpt,
-              dateLabel: new Date(p.publishedAt ?? p.updatedAt).toLocaleDateString("vi-VN"),
-              href: `/blog/${p.slug}`,
-              tag: homeFixture.news.items[i]?.tag,
-              tagTone: homeFixture.news.items[i]?.tagTone,
-            }))
-          : homeFixture.news.items,
+      visible: published.length > 0,
+      items: published.map((p, i) => ({
+        id: p.id,
+        title: p.title,
+        excerpt: p.excerpt,
+        dateLabel: new Date(p.publishedAt ?? p.updatedAt).toLocaleDateString(
+          "vi-VN",
+        ),
+        href: `/blog/${p.slug}`,
+        tag: homeFixture.news.items[i]?.tag,
+        tagTone: homeFixture.news.items[i]?.tagTone,
+      })),
     },
     footer: {
       blurb: footer.blurb || homeFixture.footer.blurb,
@@ -186,6 +273,8 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
       legalLinks: footer.legalLinks.length
         ? footer.legalLinks
         : homeFixture.footer.legalLinks,
+      supportEmail: "support@keyon.vn",
+      paymentBadges: ["VietQR", "Chuyển khoản"],
     },
   };
 });

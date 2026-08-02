@@ -43,11 +43,11 @@ export default async function AdminMonitoringPage() {
 
   const kpi = [
     {
-      label: "Worker",
+      label: "Tiến trình giao hàng",
       value: snap.worker.ok ? "OK" : "DOWN",
       sub: snap.worker.ok
-        ? `Heartbeat ${formatAge(snap.worker.age_ms)} trước`
-        : "Không có heartbeat",
+        ? `Nhịp sống ${formatAge(snap.worker.age_ms)} trước`
+        : "Không có nhịp sống",
       tone: snap.worker.ok ? "text-emerald-700" : "text-red-700",
     },
     {
@@ -84,7 +84,7 @@ export default async function AdminMonitoringPage() {
         <div>
           <h1 className={ADMIN_PAGE_TITLE_CLASS}>Monitoring</h1>
           <p className={SECTION_LEAD_CLASS}>
-            Worker · hàng đợi · thanh toán · lỗi gần đây
+            Tiến trình giao hàng · hàng đợi · thanh toán · lỗi gần đây
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">

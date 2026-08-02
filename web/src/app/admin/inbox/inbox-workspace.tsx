@@ -24,6 +24,7 @@ import {
   PageSizeSelect,
   useClientPagination,
 } from "@/app/admin/ui/client-pagination";
+import { jobStatusVi } from "@/lib/admin-glossary";
 
 type Props = {
   jobs: InboxJobRow[];
@@ -471,9 +472,9 @@ export function InboxWorkspace({ jobs, kpi, staffLabel }: Props) {
                       {selected.orderCode}
                     </h2>
                     <p className="text-sm text-muted">
-                      Job {selected.status}
+                      {jobStatusVi(selected.status)}
                       {selected.isPax8 ? " · Pax8" : ""}
-                      {selected.strategy === "MANUAL" ? " · Manual" : ""}
+                      {selected.strategy === "MANUAL" ? " · Thủ công" : ""}
                     </p>
                   </div>
                   <Link
@@ -632,8 +633,8 @@ export function InboxWorkspace({ jobs, kpi, staffLabel }: Props) {
                 </section>
               ) : (
                 <section className="rounded-2xl border border-border bg-card p-4 text-sm text-muted">
-                  Job đang {selected.status} — chưa cần nhập deliverable. Có thể Skip
-                  hoặc theo dõi.
+                  Đang {jobStatusVi(selected.status).toLowerCase()} — chưa cần nhập
+                  deliverable. Có thể bỏ qua phiên này hoặc theo dõi.
                 </section>
               )}
 

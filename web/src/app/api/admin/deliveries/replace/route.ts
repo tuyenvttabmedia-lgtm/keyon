@@ -3,6 +3,7 @@ import { z } from "zod";
 import { isStaff, readSession } from "@/lib/auth";
 import { replaceDelivery } from "@/server/fulfillment/replace";
 import { toErrorResponse } from "@/lib/errors";
+import { assertStaffCapability } from "@/lib/staff-access";
 
 const schema = z.object({
   deliveryId: z.string().min(1),
@@ -16,6 +17,11 @@ export async function POST(req: Request) {
     if (!session || !isStaff(session.role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    assertStaffCapability(
+      session.role,
+      "fulfillment",
+      "Không có quyền thay thế deliverable",
+    );
     const body = schema.parse(await req.json());
     const delivery = await replaceDelivery({
       deliveryId: body.deliveryId,

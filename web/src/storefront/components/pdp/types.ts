@@ -24,9 +24,10 @@ export type PdpProductData = {
   brandName: string;
   categoryId: ShopCategoryId;
   categoryLabel: string;
-  rating: number;
-  reviewCount: number;
-  soldCount: number;
+  /** Null/undefined = không hiện social proof giả */
+  rating?: number | null;
+  reviewCount?: number | null;
+  soldCount?: number | null;
   mark?: ShopProduct["mark"];
   /** Gallery URLs from CMS (main + thumbs). Empty → demo art. */
   galleryUrls: string[];

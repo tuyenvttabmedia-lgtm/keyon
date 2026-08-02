@@ -4,6 +4,7 @@ import { isStaff, readSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { audit } from "@/lib/audit";
 import { toErrorResponse, AppError } from "@/lib/errors";
+import { assertStaffCapability } from "@/lib/staff-access";
 import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
 import {
   formatIssues,
@@ -64,9 +65,11 @@ export async function POST(req: Request) {
     if (!session || !isStaff(session.role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    if (session.role === "CS") {
-      throw new AppError("CS không được tạo catalog", 403);
-    }
+    assertStaffCapability(
+      session.role,
+      "catalog_mutate",
+      "Không có quyền tạo catalog",
+    );
     const body = schema.parse(await req.json());
     const publishing = body.active === true;
 

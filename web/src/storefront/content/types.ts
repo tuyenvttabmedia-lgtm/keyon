@@ -46,9 +46,9 @@ export type FeaturedProduct = {
   mark?: "windows" | "office" | "defender" | "adobe" | "security" | "server" | "generic";
   /** Optional box / cover image */
   imageUrl?: string;
-  /** Average rating 0–5 (from reviews aggregate when available) */
-  rating: number;
-  reviewCount: number;
+  /** Average rating 0–5 when real reviews exist — omit to hide stars */
+  rating?: number;
+  reviewCount?: number;
   /** CTA on featured card — default “Thanh toán ngay” */
   ctaLabel?: string;
   href: string;
@@ -205,6 +205,12 @@ export type HomeContent = {
     viewAllLabel: string;
     items: NewsItem[];
   };
+  /** FAQ marked showOnHome in CMS */
+  faqHome?: {
+    visible: boolean;
+    title: string;
+    items: FaqItem[];
+  };
   ctaBanner: {
     visible: boolean;
     title: string;
@@ -218,5 +224,7 @@ export type HomeContent = {
     copyright: string;
     legalLinks: NavItem[];
     contactLines?: string[];
+    supportEmail?: string;
+    paymentBadges?: string[];
   };
 };

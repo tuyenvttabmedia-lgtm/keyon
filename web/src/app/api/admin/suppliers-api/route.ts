@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { isStaff, readSession } from "@/lib/auth";
+import { staffHasCapability } from "@/lib/staff-access";
 import {
   getSupplierApiSettingsPublic,
   saveSupplierApiSettings,
@@ -10,7 +11,7 @@ import { resetSupplierProvisionerCache } from "@/server/supplier";
 async function requireAdmin() {
   const session = await readSession();
   if (!session || !isStaff(session.role)) return null;
-  if (session.role === "CS") return null;
+  if (!staffHasCapability(session.role, "settings")) return null;
   return session;
 }
 

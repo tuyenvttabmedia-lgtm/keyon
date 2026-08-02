@@ -67,9 +67,17 @@ export function ProductCard({ item, compact = false }: Props) {
             {item.packageName}
           </p>
 
-          <div className={compact ? "mt-1.5 scale-90 origin-left" : "mt-2"}>
-            <StarRating rating={item.rating} reviewCount={item.reviewCount} size="sm" />
-          </div>
+          {typeof item.rating === "number" &&
+          typeof item.reviewCount === "number" &&
+          item.reviewCount > 0 ? (
+            <div className={compact ? "mt-1.5 scale-90 origin-left" : "mt-2"}>
+              <StarRating
+                rating={item.rating}
+                reviewCount={item.reviewCount}
+                size="sm"
+              />
+            </div>
+          ) : null}
 
           <p className={`${compact ? "mt-1.5" : "mt-2.5"} ${CARD_PRICE_CLASS}`}>
             {item.priceVnd.toLocaleString("vi-VN")} ₫

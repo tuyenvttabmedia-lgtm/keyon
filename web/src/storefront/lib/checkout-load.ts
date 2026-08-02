@@ -126,6 +126,10 @@ export async function buildCheckoutPaymentUi(
   });
   const resolved = await resolvePayment();
   const status = paymentStatusForCustomer(payment.status, orderStatus);
+  /** Stub-only: never show “confirm paid” when real gateway is active. */
+  const stubConfirmAllowed =
+    resolved.provider === "stub" &&
+    (payment.status === "AWAITING" || payment.status === "CREATED");
 
   return {
     paymentReference: payment.paymentReference,
@@ -136,6 +140,6 @@ export async function buildCheckoutPaymentUi(
     bankName: resolved.sepay.bankDisplayName || resolved.sepay.bankName || "Ngân hàng",
     account: resolved.sepay.accountNumber || "—",
     accountName: resolved.sepay.accountName || "KEYON",
-    canConfirm: payment.status === "AWAITING" || payment.status === "CREATED",
+    canConfirm: stubConfirmAllowed,
   };
 }

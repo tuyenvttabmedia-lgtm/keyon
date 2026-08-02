@@ -152,14 +152,20 @@ export function PdpView({ data }: { data: PdpProductData }) {
 
   const tabLabels = useMemo(
     () =>
-      TABS.map((t) =>
+      TABS.filter((t) => t.id !== "faq" || data.faqs.length > 0).map((t) =>
         t.id === "reviews"
-          ? { ...t, label: `Đánh giá (${data.reviewCount})` }
+          ? {
+              ...t,
+              label:
+                data.reviewCount && data.reviewCount > 0
+                  ? `Đánh giá (${data.reviewCount})`
+                  : "Đánh giá",
+            }
           : t.id === "faq"
             ? { ...t, label: "Câu hỏi thường gặp" }
             : t,
       ),
-    [data.reviewCount],
+    [data.reviewCount, data.faqs.length],
   );
 
   function selectVariant(id: string) {
@@ -482,8 +488,12 @@ function PurchaseColumn({
   onBuy: () => void;
   compare?: number;
   disc?: number;
-  soldCount: number;
+  soldCount: number | null;
 }) {
+  const hasReviews =
+    typeof data.rating === "number" &&
+    typeof data.reviewCount === "number" &&
+    data.reviewCount > 0;
   return (
     <div className="min-w-0">
       <span className={`inline-flex rounded-md bg-accent-soft px-2.5 py-1 ${OVERLINE_CLASS} text-accent`}>
@@ -492,21 +502,34 @@ function PurchaseColumn({
 
       <h1 className={`mt-3 ${PDP_TITLE_CLASS}`}>{data.name}</h1>
 
-      <div className={`mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 ${BODY_MUTED_CLASS}`}>
-        <StarRating rating={data.rating} size="md" />
-        <span className={`tabular-nums ${CARD_META_CLASS}`}>
-          {data.rating.toFixed(1)} ({data.reviewCount.toLocaleString("vi-VN")} đánh giá)
-        </span>
-        <span className="hidden text-border sm:inline" aria-hidden>
-          |
-        </span>
-        <span className={CARD_META_CLASS}>
-          Đã bán:{" "}
-          <span className="font-semibold tabular-nums text-navy">
-            {soldCount.toLocaleString("vi-VN")}
-          </span>
-        </span>
-      </div>
+      {hasReviews || soldCount != null ? (
+        <div className={`mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 ${BODY_MUTED_CLASS}`}>
+          {hasReviews ? (
+            <>
+              <StarRating rating={data.rating!} size="md" />
+              <span className={`tabular-nums ${CARD_META_CLASS}`}>
+                {data.rating!.toFixed(1)} (
+                {data.reviewCount!.toLocaleString("vi-VN")} đánh giá)
+              </span>
+            </>
+          ) : null}
+          {soldCount != null ? (
+            <>
+              {hasReviews ? (
+                <span className="hidden text-border sm:inline" aria-hidden>
+                  |
+                </span>
+              ) : null}
+              <span className={CARD_META_CLASS}>
+                Đã bán:{" "}
+                <span className="font-semibold tabular-nums text-navy">
+                  {soldCount.toLocaleString("vi-VN")}
+                </span>
+              </span>
+            </>
+          ) : null}
+        </div>
+      ) : null}
 
       <div className="mt-5 flex flex-wrap items-end gap-3">
         <p className={PDP_PRICE_CLASS}>{formatVnd(variant.priceVnd)}</p>
@@ -805,13 +828,22 @@ function TabsSection({
 
         {tab === "reviews" ? (
           <div className="rounded-2xl border border-border bg-surface px-5 py-10 text-center">
-            <div className="inline-flex flex-col items-center">
-              <StarRating rating={data.rating} reviewCount={data.reviewCount} />
-              <p className={`mt-3 ${SECTION_LEAD_CLASS}`}>
-                Điểm trung bình {data.rating.toFixed(1)}/5 từ{" "}
-                {data.reviewCount.toLocaleString("vi-VN")} đánh giá.
+            {typeof data.rating === "number" &&
+            typeof data.reviewCount === "number" &&
+            data.reviewCount > 0 ? (
+              <div className="inline-flex flex-col items-center">
+                <StarRating rating={data.rating} reviewCount={data.reviewCount} />
+                <p className={`mt-3 ${SECTION_LEAD_CLASS}`}>
+                  Điểm trung bình {data.rating.toFixed(1)}/5 từ{" "}
+                  {data.reviewCount.toLocaleString("vi-VN")} đánh giá.
+                </p>
+              </div>
+            ) : (
+              <p className={SECTION_LEAD_CLASS}>
+                Chưa có đánh giá công khai cho sản phẩm này. Sau khi mua, bạn có thể gửi
+                phản hồi qua ticket hỗ trợ.
               </p>
-            </div>
+            )}
           </div>
         ) : null}
 
