@@ -7,7 +7,7 @@ import type {
   CmsCategoryIconKey,
   CmsCategoryItem,
 } from "@/server/cms/types";
-import { MediaPicker } from "@/app/admin/products/MediaPicker";
+import { MediaPicker } from "@/app/admin/media/MediaPicker";
 import { CmsSaveForm } from "../CmsSaveForm";
 
 const ICON_KEYS: CmsCategoryIconKey[] = [
@@ -202,8 +202,8 @@ function CategoryRow({
             multiple={false}
             purpose="ui"
             title="Chọn icon danh mục"
-            onSelect={(urls) => {
-              if (urls[0]) onChange({ ...item, iconUrl: urls[0] });
+            onSelect={(items) => {
+              if (items[0]?.url) onChange({ ...item, iconUrl: items[0].url });
             }}
           />
         </div>

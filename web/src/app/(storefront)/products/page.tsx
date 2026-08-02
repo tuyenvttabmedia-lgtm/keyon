@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { prisma } from "@/lib/db";
 import { ShopView } from "@/storefront/components/shop/ShopView";
 import type { ShopProduct } from "@/storefront/components/shop/types";
@@ -19,14 +20,23 @@ import {
   parseStringList,
   PRODUCT_CATEGORY_KEYS,
 } from "@/storefront/lib/product-cms";
+import { buildMainPageMetadata } from "@/server/seo/metadata";
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata(): Promise<Metadata> {
+  return buildMainPageMetadata("/products");
+}
+
 const LEGACY_CAT: Record<string, ShopCategoryId | "all"> = {
   all: "all",
+  windows: "windows",
   office: "office",
+  adobe: "adobe",
   design: "adobe",
+  cloud: "cloud",
   security: "security",
+  other: "other",
 };
 
 export default async function ProductsPage({

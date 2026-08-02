@@ -2,13 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/db";
+import { buildMainPageMetadata } from "@/server/seo/metadata";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Thương hiệu | KEYON",
-  description: "Danh sách thương hiệu phần mềm trên KEYON",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return buildMainPageMetadata("/brands");
+}
 
 export default async function BrandsIndexPage() {
   const brands = await prisma.brand.findMany({

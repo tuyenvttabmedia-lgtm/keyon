@@ -6,6 +6,7 @@
     "dev": "next dev --turbopack",
     "dev:all": "npm run dev",
     "worker": "tsx --env-file=.env.local --env-file=.env scripts/worker.ts",
+    "stock:replenish-empty": "tsx --env-file=.env.local --env-file=.env scripts/replenish-out-of-stock.ts",
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",

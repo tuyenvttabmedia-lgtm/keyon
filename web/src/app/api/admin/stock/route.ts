@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { decryptPayload, encryptPayload } from "@/lib/crypto";
 import { audit } from "@/lib/audit";
 import { AppError, toErrorResponse } from "@/lib/errors";
+import { assertStaffCapability } from "@/lib/staff-access";
 import {
   applyDbDuplicates,
   countPreview,
@@ -22,7 +23,7 @@ export async function POST(req: Request) {
     if (!session || !isStaff(session.role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    if (session.role === "CS") throw new AppError("CS không nhập kho", 403);
+    assertStaffCapability(session.role, "stock_mutate", "Không có quyền nhập kho");
 
     const body = schema.parse(await req.json());
     const variant = await prisma.productVariant.findUnique({

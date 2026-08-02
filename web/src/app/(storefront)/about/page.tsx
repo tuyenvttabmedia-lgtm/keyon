@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { AboutHeroVisual } from "@/storefront/components/about/AboutHeroVisual";
 import {
@@ -16,11 +17,16 @@ import {
 import { StoreButton } from "@/storefront/components/StoreButton";
 import { SectionSurface } from "@/storefront/components/ui/SectionSurface";
 import { CARD_TITLE_CLASS, PAGE_TITLE_CLASS, SECTION_TITLE_CLASS, SUBSECTION_TITLE_CLASS } from "@/storefront/typography";
+import { buildMainPageMetadata } from "@/server/seo/metadata";
 
 /**
  * About — aligned to about-locked.png
  * Fewer sections, flat surfaces, no decorative noise.
  */
+export async function generateMetadata(): Promise<Metadata> {
+  return buildMainPageMetadata("/about");
+}
+
 export default function AboutPage() {
   return (
     <div className="bg-white">

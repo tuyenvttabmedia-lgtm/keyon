@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import type { CmsPartnerItem, CmsPartners } from "@/server/cms/types";
-import { MediaPicker } from "@/app/admin/products/MediaPicker";
+import { MediaPicker } from "@/app/admin/media/MediaPicker";
 import { CmsSaveForm } from "../CmsSaveForm";
 
 export function PartnersForm({ initial }: { initial: CmsPartners }) {
@@ -167,8 +167,8 @@ function PartnerRow({
             multiple={false}
             purpose="ui"
             title="Chọn logo đối tác"
-            onSelect={(urls) => {
-              if (urls[0]) onChange({ ...item, logoUrl: urls[0] });
+            onSelect={(items) => {
+              if (items[0]?.url) onChange({ ...item, logoUrl: items[0].url });
             }}
           />
         </div>

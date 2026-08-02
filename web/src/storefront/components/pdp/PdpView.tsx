@@ -64,9 +64,9 @@ const DEFAULT_GALLERY_SIDE: {
   { title: "Bản quyền chính hãng", kind: "brand", icon: "shield" },
   { title: "Kích hoạt nhanh", kind: "delivery", icon: "bolt" },
   {
-    title: "Hỗ trợ 24/7",
+    title: "Hỗ trợ kích hoạt",
     kind: "fixed",
-    sub: "Kỹ thuật chuyên nghiệp",
+    sub: "Ticket trong Tài khoản",
     icon: "headset",
   },
   {
@@ -668,7 +668,7 @@ function PurchaseColumn({
         {[
           { t: "Thanh toán an toàn", s: "QR / chuyển khoản rõ" },
           { t: "Hoàn tiền 100%", s: "Khi giao sai loại" },
-          { t: "Hỗ trợ 24/7", s: "Kích hoạt & gửi lại" },
+          { t: "Hỗ trợ kích hoạt", s: "Ticket & gửi lại khi cần" },
         ].map((x) => (
           <li key={x.t} className="text-center sm:text-left">
             <p className={`${CARD_META_CLASS} font-bold text-navy`}>{x.t}</p>

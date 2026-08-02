@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { defaultSettings, readJsonFile } from "@/server/cms/store";
 import { getStorageSettingsPublic } from "@/server/storage/config";
 import { getPaymentSettingsPublic } from "@/server/payment/config";
 import { getSupplierApiSettingsPublic } from "@/server/supplier/config";
@@ -8,6 +7,12 @@ import {
   buildSettingsStatus,
   parseSettingsTab,
 } from "@/lib/admin-settings";
+import { loadSiteSettings } from "@/server/seo/settings";
+import {
+  allowSearchIndexing,
+  getSiteHostname,
+  getSiteOrigin,
+} from "@/server/seo/site-url";
 import { SettingsForm } from "./settings-form";
 import { ADMIN_PAGE_TITLE_CLASS } from "@/storefront/typography";
 
@@ -29,7 +34,7 @@ export default async function AdminSettingsPage({
   const initialTab = parseSettingsTab(sp.tab);
 
   const [settings, storage, payment, supplierApi, mail] = await Promise.all([
-    readJsonFile("settings.json", defaultSettings),
+    loadSiteSettings(),
     getStorageSettingsPublic(),
     getPaymentSettingsPublic(),
     getSupplierApiSettingsPublic(),
@@ -86,6 +91,9 @@ export default async function AdminSettingsPage({
         initialSupplierApi={supplierApi}
         initialMail={mail}
         initialTab={initialTab}
+        siteOrigin={getSiteOrigin()}
+        siteHostname={getSiteHostname()}
+        indexingAllowed={allowSearchIndexing()}
       />
     </div>
   );

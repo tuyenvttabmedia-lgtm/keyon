@@ -3,6 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/db";
+import {
+  resolveWithGlobalFallback,
+  toNextMetadata,
+} from "@/server/seo/metadata";
+import { loadSiteSettings } from "@/server/seo/settings";
 
 export const dynamic = "force-dynamic";
 
@@ -12,34 +17,35 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const brand = await prisma.brand.findFirst({
-    where: { slug, active: true },
-  });
+  const [brand, settings] = await Promise.all([
+    prisma.brand.findFirst({
+      where: { slug, active: true },
+    }),
+    loadSiteSettings(),
+  ]);
   if (!brand) return { title: "Brand" };
 
-  const title = brand.seoTitle?.trim() || `${brand.name} | KEYON`;
-  const description =
-    brand.seoDescription?.trim() ||
-    brand.shortDescription?.trim() ||
-    `Sản phẩm ${brand.name} trên KEYON`;
-  const og =
-    brand.ogImageUrl?.trim() ||
-    brand.bannerDesktopUrl?.trim() ||
-    brand.logoUrl?.trim() ||
-    undefined;
-
-  return {
-    title,
-    description,
-    alternates: brand.canonicalUrl
-      ? { canonical: brand.canonicalUrl }
-      : undefined,
-    openGraph: {
-      title,
-      description,
-      images: og ? [{ url: og }] : undefined,
-    },
-  };
+  const seo = resolveWithGlobalFallback(settings, {
+    path: `/brands/${slug}`,
+    title: brand.seoTitle?.trim() || `${brand.name} | KEYON`,
+    description:
+      brand.seoDescription?.trim() ||
+      brand.shortDescription?.trim() ||
+      undefined,
+    ogImageUrl:
+      brand.ogImageUrl?.trim() ||
+      brand.bannerDesktopUrl?.trim() ||
+      brand.logoUrl?.trim() ||
+      null,
+  });
+  const meta = toNextMetadata(seo);
+  if (brand.canonicalUrl?.trim()) {
+    return {
+      ...meta,
+      alternates: { canonical: brand.canonicalUrl.trim() },
+    };
+  }
+  return meta;
 }
 
 export default async function BrandLandingPage({

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isStaff, readSession } from "@/lib/auth";
+import { staffHasCapability } from "@/lib/staff-access";
 import { StorageService } from "@/server/storage";
 import {
   listBrandMedia,
@@ -11,6 +12,9 @@ export async function GET(req: Request) {
   const session = await readSession();
   if (!session || !isStaff(session.role)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (!staffHasCapability(session.role, "media_mutate")) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   const url = new URL(req.url);
@@ -65,8 +69,8 @@ export async function POST(req: Request) {
   if (!session || !isStaff(session.role)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  if (session.role === "CS") {
-    return NextResponse.json({ error: "CS không upload media" }, { status: 403 });
+  if (!staffHasCapability(session.role, "media_mutate")) {
+    return NextResponse.json({ error: "Không có quyền tải media" }, { status: 403 });
   }
 
   try {

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { BlogPost } from "@/server/cms/store";
+import type { BlogPost } from "@/server/cms/types";
 import type { BlogCategoryId } from "@/server/cms/types";
 import { CATEGORY_LABEL } from "@/storefront/lib/blog";
 import { uniqueBlogSlug } from "@/server/cms/blog-utils";

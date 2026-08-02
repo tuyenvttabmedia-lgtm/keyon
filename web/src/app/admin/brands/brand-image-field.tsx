@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { MediaPicker } from "@/app/admin/products/MediaPicker";
+import { MediaPicker } from "@/app/admin/media/MediaPicker";
 
 export function BrandImageField({
   label,
@@ -65,8 +65,8 @@ export function BrandImageField({
         multiple={false}
         purpose="brand"
         title="Chọn ảnh thương hiệu"
-        onSelect={(urls) => {
-          if (urls[0]) onChange(urls[0]);
+        onSelect={(items) => {
+          if (items[0]?.url) onChange(items[0].url);
           setOpen(false);
         }}
       />

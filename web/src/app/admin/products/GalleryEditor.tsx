@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { MediaPicker } from "./MediaPicker";
+import { MediaPicker, type MediaPickItem } from "@/app/admin/media/MediaPicker";
 
 type Props = {
   urls: string[];
@@ -26,10 +26,11 @@ export function GalleryEditor({ urls, onChange }: Props) {
     onChange(urls.filter((_, i) => i !== index));
   }
 
-  function addUrls(incoming: string[]) {
+  function addUrls(incoming: MediaPickItem[]) {
     const set = new Set(urls);
     const merged = [...urls];
-    for (const u of incoming) {
+    for (const item of incoming) {
+      const u = item.url;
       if (!set.has(u)) {
         set.add(u);
         merged.push(u);

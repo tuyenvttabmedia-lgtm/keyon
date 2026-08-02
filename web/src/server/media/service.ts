@@ -7,11 +7,7 @@ import { prisma } from "@/lib/db";
 import type { MediaDto } from "@/lib/media-types";
 import { childLogger } from "@/lib/logger";
 import { StorageService } from "@/server/storage";
-import {
-  appendMediaIndex,
-  listMediaIndex,
-  removeMediaIndex,
-} from "@/server/storage/media-index";
+import { listMediaIndex } from "@/server/storage/media-index";
 
 export type { MediaDto } from "@/lib/media-types";
 
@@ -299,15 +295,6 @@ export async function uploadMedia(input: {
       },
     });
 
-    await appendMediaIndex({
-      key: stored.key,
-      url: stored.url,
-      name: filename,
-      driver: stored.driver,
-      contentType: mimeType,
-      uploadedAt: row.createdAt.toISOString(),
-    }).catch(() => undefined);
-
     return toDto(row);
   } catch (e) {
     log.error({ err: e, key: stored.key }, "media DB create failed — cleanup");
@@ -364,6 +351,5 @@ export async function deleteMedia(id: string): Promise<void> {
       .unlink(path.join(process.cwd(), "public", "uploads", row.filename))
       .catch(() => undefined);
   }
-  await removeMediaIndex(row.storageKey).catch(() => undefined);
   await prisma.mediaAsset.delete({ where: { id } });
 }

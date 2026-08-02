@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { isStaff, readSession } from "@/lib/auth";
+import { staffHasCapability } from "@/lib/staff-access";
 import { deleteMedia, updateMedia } from "@/server/media/service";
 
 const patchSchema = z.object({
@@ -17,8 +18,8 @@ export async function PATCH(
   if (!session || !isStaff(session.role)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  if (session.role === "CS") {
-    return NextResponse.json({ error: "CS không sửa media" }, { status: 403 });
+  if (!staffHasCapability(session.role, "media_mutate")) {
+    return NextResponse.json({ error: "Không có quyền sửa media" }, { status: 403 });
   }
 
   const { id } = await params;
@@ -50,8 +51,8 @@ export async function DELETE(
   if (!session || !isStaff(session.role)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  if (session.role === "CS") {
-    return NextResponse.json({ error: "CS không xóa media" }, { status: 403 });
+  if (!staffHasCapability(session.role, "media_mutate")) {
+    return NextResponse.json({ error: "Không có quyền xóa media" }, { status: 403 });
   }
 
   const { id } = await params;

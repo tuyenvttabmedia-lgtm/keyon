@@ -1,6 +1,7 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import type { UserRole } from "@prisma/client";
+import { prisma } from "@/lib/db";
 import {
   isAuthSessionActive,
   newSessionJti,
@@ -67,11 +68,17 @@ export async function readSession(): Promise<SessionUser | null> {
       void touchAuthSession(jti);
     }
 
+    const account = await prisma.user.findUnique({
+      where: { id: payload.sub },
+      select: { disabledAt: true, role: true, email: true, name: true },
+    });
+    if (!account || account.disabledAt) return null;
+
     return {
       id: payload.sub,
-      email: payload.email,
-      role: payload.role as UserRole,
-      name: typeof payload.name === "string" ? payload.name : null,
+      email: account.email,
+      role: account.role,
+      name: account.name,
       jti,
     };
   } catch {

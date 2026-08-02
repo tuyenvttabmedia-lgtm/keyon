@@ -32,6 +32,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Sai email hoặc mật khẩu" }, { status: 401 });
     }
 
+    if (user.disabledAt) {
+      return NextResponse.json(
+        { error: "Tài khoản đã bị khóa. Liên hệ quản trị viên." },
+        { status: 403 },
+      );
+    }
+
     if (user.totpEnabledAt && user.totpSecretEnc) {
       if (!body.totpCode?.trim()) {
         return NextResponse.json(

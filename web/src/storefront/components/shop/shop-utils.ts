@@ -33,12 +33,38 @@ export const PLATFORM_LABELS: Record<ShopPlatform, string> = {
 
 export function inferCategory(brand: string, name: string): ShopCategoryId {
   const hay = `${brand} ${name}`.toLowerCase();
-  if (/adobe|creative|photoshop|illustrator|premiere/.test(hay)) return "adobe";
-  if (/kaspersky|eset|norton|mcafee|defender|security|antivirus/.test(hay)) return "security";
+  if (/adobe|creative|photoshop|illustrator|premiere|acrobat/.test(hay))
+    return "adobe";
+  if (/kaspersky|eset|norton|mcafee|defender|security|antivirus|nod32/.test(hay))
+    return "security";
   if (/server|vmware|azure|aws|cloud|acronis|backup/.test(hay)) return "cloud";
   if (/office|365|word|excel|powerpoint|outlook/.test(hay)) return "office";
   if (/windows|win\s?1[01]/.test(hay)) return "windows";
+  // Autodesk / CAD stay in "other" until shop gains a dedicated filter
   return "other";
+}
+
+/** Map home CMS iconKey → shop category query (or brand filter hint). */
+export function shopCatFromCmsIcon(
+  iconKey: string | undefined,
+): ShopCategoryId | "all" | null {
+  switch (iconKey) {
+    case "windows":
+      return "windows";
+    case "office":
+      return "office";
+    case "adobe":
+      return "adobe";
+    case "cloud":
+    case "backup":
+      return "cloud";
+    case "security":
+      return "security";
+    case "autodesk":
+      return "other";
+    default:
+      return null;
+  }
 }
 
 export function inferMark(

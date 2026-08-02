@@ -21,9 +21,9 @@ export default async function AdminUsersNewPage() {
         >
           ← Người dùng
         </Link>
-        <h1 className={`mt-2 ${ADMIN_PAGE_TITLE_CLASS}`}>Thêm staff</h1>
+        <h1 className={`mt-2 ${ADMIN_PAGE_TITLE_CLASS}`}>Thêm nhân viên</h1>
         <p className="text-sm text-muted">
-          Tạo tài khoản Admin / Giao hàng / CSKH · mật khẩu bcrypt
+          Tạo tài khoản nội bộ — nhân viên tự đặt mật khẩu qua email
         </p>
       </div>
       <div className="rounded-2xl border border-border bg-card p-5">

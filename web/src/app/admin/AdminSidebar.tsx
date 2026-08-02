@@ -3,6 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { UserRole } from "@prisma/client";
+import { staffCanSeeAdminPath } from "@/lib/staff-access";
+import { staffRoleLabel } from "@/lib/admin-users";
 import {
   BADGE_CLASS,
   CARD_META_CLASS,
@@ -87,9 +90,13 @@ export function AdminSidebar({
   role,
 }: {
   email: string;
-  role: string;
+  role: UserRole;
 }) {
   const pathname = usePathname();
+  const visibleGroups = GROUPS.map((group) => ({
+    ...group,
+    items: group.items.filter((item) => staffCanSeeAdminPath(role, item.href)),
+  })).filter((g) => g.items.length > 0);
 
   return (
     <aside className="flex w-full flex-col border-b border-border bg-card md:w-60 md:min-h-screen md:border-b-0 md:border-r">
@@ -106,7 +113,7 @@ export function AdminSidebar({
         </span>
       </div>
       <nav className="flex gap-1 overflow-x-auto p-3 md:flex-1 md:flex-col md:overflow-y-auto md:gap-0">
-        {GROUPS.map((group, gi) => (
+        {visibleGroups.map((group, gi) => (
           <div key={group.title ?? `g-${gi}`} className="md:mb-3">
             {group.title ? (
               <p className={`mb-1 hidden px-3 pt-1 md:block ${SIDEBAR_SECTION_CLASS}`}>
@@ -131,7 +138,7 @@ export function AdminSidebar({
                 );
               })}
             </div>
-            {gi < GROUPS.length - 1 ? (
+            {gi < visibleGroups.length - 1 ? (
               <div className="my-2 hidden border-t border-border md:block" />
             ) : null}
           </div>
@@ -139,7 +146,7 @@ export function AdminSidebar({
       </nav>
       <div className="hidden border-t border-border p-4 md:block">
         <p className={`truncate ${FIELD_VALUE_CLASS}`}>{email}</p>
-        <p className={CARD_META_CLASS}>{role}</p>
+        <p className={CARD_META_CLASS}>{staffRoleLabel(role)}</p>
         <div className="mt-3 flex gap-3">
           <Link href="/" className={LINK_ACCENT_CLASS}>
             Storefront

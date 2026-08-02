@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { buildRootMetadata } from "@/server/seo/metadata";
 
 /** HOME.spec.md — Font family: Inter (home-v5) */
 const inter = Inter({
@@ -9,11 +10,9 @@ const inter = Inter({
   weight: ["300", "400", "500", "600", "700", "800"],
 });
 
-export const metadata: Metadata = {
-  title: "KEYON — Phần mềm bản quyền",
-  description:
-    "Mua phần mềm bản quyền — thanh toán rõ, nhận hàng rõ, quản lý trong Tài khoản.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return buildRootMetadata();
+}
 
 export default function RootLayout({
   children,

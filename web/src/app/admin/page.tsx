@@ -67,7 +67,7 @@ export default async function AdminHomePage() {
       <div>
         <h1 className={ADMIN_PAGE_TITLE_CLASS}>Dashboard</h1>
         <p className={`mt-1 ${SECTION_LEAD_CLASS}`}>
-          Tổng quan vận hành · Read model (không đụng Core logic)
+          Tổng quan vận hành hôm nay
         </p>
       </div>
 

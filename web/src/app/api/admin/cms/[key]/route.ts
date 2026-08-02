@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { isStaff, readSession } from "@/lib/auth";
+import { AppError, toErrorResponse } from "@/lib/errors";
+import { assertStaffCapability } from "@/lib/staff-access";
+import { MAIN_SEO_PATHS } from "@/lib/seo-main-pages";
+import { normalizeSiteSettings } from "@/server/seo/settings";
 import {
   defaultBlog,
   defaultCmsBanner,
@@ -40,6 +44,61 @@ async function requireAdmin() {
   return session;
 }
 
+function requireSettingsAdmin(
+  session: NonNullable<Awaited<ReturnType<typeof requireAdmin>>>,
+) {
+  assertStaffCapability(
+    session.role,
+    "settings",
+    "Không có quyền cấu hình SEO / cài đặt hệ thống",
+  );
+}
+
+const pageSeoOverrideSchema = z.object({
+  title: z.string().max(200).optional(),
+  description: z.string().max(500).optional(),
+  ogImageUrl: z
+    .string()
+    .max(2000)
+    .optional()
+    .refine(
+      (v) =>
+        !v ||
+        v.startsWith("/") ||
+        /^https?:\/\//i.test(v),
+      "Ảnh chia sẻ phải là path hoặc URL hợp lệ",
+    ),
+});
+
+const settingsSchema = z.object({
+  siteName: z.string().min(1).max(120),
+  supportEmail: z.string().email().max(200),
+  seoTitle: z.string().min(1).max(200),
+  seoDescription: z.string().min(1).max(500),
+  ogImageUrl: z
+    .string()
+    .max(2000)
+    .optional()
+    .refine(
+      (v) =>
+        !v ||
+        v.startsWith("/") ||
+        /^https?:\/\//i.test(v),
+      "Ảnh chia sẻ phải là path hoặc URL hợp lệ",
+    ),
+  pageSeo: z
+    .record(z.string(), pageSeoOverrideSchema)
+    .optional()
+    .refine(
+      (map) =>
+        !map ||
+        Object.keys(map).every((k) =>
+          (MAIN_SEO_PATHS as string[]).includes(k),
+        ),
+      "pageSeo chứa path không được phép",
+    ),
+});
+
 const FILES: Record<string, { file: string; fallback: unknown }> = {
   settings: { file: "settings.json", fallback: defaultSettings },
   home: { file: "home.json", fallback: defaultCmsHome },
@@ -61,35 +120,51 @@ export async function GET(
   _req: Request,
   ctx: { params: Promise<{ key: string }> },
 ) {
-  if (!(await requireAdmin())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const session = await requireAdmin();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { key } = await ctx.params;
+    if (key === "settings") requireSettingsAdmin(session);
+    const entry = FILES[key];
+    if (!entry) return NextResponse.json({ error: "Unknown key" }, { status: 404 });
+    if (key === "settings") {
+      const raw = await readJsonFile("settings.json", defaultSettings);
+      return NextResponse.json(normalizeSiteSettings(raw));
+    }
+    return NextResponse.json(await readJsonFile(entry.file, entry.fallback));
+  } catch (e) {
+    return toErrorResponse(e, "cms.get");
   }
-  const { key } = await ctx.params;
-  const entry = FILES[key];
-  if (!entry) return NextResponse.json({ error: "Unknown key" }, { status: 404 });
-  return NextResponse.json(await readJsonFile(entry.file, entry.fallback));
 }
 
 export async function PUT(
   req: Request,
   ctx: { params: Promise<{ key: string }> },
 ) {
-  if (!(await requireAdmin())) {
+  try {
+  const session = await requireAdmin();
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const { key } = await ctx.params;
   const body = await req.json();
 
   if (key === "settings") {
-    const data = z
-      .object({
-        siteName: z.string().min(1),
-        supportEmail: z.string().email(),
-        seoTitle: z.string().min(1),
-        seoDescription: z.string().min(1),
-        ogImageUrl: z.string().optional(),
-      })
-      .parse(body) satisfies SiteSettings;
+    requireSettingsAdmin(session);
+    const cleanedBody = {
+      ...body,
+      ogImageUrl:
+        typeof body?.ogImageUrl === "string" && !body.ogImageUrl.trim()
+          ? undefined
+          : body?.ogImageUrl,
+    };
+    const parsed = settingsSchema.parse(cleanedBody);
+    const data = normalizeSiteSettings(parsed) satisfies SiteSettings;
+    if (!data.seoTitle.trim() || !data.seoDescription.trim()) {
+      throw new AppError("Thiếu tiêu đề hoặc mô tả SEO mặc định", 400);
+    }
     await writeJsonFile("settings.json", data);
     return NextResponse.json({ ok: true, data });
   }
@@ -601,4 +676,7 @@ export async function PUT(
   }
 
   return NextResponse.json({ error: "Unknown key" }, { status: 404 });
+  } catch (e) {
+    return toErrorResponse(e, "cms.put");
+  }
 }

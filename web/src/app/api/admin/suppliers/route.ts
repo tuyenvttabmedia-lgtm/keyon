@@ -3,6 +3,7 @@ import { isStaff, readSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { audit } from "@/lib/audit";
 import { toErrorResponse, AppError } from "@/lib/errors";
+import { assertStaffCapability } from "@/lib/staff-access";
 import { supplierWriteSchema } from "@/lib/admin-suppliers";
 
 export async function POST(req: Request) {
@@ -11,9 +12,11 @@ export async function POST(req: Request) {
     if (!session || !isStaff(session.role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    if (session.role === "CS") {
-      throw new AppError("CS không được tạo nhà cung cấp", 403);
-    }
+    assertStaffCapability(
+      session.role,
+      "suppliers_mutate",
+      "Không có quyền tạo nhà cung cấp",
+    );
 
     const body = supplierWriteSchema.parse(await req.json());
     const name = body.name.trim();

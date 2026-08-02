@@ -11,7 +11,7 @@ export function isStaffRole(role: UserRole): role is StaffRole {
 export function staffRoleLabel(role: UserRole): string {
   switch (role) {
     case "ADMIN":
-      return "Quản trị";
+      return "Quản trị viên";
     case "FULFILLMENT":
       return "Giao hàng";
     case "CS":
@@ -30,7 +30,7 @@ export function staffRoleHint(role: StaffRole): string {
     case "FULFILLMENT":
       return "Inbox · đơn hàng · kho license";
     case "CS":
-      return "Đơn hàng · khách · tickets (không sửa NCC / settings nặng)";
+      return "Đơn hàng · khách · tickets (không sửa NCC / settings)";
   }
 }
 
@@ -41,6 +41,7 @@ export type AdminUserListRow = {
   role: StaffRole;
   totpEnabled: boolean;
   emailVerified: boolean;
+  disabled: boolean;
   createdAt: string;
   lastSeenAt: string | null;
   activeSessionCount: number;
@@ -52,21 +53,19 @@ export const staffCreateSchema = z.object({
     .trim()
     .email("Email không hợp lệ")
     .transform((v) => v.toLowerCase()),
-  name: z.string().trim().max(120).optional().nullable(),
+  name: z.string().trim().min(1, "Họ tên bắt buộc").max(120),
   role: z.enum(STAFF_ROLES),
-  password: z.string().min(8, "Mật khẩu tối thiểu 8 ký tự").max(128),
 });
 
 export const staffPatchSchema = z
   .object({
     name: z.string().trim().max(120).optional().nullable(),
     role: z.enum(STAFF_ROLES).optional(),
-    password: z
-      .string()
-      .min(8, "Mật khẩu tối thiểu 8 ký tự")
-      .max(128)
-      .optional(),
   })
-  .refine((v) => v.name !== undefined || v.role !== undefined || v.password !== undefined, {
+  .refine((v) => v.name !== undefined || v.role !== undefined, {
     message: "Không có thay đổi",
   });
+
+export const staffStatusSchema = z.object({
+  disabled: z.boolean(),
+});

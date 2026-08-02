@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
-import { isStaff, readSession } from "@/lib/auth";
+import { readSession } from "@/lib/auth";
 import { StorageService, resetStorageCache } from "@/server/storage";
 import { resolveStorage } from "@/server/storage/config";
 
 async function requireAdmin() {
   const session = await readSession();
-  if (!session || !isStaff(session.role)) return null;
-  if (session.role === "CS") return null;
+  if (!session || session.role !== "ADMIN") return null;
   return session;
 }
 

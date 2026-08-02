@@ -9,15 +9,18 @@ import {
 import type { CmsBlog } from "@/server/cms/types";
 import {
   resolveMetaDescription,
-  resolveOgDescription,
   resolveOgImage,
-  resolveOgTitle,
   resolveSeoTitle,
   robotsFollowOf,
   robotsIndexOf,
 } from "@/server/cms/blog-utils";
-import { absoluteAssetUrl } from "@/storefront/lib/asset-url";
 import { BlogDetailView } from "@/storefront/components/blog/BlogDetailView";
+import {
+  resolveWithGlobalFallback,
+  toNextMetadata,
+} from "@/server/seo/metadata";
+import { loadSiteSettings } from "@/server/seo/settings";
+import { absoluteUrl } from "@/server/seo/site-url";
 
 export const dynamic = "force-dynamic";
 
@@ -35,41 +38,29 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const { post } = await loadPublishedPost(slug);
+  const [{ post }, settings] = await Promise.all([
+    loadPublishedPost(slug),
+    loadSiteSettings(),
+  ]);
   if (!post) return { title: "Bài viết" };
 
-  const title = resolveSeoTitle(post);
-  const description = resolveMetaDescription(post);
-  const ogTitle = resolveOgTitle(post);
-  const ogDescription = resolveOgDescription(post);
-  const og = absoluteAssetUrl(resolveOgImage(post) ?? null);
+  const seo = resolveWithGlobalFallback(settings, {
+    path: `/blog/${post.slug}`,
+    title: resolveSeoTitle(post),
+    description: resolveMetaDescription(post),
+    ogImageUrl: resolveOgImage(post) ?? null,
+  });
   const canonical =
-    post.canonicalUrl?.trim() || `https://keyon.vn/blog/${post.slug}`;
-  const index = robotsIndexOf(post);
-  const follow = robotsFollowOf(post);
+    post.canonicalUrl?.trim() || absoluteUrl(`/blog/${post.slug}`);
 
-  return {
-    title,
-    description,
-    alternates: { canonical },
-    robots: {
-      index,
-      follow,
-    },
-    openGraph: {
-      title: ogTitle,
-      description: ogDescription,
+  return toNextMetadata(
+    { ...seo, canonical },
+    {
+      robotsIndex: robotsIndexOf(post),
+      robotsFollow: robotsFollowOf(post),
       type: "article",
-      url: canonical,
-      ...(og ? { images: [{ url: og }] } : {}),
     },
-    twitter: {
-      card: "summary_large_image",
-      title: ogTitle,
-      description: ogDescription,
-      ...(og ? { images: [og] } : {}),
-    },
-  };
+  );
 }
 
 export default async function BlogDetailPage({

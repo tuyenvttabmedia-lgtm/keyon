@@ -55,6 +55,17 @@ export async function GET() {
   const healthy =
     checks.database === "ok" && checks.redis === "ok" && checks.worker === "ok";
 
+  const paymentProvider = String(checks.paymentProvider);
+  const warnings: string[] = [];
+  if (paymentProvider === "stub" && process.env.NODE_ENV === "production") {
+    warnings.push(
+      "PAYMENT_PROVIDER=stub in production — do not accept real payments",
+    );
+  }
+  if (checks.worker !== "ok") {
+    warnings.push("Worker down — fulfillment/email queues will stall");
+  }
+
   return NextResponse.json(
     {
       status: healthy ? "healthy" : "degraded",
@@ -62,6 +73,7 @@ export async function GET() {
       worker,
       queues,
       inventory: inv,
+      warnings: warnings.length ? warnings : undefined,
       timestamp: new Date().toISOString(),
     },
     { status: healthy ? 200 : 503 },

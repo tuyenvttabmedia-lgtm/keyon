@@ -33,14 +33,14 @@ export const homeFixture: HomeContent = {
         description: "Key / tài khoản / kích hoạt sau thanh toán.",
       },
       {
-        title: "Hỗ trợ 24/7",
-        description: "Kênh hỗ trợ khi kích hoạt gặp sự cố.",
+        title: "Hỗ trợ kích hoạt",
+        description: "Ticket trong Tài khoản khi gặp sự cố.",
       },
     ],
   },
   partners: {
     title: "Đối tác tin cậy của KEYON",
-    badges: ["ISO 27001 · GDPR", "PCI DSS Compliant"],
+    badges: ["Bản quyền chính hãng", "Thanh toán rõ ràng"],
     items: [
       { id: "p1", name: "Microsoft", brandColor: "#00A4EF", visible: true },
       { id: "p2", name: "Adobe", brandColor: "#EB1000", visible: true },
@@ -225,13 +225,13 @@ export const homeFixture: HomeContent = {
       {
         id: "w4",
         title: "Thanh toán an toàn",
-        description: "Chuẩn PCI DSS, nhiều cổng thanh toán được bảo vệ.",
+        description: "QR / chuyển khoản rõ — theo dõi trạng thái trong Tài khoản.",
         icon: "card",
       },
       {
         id: "w5",
-        title: "Hỗ trợ 24/7",
-        description: "Kênh hỗ trợ kích hoạt và xử lý sự cố mọi lúc.",
+        title: "Hỗ trợ kích hoạt",
+        description: "Mở ticket trong Tài khoản khi cần hướng dẫn hoặc gửi lại.",
         icon: "support",
       },
       {
@@ -363,7 +363,7 @@ export const homeFixture: HomeContent = {
       {
         title: "Liên hệ",
         links: [
-          { label: "+84 900 000 000", href: "tel:+84900000000" },
+          { label: "Form liên hệ", href: "/contact" },
           { label: "support@keyon.vn", href: "mailto:support@keyon.vn" },
           { label: "Đà Nẵng, Việt Nam", href: "/contact" },
         ],
@@ -374,6 +374,6 @@ export const homeFixture: HomeContent = {
       { label: "Điều khoản sử dụng", href: "/terms" },
       { label: "Chính sách bảo mật", href: "/policy" },
     ],
-    contactLines: ["+84 900 000 000", "support@keyon.vn", "Đà Nẵng, Việt Nam"],
+    contactLines: ["Form liên hệ /contact", "support@keyon.vn", "Đà Nẵng, Việt Nam"],
   },
 };

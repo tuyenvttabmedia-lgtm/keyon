@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { SiteSettings } from "@/server/cms/types";
 import type { StorageSettingsPublic } from "@/server/storage/config";
 import type { PaymentSettingsPublic } from "@/server/payment/config";
@@ -12,6 +12,7 @@ import {
   SETTINGS_TABS,
   type SettingsTab,
 } from "@/lib/admin-settings";
+import { SeoSettingsPanel } from "./seo-settings-panel";
 
 function formatHealthTime(iso: string | null) {
   if (!iso) return "—";
@@ -29,7 +30,7 @@ const TAB_HELP: Record<SettingsTab, { title: string; lead: string }> = {
   },
   seo: {
     title: "SEO",
-    lead: "Meta title / description trang chính (MVP gọn — không SEO Manager đầy đủ).",
+    lead: "Cấu hình thông tin hiển thị trên công cụ tìm kiếm và khi chia sẻ website.",
   },
   email: {
     title: "Email / SMTP",
@@ -56,6 +57,9 @@ export function SettingsForm({
   initialSupplierApi,
   initialMail,
   initialTab = "chung",
+  siteOrigin,
+  siteHostname,
+  indexingAllowed,
 }: {
   initial: SiteSettings;
   initialStorage: StorageSettingsPublic;
@@ -63,10 +67,14 @@ export function SettingsForm({
   initialSupplierApi: SupplierApiSettingsPublic;
   initialMail: MailSettingsPublic;
   initialTab?: SettingsTab;
+  siteOrigin: string;
+  siteHostname: string;
+  indexingAllowed: boolean;
 }) {
   const router = useRouter();
   const [tab, setTab] = useState<SettingsTab>(initialTab);
   const [form, setForm] = useState(initial);
+  const [savedForm, setSavedForm] = useState(initial);
   const [storage, setStorage] = useState(initialStorage);
   const [payment, setPayment] = useState(initialPayment);
   const [supplierApi, setSupplierApi] = useState(initialSupplierApi);
@@ -80,12 +88,30 @@ export function SettingsForm({
   const [msg, setMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => setForm(initial), [initial]);
+  useEffect(() => {
+    setForm(initial);
+    setSavedForm(initial);
+  }, [initial]);
   useEffect(() => setStorage(initialStorage), [initialStorage]);
   useEffect(() => setPayment(initialPayment), [initialPayment]);
   useEffect(() => setSupplierApi(initialSupplierApi), [initialSupplierApi]);
   useEffect(() => setMail(initialMail), [initialMail]);
   useEffect(() => setTab(initialTab), [initialTab]);
+
+  const siteDirty = useMemo(
+    () => JSON.stringify(form) !== JSON.stringify(savedForm),
+    [form, savedForm],
+  );
+
+  useEffect(() => {
+    if (!siteDirty || (tab !== "chung" && tab !== "seo")) return;
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [siteDirty, tab]);
 
   function selectTab(id: SettingsTab) {
     setTab(id);
@@ -97,14 +123,24 @@ export function SettingsForm({
     setLoading(true);
     setMsg(null);
     try {
+      const payload = {
+        ...form,
+        ogImageUrl: form.ogImageUrl?.trim() || undefined,
+        pageSeo: form.pageSeo,
+      };
       const res = await fetch("/api/admin/cms/settings", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Lỗi");
-      setMsg("Đã lưu");
+      const next = (data.data as SiteSettings) ?? form;
+      setForm(next);
+      setSavedForm(next);
+      setMsg(
+        tab === "seo" ? "Đã lưu cấu hình SEO." : "Đã lưu",
+      );
     } catch (e) {
       setMsg(e instanceof Error ? e.message : "Lỗi");
     } finally {
@@ -378,10 +414,12 @@ export function SettingsForm({
       </nav>
 
       <div className="rounded-2xl border border-border bg-card p-6">
-        <div className="mb-5 border-b border-border pb-4">
-          <h2 className="text-base font-semibold text-navy">{help.title}</h2>
-          <p className="mt-1 text-sm text-muted">{help.lead}</p>
-        </div>
+        {tab !== "seo" ? (
+          <div className="mb-5 border-b border-border pb-4">
+            <h2 className="text-base font-semibold text-navy">{help.title}</h2>
+            <p className="mt-1 text-sm text-muted">{help.lead}</p>
+          </div>
+        ) : null}
 
         {tab === "chung" ? (
           <div className="space-y-4">
@@ -413,41 +451,13 @@ export function SettingsForm({
         ) : null}
 
         {tab === "seo" ? (
-          <div className="space-y-4">
-            <label className="block text-sm">
-              <span className="font-medium text-navy">Meta title</span>
-              <input
-                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-                value={form.seoTitle}
-                onChange={(e) => setForm({ ...form, seoTitle: e.target.value })}
-              />
-            </label>
-            <label className="block text-sm">
-              <span className="font-medium text-navy">Meta description</span>
-              <textarea
-                rows={3}
-                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-                value={form.seoDescription}
-                onChange={(e) => setForm({ ...form, seoDescription: e.target.value })}
-              />
-            </label>
-            <label className="block text-sm">
-              <span className="font-medium text-navy">OG image URL (tuỳ chọn)</span>
-              <input
-                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-                placeholder="https://… hoặc /media/…"
-                value={form.ogImageUrl ?? ""}
-                onChange={(e) =>
-                  setForm({ ...form, ogImageUrl: e.target.value || undefined })
-                }
-              />
-            </label>
-            <div className="rounded-lg border border-border bg-[#f8fafc] p-4 text-sm">
-              <p className="text-xs text-emerald-700">keyon.vn</p>
-              <p className="text-lg text-sky-700">{form.seoTitle}</p>
-              <p className="text-muted">{form.seoDescription}</p>
-            </div>
-          </div>
+          <SeoSettingsPanel
+            form={form}
+            setForm={setForm}
+            siteHostname={siteHostname}
+            siteOrigin={siteOrigin}
+            indexingAllowed={indexingAllowed}
+          />
         ) : null}
 
         {tab === "email" ? (
@@ -1083,7 +1093,10 @@ export function SettingsForm({
         <div className="mt-6 flex flex-wrap items-center gap-3">
           <button
             type="button"
-            disabled={loading}
+            disabled={
+              loading ||
+              ((tab === "chung" || tab === "seo") && !siteDirty)
+            }
             onClick={save}
             className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
           >

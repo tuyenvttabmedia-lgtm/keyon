@@ -141,12 +141,21 @@ export type CmsContact = {
   instantPerks: string[];
 };
 
+/** Per-path SEO override for main static listing pages (not product/post detail). */
+export type PageSeoOverride = {
+  title?: string;
+  description?: string;
+  ogImageUrl?: string;
+};
+
 export type SiteSettings = {
   siteName: string;
   supportEmail: string;
   seoTitle: string;
   seoDescription: string;
   ogImageUrl?: string;
+  /** Keyed by path, e.g. "/", "/products", "/blog". */
+  pageSeo?: Record<string, PageSeoOverride>;
 };
 
 /** Object storage (Media). Secret is AES-GCM encrypted at rest. */
@@ -366,7 +375,7 @@ export const defaultCmsFooter: CmsFooter = {
     {
       title: "Liên hệ",
       links: [
-        { label: "+84 900 000 000", href: "tel:+84900000000" },
+        { label: "Form liên hệ", href: "/contact" },
         { label: "support@keyon.vn", href: "mailto:support@keyon.vn" },
         { label: "Đà Nẵng, Việt Nam", href: "/contact" },
       ],
@@ -391,7 +400,7 @@ export const defaultCmsNav: CmsNav = {
 
 export const defaultCmsPartners: CmsPartners = {
   title: "Đối tác tin cậy của KEYON",
-  badges: ["ISO 27001 · GDPR", "PCI DSS Compliant"],
+  badges: ["Bản quyền chính hãng", "Thanh toán rõ ràng"],
   items: [
     { id: "p1", name: "Microsoft", brandColor: "#00A4EF", visible: true },
     { id: "p2", name: "Adobe", brandColor: "#EB1000", visible: true },
@@ -506,9 +515,45 @@ export const defaultCmsProductRatings: CmsProductRatings = {
 export const defaultSettings: SiteSettings = {
   siteName: "KEYON",
   supportEmail: "support@keyon.vn",
-  seoTitle: "KEYON — Phần mềm bản quyền",
+  seoTitle: "KEYON — Phần mềm bản quyền chính hãng",
   seoDescription:
     "Mua phần mềm bản quyền — thanh toán rõ, nhận hàng rõ, quản lý trong Tài khoản.",
+  pageSeo: {
+    "/": {
+      title: "KEYON — Phần mềm bản quyền chính hãng",
+      description:
+        "Mua phần mềm bản quyền — thanh toán rõ, nhận hàng rõ, quản lý trong Tài khoản.",
+    },
+    "/products": {
+      title: "Sản phẩm — KEYON",
+      description: "Danh mục phần mềm bản quyền chính hãng trên KEYON.",
+    },
+    "/blog": {
+      title: "Blog — KEYON",
+      description: "Kiến thức bản quyền, license và vận hành phần mềm cho doanh nghiệp.",
+    },
+    "/contact": {
+      title: "Liên hệ — KEYON",
+      description: "Liên hệ hỗ trợ KEYON — tư vấn mua bản quyền phần mềm.",
+    },
+    "/about": {
+      title: "Về KEYON",
+      description: "KEYON — nền tảng mua phần mềm bản quyền chính hãng.",
+    },
+    "/faq": {
+      title: "Hỗ trợ / FAQ — KEYON",
+      description: "Câu hỏi thường gặp về mua, kích hoạt và hỗ trợ bản quyền trên KEYON.",
+    },
+    "/policy": {
+      title: "Chính sách — KEYON",
+      description:
+        "Điều khoản, giao hàng, hoàn tiền, bảo hành, bảo mật và hỗ trợ tại KEYON.",
+    },
+    "/brands": {
+      title: "Thương hiệu — KEYON",
+      description: "Danh sách thương hiệu phần mềm trên KEYON.",
+    },
+  },
 };
 
 export const defaultStorageSettings: StorageSettings = {

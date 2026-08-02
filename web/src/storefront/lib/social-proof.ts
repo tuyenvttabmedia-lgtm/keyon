@@ -12,29 +12,24 @@ function hashSlug(slug: string): number {
   return h >>> 0;
 }
 
-/** Stable-ish sold count; drifts by day/hour so it feels alive without jumping wildly. */
+/**
+ * Soft social-proof only — modest ranges so storefront does not claim
+ * enterprise-scale volume KEYON has not earned yet.
+ */
 export function computeSocialSold(slug: string, nowMs = Date.now()): number {
   const h = hashSlug(slug);
-  // Uneven base in a realistic retail range
-  const base = 1283 + (h % 5189);
+  const base = 18 + (h % 87); // 18–104
   const day = Math.floor(nowMs / 86_400_000);
-  const hour = Math.floor(nowMs / 3_600_000);
-  // ~2–7 units/day growth pattern (product-specific)
-  const dailyPace = 2 + (h % 6);
-  const growth = Math.floor((day * dailyPace + (h % 113)) % 941);
-  const hourBump = (hour + (h % 17)) % 5; // 0–4 within the hour
-  let n = base + growth + hourBump;
-  // Avoid suspiciously round endings (…00, …000)
-  if (n % 100 === 0) n += 3 + (h % 11);
+  const growth = Math.floor((day + (h % 17)) % 24); // slow drift
+  let n = base + growth;
   if (n % 10 === 0) n += 1 + (h % 3);
   return n;
 }
 
-/** Reviews << sold, correlated so ratio looks natural (~2.5%–4%). */
+/** Reviews << sold; keep counts small and believable for a young shop. */
 export function computeSocialReviews(slug: string, sold: number): number {
   const h = hashSlug(slug);
-  const rate = 0.025 + ((h % 20) / 1000); // 2.5%–4.4%
-  let reviews = Math.max(37, Math.round(sold * rate) + (h % 19));
+  let reviews = Math.max(3, Math.round(sold * 0.12) + (h % 5));
   if (reviews % 10 === 0) reviews += 1;
   return reviews;
 }

@@ -32,10 +32,11 @@ export function ShopCatalog({
   initialCategory = "all",
   initialQuery = "",
 }: ShopCatalogProps) {
-  const boundMin = 100_000;
+  const prices = products.map((p) => p.priceVnd).filter((n) => n > 0);
+  const boundMin = prices.length ? Math.min(...prices) : 0;
   const boundMax = Math.max(
     10_000_000,
-    ...products.map((p) => p.priceVnd),
+    ...prices,
     1_000_000,
   );
 
@@ -44,8 +45,9 @@ export function ShopCatalog({
   );
   const [licenses, setLicenses] = useState<ShopLicenseType[]>([]);
   const [platforms, setPlatforms] = useState<ShopPlatform[]>([]);
+  /** Default: full catalog range — do not hide SKUs under an arbitrary floor. */
   const [priceMin, setPriceMin] = useState(boundMin);
-  const [priceMax, setPriceMax] = useState(Math.min(boundMax, 10_000_000));
+  const [priceMax, setPriceMax] = useState(boundMax);
   const [sort, setSort] = useState<ShopSort>("newest");
   const [view, setView] = useState<ShopViewMode>("grid");
   const [page, setPage] = useState(1);
@@ -114,14 +116,14 @@ export function ShopCatalog({
     licenses.length > 0 ||
     platforms.length > 0 ||
     priceMin > boundMin ||
-    priceMax < Math.min(boundMax, 10_000_000);
+    priceMax < boundMax;
 
   const clearFilters = () => {
     setCategory("all");
     setLicenses([]);
     setPlatforms([]);
     setPriceMin(boundMin);
-    setPriceMax(Math.min(boundMax, 10_000_000));
+    setPriceMax(boundMax);
     setPage(1);
   };
 

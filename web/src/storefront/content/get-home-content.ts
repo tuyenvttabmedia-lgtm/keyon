@@ -22,28 +22,75 @@ import {
 } from "@/server/cms/store";
 import { ProductRatingsService, getProductRatingMap } from "@/server/product-ratings";
 import type { CategoryIconKey, CategoryItem } from "./types";
+import { prisma } from "@/lib/db";
+import {
+  inferCategory,
+  shopCatFromCmsIcon,
+} from "@/storefront/components/shop/shop-utils";
+import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
+import type { ShopCategoryId } from "@/storefront/components/shop/types";
 
 /**
  * Home content: fixture + overlay CMS (hero, nav, footer, news, partners, categories, ratings, why banner).
  * Wrapped in React cache() so layout + page share one load per request.
  */
 export const getHomeContent = cache(async (): Promise<HomeContent> => {
-  const [cmsHome, posts, footer, nav, partners, categories, ratingMap, banner] =
-    await Promise.all([
-      readJsonFile("home.json", defaultCmsHome),
-      readJsonFile<BlogPost[]>("blog.json", defaultBlog),
-      readJsonFile<CmsFooter>("footer.json", defaultCmsFooter),
-      readJsonFile<CmsNav>("nav.json", defaultCmsNav),
-      readJsonFile<CmsPartners>("partners.json", defaultCmsPartners),
-      readJsonFile<CmsCategories>("categories.json", defaultCmsCategories),
-      getProductRatingMap(),
-      readJsonFile<CmsBanner>("banner.json", defaultCmsBanner),
-    ]);
+  const [
+    cmsHome,
+    posts,
+    footer,
+    nav,
+    partners,
+    categories,
+    ratingMap,
+    banner,
+    catalogRows,
+  ] = await Promise.all([
+    readJsonFile("home.json", defaultCmsHome),
+    readJsonFile<BlogPost[]>("blog.json", defaultBlog),
+    readJsonFile<CmsFooter>("footer.json", defaultCmsFooter),
+    readJsonFile<CmsNav>("nav.json", defaultCmsNav),
+    readJsonFile<CmsPartners>("partners.json", defaultCmsPartners),
+    readJsonFile<CmsCategories>("categories.json", defaultCmsCategories),
+    getProductRatingMap(),
+    readJsonFile<CmsBanner>("banner.json", defaultCmsBanner),
+    prisma.product.findMany({
+      where: { active: true },
+      select: {
+        name: true,
+        categoryKey: true,
+        brand: { select: { name: true } },
+        variants: {
+          where: { active: true },
+          select: { id: true },
+          take: 1,
+        },
+      },
+    }),
+  ]);
 
   const published = posts.filter((p) => p.status === "published").slice(0, 4);
   const partnerItems = (partners.items?.length ? partners.items : homeFixture.partners.items).filter(
     (p) => p.visible !== false,
   );
+
+  const shopCounts: Record<ShopCategoryId, number> = {
+    windows: 0,
+    office: 0,
+    adobe: 0,
+    cloud: 0,
+    security: 0,
+    other: 0,
+  };
+  for (const p of catalogRows) {
+    if (!p.variants.length) continue;
+    const categoryId: ShopCategoryId =
+      p.categoryKey &&
+      (PRODUCT_CATEGORY_KEYS as readonly string[]).includes(p.categoryKey)
+        ? (p.categoryKey as ShopCategoryId)
+        : inferCategory(p.brand.name, p.name);
+    shopCounts[categoryId] += 1;
+  }
 
   const categorySource =
     categories.items?.length > 0 ? categories.items : defaultCmsCategories.items;
@@ -52,15 +99,28 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
     .slice()
     .sort((a, b) => a.sortOrder - b.sortOrder)
     .slice(0, 8)
-    .map((c) => ({
-      id: c.id,
-      title: c.title,
-      countLabel: c.countLabel,
-      href: c.href,
-      icon: toCategoryIcon(c.iconKey),
-      iconUrl: c.iconUrl,
-      accentColor: c.accentColor,
-    }));
+    .map((c) => {
+      const shopCat = shopCatFromCmsIcon(c.iconKey);
+      const liveCount =
+        shopCat && shopCat !== "all" ? shopCounts[shopCat] : undefined;
+      const countLabel =
+        liveCount !== undefined
+          ? `${liveCount} sản phẩm`
+          : c.countLabel;
+      const href =
+        shopCat && shopCat !== "all"
+          ? `/products?cat=${shopCat}`
+          : c.href || "/products";
+      return {
+        id: c.id,
+        title: c.title,
+        countLabel,
+        href,
+        icon: toCategoryIcon(c.iconKey),
+        iconUrl: c.iconUrl,
+        accentColor: c.accentColor,
+      };
+    });
 
   const featuredItems = ProductRatingsService.applyToFeatured(
     homeFixture.featured.items,

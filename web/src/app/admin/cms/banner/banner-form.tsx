@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import type { CmsBanner } from "@/server/cms/types";
-import { MediaPicker } from "@/app/admin/products/MediaPicker";
+import { MediaPicker } from "@/app/admin/media/MediaPicker";
 import { CmsSaveForm } from "../CmsSaveForm";
 
 export function BannerForm({ initial }: { initial: CmsBanner }) {
@@ -82,8 +82,8 @@ function BannerFields({
         multiple={false}
         purpose="ui"
         title="Chọn ảnh banner"
-        onSelect={(urls) => {
-          if (urls[0]) setForm({ ...form, imageUrl: urls[0] });
+        onSelect={(items) => {
+          if (items[0]?.url) setForm({ ...form, imageUrl: items[0].url });
         }}
       />
 

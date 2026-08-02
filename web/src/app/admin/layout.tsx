@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { isStaff, readSession } from "@/lib/auth";
 import { AdminSidebar } from "./AdminSidebar";
+import { AdminPathGuard } from "./admin-path-guard";
 
 export default async function AdminLayout({
   children,
@@ -12,6 +13,7 @@ export default async function AdminLayout({
 
   return (
     <div className="flex min-h-screen flex-col bg-[#f5f7fa] md:flex-row">
+      <AdminPathGuard role={session.role} />
       <AdminSidebar email={session.email} role={session.role} />
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex h-14 items-center justify-between border-b border-border bg-card px-4 md:px-6">

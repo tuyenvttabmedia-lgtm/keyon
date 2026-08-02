@@ -1,9 +1,15 @@
+import type { Metadata } from "next";
 import { defaultBlog, defaultCmsBlog, readJsonFile } from "@/server/cms/store";
 import type { BlogCategoryId } from "@/server/cms/types";
 import { BlogIndexView } from "@/storefront/components/blog/BlogIndexView";
 import { BLOG_CATEGORIES } from "@/storefront/lib/blog";
+import { buildMainPageMetadata } from "@/server/seo/metadata";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata(): Promise<Metadata> {
+  return buildMainPageMetadata("/blog");
+}
 
 export default async function BlogIndexPage({
   searchParams,

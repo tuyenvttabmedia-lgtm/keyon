@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { MediaPicker } from "./MediaPicker";
+import { MediaPicker } from "@/app/admin/media/MediaPicker";
 
 type Props = {
   url: string;
@@ -69,8 +69,8 @@ export function OgImagePicker({ url, onChange, fallbackHint }: Props) {
         multiple={false}
         purpose="product"
         title="Chọn ảnh Open Graph"
-        onSelect={(urls) => {
-          if (urls[0]) onChange(urls[0]);
+        onSelect={(items) => {
+          if (items[0]?.url) onChange(items[0].url);
         }}
       />
     </div>

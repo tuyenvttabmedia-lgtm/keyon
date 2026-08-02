@@ -32,7 +32,21 @@ import {
   PRODUCT_CATEGORY_KEYS,
 } from "@/storefront/lib/product-cms";
 import { mapProductsToShopCards } from "@/storefront/lib/related-products";
-import { absoluteAssetUrl } from "@/storefront/lib/asset-url";
+import {
+  resolveWithGlobalFallback,
+  toNextMetadata,
+} from "@/server/seo/metadata";
+import { loadSiteSettings } from "@/server/seo/settings";
+
+/** Strip internal demo prefixes from customer-facing blurb. */
+function cleanStorefrontBlurb(raw: string | null | undefined): string | undefined {
+  const t = raw?.trim();
+  if (!t) return undefined;
+  const cleaned = t
+    .replace(/^demo\s*ops\s*[·•\-–—:]?\s*/i, "")
+    .trim();
+  return cleaned || undefined;
+}
 
 export const dynamic = "force-dynamic";
 
@@ -42,45 +56,37 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const product = await prisma.product.findUnique({
-    where: { slug },
-    select: {
-      name: true,
-      active: true,
-      seoTitle: true,
-      seoDescription: true,
-      shortDescription: true,
-      description: true,
-      ogImageUrl: true,
-      galleryUrls: true,
-    },
-  });
+  const [product, settings] = await Promise.all([
+    prisma.product.findUnique({
+      where: { slug },
+      select: {
+        name: true,
+        active: true,
+        seoTitle: true,
+        seoDescription: true,
+        shortDescription: true,
+        description: true,
+        ogImageUrl: true,
+        galleryUrls: true,
+      },
+    }),
+    loadSiteSettings(),
+  ]);
   if (!product || !product.active) {
     return { title: "Sản phẩm" };
   }
-  const title = product.seoTitle?.trim() || product.name;
-  const description =
-    product.seoDescription?.trim() ||
-    product.shortDescription?.trim() ||
-    product.description?.trim()?.slice(0, 160) ||
-    `${product.name} — bản quyền số trên KEYON`;
   const gallery = parseStringList(product.galleryUrls);
-  const og = absoluteAssetUrl(product.ogImageUrl || gallery[0] || null);
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      ...(og ? { images: [{ url: og }] } : {}),
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      ...(og ? { images: [og] } : {}),
-    },
-  };
+  const seo = resolveWithGlobalFallback(settings, {
+    path: `/products/${slug}`,
+    title: product.seoTitle?.trim() || product.name,
+    description:
+      product.seoDescription?.trim() ||
+      product.shortDescription?.trim() ||
+      product.description?.trim()?.slice(0, 160) ||
+      undefined,
+    ogImageUrl: product.ogImageUrl || gallery[0] || null,
+  });
+  return toNextMetadata(seo);
 }
 
 export default async function ProductPage({
@@ -306,7 +312,7 @@ export default async function ProductPage({
     description:
       product.description?.trim() ||
       `${product.name} — bản quyền số chính hãng. Thanh toán rõ, nhận trong Tài khoản KEYON.`,
-    shortDescription: product.shortDescription?.trim() || undefined,
+    shortDescription: cleanStorefrontBlurb(product.shortDescription),
     brandName: product.brand.name,
     categoryId,
     categoryLabel,

@@ -25,6 +25,7 @@ export default async function AdminUsersPage() {
       role: true,
       totpEnabledAt: true,
       emailVerifiedAt: true,
+      disabledAt: true,
       createdAt: true,
       authSessions: {
         where: { revokedAt: null },
@@ -49,6 +50,7 @@ export default async function AdminUsersPage() {
       role: u.role as StaffRole,
       totpEnabled: Boolean(u.totpEnabledAt),
       emailVerified: Boolean(u.emailVerifiedAt),
+      disabled: Boolean(u.disabledAt),
       createdAt: u.createdAt.toISOString(),
       lastSeenAt: u.authSessions[0]?.lastSeenAt?.toISOString() ?? null,
       activeSessionCount: u._count.authSessions,
@@ -68,7 +70,7 @@ export default async function AdminUsersPage() {
         <div>
           <h1 className={ADMIN_PAGE_TITLE_CLASS}>Người dùng</h1>
           <p className="text-sm text-muted">
-            Tài khoản staff · role đơn giản (Admin / Giao hàng / CSKH)
+            Quản lý tài khoản nhân viên và quyền truy cập hệ thống
           </p>
         </div>
         {canManage ? (
@@ -76,7 +78,7 @@ export default async function AdminUsersPage() {
             href="/admin/users/new"
             className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white"
           >
-            + Thêm staff
+            + Thêm nhân viên
           </Link>
         ) : null}
       </div>

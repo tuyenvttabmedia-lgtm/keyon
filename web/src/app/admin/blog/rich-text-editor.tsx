@@ -11,7 +11,7 @@ import { Table } from "@tiptap/extension-table";
 import { TableRow } from "@tiptap/extension-table-row";
 import { TableCell } from "@tiptap/extension-table-cell";
 import { TableHeader } from "@tiptap/extension-table-header";
-import { MediaPicker } from "@/app/admin/products/MediaPicker";
+import { MediaPicker } from "@/app/admin/media/MediaPicker";
 import { useState } from "react";
 
 type Props = {
@@ -254,14 +254,16 @@ export function RichTextEditor({ value, onChange }: Props) {
         multiple={false}
         purpose="blog"
         title="Chèn ảnh vào bài viết"
-        onSelect={(urls) => {
-          const url = urls[0];
-          if (!url) return;
-          const alt = window.prompt("Alt text (tuỳ chọn)", "") ?? "";
+        onSelect={(items) => {
+          const item = items[0];
+          if (!item?.url) return;
+          const preset = item.altText?.trim() || "";
+          const alt =
+            window.prompt("Alt text (tuỳ chọn)", preset) ?? preset;
           editor
             .chain()
             .focus()
-            .setImage({ src: url, alt: alt.trim() || undefined })
+            .setImage({ src: item.url, alt: alt.trim() || undefined })
             .run();
         }}
       />

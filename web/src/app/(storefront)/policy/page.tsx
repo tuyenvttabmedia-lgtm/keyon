@@ -1,13 +1,13 @@
+import type { Metadata } from "next";
 import { PolicyView } from "@/storefront/components/policy/PolicyView";
 import { loadPolicyCms } from "@/storefront/components/policy/load-policy-cms";
+import { buildMainPageMetadata } from "@/server/seo/metadata";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = {
-  title: "Chính sách — KEYON",
-  description:
-    "Điều khoản, giao hàng, hoàn tiền, bảo hành, bảo mật và hỗ trợ tại KEYON.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return buildMainPageMetadata("/policy");
+}
 
 export default async function PolicyPage() {
   const cms = await loadPolicyCms();

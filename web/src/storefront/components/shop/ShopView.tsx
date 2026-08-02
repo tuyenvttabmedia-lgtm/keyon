@@ -12,17 +12,17 @@ import {
 } from "@/storefront/typography";
 
 const TRUST = [
-  { title: "Giao license", desc: "1-5 phút", icon: "bolt" as const },
-  { title: "Chính hãng", desc: "100%", icon: "check" as const },
-  { title: "Thanh toán an toàn", desc: "PCI DSS, SSL", icon: "lock" as const },
-  { title: "Hỗ trợ 24/7", desc: "Mọi lúc, mọi nơi", icon: "support" as const },
+  { title: "Giao license", desc: "Theo SLA từng gói", icon: "bolt" as const },
+  { title: "Chính hãng", desc: "Nguồn cung rõ", icon: "check" as const },
+  { title: "Thanh toán an toàn", desc: "QR / chuyển khoản", icon: "lock" as const },
+  { title: "Hỗ trợ kích hoạt", desc: "Ticket trong Tài khoản", icon: "support" as const },
 ];
 
 const STATS = [
-  { value: "120.000+", label: "License đã được phân phối", icon: "grid" as const },
-  { value: "99.98%", label: "Đơn hàng giao thành công", icon: "shield" as const },
-  { value: "1 phút", label: "Thời gian giao hàng trung bình", icon: "clock" as const },
-  { value: "24/7", label: "Hỗ trợ mọi lúc mọi nơi", icon: "headset" as const },
+  { value: "Instant", label: "Giao key tự động khi còn tồn", icon: "grid" as const },
+  { value: "Manual", label: "Ops xử lý khi cần kiểm tra", icon: "shield" as const },
+  { value: "Portal", label: "License lưu trong Tài khoản", icon: "clock" as const },
+  { value: "Ticket", label: "Hỗ trợ kích hoạt có lịch sử", icon: "headset" as const },
 ];
 
 export function ShopView(props: ShopCatalogProps) {

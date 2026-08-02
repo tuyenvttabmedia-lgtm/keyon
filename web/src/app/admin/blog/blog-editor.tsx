@@ -11,7 +11,7 @@ import {
   uniqueBlogSlug,
 } from "@/server/cms/blog-utils";
 import { sanitizeBlogHtml } from "@/lib/sanitize-blog-html";
-import { MediaPicker } from "@/app/admin/products/MediaPicker";
+import { MediaPicker } from "@/app/admin/media/MediaPicker";
 import { RichTextEditor } from "./rich-text-editor";
 import {
   ADMIN_PAGE_TITLE_CLASS,
@@ -611,8 +611,13 @@ export function BlogEditor({
         multiple={false}
         purpose="blog"
         title="Chọn ảnh đại diện"
-        onSelect={(urls) => {
-          if (urls[0]) patch({ coverUrl: urls[0] });
+        onSelect={(items) => {
+          const item = items[0];
+          if (!item?.url) return;
+          patch({
+            coverUrl: item.url,
+            coverAlt: item.altText?.trim() || form.coverAlt,
+          });
         }}
       />
       <MediaPicker
@@ -621,8 +626,8 @@ export function BlogEditor({
         multiple={false}
         purpose="blog"
         title="Chọn ảnh Open Graph"
-        onSelect={(urls) => {
-          if (urls[0]) patch({ ogImageUrl: urls[0] });
+        onSelect={(items) => {
+          if (items[0]?.url) patch({ ogImageUrl: items[0].url });
         }}
       />
     </div>

@@ -24,13 +24,14 @@ export default async function AdminUserDetailPage({
       role: true,
       totpEnabledAt: true,
       emailVerifiedAt: true,
+      disabledAt: true,
       createdAt: true,
       passwordChangedAt: true,
       authSessions: {
         where: { revokedAt: null },
         orderBy: { lastSeenAt: "desc" },
         take: 1,
-        select: { lastSeenAt: true, deviceLabel: true },
+        select: { lastSeenAt: true },
       },
       _count: {
         select: {
@@ -52,11 +53,12 @@ export default async function AdminUserDetailPage({
         role: user.role as StaffRole,
         totpEnabled: Boolean(user.totpEnabledAt),
         emailVerified: Boolean(user.emailVerifiedAt),
+        disabled: Boolean(user.disabledAt),
         createdAt: user.createdAt.toISOString(),
         passwordChangedAt: user.passwordChangedAt?.toISOString() ?? null,
         lastSeenAt: user.authSessions[0]?.lastSeenAt?.toISOString() ?? null,
         activeSessionCount: user._count.authSessions,
-        deviceLabel: user.authSessions[0]?.deviceLabel ?? null,
+        isSelf: session?.id === user.id,
       }}
     />
   );
