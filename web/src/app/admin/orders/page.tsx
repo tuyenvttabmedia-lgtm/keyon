@@ -7,10 +7,7 @@ import {
 } from "@/server/admin/orders-query";
 import { OrdersToolbar } from "./orders-toolbar";
 import { OrdersList } from "./orders-list";
-import {
-  ADMIN_PAGE_TITLE_CLASS,
-  SECTION_LEAD_CLASS,
-} from "@/storefront/typography";
+import { AdminPageHeader } from "../ui/AdminPageHeader";
 
 export const dynamic = "force-dynamic";
 
@@ -41,15 +38,12 @@ export default async function AdminOrdersPage({
   ]);
 
   return (
-    <div className="space-y-3">
-      <div className="flex flex-wrap items-end justify-between gap-2">
-        <div>
-          <h1 className={ADMIN_PAGE_TITLE_CLASS}>Đơn hàng</h1>
-          <p className={SECTION_LEAD_CLASS}>
-            Order Workspace · dual status · xử lý nhanh
-          </p>
-        </div>
-      </div>
+    <div className="space-y-4">
+      <AdminPageHeader
+        title="Đơn hàng"
+        lead="Order Workspace · dual status · xử lý nhanh"
+        crumbs={[{ label: "Đơn hàng" }]}
+      />
 
       <Suspense
         fallback={

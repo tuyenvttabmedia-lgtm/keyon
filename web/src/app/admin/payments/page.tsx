@@ -3,10 +3,7 @@ import { parsePaymentsSearchParams } from "@/lib/admin-payments";
 import { queryAdminPayments } from "@/server/admin/payments-query";
 import { PaymentsToolbar } from "./payments-toolbar";
 import { PaymentsList } from "./payments-list";
-import {
-  ADMIN_PAGE_TITLE_CLASS,
-  SECTION_LEAD_CLASS,
-} from "@/storefront/typography";
+import { AdminPageHeader } from "../ui/AdminPageHeader";
 
 export const dynamic = "force-dynamic";
 
@@ -21,16 +18,14 @@ export default async function AdminPaymentsPage({
     await queryAdminPayments(query);
 
   return (
-    <div className="space-y-3">
-      <div>
-        <h1 className={ADMIN_PAGE_TITLE_CLASS}>Thanh toán</h1>
-        <p className={SECTION_LEAD_CLASS}>
-          Payment Workspace · tra cứu / đối soát nhẹ (PL5: Export CSV gồm
-          reference ↔ order ↔ deliveryCount)
-        </p>
-      </div>
+    <div className="space-y-4">
+      <AdminPageHeader
+        title="Thanh toán"
+        lead="Payment Workspace · tra cứu / đối soát nhẹ (PL5 CSV)"
+        crumbs={[{ label: "Thanh toán" }]}
+      />
 
-      <div className="rounded-xl border border-border bg-card px-4 py-3 text-sm text-muted">
+      <div className="admin-panel rounded-xl border border-border bg-card px-4 py-3 text-sm text-muted">
         <p className="font-medium text-navy">Checklist đối soát pilot (PL5)</p>
         <ol className="mt-1 list-decimal space-y-0.5 pl-5">
           <li>Lọc khoảng ngày pilot → Export CSV</li>

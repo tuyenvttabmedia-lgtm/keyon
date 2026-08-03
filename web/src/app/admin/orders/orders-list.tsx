@@ -127,7 +127,7 @@ export function OrdersList({ rows }: { rows: AdminOrderListRow[] }) {
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-border bg-card">
+    <div className="admin-panel overflow-hidden rounded-2xl border border-border bg-card">
       <ul className="divide-y divide-border">
         {rows.map((o) => {
           const payment = {

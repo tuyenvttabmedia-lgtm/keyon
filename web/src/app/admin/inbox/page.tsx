@@ -3,10 +3,7 @@ import { redirect } from "next/navigation";
 import { isStaff, readSession } from "@/lib/auth";
 import { loadInboxWorkspace } from "@/server/admin/inbox-query";
 import { InboxWorkspace } from "./inbox-workspace";
-import {
-  ADMIN_PAGE_TITLE_CLASS,
-  SECTION_LEAD_CLASS,
-} from "@/storefront/typography";
+import { AdminPageHeader } from "../ui/AdminPageHeader";
 
 export const dynamic = "force-dynamic";
 
@@ -17,13 +14,12 @@ export default async function AdminInboxPage() {
   const { jobs, kpi } = await loadInboxWorkspace();
 
   return (
-    <div className="space-y-3">
-      <div>
-        <h1 className={ADMIN_PAGE_TITLE_CLASS}>Inbox</h1>
-        <p className={SECTION_LEAD_CLASS}>
-          Fulfillment Workspace · giao nhanh · ít click
-        </p>
-      </div>
+    <div className="space-y-4">
+      <AdminPageHeader
+        title="Inbox"
+        lead="Fulfillment Workspace · giao nhanh · ít click"
+        crumbs={[{ label: "Inbox" }]}
+      />
 
       <Suspense
         fallback={
