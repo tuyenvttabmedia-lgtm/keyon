@@ -601,32 +601,44 @@ export const defaultMailSettings: MailSettings = {
   },
 };
 
-/** Payment gateway (SePay legacy QR). Secrets AES-GCM encrypted at rest. */
+/** Payment gateway (SePay). Secrets AES-GCM encrypted at rest. */
 export type PaymentSettings = {
   provider: "stub" | "sepay" | "payos" | "megapay";
   sepay: {
+    /** sandbox → PG checkout; production → bank VietQR + HMAC webhook */
+    environment?: "sandbox" | "production";
     accountNumber: string;
     bankBin: string;
     bankName: string;
     bankDisplayName: string;
     accountName: string;
     qrTemplate: string;
+    /** PG merchant id (SP-TEST-…) */
+    merchantId?: string;
+    paymentMethod?: "BANK_TRANSFER" | "NAPAS_BANK_TRANSFER";
     apiKeyEnc: string;
     webhookSecretEnc: string;
+    merchantSecretEnc?: string;
+    ipnSecretEnc?: string;
   };
 };
 
 export const defaultPaymentSettings: PaymentSettings = {
   provider: "stub",
   sepay: {
+    environment: "sandbox",
     accountNumber: "",
     bankBin: "",
     bankName: "",
     bankDisplayName: "",
     accountName: "",
     qrTemplate: "compact2",
+    merchantId: "",
+    paymentMethod: "BANK_TRANSFER",
     apiKeyEnc: "",
     webhookSecretEnc: "",
+    merchantSecretEnc: "",
+    ipnSecretEnc: "",
   },
 };
 

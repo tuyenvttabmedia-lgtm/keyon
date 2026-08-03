@@ -56,6 +56,7 @@ export type CheckoutConfirmViewProps = {
     expiresAt: string | null;
     qrImageUrl?: string;
     canConfirm: boolean;
+    notice?: string | null;
   };
   methodTitle: string;
 };
@@ -92,6 +93,11 @@ export function CheckoutConfirmView({
           <p className={`mx-auto mt-2 max-w-2xl ${SECTION_LEAD_CLASS}`}>
             {cms.confirmLead}
           </p>
+          {payment.notice ? (
+            <p className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-900">
+              {payment.notice}
+            </p>
+          ) : null}
           <p
             className={`mt-3 inline-flex items-center justify-center gap-1.5 ${FIELD_CAPTION_CLASS} text-accent`}
           >

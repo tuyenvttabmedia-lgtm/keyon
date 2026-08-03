@@ -5,8 +5,16 @@ import {
   writeJsonFile,
   type PaymentSettings,
 } from "@/server/cms/store";
+import type { SepayPgPaymentMethod } from "./providers/sepay-pg";
+
+export type SepayEnvironment = "sandbox" | "production";
+/** Derived from environment — one active method at a time. */
+export type SepayMode = "payment_gateway" | "bank_webhook";
 
 export type ResolvedSepayConfig = {
+  environment: SepayEnvironment;
+  mode: SepayMode;
+  /** Bank / VietQR (production) */
   accountNumber: string;
   bankBin: string;
   bankName: string;
@@ -15,8 +23,11 @@ export type ResolvedSepayConfig = {
   qrTemplate: string;
   apiKey: string;
   webhookSecret: string;
-  /** SePay company / unit code (e.g. SP-TEST-…) — display / ops reference */
-  merchantCode: string;
+  /** PG sandbox */
+  merchantId: string;
+  merchantSecretKey: string;
+  ipnSecretKey: string;
+  paymentMethod: SepayPgPaymentMethod;
   source: "admin" | "env" | "mixed";
 };
 
@@ -41,6 +52,26 @@ function pick(admin: string, env: string | undefined): string {
   return (env ?? "").trim();
 }
 
+function resolveEnvironment(
+  adminEnv: string | undefined,
+): SepayEnvironment {
+  const fromAdmin = (adminEnv ?? "").trim().toLowerCase();
+  if (fromAdmin === "sandbox" || fromAdmin === "production") {
+    return fromAdmin;
+  }
+  const fromEnv = (process.env.SEPAY_ENVIRONMENT ?? "").trim().toLowerCase();
+  if (fromEnv === "sandbox" || fromEnv === "production") {
+    return fromEnv;
+  }
+  // Default sandbox while testing PG; production must set explicitly.
+  return "sandbox";
+}
+
+function modeForEnvironment(environment: SepayEnvironment): SepayMode {
+  // KEYON: sandbox = PG IPN; production = bank HMAC webhook.
+  return environment === "sandbox" ? "payment_gateway" : "bank_webhook";
+}
+
 /** Field-level hybrid like CardOn: admin value if set, else ENV. */
 export async function resolvePayment(): Promise<ResolvedPayment> {
   const settings = await readJsonFile("payment.json", defaultPaymentSettings);
@@ -48,11 +79,7 @@ export async function resolvePayment(): Promise<ResolvedPayment> {
   const valid = ["stub", "sepay", "payos", "megapay"] as const;
   const adminProvider = settings.provider;
   const useAdminProvider = valid.includes(adminProvider);
-  // Admin file always has a provider (default stub). Prefer admin when
-  // payment.json was intentionally saved with sepay/payos/megapay, OR when
-  // ENV is also stub. If ENV forces sepay and admin still default stub with
-  // empty bank fields — still allow ENV via: admin provider wins only if
-  // admin.provider !== stub OR admin has sepay account filled.
+
   let provider: ResolvedPayment["provider"] = "stub";
   let providerSource: "admin" | "env" = "env";
 
@@ -67,11 +94,10 @@ export async function resolvePayment(): Promise<ResolvedPayment> {
     providerSource = "admin";
   }
 
-  // If admin explicitly set stub (and saved), and ENV says sepay — ENV wins for ops override
-  // unless admin has non-stub. Already handled above.
-  // Extra: admin set stub intentionally while ENV=sepay → ENV wins (ops). Good.
-
   const s = settings.sepay;
+  const environment = resolveEnvironment(s.environment);
+  const mode = modeForEnvironment(environment);
+
   const accountNumber = pick(s.accountNumber, process.env.SEPAY_ACCOUNT_NUMBER);
   const bankBin = pick(
     s.bankBin,
@@ -88,18 +114,47 @@ export async function resolvePayment(): Promise<ResolvedPayment> {
     decryptSecret(s.apiKeyEnc) || (process.env.SEPAY_API_KEY ?? "").trim();
   const webhookSecret =
     decryptSecret(s.webhookSecretEnc) ||
-    (process.env.SEPAY_WEBHOOK_SECRET ?? "").trim();
-  const merchantCode = (process.env.SEPAY_MERCHANT_CODE ?? "").trim();
+    (process.env.SEPAY_WEBHOOK_SECRET ?? process.env.SEPAY_HMAC_SECRET ?? "").trim();
+
+  const merchantId = pick(
+    s.merchantId ?? "",
+    process.env.SEPAY_PG_MERCHANT_ID ??
+      process.env.SEPAY_MERCHANT_ID ??
+      process.env.SEPAY_MERCHANT_CODE,
+  );
+  const merchantSecretKey =
+    decryptSecret(s.merchantSecretEnc ?? "") ||
+    (process.env.SEPAY_PG_SECRET_KEY ?? process.env.SEPAY_MERCHANT_SECRET_KEY ?? "").trim();
+  const ipnSecretKey =
+    decryptSecret(s.ipnSecretEnc ?? "") ||
+    (process.env.SEPAY_PG_IPN_SECRET ?? process.env.SEPAY_IPN_SECRET_KEY ?? "").trim() ||
+    merchantSecretKey;
+
+  const paymentMethodRaw = (
+    s.paymentMethod ||
+    process.env.SEPAY_PG_PAYMENT_METHOD ||
+    "BANK_TRANSFER"
+  ).trim();
+  const paymentMethod: SepayPgPaymentMethod =
+    paymentMethodRaw === "NAPAS_BANK_TRANSFER"
+      ? "NAPAS_BANK_TRANSFER"
+      : "BANK_TRANSFER";
 
   const fromAdmin =
     Boolean(s.accountNumber.trim()) ||
     Boolean(s.bankBin.trim()) ||
     Boolean(s.apiKeyEnc) ||
-    Boolean(s.webhookSecretEnc);
+    Boolean(s.webhookSecretEnc) ||
+    Boolean(s.merchantId?.trim()) ||
+    Boolean(s.merchantSecretEnc) ||
+    Boolean(s.ipnSecretEnc);
   const fromEnv =
     Boolean(process.env.SEPAY_ACCOUNT_NUMBER) ||
     Boolean(process.env.SEPAY_API_KEY) ||
-    Boolean(process.env.SEPAY_WEBHOOK_SECRET);
+    Boolean(process.env.SEPAY_WEBHOOK_SECRET) ||
+    Boolean(process.env.SEPAY_PG_MERCHANT_ID) ||
+    Boolean(process.env.SEPAY_PG_SECRET_KEY) ||
+    Boolean(process.env.SEPAY_MERCHANT_CODE);
 
   let source: ResolvedSepayConfig["source"] = "env";
   if (fromAdmin && fromEnv) source = "mixed";
@@ -109,6 +164,8 @@ export async function resolvePayment(): Promise<ResolvedPayment> {
     provider,
     providerSource,
     sepay: {
+      environment,
+      mode,
       accountNumber,
       bankBin,
       bankName,
@@ -117,7 +174,10 @@ export async function resolvePayment(): Promise<ResolvedPayment> {
       qrTemplate,
       apiKey,
       webhookSecret,
-      merchantCode,
+      merchantId,
+      merchantSecretKey,
+      ipnSecretKey,
+      paymentMethod,
       source,
     },
   };
@@ -130,15 +190,20 @@ export async function getPaymentSettings(): Promise<PaymentSettings> {
 export type PaymentSettingsPublic = {
   provider: PaymentSettings["provider"];
   sepay: {
+    environment: SepayEnvironment;
+    mode: SepayMode;
     accountNumber: string;
     bankBin: string;
     bankName: string;
     bankDisplayName: string;
     accountName: string;
     qrTemplate: string;
+    merchantId: string;
+    paymentMethod: string;
     apiKeyConfigured: boolean;
     webhookSecretConfigured: boolean;
-    merchantCode: string;
+    merchantSecretConfigured: boolean;
+    ipnSecretConfigured: boolean;
   };
   resolvedProvider: ResolvedPayment["provider"];
   resolvedProviderSource: "admin" | "env";
@@ -149,21 +214,34 @@ export async function getPaymentSettingsPublic(): Promise<PaymentSettingsPublic>
   const settings = await getPaymentSettings();
   const resolved = await resolvePayment();
   const appUrl = (process.env.NEXT_PUBLIC_APP_URL ?? "").replace(/\/$/, "");
+  const environment = resolveEnvironment(settings.sepay.environment);
   return {
     provider: settings.provider,
     sepay: {
+      environment,
+      mode: modeForEnvironment(environment),
       accountNumber: settings.sepay.accountNumber,
       bankBin: settings.sepay.bankBin,
       bankName: settings.sepay.bankName,
       bankDisplayName: settings.sepay.bankDisplayName,
       accountName: settings.sepay.accountName,
       qrTemplate: settings.sepay.qrTemplate || "compact2",
+      merchantId: settings.sepay.merchantId || resolved.sepay.merchantId,
+      paymentMethod: settings.sepay.paymentMethod || "BANK_TRANSFER",
       apiKeyConfigured:
         Boolean(settings.sepay.apiKeyEnc) || Boolean(resolved.sepay.apiKey),
       webhookSecretConfigured:
         Boolean(settings.sepay.webhookSecretEnc) ||
         Boolean(resolved.sepay.webhookSecret),
-      merchantCode: resolved.sepay.merchantCode,
+      merchantSecretConfigured:
+        Boolean(settings.sepay.merchantSecretEnc) ||
+        Boolean(resolved.sepay.merchantSecretKey),
+      ipnSecretConfigured:
+        Boolean(settings.sepay.ipnSecretEnc) ||
+        Boolean(
+          process.env.SEPAY_PG_IPN_SECRET || process.env.SEPAY_IPN_SECRET_KEY,
+        ) ||
+        Boolean(resolved.sepay.ipnSecretKey),
     },
     resolvedProvider: resolved.provider,
     resolvedProviderSource: resolved.providerSource,
@@ -174,36 +252,58 @@ export async function getPaymentSettingsPublic(): Promise<PaymentSettingsPublic>
 export async function savePaymentSettings(input: {
   provider: PaymentSettings["provider"];
   sepay: {
+    environment?: SepayEnvironment;
     accountNumber: string;
     bankBin: string;
     bankName?: string;
     bankDisplayName?: string;
     accountName?: string;
     qrTemplate?: string;
+    merchantId?: string;
+    paymentMethod?: string;
     apiKey?: string;
     webhookSecret?: string;
+    merchantSecret?: string;
+    ipnSecret?: string;
   };
 }): Promise<PaymentSettings> {
   const current = await getPaymentSettings();
   let apiKeyEnc = current.sepay.apiKeyEnc;
   let webhookSecretEnc = current.sepay.webhookSecretEnc;
+  let merchantSecretEnc = current.sepay.merchantSecretEnc ?? "";
+  let ipnSecretEnc = current.sepay.ipnSecretEnc ?? "";
 
   const apiPlain = input.sepay.apiKey?.trim();
   if (apiPlain) apiKeyEnc = encryptPayload(apiPlain);
   const whPlain = input.sepay.webhookSecret?.trim();
   if (whPlain) webhookSecretEnc = encryptPayload(whPlain);
+  const msPlain = input.sepay.merchantSecret?.trim();
+  if (msPlain) merchantSecretEnc = encryptPayload(msPlain);
+  const ipnPlain = input.sepay.ipnSecret?.trim();
+  if (ipnPlain) ipnSecretEnc = encryptPayload(ipnPlain);
+
+  const environment =
+    input.sepay.environment === "production" ? "production" : "sandbox";
 
   const next: PaymentSettings = {
     provider: input.provider,
     sepay: {
+      environment,
       accountNumber: input.sepay.accountNumber.trim(),
       bankBin: input.sepay.bankBin.trim(),
       bankName: (input.sepay.bankName ?? "").trim(),
       bankDisplayName: (input.sepay.bankDisplayName ?? "").trim(),
       accountName: (input.sepay.accountName ?? "").trim(),
       qrTemplate: (input.sepay.qrTemplate ?? "compact2").trim() || "compact2",
+      merchantId: (input.sepay.merchantId ?? "").trim(),
+      paymentMethod:
+        input.sepay.paymentMethod === "NAPAS_BANK_TRANSFER"
+          ? "NAPAS_BANK_TRANSFER"
+          : "BANK_TRANSFER",
       apiKeyEnc,
       webhookSecretEnc,
+      merchantSecretEnc,
+      ipnSecretEnc,
     },
   };
   await writeJsonFile("payment.json", next);

@@ -141,5 +141,8 @@ export async function buildCheckoutPaymentUi(
     account: resolved.sepay.accountNumber || "—",
     accountName: resolved.sepay.accountName || "KEYON",
     canConfirm: stubConfirmAllowed,
+    integrationMode: created.integrationMode ?? null,
+    checkoutUrl: created.checkoutUrl,
+    checkoutFormFields: created.checkoutFormFields,
   };
 }

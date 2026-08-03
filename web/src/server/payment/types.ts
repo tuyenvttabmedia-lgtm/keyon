@@ -10,9 +10,13 @@ export type CreatePaymentInput = {
 export type CreatePaymentResult = {
   provider: string;
   redirectUrl?: string;
-  /** Image URL for QR (VietQR / SePay) */
+  /** Image URL for QR (VietQR / SePay bank mode) */
   qrImageUrl?: string;
   instructions: string;
+  /** SePay PG hosted checkout */
+  checkoutUrl?: string;
+  checkoutFormFields?: Record<string, string>;
+  integrationMode?: "payment_gateway" | "bank_webhook" | "stub";
   raw?: unknown;
 };
 

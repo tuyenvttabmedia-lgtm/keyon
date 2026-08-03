@@ -84,6 +84,8 @@ export function SettingsForm({
   const [wasabiSecret, setWasabiSecret] = useState("");
   const [apiKey, setApiKey] = useState("");
   const [webhookSecret, setWebhookSecret] = useState("");
+  const [merchantSecret, setMerchantSecret] = useState("");
+  const [ipnSecret, setIpnSecret] = useState("");
   const [pax8Secret, setPax8Secret] = useState("");
   const [pacisoftKey, setPacisoftKey] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
@@ -221,14 +223,19 @@ export function SettingsForm({
         body: JSON.stringify({
           provider: payment.provider,
           sepay: {
+            environment: payment.sepay.environment,
             accountNumber: payment.sepay.accountNumber,
             bankBin: payment.sepay.bankBin,
             bankName: payment.sepay.bankName,
             bankDisplayName: payment.sepay.bankDisplayName,
             accountName: payment.sepay.accountName,
             qrTemplate: payment.sepay.qrTemplate,
+            merchantId: payment.sepay.merchantId,
+            paymentMethod: payment.sepay.paymentMethod,
             ...(apiKey.trim() ? { apiKey: apiKey.trim() } : {}),
             ...(webhookSecret.trim() ? { webhookSecret: webhookSecret.trim() } : {}),
+            ...(merchantSecret.trim() ? { merchantSecret: merchantSecret.trim() } : {}),
+            ...(ipnSecret.trim() ? { ipnSecret: ipnSecret.trim() } : {}),
           },
         }),
       });
@@ -237,6 +244,8 @@ export function SettingsForm({
       setPayment(data.data);
       setApiKey("");
       setWebhookSecret("");
+      setMerchantSecret("");
+      setIpnSecret("");
       setMsg("Đã lưu cấu hình SePay");
     } catch (e) {
       setMsg(e instanceof Error ? e.message : "Lỗi");
@@ -645,10 +654,14 @@ export function SettingsForm({
         {tab === "sepay" ? (
           <div className="space-y-4">
             <p className="text-sm text-muted">
-              Provider đang resolve:{" "}
-              <span className="font-medium text-navy">{payment.resolvedProvider}</span> (nguồn:{" "}
-              {payment.resolvedProviderSource}). Secret mã hóa AES. Field trống → fallback ENV
-              (kiểu CardOn).
+              Provider:{" "}
+              <span className="font-medium text-navy">{payment.resolvedProvider}</span> (
+              {payment.resolvedProviderSource}) · Mode:{" "}
+              <span className="font-medium text-navy">
+                {payment.sepay.mode === "payment_gateway"
+                  ? "Cổng thanh toán PG (sandbox)"
+                  : "Bank webhook HMAC (production)"}
+              </span>
             </p>
 
             <label className="block text-sm">
@@ -672,172 +685,201 @@ export function SettingsForm({
                   MegaPay (chưa hỗ trợ)
                 </option>
               </select>
+            </label>
+
+            <label className="block text-sm">
+              <span className="font-medium text-navy">Môi trường SePay</span>
+              <select
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                value={payment.sepay.environment}
+                onChange={(e) =>
+                  setPayment({
+                    ...payment,
+                    sepay: {
+                      ...payment.sepay,
+                      environment: e.target.value as "sandbox" | "production",
+                      mode:
+                        e.target.value === "sandbox"
+                          ? "payment_gateway"
+                          : "bank_webhook",
+                    },
+                  })
+                }
+              >
+                <option value="sandbox">Sandbox — Cổng thanh toán PG + IPN X-Secret-Key</option>
+                <option value="production">
+                  Production — VietQR + Webhook bank HMAC-SHA256
+                </option>
+              </select>
               <span className="mt-1 block text-xs text-muted">
-                Chọn SePay ở đây sẽ ưu tiên hơn ENV. PayOS/MegaPay chưa có adapter — không chọn được.
-                Stub chỉ dùng để giả lập thanh toán khi phát triển.
+                KEYON chỉ dùng một phương thức theo môi trường (giống CardOn tách mode).
               </span>
             </label>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              <label className="block text-sm">
-                <span className="font-medium text-navy">Số tài khoản</span>
-                <input
-                  className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-                  value={payment.sepay.accountNumber}
-                  onChange={(e) =>
-                    setPayment({
-                      ...payment,
-                      sepay: { ...payment.sepay, accountNumber: e.target.value },
-                    })
-                  }
-                />
-              </label>
-              <label className="block text-sm">
-                <span className="font-medium text-navy">Bank BIN</span>
-                <input
-                  className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-                  placeholder="970436"
-                  value={payment.sepay.bankBin}
-                  onChange={(e) =>
-                    setPayment({
-                      ...payment,
-                      sepay: { ...payment.sepay, bankBin: e.target.value },
-                    })
-                  }
-                />
-              </label>
-              <label className="block text-sm">
-                <span className="font-medium text-navy">Tên ngân hàng (hiển thị)</span>
-                <input
-                  className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-                  value={payment.sepay.bankDisplayName}
-                  onChange={(e) =>
-                    setPayment({
-                      ...payment,
-                      sepay: { ...payment.sepay, bankDisplayName: e.target.value },
-                    })
-                  }
-                />
-              </label>
-              <label className="block text-sm">
-                <span className="font-medium text-navy">Tên chủ TK</span>
-                <input
-                  className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-                  value={payment.sepay.accountName}
-                  onChange={(e) =>
-                    setPayment({
-                      ...payment,
-                      sepay: { ...payment.sepay, accountName: e.target.value },
-                    })
-                  }
-                />
-              </label>
-              <label className="block text-sm">
-                <span className="font-medium text-navy">Bank name / code (nội bộ)</span>
-                <input
-                  className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-                  value={payment.sepay.bankName}
-                  onChange={(e) =>
-                    setPayment({
-                      ...payment,
-                      sepay: { ...payment.sepay, bankName: e.target.value },
-                    })
-                  }
-                />
-              </label>
-              <label className="block text-sm">
-                <span className="font-medium text-navy">QR template</span>
-                <input
-                  className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-                  placeholder="compact2"
-                  value={payment.sepay.qrTemplate}
-                  onChange={(e) =>
-                    setPayment({
-                      ...payment,
-                      sepay: { ...payment.sepay, qrTemplate: e.target.value },
-                    })
-                  }
-                />
-              </label>
-              <label className="block text-sm">
-                <span className="font-medium text-navy">API key (webhook / IPN)</span>
-                <input
-                  type="password"
-                  autoComplete="new-password"
-                  className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-                  placeholder={
-                    payment.sepay.apiKeyConfigured
-                      ? "Đã lưu — nhập để thay"
-                      : "spsk_test_… hoặc spsk_live_…"
-                  }
-                  value={apiKey}
-                  onChange={(e) => setApiKey(e.target.value)}
-                />
-                <span className="mt-1 block text-xs text-muted">
-                  Khớp Secret Key trên SePay Webhook (Authorization: Apikey …). Sandbox thường bắt đầu bằng{" "}
-                  <code className="text-[11px]">spsk_test_</code>.
-                </span>
-              </label>
-              <label className="block text-sm">
-                <span className="font-medium text-navy">Webhook HMAC secret</span>
-                <input
-                  type="password"
-                  autoComplete="new-password"
-                  className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-                  placeholder={
-                    payment.sepay.webhookSecretConfigured
-                      ? "Đã lưu — nhập để thay"
-                      : "Để trống nếu dùng API Key"
-                  }
-                  value={webhookSecret}
-                  onChange={(e) => setWebhookSecret(e.target.value)}
-                />
-                <span className="mt-1 block text-xs text-muted">
-                  Chỉ điền khi chọn HMAC-SHA256 trên SePay. Nếu điền, KEYON bỏ qua API Key.
-                </span>
-              </label>
-              <div className="sm:col-span-2 space-y-3 rounded-xl border border-accent/30 bg-accent-soft/40 p-4 text-sm">
-                <p className="font-semibold text-navy">Gắn Webhook / IPN trên SePay Dashboard</p>
-                <p className="text-xs text-muted">
-                  SePay → Tích hợp → Webhooks → Tạo mới. Dán đúng các giá trị dưới đây (sandbox).
-                </p>
-                <dl className="space-y-2 font-mono text-xs">
-                  <div>
-                    <dt className="text-[11px] font-sans font-medium text-muted">IPN URL</dt>
-                    <dd className="mt-0.5 break-all rounded-md border border-border bg-white px-2 py-1.5 text-navy">
-                      {payment.webhookUrl}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-[11px] font-sans font-medium text-muted">
-                      Secret Key (API Key auth)
-                    </dt>
-                    <dd className="mt-0.5 break-all rounded-md border border-border bg-white px-2 py-1.5 text-navy">
-                      {payment.sepay.apiKeyConfigured || payment.resolvedProvider === "sepay"
-                        ? "Đã cấu hình trên server (ENV/Admin) — dán cùng key vào SePay bước Bảo mật → API Key"
-                        : "Chưa cấu hình — lưu API key bên trên hoặc SEPAY_API_KEY trên ENV"}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-[11px] font-sans font-medium text-muted">
-                      Cấu hình khuyến nghị
-                    </dt>
-                    <dd className="mt-0.5 space-y-1 font-sans text-xs text-navy">
-                      <p>· Loại sự kiện: <strong>Tiền vào</strong> (In / credit)</p>
-                      <p>· Content-Type: <strong>application/json</strong></p>
-                      <p>· Bảo mật: <strong>API Key</strong> (không chọn HMAC trừ khi đã lưu HMAC secret)</p>
-                      <p>· Tự động gửi lại: bật</p>
-                      {payment.sepay.merchantCode ? (
-                        <p>
-                          · Mã đơn vị (tham chiếu):{" "}
-                          <code className="font-mono">{payment.sepay.merchantCode}</code>
-                        </p>
-                      ) : null}
-                    </dd>
-                  </div>
-                </dl>
+            {payment.sepay.environment === "sandbox" ? (
+              <div className="grid gap-4 sm:grid-cols-2">
+                <label className="block text-sm sm:col-span-2">
+                  <span className="font-medium text-navy">Merchant ID (mã đơn vị)</span>
+                  <input
+                    className="mt-1 w-full rounded-lg border border-border px-3 py-2 font-mono text-sm"
+                    placeholder="SP-TEST-…"
+                    value={payment.sepay.merchantId}
+                    onChange={(e) =>
+                      setPayment({
+                        ...payment,
+                        sepay: { ...payment.sepay, merchantId: e.target.value },
+                      })
+                    }
+                  />
+                </label>
+                <label className="block text-sm">
+                  <span className="font-medium text-navy">Merchant Secret Key</span>
+                  <input
+                    type="password"
+                    autoComplete="new-password"
+                    className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                    placeholder={
+                      payment.sepay.merchantSecretConfigured
+                        ? "Đã lưu — nhập để thay"
+                        : "spsk_test_…"
+                    }
+                    value={merchantSecret}
+                    onChange={(e) => setMerchantSecret(e.target.value)}
+                  />
+                  <span className="mt-1 block text-xs text-muted">
+                    Ký form checkout PG (HMAC-SHA256 base64).
+                  </span>
+                </label>
+                <label className="block text-sm">
+                  <span className="font-medium text-navy">IPN Secret (X-Secret-Key)</span>
+                  <input
+                    type="password"
+                    autoComplete="new-password"
+                    className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                    placeholder={
+                      payment.sepay.ipnSecretConfigured
+                        ? "Đã lưu — nhập để thay"
+                        : "Tách với merchant secret nếu SePay cấp riêng"
+                    }
+                    value={ipnSecret}
+                    onChange={(e) => setIpnSecret(e.target.value)}
+                  />
+                  <span className="mt-1 block text-xs text-muted">
+                    Trống → dùng Merchant Secret. Header IPN:{" "}
+                    <code className="text-[11px]">X-Secret-Key</code>
+                  </span>
+                </label>
+                <div className="sm:col-span-2 space-y-2 rounded-xl border border-accent/30 bg-accent-soft/40 p-4 text-sm">
+                  <p className="font-semibold text-navy">IPN Cổng thanh toán (sandbox)</p>
+                  <p className="text-xs text-muted">
+                    Cấu hình Callback/IPN trên SePay PG. Endpoint KEYON:
+                  </p>
+                  <p className="break-all rounded-md border border-border bg-white px-2 py-1.5 font-mono text-xs text-navy">
+                    {payment.webhookUrl}
+                  </p>
+                  <ul className="list-inside list-disc text-xs text-navy">
+                    <li>Checkout: pay-sandbox.sepay.vn</li>
+                    <li>Auth IPN: header X-Secret-Key</li>
+                    <li>Không dùng Webhook bank HMAC ở mode này</li>
+                  </ul>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2">
+                <label className="block text-sm">
+                  <span className="font-medium text-navy">Số tài khoản</span>
+                  <input
+                    className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                    value={payment.sepay.accountNumber}
+                    onChange={(e) =>
+                      setPayment({
+                        ...payment,
+                        sepay: { ...payment.sepay, accountNumber: e.target.value },
+                      })
+                    }
+                  />
+                </label>
+                <label className="block text-sm">
+                  <span className="font-medium text-navy">Bank BIN</span>
+                  <input
+                    className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                    placeholder="970436"
+                    value={payment.sepay.bankBin}
+                    onChange={(e) =>
+                      setPayment({
+                        ...payment,
+                        sepay: { ...payment.sepay, bankBin: e.target.value },
+                      })
+                    }
+                  />
+                </label>
+                <label className="block text-sm">
+                  <span className="font-medium text-navy">Tên ngân hàng (hiển thị)</span>
+                  <input
+                    className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                    value={payment.sepay.bankDisplayName}
+                    onChange={(e) =>
+                      setPayment({
+                        ...payment,
+                        sepay: { ...payment.sepay, bankDisplayName: e.target.value },
+                      })
+                    }
+                  />
+                </label>
+                <label className="block text-sm">
+                  <span className="font-medium text-navy">Tên chủ TK</span>
+                  <input
+                    className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                    value={payment.sepay.accountName}
+                    onChange={(e) =>
+                      setPayment({
+                        ...payment,
+                        sepay: { ...payment.sepay, accountName: e.target.value },
+                      })
+                    }
+                  />
+                </label>
+                <label className="block text-sm">
+                  <span className="font-medium text-navy">HMAC webhook secret (whsec_…)</span>
+                  <input
+                    type="password"
+                    autoComplete="new-password"
+                    className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                    placeholder={
+                      payment.sepay.webhookSecretConfigured
+                        ? "Đã lưu — nhập để thay"
+                        : "whsec_…"
+                    }
+                    value={webhookSecret}
+                    onChange={(e) => setWebhookSecret(e.target.value)}
+                  />
+                </label>
+                <label className="block text-sm">
+                  <span className="font-medium text-navy">API key (fallback)</span>
+                  <input
+                    type="password"
+                    autoComplete="new-password"
+                    className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                    placeholder={
+                      payment.sepay.apiKeyConfigured ? "Đã lưu — nhập để thay" : "Tuỳ chọn"
+                    }
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
+                  />
+                </label>
+                <div className="sm:col-span-2 space-y-2 rounded-xl border border-accent/30 bg-accent-soft/40 p-4 text-sm">
+                  <p className="font-semibold text-navy">Webhook bank (production)</p>
+                  <p className="break-all rounded-md border border-border bg-white px-2 py-1.5 font-mono text-xs text-navy">
+                    {payment.webhookUrl}
+                  </p>
+                  <ul className="list-inside list-disc text-xs text-navy">
+                    <li>SePay → Webhooks → Bảo mật: HMAC-SHA256</li>
+                    <li>Loại sự kiện: Tiền vào</li>
+                    <li>Secret whsec_… khớp field HMAC bên trên</li>
+                  </ul>
+                </div>
+              </div>
+            )}
           </div>
         ) : null}
 
