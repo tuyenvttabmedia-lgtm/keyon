@@ -279,7 +279,7 @@ export async function loadCustomerWorkspace(
   if (user.pendingEmail) {
     timeline.push({
       at: user.updatedAt.toISOString(),
-      title: "Đổi email (pending)",
+      title: "Pending email (legacy)",
       detail: user.pendingEmail,
       tone: "warn",
     });

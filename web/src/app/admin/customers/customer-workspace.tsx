@@ -182,7 +182,6 @@ export function CustomerWorkspace({ data }: { data: CustomerWorkspaceData }) {
                 ["Ngày tham gia", fmt(user.createdAt)],
                 ["Email verified", user.emailVerifiedAt ? fmt(user.emailVerifiedAt) : "Chưa"],
                 ["Last login / seen", fmt(user.lastSeenAt)],
-                ["Pending email", user.pendingEmail || "—"],
               ] as const
             ).map(([k, v]) => (
               <div key={k} className="flex justify-between gap-3">

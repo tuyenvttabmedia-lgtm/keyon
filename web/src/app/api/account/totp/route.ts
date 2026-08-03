@@ -153,7 +153,6 @@ export async function GET() {
       role: true,
       emailVerifiedAt: true,
       email: true,
-      pendingEmail: true,
       passwordChangedAt: true,
       createdAt: true,
     },
@@ -166,7 +165,6 @@ export async function GET() {
     totpRequired: roleRequiresTotp(user.role),
     email: user.email,
     emailVerified: Boolean(user.emailVerifiedAt),
-    pendingEmail: user.pendingEmail,
     passwordUpdatedAt: (user.passwordChangedAt ?? user.createdAt).toISOString(),
   });
 }

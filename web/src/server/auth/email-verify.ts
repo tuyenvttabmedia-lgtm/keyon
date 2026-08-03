@@ -19,13 +19,13 @@ function appBaseUrl() {
   );
 }
 
+/** Email is the login identity — only verify current address (no change-email). */
 export async function issueEmailVerifyToken(input: {
   userId: string;
   email: string;
-  purpose?: "verify" | "change_email";
 }) {
   return new SignJWT({
-    purpose: input.purpose ?? "verify",
+    purpose: "verify",
     email: input.email.toLowerCase(),
   })
     .setProtectedHeader({ alg: "HS256" })
@@ -38,7 +38,6 @@ export async function issueEmailVerifyToken(input: {
 export async function sendVerifyEmail(input: {
   userId: string;
   email: string;
-  purpose?: "verify" | "change_email";
 }) {
   const token = await issueEmailVerifyToken(input);
   const verifyUrl = `${appBaseUrl()}/verify-email?token=${encodeURIComponent(token)}`;
@@ -58,7 +57,7 @@ export async function sendVerifyEmail(input: {
 export async function consumeEmailVerifyToken(token: string) {
   const { payload } = await jwtVerify(token, secret());
   const purpose = payload.purpose;
-  if (purpose !== "verify" && purpose !== "change_email") {
+  if (purpose !== "verify") {
     throw new Error("Token không hợp lệ");
   }
   if (!payload.sub || typeof payload.email !== "string") {
@@ -70,43 +69,28 @@ export async function consumeEmailVerifyToken(token: string) {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) throw new Error("Tài khoản không tồn tại");
 
-  if (purpose === "change_email") {
-    if (user.pendingEmail?.toLowerCase() !== email) {
-      throw new Error("Email xác thực không khớp yêu cầu đổi email");
-    }
-    const taken = await prisma.user.findUnique({ where: { email } });
-    if (taken && taken.id !== userId) {
-      throw new Error("Email đã được sử dụng");
-    }
-    await prisma.user.update({
-      where: { id: userId },
-      data: {
-        email,
-        pendingEmail: null,
-        emailVerifiedAt: new Date(),
-      },
-    });
-  } else {
-    if (user.email.toLowerCase() !== email) {
-      throw new Error("Email không khớp tài khoản");
-    }
-    await prisma.user.update({
-      where: { id: userId },
-      data: { emailVerifiedAt: new Date() },
-    });
+  if (user.email.toLowerCase() !== email) {
+    throw new Error("Email không khớp tài khoản");
   }
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      emailVerifiedAt: new Date(),
+      pendingEmail: null,
+    },
+  });
 
   await prisma.auditLog.create({
     data: {
       actorId: userId,
-      action: purpose === "change_email" ? "email.change_verified" : "email.verified",
+      action: "email.verified",
       entityType: "User",
       entityId: userId,
     },
   });
 
   log.info({ userId, purpose }, "email verified");
-  return { userId, email, purpose };
+  return { userId, email, purpose: "verify" as const };
 }
 
 export function isEmailVerified(user: {

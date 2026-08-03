@@ -20,7 +20,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    // Refresh session cookie if logged in as same user (email may have changed)
+    // Refresh session cookie if logged in as same user
     const session = await readSession();
     if (session?.id === user.id) {
       const jti = mintSessionJti();

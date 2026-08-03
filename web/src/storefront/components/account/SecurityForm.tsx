@@ -46,7 +46,6 @@ type SecurityStatus = {
   totpRequired: boolean;
   email: string;
   emailVerified: boolean;
-  pendingEmail: string | null;
   passwordUpdatedAt: string;
 };
 
@@ -66,7 +65,6 @@ export function SecurityForm({
   const [currentPassword, setCurrent] = useState("");
   const [newPassword, setNew] = useState("");
   const [confirm, setConfirm] = useState("");
-  const [pendingChangeEmail, setPendingChangeEmail] = useState("");
   const [otpauthUrl, setOtpauthUrl] = useState<string | null>(null);
   const [totpSecret, setTotpSecret] = useState<string | null>(null);
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
@@ -117,7 +115,7 @@ export function SecurityForm({
     }
   }
 
-  async function sendVerify(email?: string) {
+  async function sendVerify() {
     setLoading(true);
     setMsg(null);
     setErr(null);
@@ -125,7 +123,7 @@ export function SecurityForm({
       const res = await fetch("/api/account/verify-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(email ? { email } : {}),
+        body: JSON.stringify({}),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Lỗi");
@@ -134,7 +132,6 @@ export function SecurityForm({
           ? "Email đã được xác thực"
           : "Đã gửi email xác thực — kiểm tra hộp thư / Mailpit",
       );
-      setPendingChangeEmail("");
       await refresh();
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Lỗi");
@@ -344,9 +341,10 @@ export function SecurityForm({
             <MailIcon />
           </span>
           <div className="min-w-0 flex-1">
-            <h2 className={SUBSECTION_TITLE_CLASS}>Email xác thực</h2>
+            <h2 className={SUBSECTION_TITLE_CLASS}>Email đăng nhập</h2>
             <p className={`mt-1 ${BODY_MUTED_CLASS}`}>
-              Kênh nhận thông báo đơn hàng và mở khóa xem license.
+              Email là tài khoản đăng nhập — không đổi được. Xác thực để nhận
+              thông báo đơn và mở khóa xem license.
             </p>
           </div>
           <span
@@ -361,16 +359,10 @@ export function SecurityForm({
         </div>
 
         <div className="mt-4 rounded-xl bg-surface px-4 py-3">
-          <p className={FORM_LABEL_CLASS}>Email hiện tại</p>
+          <p className={FORM_LABEL_CLASS}>Email tài khoản</p>
           <p className={`mt-0.5 break-all ${CARD_TITLE_CLASS}`}>
             {status?.email ?? "…"}
           </p>
-          {status?.pendingEmail ? (
-            <p className={`mt-2 ${CARD_META_CLASS}`}>
-              Đang chờ xác thực đổi sang:{" "}
-              <span className="font-semibold text-navy">{status.pendingEmail}</span>
-            </p>
-          ) : null}
         </div>
 
         <div className="mt-4 flex flex-wrap gap-2">
@@ -384,27 +376,6 @@ export function SecurityForm({
               Gửi lại email xác thực
             </button>
           ) : null}
-        </div>
-
-        <div className="mt-4 border-t border-border pt-4">
-          <p className={FORM_LABEL_CLASS}>Đổi email</p>
-          <div className="mt-2 grid gap-2 sm:grid-cols-[1fr_auto]">
-            <input
-              type="email"
-              placeholder="email-moi@example.com"
-              className={`rounded-xl border border-border px-3 py-2.5 ${INPUT_TEXT_CLASS}`}
-              value={pendingChangeEmail}
-              onChange={(e) => setPendingChangeEmail(e.target.value)}
-            />
-            <button
-              type="button"
-              disabled={loading || !pendingChangeEmail.trim()}
-              onClick={() => sendVerify(pendingChangeEmail.trim())}
-              className={`inline-flex h-11 items-center justify-center rounded-xl border border-border px-4 ${CTA_COMPACT_CLASS} text-navy ${TRANSITION_UI} hover:border-accent ${OPACITY_DISABLED_BUSY}`}
-            >
-              Đổi & gửi xác thực
-            </button>
-          </div>
         </div>
       </section>
 
