@@ -20,9 +20,6 @@ export function mergeCheckoutCms(raw: Partial<CmsCheckout> | null | undefined): 
     activationSteps: raw?.activationSteps?.length
       ? raw.activationSteps
       : defaultCmsCheckout.activationSteps,
-    successSupportLinks: raw?.successSupportLinks?.length
-      ? raw.successSupportLinks
-      : defaultCmsCheckout.successSupportLinks,
     continueCtaLabel: raw?.continueCtaLabel ?? defaultCmsCheckout.continueCtaLabel,
     continueCtaHint: raw?.continueCtaHint ?? defaultCmsCheckout.continueCtaHint,
     confirmTitle: raw?.confirmTitle ?? defaultCmsCheckout.confirmTitle,
@@ -70,11 +67,19 @@ export function mergeCheckoutCms(raw: Partial<CmsCheckout> | null | undefined): 
     activationGuideCta:
       raw?.activationGuideCta ?? defaultCmsCheckout.activationGuideCta,
     activationGuideHref:
-      raw?.activationGuideHref ?? defaultCmsCheckout.activationGuideHref,
+      raw?.activationGuideHref === "/support"
+        ? "/faq"
+        : (raw?.activationGuideHref ?? defaultCmsCheckout.activationGuideHref),
     summaryPaidBanner:
       raw?.summaryPaidBanner ?? defaultCmsCheckout.summaryPaidBanner,
     successSupportTitle:
       raw?.successSupportTitle ?? defaultCmsCheckout.successSupportTitle,
+    successSupportLinks: (raw?.successSupportLinks?.length
+      ? raw.successSupportLinks
+      : defaultCmsCheckout.successSupportLinks
+    ).map((l) =>
+      l.href === "/support" ? { ...l, href: "/faq" } : l,
+    ),
     accountUpsellTitle:
       raw?.accountUpsellTitle ?? defaultCmsCheckout.accountUpsellTitle,
     accountUpsellBody:

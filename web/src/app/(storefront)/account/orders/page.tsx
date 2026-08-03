@@ -16,7 +16,7 @@ function paymentMethodLabel(provider: string | undefined): string {
   switch (provider) {
     case "sepay":
     case "sepay_qr":
-      return "SePay VietQR";
+      return "VietQR";
     case "stub":
       return "Thanh toán thử";
     default:

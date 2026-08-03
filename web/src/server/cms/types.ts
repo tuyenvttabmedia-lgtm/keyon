@@ -862,7 +862,7 @@ export const defaultCmsCheckout: CmsCheckout = {
   ],
   supportTitle: "Cần hỗ trợ?",
   supportLiveChatLabel: "Live chat",
-  supportLiveChatHref: "/support",
+  supportLiveChatHref: "/faq",
   supportEmailLabel: "Email hỗ trợ",
   supportPhone: "1900 0000",
   trustBar: [
@@ -891,7 +891,7 @@ export const defaultCmsCheckout: CmsCheckout = {
   paymentMethods: [
     {
       id: "qr",
-      title: "VietQR / chuyển khoản",
+      title: "VietQR",
       subtitle: "Quét QR hoặc CK đúng nội dung",
       badge: "Phổ biến",
       provider: "sepay_qr",
@@ -946,14 +946,14 @@ export const defaultCmsCheckout: CmsCheckout = {
     { id: "a4", text: "Nhập mã kích hoạt và xác nhận." },
   ],
   activationGuideCta: "Xem hướng dẫn chi tiết",
-  activationGuideHref: "/support",
+  activationGuideHref: "/faq",
   summaryPaidBanner: "Đơn hàng đã được thanh toán thành công",
   successSupportTitle: "Bạn cần hỗ trợ?",
   successSupportLinks: [
-    { id: "h1", title: "Hướng dẫn kích hoạt", href: "/support" },
-    { id: "h2", title: "Liên hệ hỗ trợ", href: "/support" },
-    { id: "h3", title: "Gửi yêu cầu", href: "/support" },
-    { id: "h4", title: "Trung tâm trợ giúp", href: "/support" },
+    { id: "h1", title: "Hướng dẫn kích hoạt", href: "/faq" },
+    { id: "h2", title: "Liên hệ hỗ trợ", href: "/contact" },
+    { id: "h3", title: "Gửi yêu cầu", href: "/account/tickets" },
+    { id: "h4", title: "Trung tâm trợ giúp", href: "/faq" },
   ],
   accountUpsellTitle: "Trải nghiệm KEYON tốt hơn",
   accountUpsellBody:
@@ -1833,7 +1833,7 @@ export const defaultCmsAccount: CmsAccount = {
   promoCta: "Xem sản phẩm",
   promoHref: "/products",
   activationGuideCta: "Hướng dẫn kích hoạt",
-  activationGuideHref: "/support",
+  activationGuideHref: "/faq",
   licenseSecurityNote:
     "KEYON cam kết bảo mật tuyệt đối thông tin license của bạn.",
   feeValue: "Miễn phí",

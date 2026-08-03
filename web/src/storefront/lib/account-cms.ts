@@ -25,9 +25,14 @@ export function resolveAccountCopy(
   raw: Partial<CmsAccount> | Record<string, unknown> | null | undefined,
 ): AccountCopy {
   const ops = pickAccountOps(raw as Record<string, unknown>);
-  return {
+  const merged = {
     ...ACCOUNT_UI,
     ...defaultCmsAccount,
     ...ops,
   };
+  // Legacy CMS may still store /support (no route) → FAQ help center
+  if (merged.activationGuideHref === "/support") {
+    merged.activationGuideHref = "/faq";
+  }
+  return merged;
 }

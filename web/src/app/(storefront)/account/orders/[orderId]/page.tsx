@@ -154,8 +154,10 @@ export default async function OrderDetailPage({
     hasCompare && listTotal > 0 ? Math.round((discount / listTotal) * 100) : 0;
 
   const methodTitle =
-    cmsCheckout.paymentMethods.find((m) => m.provider === "sepay_qr")?.title ??
-    "VietQR / chuyển khoản";
+    latestPayment?.provider === "sepay" || latestPayment?.provider === "sepay_qr"
+      ? "VietQR"
+      : (cmsCheckout.paymentMethods.find((m) => m.provider === "sepay_qr")?.title ??
+        "VietQR");
 
   const lines = order.items.map((item) => {
     const product = item.variant.product;

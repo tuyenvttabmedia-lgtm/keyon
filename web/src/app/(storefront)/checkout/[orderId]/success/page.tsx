@@ -77,8 +77,12 @@ export default async function CheckoutSuccessPage({
   });
 
   const methodTitle =
-    cms.paymentMethods.find((m) => m.provider === "sepay_qr")?.title ??
-    "VietQR / chuyển khoản";
+    !payment ||
+    payment.provider === "sepay" ||
+    payment.provider === "sepay_qr"
+      ? "VietQR"
+      : (cms.paymentMethods.find((m) => m.provider === "sepay_qr")?.title ??
+        "VietQR");
 
   const recommended = product
     ? await loadRecommended(product.id, product.brandId, product.categoryKey, product.brand.name)
