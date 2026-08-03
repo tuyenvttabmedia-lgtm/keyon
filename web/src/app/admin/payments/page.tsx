@@ -25,10 +25,19 @@ export default async function AdminPaymentsPage({
       <div>
         <h1 className={ADMIN_PAGE_TITLE_CLASS}>Thanh toán</h1>
         <p className={SECTION_LEAD_CLASS}>
-          Payment Workspace · tra cứu / đối soát nhẹ
+          Payment Workspace · tra cứu / đối soát nhẹ (PL5: Export CSV gồm
+          reference ↔ order ↔ deliveryCount)
         </p>
       </div>
 
+      <div className="rounded-xl border border-border bg-card px-4 py-3 text-sm text-muted">
+        <p className="font-medium text-navy">Checklist đối soát pilot (PL5)</p>
+        <ol className="mt-1 list-decimal space-y-0.5 pl-5">
+          <li>Lọc khoảng ngày pilot → Export CSV</li>
+          <li>Khớp cột reference với SePay (PG IPN / sao kê)</li>
+          <li>SUCCEEDED + deliveryCount ≥ 1 = đã giao; = 0 → mở Inbox / Stock</li>
+        </ol>
+      </div>
       <Suspense
         fallback={
           <div className="h-28 animate-pulse rounded-xl border border-border bg-card" />

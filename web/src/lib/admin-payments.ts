@@ -42,6 +42,9 @@ export type AdminPaymentListRow = {
   reconcileHint: ReconcileHint;
   rawTransferAmount: number | null;
   rawGateway: string | null;
+  /** Soft PL5: deliveries attached to order items */
+  deliveryCount: number;
+  fulfillmentStatuses: string;
 };
 
 export type PaymentsKpi = {

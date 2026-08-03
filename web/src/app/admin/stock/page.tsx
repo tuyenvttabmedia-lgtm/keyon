@@ -166,6 +166,11 @@ export default async function AdminStockPage({
     };
   });
 
+  const thinInstant = skuRows.filter((r) => {
+    const v = variants.find((x) => x.id === r.variantId);
+    return Boolean(v?.active) && r.available < 20;
+  });
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -182,6 +187,24 @@ export default async function AdminStockPage({
           Tồn kho (cảnh báo) →
         </Link>
       </div>
+      {thinInstant.length > 0 ? (
+        <div
+          role="status"
+          className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950"
+        >
+          <p className="font-semibold">
+            Pilot buffer: {thinInstant.length} SKU Instant &lt; 20 AVAILABLE
+          </p>
+          <p className="mt-1 text-amber-900/90">
+            {thinInstant
+              .slice(0, 8)
+              .map((s) => `${s.sku} (${s.available})`)
+              .join(" · ")}
+            {thinInstant.length > 8 ? " …" : ""}. Tab Import để nhập kho trước
+            khi mở khách.
+          </p>
+        </div>
+      ) : null}
       <LicenseConsole
         tab={tab}
         kpis={kpis}

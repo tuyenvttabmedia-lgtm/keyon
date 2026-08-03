@@ -114,6 +114,8 @@ function toRow(
       email: string;
       userId: string | null;
       user: { id: string; name: string | null } | null;
+      fulfillmentJobs: { status: string }[];
+      items: { deliveries: { id: string }[] }[];
     };
   },
   now: number,
@@ -128,6 +130,14 @@ function toRow(
     rawTransferAmount: raw.transferAmount,
     now,
   });
+
+  const deliveryCount = p.order.items.reduce(
+    (n, item) => n + item.deliveries.length,
+    0,
+  );
+  const fulfillmentStatuses = [
+    ...new Set(p.order.fulfillmentJobs.map((j) => j.status)),
+  ].join("|");
 
   return {
     id: p.id,
@@ -151,6 +161,8 @@ function toRow(
     reconcileHint,
     rawTransferAmount: raw.transferAmount,
     rawGateway: raw.gateway,
+    deliveryCount,
+    fulfillmentStatuses,
   };
 }
 
@@ -176,6 +188,10 @@ export async function queryAdminPayments(input: PaymentsListQuery): Promise<{
             email: true,
             userId: true,
             user: { select: { id: true, name: true } },
+            fulfillmentJobs: { select: { status: true } },
+            items: {
+              select: { deliveries: { select: { id: true } } },
+            },
           },
         },
       },
@@ -221,6 +237,10 @@ export async function queryAdminPayments(input: PaymentsListQuery): Promise<{
           email: true,
           userId: true,
           user: { select: { id: true, name: true } },
+          fulfillmentJobs: { select: { status: true } },
+          items: {
+            select: { deliveries: { select: { id: true } } },
+          },
         },
       },
     },

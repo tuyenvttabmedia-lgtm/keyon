@@ -48,14 +48,17 @@ function toCsv(rows: AdminPaymentListRow[]) {
   const header = [
     "reference",
     "order",
+    "orderStatus",
     "email",
     "provider",
     "amountVnd",
     "status",
     "reconcile",
+    "deliveryCount",
+    "fulfillmentStatuses",
+    "providerTxnId",
     "age",
     "createdAt",
-    "txnId",
   ];
   const escape = (v: string) => `"${v.replace(/"/g, '""')}"`;
   const lines = [
@@ -64,14 +67,17 @@ function toCsv(rows: AdminPaymentListRow[]) {
       [
         r.paymentReference,
         r.orderCode,
+        r.orderStatus,
         r.customerEmail,
         r.provider,
         String(r.amountVnd),
         r.status,
         reconcileHintLabel(r.reconcileHint),
+        String(r.deliveryCount),
+        r.fulfillmentStatuses,
+        r.providerTransactionId ?? "",
         r.ageLabel,
         r.createdAt,
-        r.providerTransactionId ?? "",
       ]
         .map(escape)
         .join(","),
