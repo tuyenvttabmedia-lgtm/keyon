@@ -760,17 +760,23 @@ export function SettingsForm({
                 />
               </label>
               <label className="block text-sm">
-                <span className="font-medium text-navy">API key (webhook)</span>
+                <span className="font-medium text-navy">API key (webhook / IPN)</span>
                 <input
                   type="password"
                   autoComplete="new-password"
                   className="mt-1 w-full rounded-lg border border-border px-3 py-2"
                   placeholder={
-                    payment.sepay.apiKeyConfigured ? "Đã lưu — nhập để thay" : "Tuỳ chọn"
+                    payment.sepay.apiKeyConfigured
+                      ? "Đã lưu — nhập để thay"
+                      : "spsk_test_… hoặc spsk_live_…"
                   }
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
                 />
+                <span className="mt-1 block text-xs text-muted">
+                  Khớp Secret Key trên SePay Webhook (Authorization: Apikey …). Sandbox thường bắt đầu bằng{" "}
+                  <code className="text-[11px]">spsk_test_</code>.
+                </span>
               </label>
               <label className="block text-sm">
                 <span className="font-medium text-navy">Webhook HMAC secret</span>
@@ -781,15 +787,55 @@ export function SettingsForm({
                   placeholder={
                     payment.sepay.webhookSecretConfigured
                       ? "Đã lưu — nhập để thay"
-                      : "Tuỳ chọn (ưu tiên hơn API key)"
+                      : "Để trống nếu dùng API Key"
                   }
                   value={webhookSecret}
                   onChange={(e) => setWebhookSecret(e.target.value)}
                 />
+                <span className="mt-1 block text-xs text-muted">
+                  Chỉ điền khi chọn HMAC-SHA256 trên SePay. Nếu điền, KEYON bỏ qua API Key.
+                </span>
               </label>
-              <div className="sm:col-span-2 rounded-lg border border-border bg-[#f8fafc] p-3 text-sm">
-                <p className="font-medium text-navy">Webhook URL (dán vào SePay dashboard)</p>
-                <p className="mt-1 break-all font-mono text-xs text-muted">{payment.webhookUrl}</p>
+              <div className="sm:col-span-2 space-y-3 rounded-xl border border-accent/30 bg-accent-soft/40 p-4 text-sm">
+                <p className="font-semibold text-navy">Gắn Webhook / IPN trên SePay Dashboard</p>
+                <p className="text-xs text-muted">
+                  SePay → Tích hợp → Webhooks → Tạo mới. Dán đúng các giá trị dưới đây (sandbox).
+                </p>
+                <dl className="space-y-2 font-mono text-xs">
+                  <div>
+                    <dt className="text-[11px] font-sans font-medium text-muted">IPN URL</dt>
+                    <dd className="mt-0.5 break-all rounded-md border border-border bg-white px-2 py-1.5 text-navy">
+                      {payment.webhookUrl}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-[11px] font-sans font-medium text-muted">
+                      Secret Key (API Key auth)
+                    </dt>
+                    <dd className="mt-0.5 break-all rounded-md border border-border bg-white px-2 py-1.5 text-navy">
+                      {payment.sepay.apiKeyConfigured || payment.resolvedProvider === "sepay"
+                        ? "Đã cấu hình trên server (ENV/Admin) — dán cùng key vào SePay bước Bảo mật → API Key"
+                        : "Chưa cấu hình — lưu API key bên trên hoặc SEPAY_API_KEY trên ENV"}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-[11px] font-sans font-medium text-muted">
+                      Cấu hình khuyến nghị
+                    </dt>
+                    <dd className="mt-0.5 space-y-1 font-sans text-xs text-navy">
+                      <p>· Loại sự kiện: <strong>Tiền vào</strong> (In / credit)</p>
+                      <p>· Content-Type: <strong>application/json</strong></p>
+                      <p>· Bảo mật: <strong>API Key</strong> (không chọn HMAC trừ khi đã lưu HMAC secret)</p>
+                      <p>· Tự động gửi lại: bật</p>
+                      {payment.sepay.merchantCode ? (
+                        <p>
+                          · Mã đơn vị (tham chiếu):{" "}
+                          <code className="font-mono">{payment.sepay.merchantCode}</code>
+                        </p>
+                      ) : null}
+                    </dd>
+                  </div>
+                </dl>
               </div>
             </div>
           </div>

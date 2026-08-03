@@ -15,6 +15,8 @@ export type ResolvedSepayConfig = {
   qrTemplate: string;
   apiKey: string;
   webhookSecret: string;
+  /** SePay company / unit code (e.g. SP-TEST-…) — display / ops reference */
+  merchantCode: string;
   source: "admin" | "env" | "mixed";
 };
 
@@ -87,6 +89,7 @@ export async function resolvePayment(): Promise<ResolvedPayment> {
   const webhookSecret =
     decryptSecret(s.webhookSecretEnc) ||
     (process.env.SEPAY_WEBHOOK_SECRET ?? "").trim();
+  const merchantCode = (process.env.SEPAY_MERCHANT_CODE ?? "").trim();
 
   const fromAdmin =
     Boolean(s.accountNumber.trim()) ||
@@ -114,6 +117,7 @@ export async function resolvePayment(): Promise<ResolvedPayment> {
       qrTemplate,
       apiKey,
       webhookSecret,
+      merchantCode,
       source,
     },
   };
@@ -134,6 +138,7 @@ export type PaymentSettingsPublic = {
     qrTemplate: string;
     apiKeyConfigured: boolean;
     webhookSecretConfigured: boolean;
+    merchantCode: string;
   };
   resolvedProvider: ResolvedPayment["provider"];
   resolvedProviderSource: "admin" | "env";
@@ -153,8 +158,12 @@ export async function getPaymentSettingsPublic(): Promise<PaymentSettingsPublic>
       bankDisplayName: settings.sepay.bankDisplayName,
       accountName: settings.sepay.accountName,
       qrTemplate: settings.sepay.qrTemplate || "compact2",
-      apiKeyConfigured: Boolean(settings.sepay.apiKeyEnc),
-      webhookSecretConfigured: Boolean(settings.sepay.webhookSecretEnc),
+      apiKeyConfigured:
+        Boolean(settings.sepay.apiKeyEnc) || Boolean(resolved.sepay.apiKey),
+      webhookSecretConfigured:
+        Boolean(settings.sepay.webhookSecretEnc) ||
+        Boolean(resolved.sepay.webhookSecret),
+      merchantCode: resolved.sepay.merchantCode,
     },
     resolvedProvider: resolved.provider,
     resolvedProviderSource: resolved.providerSource,
