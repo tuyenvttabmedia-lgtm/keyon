@@ -23,8 +23,6 @@ const TABS: { id: NotifCenterTab; label: string }[] = [
   { id: "broadcast", label: "Broadcast" },
   { id: "templates", label: "Templates" },
   { id: "history", label: "History" },
-  { id: "scheduled", label: "Scheduled" },
-  { id: "draft", label: "Draft" },
 ];
 
 export function NotificationCenter({
@@ -199,23 +197,9 @@ export function NotificationCenter({
 
             <div>
               <p className="text-sm font-semibold text-navy">Delivery</p>
-              <div className="mt-2 flex flex-wrap gap-2">
-                <span className="rounded-lg bg-accent-soft px-3 py-1.5 text-sm font-semibold text-accent">
-                  In-App
-                </span>
-                <span
-                  className="cursor-not-allowed rounded-lg border border-dashed border-border px-3 py-1.5 text-sm text-muted"
-                  title="Chưa hỗ trợ MVP — không đổi API/queue"
-                >
-                  Email (chưa hỗ trợ)
-                </span>
-                <span
-                  className="cursor-not-allowed rounded-lg border border-dashed border-border px-3 py-1.5 text-sm text-muted"
-                  title="Chưa hỗ trợ MVP"
-                >
-                  Cả hai (chưa hỗ trợ)
-                </span>
-              </div>
+              <p className="mt-2 text-sm text-muted">
+                MVP: chỉ gửi In-App. Email broadcast chưa mở.
+              </p>
             </div>
 
             <label className="block text-sm">
@@ -427,29 +411,6 @@ export function NotificationCenter({
           />
         </div>
       ) : null}
-
-      {tab === "scheduled" ? (
-        <EmptyTab
-          title="Scheduled chưa hỗ trợ MVP"
-          body="Không có bảng / worker lên lịch. Sẽ bổ sung khi nới constraint DB + queue."
-        />
-      ) : null}
-
-      {tab === "draft" ? (
-        <EmptyTab
-          title="Draft chưa hỗ trợ MVP"
-          body="Không lưu nháp trên DB. Soạn và gửi ngay từ Broadcast, hoặc dùng Templates."
-        />
-      ) : null}
     </div>
-  );
-}
-
-function EmptyTab({ title, body }: { title: string; body: string }) {
-  return (
-    <section className="rounded-2xl border border-dashed border-border bg-card px-6 py-14 text-center">
-      <p className="font-semibold text-navy">{title}</p>
-      <p className="mx-auto mt-2 max-w-md text-sm text-muted">{body}</p>
-    </section>
   );
 }

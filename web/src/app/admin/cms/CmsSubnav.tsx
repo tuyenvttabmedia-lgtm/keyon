@@ -5,6 +5,7 @@ const CMS_NAV = [
   { href: "/admin/cms/banner", label: "Banner Why" },
   { href: "/admin/cms/partners", label: "Đối tác" },
   { href: "/admin/cms/categories", label: "Danh mục" },
+  { href: "/admin/cms/ratings", label: "Ratings" },
   { href: "/admin/cms/checkout", label: "Checkout" },
   { href: "/admin/cms/account", label: "Account" },
   { href: "/admin/cms/faq", label: "FAQ" },

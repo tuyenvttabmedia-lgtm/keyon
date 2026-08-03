@@ -3,6 +3,38 @@
 import { useState } from "react";
 import type { CmsHome } from "@/server/cms/types";
 
+function Field({
+  label,
+  value,
+  onChange,
+  rows,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  rows?: number;
+}) {
+  return (
+    <label className="block text-sm">
+      <span className="font-medium">{label}</span>
+      {rows ? (
+        <textarea
+          rows={rows}
+          className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
+      ) : (
+        <input
+          className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
+      )}
+    </label>
+  );
+}
+
 export function CmsHomeForm({ initial }: { initial: CmsHome }) {
   const [form, setForm] = useState(initial);
   const [msg, setMsg] = useState<string | null>(null);
@@ -24,44 +56,115 @@ export function CmsHomeForm({ initial }: { initial: CmsHome }) {
     setMsg(publish ? "Đã lưu và xuất bản" : "Đã lưu");
   }
 
+  function set<K extends keyof CmsHome>(key: K, value: CmsHome[K]) {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  }
+
   return (
-    <div className="space-y-4 rounded-2xl border border-border bg-card p-6">
-      <label className="block text-sm">
-        <span className="font-medium">Tiêu đề Hero</span>
-        <input
-          className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+    <div className="space-y-6 rounded-2xl border border-border bg-card p-6">
+      <section className="space-y-4">
+        <h2 className="text-sm font-semibold text-navy">Hero</h2>
+        <Field
+          label="Tiêu đề Hero"
           value={form.heroTitle}
-          onChange={(e) => setForm({ ...form, heroTitle: e.target.value })}
+          onChange={(v) => set("heroTitle", v)}
         />
-      </label>
-      <label className="block text-sm">
-        <span className="font-medium">Phụ đề</span>
-        <textarea
-          rows={3}
-          className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+        <Field
+          label="Phụ đề"
           value={form.heroSubtitle}
-          onChange={(e) => setForm({ ...form, heroSubtitle: e.target.value })}
+          onChange={(v) => set("heroSubtitle", v)}
+          rows={3}
         />
-      </label>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <label className="block text-sm">
-          <span className="font-medium">Nút CTA</span>
-          <input
-            className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field
+            label="Nút CTA"
             value={form.heroCta}
-            onChange={(e) => setForm({ ...form, heroCta: e.target.value })}
+            onChange={(v) => set("heroCta", v)}
           />
-        </label>
-        <label className="block text-sm">
-          <span className="font-medium">Liên kết</span>
-          <input
-            className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+          <Field
+            label="Liên kết"
             value={form.heroCtaHref}
-            onChange={(e) => setForm({ ...form, heroCtaHref: e.target.value })}
+            onChange={(v) => set("heroCtaHref", v)}
           />
-        </label>
-      </div>
-      <div className="flex flex-wrap gap-3">
+        </div>
+      </section>
+
+      <section className="space-y-4 border-t border-border pt-4">
+        <h2 className="text-sm font-semibold text-navy">Why KEYON</h2>
+        <p className="text-xs text-muted">
+          Để trống = giữ copy mặc định từ fixture. Chỉ ghi đè tiêu đề/phụ đề.
+        </p>
+        <Field
+          label="Tiêu đề"
+          value={form.whyTitle ?? ""}
+          onChange={(v) => set("whyTitle", v)}
+        />
+        <Field
+          label="Phụ đề"
+          value={form.whySubtitle ?? ""}
+          onChange={(v) => set("whySubtitle", v)}
+          rows={2}
+        />
+      </section>
+
+      <section className="space-y-4 border-t border-border pt-4">
+        <h2 className="text-sm font-semibold text-navy">How it works</h2>
+        <Field
+          label="Tiêu đề"
+          value={form.howTitle ?? ""}
+          onChange={(v) => set("howTitle", v)}
+        />
+        <Field
+          label="Phụ đề"
+          value={form.howSubtitle ?? ""}
+          onChange={(v) => set("howSubtitle", v)}
+          rows={2}
+        />
+      </section>
+
+      <section className="space-y-4 border-t border-border pt-4">
+        <h2 className="text-sm font-semibold text-navy">Solutions</h2>
+        <Field
+          label="Tiêu đề"
+          value={form.solutionsTitle ?? ""}
+          onChange={(v) => set("solutionsTitle", v)}
+        />
+        <Field
+          label="Phụ đề"
+          value={form.solutionsSubtitle ?? ""}
+          onChange={(v) => set("solutionsSubtitle", v)}
+          rows={2}
+        />
+      </section>
+
+      <section className="space-y-4 border-t border-border pt-4">
+        <h2 className="text-sm font-semibold text-navy">CTA banner</h2>
+        <Field
+          label="Tiêu đề"
+          value={form.ctaTitle ?? ""}
+          onChange={(v) => set("ctaTitle", v)}
+        />
+        <Field
+          label="Phụ đề"
+          value={form.ctaSubtitle ?? ""}
+          onChange={(v) => set("ctaSubtitle", v)}
+          rows={2}
+        />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field
+            label="Nút CTA"
+            value={form.ctaLabel ?? ""}
+            onChange={(v) => set("ctaLabel", v)}
+          />
+          <Field
+            label="Liên kết"
+            value={form.ctaHref ?? ""}
+            onChange={(v) => set("ctaHref", v)}
+          />
+        </div>
+      </section>
+
+      <div className="flex flex-wrap gap-3 border-t border-border pt-4">
         <button
           type="button"
           onClick={() => save(false)}

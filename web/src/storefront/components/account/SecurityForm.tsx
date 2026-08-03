@@ -50,7 +50,13 @@ type SecurityStatus = {
   passwordUpdatedAt: string;
 };
 
-export function SecurityForm({ cms }: { cms: AccountCopy }) {
+export function SecurityForm({
+  cms,
+  requireAdmin2fa = false,
+}: {
+  cms: AccountCopy;
+  requireAdmin2fa?: boolean;
+}) {
   const [status, setStatus] = useState<SecurityStatus | null>(null);
   const [sessions, setSessions] = useState<SessionRow[]>([]);
   const [msg, setMsg] = useState<string | null>(null);
@@ -261,6 +267,15 @@ export function SecurityForm({ cms }: { cms: AccountCopy }) {
 
   return (
     <div className="space-y-5">
+      {requireAdmin2fa && !totpOk ? (
+        <div
+          role="alert"
+          className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950"
+        >
+          Tài khoản staff cần bật 2FA (TOTP) trước khi vào Admin. Cuộn xuống mục
+          xác thực hai lớp bên dưới.
+        </div>
+      ) : null}
       <nav className={`flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
         <Link href="/account" className={HOVER_LINK_ACCENT}>
           Tài khoản

@@ -14,7 +14,16 @@ import { createCipheriv, randomBytes, scryptSync } from "crypto";
 const prisma = new PrismaClient();
 
 function encrypt(plain: string): string {
-  const raw = process.env.DELIVERY_ENCRYPTION_KEY ?? "0123456789abcdef0123456789abcdef";
+  if (
+    process.env.NODE_ENV === "production" &&
+    !process.env.DELIVERY_ENCRYPTION_KEY
+  ) {
+    throw new Error(
+      "DELIVERY_ENCRYPTION_KEY is required to seed in production (no weak fallback).",
+    );
+  }
+  const raw =
+    process.env.DELIVERY_ENCRYPTION_KEY ?? "0123456789abcdef0123456789abcdef";
   const key = scryptSync(raw, "keyon-delivery", 32);
   const iv = randomBytes(12);
   const cipher = createCipheriv("aes-256-gcm", key, iv);
@@ -24,6 +33,12 @@ function encrypt(plain: string): string {
 }
 
 async function main() {
+  if (process.env.NODE_ENV === "production" && process.env.ALLOW_PROD_SEED !== "1") {
+    throw new Error(
+      "Refusing to seed production. Set ALLOW_PROD_SEED=1 only on intentional staging resets. Seed credentials are for local/staging only.",
+    );
+  }
+
   await prisma.deliveryResend.deleteMany();
   await prisma.delivery.deleteMany();
   await prisma.fulfillmentJob.deleteMany();
@@ -363,9 +378,11 @@ async function main() {
   }
 
   console.log("Seed OK — Instant ≥5 + Manual ≥5 + Phase B sample");
-  console.log("Admin: admin@keyon.local / Admin@123");
+  console.log("Seed OK (staging/local only).");
+  console.log("Admin: admin@keyon.local / Admin@123 — CHANGE before production pilot");
   console.log("Fulfillment: fulfill@keyon.local / Admin@123");
   console.log("Customer: customer@keyon.local / Admin@123");
+  console.log("Staff roles require TOTP before /admin (enable at /account/security).");
 }
 
 main()

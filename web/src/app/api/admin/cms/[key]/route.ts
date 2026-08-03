@@ -20,6 +20,7 @@ import {
   defaultCmsPolicy,
   defaultStaticPages,
   defaultSettings,
+  defaultCmsProductRatings,
   readJsonFile,
   writeJsonFile,
   type BlogPost,
@@ -35,6 +36,7 @@ import {
   type CmsHome,
   type CmsNav,
   type CmsPartners,
+  type CmsProductRatings,
   type SiteSettings,
 } from "@/server/cms/store";
 
@@ -114,6 +116,10 @@ const FILES: Record<string, { file: string; fallback: unknown }> = {
   contact: { file: "contact-page.json", fallback: defaultCmsContact },
   policy: { file: "policy-page.json", fallback: defaultCmsPolicy },
   pages: { file: "static-pages.json", fallback: defaultStaticPages },
+  "product-ratings": {
+    file: "product-ratings.json",
+    fallback: defaultCmsProductRatings,
+  },
 };
 
 export async function GET(
@@ -192,6 +198,16 @@ export async function PUT(
         heroSubtitle: z.string(),
         heroCta: z.string(),
         heroCtaHref: z.string(),
+        whyTitle: z.string().optional(),
+        whySubtitle: z.string().optional(),
+        howTitle: z.string().optional(),
+        howSubtitle: z.string().optional(),
+        solutionsTitle: z.string().optional(),
+        solutionsSubtitle: z.string().optional(),
+        ctaTitle: z.string().optional(),
+        ctaSubtitle: z.string().optional(),
+        ctaLabel: z.string().optional(),
+        ctaHref: z.string().optional(),
         published: z.boolean(),
       })
       .parse(body) satisfies CmsHome;
@@ -690,6 +706,21 @@ export async function PUT(
     }
     await writeJsonFile("static-pages.json", data);
     return NextResponse.json({ ok: true, count: data.length });
+  }
+  if (key === "product-ratings") {
+    const data = z
+      .object({
+        items: z.array(
+          z.object({
+            productKey: z.string().min(1),
+            ratingAvg: z.number().min(0).max(5),
+            reviewCount: z.number().int().min(0),
+          }),
+        ),
+      })
+      .parse(body) satisfies CmsProductRatings;
+    await writeJsonFile("product-ratings.json", data);
+    return NextResponse.json({ ok: true, data });
   }
 
   return NextResponse.json({ error: "Unknown key" }, { status: 404 });

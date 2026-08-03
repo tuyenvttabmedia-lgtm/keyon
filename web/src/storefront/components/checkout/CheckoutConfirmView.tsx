@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { CmsCheckout } from "@/server/cms/types";
 import { ConfirmPayButton } from "@/app/(storefront)/checkout/[orderId]/confirm-pay-button";
 import { CopyButton } from "@/storefront/components/CopyButton";
@@ -70,12 +70,48 @@ export function CheckoutConfirmView({
 }: CheckoutConfirmViewProps) {
   const router = useRouter();
   const [reloading, setReloading] = useState(false);
+  const [polling, setPolling] = useState(true);
   const money = checkoutMoney(item, order.totalVnd);
   const payLabel = formatCheckoutVnd(money.pay);
   const discountPct =
     money.listTotal && money.discount > 0
       ? Math.round((money.discount / money.listTotal) * 100)
       : 0;
+
+  useEffect(() => {
+    let cancelled = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+
+    async function tick() {
+      try {
+        const res = await fetch(
+          `/api/checkout/${order.id}/payment-status`,
+          { cache: "no-store" },
+        );
+        if (!res.ok || cancelled) return;
+        const data = (await res.json()) as {
+          paid?: boolean;
+          redirectTo?: string | null;
+        };
+        if (data.paid && data.redirectTo) {
+          setPolling(false);
+          router.replace(data.redirectTo);
+          return;
+        }
+      } catch {
+        /* keep polling */
+      }
+      if (!cancelled) {
+        timer = setTimeout(tick, 3000);
+      }
+    }
+
+    timer = setTimeout(tick, 2500);
+    return () => {
+      cancelled = true;
+      if (timer) clearTimeout(timer);
+    };
+  }, [order.id, router]);
 
   async function reloadQr() {
     setReloading(true);
@@ -329,8 +365,10 @@ export function CheckoutConfirmView({
               </div>
             ) : (
               <p className={`mt-5 border-t border-border pt-4 text-sm text-muted`}>
-                {cms.payCtaHint ||
-                  "Sau khi chuyển khoản đúng, hệ thống sẽ cập nhật trạng thái tự động. Bạn không cần bấm xác nhận thủ công."}
+                {polling
+                  ? "Đang chờ xác nhận thanh toán… trang sẽ tự chuyển khi nhận được IPN."
+                  : cms.payCtaHint ||
+                    "Sau khi chuyển khoản đúng, hệ thống sẽ cập nhật trạng thái tự động. Bạn không cần bấm xác nhận thủ công."}
               </p>
             )}
           </section>

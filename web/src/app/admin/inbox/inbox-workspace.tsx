@@ -159,6 +159,38 @@ export function InboxWorkspace({ jobs, kpi, staffLabel }: Props) {
     return validateDeliverablePayload(selected.deliverableType, payload);
   }, [selected, payload]);
 
+  async function retryInstant() {
+    if (!selected || selected.status !== "WAITING_STOCK") return;
+    if (selected.strategy !== "INSTANT") return;
+    setLoading(true);
+    setError(null);
+    const currentId = selected.id;
+    try {
+      const res = await fetch("/api/admin/fulfillment/retry-instant", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jobId: currentId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Retry thất bại");
+      if (data.status === "SUCCEEDED") {
+        const nextJob =
+          filtered.find((j) => j.id !== currentId && j.actionable) ??
+          filtered.find((j) => j.id !== currentId) ??
+          null;
+        if (nextJob) setSelected(nextJob.id);
+        else setSelected(null);
+      }
+      startTransition(() => {
+        router.refresh();
+      });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Retry thất bại");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   // After complete: both buttons auto-open next (#11)
   async function complete(_mode: "stay" | "next") {
     if (!selected || !selected.actionable) return;
@@ -560,7 +592,44 @@ export function InboxWorkspace({ jobs, kpi, staffLabel }: Props) {
                 </ol>
               </section>
 
-              {selected.actionable ? (
+              {selected.actionable &&
+              selected.status === "WAITING_STOCK" &&
+              selected.strategy === "INSTANT" ? (
+                <section className="rounded-2xl border border-amber-200 bg-amber-50/60 p-4 sm:p-5">
+                  <h3 className="text-sm font-semibold text-amber-950">
+                    Instant — hết kho (WAITING_STOCK)
+                  </h3>
+                  <p className="mt-1 text-xs text-amber-900/80">
+                    Nhập key vào License Pool (Admin → Stock), rồi bấm Retry.
+                    Không gọi lại NCC / buyCard.
+                  </p>
+                  {error ? (
+                    <p className="mt-2 text-sm text-danger">{error}</p>
+                  ) : null}
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      disabled={loading}
+                      onClick={() => void retryInstant()}
+                      className="rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+                    >
+                      {loading ? "…" : "Retry Instant"}
+                    </button>
+                    <Link
+                      href="/admin/stock"
+                      className="rounded-xl border border-border bg-white px-4 py-2 text-sm font-medium text-navy"
+                    >
+                      Mở Stock
+                    </Link>
+                  </div>
+                </section>
+              ) : null}
+
+              {selected.actionable &&
+              !(
+                selected.status === "WAITING_STOCK" &&
+                selected.strategy === "INSTANT"
+              ) ? (
                 <section className="rounded-2xl border border-border bg-card p-4 sm:p-5">
                   <label className="block text-sm font-semibold text-navy">
                     Deliverable — {selected.deliverableType}

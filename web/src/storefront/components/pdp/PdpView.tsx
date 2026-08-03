@@ -152,14 +152,16 @@ export function PdpView({ data }: { data: PdpProductData }) {
 
   const tabLabels = useMemo(
     () =>
-      TABS.filter((t) => t.id !== "faq" || data.faqs.length > 0).map((t) =>
+      TABS.filter((t) => {
+        if (t.id === "faq") return data.faqs.length > 0;
+        if (t.id === "reviews")
+          return Boolean(data.reviewCount && data.reviewCount > 0);
+        return true;
+      }).map((t) =>
         t.id === "reviews"
           ? {
               ...t,
-              label:
-                data.reviewCount && data.reviewCount > 0
-                  ? `Đánh giá (${data.reviewCount})`
-                  : "Đánh giá",
+              label: `Đánh giá (${data.reviewCount})`,
             }
           : t.id === "faq"
             ? { ...t, label: "Câu hỏi thường gặp" }

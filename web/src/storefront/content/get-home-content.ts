@@ -184,6 +184,8 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
 
   const solutions = {
     ...homeFixture.solutions,
+    title: cmsHome.solutionsTitle || homeFixture.solutions.title,
+    subtitle: cmsHome.solutionsSubtitle || homeFixture.solutions.subtitle,
     items: homeFixture.solutions.items.map((s) =>
       s.id === "sol3"
         ? {
@@ -198,6 +200,8 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
 
   const why = {
     ...homeFixture.why,
+    title: cmsHome.whyTitle || homeFixture.why.title,
+    subtitle: cmsHome.whySubtitle || homeFixture.why.subtitle,
     items: homeFixture.why.items.map((w) =>
       w.id === "w3"
         ? {
@@ -214,6 +218,20 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
       imageUrl: banner.imageUrl,
       visible: banner.visible,
     },
+  };
+
+  const howItWorks = {
+    ...homeFixture.howItWorks,
+    title: cmsHome.howTitle || homeFixture.howItWorks.title,
+    subtitle: cmsHome.howSubtitle || homeFixture.howItWorks.subtitle,
+  };
+
+  const ctaBanner = {
+    ...homeFixture.ctaBanner,
+    title: cmsHome.ctaTitle || homeFixture.ctaBanner.title,
+    subtitle: cmsHome.ctaSubtitle || homeFixture.ctaBanner.subtitle,
+    ctaLabel: cmsHome.ctaLabel || homeFixture.ctaBanner.ctaLabel,
+    ctaHref: cmsHome.ctaHref || homeFixture.ctaBanner.ctaHref,
   };
 
   return {
@@ -245,7 +263,9 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
       visible: featuredItems.length > 0,
     },
     why,
+    howItWorks,
     solutions,
+    ctaBanner,
     faqHome: {
       visible: faqHome.length > 0,
       title: "Câu hỏi thường gặp",

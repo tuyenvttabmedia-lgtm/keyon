@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import { encryptPayload } from "@/lib/crypto";
 import { audit } from "@/lib/audit";
+import { AppError } from "@/lib/errors";
 import { getFulfillmentStrategy } from "./registry";
 import { hintFor } from "./types";
 import { enqueueEmail } from "@/server/queue";
@@ -33,7 +34,8 @@ export async function processFulfillmentForOrder(orderId: string) {
       if (
         already.status === "QUEUED" ||
         already.status === "PROCESSING" ||
-        already.status === "FAILED"
+        already.status === "FAILED" ||
+        already.status === "WAITING_STOCK"
       ) {
         await runFulfillmentJob(already.id);
       }
@@ -83,6 +85,53 @@ export async function runFulfillmentJob(jobId: string) {
     orderItemId: job.orderItemId,
     variant: job.orderItem.variant,
   });
+}
+
+/**
+ * After restocking Instant pool: re-run WAITING_STOCK Instant job (reserve/consume only — no provider buy).
+ */
+export async function retryInstantWaitingStock(input: {
+  jobId: string;
+  actorId: string;
+}) {
+  const job = await prisma.fulfillmentJob.findUnique({
+    where: { id: input.jobId },
+    include: {
+      orderItem: { include: { variant: true, deliveries: true } },
+    },
+  });
+  if (!job) throw new AppError("Job not found", 404);
+  if (job.status !== "WAITING_STOCK") {
+    throw new AppError(`Job không ở WAITING_STOCK (hiện: ${job.status})`, 400);
+  }
+  if (job.strategy !== "INSTANT") {
+    throw new AppError("Chỉ retry Instant từ License Pool", 400);
+  }
+  if (job.orderItem.deliveries.length > 0) {
+    throw new AppError("Đã có delivery", 400);
+  }
+
+  await prisma.fulfillmentJob.update({
+    where: { id: job.id },
+    data: {
+      status: "QUEUED",
+      notes: "Retry Instant sau nhập kho",
+      startedAt: null,
+      finishedAt: null,
+    },
+  });
+
+  await runFulfillmentJob(job.id);
+  await refreshOrderCompletion(job.orderId);
+  await audit("fulfillment.instant_retry", "FulfillmentJob", job.id, input.actorId, {
+    orderItemId: job.orderItemId,
+  });
+
+  const refreshed = await prisma.fulfillmentJob.findUnique({
+    where: { id: job.id },
+    select: { status: true, notes: true },
+  });
+  return refreshed;
 }
 
 export async function completeManualDelivery(input: {

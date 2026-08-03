@@ -1,6 +1,7 @@
 export {
   processFulfillmentForOrder,
   runFulfillmentJob,
+  retryInstantWaitingStock,
   completeManualDelivery,
   resendDelivery,
   refreshOrderCompletion,

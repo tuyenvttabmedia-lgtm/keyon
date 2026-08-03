@@ -177,6 +177,17 @@ export type CmsHome = {
   heroSubtitle: string;
   heroCta: string;
   heroCtaHref: string;
+  /** Section titles — optional overlays on home fixture */
+  whyTitle?: string;
+  whySubtitle?: string;
+  howTitle?: string;
+  howSubtitle?: string;
+  solutionsTitle?: string;
+  solutionsSubtitle?: string;
+  ctaTitle?: string;
+  ctaSubtitle?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
   published: boolean;
 };
 
@@ -959,6 +970,16 @@ export const defaultCmsHome: CmsHome = {
     "Cung cấp công cụ mua và quản lý giấy phép phần mềm chính hãng — thanh toán rõ, giao đúng loại nhận, lưu trong Tài khoản.",
   heroCta: "Khám phá sản phẩm →",
   heroCtaHref: "/products",
+  whyTitle: "",
+  whySubtitle: "",
+  howTitle: "",
+  howSubtitle: "",
+  solutionsTitle: "",
+  solutionsSubtitle: "",
+  ctaTitle: "",
+  ctaSubtitle: "",
+  ctaLabel: "",
+  ctaHref: "",
   published: true,
 };
 

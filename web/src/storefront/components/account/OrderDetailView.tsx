@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import type { AccountCopy } from "@/storefront/lib/account-cms";
 import { CopyButton } from "@/storefront/components/CopyButton";
 import { LicenseKeyReveal } from "@/storefront/components/checkout/LicenseKeyReveal";
@@ -92,13 +91,6 @@ export function OrderDetailView({
   timeline,
   lines,
 }: OrderDetailViewProps) {
-  const [invoiceMsg, setInvoiceMsg] = useState<string | null>(null);
-
-  function downloadInvoice() {
-    setInvoiceMsg("Hóa đơn điện tử sẽ gửi qua email / Tài khoản khi sẵn sàng.");
-    window.setTimeout(() => setInvoiceMsg(null), 4000);
-  }
-
   const statusColor =
     overallStatus === "completed"
       ? "text-emerald-600"
@@ -151,14 +143,7 @@ export function OrderDetailView({
           </Link>
           <h1 className={PAGE_TITLE_CLASS}>{cms.orderPageTitle}</h1>
         </div>
-        <button type="button" onClick={downloadInvoice} className={BTN_SECONDARY}>
-          <DownloadIcon />
-          {cms.orderInvoiceCta}
-        </button>
       </div>
-      {invoiceMsg ? (
-        <p className={`${CARD_META_CLASS} !text-accent`}>{invoiceMsg}</p>
-      ) : null}
 
       <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1.7fr)_minmax(17rem,22rem)] lg:gap-5">
         <div className="space-y-5">
@@ -475,19 +460,5 @@ function MetaCell({ label, value }: { label: string; value: string }) {
       <p className={FORM_LABEL_CLASS}>{label}</p>
       <p className={`mt-1 break-all ${FIELD_VALUE_CLASS}`}>{value}</p>
     </div>
-  );
-}
-
-function DownloadIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M12 4v10M8 10l4 4 4-4M5 18h14"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   );
 }

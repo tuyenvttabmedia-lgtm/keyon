@@ -1,9 +1,4 @@
-export type NotifCenterTab =
-  | "broadcast"
-  | "templates"
-  | "history"
-  | "scheduled"
-  | "draft";
+export type NotifCenterTab = "broadcast" | "templates" | "history";
 
 export type NotifType = "info" | "promo" | "maintenance" | "urgent";
 
@@ -102,13 +97,7 @@ export function applyTypePrefix(title: string, type: NotifType): string {
 }
 
 export function parseNotifTab(raw: string | undefined): NotifCenterTab {
-  const tabs: NotifCenterTab[] = [
-    "broadcast",
-    "templates",
-    "history",
-    "scheduled",
-    "draft",
-  ];
+  const tabs: NotifCenterTab[] = ["broadcast", "templates", "history"];
   if (raw && tabs.includes(raw as NotifCenterTab)) return raw as NotifCenterTab;
   return "broadcast";
 }

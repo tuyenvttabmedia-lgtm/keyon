@@ -52,12 +52,18 @@ export async function GET() {
   const inv = InventoryReadModel.health();
   checks.inventory = inv.inventory_healthy ? "ok" : "error";
 
-  const healthy =
-    checks.database === "ok" && checks.redis === "ok" && checks.worker === "ok";
-
   const paymentProvider = String(checks.paymentProvider);
+  const stubInProduction =
+    paymentProvider === "stub" && process.env.NODE_ENV === "production";
+
+  const healthy =
+    checks.database === "ok" &&
+    checks.redis === "ok" &&
+    checks.worker === "ok" &&
+    !stubInProduction;
+
   const warnings: string[] = [];
-  if (paymentProvider === "stub" && process.env.NODE_ENV === "production") {
+  if (stubInProduction) {
     warnings.push(
       "PAYMENT_PROVIDER=stub in production — do not accept real payments",
     );
