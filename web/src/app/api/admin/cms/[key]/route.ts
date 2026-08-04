@@ -268,9 +268,24 @@ export async function PUT(
   if (key === "nav") {
     const data = z
       .object({
+        logoUrl: z.string().optional(),
+        brandName: z.string().min(1).max(48),
+        tagline: z.string().max(80),
         items: z.array(z.object({ label: z.string(), href: z.string() })),
       })
-      .parse(body) satisfies CmsNav;
+      .parse({
+        ...body,
+        brandName:
+          typeof body?.brandName === "string" && body.brandName.trim()
+            ? body.brandName.trim()
+            : defaultCmsNav.brandName,
+        tagline:
+          typeof body?.tagline === "string" ? body.tagline.trim() : defaultCmsNav.tagline,
+        logoUrl:
+          typeof body?.logoUrl === "string" && body.logoUrl.trim()
+            ? body.logoUrl.trim()
+            : undefined,
+      }) satisfies CmsNav;
     await writeJsonFile("nav.json", data);
     return NextResponse.json({ ok: true, data });
   }

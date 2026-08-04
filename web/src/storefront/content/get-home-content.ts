@@ -237,6 +237,14 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
   return {
     ...homeFixture,
     navigation: nav.items.length ? nav.items : homeFixture.navigation,
+    brand: {
+      logoUrl: nav.logoUrl?.trim() || undefined,
+      brandName: nav.brandName?.trim() || defaultCmsNav.brandName,
+      tagline:
+        typeof nav.tagline === "string"
+          ? nav.tagline.trim()
+          : defaultCmsNav.tagline,
+    },
     hero: {
       ...homeFixture.hero,
       title: cmsHome.heroTitle || homeFixture.hero.title,

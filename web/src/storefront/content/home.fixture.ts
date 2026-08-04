@@ -12,6 +12,10 @@ export const homeFixture: HomeContent = {
     { label: "Tin tức", href: "/blog" },
     { label: "Hỗ trợ", href: "/faq" },
   ],
+  brand: {
+    brandName: "KEYON",
+    tagline: "Digital License Platform",
+  },
   hero: {
     visible: true,
     badge: "DIGITAL LICENSE PLATFORM",

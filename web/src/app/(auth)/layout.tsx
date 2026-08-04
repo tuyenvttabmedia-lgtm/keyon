@@ -20,6 +20,7 @@ export default async function AuthLayout({
     <>
       <SiteHeader
         navItems={home.navigation}
+        brand={home.brand}
         sessionEmail={session?.email}
         isStaff={isStaff}
       />

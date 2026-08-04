@@ -219,6 +219,10 @@ export type CmsFooter = {
 };
 
 export type CmsNav = {
+  /** Header logo image URL (Media library). Empty → letter mark from brandName. */
+  logoUrl?: string;
+  brandName: string;
+  tagline: string;
   items: { label: string; href: string }[];
 };
 
@@ -400,6 +404,8 @@ export const defaultCmsFooter: CmsFooter = {
 };
 
 export const defaultCmsNav: CmsNav = {
+  brandName: "KEYON",
+  tagline: "Digital License Platform",
   items: [
     { label: "Nền tảng", href: "/about" },
     { label: "Sản phẩm", href: "/products" },

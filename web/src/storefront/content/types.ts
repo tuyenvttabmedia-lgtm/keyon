@@ -139,6 +139,12 @@ export type PartnerItem = {
 
 export type HomeContent = {
   navigation: NavItem[];
+  /** Header brand — from CMS · Điều hướng */
+  brand: {
+    logoUrl?: string;
+    brandName: string;
+    tagline: string;
+  };
   hero: HomeHero;
   partners: {
     title: string;
