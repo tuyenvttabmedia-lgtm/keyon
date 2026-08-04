@@ -40,7 +40,7 @@ export function WhyKeyonSection({ data }: { data: Why }) {
           </div>
 
           <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
-            {data.items.slice(0, 4).map((item) => (
+            {data.items.slice(0, 6).map((item) => (
               <WhyCard key={item.id} item={item} />
             ))}
           </div>

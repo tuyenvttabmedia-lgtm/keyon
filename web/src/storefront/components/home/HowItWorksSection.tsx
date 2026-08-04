@@ -12,9 +12,11 @@ import {
   SECTION_TITLE_CLASS,
 } from "@/storefront/typography";
 import {
+  ELEVATION_CARD_HOVER,
   ELEVATION_HAIRLINE,
   HOVER_LIFT_CARD,
   TRANSITION_PANEL,
+  TRANSITION_UI,
 } from "@/storefront/effects";
 import { Reveal } from "./Reveal";
 
@@ -55,10 +57,12 @@ export function HowItWorksSection({ data }: { data: HomeContent["howItWorks"] })
               return (
                 <article
                   key={step.id}
-                  className={`flex h-full flex-col rounded-2xl border border-border/80 bg-surface/80 p-4 sm:bg-white sm:p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-border`}
+                  className={`group flex h-full flex-col rounded-2xl border border-border/80 bg-surface/80 p-4 sm:bg-white sm:p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/40 ${ELEVATION_CARD_HOVER}`}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent text-white sm:h-12 sm:w-12">
+                    <span
+                      className={`relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent text-white sm:h-12 sm:w-12 ${TRANSITION_UI} group-hover:bg-accent-hover group-hover:scale-105`}
+                    >
                       <Icon size={22} />
                       <span
                         className={`absolute -right-1.5 -top-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-white bg-navy px-1 ${BADGE_CLASS} font-bold leading-none text-white`}
@@ -69,7 +73,11 @@ export function HowItWorksSection({ data }: { data: HomeContent["howItWorks"] })
                     <span className={`${OVERLINE_CLASS} text-accent`}>Bước {n}</span>
                   </div>
 
-                  <h3 className={`mt-4 ${CARD_TITLE_CLASS}`}>{step.title}</h3>
+                  <h3
+                    className={`mt-4 ${CARD_TITLE_CLASS} ${TRANSITION_UI} group-hover:text-accent`}
+                  >
+                    {step.title}
+                  </h3>
                   <p className={`mt-1.5 flex-1 leading-relaxed ${SECTION_LEAD_CLASS}`}>
                     {step.description}
                   </p>

@@ -250,6 +250,20 @@ export const homeFixture: HomeContent = {
         description: "Hỗ trợ trước và sau khi mua qua ticket trong Tài khoản.",
         icon: "support",
       },
+      {
+        id: "w5",
+        title: "Thanh toán rõ ràng",
+        description:
+          "VietQR / chuyển khoản theo hướng dẫn trên trang thanh toán — theo dõi trạng thái trong đơn hàng.",
+        icon: "bolt",
+      },
+      {
+        id: "w6",
+        title: "Chính sách hoàn tiền rõ",
+        description:
+          "Điều kiện hoàn tiền được ghi trong chính sách / điều khoản — không ẩn sau khi mua.",
+        icon: "refund",
+      },
     ],
   },
   solutions: {
