@@ -174,6 +174,8 @@ export type StorageSettings = {
 
 export type CmsHome = {
   heroTitle: string;
+  /** Optional teal accent word(s) after title. Empty = no accent. */
+  heroTitleAccent?: string;
   heroSubtitle: string;
   heroCta: string;
   heroCtaHref: string;
@@ -982,6 +984,7 @@ export const defaultCmsCheckout: CmsCheckout = {
 
 export const defaultCmsHome: CmsHome = {
   heroTitle: "Nền tảng phân phối bản quyền số",
+  heroTitleAccent: "",
   heroSubtitle:
     "Mua, triển khai và quản lý bản quyền phần mềm, cloud và dịch vụ số trên một nền tảng duy nhất. Dành cho cá nhân, đội nhóm và doanh nghiệp.",
   heroCta: "Khám phá sản phẩm →",

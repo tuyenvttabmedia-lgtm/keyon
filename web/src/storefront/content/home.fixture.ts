@@ -20,7 +20,6 @@ export const homeFixture: HomeContent = {
     visible: true,
     badge: "DIGITAL LICENSE PLATFORM",
     title: "Nền tảng phân phối bản quyền số",
-    titleAccent: "toàn diện",
     subtitle:
       "Mua, triển khai và quản lý bản quyền phần mềm, cloud và dịch vụ số trên một nền tảng duy nhất. Dành cho cá nhân, đội nhóm và doanh nghiệp.",
     ctaLabel: "Khám phá sản phẩm →",

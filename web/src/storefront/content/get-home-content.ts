@@ -244,6 +244,7 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
     hero: {
       ...homeFixture.hero,
       title: cmsHome.heroTitle || homeFixture.hero.title,
+      titleAccent: cmsHome.heroTitleAccent?.trim() || undefined,
       subtitle: cmsHome.heroSubtitle || homeFixture.hero.subtitle,
       ctaLabel: cmsHome.heroCta || homeFixture.hero.ctaLabel,
       ctaHref: cmsHome.heroCtaHref || homeFixture.hero.ctaHref,

@@ -197,6 +197,7 @@ export async function PUT(
     const data = z
       .object({
         heroTitle: z.string(),
+        heroTitleAccent: z.string().optional(),
         heroSubtitle: z.string(),
         heroCta: z.string(),
         heroCtaHref: z.string(),

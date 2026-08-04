@@ -70,6 +70,14 @@ export function CmsHomeForm({ initial }: { initial: CmsHome }) {
           onChange={(v) => set("heroTitle", v)}
         />
         <Field
+          label="Chữ accent (màu teal)"
+          value={form.heroTitleAccent ?? ""}
+          onChange={(v) => set("heroTitleAccent", v)}
+        />
+        <p className="-mt-2 text-xs text-muted">
+          Ví dụ: &quot;toàn diện&quot;. Để trống = không hiện chữ accent sau tiêu đề.
+        </p>
+        <Field
           label="Phụ đề"
           value={form.heroSubtitle}
           onChange={(v) => set("heroSubtitle", v)}
