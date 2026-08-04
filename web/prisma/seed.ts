@@ -57,28 +57,35 @@ async function main() {
   await prisma.user.deleteMany();
 
   const passwordHash = await hash("Admin@123", 12);
-  await prisma.user.createMany({
-    data: [
-      {
-        email: "admin@keyon.local",
-        passwordHash,
-        name: "Admin KEYON",
-        role: UserRole.ADMIN,
-      },
-      {
-        email: "fulfill@keyon.local",
-        passwordHash,
-        name: "Fulfillment Staff",
-        role: UserRole.FULFILLMENT,
-      },
-      {
-        email: "customer@keyon.local",
-        passwordHash,
-        name: "Demo Customer",
-        role: UserRole.CUSTOMER,
-      },
-    ],
-  });
+  const users: {
+    email: string;
+    passwordHash: string;
+    name: string;
+    role: UserRole;
+  }[] = [
+    {
+      email: "admin@keyon.local",
+      passwordHash,
+      name: "Admin KEYON",
+      role: UserRole.ADMIN,
+    },
+    {
+      email: "customer@keyon.local",
+      passwordHash,
+      name: "Demo Customer",
+      role: UserRole.CUSTOMER,
+    },
+  ];
+  // Opt-in only — do not recreate fulfill@keyon.local on accidental re-seed
+  if (process.env.SEED_FULFILLMENT === "1") {
+    users.push({
+      email: "fulfill@keyon.local",
+      passwordHash,
+      name: "Fulfillment Staff",
+      role: UserRole.FULFILLMENT,
+    });
+  }
+  await prisma.user.createMany({ data: users });
 
   const stock = await prisma.supplier.create({
     data: {
@@ -380,7 +387,9 @@ async function main() {
   console.log("Seed OK — Instant ≥5 + Manual ≥5 + Phase B sample");
   console.log("Seed OK (staging/local only).");
   console.log("Admin: admin@keyon.local / Admin@123 — CHANGE before production pilot");
-  console.log("Fulfillment: fulfill@keyon.local / Admin@123");
+  if (process.env.SEED_FULFILLMENT === "1") {
+    console.log("Fulfillment: fulfill@keyon.local / Admin@123");
+  }
   console.log("Customer: customer@keyon.local / Admin@123");
   console.log("Staff roles require TOTP before /admin (enable at /account/security).");
 }

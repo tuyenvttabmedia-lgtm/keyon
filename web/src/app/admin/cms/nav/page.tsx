@@ -22,7 +22,9 @@ export default async function AdminCmsNavPage() {
       <div>
         <h1 className={ADMIN_PAGE_TITLE_CLASS}>CMS · Điều hướng</h1>
         <p className="text-sm text-muted">
-          Logo header, tagline và menu storefront
+          Logo header và tagline. Cây menu chính (mega) lấy từ IA code (
+          <code className="text-xs">storefront/nav/ia.ts</code>
+          ) — danh sách item dưới đây là legacy / tham chiếu, không điều khiển mega Phase 1.
         </p>
       </div>
       <CmsSubnav active="/admin/cms/nav" />

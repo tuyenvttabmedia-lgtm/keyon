@@ -7,10 +7,10 @@ import type { HomeContent } from "./types";
 export const homeFixture: HomeContent = {
   navigation: [
     { label: "Sản phẩm", href: "/products" },
-    { label: "Giải pháp", href: "/#solutions" },
-    { label: "Doanh nghiệp", href: "/contact" },
-    { label: "Tài nguyên", href: "/blog" },
-    { label: "Hỗ trợ", href: "/faq" },
+    { label: "Giải pháp", href: "/solutions" },
+    { label: "Doanh nghiệp", href: "/business" },
+    { label: "Tài nguyên", href: "/resources" },
+    { label: "Hỗ trợ", href: "/support" },
   ],
   brand: {
     brandName: "KEYON",
@@ -25,7 +25,7 @@ export const homeFixture: HomeContent = {
     ctaLabel: "Khám phá sản phẩm →",
     ctaHref: "/products",
     secondaryCtaLabel: "Dành cho doanh nghiệp",
-    secondaryCtaHref: "/#solutions",
+    secondaryCtaHref: "/business",
     trustItems: [
       {
         title: "100% Chính hãng",
@@ -280,32 +280,32 @@ export const homeFixture: HomeContent = {
     subtitle:
       "Từ một vài giấy phép đến hàng trăm người dùng, KEYON giúp doanh nghiệp mua, triển khai và quản lý phần mềm dễ dàng hơn.",
     ctaLabel: "Khám phá giải pháp →",
-    ctaHref: "/products",
+    ctaHref: "/solutions",
     secondaryCtaLabel: "Liên hệ tư vấn",
-    secondaryCtaHref: "/contact",
+    secondaryCtaHref: "/contact/sales",
     items: [
       {
         id: "sol1",
-        title: "Software Licensing",
+        title: "Bản quyền phần mềm",
         description:
           "Mua và quản lý license tập trung, theo dõi thiết bị và thời hạn.",
         art: "bars",
       },
       {
         id: "sol2",
-        title: "Cloud & Subscription",
-        description: "Quản lý cloud services và subscription theo tổ chức.",
+        title: "Năng suất & Cộng tác",
+        description: "Office, Microsoft 365 và làm việc nhóm.",
         art: "trend",
       },
       {
         id: "sol3",
-        title: "Security & Backup",
+        title: "Bảo mật & Backup",
         description: "Bảo mật endpoint, dữ liệu và continuity.",
         art: "shield",
       },
       {
         id: "sol4",
-        title: "License Management",
+        title: "Quản lý bản quyền",
         description: "Theo dõi license, renewal, người dùng và chi phí.",
         art: "stack",
       },
@@ -373,30 +373,31 @@ export const homeFixture: HomeContent = {
       {
         title: "Sản phẩm",
         links: [
-          { label: "Windows", href: "/products" },
-          { label: "Microsoft Office", href: "/products" },
-          { label: "Adobe", href: "/products" },
-          { label: "Bảo mật", href: "/products" },
-          { label: "Cloud & Server", href: "/products" },
+          { label: "Windows", href: "/products?cat=windows" },
+          { label: "Microsoft Office", href: "/products?cat=office" },
+          { label: "Adobe", href: "/brands/adobe" },
+          { label: "Bảo mật", href: "/products?cat=security" },
+          { label: "Cloud & Server", href: "/products?cat=cloud" },
           { label: "Tất cả sản phẩm", href: "/products" },
         ],
       },
       {
         title: "Giải pháp",
         links: [
-          { label: "Software Licensing", href: "/#solutions" },
-          { label: "Cloud", href: "/#solutions" },
-          { label: "Security & Backup", href: "/#solutions" },
-          { label: "License Management", href: "/#solutions" },
-          { label: "API", href: "/contact" },
+          { label: "Bản quyền phần mềm", href: "/solutions/software-licensing" },
+          { label: "Năng suất & Cộng tác", href: "/solutions/productivity" },
+          { label: "Cloud", href: "/solutions/cloud" },
+          { label: "Bảo mật", href: "/solutions/security" },
+          { label: "Quản lý bản quyền", href: "/solutions/license-management" },
         ],
       },
       {
-        title: "Công ty & Hỗ trợ",
+        title: "Doanh nghiệp & Hỗ trợ",
         links: [
-          { label: "Giới thiệu", href: "/about" },
-          { label: "Tin tức", href: "/blog" },
-          { label: "Trung tâm hỗ trợ", href: "/faq" },
+          { label: "Giải pháp doanh nghiệp", href: "/business" },
+          { label: "Volume licensing", href: "/business/volume-licensing" },
+          { label: "Tài nguyên", href: "/resources" },
+          { label: "Trung tâm hỗ trợ", href: "/support" },
           { label: "FAQ", href: "/faq" },
           { label: "Liên hệ", href: "/contact" },
         ],
@@ -407,7 +408,7 @@ export const homeFixture: HomeContent = {
           { label: "KEYON", href: "/about" },
           { label: "support@keyon.vn", href: "mailto:support@keyon.vn" },
           { label: "Đà Nẵng, Việt Nam", href: "/contact" },
-          { label: "Liên hệ tư vấn", href: "/contact" },
+          { label: "Liên hệ kinh doanh", href: "/contact/sales" },
         ],
       },
     ],

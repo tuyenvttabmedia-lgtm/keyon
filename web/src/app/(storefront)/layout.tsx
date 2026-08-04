@@ -18,7 +18,6 @@ export default async function StorefrontLayout({
   return (
     <>
       <SiteHeader
-        navItems={home.navigation}
         brand={home.brand}
         sessionEmail={session?.email}
         isStaff={isStaff}
