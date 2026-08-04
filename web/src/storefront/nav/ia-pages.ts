@@ -65,11 +65,14 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
     kicker: "Giải pháp",
     title: "Cloud",
     subtitle:
-      "Hướng cloud và hạ tầng số. Một số dịch vụ đang mở rộng — liên hệ tư vấn trước khi mua nếu chưa thấy trên catalog.",
-    bullets: ["Cloud & Server trên catalog", "Tư vấn triển khai theo nhu cầu", "Roadmap mở rộng (không claim đang bán nếu chưa có SKU)"],
-    primaryCta: { label: "Xem Cloud & Server", href: "/products?cat=cloud" },
+      "Cloud linh hoạt cho doanh nghiệp hiện đại — hạ tầng, storage, backup và tư vấn triển khai trên KEYON.",
+    bullets: [
+      "Cloud Infrastructure / Storage / Backup",
+      "Định hướng nền tảng đối tác (Azure, AWS, …)",
+      "Tư vấn theo quy mô SME → Enterprise",
+    ],
+    primaryCta: { label: "Khám phá dịch vụ cloud", href: "/products?cat=cloud" },
     secondaryCta: { label: "Liên hệ tư vấn", href: "/contact/sales" },
-    draftCapable: true,
   },
   security: {
     slug: "security",
