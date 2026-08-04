@@ -55,33 +55,37 @@ export function SiteHeader({
             aria-label={`${name} trang chủ`}
           >
             {logoUrl ? (
-              <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-surface sm:h-10 sm:w-10">
+              /* Full CMS logo (wordmark). Do not crop to square or duplicate brand text. */
+              <span className="relative block h-8 w-[min(180px,42vw)] sm:h-9 sm:w-[200px] lg:h-10 lg:w-[220px]">
                 <Image
                   src={logoUrl}
-                  alt=""
+                  alt={name}
                   fill
-                  className="object-contain p-0.5"
-                  sizes="40px"
+                  className="object-contain object-left"
+                  sizes="(max-width: 640px) 42vw, 220px"
+                  priority
                   unoptimized
                 />
               </span>
             ) : (
-              <span
-                className={`flex h-9 w-9 items-center justify-center rounded-xl bg-accent text-base font-extrabold text-white sm:h-10 sm:w-10 sm:text-lg ${TRANSITION_UI}`}
-              >
-                {mark}
-              </span>
-            )}
-            <span className="min-w-0 leading-tight">
-              <span className="block text-sm font-extrabold tracking-tight text-navy sm:text-base">
-                {name}
-              </span>
-              {tagline ? (
-                <span className="block truncate text-[10px] font-medium text-muted-soft sm:text-[11px]">
-                  {tagline}
+              <>
+                <span
+                  className={`flex h-9 w-9 items-center justify-center rounded-xl bg-accent text-base font-extrabold text-white sm:h-10 sm:w-10 sm:text-lg ${TRANSITION_UI}`}
+                >
+                  {mark}
                 </span>
-              ) : null}
-            </span>
+                <span className="min-w-0 leading-tight">
+                  <span className="block text-sm font-extrabold tracking-tight text-navy sm:text-base">
+                    {name}
+                  </span>
+                  {tagline ? (
+                    <span className="block truncate text-[10px] font-medium text-muted-soft sm:text-[11px]">
+                      {tagline}
+                    </span>
+                  ) : null}
+                </span>
+              </>
+            )}
           </Link>
 
           <nav className="ml-auto hidden items-center gap-7 text-[14px] font-medium text-muted lg:flex">

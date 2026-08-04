@@ -86,20 +86,26 @@ function BrandSection({
       <div>
         <p className="text-sm font-medium text-navy">Logo & thương hiệu header</p>
         <p className="mt-0.5 text-xs text-muted">
-          Hiện trên storefront header. Không upload → dùng chữ cái đầu của tên
-          thương hiệu.
+          Upload logo wordmark (ảnh ngang có chữ). Header chỉ hiện logo — không
+          ghép thêm tên/tagline. Không upload → chữ cái + tên + tagline.
         </p>
       </div>
 
       <div className="flex flex-wrap items-start gap-4">
-        <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border bg-surface">
+        <div
+          className={
+            previewUrl
+              ? "flex h-12 w-[200px] shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border bg-white px-2"
+              : "flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border bg-surface"
+          }
+        >
           {previewUrl ? (
             <Image
               src={previewUrl}
               alt=""
-              width={64}
-              height={64}
-              className="h-full w-full object-contain p-1"
+              width={200}
+              height={48}
+              className="h-10 w-full object-contain object-left"
               unoptimized
             />
           ) : (
@@ -130,6 +136,7 @@ function BrandSection({
 
       <label className="block text-sm">
         <span className="font-medium text-navy">Tên thương hiệu</span>
+        <span className="ml-1 text-xs text-muted">(fallback khi chưa có logo)</span>
         <input
           className="mt-1 h-9 w-full max-w-md rounded-lg border border-border px-3 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
           value={form.brandName}
@@ -140,6 +147,7 @@ function BrandSection({
 
       <label className="block text-sm">
         <span className="font-medium text-navy">Tagline</span>
+        <span className="ml-1 text-xs text-muted">(fallback khi chưa có logo)</span>
         <input
           className="mt-1 h-9 w-full max-w-lg rounded-lg border border-border px-3 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
           value={form.tagline}
