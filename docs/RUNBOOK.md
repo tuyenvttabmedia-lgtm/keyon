@@ -38,6 +38,7 @@
 | R7 | Email không tới |
 | R8 | Health / DB down |
 | R9 | Nghi ngờ giao trùng / trừ kho sai |
+| R10 | VPS chậm / CPU cao / nghi malware |
 | R10 | Key lỗi cần loại khỏi bán |
 | R11 | Backup / restore drill thất bại |
 
@@ -227,6 +228,18 @@ Chi tiết strategy: [`BACKUP.md`](./BACKUP.md).
 
 ---
 
+## R10 — VPS chậm / CPU cao / nghi malware
+
+**Triệu chứng:** Trang chậm dù health 200 · load cao · PM2 restart nhiều · process lạ (`syslog-ng-<hex>`, path ẩn `/usr/share/man/.../.syslog*`).
+
+1. Admin → **Monitoring** → Máy chủ / Bảo mật lite / Sự cố.  
+2. SSH: `uptime` · `ps aux --sort=-%cpu | head` · `tail -50 /var/log/keyon-watchdog.log`.  
+3. Chạy tay: `/opt/keyon/ops/host-watchdog.sh --security-full`.  
+4. Nếu process/path malware: `pkill -9 -f …` · `rm -rf` thư mục ẩn · đổi mật khẩu / rotate secrets.  
+5. Xác nhận: local `curl` health TTFB ổn · Monitoring status OK · Telegram không còn spam cùng code (cooldown).
+
+---
+
 ## Liên kết
 
 | Doc | |
@@ -234,5 +247,6 @@ Chi tiết strategy: [`BACKUP.md`](./BACKUP.md).
 | License Pool v1.0 | `docs/LICENSE-POOL-v1.md` |
 | Backup Strategy | `docs/BACKUP.md` |
 | Hướng dẫn thường ngày | `docs/OPERATIONS.md` |
+| Host watchdog | `ops/README.md` · `docs/MONITORING.md` |
 | Sprint 1.5 | `docs/SPRINT-1.5-production-readiness.md` |
 | Policy SLA / hoàn tiền | `/policy` + Admin Policy |

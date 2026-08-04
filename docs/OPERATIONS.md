@@ -254,7 +254,12 @@ npm run db:seed
 | Mail | 1 resend test |
 | SePay | đơn AWAITING lâu bất thường → reconcile |
 | Disk | `df -h` trên VPS — chỗ chứa dump + uploads |
-| Error tracker | Sentry/BetterStack — 0 spike lạ |
+| Host watchdog | Admin → Monitoring · `host-status.json` · `/var/log/keyon-watchdog.log` |
+| Security lite | Admin → Monitoring · findings / `ops/host-watchdog.sh --security-full` |
+| Uptime ngoài | UptimeRobot / Healthchecks ping `HEALTHCHECKS_PING_URL` |
+| Error tracker | Sentry/BetterStack — 0 spike lạ (tuỳ chọn) |
+
+Cài watchdog: `bash /opt/keyon/ops/install-host-watchdog.sh` — xem [`ops/README.md`](../ops/README.md).
 
 ---
 

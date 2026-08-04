@@ -8,3 +8,6 @@ dist
 public/uploads/*
 !public/uploads/.gitkeep
 data/cms/*.json
+data/ops/*.json
+data/ops/*.jsonl
+!data/ops/.gitkeep

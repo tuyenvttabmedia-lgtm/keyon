@@ -8,6 +8,12 @@ import {
 import { errorStats } from "@/server/monitoring/errors";
 import { listAlerts } from "@/server/monitoring/alerts";
 import { getOpsMetrics } from "@/server/monitoring/ops-metrics";
+import {
+  hostStatusFresh,
+  readHostStatus,
+  readRecentIncidents,
+  readSecurityScan,
+} from "@/server/monitoring/host-status";
 
 export const WORKER_HEARTBEAT_KEY = "keyon:worker:heartbeat";
 export const WORKER_HEARTBEAT_TTL_SEC = 120;
@@ -53,10 +59,13 @@ export async function getQueueDepths() {
 }
 
 export async function collectMonitoringSnapshot() {
-  const [worker, queues, ops] = await Promise.all([
+  const [worker, queues, ops, host, security, incidents] = await Promise.all([
     readWorkerHeartbeat(),
     getQueueDepths(),
     getOpsMetrics(),
+    readHostStatus(),
+    readSecurityScan(),
+    readRecentIncidents(12),
   ]);
   const err = errorStats();
   return {
@@ -71,6 +80,14 @@ export async function collectMonitoringSnapshot() {
     },
     errors: err,
     alerts: listAlerts(10),
+    host: host
+      ? {
+          ...host,
+          fresh: hostStatusFresh(host),
+        }
+      : null,
+    security,
+    incidents,
     at: new Date().toISOString(),
   };
 }
