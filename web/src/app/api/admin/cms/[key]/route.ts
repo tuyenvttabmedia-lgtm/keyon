@@ -4,6 +4,7 @@ import { isStaff, readSession } from "@/lib/auth";
 import { AppError, toErrorResponse } from "@/lib/errors";
 import { assertStaffCapability } from "@/lib/staff-access";
 import { MAIN_SEO_PATHS } from "@/lib/seo-main-pages";
+import { resolveMediaUrl } from "@/lib/media-url";
 import { normalizeSiteSettings } from "@/server/seo/settings";
 import {
   defaultBlog,
@@ -283,7 +284,7 @@ export async function PUT(
           typeof body?.tagline === "string" ? body.tagline.trim() : defaultCmsNav.tagline,
         logoUrl:
           typeof body?.logoUrl === "string" && body.logoUrl.trim()
-            ? body.logoUrl.trim()
+            ? resolveMediaUrl(body.logoUrl.trim()) || body.logoUrl.trim()
             : undefined,
       }) satisfies CmsNav;
     await writeJsonFile("nav.json", data);

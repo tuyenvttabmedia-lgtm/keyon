@@ -7,6 +7,7 @@ import {
 import { mkdir, writeFile, readFile } from "fs/promises";
 import path from "path";
 import { newPublicId } from "@/lib/ids";
+import { mediaProxyUrl } from "@/lib/media-url";
 import { childLogger } from "@/lib/logger";
 import {
   resolveStorage,
@@ -79,10 +80,15 @@ class LocalStorageDriver implements StorageDriver {
 }
 
 function publicUrl(cfg: ResolvedWasabiConfig, key: string): string {
-  if (cfg.publicBaseUrl) {
-    return `${cfg.publicBaseUrl}/${key}`;
+  // Custom CDN that is already public (not raw Wasabi host)
+  if (
+    cfg.publicBaseUrl &&
+    !/wasabisys\.com/i.test(cfg.publicBaseUrl)
+  ) {
+    return `${cfg.publicBaseUrl.replace(/\/$/, "")}/${key}`;
   }
-  return `${cfg.endpoint}/${cfg.bucket}/${key}`;
+  // Private Wasabi bucket → serve via app credentials (avoids AccessDenied)
+  return mediaProxyUrl(key);
 }
 
 class WasabiStorageDriver implements StorageDriver {
@@ -111,17 +117,36 @@ class WasabiStorageDriver implements StorageDriver {
     const filename = input.filename ?? `${newPublicId("file")}`;
     const key = path.posix.join(folder, filename);
 
-    await this.client.send(
-      new PutObjectCommand({
-        Bucket: this.cfg.bucket,
-        Key: key,
-        Body: input.data,
-        ContentType: input.contentType ?? "application/octet-stream",
-      }),
-    );
+    try {
+      await this.client.send(
+        new PutObjectCommand({
+          Bucket: this.cfg.bucket,
+          Key: key,
+          Body: input.data,
+          ContentType: input.contentType ?? "application/octet-stream",
+          // Best-effort; many Wasabi buckets disable ACLs (Bucket owner enforced)
+          ACL: "public-read",
+        }),
+      );
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      if (/ACL|AccessControl|public-read|NotImplemented|InvalidRequest/i.test(msg)) {
+        log.warn({ err: e, key }, "PutObject ACL public-read rejected — retry without ACL");
+        await this.client.send(
+          new PutObjectCommand({
+            Bucket: this.cfg.bucket,
+            Key: key,
+            Body: input.data,
+            ContentType: input.contentType ?? "application/octet-stream",
+          }),
+        );
+      } else {
+        throw e;
+      }
+    }
 
     const url = publicUrl(this.cfg, key);
-    log.info({ key, driver: this.name, source: this.cfg.source }, "stored object");
+    log.info({ key, driver: this.name, source: this.cfg.source, url }, "stored object");
     return { key, url, driver: this.name };
   }
 

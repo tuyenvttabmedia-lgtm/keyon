@@ -5,6 +5,7 @@ import imageSize from "image-size";
 import type { MediaAsset, Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import type { MediaDto } from "@/lib/media-types";
+import { resolveMediaUrl } from "@/lib/media-url";
 import { childLogger } from "@/lib/logger";
 import { StorageService } from "@/server/storage";
 import { listMediaIndex } from "@/server/storage/media-index";
@@ -34,7 +35,7 @@ function toDto(row: MediaAsset): MediaDto {
     width: row.width,
     height: row.height,
     storageDriver: row.storageDriver,
-    publicUrl: row.publicUrl,
+    publicUrl: resolveMediaUrl(row.publicUrl) || row.publicUrl,
     altText: row.altText,
     caption: row.caption,
     purpose: row.purpose,

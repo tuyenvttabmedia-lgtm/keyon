@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import type { CmsNav } from "@/server/cms/types";
+import { resolveMediaUrl } from "@/lib/media-url";
 import { MediaPicker } from "@/app/admin/media/MediaPicker";
 import { CmsSaveForm } from "../CmsSaveForm";
 
@@ -78,6 +79,7 @@ function BrandSection({
   setForm: (v: CmsNav) => void;
 }) {
   const [pickerOpen, setPickerOpen] = useState(false);
+  const previewUrl = resolveMediaUrl(form.logoUrl);
 
   return (
     <div className="space-y-4 rounded-2xl border border-border bg-card p-6">
@@ -91,9 +93,9 @@ function BrandSection({
 
       <div className="flex flex-wrap items-start gap-4">
         <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border bg-surface">
-          {form.logoUrl ? (
+          {previewUrl ? (
             <Image
-              src={form.logoUrl}
+              src={previewUrl}
               alt=""
               width={64}
               height={64}

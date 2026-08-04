@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import type { NavItem } from "@/storefront/content/types";
+import { resolveMediaUrl } from "@/lib/media-url";
 import {
   EASE_STANDARD,
   ELEVATION_CTA_HOVER,
@@ -39,7 +40,7 @@ export function SiteHeader({
   const pathname = usePathname();
   const name = brand.brandName?.trim() || "KEYON";
   const tagline = brand.tagline?.trim() ?? "";
-  const logoUrl = brand.logoUrl?.trim() || undefined;
+  const logoUrl = resolveMediaUrl(brand.logoUrl) || undefined;
   const mark = name.charAt(0).toUpperCase() || "K";
 
   return (
