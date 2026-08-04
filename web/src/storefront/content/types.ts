@@ -101,7 +101,7 @@ export type SolutionItem = {
   id: string;
   title: string;
   description: string;
-  art: "bars" | "trend" | "api" | "headset";
+  art: "bars" | "trend" | "shield" | "stack";
 };
 
 export type NewsItem = {
@@ -201,6 +201,8 @@ export type HomeContent = {
     kicker?: string;
     ctaLabel?: string;
     ctaHref?: string;
+    secondaryCtaLabel?: string;
+    secondaryCtaHref?: string;
     items: SolutionItem[];
   };
   news: {

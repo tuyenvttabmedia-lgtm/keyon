@@ -201,31 +201,12 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
     ...homeFixture.solutions,
     title: cmsHome.solutionsTitle || homeFixture.solutions.title,
     subtitle: cmsHome.solutionsSubtitle || homeFixture.solutions.subtitle,
-    items: homeFixture.solutions.items.map((s) =>
-      s.id === "sol3"
-        ? {
-            ...s,
-            title: "Tích hợp API (sắp có)",
-            description:
-              "Roadmap kết nối hệ thống nội bộ — chưa mở self-serve trên KEYON hiện tại.",
-          }
-        : s,
-    ),
   };
 
   const why = {
     ...homeFixture.why,
     title: cmsHome.whyTitle || homeFixture.why.title,
     subtitle: cmsHome.whySubtitle || homeFixture.why.subtitle,
-    items: homeFixture.why.items.map((w) =>
-      w.id === "w3"
-        ? {
-            ...w,
-            title: "Giá rõ ràng",
-            description: "So sánh gói và loại nhận trước khi mua — không ẩn phí lạ.",
-          }
-        : w,
-    ),
     sideBanner: {
       title: banner.title,
       ctaLabel: banner.ctaLabel,

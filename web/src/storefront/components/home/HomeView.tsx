@@ -23,10 +23,10 @@ export function HomeView({
       <HeroSection hero={content.hero} stats={heroStats} />
       <TrustPartnersSection data={content.partners} className="hidden lg:block" />
       <CategoriesSection data={content.categories} />
+      <SolutionsSection data={content.solutions} />
       <FeaturedSection data={content.featured} />
       <HowItWorksSection data={content.howItWorks} />
       <WhyKeyonSection data={content.why} />
-      <SolutionsSection data={content.solutions} />
       <NewsSection data={content.news} />
       {content.faqHome ? <FaqHomeSection data={content.faqHome} /> : null}
       <CtaBannerSection data={content.ctaBanner} />

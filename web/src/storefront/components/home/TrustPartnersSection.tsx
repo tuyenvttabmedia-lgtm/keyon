@@ -78,7 +78,7 @@ export function TrustPartnersSection({
           }}
         >
           <ArrowButton
-            label="Đối tác trước"
+            label="Thương hiệu trước"
             direction="prev"
             onClick={() => go(-1)}
             disabled={!canSlide}
@@ -93,7 +93,7 @@ export function TrustPartnersSection({
                   : `flex items-center gap-6 py-2.5 transition-transform ${MOTION_SLOW} ${EASE_STANDARD}`
               }
               style={{ transform: `translateX(-${offset}px)` }}
-              aria-label="Đối tác"
+              aria-label="Thương hiệu phần mềm"
               aria-roledescription="carousel"
             >
               {track.map((item, i) => (
@@ -103,7 +103,7 @@ export function TrustPartnersSection({
           </div>
 
           <ArrowButton
-            label="Đối tác sau"
+            label="Thương hiệu sau"
             direction="next"
             onClick={() => go(1)}
             disabled={!canSlide}
@@ -112,7 +112,7 @@ export function TrustPartnersSection({
         </div>
 
         {canSlide ? (
-          <div className="mt-3 flex items-center justify-center gap-1.5" role="tablist" aria-label="Vị trí đối tác">
+          <div className="mt-3 flex items-center justify-center gap-1.5" role="tablist" aria-label="Vị trí thương hiệu">
             {items.map((item, i) => {
               const active = i === index;
               return (

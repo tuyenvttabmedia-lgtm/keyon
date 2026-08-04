@@ -6,10 +6,10 @@ import type { HomeContent } from "./types";
  */
 export const homeFixture: HomeContent = {
   navigation: [
-    { label: "Nền tảng", href: "/about" },
     { label: "Sản phẩm", href: "/products" },
     { label: "Giải pháp", href: "/#solutions" },
-    { label: "Tin tức", href: "/blog" },
+    { label: "Doanh nghiệp", href: "/contact" },
+    { label: "Tài nguyên", href: "/blog" },
     { label: "Hỗ trợ", href: "/faq" },
   ],
   brand: {
@@ -22,7 +22,7 @@ export const homeFixture: HomeContent = {
     title: "Nền tảng phân phối bản quyền số",
     titleAccent: "toàn diện",
     subtitle:
-      "Cung cấp công cụ mua và quản lý giấy phép phần mềm chính hãng — thanh toán rõ, giao đúng loại nhận, lưu trong Tài khoản.",
+      "Mua, triển khai và quản lý bản quyền phần mềm, cloud và dịch vụ số trên một nền tảng duy nhất. Dành cho cá nhân, đội nhóm và doanh nghiệp.",
     ctaLabel: "Khám phá sản phẩm →",
     ctaHref: "/products",
     secondaryCtaLabel: "Dành cho doanh nghiệp",
@@ -43,7 +43,7 @@ export const homeFixture: HomeContent = {
     ],
   },
   partners: {
-    title: "Đối tác tin cậy của KEYON",
+    title: "Thương hiệu phần mềm trên KEYON",
     badges: ["Bản quyền chính hãng", "Thanh toán rõ ràng"],
     items: [
       { id: "p1", name: "Microsoft", brandColor: "#00A4EF", visible: true },
@@ -221,79 +221,72 @@ export const homeFixture: HomeContent = {
     visible: true,
     title: "Vì sao chọn KEYON?",
     subtitle:
-      "Minh bạch đơn hàng, đúng loại nhận, lưu giấy phép trong Tài khoản — vận hành rõ ràng cho cá nhân và doanh nghiệp.",
+      "Minh bạch trước khi mua, lưu license trong Tài khoản, hỗ trợ tiếng Việt.",
     ctaLabel: "Tìm hiểu thêm →",
     ctaHref: "/about",
     items: [
       {
         id: "w1",
-        title: "Bản quyền chính hãng",
-        description: "Nguồn cung minh bạch, hóa đơn đầy đủ khi mua.",
+        title: "Nguồn cung minh bạch",
+        description:
+          "Thông tin loại license và hình thức nhận được hiển thị rõ trước khi mua.",
         icon: "shield",
       },
       {
         id: "w2",
-        title: "Giao hàng tức thì",
-        description: "Nhận key, tài khoản hoặc kích hoạt ngay sau thanh toán.",
-        icon: "bolt",
+        title: "Quản lý tập trung",
+        description: "Đơn hàng và license được lưu trong Tài khoản KEYON.",
+        icon: "card",
       },
       {
         id: "w3",
-        title: "Giá tốt nhất",
-        description: "So sánh gói và loại nhận rõ ràng trước khi mua.",
+        title: "Hóa đơn doanh nghiệp",
+        description: "Hỗ trợ chứng từ/hóa đơn theo điều kiện áp dụng.",
         icon: "price",
       },
       {
         id: "w4",
-        title: "Thanh toán an toàn",
-        description: "QR / chuyển khoản rõ — theo dõi trạng thái trong Tài khoản.",
-        icon: "card",
-      },
-      {
-        id: "w5",
-        title: "Hỗ trợ kích hoạt",
-        description: "Mở ticket trong Tài khoản khi cần hướng dẫn hoặc gửi lại.",
+        title: "Hỗ trợ tiếng Việt",
+        description: "Hỗ trợ trước và sau khi mua qua ticket trong Tài khoản.",
         icon: "support",
-      },
-      {
-        id: "w6",
-        title: "Hoàn tiền linh hoạt",
-        description: "Chính sách hoàn tiền rõ ràng theo điều khoản.",
-        icon: "refund",
       },
     ],
   },
   solutions: {
     visible: true,
-    title: "Giải pháp cho doanh nghiệp",
+    kicker: "Giải pháp cho doanh nghiệp",
+    title: "Phần mềm và cloud, được quản lý tại một nơi",
     subtitle:
-      "Quản lý giấy phép tập trung, tối ưu ngân sách và kết nối hệ thống — dành cho team IT & procurement.",
-    ctaLabel: "Liên hệ tư vấn",
-    ctaHref: "/contact",
+      "Từ một vài giấy phép đến hàng trăm người dùng, KEYON giúp doanh nghiệp mua, triển khai và quản lý phần mềm dễ dàng hơn.",
+    ctaLabel: "Khám phá giải pháp →",
+    ctaHref: "/products",
+    secondaryCtaLabel: "Liên hệ tư vấn",
+    secondaryCtaHref: "/contact",
     items: [
       {
         id: "sol1",
-        title: "Quản lý tập trung",
-        description: "Theo dõi giấy phép theo đơn vị, dự án và vòng đời sử dụng.",
+        title: "Software Licensing",
+        description:
+          "Mua và quản lý license tập trung, theo dõi thiết bị và thời hạn.",
         art: "bars",
       },
       {
         id: "sol2",
-        title: "Tối ưu chi phí",
-        description: "Báo cáo ngân sách phần mềm, tránh mua trùng và lãng phí license.",
+        title: "Cloud & Subscription",
+        description: "Quản lý cloud services và subscription theo tổ chức.",
         art: "trend",
       },
       {
         id: "sol3",
-        title: "Tích hợp API linh hoạt",
-        description: "Kết nối hệ thống nội bộ, tự động hóa cấp phát (roadmap).",
-        art: "api",
+        title: "Security & Backup",
+        description: "Bảo mật endpoint, dữ liệu và continuity.",
+        art: "shield",
       },
       {
         id: "sol4",
-        title: "Hỗ trợ chuyên nghiệp",
-        description: "Kênh CS ưu tiên, SLA rõ ràng cho tài khoản doanh nghiệp.",
-        art: "headset",
+        title: "License Management",
+        description: "Theo dõi license, renewal, người dùng và chi phí.",
+        art: "stack",
       },
     ],
   },
@@ -343,15 +336,16 @@ export const homeFixture: HomeContent = {
   },
   ctaBanner: {
     visible: true,
-    title: "Sẵn sàng mua bản quyền số trên KEYON?",
-    subtitle: "Tạo tài khoản để theo dõi đơn hàng và nhận deliverable sau thanh toán.",
-    ctaLabel: "Tạo tài khoản ngay →",
-    ctaHref: "/register",
+    title: "Cần giải pháp license cho doanh nghiệp?",
+    subtitle:
+      "KEYON hỗ trợ mua, triển khai và quản lý phần mềm / cloud theo nhu cầu tổ chức — vẫn giữ trải nghiệm mua lẻ rõ ràng cho cá nhân.",
+    ctaLabel: "Liên hệ tư vấn →",
+    ctaHref: "/contact",
   },
   footer: {
     brandName: "KEYON",
     blurb:
-      "Nền tảng phân phối bản quyền số — thanh toán rõ, nhận hàng rõ, quản lý trong Tài khoản.",
+      "Nền tảng phân phối và quản lý bản quyền phần mềm, cloud và dịch vụ số.",
     supportEmail: "support@keyon.vn",
     paymentBadges: ["VietQR", "Chuyển khoản"],
     columns: [
@@ -362,42 +356,48 @@ export const homeFixture: HomeContent = {
           { label: "Microsoft Office", href: "/products" },
           { label: "Adobe", href: "/products" },
           { label: "Bảo mật", href: "/products" },
-          { label: "Autodesk", href: "/products" },
+          { label: "Cloud & Server", href: "/products" },
+          { label: "Tất cả sản phẩm", href: "/products" },
         ],
       },
       {
-        title: "Về KEYON",
+        title: "Giải pháp",
+        links: [
+          { label: "Software Licensing", href: "/#solutions" },
+          { label: "Cloud", href: "/#solutions" },
+          { label: "Security & Backup", href: "/#solutions" },
+          { label: "License Management", href: "/#solutions" },
+          { label: "API", href: "/contact" },
+        ],
+      },
+      {
+        title: "Công ty & Hỗ trợ",
         links: [
           { label: "Giới thiệu", href: "/about" },
           { label: "Tin tức", href: "/blog" },
-          { label: "Chính sách", href: "/policy" },
-          { label: "Điều khoản", href: "/terms" },
+          { label: "Trung tâm hỗ trợ", href: "/faq" },
+          { label: "FAQ", href: "/faq" },
           { label: "Liên hệ", href: "/contact" },
         ],
       },
       {
-        title: "Hỗ trợ",
+        title: "Thông tin doanh nghiệp",
         links: [
-          { label: "Trung tâm hỗ trợ", href: "/faq" },
-          { label: "Hướng dẫn nhận hàng", href: "/about" },
-          { label: "FAQ", href: "/faq" },
-          { label: "Yêu cầu hỗ trợ", href: "/contact" },
-        ],
-      },
-      {
-        title: "Liên hệ",
-        links: [
-          { label: "Form liên hệ", href: "/contact" },
+          { label: "KEYON", href: "/about" },
           { label: "support@keyon.vn", href: "mailto:support@keyon.vn" },
           { label: "Đà Nẵng, Việt Nam", href: "/contact" },
+          { label: "Liên hệ tư vấn", href: "/contact" },
         ],
       },
     ],
-    copyright: "© 2024 KEYON. All rights reserved.",
+    copyright: "© 2026 KEYON. All rights reserved.",
     legalLinks: [
-      { label: "Điều khoản sử dụng", href: "/terms" },
+      { label: "Điều khoản", href: "/terms" },
       { label: "Chính sách bảo mật", href: "/policy" },
+      { label: "Chính sách thanh toán", href: "/policy" },
+      { label: "Chính sách giao hàng điện tử", href: "/policy" },
+      { label: "Quy định sản phẩm số", href: "/policy" },
     ],
-    contactLines: ["Form liên hệ /contact", "support@keyon.vn", "Đà Nẵng, Việt Nam"],
+    contactLines: ["support@keyon.vn", "Đà Nẵng, Việt Nam"],
   },
 };

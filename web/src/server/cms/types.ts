@@ -360,7 +360,7 @@ export const defaultCmsFaq: CmsFaqItem[] = [
 export const defaultCmsFooter: CmsFooter = {
   brandName: "KEYON",
   blurb:
-    "Nền tảng phân phối bản quyền số — thanh toán rõ, nhận hàng rõ, quản lý trong Tài khoản.",
+    "Nền tảng phân phối và quản lý bản quyền phần mềm, cloud và dịch vụ số.",
   columns: [
     {
       title: "Sản phẩm",
@@ -369,41 +369,47 @@ export const defaultCmsFooter: CmsFooter = {
         { label: "Microsoft Office", href: "/products" },
         { label: "Adobe", href: "/products" },
         { label: "Bảo mật", href: "/products" },
-        { label: "Autodesk", href: "/products" },
+        { label: "Cloud & Server", href: "/products" },
+        { label: "Tất cả sản phẩm", href: "/products" },
       ],
     },
     {
-      title: "Về KEYON",
+      title: "Giải pháp",
+      links: [
+        { label: "Software Licensing", href: "/#solutions" },
+        { label: "Cloud", href: "/#solutions" },
+        { label: "Security & Backup", href: "/#solutions" },
+        { label: "License Management", href: "/#solutions" },
+        { label: "API", href: "/contact" },
+      ],
+    },
+    {
+      title: "Công ty & Hỗ trợ",
       links: [
         { label: "Giới thiệu", href: "/about" },
         { label: "Tin tức", href: "/blog" },
-        { label: "Chính sách", href: "/policy" },
-        { label: "Điều khoản", href: "/terms" },
+        { label: "Trung tâm hỗ trợ", href: "/faq" },
+        { label: "FAQ", href: "/faq" },
         { label: "Liên hệ", href: "/contact" },
       ],
     },
     {
-      title: "Hỗ trợ",
+      title: "Thông tin doanh nghiệp",
       links: [
-        { label: "Trung tâm hỗ trợ", href: "/faq" },
-        { label: "Hướng dẫn nhận hàng", href: "/about" },
-        { label: "FAQ", href: "/faq" },
-        { label: "Yêu cầu hỗ trợ", href: "/contact" },
-      ],
-    },
-    {
-      title: "Liên hệ",
-      links: [
-        { label: "Form liên hệ", href: "/contact" },
+        { label: "KEYON", href: "/about" },
         { label: "support@keyon.vn", href: "mailto:support@keyon.vn" },
         { label: "Đà Nẵng, Việt Nam", href: "/contact" },
+        { label: "Liên hệ tư vấn", href: "/contact" },
       ],
     },
   ],
-  copyright: "© 2024 KEYON. All rights reserved.",
+  copyright: "© 2026 KEYON. All rights reserved.",
   legalLinks: [
-    { label: "Điều khoản sử dụng", href: "/terms" },
+    { label: "Điều khoản", href: "/terms" },
     { label: "Chính sách bảo mật", href: "/policy" },
+    { label: "Chính sách thanh toán", href: "/policy" },
+    { label: "Chính sách giao hàng điện tử", href: "/policy" },
+    { label: "Quy định sản phẩm số", href: "/policy" },
   ],
 };
 
@@ -411,16 +417,16 @@ export const defaultCmsNav: CmsNav = {
   brandName: "KEYON",
   tagline: "Digital License Platform",
   items: [
-    { label: "Nền tảng", href: "/about" },
     { label: "Sản phẩm", href: "/products" },
     { label: "Giải pháp", href: "/#solutions" },
-    { label: "Tin tức", href: "/blog" },
+    { label: "Doanh nghiệp", href: "/contact" },
+    { label: "Tài nguyên", href: "/blog" },
     { label: "Hỗ trợ", href: "/faq" },
   ],
 };
 
 export const defaultCmsPartners: CmsPartners = {
-  title: "Đối tác tin cậy của KEYON",
+  title: "Thương hiệu phần mềm trên KEYON",
   badges: ["Bản quyền chính hãng", "Thanh toán rõ ràng"],
   items: [
     { id: "p1", name: "Microsoft", brandColor: "#00A4EF", visible: true },
@@ -977,7 +983,7 @@ export const defaultCmsCheckout: CmsCheckout = {
 export const defaultCmsHome: CmsHome = {
   heroTitle: "Nền tảng phân phối bản quyền số",
   heroSubtitle:
-    "Cung cấp công cụ mua và quản lý giấy phép phần mềm chính hãng — thanh toán rõ, giao đúng loại nhận, lưu trong Tài khoản.",
+    "Mua, triển khai và quản lý bản quyền phần mềm, cloud và dịch vụ số trên một nền tảng duy nhất. Dành cho cá nhân, đội nhóm và doanh nghiệp.",
   heroCta: "Khám phá sản phẩm →",
   heroCtaHref: "/products",
   whyTitle: "",

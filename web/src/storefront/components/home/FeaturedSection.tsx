@@ -8,7 +8,13 @@ type Featured = HomeContent["featured"];
 export function FeaturedSection({ data }: { data: Featured }) {
   if (!data.visible) return null;
 
-  const items = data.items.slice(0, 5);
+  const items = data.items.slice(0, 4);
+  const desktopCols =
+    items.length >= 4
+      ? "lg:grid-cols-4"
+      : items.length === 3
+        ? "lg:grid-cols-3"
+        : "lg:grid-cols-2";
 
   return (
     <section className="bg-white py-5 md:py-4 lg:py-6">
@@ -19,7 +25,6 @@ export function FeaturedSection({ data }: { data: Featured }) {
           viewAllLabel={data.viewAllLabel}
         />
 
-        {/* Mobile / tablet: ~2 cards visible, then snap-scroll */}
         <div className="-mx-4 px-4 lg:hidden">
           <div className="home-snap-x gap-2.5 pb-1">
             {items.map((item: FeaturedProduct) => (
@@ -33,8 +38,7 @@ export function FeaturedSection({ data }: { data: Featured }) {
           </div>
         </div>
 
-        {/* Desktop grid */}
-        <Reveal stagger className="hidden lg:grid lg:grid-cols-5 lg:gap-3.5">
+        <Reveal stagger className={`hidden lg:grid lg:gap-3.5 ${desktopCols}`}>
           {items.map((item: FeaturedProduct) => (
             <ProductCard key={item.id} item={item} />
           ))}
