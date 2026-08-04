@@ -7,7 +7,12 @@ OPS_DIR="$APP_ROOT/ops"
 SRC_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 mkdir -p "$OPS_DIR" /var/log
-install -m 0755 "$SRC_DIR/host-watchdog.sh" "$OPS_DIR/host-watchdog.sh"
+if [[ "$(readlink -f "$SRC_DIR/host-watchdog.sh" 2>/dev/null || echo "$SRC_DIR/host-watchdog.sh")" != "$(readlink -f "$OPS_DIR/host-watchdog.sh" 2>/dev/null || echo "$OPS_DIR/host-watchdog.sh")" ]]; then
+  install -m 0755 "$SRC_DIR/host-watchdog.sh" "$OPS_DIR/host-watchdog.sh"
+else
+  chmod 0755 "$OPS_DIR/host-watchdog.sh"
+fi
+chmod 0755 "$OPS_DIR/install-host-watchdog.sh" 2>/dev/null || true
 
 # Env template
 ENV_OPS="$APP_ROOT/.env.ops"
