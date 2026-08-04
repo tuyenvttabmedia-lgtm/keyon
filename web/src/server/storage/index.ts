@@ -7,7 +7,7 @@ import {
 import { mkdir, writeFile, readFile } from "fs/promises";
 import path from "path";
 import { newPublicId } from "@/lib/ids";
-import { mediaProxyUrl } from "@/lib/media-url";
+import { joinPublicBase } from "@/lib/media-url";
 import { childLogger } from "@/lib/logger";
 import {
   resolveStorage,
@@ -80,15 +80,11 @@ class LocalStorageDriver implements StorageDriver {
 }
 
 function publicUrl(cfg: ResolvedWasabiConfig, key: string): string {
-  // Custom CDN that is already public (not raw Wasabi host)
-  if (
-    cfg.publicBaseUrl &&
-    !/wasabisys\.com/i.test(cfg.publicBaseUrl)
-  ) {
-    return `${cfg.publicBaseUrl.replace(/\/$/, "")}/${key}`;
+  if (cfg.publicBaseUrl) {
+    return joinPublicBase(cfg.publicBaseUrl, key);
   }
-  // Private Wasabi bucket → serve via app credentials (avoids AccessDenied)
-  return mediaProxyUrl(key);
+  // Public bucket path-style fallback
+  return `${cfg.endpoint.replace(/\/$/, "")}/${cfg.bucket}/${key}`;
 }
 
 class WasabiStorageDriver implements StorageDriver {

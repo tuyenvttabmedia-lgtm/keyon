@@ -1156,7 +1156,7 @@ export function SettingsForm({
                   <span className="font-medium text-navy">Public base URL (CDN)</span>
                   <input
                     className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-                    placeholder="https://cdn.example.com (để trống nếu bucket private)"
+                    placeholder="https://media.tabfarm.vn"
                     value={storage.wasabi.publicBaseUrl}
                     onChange={(e) =>
                       setStorage({
@@ -1166,8 +1166,12 @@ export function SettingsForm({
                     }
                   />
                   <span className="mt-1 block text-xs text-muted">
-                    Bucket private → app phục vụ qua <code>/api/media/…</code> (khuyến nghị).
-                    Chỉ điền CDN khi object đã public-read; URL Wasabi thô sẽ bị AccessDenied.
+                    URL công khai gắn vào mỗi ảnh khi upload. Hiện Wasabi public OK — dùng{" "}
+                    <code className="text-[11px]">
+                      https://s3.ap-southeast-1.wasabisys.com/media.keyon.vn
+                    </code>
+                    . Khi Cloudflare CDN (vd. https://media.tabfarm.vn) trả 200, đổi sang domain
+                    CDN.
                   </span>
                 </label>
                 <label className="block text-sm">

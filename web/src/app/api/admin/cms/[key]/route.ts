@@ -6,6 +6,7 @@ import { assertStaffCapability } from "@/lib/staff-access";
 import { MAIN_SEO_PATHS } from "@/lib/seo-main-pages";
 import { resolveMediaUrl } from "@/lib/media-url";
 import { normalizeSiteSettings } from "@/server/seo/settings";
+import { resolveStorage } from "@/server/storage/config";
 import {
   defaultBlog,
   defaultCmsBanner,
@@ -267,6 +268,12 @@ export async function PUT(
     return NextResponse.json({ ok: true, data });
   }
   if (key === "nav") {
+    const storage = await resolveStorage();
+    const mediaBase =
+      storage.driver === "wasabi"
+        ? storage.wasabi.publicBaseUrl ||
+          `${storage.wasabi.endpoint.replace(/\/$/, "")}/${storage.wasabi.bucket}`
+        : "";
     const data = z
       .object({
         logoUrl: z.string().optional(),
@@ -284,7 +291,8 @@ export async function PUT(
           typeof body?.tagline === "string" ? body.tagline.trim() : defaultCmsNav.tagline,
         logoUrl:
           typeof body?.logoUrl === "string" && body.logoUrl.trim()
-            ? resolveMediaUrl(body.logoUrl.trim()) || body.logoUrl.trim()
+            ? resolveMediaUrl(body.logoUrl.trim(), mediaBase) ||
+              body.logoUrl.trim()
             : undefined,
       }) satisfies CmsNav;
     await writeJsonFile("nav.json", data);

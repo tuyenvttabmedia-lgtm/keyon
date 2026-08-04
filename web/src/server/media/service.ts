@@ -5,9 +5,14 @@ import imageSize from "image-size";
 import type { MediaAsset, Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import type { MediaDto } from "@/lib/media-types";
-import { resolveMediaUrl } from "@/lib/media-url";
+import {
+  extractStorageKey,
+  joinPublicBase,
+  resolveMediaUrl,
+} from "@/lib/media-url";
 import { childLogger } from "@/lib/logger";
 import { StorageService } from "@/server/storage";
+import { resolveStorage } from "@/server/storage/config";
 import { listMediaIndex } from "@/server/storage/media-index";
 
 export type { MediaDto } from "@/lib/media-types";
@@ -25,7 +30,26 @@ export const MEDIA_MAX_BYTES = 2 * 1024 * 1024;
 
 export type MediaPurpose = "product" | "blog" | "brand" | "ui";
 
-function toDto(row: MediaAsset): MediaDto {
+async function mediaPublicBase(): Promise<string> {
+  const resolved = await resolveStorage();
+  if (resolved.driver !== "wasabi") return "";
+  if (resolved.wasabi.publicBaseUrl) {
+    return resolved.wasabi.publicBaseUrl.replace(/\/$/, "");
+  }
+  return `${resolved.wasabi.endpoint.replace(/\/$/, "")}/${resolved.wasabi.bucket}`;
+}
+
+function canonicalPublicUrl(
+  row: Pick<MediaAsset, "publicUrl" | "storageKey" | "storageDriver">,
+  base: string,
+): string {
+  if (row.storageDriver === "wasabi" && row.storageKey && base) {
+    return joinPublicBase(base, row.storageKey);
+  }
+  return resolveMediaUrl(row.publicUrl, base) || row.publicUrl;
+}
+
+function toDto(row: MediaAsset, base: string): MediaDto {
   return {
     id: row.id,
     filename: row.filename,
@@ -35,7 +59,7 @@ function toDto(row: MediaAsset): MediaDto {
     width: row.width,
     height: row.height,
     storageDriver: row.storageDriver,
-    publicUrl: resolveMediaUrl(row.publicUrl) || row.publicUrl,
+    publicUrl: canonicalPublicUrl(row, base),
     altText: row.altText,
     caption: row.caption,
     purpose: row.purpose,
@@ -43,6 +67,44 @@ function toDto(row: MediaAsset): MediaDto {
     updatedAt: row.updatedAt.toISOString(),
     source: "library",
   };
+}
+
+/** Rewrite stale proxy / raw S3 URLs in DB to CDN/public base (best-effort). */
+async function backfillPublicUrls(
+  rows: MediaAsset[],
+  base: string,
+): Promise<MediaAsset[]> {
+  if (!base) return rows;
+  const out: MediaAsset[] = [];
+  for (const row of rows) {
+    if (row.storageDriver !== "wasabi" || !row.storageKey) {
+      out.push(row);
+      continue;
+    }
+    const next = joinPublicBase(base, row.storageKey);
+    if (row.publicUrl === next) {
+      out.push(row);
+      continue;
+    }
+    const stale =
+      row.publicUrl.includes("/api/media/") ||
+      /wasabisys\.com/i.test(row.publicUrl) ||
+      Boolean(extractStorageKey(row.publicUrl));
+    if (!stale && row.publicUrl.startsWith(base)) {
+      out.push(row);
+      continue;
+    }
+    try {
+      const updated = await prisma.mediaAsset.update({
+        where: { id: row.id },
+        data: { publicUrl: next },
+      });
+      out.push(updated);
+    } catch {
+      out.push({ ...row, publicUrl: next });
+    }
+  }
+  return out;
 }
 
 function safeBaseName(original: string): string {
@@ -220,7 +282,9 @@ export async function listLibraryMedia(
   if (query.sort === "size") orderBy = { size: "desc" };
 
   const rows = await prisma.mediaAsset.findMany({ where, orderBy });
-  return rows.map(toDto);
+  const base = await mediaPublicBase();
+  const synced = await backfillPublicUrls(rows, base);
+  return synced.map((row) => toDto(row, base));
 }
 
 export async function uploadMedia(input: {
@@ -296,7 +360,7 @@ export async function uploadMedia(input: {
       },
     });
 
-    return toDto(row);
+    return toDto(row, await mediaPublicBase());
   } catch (e) {
     log.error({ err: e, key: stored.key }, "media DB create failed — cleanup");
     await StorageService.delete(stored.key).catch(() => undefined);
@@ -332,7 +396,7 @@ export async function updateMedia(
           : data.purpose?.trim() || null,
     },
   });
-  return toDto(row);
+  return toDto(row, await mediaPublicBase());
 }
 
 export async function deleteMedia(id: string): Promise<void> {

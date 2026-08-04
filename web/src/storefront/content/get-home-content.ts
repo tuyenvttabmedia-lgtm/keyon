@@ -24,6 +24,7 @@ import { ProductRatingsService, getProductRatingMap } from "@/server/product-rat
 import type { CategoryIconKey, CategoryItem } from "./types";
 import { prisma } from "@/lib/db";
 import { resolveMediaUrl } from "@/lib/media-url";
+import { resolveStorage } from "@/server/storage/config";
 import {
   inferCategory,
   shopCatFromCmsIcon,
@@ -88,11 +89,21 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
   ]);
 
   const published = posts.filter((p) => p.status === "published").slice(0, 4);
+
+  const storage = await resolveStorage();
+  const mediaBase =
+    storage.driver === "wasabi"
+      ? storage.wasabi.publicBaseUrl ||
+        `${storage.wasabi.endpoint.replace(/\/$/, "")}/${storage.wasabi.bucket}`
+      : "";
+
   const partnerItems = (partners.items?.length ? partners.items : homeFixture.partners.items)
     .filter((p) => p.visible !== false)
     .map((p) => ({
       ...p,
-      logoUrl: p.logoUrl ? resolveMediaUrl(p.logoUrl) || p.logoUrl : p.logoUrl,
+      logoUrl: p.logoUrl
+        ? resolveMediaUrl(p.logoUrl, mediaBase) || p.logoUrl
+        : p.logoUrl,
     }));
 
   const shopCounts: Record<ShopCategoryId, number> = {
@@ -242,7 +253,7 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
     ...homeFixture,
     navigation: nav.items.length ? nav.items : homeFixture.navigation,
     brand: {
-      logoUrl: resolveMediaUrl(nav.logoUrl) || undefined,
+      logoUrl: resolveMediaUrl(nav.logoUrl, mediaBase) || undefined,
       brandName: nav.brandName?.trim() || defaultCmsNav.brandName,
       tagline:
         typeof nav.tagline === "string"
