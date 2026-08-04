@@ -6,7 +6,12 @@ import { ADMIN_PAGE_TITLE_CLASS } from "@/storefront/typography";
 export const dynamic = "force-dynamic";
 
 export default async function AdminCmsHomePage() {
-  const home = await readJsonFile("home.json", defaultCmsHome);
+  const raw = await readJsonFile("home.json", defaultCmsHome);
+  const home = {
+    ...defaultCmsHome,
+    ...raw,
+    heroTitleAccent: raw.heroTitleAccent ?? "",
+  };
   return (
     <div className="space-y-4">
       <div>
