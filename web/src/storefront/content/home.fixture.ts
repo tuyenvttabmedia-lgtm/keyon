@@ -314,7 +314,7 @@ export const homeFixture: HomeContent = {
   news: {
     visible: true,
     title: "Tin tức & cập nhật",
-    viewAllHref: "/blog",
+    viewAllHref: "/resources/news",
     viewAllLabel: "Xem tất cả bài viết",
     items: [
       {

@@ -30,6 +30,11 @@ export type BlogPost = {
   coverCaption?: string;
   /** Optional category for index filters */
   category?: BlogCategoryId;
+  /**
+   * IA Resource section (NAV-03). When omitted, inferred from category
+   * (huong-dan→guides, tin-keyon→news, topical→insights, else news).
+   */
+  section?: "insights" | "guides" | "news";
   author?: string;
   /** Cached estimate; UI auto-computes from body when missing */
   readMinutes?: number;

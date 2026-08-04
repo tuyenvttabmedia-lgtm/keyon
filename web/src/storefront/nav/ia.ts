@@ -1,7 +1,7 @@
 /**
- * KEYON IA v1 — Navigation / merchandising layer (Phase 1).
+ * KEYON IA v1 — Navigation / merchandising layer.
  * Frozen: NAV-01..05 — Brand ≠ Category ≠ Collection ≠ Solution ≠ Navigation.
- * Do not mirror Product Category DB here.
+ * Phase 2: Collections remain merchandising config (not Prisma Category).
  */
 
 export type NavLink = {
@@ -41,6 +41,24 @@ export type DropdownNavItem = {
 
 export type PrimaryNavItem = MegaNavItem | DropdownNavItem;
 
+/** Shop Collections (merchandising) — map to /products filters, not Category DB. */
+export const SHOP_COLLECTIONS: NavLink[] = [
+  { label: "Windows", href: "/products?cat=windows", description: "Hệ điều hành" },
+  { label: "Microsoft Office", href: "/products?cat=office", description: "Office & năng suất" },
+  { label: "Bảo mật", href: "/products?cat=security", description: "Bảo vệ thiết bị và dữ liệu" },
+  { label: "Cloud & Server", href: "/products?cat=cloud", description: "Hạ tầng và dịch vụ cloud" },
+  { label: "Backup", href: "/products?q=backup", description: "Sao lưu và khôi phục" },
+  { label: "Tất cả sản phẩm", href: "/products" },
+];
+
+export const FEATURED_BRANDS: NavLink[] = [
+  { label: "Microsoft", href: "/brands/microsoft", description: "Windows, Office, Microsoft 365" },
+  { label: "Adobe", href: "/brands/adobe", description: "Sáng tạo, thiết kế và tài liệu" },
+  { label: "Autodesk", href: "/brands/autodesk", description: "Thiết kế, kỹ thuật và xây dựng" },
+  { label: "Acronis", href: "/products?q=acronis", description: "Backup và bảo vệ dữ liệu" },
+  { label: "Tất cả thương hiệu", href: "/brands" },
+];
+
 /** Top-level header navigation (desktop mega / dropdown). */
 export const IA_PRIMARY_NAV: PrimaryNavItem[] = [
   {
@@ -49,27 +67,8 @@ export const IA_PRIMARY_NAV: PrimaryNavItem[] = [
     href: "/products",
     kind: "mega",
     columns: [
-      {
-        title: "Thương hiệu",
-        links: [
-          { label: "Microsoft", href: "/brands/microsoft", description: "Windows, Office, Microsoft 365" },
-          { label: "Adobe", href: "/brands/adobe", description: "Sáng tạo, thiết kế và tài liệu" },
-          { label: "Autodesk", href: "/brands/autodesk", description: "Thiết kế, kỹ thuật và xây dựng" },
-          { label: "Acronis", href: "/products?q=acronis", description: "Backup và bảo vệ dữ liệu" },
-          { label: "Tất cả thương hiệu", href: "/brands" },
-        ],
-      },
-      {
-        title: "Khám phá",
-        links: [
-          { label: "Windows", href: "/products?cat=windows", description: "Hệ điều hành" },
-          { label: "Microsoft Office", href: "/products?cat=office", description: "Office & năng suất" },
-          { label: "Bảo mật", href: "/products?cat=security", description: "Bảo vệ thiết bị và dữ liệu" },
-          { label: "Cloud & Server", href: "/products?cat=cloud", description: "Hạ tầng và dịch vụ cloud" },
-          { label: "Backup", href: "/products?q=backup", description: "Sao lưu và khôi phục" },
-          { label: "Tất cả sản phẩm", href: "/products" },
-        ],
-      },
+      { title: "Thương hiệu", links: FEATURED_BRANDS },
+      { title: "Khám phá", links: SHOP_COLLECTIONS },
     ],
   },
   {

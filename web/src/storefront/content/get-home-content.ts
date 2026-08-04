@@ -25,6 +25,7 @@ import type { CategoryIconKey, CategoryItem } from "./types";
 import { prisma } from "@/lib/db";
 import { resolveMediaUrl } from "@/lib/media-url";
 import { resolveStorage } from "@/server/storage/config";
+import { resourcePostHref } from "@/storefront/lib/resources";
 import {
   inferCategory,
   shopCatFromCmsIcon,
@@ -286,7 +287,7 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
         dateLabel: new Date(p.publishedAt ?? p.updatedAt).toLocaleDateString(
           "vi-VN",
         ),
-        href: `/blog/${p.slug}`,
+        href: resourcePostHref(p),
         tag: homeFixture.news.items[i]?.tag,
         tagTone: homeFixture.news.items[i]?.tagTone,
       })),

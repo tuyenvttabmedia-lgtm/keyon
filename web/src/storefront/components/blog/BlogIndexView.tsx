@@ -16,6 +16,8 @@ import {
   readMinutesOf,
   type BlogCategoryFilter,
 } from "@/storefront/lib/blog";
+import { resourcePostHref, RESOURCE_SECTION_META } from "@/storefront/lib/resources";
+import type { ResourceSectionId } from "@/storefront/lib/resources";
 import {
   BADGE_CLASS,
   BODY_MUTED_CLASS,
@@ -54,11 +56,14 @@ export function BlogIndexView({
   posts,
   initialQuery = "",
   initialCategory = "all",
+  section,
 }: {
   cms: CmsBlog;
   posts: BlogPost[];
   initialQuery?: string;
   initialCategory?: BlogCategoryFilter;
+  /** When set, breadcrumb links under /resources/{section} */
+  section?: ResourceSectionId;
 }) {
   const [query, setQuery] = useState(initialQuery);
   const [sort, setSort] = useState<SortId>("newest");
@@ -168,7 +173,22 @@ export function BlogIndexView({
             Trang chủ
           </Link>
           <span aria-hidden>/</span>
-          <span className={BREADCRUMB_CURRENT_CLASS}>{cms.pageTitle}</span>
+          <Link href="/resources" className="transition-colors hover:text-accent">
+            Tài nguyên
+          </Link>
+          {section ? (
+            <>
+              <span aria-hidden>/</span>
+              <span className={BREADCRUMB_CURRENT_CLASS}>
+                {RESOURCE_SECTION_META[section].label}
+              </span>
+            </>
+          ) : (
+            <>
+              <span aria-hidden>/</span>
+              <span className={BREADCRUMB_CURRENT_CLASS}>{cms.pageTitle}</span>
+            </>
+          )}
         </nav>
 
         {/* Title + search/sort */}
@@ -308,7 +328,7 @@ export function BlogIndexView({
                 {trending.map((p, i) => (
                   <li key={p.id}>
                     <Link
-                      href={`/blog/${p.slug}`}
+                      href={resourcePostHref(p)}
                       className={`flex gap-3 rounded-lg p-1 ${TRANSITION_UI} ${HOVER_ROW}`}
                     >
                       <span
@@ -445,7 +465,7 @@ function FeaturedHero({ post, badge }: { post: BlogPost; badge: string }) {
   const tone = COVER_TONE_CLASS[coverToneOf(post)];
   return (
     <Link
-      href={`/blog/${post.slug}`}
+      href={resourcePostHref(post)}
       className={`group relative flex min-h-[18rem] flex-col justify-end overflow-hidden rounded-2xl bg-gradient-to-br p-5 text-white sm:min-h-[22rem] sm:p-6 ${tone} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD}`}
     >
       {post.coverUrl ? (
@@ -489,7 +509,7 @@ function FeaturedSide({ post }: { post: BlogPost }) {
   const tone = COVER_TONE_CLASS[coverToneOf(post)];
   return (
     <Link
-      href={`/blog/${post.slug}`}
+      href={resourcePostHref(post)}
       className={`group relative flex min-h-[10.5rem] flex-col justify-between overflow-hidden rounded-2xl bg-gradient-to-br p-4 text-white sm:p-5 ${tone} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD}`}
     >
       {post.coverUrl ? (
@@ -537,7 +557,7 @@ function LatestCard({
       className={`flex flex-col gap-4 overflow-hidden rounded-2xl border border-border/80 bg-white p-3 sm:flex-row sm:items-stretch sm:p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-border`}
     >
       <Link
-        href={`/blog/${post.slug}`}
+        href={resourcePostHref(post)}
         className={`relative aspect-[16/10] w-full shrink-0 overflow-hidden rounded-xl bg-gradient-to-br sm:aspect-auto sm:h-auto sm:w-[11.5rem] md:w-[13rem] ${tone}`}
       >
         {post.coverUrl ? (
@@ -559,7 +579,7 @@ function LatestCard({
             {categoryLabel(post)}
           </span>
         </div>
-        <Link href={`/blog/${post.slug}`} className="mt-1.5 block">
+        <Link href={resourcePostHref(post)} className="mt-1.5 block">
           <h3
             className={`${CARD_TITLE_CLASS} ${TRANSITION_UI} hover:text-accent sm:text-[15px] sm:font-bold`}
           >

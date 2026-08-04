@@ -22,6 +22,12 @@ import {
   tocFromBlocks,
   type BlogCategoryFilter,
 } from "@/storefront/lib/blog";
+import {
+  RESOURCE_SECTION_META,
+  resolveResourceSection,
+  resourceIndexHref,
+  resourcePostHref,
+} from "@/storefront/lib/resources";
 
 function tocFromHtml(html: string) {
   const items: { id: string; text: string }[] = [];
@@ -185,6 +191,10 @@ export function BlogDetailView({
     window.open(href, "_blank", "noopener,noreferrer,width=640,height=480");
   }
 
+  const section = resolveResourceSection(post);
+  const sectionMeta = RESOURCE_SECTION_META[section];
+  const indexHref = resourceIndexHref(section);
+
   return (
     <div className="home-container space-y-6 py-8 md:space-y-8 md:py-12">
       <nav className={`flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
@@ -192,14 +202,18 @@ export function BlogDetailView({
           Trang chủ
         </Link>
         <span aria-hidden>/</span>
-        <Link href="/blog" className={HOVER_LINK_ACCENT}>
-          Tin tức
+        <Link href="/resources" className={HOVER_LINK_ACCENT}>
+          Tài nguyên
+        </Link>
+        <span aria-hidden>/</span>
+        <Link href={indexHref} className={HOVER_LINK_ACCENT}>
+          {sectionMeta.label}
         </Link>
         {post.category ? (
           <>
             <span aria-hidden>/</span>
             <Link
-              href={`/blog?category=${post.category}`}
+              href={`${indexHref}?category=${post.category}`}
               className={HOVER_LINK_ACCENT}
             >
               {categoryLabel(post)}
@@ -369,7 +383,7 @@ export function BlogDetailView({
           <div className="mt-10 grid gap-3 border-t border-border pt-6 sm:grid-cols-2">
             {prev ? (
               <Link
-                href={`/blog/${prev.slug}`}
+                href={resourcePostHref(prev)}
                 className={`group flex gap-3 rounded-xl border border-border p-3 ${ELEVATION_NONE} ${TRANSITION_UI} ${HOVER_ROW}`}
               >
                 <span
@@ -392,7 +406,7 @@ export function BlogDetailView({
             )}
             {next ? (
               <Link
-                href={`/blog/${next.slug}`}
+                href={resourcePostHref(next)}
                 className={`group flex gap-3 rounded-xl border border-border p-3 sm:flex-row-reverse sm:text-right ${ELEVATION_NONE} ${TRANSITION_UI} ${HOVER_ROW}`}
               >
                 <span
@@ -460,7 +474,7 @@ export function BlogDetailView({
               onSubmit={(e) => {
                 e.preventDefault();
                 const q = search.trim();
-                router.push(q ? `/blog?q=${encodeURIComponent(q)}` : "/blog");
+                router.push(q ? `${indexHref}?q=${encodeURIComponent(q)}` : indexHref);
               }}
             >
               <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted">
@@ -485,7 +499,7 @@ export function BlogDetailView({
               {topicCounts.map((t) => (
                 <li key={t.id}>
                   <Link
-                    href={`/blog?category=${t.id}`}
+                    href={`${indexHref}?category=${t.id}`}
                     className={`flex items-center gap-2.5 rounded-xl px-2 py-2.5 ${TRANSITION_UI} ${HOVER_ROW}`}
                   >
                     <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-surface text-navy">
@@ -514,7 +528,7 @@ export function BlogDetailView({
               {featured.map((p) => (
                 <li key={p.id}>
                   <Link
-                    href={`/blog/${p.slug}`}
+                    href={resourcePostHref(p)}
                     className={`flex gap-3 rounded-lg p-1 ${TRANSITION_UI} ${HOVER_ROW}`}
                   >
                     <span
@@ -566,7 +580,7 @@ export function BlogDetailView({
                 {tags.map((tag) => (
                   <Link
                     key={tag}
-                    href={`/blog?q=${encodeURIComponent(tag)}`}
+                    href={`${indexHref}?q=${encodeURIComponent(tag)}`}
                     className={`rounded-full border border-border bg-surface px-3 py-1.5 ${CTA_COMPACT_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:bg-accent-soft hover:text-accent`}
                   >
                     {tag}

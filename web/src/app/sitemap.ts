@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { defaultBlog, readJsonFile, type BlogPost } from "@/server/cms/store";
 import { loadPublishedStaticPages } from "@/server/cms/static-pages";
 import { MAIN_SEO_PATHS } from "@/lib/seo-main-pages";
+import { resourcePostHref } from "@/storefront/lib/resources";
 import { absoluteUrl } from "@/server/seo/site-url";
 
 export const dynamic = "force-dynamic";
@@ -55,7 +56,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   );
   for (const post of posts) {
     entries.push({
-      url: absoluteUrl(`/blog/${post.slug}`),
+      url: absoluteUrl(resourcePostHref(post)),
       lastModified: post.updatedAt ? new Date(post.updatedAt) : now,
       changeFrequency: "weekly",
       priority: 0.6,

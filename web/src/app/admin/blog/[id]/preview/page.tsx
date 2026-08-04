@@ -8,6 +8,7 @@ import {
 } from "@/server/cms/store";
 import type { CmsBlog } from "@/server/cms/types";
 import { BlogDetailView } from "@/storefront/components/blog/BlogDetailView";
+import { resourcePostHref } from "@/storefront/lib/resources";
 
 export const dynamic = "force-dynamic";
 
@@ -52,7 +53,7 @@ export default async function AdminBlogPreviewPage({
           </Link>
           {post.status === "published" ? (
             <a
-              href={`/blog/${post.slug}`}
+              href={resourcePostHref(post)}
               target="_blank"
               rel="noreferrer"
               className="rounded-lg bg-accent px-3 py-1.5 text-sm font-semibold text-white"

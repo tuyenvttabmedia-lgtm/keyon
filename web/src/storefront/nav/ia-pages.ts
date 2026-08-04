@@ -169,8 +169,7 @@ export const RESOURCE_SECTIONS: Record<
   },
   news: {
     title: "Tin tức",
-    subtitle: "Cập nhật vendor và KEYON. Phase 1 đang dùng kho bài hiện có tại /blog.",
+    subtitle: "Cập nhật vendor và KEYON. Canonical Article engine — /blog 301 → đây.",
     href: "/resources/news",
-    aliasNote: "Nội dung hiện tại: /blog — sẽ 301 dần sang /resources/news/... khi audit SEO xong.",
   },
 };

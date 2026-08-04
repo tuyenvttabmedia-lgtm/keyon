@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import type { BlogPost } from "@/server/cms/types";
 import type { BlogCategoryId } from "@/server/cms/types";
 import { CATEGORY_LABEL } from "@/storefront/lib/blog";
+import { resourcePostHref } from "@/storefront/lib/resources";
 import { uniqueBlogSlug } from "@/server/cms/blog-utils";
 import {
   ListPaginationBar,
@@ -312,7 +313,7 @@ export function BlogList({ posts: initial }: { posts: BlogPost[] }) {
                         <div className="inline-flex items-center gap-2">
                           {p.status === "published" ? (
                             <a
-                              href={`/blog/${p.slug}`}
+                              href={resourcePostHref(p)}
                               target="_blank"
                               rel="noreferrer"
                               className="text-sm font-medium text-accent hover:underline"
@@ -349,7 +350,7 @@ export function BlogList({ posts: initial }: { posts: BlogPost[] }) {
                           <div className="absolute right-4 z-20 mt-1 w-48 rounded-xl border border-border bg-white py-1 text-left shadow-lg">
                             {p.status === "published" ? (
                               <a
-                                href={`/blog/${p.slug}`}
+                                href={resourcePostHref(p)}
                                 target="_blank"
                                 rel="noreferrer"
                                 className="block px-3 py-2 text-sm hover:bg-surface"

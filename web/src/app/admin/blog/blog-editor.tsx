@@ -10,6 +10,7 @@ import {
   slugifyTitle,
   uniqueBlogSlug,
 } from "@/server/cms/blog-utils";
+import { resourcePostHref, resolveResourceSection } from "@/storefront/lib/resources";
 import { sanitizeBlogHtml } from "@/lib/sanitize-blog-html";
 import { MediaPicker } from "@/app/admin/media/MediaPicker";
 import { RichTextEditor } from "./rich-text-editor";
@@ -196,7 +197,7 @@ export function BlogEditor({
           <p className="text-xs text-muted">
             URL:{" "}
             <span className="font-medium text-navy">
-              keyon.vn/blog/{form.slug || "…"}
+              keyon.vn{resourcePostHref(form)}
             </span>
           </p>
 
@@ -318,6 +319,24 @@ export function BlogEditor({
               <option value="huong-dan">Hướng dẫn</option>
               <option value="bao-mat">Bảo mật</option>
               <option value="tin-keyon">Tin Keyon</option>
+            </select>
+          </label>
+          <label className="block text-xs text-muted">
+            Tài nguyên (section)
+            <select
+              className="mt-1 w-full rounded-lg border border-border px-2 py-1.5 text-sm text-navy"
+              value={form.section ?? ""}
+              onChange={(e) =>
+                patch({
+                  section: (e.target.value ||
+                    undefined) as BlogPost["section"],
+                })
+              }
+            >
+              <option value="">Tự suy từ chuyên mục</option>
+              <option value="insights">Kiến thức</option>
+              <option value="guides">Hướng dẫn</option>
+              <option value="news">Tin tức</option>
             </select>
           </label>
           <label className="block text-xs text-muted">
@@ -478,7 +497,8 @@ export function BlogEditor({
                 </p>
                 <p className="text-xs text-navy">KEYON</p>
                 <p className="truncate text-[11px] text-emerald-700">
-                  keyon.vn › blog › {form.slug || "slug"}
+                  keyon.vn › resources › {resolveResourceSection(form)} ›{" "}
+                  {form.slug || "slug"}
                 </p>
                 <p className="text-sm font-medium text-sky-800 line-clamp-2">
                   {previewTitle}
@@ -504,7 +524,7 @@ export function BlogEditor({
                       className="mt-1 w-full rounded-lg border border-border px-2 py-1.5 text-sm"
                       value={form.canonicalUrl ?? ""}
                       onChange={(e) => patch({ canonicalUrl: e.target.value })}
-                      placeholder="https://keyon.vn/blog/..."
+                      placeholder="https://keyon.vn/resources/..."
                     />
                   </label>
                   <div className="flex gap-4 text-xs text-navy">
