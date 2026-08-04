@@ -30,9 +30,5 @@ export function resolveAccountCopy(
     ...defaultCmsAccount,
     ...ops,
   };
-  // Legacy CMS may still store /support (no route) → FAQ help center
-  if (merged.activationGuideHref === "/support") {
-    merged.activationGuideHref = "/faq";
-  }
   return merged;
 }

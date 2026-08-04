@@ -1,13 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  async redirects() {
-    return [
-      // Legacy CMS / mockup link — no /support page; FAQ is the help center
-      { source: "/support", destination: "/faq", permanent: true },
-      { source: "/support/:path*", destination: "/faq", permanent: true },
-    ];
-  },
+  // /support is a real IA hub (ADR-006) — do not redirect to /faq
 };
 
 export default nextConfig;

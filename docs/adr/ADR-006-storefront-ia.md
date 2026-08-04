@@ -68,8 +68,9 @@ CMS `nav.json` items are **legacy / secondary** (brand logo + tagline still from
 
 ## Exit criteria (Phase 1)
 
-- [ ] Desktop mega opens for Sản phẩm / Giải pháp / Doanh nghiệp
-- [ ] Mobile accordion lists same destinations
-- [ ] `/solutions/license-management` and `/business` cross-link correctly
-- [ ] `/resources/news` points users to `/blog` with alias note
-- [ ] No reliance on `/#solutions` for primary nav
+- [x] Desktop mega opens for Sản phẩm / Giải pháp / Doanh nghiệp
+- [x] Mobile accordion lists same destinations
+- [x] `/solutions/license-management` and `/business` cross-link correctly
+- [x] `/resources/news` points users to `/blog` with alias note
+- [x] No reliance on `/#solutions` for primary nav
+- [x] `/support` is a real hub (removed legacy redirect to `/faq`)

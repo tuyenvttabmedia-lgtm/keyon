@@ -67,19 +67,14 @@ export function mergeCheckoutCms(raw: Partial<CmsCheckout> | null | undefined): 
     activationGuideCta:
       raw?.activationGuideCta ?? defaultCmsCheckout.activationGuideCta,
     activationGuideHref:
-      raw?.activationGuideHref === "/support"
-        ? "/faq"
-        : (raw?.activationGuideHref ?? defaultCmsCheckout.activationGuideHref),
+      raw?.activationGuideHref ?? defaultCmsCheckout.activationGuideHref,
     summaryPaidBanner:
       raw?.summaryPaidBanner ?? defaultCmsCheckout.summaryPaidBanner,
     successSupportTitle:
       raw?.successSupportTitle ?? defaultCmsCheckout.successSupportTitle,
-    successSupportLinks: (raw?.successSupportLinks?.length
+    successSupportLinks: raw?.successSupportLinks?.length
       ? raw.successSupportLinks
-      : defaultCmsCheckout.successSupportLinks
-    ).map((l) =>
-      l.href === "/support" ? { ...l, href: "/faq" } : l,
-    ),
+      : defaultCmsCheckout.successSupportLinks,
     accountUpsellTitle:
       raw?.accountUpsellTitle ?? defaultCmsCheckout.accountUpsellTitle,
     accountUpsellBody:
