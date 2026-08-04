@@ -39,7 +39,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-async function loadCloudFeatured(): Promise<CloudFeaturedProduct[]> {
+async function loadCloudFeatured(): Promise<{
+  featured: CloudFeaturedProduct[];
+  usingFallback: boolean;
+}> {
   const products = await prisma.product.findMany({
     where: { active: true },
     include: {
@@ -64,7 +67,6 @@ async function loadCloudFeatured(): Promise<CloudFeaturedProduct[]> {
       cat === "cloud" ||
       nameL.includes("cloud") ||
       nameL.includes("azure") ||
-      nameL.includes("server") ||
       nameL.includes("backup");
     if (!isCloud) continue;
     cloudish.push({
@@ -76,11 +78,15 @@ async function loadCloudFeatured(): Promise<CloudFeaturedProduct[]> {
         variant.sku ? `SKU ${variant.sku}` : "License / dịch vụ số",
       ].filter(Boolean),
       priceLabel: `Từ ${variant.priceVnd.toLocaleString("vi-VN")}đ`,
+      icon: "server",
     });
     if (cloudish.length >= 5) break;
   }
 
-  return cloudish.length > 0 ? cloudish : CLOUD_FALLBACK_FEATURED;
+  if (cloudish.length > 0) {
+    return { featured: cloudish, usingFallback: false };
+  }
+  return { featured: CLOUD_FALLBACK_FEATURED, usingFallback: true };
 }
 
 export default async function SolutionPage({ params }: Props) {
@@ -89,8 +95,8 @@ export default async function SolutionPage({ params }: Props) {
   if (!page) notFound();
 
   if (slug === "cloud") {
-    const featured = await loadCloudFeatured();
-    return <CloudSolutionLanding featured={featured} />;
+    const { featured, usingFallback } = await loadCloudFeatured();
+    return <CloudSolutionLanding featured={featured} usingFallback={usingFallback} />;
   }
 
   return <IaLandingPage page={page} hubLabel="Giải pháp" hubHref="/solutions" />;
