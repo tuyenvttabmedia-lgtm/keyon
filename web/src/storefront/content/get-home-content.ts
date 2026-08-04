@@ -176,14 +176,14 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
       reviewCount: undefined,
     };
   });
+  /** Prefer live catalog; pad with fixture so Home always shows up to 5 compact cards. */
+  const featuredMerged = fillFeaturedSlots(
+    featuredFromCatalog,
+    homeFixture.featured.items,
+    5,
+  );
   const featuredItems = ProductRatingsService.applyToFeatured(
-    featuredFromCatalog.length
-      ? featuredFromCatalog
-      : homeFixture.featured.items.map((i) => ({
-          ...i,
-          rating: undefined,
-          reviewCount: undefined,
-        })),
+    featuredMerged,
     ratingMap,
   );
 
@@ -310,6 +310,33 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
     },
   };
 });
+
+/** Catalog first, then fixture fillers — keep Home featured row dense (up to `limit`). */
+function fillFeaturedSlots(
+  catalog: FeaturedProduct[],
+  fallback: FeaturedProduct[],
+  limit: number,
+): FeaturedProduct[] {
+  const out: FeaturedProduct[] = [];
+  const seen = new Set<string>();
+  const keyOf = (p: FeaturedProduct) =>
+    `${p.brandName}|${p.productName}`.toLowerCase().trim();
+
+  for (const list of [catalog, fallback]) {
+    for (const p of list) {
+      const key = keyOf(p);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push({
+        ...p,
+        rating: p.rating,
+        reviewCount: p.reviewCount,
+      });
+      if (out.length >= limit) return out;
+    }
+  }
+  return out;
+}
 
 function toCategoryIcon(key?: CmsCategoryIconKey): CategoryIconKey {
   if (!key) return "other";

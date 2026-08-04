@@ -24,11 +24,13 @@ type Why = HomeContent["why"];
 export function WhyKeyonSection({ data }: { data: Why }) {
   if (!data.visible) return null;
 
+  const items = data.items.slice(0, 6);
+
   return (
     <section className="py-5 md:py-4 lg:py-7">
       <div className="home-container">
-        <div className="grid items-start gap-5 lg:grid-cols-[210px_minmax(0,1.55fr)_280px] lg:gap-5">
-          <div>
+        <div className="grid items-start gap-5 lg:grid-cols-[210px_minmax(0,1.55fr)_280px] lg:items-stretch lg:gap-5">
+          <div className="lg:self-start">
             <h2 className={SECTION_TITLE_CLASS}>{data.title}</h2>
             <p className={`mt-2 ${SECTION_LEAD_CLASS} sm:mt-3`}>{data.subtitle}</p>
             <Link
@@ -39,8 +41,9 @@ export function WhyKeyonSection({ data }: { data: Why }) {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
-            {data.items.slice(0, 6).map((item) => (
+          {/* Match shield column height (280) on desktop: 2×3 compact cards */}
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-3 lg:h-[280px] lg:grid-rows-3 lg:gap-2.5">
+            {items.map((item) => (
               <WhyCard key={item.id} item={item} />
             ))}
           </div>
@@ -87,7 +90,7 @@ function WhySideBanner({ banner }: { banner: Why["sideBanner"] }) {
     return (
       <Link
         href={href}
-        className={`relative mx-auto block aspect-square w-full max-w-[280px] overflow-hidden rounded-[18px] border border-border ${ELEVATION_FLOAT} lg:mx-0 lg:w-[280px]`}
+        className={`relative mx-auto block aspect-square w-full max-w-[280px] overflow-hidden rounded-[18px] border border-border ${ELEVATION_FLOAT} lg:mx-0 lg:h-[280px] lg:w-[280px] lg:max-w-none`}
       >
         {content}
       </Link>
@@ -96,7 +99,7 @@ function WhySideBanner({ banner }: { banner: Why["sideBanner"] }) {
 
   return (
     <div
-      className="relative mx-auto flex aspect-square w-full max-w-[280px] items-center justify-center overflow-hidden rounded-[18px] border border-border bg-gradient-to-br from-accent-soft via-sky-50 to-surface lg:mx-0 lg:w-[280px]"
+      className="relative mx-auto flex aspect-square w-full max-w-[280px] items-center justify-center overflow-hidden rounded-[18px] border border-border bg-gradient-to-br from-accent-soft via-sky-50 to-surface lg:mx-0 lg:h-[280px] lg:w-[280px] lg:max-w-none lg:shrink-0"
       aria-hidden
     >
       <span className={`absolute left-4 top-6 rounded-full border border-border bg-white px-2.5 py-1 ${BADGE_CLASS} text-muted-soft shadow-sm`}>
@@ -121,24 +124,26 @@ function WhySideBanner({ banner }: { banner: Why["sideBanner"] }) {
 
 function WhyCard({ item }: { item: WhyItem }) {
   return (
-    <div className={`overflow-hidden rounded-xl border border-border/80 bg-white px-3 pb-2.5 pt-2.5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-border ${ELEVATION_CARD_HOVER} sm:px-3.5 sm:pb-3 sm:pt-3`}>
-      {/* Newspaper / media wrap: icon trái, chữ chảy bên phải rồi ôm dưới icon */}
-      <div className="float-left mr-2.5 mb-0.5 flex h-9 w-9 items-center justify-center rounded-xl bg-accent-soft text-accent sm:mr-3 sm:h-10 sm:w-10">
+    <div
+      className={`flex h-full min-h-0 overflow-hidden rounded-xl border border-border/80 bg-white px-2.5 py-2 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/35 ${ELEVATION_CARD_HOVER} sm:px-3 sm:py-2`}
+    >
+      <div className="mr-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent sm:mr-2.5 sm:h-9 sm:w-9">
         <WhyIcon icon={item.icon} />
       </div>
-      <h4 className={CARD_TITLE_CLASS}>{item.title}</h4>
-      <p className={`mt-0.5 line-clamp-2 leading-snug ${CARD_META_CLASS}`}>
-        {item.description}
-      </p>
-      <div className="clear-both" aria-hidden />
+      <div className="min-w-0 flex-1">
+        <h4 className={`${CARD_TITLE_CLASS} leading-snug`}>{item.title}</h4>
+        <p className={`mt-0.5 line-clamp-2 leading-snug ${CARD_META_CLASS}`}>
+          {item.description}
+        </p>
+      </div>
     </div>
   );
 }
 
 function WhyIcon({ icon }: { icon: WhyItem["icon"] }) {
   const props = {
-    width: 24,
-    height: 24,
+    width: 18,
+    height: 18,
     viewBox: "0 0 24 24",
     fill: "none",
     stroke: "currentColor",

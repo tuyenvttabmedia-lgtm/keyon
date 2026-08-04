@@ -1,6 +1,7 @@
 import type { HomeContent } from "@/storefront/content/types";
 import {
   IconCard,
+  IconFolder,
   IconPackage,
   IconSearch,
 } from "@/storefront/components/icons/StoreIcons";
@@ -20,18 +21,18 @@ import {
 } from "@/storefront/effects";
 import { Reveal } from "./Reveal";
 
-const ICONS = [IconSearch, IconCard, IconPackage] as const;
+const ICONS = [IconSearch, IconCard, IconPackage, IconFolder] as const;
 
 /**
- * How KEYON works — full-width title → 3 step cards (HOME.v6).
- * Avoid left-intro + sparse steps (felt unfinished next to Featured / Why).
+ * How KEYON works — full-width title → 4 step cards.
  */
 export function HowItWorksSection({ data }: { data: HomeContent["howItWorks"] }) {
   if (!data.visible || data.steps.length === 0) return null;
 
   const subtitle =
     data.subtitle ??
-    "Ba bước rõ ràng — từ chọn gói đến giữ giấy phép trong Tài khoản.";
+    "Bốn bước rõ ràng — từ chọn gói đến quản lý giấy phép trong Tài khoản.";
+  const steps = data.steps.slice(0, 4);
 
   return (
     <section id="how-it-works" className="scroll-mt-20 bg-white py-6 md:py-7 lg:py-9">
@@ -43,25 +44,25 @@ export function HowItWorksSection({ data }: { data: HomeContent["howItWorks"] })
 
         <div className="relative">
           <div
-            className="pointer-events-none absolute left-[16.666%] right-[16.666%] top-[2.15rem] z-0 hidden h-px bg-border sm:block"
+            className="pointer-events-none absolute left-[12.5%] right-[12.5%] top-[2.15rem] z-0 hidden h-px bg-border lg:block"
             aria-hidden
           />
 
           <Reveal
             stagger
-            className="relative z-[1] grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-3 lg:gap-4"
+            className="relative z-[1] grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-3.5"
           >
-            {data.steps.map((step, index) => {
-              const Icon = ICONS[index] ?? IconPackage;
+            {steps.map((step, index) => {
+              const Icon = ICONS[index] ?? IconFolder;
               const n = String(index + 1).padStart(2, "0");
               return (
                 <article
                   key={step.id}
-                  className={`group flex h-full flex-col rounded-2xl border border-border/80 bg-surface/80 p-4 sm:bg-white sm:p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/40 ${ELEVATION_CARD_HOVER}`}
+                  className={`group flex h-full flex-col rounded-2xl border border-border/80 bg-surface/80 p-4 sm:bg-white sm:p-4 lg:p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/40 ${ELEVATION_CARD_HOVER}`}
                 >
                   <div className="flex items-center gap-3">
                     <span
-                      className={`relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent text-white sm:h-12 sm:w-12 ${TRANSITION_UI} group-hover:bg-accent-hover group-hover:scale-105`}
+                      className={`relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent text-white ${TRANSITION_UI} group-hover:scale-105 group-hover:bg-accent-hover`}
                     >
                       <Icon size={22} />
                       <span
@@ -74,7 +75,7 @@ export function HowItWorksSection({ data }: { data: HomeContent["howItWorks"] })
                   </div>
 
                   <h3
-                    className={`mt-4 ${CARD_TITLE_CLASS} ${TRANSITION_UI} group-hover:text-accent`}
+                    className={`mt-3.5 ${CARD_TITLE_CLASS} ${TRANSITION_UI} group-hover:text-accent`}
                   >
                     {step.title}
                   </h3>

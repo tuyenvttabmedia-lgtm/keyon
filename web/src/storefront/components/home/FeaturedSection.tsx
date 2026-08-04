@@ -5,18 +5,11 @@ import { Reveal } from "./Reveal";
 
 type Featured = HomeContent["featured"];
 
+/** Always 5-col desktop track so cards stay compact (never stretch to half-width). */
 export function FeaturedSection({ data }: { data: Featured }) {
   if (!data.visible) return null;
 
   const items = data.items.slice(0, 5);
-  const desktopCols =
-    items.length >= 5
-      ? "lg:grid-cols-5"
-      : items.length === 4
-        ? "lg:grid-cols-4"
-        : items.length === 3
-          ? "lg:grid-cols-3"
-          : "lg:grid-cols-2";
 
   return (
     <section className="bg-white py-5 md:py-4 lg:py-6">
@@ -40,7 +33,7 @@ export function FeaturedSection({ data }: { data: Featured }) {
           </div>
         </div>
 
-        <Reveal stagger className={`hidden lg:grid lg:gap-3.5 ${desktopCols}`}>
+        <Reveal stagger className="hidden lg:grid lg:grid-cols-5 lg:gap-3.5">
           {items.map((item: FeaturedProduct) => (
             <ProductCard key={item.id} item={item} />
           ))}

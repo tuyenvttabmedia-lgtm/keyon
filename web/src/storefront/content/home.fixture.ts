@@ -120,6 +120,8 @@ export const homeFixture: HomeContent = {
   howItWorks: {
     visible: true,
     title: "Cách KEYON hoạt động",
+    subtitle:
+      "Bốn bước rõ ràng — từ chọn gói đến quản lý giấy phép trong Tài khoản.",
     steps: [
       {
         id: "h1",
@@ -135,7 +137,13 @@ export const homeFixture: HomeContent = {
         id: "h3",
         title: "Nhận trong Tài khoản",
         description:
-          "Sau khi hệ thống xác nhận thanh toán, mở Đơn hàng / Tài sản để lấy deliverable.",
+          "Sau khi xác nhận thanh toán, mở Đơn hàng / Tài sản để lấy deliverable.",
+      },
+      {
+        id: "h4",
+        title: "Quản lý & hỗ trợ",
+        description:
+          "Mở lại license khi cần; tạo ticket trong Tài khoản nếu cần hỗ trợ kích hoạt.",
       },
     ],
   },
