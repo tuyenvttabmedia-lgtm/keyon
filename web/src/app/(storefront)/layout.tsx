@@ -25,6 +25,8 @@ export default async function StorefrontLayout({
       />
       <main className="flex-1">{children}</main>
       <SiteFooter
+        logoUrl={home.footer.logoUrl}
+        brandName={home.footer.brandName}
         blurb={home.footer.blurb}
         columns={home.footer.columns}
         copyright={home.footer.copyright}

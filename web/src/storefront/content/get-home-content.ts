@@ -310,6 +310,14 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
       })),
     },
     footer: {
+      logoUrl:
+        resolveMediaUrl(footer.logoUrl, mediaBase) ||
+        resolveMediaUrl(nav.logoUrl, mediaBase) ||
+        undefined,
+      brandName:
+        footer.brandName?.trim() ||
+        nav.brandName?.trim() ||
+        defaultCmsFooter.brandName,
       blurb: footer.blurb || homeFixture.footer.blurb,
       columns: footer.columns.length ? footer.columns : homeFixture.footer.columns,
       copyright: footer.copyright || homeFixture.footer.copyright,

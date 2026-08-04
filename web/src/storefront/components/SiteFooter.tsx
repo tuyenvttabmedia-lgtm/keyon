@@ -1,11 +1,15 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import type { FooterColumn, NavItem } from "@/storefront/content/types";
+import { resolveMediaUrl } from "@/lib/media-url";
 import { EASE_STANDARD, MOTION_NORMAL, TRANSITION_COLORS, TRANSITION_UI } from "@/storefront/effects";
 
 type Props = {
+  logoUrl?: string;
+  brandName?: string;
   blurb: string;
   columns: FooterColumn[];
   copyright: string;
@@ -18,6 +22,8 @@ const footerLink = `inline-block text-slate-400 ${TRANSITION_COLORS} ${MOTION_NO
 
 /** Digital Home footer — navy · accordion on mobile · multi-col on desktop */
 export function SiteFooter({
+  logoUrl: logoUrlProp,
+  brandName: brandNameProp,
   blurb,
   columns,
   copyright,
@@ -25,6 +31,9 @@ export function SiteFooter({
   supportEmail = "support@keyon.vn",
   paymentBadges = ["VietQR", "Chuyển khoản"],
 }: Props) {
+  const name = brandNameProp?.trim() || "KEYON";
+  const logoUrl = resolveMediaUrl(logoUrlProp) || undefined;
+  const mark = name.charAt(0).toUpperCase() || "K";
   const social = [
     { label: "Email", href: `mailto:${supportEmail}`, letter: "✉" },
     { label: "Liên hệ", href: "/contact", letter: "?" },
@@ -34,11 +43,30 @@ export function SiteFooter({
       <div className="home-container">
         <div className="py-10 lg:grid lg:grid-cols-5 lg:gap-8 lg:py-12">
           <div className="mb-8 lg:mb-0">
-            <Link href="/" className="inline-flex items-center gap-2.5 transition hover:opacity-90">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-cyan-600 text-sm font-extrabold text-white">
-                K
-              </span>
-              <strong className="text-lg text-white">KEYON</strong>
+            <Link
+              href="/"
+              className="inline-flex min-w-0 items-center gap-2.5 transition hover:opacity-90"
+              aria-label={`${name} trang chủ`}
+            >
+              {logoUrl ? (
+                <span className="relative block h-8 w-[min(180px,48vw)] sm:h-9 sm:w-[200px]">
+                  <Image
+                    src={logoUrl}
+                    alt={name}
+                    fill
+                    className="object-contain object-left"
+                    sizes="(max-width: 640px) 48vw, 200px"
+                    unoptimized
+                  />
+                </span>
+              ) : (
+                <>
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-cyan-600 text-sm font-extrabold text-white">
+                    {mark}
+                  </span>
+                  <strong className="text-lg text-white">{name}</strong>
+                </>
+              )}
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-400">{blurb}</p>
             <div className="mt-5 flex gap-2">

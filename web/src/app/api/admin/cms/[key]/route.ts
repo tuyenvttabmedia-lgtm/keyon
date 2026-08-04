@@ -253,9 +253,17 @@ export async function PUT(
     return NextResponse.json({ ok: true, data });
   }
   if (key === "footer") {
+    const storage = await resolveStorage();
+    const mediaBase =
+      storage.driver === "wasabi"
+        ? storage.wasabi.publicBaseUrl ||
+          `${storage.wasabi.endpoint.replace(/\/$/, "")}/${storage.wasabi.bucket}`
+        : "";
     const link = z.object({ label: z.string(), href: z.string() });
     const data = z
       .object({
+        logoUrl: z.string().optional(),
+        brandName: z.string().min(1).max(48),
         blurb: z.string(),
         columns: z.array(
           z.object({ title: z.string(), links: z.array(link) }),
@@ -263,7 +271,18 @@ export async function PUT(
         copyright: z.string(),
         legalLinks: z.array(link),
       })
-      .parse(body) satisfies CmsFooter;
+      .parse({
+        ...body,
+        brandName:
+          typeof body?.brandName === "string" && body.brandName.trim()
+            ? body.brandName.trim()
+            : defaultCmsFooter.brandName,
+        logoUrl:
+          typeof body?.logoUrl === "string" && body.logoUrl.trim()
+            ? resolveMediaUrl(body.logoUrl.trim(), mediaBase) ||
+              body.logoUrl.trim()
+            : undefined,
+      }) satisfies CmsFooter;
     await writeJsonFile("footer.json", data);
     return NextResponse.json({ ok: true, data });
   }

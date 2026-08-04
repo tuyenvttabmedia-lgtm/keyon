@@ -26,6 +26,8 @@ export default async function AuthLayout({
       />
       <main className="flex min-h-0 flex-1 flex-col">{children}</main>
       <SiteFooter
+        logoUrl={home.footer.logoUrl}
+        brandName={home.footer.brandName}
         blurb={home.footer.blurb}
         columns={home.footer.columns}
         copyright={home.footer.copyright}

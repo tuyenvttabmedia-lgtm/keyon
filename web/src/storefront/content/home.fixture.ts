@@ -349,6 +349,7 @@ export const homeFixture: HomeContent = {
     ctaHref: "/register",
   },
   footer: {
+    brandName: "KEYON",
     blurb:
       "Nền tảng phân phối bản quyền số — thanh toán rõ, nhận hàng rõ, quản lý trong Tài khoản.",
     supportEmail: "support@keyon.vn",

@@ -225,6 +225,8 @@ export type HomeContent = {
     ctaHref: string;
   };
   footer: {
+    logoUrl?: string;
+    brandName: string;
     blurb: string;
     columns: FooterColumn[];
     copyright: string;

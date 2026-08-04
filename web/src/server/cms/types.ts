@@ -212,6 +212,9 @@ export type CmsFaqItem = {
 };
 
 export type CmsFooter = {
+  /** Footer logo (Media). Empty → fall back to header/nav logo, then letter mark. */
+  logoUrl?: string;
+  brandName: string;
   blurb: string;
   columns: { title: string; links: { label: string; href: string }[] }[];
   copyright: string;
@@ -355,6 +358,7 @@ export const defaultCmsFaq: CmsFaqItem[] = [
 ];
 
 export const defaultCmsFooter: CmsFooter = {
+  brandName: "KEYON",
   blurb:
     "Nền tảng phân phối bản quyền số — thanh toán rõ, nhận hàng rõ, quản lý trong Tài khoản.",
   columns: [
