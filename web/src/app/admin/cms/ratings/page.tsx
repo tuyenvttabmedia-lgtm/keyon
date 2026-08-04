@@ -5,6 +5,7 @@ import {
   readJsonFile,
   type CmsProductRatings,
 } from "@/server/cms/store";
+import { ADMIN_PAGE_TITLE_CLASS } from "@/storefront/typography";
 
 export const dynamic = "force-dynamic";
 
@@ -15,9 +16,14 @@ export default async function CmsRatingsPage() {
   );
 
   return (
-    <div>
+    <div className="space-y-4">
+      <div>
+        <h1 className={ADMIN_PAGE_TITLE_CLASS}>CMS · Ratings</h1>
+        <p className="text-sm text-muted">
+          Điểm / số lượng đánh giá hiển thị trên PDP (không phải review khách gửi)
+        </p>
+      </div>
       <CmsSubnav active="/admin/cms/ratings" />
-      <h1 className="mb-4 text-xl font-semibold text-navy">Product ratings</h1>
       <ProductRatingsForm initial={initial} />
     </div>
   );

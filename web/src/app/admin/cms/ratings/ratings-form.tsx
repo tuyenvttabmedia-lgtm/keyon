@@ -53,62 +53,63 @@ export function ProductRatingsForm({ initial }: { initial: CmsProductRatings }) 
   return (
     <div className="space-y-4 rounded-2xl border border-border bg-card p-6">
       <p className="text-sm text-muted">
-        Ratings CMS (không phải review khách).{" "}
-        <code className="text-xs">productKey</code> = id sản phẩm catalog hoặc
-        featured id. Tab Đánh giá trên PDP chỉ hiện khi reviewCount &gt; 0.
+        <code className="rounded bg-surface px-1 text-xs">productKey</code> =
+        id sản phẩm catalog hoặc featured id. Tab Đánh giá trên PDP chỉ hiện khi{" "}
+        <code className="rounded bg-surface px-1 text-xs">reviewCount</code>{" "}
+        &gt; 0.
       </p>
 
       <div className="overflow-x-auto">
         <table className="w-full min-w-[32rem] text-left text-sm">
           <thead>
-            <tr className="border-b border-border text-xs text-muted">
-              <th className="py-2 pr-2 font-medium">productKey</th>
-              <th className="py-2 pr-2 font-medium">ratingAvg</th>
-              <th className="py-2 pr-2 font-medium">reviewCount</th>
-              <th className="py-2 font-medium" />
+            <tr className="border-b border-border text-xs uppercase tracking-wide text-muted">
+              <th className="py-2.5 pr-3 font-semibold">productKey</th>
+              <th className="py-2.5 pr-3 font-semibold">ratingAvg</th>
+              <th className="py-2.5 pr-3 font-semibold">reviewCount</th>
+              <th className="py-2.5 font-semibold" />
             </tr>
           </thead>
           <tbody>
             {items.map((row, i) => (
               <tr key={i} className="border-b border-border/60">
-                <td className="py-2 pr-2">
+                <td className="py-2.5 pr-3">
                   <input
-                    className="w-full rounded-lg border border-border px-2 py-1.5 font-mono text-xs"
+                    className="h-9 w-full rounded-lg border border-border bg-white px-2.5 font-mono text-xs text-navy outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
                     value={row.productKey}
                     onChange={(e) => update(i, { productKey: e.target.value })}
                     placeholder="product-id"
                   />
                 </td>
-                <td className="py-2 pr-2">
+                <td className="py-2.5 pr-3">
                   <input
                     type="number"
                     min={0}
                     max={5}
                     step={0.1}
-                    className="w-24 rounded-lg border border-border px-2 py-1.5"
+                    className="h-9 w-24 rounded-lg border border-border bg-white px-2.5 text-sm text-navy outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
                     value={row.ratingAvg}
                     onChange={(e) =>
                       update(i, { ratingAvg: Number(e.target.value) })
                     }
                   />
                 </td>
-                <td className="py-2 pr-2">
+                <td className="py-2.5 pr-3">
                   <input
                     type="number"
                     min={0}
                     step={1}
-                    className="w-24 rounded-lg border border-border px-2 py-1.5"
+                    className="h-9 w-24 rounded-lg border border-border bg-white px-2.5 text-sm text-navy outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
                     value={row.reviewCount}
                     onChange={(e) =>
                       update(i, { reviewCount: Number(e.target.value) })
                     }
                   />
                 </td>
-                <td className="py-2">
+                <td className="py-2.5">
                   <button
                     type="button"
                     onClick={() => removeRow(i)}
-                    className="text-xs text-danger"
+                    className="text-xs font-medium text-danger hover:underline"
                   >
                     Xóa
                   </button>
@@ -119,22 +120,28 @@ export function ProductRatingsForm({ initial }: { initial: CmsProductRatings }) 
         </table>
       </div>
 
-      <div className="flex flex-wrap gap-3">
+      {items.length === 0 ? (
+        <p className="rounded-xl border border-dashed border-border bg-surface/60 px-4 py-8 text-center text-sm text-muted">
+          Chưa có dòng rating — nhấn Thêm dòng để bắt đầu.
+        </p>
+      ) : null}
+
+      <div className="flex flex-wrap items-center gap-3 border-t border-border pt-4">
         <button
           type="button"
           onClick={addRow}
-          className="rounded-lg border border-border px-4 py-2 text-sm"
+          className="inline-flex h-9 items-center rounded-lg border border-border bg-white px-4 text-sm font-medium text-navy transition hover:border-accent hover:bg-accent-soft hover:text-accent"
         >
           Thêm dòng
         </button>
         <button
           type="button"
           onClick={() => void save()}
-          className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white"
+          className="inline-flex h-9 items-center rounded-lg bg-accent px-4 text-sm font-semibold text-white transition hover:bg-accent-hover"
         >
           Lưu
         </button>
-        {msg ? <span className="self-center text-sm text-muted">{msg}</span> : null}
+        {msg ? <span className="text-sm text-muted">{msg}</span> : null}
       </div>
     </div>
   );
