@@ -9,7 +9,6 @@ import {
   Check,
   ChevronRight,
   Cloud,
-  CloudUpload,
   Headphones,
   Home,
   Rocket,
@@ -239,13 +238,13 @@ export function ProductivitySolutionLanding({
             <span className={BREADCRUMB_CURRENT_CLASS}>Năng suất & Cộng tác</span>
           </nav>
 
-          <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.22fr)] lg:gap-5 xl:gap-6">
+          <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] md:gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-12 xl:gap-14">
             <div className="min-w-0">
-              <h1 className={`max-w-[20ch] ${HERO_TITLE_CLASS}`}>
+              <h1 className={`max-w-[520px] ${HERO_TITLE_CLASS}`}>
                 Kết nối con người.
                 <span className="mt-1 block">Tăng tốc công việc.</span>
               </h1>
-              <p className={`mt-4 max-w-md ${PAGE_LEAD_CLASS}`}>
+              <p className={`mt-4 max-w-[510px] ${PAGE_LEAD_CLASS}`}>
                 Bộ công cụ và dịch vụ thông minh giúp cá nhân, đội nhóm làm việc linh hoạt hơn —
                 cộng tác liền mạch, dữ liệu luôn đồng bộ.
               </p>
@@ -929,130 +928,28 @@ function EcoMark({
 
 function ProductivityHeroArt({ imageUrl }: { imageUrl?: string }) {
   return (
-    <div className="relative mx-auto aspect-[5/4] w-full max-w-[560px] lg:max-w-none">
-      <span className="absolute left-[6%] top-[14%] h-2.5 w-2.5 rounded-full bg-accent/45" aria-hidden />
-      <span className="absolute right-[4%] top-[48%] h-2 w-2 rounded-full bg-sky-400/55" aria-hidden />
-      <span className="absolute bottom-[22%] left-[3%] h-1.5 w-1.5 rounded-full bg-accent/35" aria-hidden />
-      <span className="absolute right-[18%] top-[8%] h-1.5 w-1.5 rounded-full bg-slate-300" aria-hidden />
-
-      {/* Organic blob — mockup accent shape */}
-      <div
-        className={`absolute inset-[8%_6%_10%_10%] overflow-hidden ${ELEVATION_FLOAT}`}
-        style={{ borderRadius: "48% 52% 42% 58% / 36% 44% 56% 64%" }}
-      >
-        {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt="Năng suất & Cộng tác"
-            fill
-            className="object-cover"
-            unoptimized
-            sizes="(max-width: 1024px) 90vw, 560px"
-            priority
-          />
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-[#9fd9d4] via-[#6eb8b4] to-[#4a9aa3]">
-            <svg viewBox="0 0 400 420" className="h-full w-full" aria-hidden>
-              <ellipse cx="210" cy="360" rx="150" ry="28" fill="#0f172a" opacity="0.12" />
-              <rect x="130" y="250" width="150" height="95" rx="8" fill="#1e293b" />
-              <rect x="140" y="260" width="130" height="72" rx="4" fill="#0ea5a4" opacity="0.35" />
-              <path d="M145 360c15-85 35-120 65-120s50 35 65 120" fill="#e2e8f0" />
-              <circle cx="210" cy="175" r="48" fill="#cbd5e1" />
-              <path
-                d="M162 165c8-45 35-62 48-62 18 0 42 20 48 55-12-8-22-10-30-8-8 18-28 28-48 22z"
-                fill="#334155"
-                opacity="0.85"
-              />
-            </svg>
-          </div>
-        )}
-        <div
-          className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-navy/10 via-transparent to-white/10"
-          aria-hidden
+    <div className="flex w-full items-center justify-center max-h-[300px] sm:max-h-[380px] lg:h-[440px] lg:max-h-[460px] xl:h-[450px]">
+      {imageUrl ? (
+        <Image
+          src={imageUrl}
+          alt="Năng suất & Cộng tác"
+          width={900}
+          height={700}
+          className="h-auto max-h-full w-auto max-w-full object-contain object-center"
+          unoptimized
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 48vw, 640px"
+          priority
         />
-      </div>
-
-      <div
-        className={`absolute right-0 top-[2%] z-10 w-[48%] max-w-[210px] rounded-2xl border border-border/70 bg-white px-3.5 py-3 ${ELEVATION_FLOAT}`}
-      >
-        <div className="flex items-center gap-2.5">
-          <span
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky-50 text-sky-600"
-            aria-hidden
-          >
-            <CloudUpload size={16} strokeWidth={1.9} />
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className={`${BADGE_CLASS} font-semibold text-navy`}>Đồng bộ dữ liệu</p>
-            <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-surface">
-              <div className="h-full w-full rounded-full bg-accent" />
-            </div>
-          </div>
-          <span className={`${BADGE_CLASS} shrink-0 tabular-nums font-semibold text-accent`}>
-            100%
-          </span>
-        </div>
-      </div>
-
-      <div
-        className={`absolute left-0 top-[38%] z-10 flex items-center gap-2.5 rounded-2xl border border-border/70 bg-white px-3 py-2.5 ${ELEVATION_FLOAT}`}
-      >
+      ) : (
         <div
-          className="h-10 w-10 shrink-0 overflow-hidden rounded-lg"
-          style={{ background: "linear-gradient(145deg, #5eead4, #0ea5a4)" }}
+          className="flex h-full min-h-[200px] w-full items-center justify-center rounded-2xl bg-gradient-to-br from-slate-100 via-teal-50/70 to-slate-100 lg:min-h-0"
           aria-hidden
-        />
-        <div>
-          <p className={`${BADGE_CLASS} text-muted`}>Cuộc họp hôm nay</p>
-          <p className="font-display text-2xl font-bold leading-none tabular-nums text-navy">6</p>
-        </div>
-      </div>
-
-      <div
-        className={`absolute bottom-[4%] right-0 z-10 flex items-center gap-2 rounded-2xl border border-border/70 bg-white px-3 py-2.5 ${ELEVATION_FLOAT}`}
-      >
-        <WordChip />
-        <ExcelChip />
-        <PptChip />
-        <span
-          className={`flex h-[26px] min-w-[26px] items-center justify-center rounded-md bg-surface px-1.5 ${BADGE_CLASS} font-bold text-navy`}
         >
-          +5
-        </span>
-        <div className="pl-0.5">
-          <p className={`${BADGE_CLASS} font-semibold text-navy`}>Tài liệu cộng tác</p>
+          <span className="font-display text-3xl font-bold tracking-wide text-accent/25 sm:text-4xl">
+            KEYON
+          </span>
         </div>
-      </div>
+      )}
     </div>
-  );
-}
-
-function WordChip() {
-  return (
-    <svg width="26" height="26" viewBox="0 0 36 36" aria-hidden>
-      <rect width="36" height="36" rx="7" fill="#185ABD" />
-      <path fill="#fff" d="M10 9h7.5l1.2 10.2L20.8 9H28l-3.4 18h-5.2l-1.5-11.4L16.4 27H11L10 9Z" />
-    </svg>
-  );
-}
-
-function ExcelChip() {
-  return (
-    <svg width="26" height="26" viewBox="0 0 36 36" aria-hidden>
-      <rect width="36" height="36" rx="7" fill="#107C41" />
-      <path fill="#fff" d="M12 9h5.2l2.6 6.4L22.6 9H28l-4.8 9L28 27h-5.5l-2.8-6.6L16.8 27H11.5l4.9-9L12 9Z" />
-    </svg>
-  );
-}
-
-function PptChip() {
-  return (
-    <svg width="26" height="26" viewBox="0 0 36 36" aria-hidden>
-      <rect width="36" height="36" rx="7" fill="#C43E1C" />
-      <path
-        fill="#fff"
-        d="M11 9h9.2c3.4 0 5.6 2 5.6 5.1 0 3.2-2.3 5.2-5.8 5.2H15.6V27H11V9Zm4.6 3.4v5.2h3.8c1.7 0 2.7-.9 2.7-2.6s-1-2.6-2.7-2.6h-3.8Z"
-      />
-    </svg>
   );
 }
