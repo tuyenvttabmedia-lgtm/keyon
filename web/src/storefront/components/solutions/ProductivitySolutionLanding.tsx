@@ -238,7 +238,7 @@ export function ProductivitySolutionLanding({
             <span className={BREADCRUMB_CURRENT_CLASS}>Năng suất & Cộng tác</span>
           </nav>
 
-          <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] md:gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-12 xl:gap-14">
+          <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] md:gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-12 xl:gap-14">
             <div className="min-w-0">
               <h1 className={`max-w-[520px] ${HERO_TITLE_CLASS}`}>
                 Kết nối con người.
