@@ -395,7 +395,7 @@ export function ProductivitySolutionLanding({
             </h2>
           </header>
 
-          <div className="mt-6 grid items-center gap-6 lg:grid-cols-2 lg:gap-8">
+          <div className="mt-6 grid items-center gap-6 lg:grid-cols-[0.88fr_1.12fr] lg:gap-8 xl:gap-10">
             {/* Left — icon row + checklist (mockup: ~48px tiles, soft gap) */}
             <div className="flex flex-col justify-center gap-5">
               <ul className="flex flex-wrap items-center gap-3">
@@ -521,7 +521,7 @@ function WorkModesPanel({ workSceneImageUrl }: { workSceneImageUrl?: string }) {
               role="tab"
               aria-selected={selected}
               onClick={() => setActive(m.id)}
-              className={`inline-flex shrink-0 items-center gap-2.5 rounded-xl px-4 py-3 text-left ${CTA_COMPACT_CLASS} ${TRANSITION_UI} ${
+              className={`inline-flex w-full shrink-0 items-center gap-2.5 rounded-xl px-4 py-3 text-left ${CTA_COMPACT_CLASS} ${TRANSITION_UI} ${
                 selected
                   ? "bg-accent text-white shadow-sm"
                   : "bg-transparent text-navy hover:bg-surface"
