@@ -120,12 +120,33 @@ const TRUST_STRIP: { title: string; Icon: LucideIcon }[] = [
   { title: "Bảo hành & cập nhật", Icon: ShieldCheck },
 ];
 
-const FLOW: { title: string; Icon: LucideIcon; highlight?: boolean }[] = [
-  { title: "Sự cố xảy ra", Icon: AlertTriangle },
-  { title: "Dữ liệu đã được sao lưu", Icon: CloudUpload },
-  { title: "Khôi phục nhanh chóng", Icon: History, highlight: true },
-  { title: "Dữ liệu trở lại bình thường", Icon: Check },
-  { title: "An tâm tiếp tục", Icon: ShieldCheck },
+const FLOW: { title: string; body: string; Icon: LucideIcon; highlight?: boolean }[] = [
+  {
+    title: "Sự cố xảy ra",
+    body: "Mất dữ liệu, xóa nhầm hoặc thiết bị hỏng.",
+    Icon: AlertTriangle,
+  },
+  {
+    title: "Dữ liệu đã được sao lưu",
+    body: "Bản sao lưu an toàn sẵn sàng trên KEYON.",
+    Icon: CloudUpload,
+  },
+  {
+    title: "Khôi phục nhanh chóng",
+    body: "Chọn điểm khôi phục và phục hồi chỉ trong vài phút.",
+    Icon: History,
+    highlight: true,
+  },
+  {
+    title: "Dữ liệu trở lại bình thường",
+    body: "File và hệ thống sẵn sàng sử dụng lại.",
+    Icon: Check,
+  },
+  {
+    title: "An tâm tiếp tục",
+    body: "Dữ liệu luôn được bảo vệ liên tục.",
+    Icon: ShieldCheck,
+  },
 ];
 
 export const BACKUP_FALLBACK_FEATURED: BackupFeaturedProduct[] = [
@@ -389,16 +410,16 @@ export function BackupSolutionLanding({ featured, usingFallback }: Props) {
               </div>
             </div>
 
-            <ul className="grid gap-3 border-t border-white/10 bg-accent/15 px-4 py-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4 lg:px-6">
+            <ul className="grid gap-3 border-t border-white/10 bg-accent px-4 py-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4 lg:px-6">
               {TRUST_STRIP.map((t) => (
-                <li key={t.title} className="flex items-center gap-2.5 text-white">
+                <li key={t.title} className="flex items-center gap-2.5">
                   <span
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/35"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/50 text-white"
                     aria-hidden
                   >
                     <t.Icon size={16} strokeWidth={1.9} />
                   </span>
-                  <span className={CARD_TITLE_CLASS}>{t.title}</span>
+                  <span className={`${CARD_TITLE_CLASS} text-white`}>{t.title}</span>
                 </li>
               ))}
             </ul>
@@ -407,8 +428,12 @@ export function BackupSolutionLanding({ featured, usingFallback }: Props) {
       </section>
 
       {/* ── Recovery flow ────────────────────────────────────── */}
-      <section className="pb-9 md:pb-11">
-        <div className="home-container">
+      <section className="relative overflow-hidden pb-9 md:pb-11">
+        <div
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(15,23,42,0.06)_1px,transparent_0)] bg-[length:18px_18px]"
+          aria-hidden
+        />
+        <div className="home-container relative">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>
               Khi sự cố xảy ra, bạn chỉ cần khôi phục
@@ -416,24 +441,36 @@ export function BackupSolutionLanding({ featured, usingFallback }: Props) {
             <div className="mx-auto mt-2.5 h-1 w-14 rounded-full bg-accent" aria-hidden />
           </header>
 
-          <ol className="relative mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3">
+          <ol className="relative mt-10 grid items-start gap-8 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3 lg:pt-2">
             <span
-              className="pointer-events-none absolute left-[10%] right-[10%] top-7 hidden border-t border-dashed border-border lg:block"
+              className="pointer-events-none absolute left-[8%] right-[8%] top-[2.75rem] hidden border-t border-dashed border-slate-300 lg:block"
               aria-hidden
             />
             {FLOW.map((s) => (
-              <li key={s.title} className="relative z-[1] flex flex-col items-center text-center">
+              <li
+                key={s.title}
+                className={`relative z-[1] flex flex-col items-center text-center ${
+                  s.highlight ? "lg:-mt-2" : ""
+                }`}
+              >
                 <span
                   className={`flex items-center justify-center rounded-full border-2 ${
                     s.highlight
-                      ? `h-16 w-16 border-accent bg-accent text-white ${ELEVATION_FLOAT}`
-                      : "h-14 w-14 border-accent/35 bg-white text-accent"
+                      ? `h-[4.5rem] w-[4.5rem] border-accent bg-accent text-white shadow-[0_0_0_8px_rgba(14,165,164,0.12)] ${ELEVATION_FLOAT}`
+                      : "h-14 w-14 border-accent/40 bg-white text-accent"
                   }`}
                   aria-hidden
                 >
-                  <s.Icon size={s.highlight ? 26 : 20} strokeWidth={1.8} />
+                  <s.Icon size={s.highlight ? 28 : 20} strokeWidth={1.8} />
                 </span>
-                <p className={`mt-3 max-w-[14ch] ${CARD_TITLE_CLASS}`}>{s.title}</p>
+                <p
+                  className={`mt-3 max-w-[16ch] ${CARD_TITLE_CLASS} ${
+                    s.highlight ? "text-[15px]" : ""
+                  }`}
+                >
+                  {s.title}
+                </p>
+                <p className={`mt-1.5 max-w-[18ch] ${BODY_MUTED_CLASS}`}>{s.body}</p>
               </li>
             ))}
           </ol>
@@ -482,63 +519,120 @@ export function BackupSolutionLanding({ featured, usingFallback }: Props) {
 
 function BackupHeroArt() {
   return (
-    <div className="relative mx-auto aspect-square w-full max-w-[420px]">
+    <div className="relative mx-auto aspect-[5/4.4] w-full max-w-[520px] lg:max-w-none">
+      {/* Soft grid + glow */}
       <div
-        className="pointer-events-none absolute inset-[12%] rounded-full bg-accent/15 blur-2xl"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_55%_45%,rgba(14,165,164,0.18),transparent_55%)]"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-[8%] bg-[radial-gradient(circle_at_1px_1px,rgba(14,165,164,0.12)_1px,transparent_0)] bg-[length:16px_16px] opacity-60"
         aria-hidden
       />
 
-      {/* Floating status chips */}
+      {/* Left — laptop with Backup Complete */}
       <div
-        className={`absolute left-[2%] top-[18%] z-20 max-w-[150px] rounded-xl border border-border/70 bg-white px-3 py-2 ${ELEVATION_FLOAT}`}
+        className={`absolute bottom-[8%] left-[0%] z-20 w-[42%] max-w-[200px] ${ELEVATION_FLOAT}`}
       >
-        <p className={`${BADGE_CLASS} font-semibold text-accent`}>Backup Complete</p>
-        <p className="mt-0.5 text-[11px] text-muted">Hôm nay · 14:20</p>
-      </div>
-      <div
-        className={`absolute right-[0%] top-[28%] z-20 max-w-[140px] rounded-xl border border-border/70 bg-white px-3 py-2 ${ELEVATION_FLOAT}`}
-      >
-        <p className={`${BADGE_CLASS} font-semibold text-navy`}>Restore Point</p>
-        <p className="mt-0.5 text-[11px] text-muted">Sẵn sàng khôi phục</p>
-      </div>
-
-      {/* Cloud + K */}
-      <div className="absolute inset-[22%_18%_34%_18%] z-10 flex items-center justify-center">
-        <svg viewBox="0 0 240 160" className="h-full w-full" aria-hidden>
-          <defs>
-            <linearGradient id="bkCloud" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#5eead4" />
-              <stop offset="100%" stopColor="#0ea5a4" />
-            </linearGradient>
-          </defs>
-          <ellipse cx="120" cy="148" rx="78" ry="8" fill="#0ea5a4" opacity="0.28" />
-          <path
-            d="M70 108c-22 0-40-16-40-36s18-36 40-36c6-20 24-34 46-34 26 0 48 20 50 46 18 2 32 16 32 34 0 20-16 36-36 36H70Z"
-            fill="url(#bkCloud)"
-          />
-          <circle cx="120" cy="78" r="28" fill="#0b1f33" />
-          <text
-            x="120"
-            y="90"
-            textAnchor="middle"
-            fontFamily="var(--font-display), system-ui, sans-serif"
-            fontSize="28"
-            fontWeight="800"
-            fill="#5eead4"
-          >
-            K
-          </text>
-        </svg>
-      </div>
-
-      {/* Laptop base */}
-      <div className="absolute bottom-[10%] left-1/2 z-[5] w-[62%] -translate-x-1/2">
-        <div className="overflow-hidden rounded-t-lg border border-slate-300/60 bg-slate-100 shadow-sm">
-          <div className="flex h-16 items-end justify-center bg-gradient-to-b from-slate-200 to-slate-100 pb-2">
-            <div className="h-8 w-[70%] rounded-md bg-accent/20" />
+        <div className="overflow-hidden rounded-t-lg border border-slate-300/80 bg-[#0f172a]">
+          <div className="flex items-center gap-1 border-b border-white/10 px-2 py-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-rose-400/80" />
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-400/80" />
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/80" />
+          </div>
+          <div className="flex flex-col items-center px-3 py-4">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white">
+              <Check size={22} strokeWidth={2.5} />
+            </span>
+            <p className={`mt-2 ${BADGE_CLASS} font-semibold text-white`}>Backup Complete</p>
+            <p className="mt-0.5 text-[10px] text-slate-400">Hôm nay · 14:20</p>
           </div>
         </div>
-        <div className="mx-auto h-2 w-[108%] rounded-b-md bg-slate-400/80" />
+        <div className="mx-auto h-2 w-[108%] rounded-b-md bg-slate-500" />
+        <div className="mx-auto h-1 w-[72%] rounded-b-full bg-slate-400" />
+      </div>
+
+      {/* Right — folders panel */}
+      <div
+        className={`absolute right-[0%] top-[10%] z-20 w-[44%] max-w-[190px] rounded-xl border border-border/80 bg-white/95 p-3 backdrop-blur-sm ${ELEVATION_FLOAT}`}
+      >
+        <p className={`${BADGE_CLASS} mb-2 font-semibold text-muted`}>Đã bảo vệ</p>
+        <ul className="space-y-1.5">
+          {[
+            { name: "Documents", tone: "bg-sky-100 text-sky-700" },
+            { name: "Images", tone: "bg-violet-100 text-violet-700" },
+            { name: "Projects", tone: "bg-amber-100 text-amber-700" },
+          ].map((f) => (
+            <li key={f.name} className="flex items-center gap-2">
+              <span
+                className={`flex h-6 w-6 items-center justify-center rounded-md ${f.tone}`}
+                aria-hidden
+              >
+                <FolderOpen size={12} strokeWidth={2} />
+              </span>
+              <span className="text-[11px] font-semibold text-navy">{f.name}</span>
+              <Check size={12} className="ml-auto text-accent" strokeWidth={2.5} />
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Right lower — Restore Point */}
+      <div
+        className={`absolute bottom-[18%] right-[2%] z-20 flex w-[46%] max-w-[200px] items-center gap-2.5 rounded-xl border border-border/80 bg-white px-3 py-2.5 ${ELEVATION_FLOAT}`}
+      >
+        <span
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent"
+          aria-hidden
+        >
+          <History size={18} strokeWidth={1.9} />
+        </span>
+        <div className="min-w-0">
+          <p className={`${BADGE_CLASS} font-semibold text-navy`}>Restore Point</p>
+          <p className="text-[11px] text-muted">10:30 AM · Hôm nay</p>
+        </div>
+      </div>
+
+      {/* Center — glowing cloud K on ring platform */}
+      <div className="absolute inset-[12%_22%_22%_28%] z-10 flex flex-col items-center justify-end">
+        <div className="relative flex w-full flex-1 items-center justify-center">
+          <span
+            className="pointer-events-none absolute h-[70%] w-[70%] rounded-full bg-accent/30 blur-2xl"
+            aria-hidden
+          />
+          <svg viewBox="0 0 240 170" className="relative z-[1] h-full w-full drop-shadow-[0_12px_28px_rgba(14,165,164,0.45)]" aria-hidden>
+            <defs>
+              <linearGradient id="bkCloud" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#99f6e4" />
+                <stop offset="55%" stopColor="#2dd4bf" />
+                <stop offset="100%" stopColor="#0d9488" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M68 118c-24 0-44-18-44-40s20-40 44-40c7-22 26-38 50-38 28 0 52 22 54 50 20 2 36 18 36 38 0 22-18 40-40 40H68Z"
+              fill="url(#bkCloud)"
+            />
+            <circle cx="120" cy="82" r="30" fill="#0b1f33" />
+            <text
+              x="120"
+              y="94"
+              textAnchor="middle"
+              fontFamily="var(--font-display), system-ui, sans-serif"
+              fontSize="30"
+              fontWeight="800"
+              fill="#5eead4"
+            >
+              K
+            </text>
+          </svg>
+        </div>
+
+        {/* Concentric platform rings */}
+        <div className="relative mt-[-6%] flex h-10 w-[88%] items-center justify-center" aria-hidden>
+          <span className="absolute h-3 w-full rounded-[100%] border border-accent/25 bg-accent/10" />
+          <span className="absolute h-2 w-[78%] rounded-[100%] border border-accent/40 bg-accent/20" />
+          <span className="absolute h-1.5 w-[52%] rounded-[100%] bg-accent/50 blur-[1px]" />
+        </div>
       </div>
     </div>
   );
