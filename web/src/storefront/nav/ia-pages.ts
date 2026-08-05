@@ -47,14 +47,14 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
     kicker: "Giải pháp",
     title: "Năng suất & Cộng tác",
     subtitle:
-      "Office, Microsoft 365 và công cụ làm việc nhóm — chọn gói phù hợp trước khi mua.",
+      "Microsoft 365, Office, Teams và công cụ cộng tác chính hãng — kích hoạt nhanh, hỗ trợ tiếng Việt.",
     bullets: [
       "Microsoft Office / Microsoft 365",
-      "Làm việc nhóm và tài liệu",
-      "Gói cá nhân và doanh nghiệp",
+      "Teams, Outlook, OneDrive",
+      "Gói cá nhân, đội nhóm và doanh nghiệp",
     ],
-    primaryCta: { label: "Xem Office & năng suất", href: "/products?cat=office" },
-    secondaryCta: { label: "Tư vấn chọn gói", href: "/business/licensing-consulting" },
+    primaryCta: { label: "Khám phá sản phẩm", href: "/products?cat=office" },
+    secondaryCta: { label: "Tư vấn giải pháp", href: "/contact/sales" },
     related: [
       { label: "Microsoft", href: "/brands/microsoft" },
       { label: "Giải pháp doanh nghiệp", href: "/business" },
