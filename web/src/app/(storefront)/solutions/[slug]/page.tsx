@@ -172,7 +172,7 @@ async function loadProductivityFeatured(): Promise<{
   }
 
   scored.sort((a, b) => b.score - a.score);
-  const featured = scored.slice(0, 5).map((s) => s.item);
+  const featured = scored.slice(0, 4).map((s) => s.item);
   if (featured.length > 0) {
     return { featured, usingFallback: false };
   }
