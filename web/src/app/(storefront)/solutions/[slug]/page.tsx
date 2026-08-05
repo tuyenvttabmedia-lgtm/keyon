@@ -17,6 +17,11 @@ import {
   SoftwareLicensingSolutionLanding,
   type LicensingFeaturedProduct,
 } from "@/storefront/components/solutions/SoftwareLicensingSolutionLanding";
+import {
+  SECURITY_FALLBACK_FEATURED,
+  SecuritySolutionLanding,
+  type SecurityFeaturedProduct,
+} from "@/storefront/components/solutions/SecuritySolutionLanding";
 import { SOLUTION_PAGES } from "@/storefront/nav/ia-pages";
 import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
 import { inferCategory } from "@/storefront/components/shop/shop-utils";
@@ -59,6 +64,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: "Bản quyền phần mềm | KEYON",
       description:
         "Mua và quản lý bản quyền phần mềm chính hãng — perpetual, subscription và volume cho cá nhân đến doanh nghiệp.",
+    };
+  }
+  if (slug === "security") {
+    return {
+      ...(await buildMainPageMetadata("/solutions/security")),
+      title: "Bảo mật | KEYON",
+      description:
+        "Giải pháp bảo mật KEYON: endpoint, antivirus và bảo vệ thiết bị — license chính hãng, hỗ trợ tiếng Việt.",
     };
   }
   return {
@@ -276,6 +289,92 @@ async function loadLicensingFeatured(): Promise<{
   return { featured: LICENSING_FALLBACK_FEATURED, usingFallback: true };
 }
 
+function inferSecurityBrand(name: string, brandName: string): SecurityFeaturedProduct["brand"] {
+  const n = `${name} ${brandName}`.toLowerCase();
+  if (n.includes("bitdefender")) return "bitdefender";
+  if (n.includes("kaspersky")) return "kaspersky";
+  if (n.includes("eset") || n.includes("nod32")) return "eset";
+  if (n.includes("norton") || n.includes("symantec")) return "symantec";
+  if (n.includes("acronis")) return "acronis";
+  return "generic";
+}
+
+async function loadSecurityFeatured(): Promise<{
+  featured: SecurityFeaturedProduct[];
+  usingFallback: boolean;
+}> {
+  const products = await prisma.product.findMany({
+    where: { active: true },
+    include: {
+      brand: true,
+      variants: { where: { active: true }, orderBy: { priceVnd: "asc" }, take: 1 },
+    },
+    orderBy: { name: "asc" },
+    take: 80,
+  });
+
+  const scored: { score: number; item: SecurityFeaturedProduct }[] = [];
+  for (const p of products) {
+    const variant = p.variants[0];
+    if (!variant) continue;
+    const cat =
+      p.categoryKey &&
+      (PRODUCT_CATEGORY_KEYS as readonly string[]).includes(p.categoryKey)
+        ? p.categoryKey
+        : inferCategory(p.brand.name, p.name);
+    const nameL = p.name.toLowerCase();
+    const brandL = p.brand.name.toLowerCase();
+
+    const isSecurity =
+      cat === "security" ||
+      nameL.includes("antivirus") ||
+      nameL.includes("security") ||
+      nameL.includes("bitdefender") ||
+      nameL.includes("kaspersky") ||
+      nameL.includes("eset") ||
+      nameL.includes("norton") ||
+      nameL.includes("symantec") ||
+      nameL.includes("acronis") ||
+      brandL.includes("bitdefender") ||
+      brandL.includes("kaspersky") ||
+      brandL.includes("eset") ||
+      brandL.includes("norton") ||
+      brandL.includes("symantec") ||
+      brandL.includes("acronis");
+    if (!isSecurity) continue;
+
+    let score = 0;
+    if (nameL.includes("bitdefender")) score += 50;
+    else if (nameL.includes("kaspersky")) score += 48;
+    else if (nameL.includes("eset") || nameL.includes("nod32")) score += 45;
+    else if (nameL.includes("norton") || nameL.includes("symantec")) score += 42;
+    else if (nameL.includes("acronis")) score += 40;
+    else if (nameL.includes("antivirus") || nameL.includes("security")) score += 30;
+    if (cat === "security") score += 10;
+
+    scored.push({
+      score,
+      item: {
+        id: p.id,
+        title: p.name,
+        href: `/products/${p.slug}`,
+        brandLabel: p.brand.name,
+        meta: "License · theo gói",
+        priceLabel: `Từ ${variant.priceVnd.toLocaleString("vi-VN")}đ`,
+        features: [p.brand.name, "License chính hãng", "Hỗ trợ tiếng Việt"],
+        brand: inferSecurityBrand(p.name, p.brand.name),
+      },
+    });
+  }
+
+  scored.sort((a, b) => b.score - a.score);
+  const featured = scored.slice(0, 5).map((s) => s.item);
+  if (featured.length > 0) {
+    return { featured, usingFallback: false };
+  }
+  return { featured: SECURITY_FALLBACK_FEATURED, usingFallback: true };
+}
+
 export default async function SolutionPage({ params }: Props) {
   const { slug } = await params;
   const page = SOLUTION_PAGES[slug];
@@ -291,6 +390,11 @@ export default async function SolutionPage({ params }: Props) {
     return (
       <SoftwareLicensingSolutionLanding featured={featured} usingFallback={usingFallback} />
     );
+  }
+
+  if (slug === "security") {
+    const { featured, usingFallback } = await loadSecurityFeatured();
+    return <SecuritySolutionLanding featured={featured} usingFallback={usingFallback} />;
   }
 
   if (slug === "productivity") {
