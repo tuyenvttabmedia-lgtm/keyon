@@ -31,7 +31,6 @@ import {
   CTA_LABEL_CLASS,
   HERO_TITLE_CLASS,
   LINK_ACCENT_CLASS,
-  OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
@@ -264,10 +263,7 @@ export function SecuritySolutionLanding({ featured, usingFallback }: Props) {
 
           <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-8 xl:gap-10">
             <div className="min-w-0">
-              <p className={`${OVERLINE_CLASS} tracking-[0.16em] text-accent`}>
-                Giải pháp bảo mật
-              </p>
-              <h1 className={`mt-3 max-w-[16ch] ${HERO_TITLE_CLASS}`}>
+              <h1 className={`max-w-[16ch] ${HERO_TITLE_CLASS}`}>
                 Bảo vệ những gì quan trọng nhất
               </h1>
               <p className={`mt-4 max-w-xl ${PAGE_LEAD_CLASS}`}>
@@ -388,30 +384,36 @@ export function SecuritySolutionLanding({ featured, usingFallback }: Props) {
             </Link>
           </div>
 
-          <div className="relative">
-            <ul className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3">
+          <div className="relative pr-0 lg:pr-12">
+            <ul className="grid auto-rows-fr grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3">
               {products.map((p) => (
-                <li key={p.id} className="min-w-0">
+                <li key={p.id} className="flex min-h-0 min-w-0">
                   <article
-                    className={`flex h-full flex-col rounded-2xl border border-border bg-white p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                    className={`flex h-full w-full flex-col rounded-2xl border border-border bg-white p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                   >
-                    <div className="flex items-center gap-2.5">
-                      <span className="shrink-0" aria-hidden>
+                    <div className="flex min-h-[52px] items-start gap-2.5">
+                      <span className="mt-0.5 shrink-0" aria-hidden>
                         <SecurityBrandMark brand={p.brand} size={36} />
                       </span>
-                      <div className="min-w-0">
+                      <div className="min-w-0 flex-1">
                         <p className={`${BADGE_CLASS} font-semibold text-muted`}>
                           {p.brandLabel}
                         </p>
-                        <h3 className={`${CARD_TITLE_CLASS} line-clamp-2`}>{p.title}</h3>
+                        <h3 className={`${CARD_TITLE_CLASS} mt-0.5 line-clamp-2 min-h-[2.5rem]`}>
+                          {p.title}
+                        </h3>
                       </div>
                     </div>
-                    <p className={`mt-2 ${CARD_META_CLASS}`}>{p.meta}</p>
-                    <p className={`mt-2 ${CARD_PRICE_CLASS} text-navy`}>{p.priceLabel}</p>
+                    <p className={`mt-2 ${CARD_META_CLASS} line-clamp-1`}>{p.meta}</p>
+                    <p className={`mt-2 ${CARD_PRICE_CLASS} min-h-[1.5rem] text-navy`}>
+                      {p.priceLabel}
+                    </p>
                     {p.priceHint ? (
                       <p className={`mt-0.5 ${CARD_META_CLASS}`}>{p.priceHint}</p>
-                    ) : null}
-                    <ul className="mt-3 space-y-1.5">
+                    ) : (
+                      <p className="mt-0.5 h-4" aria-hidden />
+                    )}
+                    <ul className="mt-3 flex min-h-[4.5rem] flex-col gap-1.5">
                       {p.features.slice(0, 3).map((f) => (
                         <li key={f} className="flex gap-2">
                           <span
@@ -420,13 +422,13 @@ export function SecuritySolutionLanding({ featured, usingFallback }: Props) {
                           >
                             <Check size={10} strokeWidth={3} />
                           </span>
-                          <span className="text-xs leading-snug text-muted">{f}</span>
+                          <span className="line-clamp-2 text-xs leading-snug text-muted">{f}</span>
                         </li>
                       ))}
                     </ul>
                     <Link
                       href={p.href}
-                      className={`mt-auto pt-4 inline-flex h-9 items-center justify-center rounded-xl bg-accent px-3 ${CTA_COMPACT_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover`}
+                      className={`mt-auto inline-flex h-9 w-full items-center justify-center rounded-xl bg-accent px-3 ${CTA_COMPACT_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover`}
                     >
                       Mua ngay →
                     </Link>
@@ -436,7 +438,7 @@ export function SecuritySolutionLanding({ featured, usingFallback }: Props) {
             </ul>
             <Link
               href="/products?cat=security"
-              className={`absolute -right-1 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-white text-navy lg:flex ${ELEVATION_HAIRLINE} ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+              className={`absolute -right-0.5 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-white text-navy lg:flex ${ELEVATION_HAIRLINE} ${TRANSITION_UI} hover:border-accent hover:text-accent`}
               aria-label="Xem thêm sản phẩm"
             >
               <ChevronRight size={18} strokeWidth={2.2} />
@@ -489,34 +491,29 @@ export function SecuritySolutionLanding({ featured, usingFallback }: Props) {
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>4 bước đơn giản để được bảo vệ</h2>
+            <div className="mx-auto mt-2.5 h-1 w-14 rounded-full bg-accent" aria-hidden />
           </header>
-          <ol className="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+          <ol className="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-3">
             {STEPS.map((s, i) => (
-              <li key={s.n} className="relative flex gap-3 lg:flex-col lg:items-start">
+              <li key={s.n} className="relative flex items-start gap-3">
                 {i < STEPS.length - 1 ? (
                   <span
-                    className="pointer-events-none absolute left-[1.35rem] top-12 hidden h-[calc(100%-3rem)] w-px border-l border-dashed border-accent/40 lg:left-[3.25rem] lg:right-0 lg:top-5 lg:h-0 lg:w-[calc(100%-2rem)] lg:border-l-0 lg:border-t"
+                    className="pointer-events-none absolute left-[5.25rem] top-5 hidden h-px w-[calc(100%-4.25rem)] border-t border-dashed border-border lg:block"
                     aria-hidden
                   />
                 ) : null}
-                <div className="relative z-[1] flex shrink-0 items-center gap-2.5">
+                <div className="relative z-[1] flex shrink-0 items-center gap-2">
                   <span className="flex h-10 w-10 items-center justify-center rounded-full bg-accent font-display text-sm font-bold text-white">
                     {s.n}
                   </span>
                   <span
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-accent/30 bg-accent-soft text-accent lg:hidden"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-accent/30 bg-accent-soft text-accent"
                     aria-hidden
                   >
                     <s.Icon size={18} strokeWidth={1.85} />
                   </span>
                 </div>
-                <div className="min-w-0 pt-0.5 lg:pt-3">
-                  <span
-                    className="mb-2 hidden h-10 w-10 items-center justify-center rounded-full border border-accent/30 bg-accent-soft text-accent lg:flex"
-                    aria-hidden
-                  >
-                    <s.Icon size={18} strokeWidth={1.85} />
-                  </span>
+                <div className="min-w-0 pt-1">
                   <p className={CARD_TITLE_CLASS}>{s.title}</p>
                   <p className={`mt-1 ${BODY_MUTED_CLASS}`}>{s.body}</p>
                 </div>
