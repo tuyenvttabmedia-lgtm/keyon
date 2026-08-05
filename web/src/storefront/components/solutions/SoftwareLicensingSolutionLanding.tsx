@@ -8,16 +8,18 @@ import {
   CalendarDays,
   Check,
   ChevronRight,
+  CreditCard,
   FileText,
   Headphones,
   Infinity,
   KeyRound,
   Package,
+  Search,
+  Settings2,
   ShieldCheck,
   ShoppingCart,
   Users,
   User,
-  Wallet,
   Zap,
 } from "lucide-react";
 import {
@@ -157,7 +159,7 @@ const AUDIENCES: {
       {
         title: "Chi phí tối ưu",
         body: "Chọn đúng gói Retail / Home — không trả thừa.",
-        Icon: Wallet,
+        Icon: CreditCard,
       },
       {
         title: "An tâm sử dụng",
@@ -322,19 +324,19 @@ const STEPS: { n: string; title: string; body: string; Icon: LucideIcon }[] = [
   {
     n: "01",
     title: "Chọn sản phẩm",
-    body: "Tìm và chọn bản quyền phù hợp nhu cầu.",
+    body: "Tìm kiếm và lựa chọn sản phẩm phù hợp.",
     Icon: ShoppingCart,
   },
   {
     n: "02",
     title: "Thanh toán",
     body: "Thanh toán an toàn qua nhiều phương thức.",
-    Icon: Wallet,
+    Icon: CreditCard,
   },
   {
     n: "03",
     title: "Nhận license",
-    body: "Nhận ngay và kích hoạt theo hướng dẫn.",
+    body: "Nhận license ngay và kích hoạt sử dụng.",
     Icon: KeyRound,
   },
 ];
@@ -628,34 +630,41 @@ export function SoftwareLicensingSolutionLanding({
       {/* ── 3 steps ──────────────────────────────────────────── */}
       <section className="pb-8 md:pb-9">
         <div className="home-container">
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#071a2b] via-[#0a2a38] to-[#0a3d42] px-5 py-8 sm:px-8 sm:py-9 lg:px-10">
+          <div className="relative overflow-hidden rounded-2xl bg-[#062033] px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-11">
             <div
-              className="pointer-events-none absolute -right-16 top-1/2 h-56 w-56 -translate-y-1/2 rounded-full bg-accent/25 blur-3xl"
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_88%_50%,rgba(14,165,164,0.28),transparent_42%)]"
               aria-hidden
             />
-            <div className="relative grid items-center gap-8 lg:grid-cols-[1fr_auto] lg:gap-10">
-              <div>
-                <h2 className={`${SECTION_TITLE_CLASS} text-white`}>
+            <div className="relative grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(140px,180px)] lg:gap-6 xl:gap-8">
+              <div className="min-w-0">
+                <h2 className={`${SECTION_TITLE_CLASS} text-center text-white lg:text-left`}>
                   Mua và nhận license chỉ trong 3 bước
                 </h2>
-                <ol className="mt-7 grid gap-6 sm:grid-cols-3 sm:gap-4">
+
+                <ol className="mt-8 grid gap-6 sm:grid-cols-3 sm:gap-2 md:gap-3">
                   {STEPS.map((s, i) => (
-                    <li key={s.n} className="relative flex gap-3 sm:flex-col sm:items-start">
+                    <li key={s.n} className="relative flex gap-3 sm:flex-col sm:items-start sm:pr-3">
                       {i < STEPS.length - 1 ? (
                         <span
-                          className="pointer-events-none absolute left-[22px] top-11 hidden h-[calc(100%-2.5rem)] w-px border-l border-dashed border-accent/40 sm:left-auto sm:right-[-12%] sm:top-5 sm:h-px sm:w-[calc(100%+24%)] sm:border-l-0 sm:border-t"
+                          className="pointer-events-none absolute left-5 top-12 h-[calc(100%-2.75rem)] w-px border-l border-dashed border-accent/50 sm:left-[3.25rem] sm:right-0 sm:top-[1.35rem] sm:h-0 sm:w-[calc(100%-2.5rem)] sm:border-l-0 sm:border-t"
                           aria-hidden
                         />
                       ) : null}
-                      <span
-                        className="relative z-[1] flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-accent/40 bg-[#0b2433] text-accent"
-                        aria-hidden
-                      >
-                        <s.Icon size={18} strokeWidth={1.85} />
-                      </span>
-                      <div>
-                        <p className={`${BADGE_CLASS} font-semibold text-accent`}>{s.n}</p>
-                        <p className={`mt-1 ${CARD_TITLE_CLASS} text-white`}>{s.title}</p>
+                      <div className="relative z-[1] flex shrink-0 items-center gap-2.5">
+                        <span
+                          className={`flex h-10 w-10 items-center justify-center rounded-full border-2 border-accent bg-[#0a2a3a] font-display text-sm font-bold tabular-nums text-accent`}
+                        >
+                          {s.n}
+                        </span>
+                        <span
+                          className="flex h-11 w-11 items-center justify-center rounded-full border border-accent/45 bg-accent/10 text-accent"
+                          aria-hidden
+                        >
+                          <s.Icon size={20} strokeWidth={1.8} />
+                        </span>
+                      </div>
+                      <div className="min-w-0 pt-0.5 sm:pt-3">
+                        <p className={`${CARD_TITLE_CLASS} text-[15px] text-white`}>{s.title}</p>
                         <p className="mt-1 text-sm leading-relaxed text-slate-300">{s.body}</p>
                       </div>
                     </li>
@@ -663,12 +672,28 @@ export function SoftwareLicensingSolutionLanding({
                 </ol>
               </div>
 
-              <div
-                className="mx-auto flex h-28 w-28 items-center justify-center rounded-full bg-accent/20 ring-1 ring-accent/40 sm:h-32 sm:w-32"
-                aria-hidden
-              >
-                <span className="flex h-20 w-20 items-center justify-center rounded-full bg-accent text-white shadow-[0_0_40px_rgba(14,165,164,0.45)] sm:h-24 sm:w-24">
-                  <KeyRound size={36} strokeWidth={1.6} />
+              <div className="relative mx-auto flex h-36 w-36 items-center justify-center sm:h-40 sm:w-40" aria-hidden>
+                <span className="absolute inset-0 rounded-full border border-dashed border-accent/35" />
+                <span className="absolute inset-3 rounded-full border border-accent/25" />
+                <span className="absolute inset-6 rounded-full bg-accent/15 blur-sm" />
+                <span className="relative flex h-24 w-24 items-center justify-center rounded-full bg-accent text-white shadow-[0_0_48px_rgba(14,165,164,0.55)] sm:h-28 sm:w-28">
+                  <svg width="44" height="44" viewBox="0 0 48 48" fill="none" aria-hidden>
+                    <path
+                      d="M24 4 8 10v12c0 11.2 7.2 21.6 16 24 8.8-2.4 16-12.8 16-24V10L24 4Z"
+                      fill="currentColor"
+                      fillOpacity="0.15"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinejoin="round"
+                    />
+                    <circle cx="24" cy="22" r="4.5" stroke="currentColor" strokeWidth="2.2" />
+                    <path
+                      d="M24 26.5v8"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
                 </span>
               </div>
             </div>
@@ -828,82 +853,143 @@ function AudienceScene({ kind }: { kind: "personal" | "team" | "business" | "org
 }
 
 function LicensingHeroArt() {
+  const recent = [
+    { name: "Windows 11 Pro", meta: "Retail · 1 PC", status: "Đang dùng", tone: "active" as const, brand: "windows" as const },
+    { name: "Office 2024 Home", meta: "Perpetual", status: "Đang dùng", tone: "active" as const, brand: "office" as const },
+    { name: "Adobe Creative Cloud", meta: "Subscription", status: "Cần gia hạn", tone: "warn" as const, brand: "adobe" as const },
+  ];
+
   return (
-    <div className="relative mx-auto aspect-[5/4.2] w-full">
+    <div className="relative mx-auto aspect-[5/4.1] w-full max-w-[520px] lg:max-w-none">
+      {/* Ambient glow under laptop */}
+      <div
+        className="pointer-events-none absolute bottom-[6%] left-1/2 h-24 w-[70%] -translate-x-1/2 rounded-[100%] bg-accent/35 blur-2xl"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute right-[8%] top-[28%] h-40 w-40 rounded-full bg-accent/20 blur-3xl"
+        aria-hidden
+      />
+
+      {/* Floating brand chips — mockup positions */}
       <span
-        className="absolute left-[8%] top-[12%] h-14 w-14 rounded-2xl bg-white p-2.5"
-        style={{ boxShadow: "0 12px 28px rgba(0,0,0,0.25)" }}
+        className="absolute left-[2%] top-[10%] z-20 flex h-14 w-14 items-center justify-center rounded-2xl bg-white p-2.5 sm:h-16 sm:w-16"
+        style={{ boxShadow: "0 14px 32px rgba(0,0,0,0.28)" }}
         aria-hidden
       >
-        <BrandMark brand="windows" size={36} />
+        <BrandMark brand="windows" size={40} />
       </span>
       <span
-        className="absolute right-[4%] top-[18%] h-14 w-14 rounded-2xl bg-white p-2.5"
-        style={{ boxShadow: "0 12px 28px rgba(0,0,0,0.25)" }}
+        className="absolute right-[0%] top-[8%] z-20 flex h-14 w-14 items-center justify-center rounded-2xl bg-white p-2.5 sm:h-16 sm:w-16"
+        style={{ boxShadow: "0 14px 32px rgba(0,0,0,0.28)" }}
         aria-hidden
       >
-        <BrandMark brand="office" size={36} />
+        <BrandMark brand="adobe" size={40} />
       </span>
       <span
-        className="absolute bottom-[22%] left-[2%] h-12 w-12 rounded-2xl bg-white p-2"
-        style={{ boxShadow: "0 12px 28px rgba(0,0,0,0.25)" }}
+        className="absolute bottom-[28%] left-[-2%] z-20 flex h-12 w-12 items-center justify-center rounded-2xl bg-white p-2 sm:h-14 sm:w-14"
+        style={{ boxShadow: "0 14px 32px rgba(0,0,0,0.28)" }}
         aria-hidden
       >
-        <BrandMark brand="adobe" size={32} />
+        <BrandMark brand="office" size={34} />
       </span>
       <span
-        className="absolute bottom-[16%] right-[6%] h-12 w-12 rounded-2xl bg-white p-2"
-        style={{ boxShadow: "0 12px 28px rgba(0,0,0,0.25)" }}
+        className="absolute right-[-2%] top-[42%] z-20 flex h-12 w-12 items-center justify-center rounded-2xl bg-white p-2 sm:h-14 sm:w-14"
+        style={{ boxShadow: "0 14px 32px rgba(0,0,0,0.28)" }}
         aria-hidden
       >
-        <BrandMark brand="autodesk" size={32} />
+        <BrandMark brand="autodesk" size={34} />
       </span>
 
-      {/* Laptop */}
-      <div className="absolute inset-[14%_10%_18%_12%] flex flex-col">
+      {/* Laptop body */}
+      <div className="absolute inset-[10%_8%_14%_10%] z-10 flex flex-col">
         <div
-          className={`relative flex-1 overflow-hidden rounded-t-xl border border-white/10 bg-[#0b1220] ${ELEVATION_FLOAT}`}
+          className={`relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-t-[14px] border border-white/15 bg-[#f4f7fb] ${ELEVATION_FLOAT}`}
         >
-          <div className="flex items-center gap-1.5 border-b border-white/10 px-3 py-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-rose-400/80" />
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-400/80" />
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/80" />
-            <span className={`ml-2 ${BADGE_CLASS} text-slate-400`}>Quản lý bản quyền</span>
+          {/* Bezel / chrome */}
+          <div className="flex items-center justify-between border-b border-slate-200/90 bg-white px-3 py-2 sm:px-3.5">
+            <p className={`${BADGE_CLASS} font-semibold tracking-wide text-navy`}>
+              Quản lý bản quyền
+            </p>
+            <div className="flex items-center gap-2 text-slate-400" aria-hidden>
+              <Search size={13} strokeWidth={2} />
+              <Settings2 size={13} strokeWidth={2} />
+            </div>
           </div>
-          <div className="grid grid-cols-3 gap-2 p-3 sm:p-4">
-            {[
-              { label: "Tổng license", value: "128" },
-              { label: "Sắp hết hạn", value: "15" },
-              { label: "Hết hạn", value: "2" },
-            ].map((s) => (
-              <div
-                key={s.label}
-                className="rounded-lg border border-white/10 bg-white/5 px-2 py-2.5 text-center"
-              >
-                <p className="font-display text-lg font-bold tabular-nums text-accent sm:text-xl">
-                  {s.value}
-                </p>
-                <p className="mt-0.5 text-[10px] leading-tight text-slate-400">{s.label}</p>
-              </div>
-            ))}
-          </div>
-          <div className="space-y-1.5 px-3 pb-3 sm:px-4">
-            {[72, 54, 88].map((w) => (
-              <div key={w} className="h-2 overflow-hidden rounded-full bg-white/10">
-                <div className="h-full rounded-full bg-accent/70" style={{ width: `${w}%` }} />
-              </div>
-            ))}
+
+          <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-hidden p-2.5 sm:gap-2.5 sm:p-3">
+            {/* Stat cards — white like mockup */}
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+              {[
+                { label: "Tổng license", value: "128", sub: "Active: 98" },
+                { label: "Sắp hết hạn", value: "15", sub: "< 30 ngày" },
+                { label: "Hết hạn", value: "2", sub: "Cần gia hạn" },
+              ].map((s) => (
+                <div
+                  key={s.label}
+                  className="rounded-lg border border-slate-200/80 bg-white px-1.5 py-2 text-center sm:px-2 sm:py-2.5"
+                  style={{ boxShadow: "0 1px 2px rgba(15,23,42,0.04)" }}
+                >
+                  <p className="font-display text-base font-bold tabular-nums leading-none text-navy sm:text-lg">
+                    {s.value}
+                  </p>
+                  <p className="mt-1 text-[9px] font-semibold leading-tight text-slate-500 sm:text-[10px]">
+                    {s.label}
+                  </p>
+                  <p className="mt-0.5 hidden text-[9px] text-slate-400 sm:block">{s.sub}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Recent licenses */}
+            <div className="min-h-0 flex-1 overflow-hidden rounded-lg border border-slate-200/80 bg-white px-2 py-2 sm:px-2.5">
+              <p className={`${BADGE_CLASS} mb-1.5 font-semibold text-slate-500`}>
+                License gần đây
+              </p>
+              <ul className="space-y-1.5">
+                {recent.map((r) => (
+                  <li key={r.name} className="flex items-center gap-2">
+                    <span className="shrink-0" aria-hidden>
+                      <BrandMark brand={r.brand} size={22} />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-[11px] font-bold leading-tight text-navy sm:text-xs">
+                        {r.name}
+                      </span>
+                      <span className="block truncate text-[9px] text-slate-400 sm:text-[10px]">
+                        {r.meta}
+                      </span>
+                    </span>
+                    <span
+                      className={`shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-semibold sm:text-[10px] ${
+                        r.tone === "active"
+                          ? "bg-accent/15 text-accent"
+                          : "border border-amber-300/80 bg-amber-50 text-amber-700"
+                      }`}
+                    >
+                      {r.status}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
-        <div className="mx-auto h-2.5 w-[92%] rounded-b-md bg-[#1e293b]" />
-        <div className="mx-auto h-1.5 w-[70%] rounded-b-full bg-[#334155]" />
+
+        {/* Laptop base */}
+        <div className="relative mx-auto h-2.5 w-[104%] max-w-none rounded-b-md bg-gradient-to-b from-[#2a3544] to-[#1a222e]">
+          <div className="absolute left-1/2 top-0 h-1 w-16 -translate-x-1/2 rounded-b-sm bg-[#0f172a]/50" />
+        </div>
+        <div className="mx-auto h-1.5 w-[78%] rounded-b-[10px] bg-[#334155]" />
       </div>
 
+      {/* Shield badge — bottom-right of laptop */}
       <span
-        className="absolute bottom-[8%] left-1/2 flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full bg-accent text-white shadow-[0_0_32px_rgba(14,165,164,0.55)]"
+        className="absolute bottom-[6%] right-[10%] z-30 flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white sm:h-16 sm:w-16"
+        style={{ boxShadow: "0 0 36px rgba(14,165,164,0.55)" }}
         aria-hidden
       >
-        <ShieldCheck size={26} strokeWidth={1.8} />
+        <ShieldCheck size={28} strokeWidth={1.85} />
       </span>
     </div>
   );
