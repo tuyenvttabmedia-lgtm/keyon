@@ -284,7 +284,7 @@ export function ProductivitySolutionLanding({
               </div>
             </div>
 
-            <div className="relative w-full min-w-0 lg:-ml-2 xl:-ml-4">
+            <div className="relative w-full min-w-0">
               <ProductivityHeroArt imageUrl={heroImageUrl} />
             </div>
           </div>
@@ -351,12 +351,12 @@ export function ProductivitySolutionLanding({
                 </Link>
               </div>
 
-              <div className="relative min-w-0 pr-0 lg:pr-10 xl:pr-12">
-                <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-3">
+              <div className="relative min-w-0 self-stretch pr-0 lg:pr-10 xl:pr-12">
+                <ul className="grid h-full grid-cols-2 items-stretch gap-3 lg:grid-cols-4 lg:gap-3">
                   {products.map((p) => (
-                    <li key={p.id}>
+                    <li key={p.id} className="flex h-full min-h-[180px] items-center">
                       <article
-                        className={`flex h-full flex-col rounded-2xl bg-white p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                        className={`flex h-full w-full flex-col rounded-2xl bg-white p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                       >
                         <span className="shrink-0" aria-hidden>
                           <ProductBrandMark brand={p.brand} size={36} />
@@ -399,9 +399,9 @@ export function ProductivitySolutionLanding({
           </header>
 
           <div className="mt-6 grid items-center gap-6 lg:grid-cols-2 lg:gap-8">
-            {/* Left — icons one row + checklist */}
+            {/* Left — icon row + checklist (mockup: ~48px tiles, soft gap) */}
             <div className="flex flex-col justify-center gap-5">
-              <ul className="flex flex-nowrap items-center gap-2.5 overflow-x-auto pb-0.5 sm:gap-3">
+              <ul className="flex flex-wrap items-center gap-3">
                 <EcoMark kind="windows" />
                 <EcoMark kind="apple" />
                 <EcoMark kind="android" />
@@ -409,7 +409,7 @@ export function ProductivitySolutionLanding({
                 <EcoMark kind="chrome" />
                 <EcoMark kind="slack" />
                 <span
-                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-border bg-white text-sm font-semibold text-muted ${ELEVATION_HAIRLINE}`}
+                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-border bg-white text-sm font-semibold text-muted ${ELEVATION_HAIRLINE}`}
                   aria-hidden
                 >
                   …
@@ -853,11 +853,11 @@ function EcoMark({
 }: {
   kind: "windows" | "apple" | "android" | "browser" | "chrome" | "slack";
 }) {
-  const wrap = `flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-border bg-white ${ELEVATION_HAIRLINE}`;
+  const wrap = `flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-border bg-white ${ELEVATION_HAIRLINE}`;
   if (kind === "windows") {
     return (
       <span className={wrap} title="Windows" aria-label="Windows">
-        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden>
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden>
           <path
             fill="#0078D4"
             d="M3 5.5 11 4.3v7.2H3V5.5Zm9-.9 9-1.3v9.4h-9V4.6ZM3 13.5h8V21l-8-1.2v-6.3Zm9 0h9v8.7l-9-1.3v-7.4Z"
@@ -869,7 +869,7 @@ function EcoMark({
   if (kind === "apple") {
     return (
       <span className={wrap} title="Apple" aria-label="Apple">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="#111" aria-hidden>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#111" aria-hidden>
           <path d="M16.4 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.2-2.8.9-3.5.9-.7 0-1.9-.8-3.1-.8-1.6 0-3.1 1-3.9 2.4-1.7 2.9-.4 7.2 1.2 9.6.8 1.1 1.7 2.4 3 2.3 1.2 0 1.6-.8 3.1-.8s1.8.8 3.1.7c1.3 0 2.1-1.1 2.9-2.2.9-1.3 1.3-2.6 1.3-2.6s-2.3-.9-2.3-3.2ZM14.7 5.7c.6-.8 1.1-1.9.9-3-.9 0-2 .6-2.6 1.4-.6.7-1.1 1.8-.9 2.9 1 .1 2-.5 2.6-1.3Z" />
         </svg>
       </span>
@@ -878,7 +878,7 @@ function EcoMark({
   if (kind === "android") {
     return (
       <span className={wrap} title="Android" aria-label="Android">
-        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden>
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden>
           <path
             fill="#3DDC84"
             d="M17 10.5V17a1 1 0 0 1-1 1h-1v3.5a1.5 1.5 0 1 1-3 0V18H12v3.5a1.5 1.5 0 1 1-3 0V18H8a1 1 0 0 1-1-1v-6.5h10ZM7 11.5H5a1.5 1.5 0 0 0 0 3h2v-3Zm12 0h-2v3h2a1.5 1.5 0 0 0 0-3ZM8.5 6.2 7.6 4.7a.5.5 0 1 1 .86-.5l.95 1.6A6.9 6.9 0 0 1 12 5.5c.9 0 1.8.2 2.6.4l.95-1.6a.5.5 0 1 1 .86.5l-.9 1.5A6 6 0 0 1 18 10.5H6a6 6 0 0 1 2.5-4.3ZM10 8.2a.7.7 0 1 0 0-1.4.7.7 0 0 0 0 1.4Zm4 0a.7.7 0 1 0 0-1.4.7.7 0 0 0 0 1.4Z"
@@ -890,7 +890,7 @@ function EcoMark({
   if (kind === "chrome") {
     return (
       <span className={wrap} title="Chrome" aria-label="Chrome">
-        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden>
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden>
           <circle cx="12" cy="12" r="3.2" fill="#4285F4" />
           <path fill="#EA4335" d="M12 3a9 9 0 0 1 7.8 4.5H12V3Z" />
           <path fill="#FBBC04" d="M19.8 7.5A9 9 0 0 1 15.6 19l-3.6-6.2 7.8-5.3Z" />
@@ -903,7 +903,7 @@ function EcoMark({
   if (kind === "slack") {
     return (
       <span className={wrap} title="Slack" aria-label="Slack">
-        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden>
           <path fill="#E01E5A" d="M6.5 15.5a2 2 0 1 1-2-2h2v2Zm1 0a2 2 0 1 1 4 0v5a2 2 0 1 1-4 0v-5Z" />
           <path fill="#36C5F0" d="M8.5 6.5a2 2 0 1 1 2-2v2h-2Zm0 1a2 2 0 1 1 0 4h-5a2 2 0 1 1 0-4h5Z" />
           <path fill="#2EB67D" d="M17.5 8.5a2 2 0 1 1 2 2h-2v-2Zm-1 0a2 2 0 1 1-4 0v-5a2 2 0 1 1 4 0v5Z" />
@@ -915,8 +915,8 @@ function EcoMark({
   return (
     <span className={wrap} title="Browser" aria-label="Browser">
       <svg
-        width="20"
-        height="20"
+        width="22"
+        height="22"
         viewBox="0 0 24 24"
         fill="none"
         stroke="#0f172a"
@@ -932,15 +932,16 @@ function EcoMark({
 
 function ProductivityHeroArt({ imageUrl }: { imageUrl?: string }) {
   return (
-    <div className="relative mx-auto aspect-[16/11] w-full sm:aspect-[5/3.4]">
-      <span className="absolute left-[3%] top-[12%] h-2.5 w-2.5 rounded-full bg-accent/45" aria-hidden />
-      <span className="absolute right-[2%] top-[46%] h-2 w-2 rounded-full bg-sky-400/55" aria-hidden />
-      <span className="absolute bottom-[18%] left-[1%] h-1.5 w-1.5 rounded-full bg-accent/35" aria-hidden />
+    <div className="relative mx-auto aspect-[5/4] w-full max-w-[560px] lg:max-w-none">
+      <span className="absolute left-[6%] top-[14%] h-2.5 w-2.5 rounded-full bg-accent/45" aria-hidden />
+      <span className="absolute right-[4%] top-[48%] h-2 w-2 rounded-full bg-sky-400/55" aria-hidden />
+      <span className="absolute bottom-[22%] left-[3%] h-1.5 w-1.5 rounded-full bg-accent/35" aria-hidden />
+      <span className="absolute right-[18%] top-[8%] h-1.5 w-1.5 rounded-full bg-slate-300" aria-hidden />
 
-      {/* Banner gần chữ nhật — kéo sát cột trái */}
+      {/* Organic blob — mockup accent shape */}
       <div
-        className={`absolute inset-[5%_3%_8%_0%] overflow-hidden ${ELEVATION_FLOAT}`}
-        style={{ borderRadius: "1.75rem 2.25rem 1.85rem 2rem" }}
+        className={`absolute inset-[8%_6%_10%_10%] overflow-hidden ${ELEVATION_FLOAT}`}
+        style={{ borderRadius: "48% 52% 42% 58% / 36% 44% 56% 64%" }}
       >
         {imageUrl ? (
           <Image
@@ -949,19 +950,19 @@ function ProductivityHeroArt({ imageUrl }: { imageUrl?: string }) {
             fill
             className="object-cover"
             unoptimized
-            sizes="(max-width: 1024px) 95vw, 640px"
+            sizes="(max-width: 1024px) 90vw, 560px"
             priority
           />
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-[#9fd9d4] via-[#6eb8b4] to-[#4a9aa3]">
-            <svg viewBox="0 0 480 320" className="h-full w-full" aria-hidden>
-              <ellipse cx="250" cy="290" rx="170" ry="22" fill="#0f172a" opacity="0.12" />
-              <rect x="160" y="170" width="180" height="100" rx="8" fill="#1e293b" />
-              <rect x="172" y="180" width="156" height="72" rx="4" fill="#0ea5a4" opacity="0.35" />
-              <path d="M175 290c18-70 40-100 75-100s57 30 75 100" fill="#e2e8f0" />
-              <circle cx="250" cy="120" r="44" fill="#cbd5e1" />
+            <svg viewBox="0 0 400 420" className="h-full w-full" aria-hidden>
+              <ellipse cx="210" cy="360" rx="150" ry="28" fill="#0f172a" opacity="0.12" />
+              <rect x="130" y="250" width="150" height="95" rx="8" fill="#1e293b" />
+              <rect x="140" y="260" width="130" height="72" rx="4" fill="#0ea5a4" opacity="0.35" />
+              <path d="M145 360c15-85 35-120 65-120s50 35 65 120" fill="#e2e8f0" />
+              <circle cx="210" cy="175" r="48" fill="#cbd5e1" />
               <path
-                d="M205 112c8-40 32-55 45-55 16 0 38 18 44 48-10-7-20-9-28-7-7 16-26 25-44 20z"
+                d="M162 165c8-45 35-62 48-62 18 0 42 20 48 55-12-8-22-10-30-8-8 18-28 28-48 22z"
                 fill="#334155"
                 opacity="0.85"
               />
@@ -975,7 +976,7 @@ function ProductivityHeroArt({ imageUrl }: { imageUrl?: string }) {
       </div>
 
       <div
-        className={`absolute right-0 top-[1%] z-10 w-[46%] max-w-[220px] rounded-2xl border border-border/70 bg-white px-3.5 py-3 ${ELEVATION_FLOAT}`}
+        className={`absolute right-0 top-[2%] z-10 w-[48%] max-w-[210px] rounded-2xl border border-border/70 bg-white px-3.5 py-3 ${ELEVATION_FLOAT}`}
       >
         <div className="flex items-center gap-2.5">
           <span
@@ -997,7 +998,7 @@ function ProductivityHeroArt({ imageUrl }: { imageUrl?: string }) {
       </div>
 
       <div
-        className={`absolute left-0 top-[40%] z-10 flex items-center gap-2.5 rounded-2xl border border-border/70 bg-white px-3 py-2.5 ${ELEVATION_FLOAT}`}
+        className={`absolute left-0 top-[38%] z-10 flex items-center gap-2.5 rounded-2xl border border-border/70 bg-white px-3 py-2.5 ${ELEVATION_FLOAT}`}
       >
         <div
           className="h-10 w-10 shrink-0 overflow-hidden rounded-lg"
@@ -1011,7 +1012,7 @@ function ProductivityHeroArt({ imageUrl }: { imageUrl?: string }) {
       </div>
 
       <div
-        className={`absolute bottom-[2%] right-0 z-10 flex items-center gap-2 rounded-2xl border border-border/70 bg-white px-3 py-2.5 ${ELEVATION_FLOAT}`}
+        className={`absolute bottom-[4%] right-0 z-10 flex items-center gap-2 rounded-2xl border border-border/70 bg-white px-3 py-2.5 ${ELEVATION_FLOAT}`}
       >
         <WordChip />
         <ExcelChip />
