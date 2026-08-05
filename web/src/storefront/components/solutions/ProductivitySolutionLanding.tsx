@@ -222,7 +222,7 @@ export function ProductivitySolutionLanding({
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_88%_12%,rgba(14,165,164,0.07),transparent_42%),radial-gradient(ellipse_at_8%_88%,rgba(14,165,233,0.05),transparent_45%)]"
           aria-hidden
         />
-        <div className="home-container relative py-8 md:py-10 lg:py-12">
+        <div className="home-container relative py-7 md:py-9 lg:py-10">
           <nav className={`mb-6 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
             <Link href="/" className={HOVER_LINK_ACCENT}>
               Trang chủ
@@ -292,7 +292,7 @@ export function ProductivitySolutionLanding({
       </section>
 
       {/* ── Value pillars ────────────────────────────────────── */}
-      <section className="pb-10 md:pb-12">
+      <section className="pb-8 md:pb-9">
         <div className="home-container">
           <ul className="grid gap-6 rounded-2xl bg-navy px-6 py-7 sm:grid-cols-2 sm:px-8 sm:py-8 lg:grid-cols-4 lg:gap-5 lg:px-9 lg:py-9">
             {VALUE_PILLARS.map((v) => (
@@ -314,23 +314,23 @@ export function ProductivitySolutionLanding({
       </section>
 
       {/* ── Work modes ───────────────────────────────────────── */}
-      <section className="pb-10 md:pb-12">
+      <section className="pb-8 md:pb-9">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Giải pháp theo cách bạn làm việc</h2>
           </header>
-          <div className="mt-8">
+          <div className="mt-6">
             <WorkModesPanel workSceneImageUrl={workSceneImageUrl} />
           </div>
         </div>
       </section>
 
       {/* ── Products — left title + right cards (mockup) ─────── */}
-      <section className="py-10 md:py-12">
+      <section className="py-8 md:py-9">
         <div className="home-container">
-          <div className="relative overflow-hidden rounded-2xl bg-navy px-5 py-7 sm:px-7 sm:py-8 lg:px-9 lg:py-9">
-            <div className="grid items-center gap-7 lg:grid-cols-[minmax(200px,0.78fr)_minmax(0,1.55fr)] lg:gap-8 xl:gap-10">
-              <div className="min-w-0">
+          <div className="relative overflow-hidden rounded-2xl bg-navy px-5 py-6 sm:px-6 sm:py-7 lg:px-8 lg:py-8">
+            <div className="grid items-center gap-5 lg:grid-cols-[minmax(148px,0.38fr)_minmax(0,1fr)] lg:gap-5 xl:gap-6">
+              <div className="min-w-0 lg:max-w-[200px]">
                 <h2 className={`${SECTION_TITLE_CLASS} text-white`}>
                   Công cụ phù hợp cho bạn ngày hôm nay
                 </h2>
@@ -339,36 +339,36 @@ export function ProductivitySolutionLanding({
                     Giá tham khảo — xác nhận khi xem chi tiết hoặc tư vấn.
                   </p>
                 ) : (
-                  <p className="mt-2 text-sm leading-relaxed text-slate-300 md:text-[15px]">
-                    Chọn gói Microsoft 365 / Office phù hợp — license chính hãng trên KEYON.
+                  <p className="mt-2 text-sm leading-relaxed text-slate-300">
+                    License chính hãng trên KEYON.
                   </p>
                 )}
                 <Link
                   href="/products?cat=office"
-                  className={`mt-5 inline-flex h-10 items-center justify-center rounded-xl border border-white/35 bg-transparent px-4 ${CTA_COMPACT_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+                  className={`mt-4 inline-flex h-10 items-center justify-center rounded-xl border border-white/35 bg-transparent px-3.5 ${CTA_COMPACT_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
-                  Xem tất cả sản phẩm →
+                  Xem tất cả →
                 </Link>
               </div>
 
-              <div className="relative min-w-0 pr-0 xl:pr-12">
-                <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4 xl:gap-3.5">
+              <div className="relative min-w-0 pr-0 lg:pr-10 xl:pr-12">
+                <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-3">
                   {products.map((p) => (
                     <li key={p.id}>
                       <article
-                        className={`flex h-full flex-col rounded-2xl bg-white p-4 sm:p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                        className={`flex h-full flex-col rounded-2xl bg-white p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                       >
                         <span className="shrink-0" aria-hidden>
-                          <ProductBrandMark brand={p.brand} size={40} />
+                          <ProductBrandMark brand={p.brand} size={36} />
                         </span>
-                        <h3 className={`mt-3.5 ${CARD_TITLE_CLASS} line-clamp-2`}>{p.title}</h3>
-                        <p className={`mt-2.5 ${CARD_PRICE_CLASS} text-accent`}>{p.priceLabel}</p>
+                        <h3 className={`mt-3 ${CARD_TITLE_CLASS} line-clamp-2`}>{p.title}</h3>
+                        <p className={`mt-2 ${CARD_PRICE_CLASS} text-accent`}>{p.priceLabel}</p>
                         {p.priceHint ? (
                           <p className={`mt-1 ${CARD_META_CLASS}`}>{p.priceHint}</p>
                         ) : null}
                         <Link
                           href={p.href}
-                          className={`mt-auto pt-4 inline-flex items-center gap-1 ${LINK_ACCENT_CLASS}`}
+                          className={`mt-auto pt-3 inline-flex items-center gap-1 ${LINK_ACCENT_CLASS}`}
                         >
                           Mua ngay →
                         </Link>
@@ -378,10 +378,10 @@ export function ProductivitySolutionLanding({
                 </ul>
                 <Link
                   href="/products?cat=office"
-                  className={`absolute -right-1 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-accent text-white xl:flex ${ELEVATION_FLOAT} ${TRANSITION_UI} hover:bg-accent-hover`}
+                  className={`absolute -right-0.5 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-accent text-white lg:flex ${ELEVATION_FLOAT} ${TRANSITION_UI} hover:bg-accent-hover`}
                   aria-label="Xem thêm sản phẩm"
                 >
-                  <ChevronRight size={20} strokeWidth={2.2} />
+                  <ChevronRight size={18} strokeWidth={2.2} />
                 </Link>
               </div>
             </div>
@@ -390,7 +390,7 @@ export function ProductivitySolutionLanding({
       </section>
 
       {/* ── Ecosystem + consult ──────────────────────────────── */}
-      <section className="py-10 md:py-12">
+      <section className="py-8 md:py-9">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>
@@ -398,10 +398,10 @@ export function ProductivitySolutionLanding({
             </h2>
           </header>
 
-          <div className="mt-8 grid items-center gap-6 lg:grid-cols-2 lg:gap-8 xl:gap-10">
-            {/* Left — icons + checklist */}
-            <div className="flex flex-col justify-center gap-6">
-              <ul className="grid grid-cols-4 gap-3 sm:grid-cols-4 sm:gap-3.5">
+          <div className="mt-6 grid items-center gap-6 lg:grid-cols-2 lg:gap-8">
+            {/* Left — icons one row + checklist */}
+            <div className="flex flex-col justify-center gap-5">
+              <ul className="flex flex-nowrap items-center gap-2.5 overflow-x-auto pb-0.5 sm:gap-3">
                 <EcoMark kind="windows" />
                 <EcoMark kind="apple" />
                 <EcoMark kind="android" />
@@ -409,13 +409,13 @@ export function ProductivitySolutionLanding({
                 <EcoMark kind="chrome" />
                 <EcoMark kind="slack" />
                 <span
-                  className={`flex aspect-square w-full items-center justify-center rounded-2xl border border-border bg-white text-base font-semibold text-muted ${ELEVATION_HAIRLINE}`}
+                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-border bg-white text-sm font-semibold text-muted ${ELEVATION_HAIRLINE}`}
                   aria-hidden
                 >
                   …
                 </span>
               </ul>
-              <ul className="space-y-3.5">
+              <ul className="space-y-3">
                 {ECOSYSTEM_CHECKS.map((item) => (
                   <li key={item} className="flex gap-3">
                     <span
@@ -434,8 +434,8 @@ export function ProductivitySolutionLanding({
             <div
               className={`relative overflow-hidden rounded-2xl border border-border bg-surface ${ELEVATION_HAIRLINE}`}
             >
-              <div className="grid h-full min-h-[240px] sm:grid-cols-[1.15fr_0.85fr]">
-                <div className="flex flex-col justify-center p-6 sm:p-7">
+              <div className="grid h-full min-h-[220px] sm:grid-cols-[1.15fr_0.85fr]">
+                <div className="flex flex-col justify-center p-5 sm:p-6">
                   <h3 className={SUBSECTION_TITLE_CLASS}>Bạn cần tư vấn giải pháp phù hợp?</h3>
                   <p className={`mt-2 ${BODY_MUTED_CLASS}`}>
                     Đội ngũ KEYON hỗ trợ chọn gói Microsoft 365 / Office theo nhu cầu — cá nhân hoặc
@@ -448,7 +448,7 @@ export function ProductivitySolutionLanding({
                     Liên hệ tư vấn
                   </Link>
                 </div>
-                <div className="relative hidden min-h-[220px] sm:block">
+                <div className="relative hidden min-h-[200px] sm:block">
                   <ConsultPortrait imageUrl={consultImageUrl} />
                 </div>
               </div>
@@ -458,7 +458,7 @@ export function ProductivitySolutionLanding({
       </section>
 
       {/* ── CTA ──────────────────────────────────────────────── */}
-      <section className="pb-10 md:pb-14">
+      <section className="pb-8 md:pb-10">
         <div className="home-container">
           <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-navy via-[#0b2a3a] to-[#0a3d42] px-6 py-8 sm:px-10 sm:py-9 lg:px-12">
             <div
@@ -853,11 +853,11 @@ function EcoMark({
 }: {
   kind: "windows" | "apple" | "android" | "browser" | "chrome" | "slack";
 }) {
-  const wrap = `flex aspect-square w-full items-center justify-center rounded-2xl border border-border bg-white ${ELEVATION_HAIRLINE}`;
+  const wrap = `flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-border bg-white ${ELEVATION_HAIRLINE}`;
   if (kind === "windows") {
     return (
       <span className={wrap} title="Windows" aria-label="Windows">
-        <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden>
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden>
           <path
             fill="#0078D4"
             d="M3 5.5 11 4.3v7.2H3V5.5Zm9-.9 9-1.3v9.4h-9V4.6ZM3 13.5h8V21l-8-1.2v-6.3Zm9 0h9v8.7l-9-1.3v-7.4Z"
@@ -869,7 +869,7 @@ function EcoMark({
   if (kind === "apple") {
     return (
       <span className={wrap} title="Apple" aria-label="Apple">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="#111" aria-hidden>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#111" aria-hidden>
           <path d="M16.4 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.2-2.8.9-3.5.9-.7 0-1.9-.8-3.1-.8-1.6 0-3.1 1-3.9 2.4-1.7 2.9-.4 7.2 1.2 9.6.8 1.1 1.7 2.4 3 2.3 1.2 0 1.6-.8 3.1-.8s1.8.8 3.1.7c1.3 0 2.1-1.1 2.9-2.2.9-1.3 1.3-2.6 1.3-2.6s-2.3-.9-2.3-3.2ZM14.7 5.7c.6-.8 1.1-1.9.9-3-.9 0-2 .6-2.6 1.4-.6.7-1.1 1.8-.9 2.9 1 .1 2-.5 2.6-1.3Z" />
         </svg>
       </span>
@@ -878,7 +878,7 @@ function EcoMark({
   if (kind === "android") {
     return (
       <span className={wrap} title="Android" aria-label="Android">
-        <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden>
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden>
           <path
             fill="#3DDC84"
             d="M17 10.5V17a1 1 0 0 1-1 1h-1v3.5a1.5 1.5 0 1 1-3 0V18H12v3.5a1.5 1.5 0 1 1-3 0V18H8a1 1 0 0 1-1-1v-6.5h10ZM7 11.5H5a1.5 1.5 0 0 0 0 3h2v-3Zm12 0h-2v3h2a1.5 1.5 0 0 0 0-3ZM8.5 6.2 7.6 4.7a.5.5 0 1 1 .86-.5l.95 1.6A6.9 6.9 0 0 1 12 5.5c.9 0 1.8.2 2.6.4l.95-1.6a.5.5 0 1 1 .86.5l-.9 1.5A6 6 0 0 1 18 10.5H6a6 6 0 0 1 2.5-4.3ZM10 8.2a.7.7 0 1 0 0-1.4.7.7 0 0 0 0 1.4Zm4 0a.7.7 0 1 0 0-1.4.7.7 0 0 0 0 1.4Z"
@@ -890,7 +890,7 @@ function EcoMark({
   if (kind === "chrome") {
     return (
       <span className={wrap} title="Chrome" aria-label="Chrome">
-        <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden>
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden>
           <circle cx="12" cy="12" r="3.2" fill="#4285F4" />
           <path fill="#EA4335" d="M12 3a9 9 0 0 1 7.8 4.5H12V3Z" />
           <path fill="#FBBC04" d="M19.8 7.5A9 9 0 0 1 15.6 19l-3.6-6.2 7.8-5.3Z" />
@@ -903,7 +903,7 @@ function EcoMark({
   if (kind === "slack") {
     return (
       <span className={wrap} title="Slack" aria-label="Slack">
-        <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden>
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
           <path fill="#E01E5A" d="M6.5 15.5a2 2 0 1 1-2-2h2v2Zm1 0a2 2 0 1 1 4 0v5a2 2 0 1 1-4 0v-5Z" />
           <path fill="#36C5F0" d="M8.5 6.5a2 2 0 1 1 2-2v2h-2Zm0 1a2 2 0 1 1 0 4h-5a2 2 0 1 1 0-4h5Z" />
           <path fill="#2EB67D" d="M17.5 8.5a2 2 0 1 1 2 2h-2v-2Zm-1 0a2 2 0 1 1-4 0v-5a2 2 0 1 1 4 0v5Z" />
@@ -915,8 +915,8 @@ function EcoMark({
   return (
     <span className={wrap} title="Browser" aria-label="Browser">
       <svg
-        width="28"
-        height="28"
+        width="20"
+        height="20"
         viewBox="0 0 24 24"
         fill="none"
         stroke="#0f172a"
