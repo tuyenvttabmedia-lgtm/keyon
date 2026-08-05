@@ -27,6 +27,7 @@ import {
   BackupSolutionLanding,
   type BackupFeaturedProduct,
 } from "@/storefront/components/solutions/BackupSolutionLanding";
+import { LicenseManagementSolutionLanding } from "@/storefront/components/solutions/LicenseManagementSolutionLanding";
 import { SOLUTION_PAGES } from "@/storefront/nav/ia-pages";
 import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
 import { inferCategory } from "@/storefront/components/shop/shop-utils";
@@ -85,6 +86,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: "Backup & Khôi phục | KEYON",
       description:
         "Sao lưu và khôi phục dữ liệu trên KEYON — endpoint, server, cloud và SaaS, license chính hãng.",
+    };
+  }
+  if (slug === "license-management") {
+    return {
+      ...(await buildMainPageMetadata("/solutions/license-management")),
+      title: "Quản lý bản quyền | KEYON",
+      description:
+        "Theo dõi, cảnh báo gia hạn và tối ưu chi phí license trên một nền tảng KEYON — minh bạch và chủ động.",
     };
   }
   return {
@@ -520,6 +529,10 @@ export default async function SolutionPage({ params }: Props) {
   if (slug === "backup") {
     const { featured, usingFallback } = await loadBackupFeatured();
     return <BackupSolutionLanding featured={featured} usingFallback={usingFallback} />;
+  }
+
+  if (slug === "license-management") {
+    return <LicenseManagementSolutionLanding />;
   }
 
   if (slug === "productivity") {

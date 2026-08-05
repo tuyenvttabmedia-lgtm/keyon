@@ -98,16 +98,17 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
     kicker: "Giải pháp · Canonical",
     title: "Quản lý bản quyền",
     subtitle:
-      "Theo dõi license, đơn hàng, gia hạn và deliverable trong Tài khoản KEYON — một nơi cho cá nhân và doanh nghiệp.",
+      "Kiểm soát toàn bộ license trên một nền tảng — theo dõi sử dụng, cảnh báo gia hạn và tối ưu chi phí.",
     bullets: [
-      "Quản lý tập trung trong Tài khoản",
-      "Theo dõi trạng thái đơn và license",
-      "Mở lại deliverable khi cần",
-      "Hỗ trợ ticket tiếng Việt",
+      "Quản lý tập trung mọi loại bản quyền",
+      "Cảnh báo thông minh trước khi hết hạn",
+      "Theo dõi sử dụng và tối ưu chi phí",
+      "Báo cáo linh hoạt, hỗ trợ tiếng Việt",
     ],
     primaryCta: { label: "Vào Tài khoản", href: "/account" },
-    secondaryCta: { label: "Giải pháp doanh nghiệp", href: "/business" },
+    secondaryCta: { label: "Tư vấn miễn phí", href: "/contact/sales" },
     related: [
+      { label: "Bản quyền phần mềm", href: "/solutions/software-licensing" },
       { label: "Subscription & Gia hạn", href: "/business/subscriptions" },
       { label: "Volume licensing", href: "/business/volume-licensing" },
     ],
