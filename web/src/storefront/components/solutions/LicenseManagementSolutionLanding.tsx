@@ -29,7 +29,6 @@ import {
   LINK_ACCENT_CLASS,
   OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
-  SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
 } from "@/storefront/typography";
 import {
@@ -67,15 +66,6 @@ const HERO_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
     Icon: Wallet,
   },
 ];
-
-const TRUST_LOGOS = [
-  "Viettel",
-  "FPT",
-  "VNPT",
-  "Trung Nguyên",
-  "Phenikaa",
-  "Tiki",
-] as const;
 
 const FEATURES: { title: string; body: string; Icon: LucideIcon }[] = [
   {
@@ -251,29 +241,10 @@ export function LicenseManagementSolutionLanding() {
               </div>
             </div>
 
-            <div className="relative mx-auto w-full max-w-[540px] lg:max-w-none">
+            <div className="relative mx-auto w-full max-w-[560px] lg:max-w-none lg:pl-2">
               <LicenseMgmtHeroArt />
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ── Social proof ─────────────────────────────────────── */}
-      <section className="border-b border-border bg-[#f8fafc] py-8 md:py-9">
-        <div className="home-container">
-          <p className={`text-center ${SECTION_LEAD_CLASS}`}>
-            Hàng trăm doanh nghiệp tin tưởng KEYON
-          </p>
-          <ul className="mt-5 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 sm:gap-x-10 md:gap-x-12">
-            {TRUST_LOGOS.map((name) => (
-              <li
-                key={name}
-                className="font-display text-sm font-bold tracking-wide text-slate-400 sm:text-base"
-              >
-                {name}
-              </li>
-            ))}
-          </ul>
         </div>
       </section>
 
@@ -495,220 +466,239 @@ function LicenseMgmtHeroArt() {
   ];
 
   return (
-    <div className="relative pb-8 sm:pb-6">
+    <div className="relative pb-10 pt-2 sm:pb-8 lg:pb-6 lg:pt-4">
+      {/* Soft floor glow under tilted panel */}
       <div
-        className="pointer-events-none absolute -right-6 -top-8 h-40 w-40 rounded-full bg-accent/25 blur-3xl"
+        className="pointer-events-none absolute bottom-[6%] left-[12%] right-[8%] h-16 rounded-[100%] bg-slate-900/20 blur-2xl motion-safe:lg:opacity-100"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute -bottom-10 left-8 h-36 w-36 rounded-full bg-sky-400/20 blur-3xl"
+        className="pointer-events-none absolute -right-4 top-[10%] h-44 w-44 rounded-full bg-accent/20 blur-3xl"
         aria-hidden
       />
 
       <div
-        className={`relative overflow-hidden rounded-[1.35rem] border border-slate-200/90 bg-[#f1f5f9] ${ELEVATION_FLOAT}`}
-        role="img"
-        aria-label="Bảng điều khiển quản lý license KEYON: tổng quan, biểu đồ trạng thái và cảnh báo gia hạn"
+        className="relative mx-auto w-full origin-center motion-safe:lg:[transform:perspective(1400px)_rotateY(-16deg)_rotateX(8deg)_rotateZ(2deg)] motion-safe:lg:[transform-style:preserve-3d]"
       >
-        <div className="flex min-h-[300px] sm:min-h-[340px]">
-          {/* Sidebar */}
-          <aside className="flex w-11 shrink-0 flex-col items-center gap-2 border-r border-slate-200/80 bg-white py-3 sm:w-12 sm:gap-2.5 sm:py-3.5">
-            <span
-              className="mb-1 flex h-7 w-7 items-center justify-center rounded-lg bg-navy font-display text-[11px] font-extrabold text-accent sm:h-8 sm:w-8"
-              aria-hidden
-            >
-              K
-            </span>
-            {nav.map(({ Icon, active }, i) => (
+        {/* Deep drop shadow — sits behind the tilted card */}
+        <div
+          className="pointer-events-none absolute inset-x-[6%] -bottom-3 top-[12%] rounded-[1.5rem] bg-slate-900/25 blur-xl motion-safe:lg:shadow-none"
+          aria-hidden
+        />
+
+        <div
+          className="relative overflow-hidden rounded-[1.35rem] border border-slate-200/90 bg-[#f1f5f9]"
+          style={{
+            boxShadow:
+              "0 28px 60px -12px rgba(15,23,42,0.28), 0 12px 24px -8px rgba(15,23,42,0.16), 0 0 0 1px rgba(15,23,42,0.04)",
+          }}
+          role="img"
+          aria-label="Bảng điều khiển quản lý license KEYON: tổng quan, biểu đồ trạng thái và cảnh báo gia hạn"
+        >
+          <div className="flex min-h-[300px] sm:min-h-[340px]">
+            {/* Sidebar */}
+            <aside className="flex w-11 shrink-0 flex-col items-center gap-2 border-r border-slate-200/80 bg-white py-3 sm:w-12 sm:gap-2.5 sm:py-3.5">
               <span
-                key={i}
-                className={`flex h-8 w-8 items-center justify-center rounded-lg ${
-                  active ? "bg-accent-soft text-accent" : "text-slate-400"
-                }`}
+                className="mb-1 flex h-7 w-7 items-center justify-center rounded-lg bg-navy font-display text-[11px] font-extrabold text-accent sm:h-8 sm:w-8"
                 aria-hidden
               >
-                <Icon size={15} strokeWidth={1.85} />
+                K
               </span>
-            ))}
-          </aside>
-
-          {/* Main */}
-          <div className="min-w-0 flex-1 p-2.5 sm:p-3.5">
-            <div className="mb-2.5 flex items-center justify-between gap-2">
-              <div>
-                <p className={`${BADGE_CLASS} text-slate-400`}>License Hub</p>
-                <p className={`${CARD_TITLE_CLASS} text-[13px] sm:text-sm`}>Tổng quan</p>
-              </div>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-semibold text-emerald-700">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden />
-                Live
-              </span>
-            </div>
-
-            <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
-              {stats.map((s) => (
-                <div
-                  key={s.label}
-                  className="rounded-xl border border-slate-200/80 bg-white px-1.5 py-2 text-center sm:px-2 sm:py-2.5"
+              {nav.map(({ Icon, active }, i) => (
+                <span
+                  key={i}
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg ${
+                    active ? "bg-accent-soft text-accent" : "text-slate-400"
+                  }`}
+                  aria-hidden
                 >
-                  <p
-                    className={`font-display text-sm font-bold tabular-nums leading-none sm:text-base ${s.tone}`}
-                  >
-                    {s.value}
-                  </p>
-                  <p className="mt-1 text-[8px] font-semibold leading-tight text-slate-500 sm:text-[9px]">
-                    {s.label}
-                  </p>
-                </div>
+                  <Icon size={15} strokeWidth={1.85} />
+                </span>
               ))}
-            </div>
+            </aside>
 
-            <div className="mt-2.5 grid gap-2.5 sm:mt-3 sm:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
-              {/* Donut */}
-              <div className="rounded-xl border border-slate-200/80 bg-white p-2.5 sm:p-3">
-                <p className={`${BADGE_CLASS} mb-2 font-semibold text-slate-500`}>
-                  Phân bố trạng thái
-                </p>
-                <div className="flex items-center gap-3">
-                  <svg viewBox="0 0 120 120" className="h-[88px] w-[88px] shrink-0 sm:h-[100px] sm:w-[100px]" aria-hidden>
-                    <circle cx="60" cy="60" r="38" fill="#f8fafc" />
-                    <circle
-                      cx="60"
-                      cy="60"
-                      r="34"
-                      fill="none"
-                      stroke="#e2e8f0"
-                      strokeWidth="12"
-                    />
-                    {/* Active ~76% */}
-                    <circle
-                      cx="60"
-                      cy="60"
-                      r="34"
-                      fill="none"
-                      stroke="#0ea5a4"
-                      strokeWidth="12"
-                      strokeDasharray={`${2 * Math.PI * 34 * 0.76} ${2 * Math.PI * 34}`}
-                      strokeLinecap="round"
-                      transform="rotate(-90 60 60)"
-                    />
-                    {/* Expiring arc overlay hint */}
-                    <circle
-                      cx="60"
-                      cy="60"
-                      r="34"
-                      fill="none"
-                      stroke="#f59e0b"
-                      strokeWidth="12"
-                      strokeDasharray={`${2 * Math.PI * 34 * 0.08} ${2 * Math.PI * 34}`}
-                      strokeDashoffset={-2 * Math.PI * 34 * 0.76}
-                      transform="rotate(-90 60 60)"
-                    />
-                    <circle
-                      cx="60"
-                      cy="60"
-                      r="34"
-                      fill="none"
-                      stroke="#f43f5e"
-                      strokeWidth="12"
-                      strokeDasharray={`${2 * Math.PI * 34 * 0.03} ${2 * Math.PI * 34}`}
-                      strokeDashoffset={-2 * Math.PI * 34 * 0.84}
-                      transform="rotate(-90 60 60)"
-                    />
-                    <text
-                      x="60"
-                      y="58"
-                      textAnchor="middle"
-                      fill="#0b1f33"
-                      fontSize="16"
-                      fontWeight="800"
-                      fontFamily="var(--font-display), system-ui, sans-serif"
+            {/* Main */}
+            <div className="min-w-0 flex-1 p-2.5 sm:p-3.5">
+              <div className="mb-2.5 flex items-center justify-between gap-2">
+                <div>
+                  <p className={`${BADGE_CLASS} text-slate-400`}>License Hub</p>
+                  <p className={`${CARD_TITLE_CLASS} text-[13px] sm:text-sm`}>Tổng quan</p>
+                </div>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-semibold text-emerald-700">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden />
+                  Live
+                </span>
+              </div>
+
+              <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
+                {stats.map((s) => (
+                  <div
+                    key={s.label}
+                    className="rounded-xl border border-slate-200/80 bg-white px-1.5 py-2 text-center sm:px-2 sm:py-2.5"
+                  >
+                    <p
+                      className={`font-display text-sm font-bold tabular-nums leading-none sm:text-base ${s.tone}`}
                     >
-                      76%
-                    </text>
-                    <text
-                      x="60"
-                      y="72"
-                      textAnchor="middle"
-                      fill="#94a3b8"
-                      fontSize="8"
-                      fontWeight="600"
+                      {s.value}
+                    </p>
+                    <p className="mt-1 text-[8px] font-semibold leading-tight text-slate-500 sm:text-[9px]">
+                      {s.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-2.5 grid gap-2.5 sm:mt-3 sm:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+                <div className="rounded-xl border border-slate-200/80 bg-white p-2.5 sm:p-3">
+                  <p className={`${BADGE_CLASS} mb-2 font-semibold text-slate-500`}>
+                    Phân bố trạng thái
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <svg
+                      viewBox="0 0 120 120"
+                      className="h-[88px] w-[88px] shrink-0 sm:h-[100px] sm:w-[100px]"
+                      aria-hidden
                     >
-                      Đang dùng
-                    </text>
-                  </svg>
-                  <ul className="min-w-0 space-y-1.5">
-                    {[
-                      { label: "Đang dùng", color: "bg-accent" },
-                      { label: "Sắp hết hạn", color: "bg-amber-500" },
-                      { label: "Hết hạn", color: "bg-rose-500" },
-                      { label: "Chưa gán", color: "bg-slate-300" },
-                    ].map((l) => (
-                      <li key={l.label} className="flex items-center gap-1.5">
-                        <span className={`h-2 w-2 shrink-0 rounded-full ${l.color}`} />
-                        <span className="truncate text-[10px] font-medium text-slate-600">
-                          {l.label}
+                      <circle cx="60" cy="60" r="38" fill="#f8fafc" />
+                      <circle
+                        cx="60"
+                        cy="60"
+                        r="34"
+                        fill="none"
+                        stroke="#e2e8f0"
+                        strokeWidth="12"
+                      />
+                      <circle
+                        cx="60"
+                        cy="60"
+                        r="34"
+                        fill="none"
+                        stroke="#0ea5a4"
+                        strokeWidth="12"
+                        strokeDasharray={`${2 * Math.PI * 34 * 0.76} ${2 * Math.PI * 34}`}
+                        strokeLinecap="round"
+                        transform="rotate(-90 60 60)"
+                      />
+                      <circle
+                        cx="60"
+                        cy="60"
+                        r="34"
+                        fill="none"
+                        stroke="#f59e0b"
+                        strokeWidth="12"
+                        strokeDasharray={`${2 * Math.PI * 34 * 0.08} ${2 * Math.PI * 34}`}
+                        strokeDashoffset={-2 * Math.PI * 34 * 0.76}
+                        transform="rotate(-90 60 60)"
+                      />
+                      <circle
+                        cx="60"
+                        cy="60"
+                        r="34"
+                        fill="none"
+                        stroke="#f43f5e"
+                        strokeWidth="12"
+                        strokeDasharray={`${2 * Math.PI * 34 * 0.03} ${2 * Math.PI * 34}`}
+                        strokeDashoffset={-2 * Math.PI * 34 * 0.84}
+                        transform="rotate(-90 60 60)"
+                      />
+                      <text
+                        x="60"
+                        y="58"
+                        textAnchor="middle"
+                        fill="#0b1f33"
+                        fontSize="16"
+                        fontWeight="800"
+                        fontFamily="var(--font-display), system-ui, sans-serif"
+                      >
+                        76%
+                      </text>
+                      <text
+                        x="60"
+                        y="72"
+                        textAnchor="middle"
+                        fill="#94a3b8"
+                        fontSize="8"
+                        fontWeight="600"
+                      >
+                        Đang dùng
+                      </text>
+                    </svg>
+                    <ul className="min-w-0 space-y-1.5">
+                      {[
+                        { label: "Đang dùng", color: "bg-accent" },
+                        { label: "Sắp hết hạn", color: "bg-amber-500" },
+                        { label: "Hết hạn", color: "bg-rose-500" },
+                        { label: "Chưa gán", color: "bg-slate-300" },
+                      ].map((l) => (
+                        <li key={l.label} className="flex items-center gap-1.5">
+                          <span className={`h-2 w-2 shrink-0 rounded-full ${l.color}`} />
+                          <span className="truncate text-[10px] font-medium text-slate-600">
+                            {l.label}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-slate-200/80 bg-white p-2.5 sm:p-3">
+                  <div className="mb-2 flex items-center justify-between gap-2">
+                    <p className={`${BADGE_CLASS} font-semibold text-slate-500`}>Cảnh báo</p>
+                    <span className="rounded-full bg-amber-50 px-1.5 py-0.5 text-[9px] font-bold text-amber-700">
+                      3 mới
+                    </span>
+                  </div>
+                  <ul className="space-y-1.5">
+                    {alerts.map((a) => (
+                      <li
+                        key={a.name}
+                        className="flex items-start gap-2 rounded-lg bg-slate-50 px-2 py-1.5"
+                      >
+                        <span
+                          className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md ${
+                            a.tone === "danger"
+                              ? "bg-rose-100 text-rose-600"
+                              : "bg-amber-100 text-amber-700"
+                          }`}
+                          aria-hidden
+                        >
+                          <AlertTriangle size={11} strokeWidth={2.2} />
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block truncate text-[11px] font-bold text-navy">
+                            {a.name}
+                          </span>
+                          <span className="block text-[9px] text-slate-500">{a.meta}</span>
                         </span>
                       </li>
                     ))}
                   </ul>
                 </div>
               </div>
-
-              {/* Alerts */}
-              <div className="rounded-xl border border-slate-200/80 bg-white p-2.5 sm:p-3">
-                <div className="mb-2 flex items-center justify-between gap-2">
-                  <p className={`${BADGE_CLASS} font-semibold text-slate-500`}>Cảnh báo</p>
-                  <span className="rounded-full bg-amber-50 px-1.5 py-0.5 text-[9px] font-bold text-amber-700">
-                    3 mới
-                  </span>
-                </div>
-                <ul className="space-y-1.5">
-                  {alerts.map((a) => (
-                    <li
-                      key={a.name}
-                      className="flex items-start gap-2 rounded-lg bg-slate-50 px-2 py-1.5"
-                    >
-                      <span
-                        className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md ${
-                          a.tone === "danger"
-                            ? "bg-rose-100 text-rose-600"
-                            : "bg-amber-100 text-amber-700"
-                        }`}
-                        aria-hidden
-                      >
-                        <AlertTriangle size={11} strokeWidth={2.2} />
-                      </span>
-                      <span className="min-w-0">
-                        <span className="block truncate text-[11px] font-bold text-navy">
-                          {a.name}
-                        </span>
-                        <span className="block text-[9px] text-slate-500">{a.meta}</span>
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Floating security card */}
-      <div
-        className={`absolute -bottom-3 right-2 z-20 flex max-w-[220px] items-start gap-2.5 rounded-2xl border border-border bg-white p-3 sm:right-4 sm:max-w-[240px] ${ELEVATION_FLOAT}`}
-      >
-        <span
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent"
-          aria-hidden
+        {/* Floating security card — flatter plane, overlaps bottom-right */}
+        <div
+          className={`absolute -bottom-4 -right-1 z-20 flex max-w-[220px] items-start gap-2.5 rounded-2xl border border-border bg-white p-3 sm:-bottom-5 sm:right-2 sm:max-w-[240px] motion-safe:lg:[transform:rotateY(10deg)_rotateX(-4deg)_translateZ(28px)] ${ELEVATION_FLOAT}`}
+          style={{
+            boxShadow:
+              "0 18px 40px -10px rgba(15,23,42,0.22), 0 8px 16px -6px rgba(15,23,42,0.12)",
+          }}
         >
-          <Lock size={16} strokeWidth={1.9} />
-        </span>
-        <div className="min-w-0">
-          <p className={`${BADGE_CLASS} font-semibold text-navy`}>An toàn & bảo mật</p>
-          <p className="mt-0.5 text-[11px] leading-snug text-muted">
-            Dữ liệu license được mã hoá và bảo vệ tuyệt đối.
-          </p>
+          <span
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent"
+            aria-hidden
+          >
+            <Lock size={16} strokeWidth={1.9} />
+          </span>
+          <div className="min-w-0">
+            <p className={`${BADGE_CLASS} font-semibold text-navy`}>An toàn & bảo mật</p>
+            <p className="mt-0.5 text-[11px] leading-snug text-muted">
+              Dữ liệu license được mã hoá và bảo vệ tuyệt đối.
+            </p>
+          </div>
         </div>
       </div>
     </div>
