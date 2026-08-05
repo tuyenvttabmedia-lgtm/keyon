@@ -19,7 +19,8 @@ import {
 type Partners = HomeContent["partners"];
 
 const AUTO_MS = 3500;
-const STEP_PX = 168; // card ~144 + gap
+/** Card width (168) + gap (32) — keep in sync with PartnerSlide + track gap */
+const STEP_PX = 200;
 
 /**
  * Stepped carousel (mỗi vài giây nhảy 1 bước) + mũi tên hai đầu.
@@ -85,12 +86,12 @@ export function TrustPartnersSection({
             className="hidden sm:inline-flex"
           />
 
-          <div className="relative min-w-0 flex-1 overflow-hidden">
+          <div className="relative min-w-0 flex-1 overflow-hidden px-1">
             <div
               className={
                 reducedMotion
-                  ? "flex items-center gap-6 py-2.5"
-                  : `flex items-center gap-6 py-2.5 transition-transform ${MOTION_SLOW} ${EASE_STANDARD}`
+                  ? "flex items-center gap-8 py-3"
+                  : `flex items-center gap-8 py-3 transition-transform ${MOTION_SLOW} ${EASE_STANDARD}`
               }
               style={{ transform: `translateX(-${offset}px)` }}
               aria-label="Thương hiệu phần mềm"
@@ -173,16 +174,16 @@ function PartnerSlide({ item }: { item: PartnerItem }) {
     <Image
       src={item.logoUrl}
       alt={item.name}
-      width={140}
-      height={40}
-      className="h-9 w-auto max-w-[140px] object-contain object-left md:h-10"
+      width={160}
+      height={48}
+      className="h-7 w-auto max-h-7 max-w-[118px] object-contain object-center md:h-8 md:max-h-8 md:max-w-[128px]"
       unoptimized
     />
   ) : (
     <BrandMark name={item.name} color={item.brandColor} />
   );
 
-  const className = `inline-flex h-12 w-[144px] shrink-0 items-center justify-center rounded-xl border border-border/80 bg-white px-3 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/50 ${ELEVATION_CARD_HOVER}`;
+  const className = `inline-flex h-14 w-[168px] shrink-0 items-center justify-center rounded-xl border border-border/80 bg-white px-5 py-3 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/50 ${ELEVATION_CARD_HOVER}`;
 
   if (item.href) {
     return (
