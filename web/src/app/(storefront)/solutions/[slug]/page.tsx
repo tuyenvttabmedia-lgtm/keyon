@@ -22,6 +22,11 @@ import {
   SecuritySolutionLanding,
   type SecurityFeaturedProduct,
 } from "@/storefront/components/solutions/SecuritySolutionLanding";
+import {
+  BACKUP_FALLBACK_FEATURED,
+  BackupSolutionLanding,
+  type BackupFeaturedProduct,
+} from "@/storefront/components/solutions/BackupSolutionLanding";
 import { SOLUTION_PAGES } from "@/storefront/nav/ia-pages";
 import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
 import { inferCategory } from "@/storefront/components/shop/shop-utils";
@@ -72,6 +77,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: "Bảo mật | KEYON",
       description:
         "Giải pháp bảo mật KEYON: endpoint, antivirus và bảo vệ thiết bị — license chính hãng, hỗ trợ tiếng Việt.",
+    };
+  }
+  if (slug === "backup") {
+    return {
+      ...(await buildMainPageMetadata("/solutions/backup")),
+      title: "Backup & Khôi phục | KEYON",
+      description:
+        "Sao lưu và khôi phục dữ liệu trên KEYON — endpoint, server, cloud và SaaS, license chính hãng.",
     };
   }
   return {
@@ -375,6 +388,113 @@ async function loadSecurityFeatured(): Promise<{
   return { featured: SECURITY_FALLBACK_FEATURED, usingFallback: true };
 }
 
+function inferBackupBrand(name: string, brandName: string): BackupFeaturedProduct["brand"] {
+  const n = `${name} ${brandName}`.toLowerCase();
+  if (n.includes("acronis")) return "acronis";
+  if (n.includes("aomei")) return "aomei";
+  if (n.includes("veeam")) return "veeam";
+  if (n.includes("microsoft") || n.includes("365")) return "microsoft";
+  return "generic";
+}
+
+function inferBackupTabs(name: string): BackupFeaturedProduct["tabs"] {
+  const n = name.toLowerCase();
+  const tabs: BackupFeaturedProduct["tabs"] = [];
+  if (n.includes("server") || n.includes("veeam") || n.includes("replication")) {
+    tabs.push("server");
+  }
+  if (n.includes("365") || n.includes("saas") || n.includes("exchange") || n.includes("sharepoint")) {
+    tabs.push("saas");
+  }
+  if (n.includes("cloud") || n.includes("azure") || n.includes("aws")) {
+    tabs.push("cloud");
+  }
+  if (n.includes("disaster") || n.includes("recover") || n.includes("cyber protect")) {
+    tabs.push("dr");
+  }
+  if (
+    n.includes("endpoint") ||
+    n.includes("home") ||
+    n.includes("aomei") ||
+    n.includes("backupper") ||
+    tabs.length === 0
+  ) {
+    tabs.push("endpoint");
+  }
+  return Array.from(new Set(tabs));
+}
+
+async function loadBackupFeatured(): Promise<{
+  featured: BackupFeaturedProduct[];
+  usingFallback: boolean;
+}> {
+  const products = await prisma.product.findMany({
+    where: { active: true },
+    include: {
+      brand: true,
+      variants: { where: { active: true }, orderBy: { priceVnd: "asc" }, take: 1 },
+    },
+    orderBy: { name: "asc" },
+    take: 80,
+  });
+
+  const scored: { score: number; item: BackupFeaturedProduct }[] = [];
+  for (const p of products) {
+    const variant = p.variants[0];
+    if (!variant) continue;
+    const cat =
+      p.categoryKey &&
+      (PRODUCT_CATEGORY_KEYS as readonly string[]).includes(p.categoryKey)
+        ? p.categoryKey
+        : inferCategory(p.brand.name, p.name);
+    const nameL = p.name.toLowerCase();
+    const brandL = p.brand.name.toLowerCase();
+
+    const isBackup =
+      cat === "backup" ||
+      nameL.includes("backup") ||
+      nameL.includes("acronis") ||
+      nameL.includes("veeam") ||
+      nameL.includes("aomei") ||
+      nameL.includes("backupper") ||
+      nameL.includes("recover") ||
+      brandL.includes("acronis") ||
+      brandL.includes("veeam") ||
+      brandL.includes("aomei");
+    if (!isBackup) continue;
+
+    let score = 0;
+    if (nameL.includes("acronis")) score += 50;
+    else if (nameL.includes("veeam")) score += 48;
+    else if (nameL.includes("aomei")) score += 45;
+    else if (nameL.includes("365") && nameL.includes("backup")) score += 42;
+    else if (nameL.includes("backup")) score += 30;
+    if (cat === "backup") score += 10;
+
+    scored.push({
+      score,
+      item: {
+        id: p.id,
+        title: p.name,
+        href: `/products/${p.slug}`,
+        brandLabel: p.brand.name,
+        meta: "License · theo gói",
+        priceLabel: `Từ ${variant.priceVnd.toLocaleString("vi-VN")}đ`,
+        features: [p.brand.name, "License chính hãng", "Hỗ trợ tiếng Việt"],
+        brand: inferBackupBrand(p.name, p.brand.name),
+        tabs: inferBackupTabs(p.name),
+      },
+    });
+  }
+
+  scored.sort((a, b) => b.score - a.score);
+  const featured = scored.slice(0, 8).map((s) => s.item);
+  if (featured.length > 0) {
+    return { featured, usingFallback: false };
+  }
+  return { featured: BACKUP_FALLBACK_FEATURED, usingFallback: true };
+}
+
 export default async function SolutionPage({ params }: Props) {
   const { slug } = await params;
   const page = SOLUTION_PAGES[slug];
@@ -395,6 +515,11 @@ export default async function SolutionPage({ params }: Props) {
   if (slug === "security") {
     const { featured, usingFallback } = await loadSecurityFeatured();
     return <SecuritySolutionLanding featured={featured} usingFallback={usingFallback} />;
+  }
+
+  if (slug === "backup") {
+    const { featured, usingFallback } = await loadBackupFeatured();
+    return <BackupSolutionLanding featured={featured} usingFallback={usingFallback} />;
   }
 
   if (slug === "productivity") {
