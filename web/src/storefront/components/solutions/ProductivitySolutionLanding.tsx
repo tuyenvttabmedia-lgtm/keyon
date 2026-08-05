@@ -241,10 +241,7 @@ export function ProductivitySolutionLanding({
 
           <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.22fr)] lg:gap-5 xl:gap-6">
             <div className="min-w-0">
-              <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
-                Năng suất & Cộng tác
-              </p>
-              <h1 className={`mt-3 max-w-[20ch] ${HERO_TITLE_CLASS}`}>
+              <h1 className={`max-w-[20ch] ${HERO_TITLE_CLASS}`}>
                 Kết nối con người.
                 <span className="mt-1 block">Tăng tốc công việc.</span>
               </h1>
