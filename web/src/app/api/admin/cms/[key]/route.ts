@@ -10,6 +10,7 @@ import { resolveStorage } from "@/server/storage/config";
 import {
   defaultBlog,
   defaultCmsBanner,
+  defaultCmsProductivity,
   defaultCmsFaq,
   defaultCmsFooter,
   defaultCmsHome,
@@ -27,6 +28,7 @@ import {
   writeJsonFile,
   type BlogPost,
   type CmsBanner,
+  type CmsProductivity,
   type CmsCheckout,
   type CmsAccount,
   type CmsContact,
@@ -108,6 +110,7 @@ const FILES: Record<string, { file: string; fallback: unknown }> = {
   home: { file: "home.json", fallback: defaultCmsHome },
   blog: { file: "blog.json", fallback: defaultBlog },
   banner: { file: "banner.json", fallback: defaultCmsBanner },
+  productivity: { file: "productivity.json", fallback: defaultCmsProductivity },
   faq: { file: "faq.json", fallback: defaultCmsFaq },
   footer: { file: "footer.json", fallback: defaultCmsFooter },
   nav: { file: "nav.json", fallback: defaultCmsNav },
@@ -233,6 +236,32 @@ export async function PUT(
       })
       .parse(body) satisfies CmsBanner;
     await writeJsonFile("banner.json", data);
+    return NextResponse.json({ ok: true, data });
+  }
+  if (key === "productivity") {
+    const storage = await resolveStorage();
+    const mediaBase =
+      storage.driver === "wasabi"
+        ? storage.wasabi.publicBaseUrl ||
+          `${storage.wasabi.endpoint.replace(/\/$/, "")}/${storage.wasabi.bucket}`
+        : "";
+    const data = z
+      .object({
+        heroImageUrl: z.string(),
+        consultImageUrl: z.string(),
+        workSceneImageUrl: z.string(),
+      })
+      .parse({
+        ...body,
+        heroImageUrl: resolveMediaUrl(String(body?.heroImageUrl ?? ""), mediaBase) || String(body?.heroImageUrl ?? ""),
+        consultImageUrl:
+          resolveMediaUrl(String(body?.consultImageUrl ?? ""), mediaBase) ||
+          String(body?.consultImageUrl ?? ""),
+        workSceneImageUrl:
+          resolveMediaUrl(String(body?.workSceneImageUrl ?? ""), mediaBase) ||
+          String(body?.workSceneImageUrl ?? ""),
+      }) satisfies CmsProductivity;
+    await writeJsonFile("productivity.json", data);
     return NextResponse.json({ ok: true, data });
   }
   if (key === "faq") {

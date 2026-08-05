@@ -16,6 +16,9 @@ import { SOLUTION_PAGES } from "@/storefront/nav/ia-pages";
 import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
 import { inferCategory } from "@/storefront/components/shop/shop-utils";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
+import { defaultCmsProductivity, readJsonFile } from "@/server/cms/store";
+import { resolveMediaUrl } from "@/lib/media-url";
+import { resolveStorage } from "@/server/storage/config";
 
 export const dynamic = "force-dynamic";
 
@@ -190,9 +193,29 @@ export default async function SolutionPage({ params }: Props) {
   }
 
   if (slug === "productivity") {
-    const { featured, usingFallback } = await loadProductivityFeatured();
+    const [{ featured, usingFallback }, cmsRaw, storage] = await Promise.all([
+      loadProductivityFeatured(),
+      readJsonFile("productivity.json", defaultCmsProductivity),
+      resolveStorage(),
+    ]);
+    const mediaBase =
+      storage.driver === "wasabi"
+        ? storage.wasabi.publicBaseUrl ||
+          `${storage.wasabi.endpoint.replace(/\/$/, "")}/${storage.wasabi.bucket}`
+        : "";
+    const cms = { ...defaultCmsProductivity, ...cmsRaw };
     return (
-      <ProductivitySolutionLanding featured={featured} usingFallback={usingFallback} />
+      <ProductivitySolutionLanding
+        featured={featured}
+        usingFallback={usingFallback}
+        heroImageUrl={resolveMediaUrl(cms.heroImageUrl, mediaBase) || cms.heroImageUrl || undefined}
+        consultImageUrl={
+          resolveMediaUrl(cms.consultImageUrl, mediaBase) || cms.consultImageUrl || undefined
+        }
+        workSceneImageUrl={
+          resolveMediaUrl(cms.workSceneImageUrl, mediaBase) || cms.workSceneImageUrl || undefined
+        }
+      />
     );
   }
 

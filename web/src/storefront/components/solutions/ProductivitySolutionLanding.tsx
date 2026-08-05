@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -8,6 +9,7 @@ import {
   Check,
   ChevronRight,
   Cloud,
+  CloudUpload,
   Headphones,
   Home,
   Rocket,
@@ -67,6 +69,12 @@ export type ProductivityFeaturedProduct = {
 type Props = {
   featured: ProductivityFeaturedProduct[];
   usingFallback?: boolean;
+  /** CMS: hero banner trong organic blob. */
+  heroImageUrl?: string;
+  /** CMS: ảnh tư vấn cột phải ecosystem. */
+  consultImageUrl?: string;
+  /** CMS: ảnh cột trái work-mode panel. */
+  workSceneImageUrl?: string;
 };
 
 const ICON_SM = { size: 18, strokeWidth: 1.85, "aria-hidden": true as const };
@@ -108,7 +116,6 @@ const WORK_MODES: {
   label: string;
   Icon: LucideIcon;
   title: string;
-  body: string;
   checks: string[];
   href: string;
   tools: { name: string; brand: ProductivityBrand }[];
@@ -119,7 +126,6 @@ const WORK_MODES: {
     label: "Làm việc cá nhân",
     Icon: Home,
     title: "Tập trung, tổ chức, hoàn thành công việc",
-    body: "Bộ công cụ gọn giúp bạn quản lý nhiệm vụ, soạn thảo và lưu trữ — mọi thứ trong tầm tay.",
     checks: [
       "Quản lý công việc & lịch trình",
       "Lưu trữ & chia sẻ tài liệu",
@@ -130,7 +136,6 @@ const WORK_MODES: {
       { name: "Microsoft 365 Personal", brand: "m365" },
       { name: "OneNote", brand: "onenote" },
       { name: "To Do", brand: "todo" },
-      { name: "Outlook", brand: "outlook" },
       { name: "OneDrive", brand: "onedrive" },
     ],
     scene: "desk",
@@ -140,7 +145,6 @@ const WORK_MODES: {
     label: "Làm việc nhóm",
     Icon: Users,
     title: "Cộng tác nhóm mượt mà, đúng nhịp",
-    body: "Họp, chat và đồng biên tập tài liệu — cả nhóm cùng một nguồn sự thật.",
     checks: [
       "Họp & chat trên Microsoft Teams",
       "Đồng biên tập Word / Excel / PPT",
@@ -152,7 +156,6 @@ const WORK_MODES: {
       { name: "Microsoft 365", brand: "m365" },
       { name: "OneDrive", brand: "onedrive" },
       { name: "Outlook", brand: "outlook" },
-      { name: "Office 2024", brand: "office" },
     ],
     scene: "team",
   },
@@ -161,7 +164,6 @@ const WORK_MODES: {
     label: "Làm việc từ xa",
     Icon: Video,
     title: "Làm việc mọi nơi, kết nối tức thì",
-    body: "Họp trực tuyến ổn định, truy cập file cloud và đồng bộ trên mọi thiết bị.",
     checks: [
       "Họp HD trên Teams mọi lúc",
       "Đồng bộ OneDrive đa thiết bị",
@@ -173,7 +175,6 @@ const WORK_MODES: {
       { name: "OneDrive", brand: "onedrive" },
       { name: "Outlook", brand: "outlook" },
       { name: "Microsoft 365", brand: "m365" },
-      { name: "To Do", brand: "todo" },
     ],
     scene: "remote",
   },
@@ -182,7 +183,6 @@ const WORK_MODES: {
     label: "Doanh nghiệp",
     Icon: Building2,
     title: "Quản trị tập trung, mở rộng theo quy mô",
-    body: "Volume licensing, quản lý người dùng và tư vấn chọn gói phù hợp từng phòng ban.",
     checks: [
       "Gói doanh nghiệp / volume",
       "Quản trị identity & bảo mật",
@@ -194,7 +194,6 @@ const WORK_MODES: {
       { name: "Microsoft Teams", brand: "teams" },
       { name: "Office LTSC", brand: "office" },
       { name: "OneDrive", brand: "onedrive" },
-      { name: "Outlook", brand: "outlook" },
     ],
     scene: "office",
   },
@@ -206,7 +205,13 @@ const ECOSYSTEM_CHECKS = [
   "Kết nối liền mạch với hệ sinh thái Microsoft",
 ] as const;
 
-export function ProductivitySolutionLanding({ featured, usingFallback }: Props) {
+export function ProductivitySolutionLanding({
+  featured,
+  usingFallback,
+  heroImageUrl,
+  consultImageUrl,
+  workSceneImageUrl,
+}: Props) {
   const products = featured.slice(0, 4);
 
   return (
@@ -280,7 +285,7 @@ export function ProductivitySolutionLanding({ featured, usingFallback }: Props) 
             </div>
 
             <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
-              <ProductivityHeroArt />
+              <ProductivityHeroArt imageUrl={heroImageUrl} />
             </div>
           </div>
         </div>
@@ -315,7 +320,7 @@ export function ProductivitySolutionLanding({ featured, usingFallback }: Props) 
             <h2 className={SECTION_TITLE_CLASS}>Giải pháp theo cách bạn làm việc</h2>
           </header>
           <div className="mt-8">
-            <WorkModesPanel />
+            <WorkModesPanel workSceneImageUrl={workSceneImageUrl} />
           </div>
         </div>
       </section>
@@ -389,34 +394,43 @@ export function ProductivitySolutionLanding({ featured, usingFallback }: Props) 
             </h2>
           </header>
 
-          <ul className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-3.5">
-            <EcoMark kind="windows" />
-            <EcoMark kind="apple" />
-            <EcoMark kind="android" />
-            <EcoMark kind="browser" />
-            <EcoMark kind="chrome" />
-            <EcoMark kind="slack" />
-          </ul>
+          <div className="mt-8 grid items-stretch gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
+            {/* Left — icons + checklist (match mockup) */}
+            <div className="flex flex-col justify-center gap-6">
+              <ul className="flex flex-wrap items-center gap-3">
+                <EcoMark kind="windows" />
+                <EcoMark kind="apple" />
+                <EcoMark kind="android" />
+                <EcoMark kind="browser" />
+                <EcoMark kind="chrome" />
+                <EcoMark kind="slack" />
+                <span
+                  className={`flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-white text-sm font-semibold text-muted ${ELEVATION_HAIRLINE}`}
+                  aria-hidden
+                >
+                  …
+                </span>
+              </ul>
+              <ul className="space-y-3.5">
+                {ECOSYSTEM_CHECKS.map((item) => (
+                  <li key={item} className="flex gap-3">
+                    <span
+                      className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent text-white"
+                      aria-hidden
+                    >
+                      <Check size={13} strokeWidth={3} />
+                    </span>
+                    <span className={`${BODY_MUTED_CLASS} text-[15px] text-navy`}>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          <div className="mt-8 grid items-stretch gap-5 lg:grid-cols-[1fr_1fr] lg:gap-6">
-            <ul className="flex flex-col justify-center space-y-4 px-1 sm:px-2">
-              {ECOSYSTEM_CHECKS.map((item) => (
-                <li key={item} className="flex gap-3">
-                  <span
-                    className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent text-white"
-                    aria-hidden
-                  >
-                    <Check size={13} strokeWidth={3} />
-                  </span>
-                  <span className={`${BODY_MUTED_CLASS} text-[15px] text-navy`}>{item}</span>
-                </li>
-              ))}
-            </ul>
-
+            {/* Right — consult card + CMS portrait */}
             <div
               className={`relative overflow-hidden rounded-2xl border border-border bg-surface ${ELEVATION_HAIRLINE}`}
             >
-              <div className="grid h-full sm:grid-cols-[1fr_0.85fr]">
+              <div className="grid h-full min-h-[220px] sm:grid-cols-[1.1fr_0.9fr]">
                 <div className="flex flex-col justify-center p-6 sm:p-7">
                   <h3 className={SUBSECTION_TITLE_CLASS}>Bạn cần tư vấn giải pháp phù hợp?</h3>
                   <p className={`mt-2 ${BODY_MUTED_CLASS}`}>
@@ -430,8 +444,8 @@ export function ProductivitySolutionLanding({ featured, usingFallback }: Props) 
                     Liên hệ tư vấn
                   </Link>
                 </div>
-                <div className="relative hidden min-h-[160px] sm:block">
-                  <ConsultPortrait />
+                <div className="relative hidden min-h-[200px] sm:block">
+                  <ConsultPortrait imageUrl={consultImageUrl} />
                 </div>
               </div>
             </div>
@@ -486,7 +500,7 @@ export function ProductivitySolutionLanding({ featured, usingFallback }: Props) 
   );
 }
 
-function WorkModesPanel() {
+function WorkModesPanel({ workSceneImageUrl }: { workSceneImageUrl?: string }) {
   const [active, setActive] = useState<WorkModeId>("personal");
   const mode = WORK_MODES.find((m) => m.id === active) ?? WORK_MODES[0];
 
@@ -524,13 +538,16 @@ function WorkModesPanel() {
         className={`overflow-hidden rounded-2xl border border-border/80 bg-surface ${ELEVATION_HAIRLINE}`}
       >
         <div className="grid lg:grid-cols-[0.92fr_1.15fr_0.88fr]">
-          <div className="relative min-h-[200px] overflow-hidden lg:min-h-[280px]">
-            <WorkScene kind={mode.scene} label={mode.label} />
+          <div className="relative min-h-[200px] overflow-hidden lg:min-h-[260px]">
+            <WorkScene
+              kind={mode.scene}
+              label={mode.label}
+              imageUrl={workSceneImageUrl}
+            />
           </div>
 
           <div className="flex flex-col justify-center bg-white p-6 sm:p-7">
             <h3 className={SUBSECTION_TITLE_CLASS}>{mode.title}</h3>
-            <p className={`mt-2.5 ${BODY_MUTED_CLASS}`}>{mode.body}</p>
             <ul className="mt-5 space-y-3">
               {mode.checks.map((c) => (
                 <li key={c} className="flex gap-2.5">
@@ -616,7 +633,31 @@ export const PRODUCTIVITY_FALLBACK_FEATURED: ProductivityFeaturedProduct[] = [
 
 /* ── Scenes / portraits ─────────────────────────────────────────────────── */
 
-function WorkScene({ kind, label }: { kind: "desk" | "team" | "remote" | "office"; label: string }) {
+function WorkScene({
+  kind,
+  label,
+  imageUrl,
+}: {
+  kind: "desk" | "team" | "remote" | "office";
+  label: string;
+  imageUrl?: string;
+}) {
+  if (imageUrl) {
+    return (
+      <div className="absolute inset-0">
+        <Image src={imageUrl} alt={label} fill className="object-cover" unoptimized sizes="320px" />
+        <div className="absolute inset-0 bg-gradient-to-t from-navy/50 via-transparent to-transparent" />
+        <div className="absolute bottom-4 left-4 right-4">
+          <span
+            className={`inline-flex rounded-lg bg-white/90 px-2.5 py-1 ${BADGE_CLASS} font-semibold text-navy backdrop-blur-sm ${ELEVATION_HAIRLINE}`}
+          >
+            {label}
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   const tones = {
     desk: "from-[#d8f3f0] via-[#e8f6f4] to-[#c5e8e4]",
     team: "from-[#dbeafe] via-[#e0f2fe] to-[#c7d2fe]",
@@ -627,28 +668,15 @@ function WorkScene({ kind, label }: { kind: "desk" | "team" | "remote" | "office
   return (
     <div className={`absolute inset-0 bg-gradient-to-br ${tones[kind]}`}>
       <svg viewBox="0 0 320 360" className="h-full w-full" aria-hidden>
-        {/* soft window light */}
         <rect x="24" y="28" width="90" height="70" rx="8" fill="#fff" opacity="0.55" />
         <rect x="32" y="36" width="74" height="54" rx="4" fill="#bae6fd" opacity="0.5" />
-        {/* desk */}
         <rect x="40" y="250" width="240" height="14" rx="3" fill="#94a3b8" opacity="0.45" />
         <rect x="70" y="170" width="160" height="90" rx="8" fill="#0f172a" opacity="0.12" />
         <rect x="82" y="180" width="136" height="72" rx="4" fill="#0ea5a4" opacity="0.22" />
-        {/* person */}
         <circle cx="160" cy="145" r="28" fill="#f8fafc" />
         <circle cx="160" cy="140" r="22" fill="#cbd5e1" />
         <path d="M115 250c12-48 28-70 45-70s33 22 45 70" fill="#64748b" opacity="0.55" />
-        {/* laptop base */}
         <rect x="100" y="230" width="120" height="8" rx="2" fill="#475569" opacity="0.5" />
-        {kind === "team" || kind === "remote" ? (
-          <>
-            <circle cx="95" cy="200" r="10" fill="#94a3b8" opacity="0.7" />
-            <circle cx="225" cy="200" r="10" fill="#94a3b8" opacity="0.7" />
-          </>
-        ) : null}
-        {kind === "desk" ? (
-          <ellipse cx="230" cy="228" rx="18" ry="10" fill="#f59e0b" opacity="0.35" />
-        ) : null}
       </svg>
       <div className="absolute bottom-4 left-4 right-4">
         <span
@@ -661,7 +689,23 @@ function WorkScene({ kind, label }: { kind: "desk" | "team" | "remote" | "office
   );
 }
 
-function ConsultPortrait() {
+function ConsultPortrait({ imageUrl }: { imageUrl?: string }) {
+  if (imageUrl) {
+    return (
+      <div className="absolute inset-0">
+        <Image
+          src={imageUrl}
+          alt="Tư vấn KEYON"
+          fill
+          className="object-cover object-top"
+          unoptimized
+          sizes="280px"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-navy/25 to-transparent" />
+      </div>
+    );
+  }
+
   return (
     <div className="absolute inset-0 bg-gradient-to-br from-accent/20 via-teal-100 to-slate-200">
       <svg viewBox="0 0 220 260" className="h-full w-full" aria-hidden>
@@ -671,12 +715,8 @@ function ConsultPortrait() {
             <stop offset="100%" stopColor="#94a3b8" />
           </linearGradient>
         </defs>
-        <rect width="220" height="260" fill="url(#cpBg)" className="opacity-0" />
-        {/* shoulders */}
         <path d="M30 260c20-70 50-100 80-100s60 30 80 100" fill="#0f172a" opacity="0.55" />
-        {/* head */}
         <circle cx="110" cy="110" r="42" fill="url(#cpSkin)" />
-        {/* headset */}
         <path
           d="M68 110a42 42 0 0 1 84 0"
           fill="none"
@@ -687,7 +727,6 @@ function ConsultPortrait() {
         <rect x="58" y="108" width="14" height="22" rx="4" fill="#0ea5a4" />
         <rect x="148" y="108" width="14" height="22" rx="4" fill="#0ea5a4" />
         <path d="M72 130c8 18 28 28 48 18" fill="none" stroke="#0ea5a4" strokeWidth="3" />
-        {/* mic */}
         <circle cx="95" cy="155" r="5" fill="#14b8a6" />
       </svg>
       <div className="absolute bottom-3 left-3 right-3">
@@ -887,116 +926,106 @@ function EcoMark({
   );
 }
 
-function ProductivityHeroArt() {
+function ProductivityHeroArt({ imageUrl }: { imageUrl?: string }) {
   return (
-    <div className="relative mx-auto aspect-[4/3.2] w-full max-w-[520px]">
-      {/* decorative dots */}
-      <span className="absolute left-[8%] top-[18%] h-2.5 w-2.5 rounded-full bg-accent/50" aria-hidden />
-      <span className="absolute right-[6%] top-[42%] h-2 w-2 rounded-full bg-sky-400/60" aria-hidden />
-      <span className="absolute bottom-[28%] left-[2%] h-1.5 w-1.5 rounded-full bg-accent/40" aria-hidden />
+    <div className="relative mx-auto aspect-[5/4] w-full max-w-[540px]">
+      {/* soft dots */}
+      <span className="absolute left-[6%] top-[14%] h-2.5 w-2.5 rounded-full bg-accent/45" aria-hidden />
+      <span className="absolute right-[4%] top-[48%] h-2 w-2 rounded-full bg-sky-400/55" aria-hidden />
+      <span className="absolute bottom-[22%] left-[3%] h-1.5 w-1.5 rounded-full bg-accent/35" aria-hidden />
+      <span className="absolute right-[18%] top-[8%] h-1.5 w-1.5 rounded-full bg-slate-300" aria-hidden />
 
-      {/* organic blob photo stage */}
+      {/* Banner viewBox — CMS uploadable image inside organic blob */}
       <div
-        className={`absolute inset-[6%_4%_4%_8%] overflow-hidden bg-gradient-to-br from-[#9fd9d4] via-[#7ec8c2] to-[#5bb0b8] ${ELEVATION_FLOAT}`}
-        style={{
-          borderRadius: "42% 58% 48% 52% / 38% 42% 58% 62%",
-        }}
+        className={`absolute inset-[8%_6%_10%_10%] overflow-hidden ${ELEVATION_FLOAT}`}
+        style={{ borderRadius: "48% 52% 42% 58% / 36% 44% 56% 64%" }}
+      >
+        {imageUrl ? (
+          <Image
+            src={imageUrl}
+            alt="Năng suất & Cộng tác"
+            fill
+            className="object-cover"
+            unoptimized
+            sizes="(max-width: 1024px) 90vw, 520px"
+            priority
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-[#9fd9d4] via-[#6eb8b4] to-[#4a9aa3]">
+            <svg viewBox="0 0 400 420" className="h-full w-full" aria-hidden>
+              <ellipse cx="210" cy="360" rx="150" ry="28" fill="#0f172a" opacity="0.12" />
+              <rect x="130" y="250" width="150" height="95" rx="8" fill="#1e293b" />
+              <rect x="140" y="260" width="130" height="72" rx="4" fill="#0ea5a4" opacity="0.35" />
+              <path d="M145 360c15-85 35-120 65-120s50 35 65 120" fill="#e2e8f0" />
+              <circle cx="210" cy="175" r="48" fill="#cbd5e1" />
+              <path
+                d="M162 165c8-45 35-62 48-62 18 0 42 20 48 55-12-8-22-10-30-8-8 18-28 28-48 22z"
+                fill="#334155"
+                opacity="0.85"
+              />
+            </svg>
+          </div>
+        )}
+        <div
+          className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-navy/10 via-transparent to-white/10"
+          aria-hidden
+        />
+      </div>
+
+      {/* Top-right — Đồng bộ dữ liệu */}
+      <div
+        className={`absolute right-0 top-[2%] z-10 w-[48%] max-w-[210px] rounded-2xl border border-border/70 bg-white px-3.5 py-3 ${ELEVATION_FLOAT}`}
+      >
+        <div className="flex items-center gap-2.5">
+          <span
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky-50 text-sky-600"
+            aria-hidden
+          >
+            <CloudUpload size={16} strokeWidth={1.9} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className={`${BADGE_CLASS} font-semibold text-navy`}>Đồng bộ dữ liệu</p>
+            <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-surface">
+              <div className="h-full w-full rounded-full bg-accent" />
+            </div>
+          </div>
+          <span className={`${BADGE_CLASS} shrink-0 tabular-nums font-semibold text-accent`}>
+            100%
+          </span>
+        </div>
+      </div>
+
+      {/* Mid-left — Cuộc họp hôm nay (overlap blob) */}
+      <div
+        className={`absolute left-0 top-[38%] z-10 flex items-center gap-2.5 rounded-2xl border border-border/70 bg-white px-3 py-2.5 ${ELEVATION_FLOAT}`}
       >
         <div
-          className="absolute inset-0 opacity-40"
+          className="h-10 w-10 shrink-0 overflow-hidden rounded-lg"
           style={{
-            backgroundImage:
-              "radial-gradient(circle at 30% 25%, rgba(255,255,255,0.55), transparent 40%), radial-gradient(circle at 70% 70%, rgba(15,23,42,0.12), transparent 45%)",
+            background: "linear-gradient(145deg, #5eead4, #0ea5a4)",
           }}
           aria-hidden
         />
-        {/* professional figure */}
-        <svg viewBox="0 0 400 420" className="absolute inset-0 h-full w-full" aria-hidden>
-          <defs>
-            <linearGradient id="phSkin" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#f1f5f9" />
-              <stop offset="100%" stopColor="#cbd5e1" />
-            </linearGradient>
-            <linearGradient id="phShirt" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#f8fafc" />
-              <stop offset="100%" stopColor="#e2e8f0" />
-            </linearGradient>
-          </defs>
-          {/* desk surface */}
-          <ellipse cx="210" cy="360" rx="150" ry="28" fill="#0f172a" opacity="0.12" />
-          {/* laptop */}
-          <rect x="130" y="250" width="150" height="95" rx="8" fill="#1e293b" />
-          <rect x="140" y="260" width="130" height="72" rx="4" fill="#0ea5a4" opacity="0.35" />
-          <rect x="120" y="345" width="170" height="10" rx="2" fill="#334155" />
-          {/* person */}
-          <path d="M145 360c15-85 35-120 65-120s50 35 65 120" fill="url(#phShirt)" />
-          <circle cx="210" cy="175" r="48" fill="url(#phSkin)" />
-          {/* hair */}
-          <path
-            d="M162 165c8-45 35-62 48-62 18 0 42 20 48 55-12-8-22-10-30-8-8 18-28 28-48 22-8-2-14-5-18-7z"
-            fill="#334155"
-            opacity="0.85"
-          />
-          {/* arm on laptop */}
-          <path d="M155 280c25 10 50 18 80 8" fill="none" stroke="#cbd5e1" strokeWidth="14" strokeLinecap="round" />
-        </svg>
-      </div>
-
-      {/* Sync card — top right */}
-      <div
-        className={`absolute right-0 top-[4%] z-10 w-[46%] max-w-[200px] rounded-2xl border border-border/80 bg-white px-3.5 py-3 ${ELEVATION_FLOAT}`}
-      >
-        <div className="flex items-center justify-between gap-2">
-          <p className={`${BADGE_CLASS} font-semibold text-navy`}>Đồng bộ dữ liệu</p>
-          <span className={`${BADGE_CLASS} tabular-nums text-accent`}>100%</span>
-        </div>
-        <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-surface">
-          <div className="h-full w-full rounded-full bg-accent" />
-        </div>
-        <p className={`mt-1.5 ${CARD_META_CLASS}`}>Hoàn tất · Cloud</p>
-      </div>
-
-      {/* Video meeting — mid left */}
-      <div
-        className={`absolute left-0 top-[28%] z-10 w-[48%] max-w-[210px] rounded-2xl border border-border/80 bg-white p-2 ${ELEVATION_FLOAT}`}
-      >
-        <div className="grid grid-cols-3 gap-1">
-          {[0, 1, 2, 3, 4, 5].map((i) => (
-            <div
-              key={i}
-              className="aspect-square rounded-md"
-              style={{
-                background: `linear-gradient(145deg, hsl(${155 + i * 22}, 42%, ${72 - i * 3}%), hsl(${190 + i * 12}, 35%, ${48 + i}%)`,
-              }}
-            />
-          ))}
-        </div>
-        <div className="mt-1.5 flex items-center gap-1.5 px-0.5">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden />
-          <p className={`${BADGE_CLASS} font-semibold text-navy`}>Họp nhóm · Live</p>
+        <div>
+          <p className={`${BADGE_CLASS} text-muted`}>Cuộc họp hôm nay</p>
+          <p className="font-display text-2xl font-bold leading-none tabular-nums text-navy">6</p>
         </div>
       </div>
 
-      {/* Meetings count — mid right lower */}
+      {/* Bottom-right — Tài liệu cộng tác */}
       <div
-        className={`absolute bottom-[34%] right-[2%] z-10 rounded-2xl border border-border/80 bg-white px-3.5 py-2.5 ${ELEVATION_FLOAT}`}
-      >
-        <p className={`${BADGE_CLASS} text-muted`}>Cuộc họp hôm nay</p>
-        <p className="mt-0.5 font-display text-[1.75rem] font-bold leading-none tabular-nums tracking-tight text-navy">
-          6
-        </p>
-      </div>
-
-      {/* Docs — bottom */}
-      <div
-        className={`absolute bottom-[2%] left-[12%] z-10 flex items-center gap-2 rounded-2xl border border-border/80 bg-white px-3 py-2.5 ${ELEVATION_FLOAT}`}
+        className={`absolute bottom-[4%] right-0 z-10 flex items-center gap-2 rounded-2xl border border-border/70 bg-white px-3 py-2.5 ${ELEVATION_FLOAT}`}
       >
         <WordChip />
         <ExcelChip />
         <PptChip />
+        <span
+          className={`flex h-[26px] min-w-[26px] items-center justify-center rounded-md bg-surface px-1.5 ${BADGE_CLASS} font-bold text-navy`}
+        >
+          +5
+        </span>
         <div className="pl-0.5">
           <p className={`${BADGE_CLASS} font-semibold text-navy`}>Tài liệu cộng tác</p>
-          <p className={`mt-0.5 ${CARD_META_CLASS}`}>Word · Excel · PPT</p>
         </div>
       </div>
     </div>

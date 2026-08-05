@@ -206,6 +206,16 @@ export type CmsBanner = {
   visible: boolean;
 };
 
+/** Landing `/solutions/productivity` — ảnh hero blob + tư vấn + scene work-mode. */
+export type CmsProductivity = {
+  /** Hero cột phải — banner trong organic blob (khuyến nghị ~960×720). */
+  heroImageUrl: string;
+  /** Ảnh người hỗ trợ trong card tư vấn (ecosystem cột phải). */
+  consultImageUrl: string;
+  /** Ảnh cột trái panel “Giải pháp theo cách bạn làm việc” (tuỳ chọn). */
+  workSceneImageUrl: string;
+};
+
 export type CmsFaqCategory = "payment" | "delivery" | "account" | "general";
 
 export type CmsFaqItem = {
@@ -287,6 +297,12 @@ export const defaultCmsBanner: CmsBanner = {
   ctaHref: "/products",
   imageUrl: "",
   visible: true,
+};
+
+export const defaultCmsProductivity: CmsProductivity = {
+  heroImageUrl: "",
+  consultImageUrl: "",
+  workSceneImageUrl: "",
 };
 
 export const defaultCmsFaq: CmsFaqItem[] = [
