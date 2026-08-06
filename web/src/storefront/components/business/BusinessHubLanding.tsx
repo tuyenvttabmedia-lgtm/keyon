@@ -353,30 +353,28 @@ export function BusinessHubLanding() {
               "radial-gradient(ellipse 42% 70% at 92% 50%, rgba(14,165,164,0.28), transparent 55%), radial-gradient(ellipse 35% 45% at 8% 85%, rgba(14,165,233,0.08), transparent 50%)",
           }}
         />
-        <div className="home-container relative py-10 md:py-12 lg:py-14">
+        <div className="home-container relative py-6 md:py-7 lg:py-8">
           <h2 className={`${SECTION_TITLE_CLASS} !text-white`}>KEYON giúp doanh nghiệp</h2>
 
-          <div className="mt-8 grid items-center gap-8 lg:mt-9 lg:grid-cols-[minmax(0,1fr)_minmax(200px,0.28fr)] lg:gap-8 xl:gap-10">
-            <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5 xl:gap-6">
+          <div className="mt-5 grid items-center gap-5 lg:mt-5 lg:grid-cols-[minmax(0,1fr)_minmax(160px,0.22fr)] lg:gap-6 xl:gap-8">
+            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4 xl:gap-5">
               {BENEFITS.map((b) => (
-                <li key={b.title} className="flex gap-3">
+                <li key={b.title} className="flex gap-2.5">
                   <span
-                    className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center text-accent"
+                    className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center text-accent"
                     aria-hidden
                   >
-                    <b.Icon size={26} strokeWidth={1.65} />
+                    <b.Icon size={22} strokeWidth={1.7} />
                   </span>
                   <div className="min-w-0">
                     <h3 className={`${CARD_TITLE_CLASS} !text-white`}>{b.title}</h3>
-                    <p className={`mt-1.5 text-[13px] leading-relaxed text-slate-300`}>
-                      {b.body}
-                    </p>
+                    <p className="mt-1 text-[13px] leading-snug text-slate-300">{b.body}</p>
                   </div>
                 </li>
               ))}
             </ul>
 
-            <div className="relative mx-auto w-full max-w-[220px] lg:mx-0 lg:max-w-none">
+            <div className="relative mx-auto w-full max-w-[168px] lg:mx-0 lg:max-w-none">
               <BusinessShieldArt />
             </div>
           </div>
@@ -455,7 +453,7 @@ export function BusinessHubLanding() {
 
 function BusinessShieldArt() {
   return (
-    <div className="relative mx-auto aspect-[4/5] w-full max-w-[240px] lg:max-w-[260px]">
+    <div className="relative mx-auto aspect-[4/5] w-full max-w-[168px] lg:max-w-[180px]">
       <span
         className="pointer-events-none absolute inset-[8%] rounded-full bg-accent/30 blur-2xl"
         aria-hidden
