@@ -180,45 +180,39 @@ const TESTIMONIALS = [
 ] as const;
 
 const HERO_FLOATS: {
+  id: string;
   label: string;
   Icon: LucideIcon;
-  x: string;
-  y: string;
   tone: string;
 }[] = [
   {
+    id: "tl",
     label: "Bản quyền phần mềm",
     Icon: KeyRound,
-    x: "0%",
-    y: "8%",
     tone: "text-accent",
   },
   {
+    id: "tr",
     label: "Quản lý bản quyền",
     Icon: LayoutGrid,
-    x: "58%",
-    y: "0%",
     tone: "text-violet-600",
   },
   {
+    id: "ml",
     label: "Bảo mật & An toàn",
     Icon: Shield,
-    x: "68%",
-    y: "38%",
     tone: "text-sky-700",
   },
   {
+    id: "mr",
     label: "Backup & Khôi phục",
     Icon: HardDrive,
-    x: "52%",
-    y: "72%",
     tone: "text-emerald-700",
   },
   {
+    id: "bl",
     label: "Năng suất & Cộng tác",
     Icon: Sparkles,
-    x: "2%",
-    y: "62%",
     tone: "text-orange-600",
   },
 ];
@@ -235,7 +229,7 @@ export function SolutionsHubLanding() {
           aria-hidden
         />
         <div className="home-container relative py-9 md:py-11 lg:py-14">
-          <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-8 xl:gap-12">
+          <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] md:gap-6 lg:gap-10 xl:gap-12">
             <div className="min-w-0 max-w-xl">
               <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
                 Giải pháp toàn diện
@@ -462,77 +456,74 @@ function TestimonialCard({
   );
 }
 
-/** Hero visual — central K hub + 5 white floating solution cards (mockup). */
+/** Hero visual hub — K 120² + mesh + glow + 5 white cards (mockup). */
 function SolutionsHeroArt() {
   return (
     <div
-      className="solutions-hero-art relative mx-auto aspect-[1.05/1] w-full max-w-[520px] lg:max-w-none"
+      className="solutions-hero-hub"
       role="img"
       aria-label="Hệ sinh thái giải pháp KEYON"
     >
-      <div
-        className="pointer-events-none absolute inset-[6%] rounded-full bg-[radial-gradient(circle_at_center,rgba(14,165,164,0.18),transparent_65%)] blur-2xl"
-        aria-hidden
-      />
+      <div className="solutions-hero-glow" aria-hidden />
 
-      {/* Circuit lines behind hub */}
       <svg
-        className="pointer-events-none absolute inset-[10%] z-[1] opacity-50"
-        viewBox="0 0 400 400"
+        className="solutions-hero-mesh"
+        viewBox="0 0 540 480"
         fill="none"
         aria-hidden
       >
         <path
-          d="M70 110 C120 140 160 170 200 200 M330 80 C280 130 240 170 200 200 M80 300 C130 260 160 230 200 200 M320 310 C270 270 230 230 200 200 M200 50 L200 200 M200 200 L200 350"
-          stroke="rgb(14 165 164 / 0.35)"
+          d="M120 90 L270 240 M420 70 L270 240 M95 340 L270 240 M430 350 L270 240 M270 40 L270 240 M270 240 L270 440 M150 200 L270 240 M390 200 L270 240"
+          stroke="#14BBA6"
+          strokeOpacity="0.18"
           strokeWidth="1.25"
-          strokeDasharray="3 7"
         />
-        <circle cx="70" cy="110" r="3" fill="rgb(14 165 164 / 0.5)" />
-        <circle cx="330" cy="80" r="3" fill="rgb(14 165 164 / 0.5)" />
-        <circle cx="80" cy="300" r="3" fill="rgb(14 165 164 / 0.5)" />
-        <circle cx="320" cy="310" r="3" fill="rgb(14 165 164 / 0.5)" />
+        <path
+          d="M90 120 C150 160 210 200 270 240 M450 100 C390 150 320 200 270 240 M100 360 C160 310 210 270 270 240 M440 370 C380 320 320 270 270 240"
+          stroke="#14BBA6"
+          strokeOpacity="0.16"
+          strokeWidth="1"
+          strokeDasharray="4 8"
+        />
+        <circle cx="120" cy="90" r="2.5" fill="#14BBA6" fillOpacity="0.35" />
+        <circle cx="420" cy="70" r="2.5" fill="#14BBA6" fillOpacity="0.35" />
+        <circle cx="95" cy="340" r="2.5" fill="#14BBA6" fillOpacity="0.35" />
+        <circle cx="430" cy="350" r="2.5" fill="#14BBA6" fillOpacity="0.35" />
+        <circle cx="150" cy="200" r="2" fill="#14BBA6" fillOpacity="0.3" />
+        <circle cx="390" cy="200" r="2" fill="#14BBA6" fillOpacity="0.3" />
       </svg>
 
-      {/* Central K cube */}
-      <div
-        className={`absolute left-1/2 top-1/2 z-20 flex h-[7.75rem] w-[7.75rem] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-[1.35rem] bg-navy sm:h-[8.75rem] sm:w-[8.75rem] sm:rounded-[1.5rem] ${ELEVATION_FLOAT}`}
-      >
-        <div
-          className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-40"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(14,165,164,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(14,165,164,0.15) 1px, transparent 1px)",
-            backgroundSize: "14px 14px",
-          }}
-          aria-hidden
-        />
-        <span
-          className={`${FONT_DISPLAY} relative text-[2.75rem] font-extrabold tracking-tight text-accent sm:text-[3.25rem]`}
-          style={{ textShadow: "0 0 28px rgba(14,165,164,0.45)" }}
-        >
-          K
-        </span>
+      <div className={`solutions-hero-k ${ELEVATION_FLOAT}`}>
+        <div className="solutions-hero-k-grid" aria-hidden />
+        <span className={`solutions-hero-k-letter ${FONT_DISPLAY}`}>K</span>
       </div>
 
-      {/* Floating white cards */}
-      {HERO_FLOATS.map((f) => (
-        <div
-          key={f.label}
-          className={`absolute z-10 flex max-w-[11.5rem] items-center gap-2 rounded-xl border border-border/80 bg-white px-2.5 py-2 sm:max-w-[12.5rem] sm:gap-2.5 sm:px-3 sm:py-2.5 ${ELEVATION_FLOAT}`}
-          style={{ left: f.x, top: f.y }}
-        >
-          <span
-            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface ${f.tone}`}
-            aria-hidden
+      {/* Desktop absolute cluster */}
+      <div className="solutions-hero-cards-desktop" aria-hidden={false}>
+        {HERO_FLOATS.map((f) => (
+          <div
+            key={f.id}
+            className={`solutions-hero-card solutions-hero-card--${f.id} ${ELEVATION_FLOAT}`}
           >
-            <f.Icon {...ICON_SM} />
-          </span>
-          <span className="truncate text-[11px] font-semibold leading-tight text-navy sm:text-[12px]">
-            {f.label}
-          </span>
-        </div>
-      ))}
+            <span className={`solutions-hero-card-icon ${f.tone}`} aria-hidden>
+              <f.Icon {...ICON_SM} />
+            </span>
+            <span className="solutions-hero-card-label">{f.label}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Mobile 2+2+1 grid */}
+      <ul className="solutions-hero-cards-mobile">
+        {HERO_FLOATS.map((f) => (
+          <li key={f.id} className={`solutions-hero-card ${ELEVATION_FLOAT}`}>
+            <span className={`solutions-hero-card-icon ${f.tone}`} aria-hidden>
+              <f.Icon {...ICON_SM} />
+            </span>
+            <span className="solutions-hero-card-label">{f.label}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

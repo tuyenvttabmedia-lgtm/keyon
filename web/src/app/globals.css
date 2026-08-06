@@ -377,6 +377,240 @@ html {
   }
 }
 
+/* Solutions hub hero — K hub + mesh + floating cards */
+.solutions-hero-hub {
+  position: relative;
+  width: 100%;
+  max-width: 540px;
+  margin-inline: auto;
+  aspect-ratio: 540 / 480;
+}
+
+.solutions-hero-glow {
+  position: absolute;
+  inset: 12% 14% 14%;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle at 50% 48%,
+    rgba(20, 187, 166, 0.28) 0%,
+    rgba(20, 187, 166, 0.1) 42%,
+    transparent 70%
+  );
+  filter: blur(22px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.solutions-hero-mesh {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.solutions-hero-k {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 20;
+  display: flex;
+  width: 120px;
+  height: 120px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  background: #0b1f33;
+  transform: translate(-50%, -50%);
+}
+
+.solutions-hero-k-grid {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0.45;
+  background-image:
+    linear-gradient(rgba(20, 187, 166, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 187, 166, 0.16) 1px, transparent 1px);
+  background-size: 12px 12px;
+  pointer-events: none;
+}
+
+.solutions-hero-k-letter {
+  position: relative;
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #14bba6;
+  text-shadow: 0 0 32px rgba(20, 187, 166, 0.55);
+}
+
+.solutions-hero-card {
+  display: flex;
+  width: 132px;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  background: #fff;
+  padding: 0.5rem 0.625rem;
+}
+
+.solutions-hero-card-icon {
+  display: flex;
+  height: 1.875rem;
+  width: 1.875rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  background: #f4f8fb;
+}
+
+.solutions-hero-card-label {
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #0b1f33;
+}
+
+.solutions-hero-cards-desktop {
+  display: none;
+}
+
+.solutions-hero-cards-mobile {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.625rem;
+  padding-top: 8.5rem;
+  list-style: none;
+  margin: 0;
+}
+
+.solutions-hero-cards-mobile .solutions-hero-card {
+  width: 100%;
+}
+
+.solutions-hero-cards-mobile li:last-child {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: min(100%, 12rem);
+}
+
+@media (max-width: 767.98px) {
+  .solutions-hero-hub {
+    aspect-ratio: auto;
+  }
+
+  .solutions-hero-glow {
+    inset: 0 8% 58%;
+  }
+
+  .solutions-hero-mesh {
+    height: 11rem;
+  }
+
+  .solutions-hero-k {
+    position: relative;
+    left: auto;
+    top: auto;
+    margin: 0.25rem auto 1.25rem;
+    transform: none;
+  }
+
+  .solutions-hero-cards-mobile {
+    padding-top: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .solutions-hero-hub {
+    max-width: none;
+  }
+
+  .solutions-hero-cards-mobile {
+    display: none;
+  }
+
+  .solutions-hero-cards-desktop {
+    display: block;
+  }
+
+  .solutions-hero-card {
+    position: absolute;
+    z-index: 10;
+    width: 136px;
+  }
+
+  /* Gap from K edge (~60px half) + 56–72px ≈ card centers ~ 56–8% from edges */
+  .solutions-hero-card--tl {
+    left: 2%;
+    top: 6%;
+  }
+
+  .solutions-hero-card--tr {
+    right: 2%;
+    top: 4%;
+  }
+
+  .solutions-hero-card--ml {
+    left: 0%;
+    top: 42%;
+  }
+
+  .solutions-hero-card--mr {
+    right: 0%;
+    top: 40%;
+  }
+
+  .solutions-hero-card--bl {
+    left: 14%;
+    bottom: 4%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .solutions-hero-card {
+    width: 140px;
+    padding: 0.55rem 0.7rem;
+    gap: 0.55rem;
+  }
+
+  .solutions-hero-card-label {
+    font-size: 12px;
+  }
+
+  .solutions-hero-card--tl {
+    left: 0%;
+    top: 5%;
+  }
+
+  .solutions-hero-card--tr {
+    right: 0%;
+    top: 2%;
+  }
+
+  .solutions-hero-card--ml {
+    left: -2%;
+    top: 41%;
+  }
+
+  .solutions-hero-card--mr {
+    right: -2%;
+    top: 39%;
+  }
+
+  .solutions-hero-card--bl {
+    left: 12%;
+    bottom: 2%;
+  }
+}
+
 /* License-management hero — product UI floating in 3D space */
 .hero-dashboard-scene {
   position: relative;
