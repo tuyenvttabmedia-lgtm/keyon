@@ -33,7 +33,7 @@ import {
 import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
 import type { ShopCategoryId } from "@/storefront/components/shop/types";
 import { mapProductsToShopCards } from "@/storefront/lib/related-products";
-import type { FeaturedProduct, FaqItem } from "./types";
+import type { FeaturedProduct, FaqItem, PartnerItem } from "./types";
 
 /**
  * Home content: fixture + overlay CMS (hero, nav, footer, news, partners, categories, ratings, why banner).
@@ -116,9 +116,9 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
   const cmsPartnerSource =
     partners.items?.length > 0 ? partners.items : defaultCmsPartners.items;
 
-  let partnerItems = cmsPartnerSource
+  let partnerItems: PartnerItem[] = cmsPartnerSource
     .filter((p) => p.visible !== false)
-    .map((p) => {
+    .map((p): PartnerItem | null => {
       const brand =
         (p.brandId ? brandById.get(p.brandId) : undefined) ||
         (p.name ? brandByName.get(p.name.trim().toLowerCase()) : undefined);
@@ -129,7 +129,7 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
           name: brand.name,
           logoUrl: resolvePartnerLogo(brand.logoUrl),
           href: p.href?.trim() || `/brands/${brand.slug}`,
-          visible: true as const,
+          visible: true,
         };
       }
 
@@ -141,13 +141,13 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
           logoUrl: resolvePartnerLogo(p.logoUrl),
           brandColor: p.brandColor,
           href: p.href,
-          visible: true as const,
+          visible: true,
         };
       }
 
       return null;
     })
-    .filter((p): p is NonNullable<typeof p> => p !== null);
+    .filter((p): p is PartnerItem => p !== null);
 
   // Soft default: featured catalog brands when CMS list empty after resolve
   if (partnerItems.length === 0) {
@@ -159,7 +159,7 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
         name: b.name,
         logoUrl: resolvePartnerLogo(b.logoUrl),
         href: `/brands/${b.slug}`,
-        visible: true as const,
+        visible: true,
       }));
   }
 
