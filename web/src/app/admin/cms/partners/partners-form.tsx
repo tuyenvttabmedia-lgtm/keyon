@@ -1,12 +1,26 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import Link from "next/link";
 import type { CmsPartnerItem, CmsPartners } from "@/server/cms/types";
-import { MediaPicker } from "@/app/admin/media/MediaPicker";
 import { CmsSaveForm } from "../CmsSaveForm";
 
-export function PartnersForm({ initial }: { initial: CmsPartners }) {
+export type PartnerBrandOption = {
+  id: string;
+  name: string;
+  slug: string;
+  logoUrl: string | null;
+};
+
+export function PartnersForm({
+  initial,
+  brands,
+}: {
+  initial: CmsPartners;
+  brands: PartnerBrandOption[];
+}) {
+  const brandById = new Map(brands.map((b) => [b.id, b]));
+
   return (
     <CmsSaveForm initial={initial} apiKey="partners">
       {(form, setForm) => (
@@ -40,11 +54,21 @@ export function PartnersForm({ initial }: { initial: CmsPartners }) {
 
           <div className="space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="text-sm font-medium text-navy">Danh sách đối tác</p>
+              <p className="text-sm font-medium text-navy">Thương hiệu trên Home</p>
               <p className="text-xs text-muted">
-                Home: carousel đối tác + tối đa 4 logo trên Hero “Trusted by”
+                Chọn từ Catalog · Thương hiệu — logo/tên lấy tự động
               </p>
             </div>
+
+            {brands.length === 0 ? (
+              <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                Chưa có thương hiệu active trong Catalog.{" "}
+                <Link href="/admin/brands/new" className="font-semibold underline">
+                  Thêm thương hiệu
+                </Link>{" "}
+                trước, rồi quay lại chọn cho Home.
+              </p>
+            ) : null}
 
             {form.items.map((item, idx) => (
               <PartnerRow
@@ -52,6 +76,11 @@ export function PartnersForm({ initial }: { initial: CmsPartners }) {
                 item={item}
                 index={idx}
                 total={form.items.length}
+                brands={brands}
+                brandById={brandById}
+                usedBrandIds={form.items
+                  .map((x) => x.brandId)
+                  .filter((id): id is string => Boolean(id && id !== item.brandId))}
                 onChange={(nextItem) => {
                   const next = [...form.items];
                   next[idx] = nextItem;
@@ -77,23 +106,25 @@ export function PartnersForm({ initial }: { initial: CmsPartners }) {
 
             <button
               type="button"
-              className="rounded-xl border border-border px-4 py-2 text-sm font-medium hover:border-accent"
-              onClick={() =>
+              disabled={brands.length === 0}
+              className="rounded-xl border border-border px-4 py-2 text-sm font-medium hover:border-accent disabled:cursor-not-allowed disabled:opacity-40"
+              onClick={() => {
+                const used = new Set(form.items.map((x) => x.brandId).filter(Boolean));
+                const firstFree = brands.find((b) => !used.has(b.id));
                 setForm({
                   ...form,
                   items: [
                     ...form.items,
                     {
                       id: `p_${Date.now()}`,
-                      name: "Đối tác mới",
-                      brandColor: "#0EA5A4",
+                      brandId: firstFree?.id,
                       visible: true,
                     },
                   ],
-                })
-              }
+                });
+              }}
             >
-              + Thêm đối tác
+              + Thêm thương hiệu
             </button>
           </div>
         </div>
@@ -106,6 +137,9 @@ function PartnerRow({
   item,
   index,
   total,
+  brands,
+  brandById,
+  usedBrandIds,
   onChange,
   onRemove,
   onMove,
@@ -113,101 +147,99 @@ function PartnerRow({
   item: CmsPartnerItem;
   index: number;
   total: number;
+  brands: PartnerBrandOption[];
+  brandById: Map<string, PartnerBrandOption>;
+  usedBrandIds: string[];
   onChange: (item: CmsPartnerItem) => void;
   onRemove: () => void;
   onMove: (dir: -1 | 1) => void;
 }) {
-  const [pickerOpen, setPickerOpen] = useState(false);
+  const brand = item.brandId ? brandById.get(item.brandId) : undefined;
+  const used = new Set(usedBrandIds);
+  const displayName = brand?.name || item.name || "Chưa chọn";
+  const displayLogo = brand?.logoUrl || item.logoUrl;
+  const defaultHref = brand ? `/brands/${brand.slug}` : undefined;
 
   return (
     <div className="grid gap-3 rounded-2xl border border-border bg-card p-4 sm:grid-cols-2">
       <div className="flex items-start gap-3 sm:col-span-2">
         <div className="flex h-16 w-28 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border bg-white p-2">
-          {item.logoUrl ? (
+          {displayLogo ? (
             <Image
-              src={item.logoUrl}
-              alt={item.name}
+              src={displayLogo}
+              alt={displayName}
               width={112}
               height={40}
               className="max-h-10 w-auto object-contain"
               unoptimized
             />
           ) : (
-            <span
-              className="text-xs font-bold"
-              style={{ color: item.brandColor || "#0EA5A4" }}
-            >
-              {item.name.slice(0, 12) || "Logo"}
-            </span>
+            <span className="text-xs font-bold text-muted">{displayName.slice(0, 12)}</span>
           )}
         </div>
-        <div className="min-w-0 flex-1 space-y-2">
-          <p className="text-sm font-medium text-navy">Logo / icon</p>
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => setPickerOpen(true)}
-              className="rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-white"
-            >
-              Chọn từ Media
-            </button>
-            {item.logoUrl ? (
-              <button
-                type="button"
-                className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted hover:border-danger hover:text-danger"
-                onClick={() => onChange({ ...item, logoUrl: undefined })}
-              >
-                Xóa logo
-              </button>
+        <div className="min-w-0 flex-1 space-y-1">
+          <p className="text-sm font-medium text-navy">{displayName}</p>
+          <p className="text-xs text-muted">
+            Logo lấy từ Catalog
+            {brand ? (
+              <>
+                {" · "}
+                <Link
+                  href={`/admin/brands/${brand.id}`}
+                  className="font-medium text-accent hover:underline"
+                >
+                  Sửa thương hiệu
+                </Link>
+              </>
             ) : null}
-          </div>
-          <MediaPicker
-            open={pickerOpen}
-            onClose={() => setPickerOpen(false)}
-            multiple={false}
-            purpose="ui"
-            title="Chọn logo đối tác"
-            onSelect={(items) => {
-              if (items[0]?.url) onChange({ ...item, logoUrl: items[0].url });
-            }}
-          />
+          </p>
+          {!item.brandId && item.name ? (
+            <p className="text-xs text-amber-700">
+              Mục cũ (chưa gắn Catalog). Chọn thương hiệu bên dưới rồi Lưu.
+            </p>
+          ) : null}
         </div>
       </div>
 
       <label className="block text-sm sm:col-span-2">
-        <span className="text-muted">Tên đối tác</span>
-        <input
-          className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-          value={item.name}
-          onChange={(e) => onChange({ ...item, name: e.target.value })}
-        />
+        <span className="text-muted">Thương hiệu (Catalog)</span>
+        <select
+          className="mt-1 w-full rounded-lg border border-border bg-white px-3 py-2"
+          value={item.brandId ?? ""}
+          onChange={(e) => {
+            const brandId = e.target.value || undefined;
+            const selected = brandId ? brandById.get(brandId) : undefined;
+            onChange({
+              id: item.id,
+              brandId,
+              visible: item.visible,
+              href: item.href,
+              // Clear legacy fields once linked
+              name: undefined,
+              logoUrl: undefined,
+              brandColor: undefined,
+              ...(selected ? {} : {}),
+            });
+          }}
+        >
+          <option value="">— Chọn thương hiệu —</option>
+          {brands.map((b) => (
+            <option key={b.id} value={b.id} disabled={used.has(b.id)}>
+              {b.name}
+              {used.has(b.id) ? " (đã chọn)" : ""}
+              {!b.logoUrl ? " · chưa có logo" : ""}
+            </option>
+          ))}
+        </select>
       </label>
 
-      <label className="block text-sm">
-        <span className="text-muted">Màu thương hiệu (khi chưa có logo)</span>
-        <div className="mt-1 flex gap-2">
-          <input
-            type="color"
-            className="h-10 w-12 cursor-pointer rounded border border-border bg-white p-1"
-            value={item.brandColor || "#0EA5A4"}
-            onChange={(e) => onChange({ ...item, brandColor: e.target.value })}
-          />
-          <input
-            className="w-full rounded-lg border border-border px-3 py-2"
-            value={item.brandColor ?? ""}
-            placeholder="#00A4EF"
-            onChange={(e) =>
-              onChange({ ...item, brandColor: e.target.value || undefined })
-            }
-          />
-        </div>
-      </label>
-
-      <label className="block text-sm">
-        <span className="text-muted">Link (tuỳ chọn)</span>
+      <label className="block text-sm sm:col-span-2">
+        <span className="text-muted">
+          Link (tuỳ chọn — mặc định {defaultHref || "/brands/…"})
+        </span>
         <input
           className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-          placeholder="https://..."
+          placeholder={defaultHref || "/brands/..."}
           value={item.href ?? ""}
           onChange={(e) =>
             onChange({ ...item, href: e.target.value.trim() || undefined })

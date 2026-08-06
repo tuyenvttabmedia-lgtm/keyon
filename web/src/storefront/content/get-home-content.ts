@@ -37,6 +37,7 @@ import type { FeaturedProduct, FaqItem } from "./types";
 
 /**
  * Home content: fixture + overlay CMS (hero, nav, footer, news, partners, categories, ratings, why banner).
+ * Partners on Home resolve from Catalog Brand (CMS only stores brandId + order/visibility).
  * Wrapped in React cache() so layout + page share one load per request.
  */
 export const getHomeContent = cache(async (): Promise<HomeContent> => {
@@ -51,6 +52,7 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
     banner,
     catalogRows,
     faqRaw,
+    catalogBrands,
   ] = await Promise.all([
     readJsonFile("home.json", defaultCmsHome),
     readJsonFile<BlogPost[]>("blog.json", defaultBlog),
@@ -87,6 +89,11 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
       take: 40,
     }),
     readJsonFile<CmsFaqItem[]>("faq.json", defaultCmsFaq),
+    prisma.brand.findMany({
+      where: { active: true },
+      select: { id: true, name: true, slug: true, logoUrl: true, featured: true, sortOrder: true },
+      orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+    }),
   ]);
 
   const published = posts.filter((p) => p.status === "published").slice(0, 4);
@@ -98,14 +105,68 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
         `${storage.wasabi.endpoint.replace(/\/$/, "")}/${storage.wasabi.bucket}`
       : "";
 
-  const partnerItems = (partners.items?.length ? partners.items : homeFixture.partners.items)
+  const brandById = new Map(catalogBrands.map((b) => [b.id, b]));
+  const brandByName = new Map(
+    catalogBrands.map((b) => [b.name.trim().toLowerCase(), b] as const),
+  );
+
+  const resolvePartnerLogo = (url?: string | null) =>
+    url ? resolveMediaUrl(url, mediaBase) || url : undefined;
+
+  const cmsPartnerSource =
+    partners.items?.length > 0 ? partners.items : defaultCmsPartners.items;
+
+  let partnerItems = cmsPartnerSource
     .filter((p) => p.visible !== false)
-    .map((p) => ({
-      ...p,
-      logoUrl: p.logoUrl
-        ? resolveMediaUrl(p.logoUrl, mediaBase) || p.logoUrl
-        : p.logoUrl,
-    }));
+    .map((p) => {
+      const brand =
+        (p.brandId ? brandById.get(p.brandId) : undefined) ||
+        (p.name ? brandByName.get(p.name.trim().toLowerCase()) : undefined);
+
+      if (brand) {
+        return {
+          id: p.id,
+          name: brand.name,
+          logoUrl: resolvePartnerLogo(brand.logoUrl),
+          href: p.href?.trim() || `/brands/${brand.slug}`,
+          visible: true as const,
+        };
+      }
+
+      // Legacy CMS row without catalog match — keep until admin re-links
+      if (p.name) {
+        return {
+          id: p.id,
+          name: p.name,
+          logoUrl: resolvePartnerLogo(p.logoUrl),
+          brandColor: p.brandColor,
+          href: p.href,
+          visible: true as const,
+        };
+      }
+
+      return null;
+    })
+    .filter((p): p is NonNullable<typeof p> => p !== null);
+
+  // Soft default: featured catalog brands when CMS list empty after resolve
+  if (partnerItems.length === 0) {
+    partnerItems = catalogBrands
+      .filter((b) => b.featured)
+      .slice(0, 8)
+      .map((b) => ({
+        id: `brand_${b.id}`,
+        name: b.name,
+        logoUrl: resolvePartnerLogo(b.logoUrl),
+        href: `/brands/${b.slug}`,
+        visible: true as const,
+      }));
+  }
+
+  // Fixture fallback only if still empty (e.g. empty catalog)
+  if (partnerItems.length === 0) {
+    partnerItems = homeFixture.partners.items.filter((p) => p.visible !== false);
+  }
 
   const shopCounts: Record<ShopCategoryId, number> = {
     windows: 0,

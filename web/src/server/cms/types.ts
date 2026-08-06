@@ -248,11 +248,20 @@ export type CmsNav = {
 
 export type CmsPartnerItem = {
   id: string;
-  name: string;
-  logoUrl?: string;
-  brandColor?: string;
+  /**
+   * Catalog Brand id — nguồn tên + logo.
+   * Legacy items may omit this and only have `name` (matched by brand name on resolve).
+   */
+  brandId?: string;
+  /** Optional link override; empty → `/brands/{slug}` when resolved from catalog */
   href?: string;
   visible: boolean;
+  /** @deprecated Prefer brandId — kept for legacy partners.json */
+  name?: string;
+  /** @deprecated Prefer Brand.logoUrl — kept for legacy partners.json */
+  logoUrl?: string;
+  /** @deprecated Prefer catalog brand — kept for legacy partners.json */
+  brandColor?: string;
 };
 
 export type CmsPartners = {
@@ -452,16 +461,8 @@ export const defaultCmsNav: CmsNav = {
 export const defaultCmsPartners: CmsPartners = {
   title: "Thương hiệu phần mềm trên KEYON",
   badges: ["Bản quyền chính hãng", "Thanh toán rõ ràng"],
-  items: [
-    { id: "p1", name: "Microsoft", brandColor: "#00A4EF", visible: true },
-    { id: "p2", name: "Adobe", brandColor: "#EB1000", visible: true },
-    { id: "p3", name: "Autodesk", brandColor: "#0696D7", visible: true },
-    { id: "p4", name: "VMware", brandColor: "#607078", visible: true },
-    { id: "p5", name: "Kaspersky", brandColor: "#006D5C", visible: true },
-    { id: "p6", name: "Acronis", brandColor: "#1A73E8", visible: true },
-    { id: "p7", name: "Norton", brandColor: "#FFE01B", visible: true },
-    { id: "p8", name: "McAfee", brandColor: "#C01818", visible: true },
-  ],
+  /** Empty by default — admin picks Catalog brands. Legacy name-only rows still resolve by name. */
+  items: [],
 };
 
 export const defaultCmsCategories: CmsCategories = {
