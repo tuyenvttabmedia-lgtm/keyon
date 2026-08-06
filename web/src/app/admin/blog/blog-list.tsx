@@ -2,13 +2,17 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { BlogPost } from "@/server/cms/types";
 import type { BlogCategoryId } from "@/server/cms/types";
 import { CATEGORY_LABEL } from "@/storefront/lib/blog";
 import { resourcePostHref } from "@/storefront/lib/resources";
 import { uniqueBlogSlug } from "@/server/cms/blog-utils";
+import {
+  PortalMenu,
+  PORTAL_MENU_ITEM_CLASS,
+} from "@/components/PortalMenu";
 import {
   ListPaginationBar,
   PageSizeSelect,
@@ -63,7 +67,6 @@ export function BlogList({ posts: initial }: { posts: BlogPost[] }) {
   const [dateFilter, setDateFilter] = useState<DateFilter>("all");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
-  const [menuId, setMenuId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
@@ -109,7 +112,6 @@ export function BlogList({ posts: initial }: { posts: BlogPost[] }) {
       setMsg(e instanceof Error ? e.message : "Lỗi");
     } finally {
       setBusy(false);
-      setMenuId(null);
     }
   }
 
@@ -309,93 +311,14 @@ export function BlogList({ posts: initial }: { posts: BlogPost[] }) {
                       <td className="px-4 py-3 text-muted">
                         {new Date(p.updatedAt).toLocaleString("vi-VN")}
                       </td>
-                      <td className="relative px-4 py-3 text-right">
-                        <div className="inline-flex items-center gap-2">
-                          {p.status === "published" ? (
-                            <a
-                              href={resourcePostHref(p)}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-sm font-medium text-accent hover:underline"
-                            >
-                              Xem
-                            </a>
-                          ) : (
-                            <Link
-                              href={`/admin/blog/${p.id}/preview`}
-                              className="text-sm font-medium text-accent hover:underline"
-                            >
-                              Xem
-                            </Link>
-                          )}
-                          <Link
-                            href={`/admin/blog/${p.id}`}
-                            className="text-sm font-medium text-navy hover:underline"
-                          >
-                            Sửa
-                          </Link>
-                          <button
-                            type="button"
-                            disabled={busy}
-                            onClick={() =>
-                              setMenuId(menuId === p.id ? null : p.id)
-                            }
-                            className="rounded-lg border border-border px-2 py-0.5 text-sm text-muted hover:bg-surface"
-                            aria-label="Thêm hành động"
-                          >
-                            …
-                          </button>
-                        </div>
-                        {menuId === p.id ? (
-                          <div className="absolute right-4 z-20 mt-1 w-48 rounded-xl border border-border bg-white py-1 text-left shadow-lg">
-                            {p.status === "published" ? (
-                              <a
-                                href={resourcePostHref(p)}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="block px-3 py-2 text-sm hover:bg-surface"
-                              >
-                                Xem bài
-                              </a>
-                            ) : (
-                              <Link
-                                href={`/admin/blog/${p.id}/preview`}
-                                className="block px-3 py-2 text-sm hover:bg-surface"
-                              >
-                                Xem bài
-                              </Link>
-                            )}
-                            <Link
-                              href={`/admin/blog/${p.id}`}
-                              className="block px-3 py-2 text-sm hover:bg-surface"
-                            >
-                              Sửa
-                            </Link>
-                            <button
-                              type="button"
-                              className="block w-full px-3 py-2 text-left text-sm hover:bg-surface"
-                              onClick={() => void duplicate(p)}
-                            >
-                              Nhân bản
-                            </button>
-                            {p.status === "published" ? (
-                              <button
-                                type="button"
-                                className="block w-full px-3 py-2 text-left text-sm hover:bg-surface"
-                                onClick={() => void unpublish(p)}
-                              >
-                                Chuyển về bản nháp
-                              </button>
-                            ) : null}
-                            <button
-                              type="button"
-                              className="block w-full px-3 py-2 text-left text-sm text-danger hover:bg-red-50"
-                              onClick={() => void remove(p)}
-                            >
-                              Xóa
-                            </button>
-                          </div>
-                        ) : null}
+                      <td className="px-4 py-3 text-right">
+                        <BlogRowActions
+                          post={p}
+                          busy={busy}
+                          onDuplicate={() => void duplicate(p)}
+                          onUnpublish={() => void unpublish(p)}
+                          onRemove={() => void remove(p)}
+                        />
                       </td>
                     </tr>
                   ))}
@@ -415,6 +338,129 @@ export function BlogList({ posts: initial }: { posts: BlogPost[] }) {
           />
         </>
       )}
+    </div>
+  );
+}
+
+function BlogRowActions({
+  post,
+  busy,
+  onDuplicate,
+  onUnpublish,
+  onRemove,
+}: {
+  post: BlogPost;
+  busy: boolean;
+  onDuplicate: () => void;
+  onUnpublish: () => void;
+  onRemove: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const item = `${PORTAL_MENU_ITEM_CLASS} hover:bg-surface`;
+
+  return (
+    <div className="inline-flex items-center gap-2">
+      {post.status === "published" ? (
+        <a
+          href={resourcePostHref(post)}
+          target="_blank"
+          rel="noreferrer"
+          className="text-sm font-medium text-accent hover:underline"
+        >
+          Xem
+        </a>
+      ) : (
+        <Link
+          href={`/admin/blog/${post.id}/preview`}
+          className="text-sm font-medium text-accent hover:underline"
+        >
+          Xem
+        </Link>
+      )}
+      <Link
+        href={`/admin/blog/${post.id}`}
+        className="text-sm font-medium text-navy hover:underline"
+      >
+        Sửa
+      </Link>
+      <button
+        ref={btnRef}
+        type="button"
+        disabled={busy}
+        onClick={() => setOpen((v) => !v)}
+        className="rounded-lg border border-border px-2 py-0.5 text-sm text-muted hover:bg-surface"
+        aria-label="Thêm hành động"
+        aria-expanded={open}
+      >
+        …
+      </button>
+      <PortalMenu
+        open={open}
+        onClose={() => setOpen(false)}
+        anchorRef={btnRef}
+        width={192}
+        className="bg-white py-1"
+      >
+        {post.status === "published" ? (
+          <a
+            href={resourcePostHref(post)}
+            target="_blank"
+            rel="noreferrer"
+            className={item}
+            onClick={() => setOpen(false)}
+          >
+            Xem bài
+          </a>
+        ) : (
+          <Link
+            href={`/admin/blog/${post.id}/preview`}
+            className={item}
+            onClick={() => setOpen(false)}
+          >
+            Xem bài
+          </Link>
+        )}
+        <Link
+          href={`/admin/blog/${post.id}`}
+          className={item}
+          onClick={() => setOpen(false)}
+        >
+          Sửa
+        </Link>
+        <button
+          type="button"
+          className={item}
+          onClick={() => {
+            setOpen(false);
+            onDuplicate();
+          }}
+        >
+          Nhân bản
+        </button>
+        {post.status === "published" ? (
+          <button
+            type="button"
+            className={item}
+            onClick={() => {
+              setOpen(false);
+              onUnpublish();
+            }}
+          >
+            Chuyển về bản nháp
+          </button>
+        ) : null}
+        <button
+          type="button"
+          className={`${item} text-danger hover:bg-red-50`}
+          onClick={() => {
+            setOpen(false);
+            onRemove();
+          }}
+        >
+          Xóa
+        </button>
+      </PortalMenu>
     </div>
   );
 }

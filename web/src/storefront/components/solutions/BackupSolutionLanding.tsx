@@ -29,7 +29,7 @@ import {
   CARD_TITLE_CLASS,
   CTA_COMPACT_CLASS,
   CTA_LABEL_CLASS,
-  HERO_TITLE_CLASS,
+  FONT_DISPLAY,
   LINK_ACCENT_CLASS,
   OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
@@ -245,14 +245,21 @@ export function BackupSolutionLanding({ featured, usingFallback }: Props) {
             <span className={BREADCRUMB_CURRENT_CLASS}>Backup & Khôi phục</span>
           </nav>
 
-          <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] md:gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-12 xl:gap-14">
-            <div className="min-w-0">
+          <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)] md:gap-10 lg:gap-12 xl:gap-[3.25rem]">
+            <div className="min-w-0 max-w-[520px]">
               <p className={`${OVERLINE_CLASS} text-accent`}>Backup & Khôi phục</p>
-              <h1 className={`mt-2.5 max-w-[520px] ${HERO_TITLE_CLASS}`}>
-                Dữ liệu của bạn.{" "}
-                <span className="text-accent">Luôn có đường quay trở lại.</span>
+              <h1
+                className={`mt-2.5 max-w-[500px] ${FONT_DISPLAY} text-[1.75rem] font-bold leading-[1.1] tracking-tight text-navy sm:text-[2.5rem] sm:leading-[1.1] lg:text-[3rem] lg:leading-[1.1] xl:text-[3.05rem] xl:leading-[1.08]`}
+              >
+                Dữ liệu của bạn.
+                <br className="hidden sm:block" />
+                <span className="text-accent">
+                  Luôn có đường
+                  <br className="hidden sm:block" />
+                  quay trở lại.
+                </span>
               </h1>
-              <p className={`mt-4 max-w-[510px] ${PAGE_LEAD_CLASS}`}>
+              <p className={`mt-4 max-w-[500px] ${PAGE_LEAD_CLASS}`}>
                 Giải pháp sao lưu tự động, an toàn — giúp cá nhân và doanh nghiệp
                 khôi phục nhanh khi sự cố, ransomware hoặc mất thiết bị.
               </p>
@@ -538,41 +545,29 @@ export function BackupSolutionLanding({ featured, usingFallback }: Props) {
 function BackupHeroArt() {
   return (
     <div
-      className="relative mx-auto aspect-[5/4.2] w-full max-w-[520px] lg:max-w-none"
+      className="backup-hero-visual hero-visual"
       role="img"
       aria-label="Minh họa backup KEYON: đám mây bảo vệ, laptop Backup Complete và điểm khôi phục"
     >
-      {/* Soft teal atmosphere — light scene, not dark demo panel */}
-      <div
-        className="pointer-events-none absolute inset-[6%] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(14,165,164,0.22)_0%,rgba(14,165,164,0.08)_45%,transparent_70%)] blur-2xl"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute inset-[18%] bg-[radial-gradient(circle_at_1px_1px,rgba(14,165,164,0.14)_1px,transparent_0)] bg-[length:16px_16px] opacity-50"
-        aria-hidden
-      />
+      <div className="backup-hero-glow" aria-hidden />
+      <div className="backup-hero-dots" aria-hidden />
 
-      {/* Concentric platform */}
-      <div
-        className="pointer-events-none absolute bottom-[6%] left-1/2 z-[1] h-14 w-[72%] -translate-x-1/2"
-        aria-hidden
-      >
-        <span className="absolute inset-x-0 top-0 h-4 rounded-[100%] border border-accent/25 bg-accent/10" />
-        <span className="absolute inset-x-[10%] top-2 h-3 rounded-[100%] border border-accent/35 bg-accent/15" />
-        <span className="absolute inset-x-[22%] top-3.5 h-2.5 rounded-[100%] bg-accent/40 blur-[1px]" />
-        <span className="absolute inset-x-[34%] top-5 h-2 rounded-[100%] bg-accent/55 blur-[2px]" />
+      <div className="backup-hero-platform" aria-hidden>
+        <span className="backup-hero-platform-ring backup-hero-platform-ring--outer" />
+        <span className="backup-hero-platform-ring backup-hero-platform-ring--inner" />
+        <span className="backup-hero-platform-core" />
       </div>
 
-      {/* Center — glowing cloud + K */}
-      <div className="absolute inset-[8%_18%_28%_18%] z-10 flex items-center justify-center">
-        <div className="relative h-full w-full max-h-[240px] max-w-[280px]">
+      {/* Cloud — center axis above laptop */}
+      <div className="backup-hero-cloud">
+        <div className="relative aspect-[280/200] w-full">
           <span
-            className="pointer-events-none absolute inset-[12%] rounded-full bg-accent/35 blur-2xl"
+            className="pointer-events-none absolute inset-[14%] rounded-full bg-accent/28 blur-2xl"
             aria-hidden
           />
           <svg
             viewBox="0 0 280 200"
-            className="relative z-[1] h-full w-full drop-shadow-[0_16px_36px_rgba(14,165,164,0.35)]"
+            className="relative z-[1] h-full w-full drop-shadow-[0_12px_24px_rgba(14,165,164,0.3)]"
             aria-hidden
           >
             <defs>
@@ -582,7 +577,7 @@ function BackupHeroArt() {
                 <stop offset="100%" stopColor="#0d9488" />
               </linearGradient>
               <filter id="bkCloudSoft" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="10" stdDeviation="12" floodColor="#0ea5a4" floodOpacity="0.35" />
+                <feDropShadow dx="0" dy="7" stdDeviation="9" floodColor="#0ea5a4" floodOpacity="0.3" />
               </filter>
             </defs>
             <path
@@ -607,66 +602,64 @@ function BackupHeroArt() {
         </div>
       </div>
 
-      {/* Left — laptop Backup Complete */}
-      <div
-        className={`absolute bottom-[14%] left-[0%] z-20 w-[44%] max-w-[210px] motion-safe:home-hero-spark ${ELEVATION_FLOAT}`}
-      >
+      {/* Laptop — shared vertical axis with cloud */}
+      <div className={`backup-hero-laptop motion-safe:home-hero-spark ${ELEVATION_FLOAT}`}>
         <div className="overflow-hidden rounded-t-xl border border-slate-200/90 bg-[#0f172a]">
           <div className="flex items-center gap-1 border-b border-white/10 px-2.5 py-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-rose-400/80" />
             <span className="h-1.5 w-1.5 rounded-full bg-amber-400/80" />
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/80" />
           </div>
-          <div className="flex flex-col items-center px-3 py-5">
-            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-500 text-white shadow-[0_0_20px_rgba(16,185,129,0.45)]">
-              <Check size={22} strokeWidth={2.6} />
+          <div className="flex flex-col items-center px-3 py-3.5 sm:py-4">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-500 text-white shadow-[0_0_16px_rgba(16,185,129,0.4)] sm:h-10 sm:w-10">
+              <Check size={18} strokeWidth={2.6} />
             </span>
-            <p className={`mt-2.5 ${BADGE_CLASS} font-semibold text-white`}>Backup Complete</p>
+            <p className={`mt-1.5 ${BADGE_CLASS} font-semibold text-white`}>Backup Complete</p>
             <p className="mt-0.5 text-[10px] text-slate-400">Hôm nay · 14:20</p>
           </div>
         </div>
-        <div className="mx-auto h-2.5 w-[108%] rounded-b-md bg-gradient-to-b from-slate-500 to-slate-600" />
+        <div className="mx-auto h-2 w-[108%] rounded-b-md bg-gradient-to-b from-slate-500 to-slate-600" />
         <div className="mx-auto h-1.5 w-[70%] rounded-b-full bg-slate-400" />
       </div>
 
-      {/* Right — protected folders */}
+      {/* Protected — attached to cloud (overlap right) */}
       <div
-        className={`absolute right-[0%] top-[8%] z-20 w-[46%] max-w-[200px] rounded-2xl border border-border/80 bg-white/95 p-3.5 backdrop-blur-sm ${ELEVATION_FLOAT}`}
+        className={`backup-hero-protected rounded-2xl border border-border/80 bg-white/95 p-2.5 backdrop-blur-sm sm:p-3 ${ELEVATION_FLOAT}`}
       >
-        <p className={`${BADGE_CLASS} mb-2.5 font-semibold text-muted`}>Đã bảo vệ</p>
-        <ul className="space-y-2">
+        <p className={`${BADGE_CLASS} mb-1.5 font-semibold text-muted`}>Đã bảo vệ</p>
+        <ul className="space-y-1.5">
           {[
             { name: "Documents", tone: "bg-sky-100 text-sky-700" },
             { name: "Images", tone: "bg-violet-100 text-violet-700" },
             { name: "Projects", tone: "bg-amber-100 text-amber-800" },
           ].map((f) => (
-            <li key={f.name} className="flex items-center gap-2">
+            <li key={f.name} className="flex items-center gap-1.5">
               <span
-                className={`flex h-7 w-7 items-center justify-center rounded-lg ${f.tone}`}
+                className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-lg ${f.tone}`}
                 aria-hidden
               >
-                <FolderOpen size={13} strokeWidth={2} />
+                <FolderOpen size={11} strokeWidth={2} />
               </span>
-              <span className="truncate text-[11px] font-semibold text-navy">{f.name}</span>
-              <Check size={13} className="ml-auto shrink-0 text-accent" strokeWidth={2.6} />
+              <span className="truncate text-[10px] font-semibold text-navy">{f.name}</span>
+              <Check size={11} className="ml-auto shrink-0 text-accent" strokeWidth={2.6} />
             </li>
           ))}
         </ul>
       </div>
 
-      {/* Right lower — Restore Point */}
+      {/* Restore — tucked beside laptop */}
       <div
-        className={`absolute bottom-[18%] right-[2%] z-20 flex w-[48%] max-w-[210px] items-center gap-2.5 rounded-2xl border border-border/80 bg-white px-3 py-2.5 ${ELEVATION_FLOAT}`}
+        className={`backup-hero-restore flex items-center gap-2 rounded-2xl border border-border/80 bg-white px-2.5 py-2 ${ELEVATION_FLOAT}`}
       >
         <span
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent sm:h-9 sm:w-9"
           aria-hidden
         >
-          <History size={18} strokeWidth={1.9} />
+          <History size={15} strokeWidth={1.9} />
         </span>
         <div className="min-w-0">
           <p className={`${BADGE_CLASS} font-semibold text-navy`}>Restore Point</p>
-          <p className="text-[11px] text-muted">10:30 AM · Hôm nay</p>
+          <p className="text-[10px] text-muted">10:30 AM · Hôm nay</p>
         </div>
       </div>
     </div>

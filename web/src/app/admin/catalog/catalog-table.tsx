@@ -2,8 +2,11 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import { useRef, useState } from "react";
+import {
+  PortalMenu,
+  PORTAL_MENU_ITEM_CLASS,
+} from "@/components/PortalMenu";
 import { ToggleActiveButton } from "./toggle-active";
 import { UpdatePriceForm } from "./update-price";
 import { BADGE_CLASS } from "@/storefront/typography";
@@ -79,60 +82,7 @@ function RowMenu({ row }: { row: CatalogRow }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
-
-  useLayoutEffect(() => {
-    if (!open || !btnRef.current) {
-      setPos(null);
-      return;
-    }
-    const MENU_W = 176;
-    const GAP = 4;
-    function place() {
-      const btn = btnRef.current;
-      if (!btn) return;
-      const r = btn.getBoundingClientRect();
-      const menuH = menuRef.current?.offsetHeight ?? 280;
-      const spaceBelow = window.innerHeight - r.bottom - GAP;
-      const openUp = spaceBelow < menuH && r.top > spaceBelow;
-      const top = openUp ? Math.max(8, r.top - menuH - GAP) : r.bottom + GAP;
-      const left = Math.min(
-        Math.max(8, r.right - MENU_W),
-        window.innerWidth - MENU_W - 8,
-      );
-      setPos({ top, left });
-    }
-    place();
-    // Remeasure after paint when menu height is known
-    const raf = requestAnimationFrame(place);
-    window.addEventListener("scroll", place, true);
-    window.addEventListener("resize", place);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", place, true);
-      window.removeEventListener("resize", place);
-    };
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    function onDoc(e: MouseEvent) {
-      const t = e.target as Node;
-      if (btnRef.current?.contains(t) || menuRef.current?.contains(t)) return;
-      setOpen(false);
-    }
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
-    }
-    document.addEventListener("mousedown", onDoc);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("mousedown", onDoc);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
 
   async function clone() {
     setBusy(true);
@@ -155,75 +105,7 @@ function RowMenu({ row }: { row: CatalogRow }) {
     }
   }
 
-  const item =
-    "block w-full px-3 py-2 text-left text-sm text-navy hover:bg-[#f8fafc] disabled:opacity-40";
-
-  const menu =
-    open
-      ? createPortal(
-          <div
-            ref={menuRef}
-            role="menu"
-            className="fixed z-[80] w-44 overflow-hidden rounded-xl border border-border bg-card shadow-lg"
-            style={{
-              top: pos?.top ?? -9999,
-              left: pos?.left ?? -9999,
-              visibility: pos ? "visible" : "hidden",
-            }}
-          >
-            <a
-              href={`/products/${row.productSlug}`}
-              target="_blank"
-              rel="noreferrer"
-              className={item}
-              onClick={() => setOpen(false)}
-            >
-              Xem PDP
-            </a>
-            <Link
-              href={`/admin/products/${row.id}`}
-              className={item}
-              onClick={() => setOpen(false)}
-            >
-              Chỉnh sửa
-            </Link>
-            <button type="button" className={item} disabled={busy} onClick={clone}>
-              Clone
-            </button>
-            <Link
-              href={`/admin/products/${row.id}#variant`}
-              className={item}
-              onClick={() => setOpen(false)}
-            >
-              Variant
-            </Link>
-            {row.fulfillmentStrategy === "INSTANT" ? (
-              <Link
-                href={`/admin/inventory/${encodeURIComponent(row.sku)}`}
-                className={item}
-                onClick={() => setOpen(false)}
-              >
-                Inventory
-              </Link>
-            ) : null}
-            <Link
-              href={`/admin/products/${row.id}#media`}
-              className={item}
-              onClick={() => setOpen(false)}
-            >
-              Media
-            </Link>
-            <Link
-              href={`/admin/products/${row.id}#seo`}
-              className={item}
-              onClick={() => setOpen(false)}
-            >
-              SEO
-            </Link>
-          </div>,
-          document.body,
-        )
-      : null;
+  const item = PORTAL_MENU_ITEM_CLASS;
 
   return (
     <div className="relative inline-flex justify-end">
@@ -237,7 +119,62 @@ function RowMenu({ row }: { row: CatalogRow }) {
       >
         ⋮
       </button>
-      {menu}
+      <PortalMenu
+        open={open}
+        onClose={() => setOpen(false)}
+        anchorRef={btnRef}
+        width={176}
+      >
+        <a
+          href={`/products/${row.productSlug}`}
+          target="_blank"
+          rel="noreferrer"
+          className={item}
+          onClick={() => setOpen(false)}
+        >
+          Xem PDP
+        </a>
+        <Link
+          href={`/admin/products/${row.id}`}
+          className={item}
+          onClick={() => setOpen(false)}
+        >
+          Chỉnh sửa
+        </Link>
+        <button type="button" className={item} disabled={busy} onClick={clone}>
+          Clone
+        </button>
+        <Link
+          href={`/admin/products/${row.id}#variant`}
+          className={item}
+          onClick={() => setOpen(false)}
+        >
+          Variant
+        </Link>
+        {row.fulfillmentStrategy === "INSTANT" ? (
+          <Link
+            href={`/admin/inventory/${encodeURIComponent(row.sku)}`}
+            className={item}
+            onClick={() => setOpen(false)}
+          >
+            Inventory
+          </Link>
+        ) : null}
+        <Link
+          href={`/admin/products/${row.id}#media`}
+          className={item}
+          onClick={() => setOpen(false)}
+        >
+          Media
+        </Link>
+        <Link
+          href={`/admin/products/${row.id}#seo`}
+          className={item}
+          onClick={() => setOpen(false)}
+        >
+          SEO
+        </Link>
+      </PortalMenu>
     </div>
   );
 }

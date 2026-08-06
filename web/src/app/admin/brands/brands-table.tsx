@@ -3,7 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import {
+  PortalMenu,
+  PORTAL_MENU_ITEM_CLASS,
+} from "@/components/PortalMenu";
 import { BADGE_CLASS } from "@/storefront/typography";
 import {
   ListPaginationBar,
@@ -96,16 +100,7 @@ function RowMenu({ row }: { row: BrandRow }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    function onDoc(e: MouseEvent) {
-      if (!ref.current?.contains(e.target as Node)) setOpen(false);
-    }
-    document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
-  }, [open]);
+  const btnRef = useRef<HTMLButtonElement>(null);
 
   async function setActive(active: boolean) {
     setBusy(true);
@@ -126,79 +121,83 @@ function RowMenu({ row }: { row: BrandRow }) {
     }
   }
 
-  const item =
-    "block w-full px-3 py-2 text-left text-sm text-navy hover:bg-[#f8fafc] disabled:opacity-40";
+  const item = PORTAL_MENU_ITEM_CLASS;
 
   return (
-    <div className="relative" ref={ref}>
+    <div className="relative">
       <button
+        ref={btnRef}
         type="button"
         aria-label="Thao tác"
+        aria-expanded={open}
         className="flex h-7 w-7 items-center justify-center rounded-md border border-border text-navy hover:bg-navy-soft"
         onClick={() => setOpen((v) => !v)}
       >
         ⋮
       </button>
-      {open ? (
-        <div className="absolute right-0 z-30 mt-1 w-48 overflow-hidden rounded-xl border border-border bg-card shadow-lg">
-          <a
-            href={`/brands/${row.slug}`}
-            target="_blank"
-            rel="noreferrer"
+      <PortalMenu
+        open={open}
+        onClose={() => setOpen(false)}
+        anchorRef={btnRef}
+        width={192}
+      >
+        <a
+          href={`/brands/${row.slug}`}
+          target="_blank"
+          rel="noreferrer"
+          className={item}
+          onClick={() => setOpen(false)}
+        >
+          Xem Landing
+        </a>
+        <Link
+          href={`/admin/catalog?brand=${encodeURIComponent(row.slug)}`}
+          className={item}
+          onClick={() => setOpen(false)}
+        >
+          Danh sách sản phẩm
+        </Link>
+        <Link
+          href={`/admin/brands/${row.id}#seo`}
+          className={item}
+          onClick={() => setOpen(false)}
+        >
+          SEO
+        </Link>
+        <Link
+          href={`/admin/brands/${row.id}#media`}
+          className={item}
+          onClick={() => setOpen(false)}
+        >
+          Media
+        </Link>
+        <Link
+          href={`/admin/brands/${row.id}`}
+          className={item}
+          onClick={() => setOpen(false)}
+        >
+          Chỉnh sửa
+        </Link>
+        {row.active ? (
+          <button
+            type="button"
             className={item}
-            onClick={() => setOpen(false)}
+            disabled={busy}
+            onClick={() => setActive(false)}
           >
-            Xem Landing
-          </a>
-          <Link
-            href={`/admin/catalog?brand=${encodeURIComponent(row.slug)}`}
+            Archive
+          </button>
+        ) : (
+          <button
+            type="button"
             className={item}
-            onClick={() => setOpen(false)}
+            disabled={busy}
+            onClick={() => setActive(true)}
           >
-            Danh sách sản phẩm
-          </Link>
-          <Link
-            href={`/admin/brands/${row.id}#seo`}
-            className={item}
-            onClick={() => setOpen(false)}
-          >
-            SEO
-          </Link>
-          <Link
-            href={`/admin/brands/${row.id}#media`}
-            className={item}
-            onClick={() => setOpen(false)}
-          >
-            Media
-          </Link>
-          <Link
-            href={`/admin/brands/${row.id}`}
-            className={item}
-            onClick={() => setOpen(false)}
-          >
-            Chỉnh sửa
-          </Link>
-          {row.active ? (
-            <button
-              type="button"
-              className={item}
-              disabled={busy}
-              onClick={() => setActive(false)}
-            >
-              Archive
-            </button>
-          ) : (
-            <button
-              type="button"
-              className={item}
-              disabled={busy}
-              onClick={() => setActive(true)}
-            >
-              Khôi phục Active
-            </button>
-          )}
-        </div>
-      ) : null}
+            Khôi phục Active
+          </button>
+        )}
+      </PortalMenu>
     </div>
   );
 }

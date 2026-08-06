@@ -1,9 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { AdminOrderListRow } from "@/lib/admin-orders";
+import {
+  PortalMenu,
+  PORTAL_MENU_ITEM_CLASS,
+} from "@/components/PortalMenu";
 import { CancelOrderButton } from "./cancel-button";
 
 async function copyText(text: string) {
@@ -14,24 +18,8 @@ export function OrderQuickMenu({ row }: { row: AdminOrderListRow }) {
   const [open, setOpen] = useState(false);
   const [flash, setFlash] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
-  const rootRef = useRef<HTMLDivElement>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
-
-  useEffect(() => {
-    if (!open) return;
-    function onDoc(e: MouseEvent) {
-      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
-    }
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
-    }
-    document.addEventListener("mousedown", onDoc);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("mousedown", onDoc);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
 
   function toast(msg: string) {
     setFlash(msg);
@@ -66,11 +54,10 @@ export function OrderQuickMenu({ row }: { row: AdminOrderListRow }) {
     ? `/admin/customers?q=${encodeURIComponent(row.email)}`
     : `/admin/customers?q=${encodeURIComponent(row.email)}`;
 
-  const itemClass =
-    "block w-full px-3 py-2 text-left text-sm text-navy hover:bg-[#f8fafc] disabled:opacity-40";
+  const itemClass = PORTAL_MENU_ITEM_CLASS;
 
   return (
-    <div className="relative flex items-center gap-1.5" ref={rootRef}>
+    <div className="relative flex items-center gap-1.5">
       {row.waitingInbox ||
       row.jobStatus === "WAITING_HUMAN" ||
       row.jobStatus === "WAITING_STOCK" ||
@@ -87,6 +74,7 @@ export function OrderQuickMenu({ row }: { row: AdminOrderListRow }) {
       ) : null}
 
       <button
+        ref={btnRef}
         type="button"
         aria-label="Thao tác nhanh"
         aria-expanded={open}
@@ -106,63 +94,66 @@ export function OrderQuickMenu({ row }: { row: AdminOrderListRow }) {
         </span>
       ) : null}
 
-      {open ? (
-        <div className="absolute right-0 top-full z-30 mt-1 w-52 overflow-hidden rounded-xl border border-border bg-card shadow-lg">
-          <Link
-            href={`/admin/orders/${row.id}`}
-            className={itemClass}
-            onClick={() => setOpen(false)}
-          >
-            Xem chi tiết
-          </Link>
-          <Link
-            href={customerHref}
-            className={itemClass}
-            onClick={() => setOpen(false)}
-          >
-            Mở khách hàng
-          </Link>
-          <button
-            type="button"
-            className={itemClass}
-            onClick={async () => {
-              await copyText(row.code);
-              toast("Đã copy Order ID");
-              setOpen(false);
-            }}
-          >
-            Copy Order ID
-          </button>
-          <button
-            type="button"
-            className={itemClass}
-            disabled={!row.paymentReference}
-            onClick={async () => {
-              if (!row.paymentReference) return;
-              await copyText(row.paymentReference);
-              toast("Đã copy Payment Ref");
-              setOpen(false);
-            }}
-          >
-            Copy Payment Ref
-          </button>
-          <button
-            type="button"
-            className={itemClass}
-            disabled={!row.primaryDeliveryId || pending}
-            onClick={resendDeliverable}
-          >
-            Gửi lại Deliverable
-          </button>
-          <Link
-            href={`/admin/orders/${row.id}#notes`}
-            className={itemClass}
-            onClick={() => setOpen(false)}
-          >
-            Thêm ghi chú
-          </Link>
-        </div>
-      ) : null}
+      <PortalMenu
+        open={open}
+        onClose={() => setOpen(false)}
+        anchorRef={btnRef}
+        width={208}
+      >
+        <Link
+          href={`/admin/orders/${row.id}`}
+          className={itemClass}
+          onClick={() => setOpen(false)}
+        >
+          Xem chi tiết
+        </Link>
+        <Link
+          href={customerHref}
+          className={itemClass}
+          onClick={() => setOpen(false)}
+        >
+          Mở khách hàng
+        </Link>
+        <button
+          type="button"
+          className={itemClass}
+          onClick={async () => {
+            await copyText(row.code);
+            toast("Đã copy Order ID");
+            setOpen(false);
+          }}
+        >
+          Copy Order ID
+        </button>
+        <button
+          type="button"
+          className={itemClass}
+          disabled={!row.paymentReference}
+          onClick={async () => {
+            if (!row.paymentReference) return;
+            await copyText(row.paymentReference);
+            toast("Đã copy Payment Ref");
+            setOpen(false);
+          }}
+        >
+          Copy Payment Ref
+        </button>
+        <button
+          type="button"
+          className={itemClass}
+          disabled={!row.primaryDeliveryId || pending}
+          onClick={resendDeliverable}
+        >
+          Gửi lại Deliverable
+        </button>
+        <Link
+          href={`/admin/orders/${row.id}#notes`}
+          className={itemClass}
+          onClick={() => setOpen(false)}
+        >
+          Thêm ghi chú
+        </Link>
+      </PortalMenu>
     </div>
   );
 }

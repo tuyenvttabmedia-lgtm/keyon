@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import { useMemo, useRef, useState } from "react";
 import type { AccountCopy } from "@/storefront/lib/account-cms";
 import { StoreButton } from "@/storefront/components/StoreButton";
+import { PortalMenu } from "@/components/PortalMenu";
 import {
   BADGE_CLASS,
   BREADCRUMB_CLASS,
@@ -29,7 +29,6 @@ import {
   CARD_PORTAL,
   CHART_FILL_OPACITY,
   CHART_STROKE_WIDTH,
-  ELEVATION_DROPDOWN,
   ELEVATION_NONE,
   HOVER_LINK_ACCENT,
   HOVER_OUTLINE_FILL,
@@ -407,7 +406,6 @@ export function OrdersView({
 }
 
 const ORDER_MENU_W = 168;
-const ORDER_MENU_GAP = 4;
 
 function OrderRow({
   cms,
@@ -423,9 +421,6 @@ function OrderRow({
   onCloseMenu: () => void;
 }) {
   const btnRef = useRef<HTMLButtonElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
-  const [mounted, setMounted] = useState(false);
 
   const created = new Date(item.createdAtIso);
   const dateLabel = created.toLocaleDateString("vi-VN");
@@ -433,94 +428,6 @@ function OrderRow({
     hour: "2-digit",
     minute: "2-digit",
   });
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useLayoutEffect(() => {
-    if (!menuOpen) {
-      setPos(null);
-      return;
-    }
-    function place() {
-      const el = btnRef.current;
-      if (!el) return;
-      const r = el.getBoundingClientRect();
-      const menuH = menuRef.current?.offsetHeight ?? 88;
-      const spaceBelow = window.innerHeight - r.bottom;
-      const openUp = spaceBelow < menuH + ORDER_MENU_GAP + 8;
-      const top = openUp
-        ? Math.max(8, r.top - menuH - ORDER_MENU_GAP)
-        : r.bottom + ORDER_MENU_GAP;
-      const left = Math.min(
-        Math.max(8, r.right - ORDER_MENU_W),
-        window.innerWidth - ORDER_MENU_W - 8,
-      );
-      setPos({ top, left });
-    }
-    place();
-    const raf = requestAnimationFrame(place);
-    window.addEventListener("scroll", place, true);
-    window.addEventListener("resize", place);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", place, true);
-      window.removeEventListener("resize", place);
-    };
-  }, [menuOpen]);
-
-  useEffect(() => {
-    if (!menuOpen) return;
-    function onDoc(e: MouseEvent) {
-      const t = e.target as Node;
-      if (btnRef.current?.contains(t) || menuRef.current?.contains(t)) return;
-      onCloseMenu();
-    }
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onCloseMenu();
-    }
-    document.addEventListener("mousedown", onDoc);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("mousedown", onDoc);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [menuOpen, onCloseMenu]);
-
-  const menu =
-    mounted && menuOpen
-      ? createPortal(
-          <div
-            ref={menuRef}
-            role="menu"
-            className={`fixed z-[80] w-[10.5rem] rounded-xl border border-border bg-white py-1 ${ELEVATION_DROPDOWN}`}
-            style={{
-              top: pos?.top ?? -9999,
-              left: pos?.left ?? -9999,
-              visibility: pos ? "visible" : "hidden",
-            }}
-          >
-            <Link
-              href={`/account/orders/${item.id}`}
-              className={LINK_MENU}
-              role="menuitem"
-              onClick={onCloseMenu}
-            >
-              {cms.ordersDetailCta}
-            </Link>
-            <Link
-              href={`/account/tickets?orderId=${item.id}`}
-              className={LINK_MENU}
-              role="menuitem"
-              onClick={onCloseMenu}
-            >
-              Yêu cầu hỗ trợ
-            </Link>
-          </div>,
-          document.body,
-        )
-      : null;
 
   return (
     <li className={`relative px-3 py-4 ${TRANSITION_UI} ${HOVER_ROW}`}>
@@ -610,7 +517,30 @@ function OrderRow({
           >
             ⋮
           </button>
-          {menu}
+          <PortalMenu
+            open={menuOpen}
+            onClose={onCloseMenu}
+            anchorRef={btnRef}
+            width={ORDER_MENU_W}
+            className="bg-white py-1"
+          >
+            <Link
+              href={`/account/orders/${item.id}`}
+              className={LINK_MENU}
+              role="menuitem"
+              onClick={onCloseMenu}
+            >
+              {cms.ordersDetailCta}
+            </Link>
+            <Link
+              href={`/account/tickets?orderId=${item.id}`}
+              className={LINK_MENU}
+              role="menuitem"
+              onClick={onCloseMenu}
+            >
+              Yêu cầu hỗ trợ
+            </Link>
+          </PortalMenu>
         </div>
       </div>
     </li>

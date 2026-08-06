@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { AccountCopy } from "@/storefront/lib/account-cms";
 import { LicenseKeyReveal } from "@/storefront/components/checkout/LicenseKeyReveal";
 import { IconShieldCheck } from "@/storefront/components/icons/StoreIcons";
 import { StoreButton } from "@/storefront/components/StoreButton";
+import { PortalMenu } from "@/components/PortalMenu";
 import {
   BADGE_CLASS,
   BREADCRUMB_CLASS,
@@ -26,14 +27,12 @@ import {
 } from "@/storefront/typography";
 import {
   CARD_PORTAL,
-  ELEVATION_DROPDOWN,
   ELEVATION_NONE,
   HOVER_LINK_ACCENT,
   HOVER_OUTLINE_FILL,
   HOVER_SOFT,
   OPACITY_DISABLED,
   TRANSITION_UI,
-  Z_DROPDOWN,
 } from "@/storefront/effects";
 
 const CARD = CARD_PORTAL;
@@ -79,7 +78,6 @@ export function LicensesView({
   const [tab, setTab] = useState<TabId>("all");
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   const counts = useMemo(() => {
     const c = { all: items.length, active: 0, pending: 0, expired: 0 };
@@ -334,43 +332,7 @@ export function LicensesView({
                 </div>
 
                 {/* Menu */}
-                <div className="relative flex shrink-0 justify-end">
-                  <button
-                    type="button"
-                    aria-label="Thêm thao tác"
-                    onClick={() =>
-                      setOpenMenuId((id) => (id === it.id ? null : it.id))
-                    }
-                    className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border text-navy ${TRANSITION_UI} ${HOVER_OUTLINE_FILL}`}
-                  >
-                    ⋮
-                  </button>
-                  {openMenuId === it.id ? (
-                    <div className={`absolute right-0 top-10 ${Z_DROPDOWN} min-w-[10.5rem] rounded-xl border border-border bg-white py-1 ${ELEVATION_DROPDOWN}`}>
-                      <Link
-                        href={`/account/assets/${it.id}`}
-                        className={LINK_MENU}
-                        onClick={() => setOpenMenuId(null)}
-                      >
-                        Xem chi tiết
-                      </Link>
-                      <Link
-                        href={`/account/orders/${it.orderId}`}
-                        className={LINK_MENU}
-                        onClick={() => setOpenMenuId(null)}
-                      >
-                        Đơn {it.orderCode}
-                      </Link>
-                      <Link
-                        href={cms.activationGuideHref}
-                        className={LINK_MENU}
-                        onClick={() => setOpenMenuId(null)}
-                      >
-                        {cms.activationGuideCta}
-                      </Link>
-                    </div>
-                  ) : null}
-                </div>
+                <LicenseRowMenu cms={cms} item={it} />
               </div>
             </li>
           ))}
@@ -427,6 +389,61 @@ export function LicensesView({
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+function LicenseRowMenu({
+  cms,
+  item,
+}: {
+  cms: AccountCopy;
+  item: LicenseListItem;
+}) {
+  const [open, setOpen] = useState(false);
+  const btnRef = useRef<HTMLButtonElement>(null);
+
+  return (
+    <div className="relative flex shrink-0 justify-end">
+      <button
+        ref={btnRef}
+        type="button"
+        aria-label="Thêm thao tác"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+        className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border text-navy ${TRANSITION_UI} ${HOVER_OUTLINE_FILL}`}
+      >
+        ⋮
+      </button>
+      <PortalMenu
+        open={open}
+        onClose={() => setOpen(false)}
+        anchorRef={btnRef}
+        width={168}
+        className="bg-white py-1"
+      >
+        <Link
+          href={`/account/assets/${item.id}`}
+          className={LINK_MENU}
+          onClick={() => setOpen(false)}
+        >
+          Xem chi tiết
+        </Link>
+        <Link
+          href={`/account/orders/${item.orderId}`}
+          className={LINK_MENU}
+          onClick={() => setOpen(false)}
+        >
+          Đơn {item.orderCode}
+        </Link>
+        <Link
+          href={cms.activationGuideHref}
+          className={LINK_MENU}
+          onClick={() => setOpen(false)}
+        >
+          {cms.activationGuideCta}
+        </Link>
+      </PortalMenu>
     </div>
   );
 }
