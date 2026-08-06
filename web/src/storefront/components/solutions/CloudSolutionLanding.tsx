@@ -36,7 +36,6 @@ import {
   CTA_LABEL_CLASS,
   HERO_TITLE_CLASS,
   LINK_ACCENT_CLASS,
-  OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
@@ -254,10 +253,7 @@ export function CloudSolutionLanding({ featured, usingFallback }: Props) {
 
           <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-10 xl:gap-12">
             <div className="min-w-0">
-              <p className={`${OVERLINE_CLASS} tracking-[0.16em] text-accent`}>
-                Giải pháp Cloud
-              </p>
-              <h1 className={`mt-2.5 max-w-xl ${HERO_TITLE_CLASS}`}>
+              <h1 className={`max-w-xl ${HERO_TITLE_CLASS}`}>
                 Cloud linh hoạt
                 <span className="mt-1 block">Cho doanh nghiệp hiện đại</span>
               </h1>

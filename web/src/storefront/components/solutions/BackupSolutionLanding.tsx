@@ -31,7 +31,6 @@ import {
   CTA_LABEL_CLASS,
   FONT_DISPLAY,
   LINK_ACCENT_CLASS,
-  OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
@@ -247,9 +246,8 @@ export function BackupSolutionLanding({ featured, usingFallback }: Props) {
 
           <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)] md:gap-10 lg:gap-12 xl:gap-[3.25rem]">
             <div className="min-w-0 max-w-[520px]">
-              <p className={`${OVERLINE_CLASS} text-accent`}>Backup & Khôi phục</p>
               <h1
-                className={`mt-2.5 max-w-[500px] ${FONT_DISPLAY} text-[1.75rem] font-bold leading-[1.1] tracking-tight text-navy sm:text-[2.5rem] sm:leading-[1.1] lg:text-[3rem] lg:leading-[1.1] xl:text-[3.05rem] xl:leading-[1.08]`}
+                className={`max-w-[500px] ${FONT_DISPLAY} text-[1.75rem] font-bold leading-[1.1] tracking-tight text-navy sm:text-[2.5rem] sm:leading-[1.1] lg:text-[3rem] lg:leading-[1.1] xl:text-[3.05rem] xl:leading-[1.08]`}
               >
                 Dữ liệu của bạn.
                 <br className="hidden sm:block" />

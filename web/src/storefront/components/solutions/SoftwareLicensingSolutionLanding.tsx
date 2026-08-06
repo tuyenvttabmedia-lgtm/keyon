@@ -455,10 +455,7 @@ export function SoftwareLicensingSolutionLanding({
 
           <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-8 xl:gap-10">
             <div className="min-w-0">
-              <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
-                Giải pháp
-              </p>
-              <h1 className={`mt-3 max-w-[18ch] ${HERO_TITLE_CLASS} text-white`}>
+              <h1 className={`max-w-[18ch] ${HERO_TITLE_CLASS} text-white`}>
                 Bản quyền phần mềm{" "}
                 <span className="text-accent">đúng nhu cầu, đúng giá trị</span>
               </h1>

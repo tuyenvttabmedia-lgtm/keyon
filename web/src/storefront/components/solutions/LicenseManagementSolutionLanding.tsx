@@ -27,7 +27,6 @@ import {
   CTA_LABEL_CLASS,
   HERO_TITLE_CLASS,
   LINK_ACCENT_CLASS,
-  OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
   SECTION_TITLE_CLASS,
 } from "@/storefront/typography";
@@ -197,8 +196,7 @@ export function LicenseManagementSolutionLanding() {
 
           <div className="grid items-center gap-9 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-8 xl:gap-10">
             <div className="min-w-0">
-              <p className={`${OVERLINE_CLASS} text-accent`}>Quản lý bản quyền</p>
-              <h1 className={`mt-2.5 max-w-[18ch] ${HERO_TITLE_CLASS}`}>
+              <h1 className={`max-w-[18ch] ${HERO_TITLE_CLASS}`}>
                 Kiểm soát toàn bộ license. Đơn giản, chủ động, hiệu quả.
               </h1>
               <p className={`mt-4 max-w-xl ${PAGE_LEAD_CLASS}`}>
