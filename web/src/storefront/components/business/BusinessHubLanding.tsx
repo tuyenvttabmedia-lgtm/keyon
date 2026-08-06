@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
   BadgeCheck,
+  BadgePercent,
   Check,
   ClipboardList,
   FileText,
@@ -14,8 +15,6 @@ import {
   RefreshCw,
   Rocket,
   ShoppingCart,
-  ShieldCheck,
-  Sparkles,
   Wallet,
 } from "lucide-react";
 import {
@@ -138,23 +137,23 @@ const HERO_TRUST = [
 const BENEFITS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Tuân thủ bản quyền",
-    body: "Mua và sử dụng license chính hãng — giảm rủi ro pháp lý cho tổ chức.",
-    Icon: ShieldCheck,
+    body: "Đảm bảo 100% bản quyền hợp pháp, an tâm sử dụng lâu dài.",
+    Icon: ShoppingCart,
   },
   {
     title: "Tối ưu chi phí",
-    body: "Chọn đúng gói theo quy mô thực tế, tránh mua thừa hoặc thiếu seat.",
-    Icon: Wallet,
+    body: "Giải pháp linh hoạt, giúp tiết kiệm chi phí đến 30%+.",
+    Icon: BadgePercent,
   },
   {
     title: "Quản lý dễ dàng",
-    body: "Theo dõi, phân bổ và gia hạn license trên một nền tảng KEYON.",
+    body: "Tập trung, minh bạch và kiểm soát mọi license.",
     Icon: LayoutGrid,
   },
   {
     title: "Hỗ trợ chuyên sâu",
-    body: "Tư vấn trước khi mua, hỗ trợ kích hoạt và đồng hành khi gia hạn.",
-    Icon: Sparkles,
+    body: "Đội ngũ kỹ thuật & kinh doanh đồng hành 24/7.",
+    Icon: Headphones,
   },
 ];
 
@@ -344,45 +343,40 @@ export function BusinessHubLanding() {
         </div>
       </section>
 
-      {/* ── Benefits + shield ────────────────────────────────── */}
+      {/* ── Benefits + shield (mockup: 4 inline items + shield) ─ */}
       <section className="relative overflow-hidden bg-navy">
         <div
           className="pointer-events-none absolute inset-0"
           aria-hidden
           style={{
             background:
-              "radial-gradient(ellipse 50% 70% at 88% 45%, rgba(14,165,164,0.22), transparent 55%), radial-gradient(ellipse 40% 50% at 8% 90%, rgba(14,165,233,0.08), transparent 50%)",
+              "radial-gradient(ellipse 42% 70% at 92% 50%, rgba(14,165,164,0.28), transparent 55%), radial-gradient(ellipse 35% 45% at 8% 85%, rgba(14,165,233,0.08), transparent 50%)",
           }}
         />
         <div className="home-container relative py-10 md:py-12 lg:py-14">
-          <header className="max-w-xl">
-            <h2 className={`${SECTION_TITLE_CLASS} !text-white`}>KEYON giúp doanh nghiệp</h2>
-            <p className={`mt-2.5 ${SECTION_LEAD_CLASS} !text-white/70`}>
-              Kiểm soát bản quyền, chi phí và vận hành — với quy trình rõ ràng và hỗ trợ tiếng
-              Việt.
-            </p>
-          </header>
+          <h2 className={`${SECTION_TITLE_CLASS} !text-white`}>KEYON giúp doanh nghiệp</h2>
 
-          <div className="mt-9 grid items-center gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-14">
-            <ul className="grid gap-4 sm:grid-cols-2 sm:gap-5">
+          <div className="mt-8 grid items-center gap-8 lg:mt-9 lg:grid-cols-[minmax(0,1fr)_minmax(200px,0.28fr)] lg:gap-8 xl:gap-10">
+            <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5 xl:gap-6">
               {BENEFITS.map((b) => (
-                <li
-                  key={b.title}
-                  className={`rounded-2xl border border-white/10 bg-white/[0.04] p-5 ${TRANSITION_PANEL} hover:border-accent/35 hover:bg-white/[0.07]`}
-                >
+                <li key={b.title} className="flex gap-3">
                   <span
-                    className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/15 text-accent"
+                    className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center text-accent"
                     aria-hidden
                   >
-                    <b.Icon {...ICON_MD} />
+                    <b.Icon size={26} strokeWidth={1.65} />
                   </span>
-                  <h3 className={`mt-3.5 ${CARD_TITLE_CLASS} !text-white`}>{b.title}</h3>
-                  <p className={`mt-1.5 text-sm leading-relaxed text-slate-300`}>{b.body}</p>
+                  <div className="min-w-0">
+                    <h3 className={`${CARD_TITLE_CLASS} !text-white`}>{b.title}</h3>
+                    <p className={`mt-1.5 text-[13px] leading-relaxed text-slate-300`}>
+                      {b.body}
+                    </p>
+                  </div>
                 </li>
               ))}
             </ul>
 
-            <div className="relative mx-auto w-full max-w-[320px] lg:max-w-[360px]">
+            <div className="relative mx-auto w-full max-w-[220px] lg:mx-0 lg:max-w-none">
               <BusinessShieldArt />
             </div>
           </div>
@@ -461,49 +455,99 @@ export function BusinessHubLanding() {
 
 function BusinessShieldArt() {
   return (
-    <div className="relative mx-auto aspect-square w-full max-w-[300px]">
+    <div className="relative mx-auto aspect-[4/5] w-full max-w-[240px] lg:max-w-[260px]">
       <span
-        className="pointer-events-none absolute inset-[12%] rounded-full bg-accent/25 blur-2xl"
+        className="pointer-events-none absolute inset-[8%] rounded-full bg-accent/30 blur-2xl"
         aria-hidden
       />
       <svg
-        viewBox="0 0 200 220"
-        className="relative h-full w-full drop-shadow-[0_16px_40px_rgba(14,165,164,0.28)]"
+        viewBox="0 0 200 250"
+        className="relative h-full w-full drop-shadow-[0_20px_48px_rgba(14,165,164,0.35)]"
         aria-hidden
       >
         <defs>
-          <linearGradient id="bizShield" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#5eead4" />
-            <stop offset="55%" stopColor="#14bba6" />
-            <stop offset="100%" stopColor="#0b8d8d" />
+          <linearGradient id="bizShieldGlass" x1="0.15" y1="0" x2="0.9" y2="1">
+            <stop offset="0%" stopColor="#99f6e4" stopOpacity="0.95" />
+            <stop offset="35%" stopColor="#2dd4bf" stopOpacity="0.85" />
+            <stop offset="70%" stopColor="#0d9488" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#115e59" stopOpacity="0.95" />
+          </linearGradient>
+          <linearGradient id="bizShieldShine" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#fff" stopOpacity="0.55" />
+            <stop offset="40%" stopColor="#fff" stopOpacity="0.08" />
+            <stop offset="100%" stopColor="#fff" stopOpacity="0" />
           </linearGradient>
           <linearGradient id="bizPedestal" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#14bba6" stopOpacity="0.55" />
-            <stop offset="100%" stopColor="#0b1f33" stopOpacity="0.2" />
+            <stop offset="0%" stopColor="#5eead4" stopOpacity="0.7" />
+            <stop offset="100%" stopColor="#0b1f33" stopOpacity="0.35" />
           </linearGradient>
+          <filter id="bizShieldGlow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="4" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
         </defs>
-        <ellipse cx="100" cy="198" rx="58" ry="10" fill="#0ea5a4" opacity="0.28" />
+
+        {/* Pedestal rings */}
+        <ellipse cx="100" cy="228" rx="62" ry="9" fill="#0ea5a4" opacity="0.2" />
+        <ellipse
+          cx="100"
+          cy="222"
+          rx="48"
+          ry="7"
+          fill="none"
+          stroke="#5eead4"
+          strokeWidth="1.5"
+          opacity="0.55"
+        />
+        <ellipse
+          cx="100"
+          cy="216"
+          rx="34"
+          ry="5"
+          fill="none"
+          stroke="#99f6e4"
+          strokeWidth="1.2"
+          opacity="0.45"
+        />
         <path
-          d="M70 188h60l8 12H62l8-12Z"
+          d="M72 208h56l10 10H62l10-10Z"
           fill="url(#bizPedestal)"
-          stroke="rgba(94,234,212,0.35)"
+          stroke="rgba(94,234,212,0.4)"
           strokeWidth="1"
         />
+
+        {/* Shield body */}
+        <g filter="url(#bizShieldGlow)">
+          <path
+            d="M100 22 36 52v54c0 48 32 88 64 102 32-14 64-54 64-102V52L100 22Z"
+            fill="url(#bizShieldGlass)"
+            stroke="rgba(255,255,255,0.45)"
+            strokeWidth="2.5"
+          />
+          <path
+            d="M100 38 52 62v42c0 38 26 70 48 82 22-12 48-44 48-82V62L100 38Z"
+            fill="url(#bizShieldShine)"
+          />
+        </g>
+
+        {/* Checkmark */}
         <path
-          d="M100 18 38 48v52c0 46 30 84 62 98 32-14 62-52 62-98V48L100 18Z"
-          fill="url(#bizShield)"
-          stroke="rgba(255,255,255,0.35)"
-          strokeWidth="2.5"
-        />
-        <path
-          d="M100 34 52 56v42c0 36 24 66 48 78 24-12 48-42 48-78V56L100 34Z"
-          fill="rgba(11,31,51,0.22)"
-        />
-        <path
-          d="M78 108l16 16 30-34"
+          d="M74 112l18 18 34-40"
           fill="none"
-          stroke="#fff"
-          strokeWidth="8"
+          stroke="#ecfeff"
+          strokeWidth="10"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity="0.95"
+        />
+        <path
+          d="M74 112l18 18 34-40"
+          fill="none"
+          stroke="#5eead4"
+          strokeWidth="4"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
