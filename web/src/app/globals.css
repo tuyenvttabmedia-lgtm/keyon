@@ -377,37 +377,48 @@ html {
   }
 }
 
-/* Solutions hub hero — K hub + mesh + floating cards */
+/* Solutions hub hero — compact K cluster (580×390) */
+.hero-solution-visual,
 .solutions-hero-hub {
   position: relative;
   width: 100%;
-  max-width: 540px;
-  margin-inline: auto;
-  aspect-ratio: 540 / 480;
+  max-width: 580px;
+  height: 390px;
+  margin: 0;
+  margin-right: auto;
 }
 
 .solutions-hero-glow {
   position: absolute;
-  inset: 12% 14% 14%;
+  inset: 18% 20% 20%;
   border-radius: 9999px;
   background: radial-gradient(
     circle at 50% 48%,
-    rgba(20, 187, 166, 0.28) 0%,
-    rgba(20, 187, 166, 0.1) 42%,
-    transparent 70%
+    rgba(20, 187, 166, 0.26) 0%,
+    rgba(20, 187, 166, 0.09) 40%,
+    transparent 68%
   );
-  filter: blur(22px);
+  filter: blur(18px);
   pointer-events: none;
   z-index: 0;
 }
 
 .solutions-hero-mesh {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  left: 50%;
+  top: 50%;
+  width: min(100%, 540px);
+  height: min(100%, 360px);
+  transform: translate(-50%, -50%);
   z-index: 1;
   pointer-events: none;
+  opacity: 0.95;
+  mask-image: radial-gradient(ellipse 70% 68% at 50% 50%, #000 45%, transparent 88%);
+  -webkit-mask-image: radial-gradient(
+    ellipse 70% 68% at 50% 50%,
+    #000 45%,
+    transparent 88%
+  );
 }
 
 .solutions-hero-k {
@@ -416,8 +427,8 @@ html {
   top: 50%;
   z-index: 20;
   display: flex;
-  width: 120px;
-  height: 120px;
+  width: 124px;
+  height: 124px;
   align-items: center;
   justify-content: center;
   border-radius: 20px;
@@ -449,13 +460,14 @@ html {
 
 .solutions-hero-card {
   display: flex;
-  width: 132px;
+  width: 122px;
+  min-height: 88px;
   align-items: center;
   gap: 0.5rem;
   border-radius: 12px;
   border: 1px solid rgba(226, 232, 240, 0.95);
   background: #fff;
-  padding: 0.5rem 0.625rem;
+  padding: 0.55rem 0.6rem;
 }
 
 .solutions-hero-card-icon {
@@ -487,13 +499,14 @@ html {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.625rem;
-  padding-top: 8.5rem;
   list-style: none;
   margin: 0;
+  padding: 0;
 }
 
 .solutions-hero-cards-mobile .solutions-hero-card {
   width: 100%;
+  min-height: 0;
 }
 
 .solutions-hero-cards-mobile li:last-child {
@@ -503,36 +516,37 @@ html {
 }
 
 @media (max-width: 767.98px) {
+  .hero-solution-visual,
   .solutions-hero-hub {
-    aspect-ratio: auto;
+    height: auto;
+    max-width: 100%;
+    margin-inline: auto;
   }
 
   .solutions-hero-glow {
-    inset: 0 8% 58%;
+    inset: 0 10% 55%;
   }
 
   .solutions-hero-mesh {
-    height: 11rem;
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    height: 9.5rem;
+    transform: none;
+    margin-bottom: -1rem;
   }
 
   .solutions-hero-k {
     position: relative;
     left: auto;
     top: auto;
-    margin: 0.25rem auto 1.25rem;
+    margin: 0.15rem auto 1.1rem;
     transform: none;
-  }
-
-  .solutions-hero-cards-mobile {
-    padding-top: 0;
   }
 }
 
 @media (min-width: 768px) {
-  .solutions-hero-hub {
-    max-width: none;
-  }
-
   .solutions-hero-cards-mobile {
     display: none;
   }
@@ -544,70 +558,70 @@ html {
   .solutions-hero-card {
     position: absolute;
     z-index: 10;
-    width: 136px;
+    width: 124px;
   }
 
-  /* Gap from K edge (~60px half) + 56–72px ≈ card centers ~ 56–8% from edges */
+  /* Pull cards ~20–30% closer to K — slight asymmetry */
   .solutions-hero-card--tl {
-    left: 2%;
-    top: 6%;
+    left: 24%;
+    top: 3%;
   }
 
   .solutions-hero-card--tr {
-    right: 2%;
-    top: 4%;
+    right: 5%;
+    top: 3%;
   }
 
   .solutions-hero-card--ml {
-    left: 0%;
+    left: 3%;
     top: 42%;
   }
 
   .solutions-hero-card--mr {
-    right: 0%;
-    top: 40%;
+    right: 2%;
+    top: 42%;
   }
 
   .solutions-hero-card--bl {
-    left: 14%;
-    bottom: 4%;
+    left: 43%;
+    bottom: 2%;
   }
 }
 
 @media (min-width: 1024px) {
   .solutions-hero-card {
-    width: 140px;
-    padding: 0.55rem 0.7rem;
-    gap: 0.55rem;
+    width: 128px;
+    min-height: 92px;
+    padding: 0.6rem 0.65rem;
   }
 
   .solutions-hero-card-label {
-    font-size: 12px;
+    font-size: 11.5px;
   }
 
   .solutions-hero-card--tl {
-    left: 0%;
-    top: 5%;
+    left: 25%;
+    top: 2.5%;
   }
 
   .solutions-hero-card--tr {
-    right: 0%;
+    right: 4%;
     top: 2%;
   }
 
   .solutions-hero-card--ml {
-    left: -2%;
+    left: 2.5%;
     top: 41%;
   }
 
   .solutions-hero-card--mr {
-    right: -2%;
-    top: 39%;
+    right: 1.5%;
+    top: 41%;
   }
 
   .solutions-hero-card--bl {
-    left: 12%;
-    bottom: 2%;
+    left: 44%;
+    bottom: 1.5%;
   }
 }
 

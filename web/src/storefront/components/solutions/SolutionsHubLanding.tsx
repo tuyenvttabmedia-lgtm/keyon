@@ -28,7 +28,6 @@ import {
   CARD_TITLE_CLASS,
   CTA_LABEL_CLASS,
   FONT_DISPLAY,
-  HERO_TITLE_CLASS,
   OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
   SECTION_LEAD_CLASS,
@@ -228,16 +227,18 @@ export function SolutionsHubLanding() {
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_85%_25%,rgba(14,165,164,0.1),transparent_42%),radial-gradient(ellipse_at_12%_80%,rgba(14,165,233,0.06),transparent_48%)]"
           aria-hidden
         />
-        <div className="home-container relative py-9 md:py-11 lg:py-14">
-          <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] md:gap-6 lg:gap-10 xl:gap-12">
-            <div className="min-w-0 max-w-xl">
+        <div className="home-container relative py-8 md:py-9 lg:py-10">
+          <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.46fr)_minmax(0,0.54fr)] md:gap-10 lg:gap-12">
+            <div className="min-w-0 w-full max-w-[540px]">
               <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
                 Giải pháp toàn diện
               </p>
-              <h1 className={`mt-3 max-w-[16ch] ${HERO_TITLE_CLASS}`}>
+              <h1
+                className={`mt-3 max-w-[520px] ${FONT_DISPLAY} text-[1.75rem] font-bold leading-[1.12] tracking-tight text-navy sm:text-[2.35rem] lg:text-[2.875rem] lg:leading-[1.1] xl:text-[3rem] xl:leading-[1.08]`}
+              >
                 Giải pháp số cho doanh nghiệp hiện đại
               </h1>
-              <p className={`mt-4 max-w-lg ${PAGE_LEAD_CLASS}`}>
+              <p className={`mt-4 max-w-[520px] ${PAGE_LEAD_CLASS}`}>
                 KEYON đồng hành chuyển đổi số với bản quyền, bảo mật, backup, cloud và
                 quản lý license — đúng nhu cầu, dễ triển khai, hỗ trợ tiếng Việt.
               </p>
@@ -261,7 +262,7 @@ export function SolutionsHubLanding() {
               </div>
             </div>
 
-            <div className="relative w-full min-w-0">
+            <div className="relative flex w-full min-w-0 justify-center md:justify-start">
               <SolutionsHeroArt />
             </div>
           </div>
@@ -456,11 +457,11 @@ function TestimonialCard({
   );
 }
 
-/** Hero visual hub — K 120² + mesh + glow + 5 white cards (mockup). */
+/** Hero visual hub — compact K cluster + mesh + 5 cards (mockup). */
 function SolutionsHeroArt() {
   return (
     <div
-      className="solutions-hero-hub"
+      className="hero-solution-visual solutions-hero-hub"
       role="img"
       aria-label="Hệ sinh thái giải pháp KEYON"
     >
@@ -468,29 +469,29 @@ function SolutionsHeroArt() {
 
       <svg
         className="solutions-hero-mesh"
-        viewBox="0 0 540 480"
+        viewBox="0 0 580 390"
         fill="none"
         aria-hidden
       >
+        {/* Compact connectors toward card anchors around K (290, 195) */}
         <path
-          d="M120 90 L270 240 M420 70 L270 240 M95 340 L270 240 M430 350 L270 240 M270 40 L270 240 M270 240 L270 440 M150 200 L270 240 M390 200 L270 240"
+          d="M210 55 L290 195 M430 50 L290 195 M70 195 L290 195 M510 195 L290 195 M290 195 L290 330 M180 170 L290 195 M400 165 L290 195"
           stroke="#14BBA6"
-          strokeOpacity="0.18"
-          strokeWidth="1.25"
+          strokeOpacity="0.17"
+          strokeWidth="1.2"
         />
         <path
-          d="M90 120 C150 160 210 200 270 240 M450 100 C390 150 320 200 270 240 M100 360 C160 310 210 270 270 240 M440 370 C380 320 320 270 270 240"
+          d="M200 70 C230 110 260 150 290 195 M450 65 C400 110 340 155 290 195 M85 210 C150 205 220 200 290 195 M500 205 C430 200 350 198 290 195 M290 320 C290 270 290 230 290 195"
           stroke="#14BBA6"
-          strokeOpacity="0.16"
+          strokeOpacity="0.14"
           strokeWidth="1"
-          strokeDasharray="4 8"
+          strokeDasharray="4 7"
         />
-        <circle cx="120" cy="90" r="2.5" fill="#14BBA6" fillOpacity="0.35" />
-        <circle cx="420" cy="70" r="2.5" fill="#14BBA6" fillOpacity="0.35" />
-        <circle cx="95" cy="340" r="2.5" fill="#14BBA6" fillOpacity="0.35" />
-        <circle cx="430" cy="350" r="2.5" fill="#14BBA6" fillOpacity="0.35" />
-        <circle cx="150" cy="200" r="2" fill="#14BBA6" fillOpacity="0.3" />
-        <circle cx="390" cy="200" r="2" fill="#14BBA6" fillOpacity="0.3" />
+        <circle cx="210" cy="55" r="2.2" fill="#14BBA6" fillOpacity="0.32" />
+        <circle cx="430" cy="50" r="2.2" fill="#14BBA6" fillOpacity="0.32" />
+        <circle cx="70" cy="195" r="2.2" fill="#14BBA6" fillOpacity="0.32" />
+        <circle cx="510" cy="195" r="2.2" fill="#14BBA6" fillOpacity="0.32" />
+        <circle cx="290" cy="330" r="2.2" fill="#14BBA6" fillOpacity="0.32" />
       </svg>
 
       <div className={`solutions-hero-k ${ELEVATION_FLOAT}`}>
@@ -498,8 +499,7 @@ function SolutionsHeroArt() {
         <span className={`solutions-hero-k-letter ${FONT_DISPLAY}`}>K</span>
       </div>
 
-      {/* Desktop absolute cluster */}
-      <div className="solutions-hero-cards-desktop" aria-hidden={false}>
+      <div className="solutions-hero-cards-desktop">
         {HERO_FLOATS.map((f) => (
           <div
             key={f.id}
@@ -513,7 +513,6 @@ function SolutionsHeroArt() {
         ))}
       </div>
 
-      {/* Mobile 2+2+1 grid */}
       <ul className="solutions-hero-cards-mobile">
         {HERO_FLOATS.map((f) => (
           <li key={f.id} className={`solutions-hero-card ${ELEVATION_FLOAT}`}>
