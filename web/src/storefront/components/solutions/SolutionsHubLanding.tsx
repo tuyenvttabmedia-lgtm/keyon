@@ -28,7 +28,6 @@ import {
   CARD_TITLE_CLASS,
   CTA_LABEL_CLASS,
   FONT_DISPLAY,
-  OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
@@ -38,6 +37,7 @@ import {
   ELEVATION_CARD_HOVER,
   ELEVATION_CTA_HOVER,
   ELEVATION_FLOAT,
+  ELEVATION_FLOAT_HOVER,
   ELEVATION_HAIRLINE,
   HOVER_LIFT_CARD,
   HOVER_LINK_ACCENT,
@@ -230,11 +230,8 @@ export function SolutionsHubLanding() {
         <div className="home-container relative py-8 md:py-9 lg:py-10">
           <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.46fr)_minmax(0,0.54fr)] md:gap-10 lg:gap-12">
             <div className="min-w-0 w-full max-w-[540px]">
-              <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
-                Giải pháp toàn diện
-              </p>
               <h1
-                className={`mt-3 max-w-[520px] ${FONT_DISPLAY} text-[1.75rem] font-bold leading-[1.12] tracking-tight text-navy sm:text-[2.35rem] lg:text-[2.875rem] lg:leading-[1.1] xl:text-[3rem] xl:leading-[1.08]`}
+                className={`max-w-[520px] ${FONT_DISPLAY} text-[1.75rem] font-bold leading-[1.12] tracking-tight text-navy sm:text-[2.35rem] lg:text-[2.875rem] lg:leading-[1.1] xl:text-[3rem] xl:leading-[1.08]`}
               >
                 Giải pháp số cho doanh nghiệp hiện đại
               </h1>
@@ -437,16 +434,22 @@ function TestimonialCard({
 }) {
   return (
     <article
-      className={`flex h-full flex-col rounded-2xl border border-border bg-white p-6 ${ELEVATION_HAIRLINE}`}
+      className={`flex h-full flex-col rounded-2xl border border-border bg-white p-6 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
     >
-      <Quote className="h-8 w-8 text-accent/80" strokeWidth={1.5} aria-hidden />
-      <div className="mt-4 flex items-center gap-2.5">
-        <span
-          className={`inline-flex h-8 min-w-8 items-center justify-center rounded-md px-2 text-[11px] font-bold tracking-wide ${item.logoTone}`}
-        >
-          {item.logo}
-        </span>
-        <p className={`${CARD_TITLE_CLASS}`}>{item.company}</p>
+      <div className="flex items-center gap-3">
+        <Quote
+          className="h-7 w-7 shrink-0 text-accent"
+          strokeWidth={1.5}
+          aria-hidden
+        />
+        <div className="flex min-w-0 items-center gap-2.5">
+          <span
+            className={`inline-flex h-8 min-w-8 items-center justify-center rounded-md px-2 text-[11px] font-bold tracking-wide ${item.logoTone}`}
+          >
+            {item.logo}
+          </span>
+          <p className={`${CARD_TITLE_CLASS} truncate`}>{item.company}</p>
+        </div>
       </div>
       <p className={`mt-4 flex-1 ${BODY_MUTED_CLASS}`}>{item.quote}</p>
       <div className="mt-6">
@@ -461,7 +464,7 @@ function TestimonialCard({
 function SolutionsHeroArt() {
   return (
     <div
-      className="hero-solution-visual solutions-hero-hub"
+      className="hero-solution-visual solutions-hero-hub group/hub"
       role="img"
       aria-label="Hệ sinh thái giải pháp KEYON"
     >
@@ -473,7 +476,6 @@ function SolutionsHeroArt() {
         fill="none"
         aria-hidden
       >
-        {/* Compact connectors toward card anchors around K (290, 195) */}
         <path
           d="M210 55 L290 195 M430 50 L290 195 M70 195 L290 195 M510 195 L290 195 M290 195 L290 330 M180 170 L290 195 M400 165 L290 195"
           stroke="#14BBA6"
@@ -503,7 +505,7 @@ function SolutionsHeroArt() {
         {HERO_FLOATS.map((f) => (
           <div
             key={f.id}
-            className={`solutions-hero-card solutions-hero-card--${f.id} ${ELEVATION_FLOAT}`}
+            className={`solutions-hero-card solutions-hero-card--${f.id} ${ELEVATION_FLOAT} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_FLOAT_HOVER} hover:border-accent/40`}
           >
             <span className={`solutions-hero-card-icon ${f.tone}`} aria-hidden>
               <f.Icon {...ICON_SM} />
@@ -515,7 +517,10 @@ function SolutionsHeroArt() {
 
       <ul className="solutions-hero-cards-mobile">
         {HERO_FLOATS.map((f) => (
-          <li key={f.id} className={`solutions-hero-card ${ELEVATION_FLOAT}`}>
+          <li
+            key={f.id}
+            className={`solutions-hero-card ${ELEVATION_FLOAT} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_FLOAT_HOVER} hover:border-accent/40`}
+          >
             <span className={`solutions-hero-card-icon ${f.tone}`} aria-hidden>
               <f.Icon {...ICON_SM} />
             </span>
