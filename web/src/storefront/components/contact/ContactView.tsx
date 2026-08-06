@@ -86,49 +86,42 @@ export function ContactView({ cms }: { cms: CmsContact }) {
 
   return (
     <div className="bg-white">
-      {/* Hero — đồng bộ trang chính sách (navy full-bleed, gọn) */}
-      <section className="relative overflow-hidden bg-navy text-white">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-40"
-          aria-hidden
-          style={{
-            background:
-              "radial-gradient(ellipse 55% 80% at 90% 40%, rgba(14,165,164,0.22), transparent 55%)",
-          }}
-        />
-        <div className="home-container relative py-5 md:py-6">
-          <nav
-            className={`flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS} !text-white/65`}
-          >
-            <Link href="/" className={`${TRANSITION_UI} hover:text-accent`}>
-              Trang chủ
-            </Link>
-            <span aria-hidden>›</span>
-            <span className={`${BREADCRUMB_CURRENT_CLASS} !text-white/90`}>
-              Liên hệ
-            </span>
-          </nav>
-          <h1 className={`mt-3 ${SUBSECTION_TITLE_CLASS} !text-white md:text-2xl`}>
-            {cms.heroTitle}{" "}
-            <span className="text-accent">{cms.heroTitleAccent}</span>
-          </h1>
-          <p className={`mt-2 max-w-2xl ${SECTION_LEAD_CLASS} !text-white/75`}>
-            {cms.heroLead}
-          </p>
-        </div>
-      </section>
+      {/* Hero — thu vào container ~1200px (không full-bleed) */}
+      <div className="home-container pt-5 md:pt-6">
+        <section className="relative overflow-hidden rounded-2xl bg-navy text-white">
+          <div
+            className="pointer-events-none absolute inset-0 opacity-40"
+            aria-hidden
+            style={{
+              background:
+                "radial-gradient(ellipse 55% 80% at 90% 40%, rgba(14,165,164,0.22), transparent 55%)",
+            }}
+          />
+          <div className="relative px-5 py-5 sm:px-6 md:px-8 md:py-6">
+            <nav
+              className={`flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS} !text-white/65`}
+            >
+              <Link href="/" className={`${TRANSITION_UI} hover:text-accent`}>
+                Trang chủ
+              </Link>
+              <span aria-hidden>›</span>
+              <span className={`${BREADCRUMB_CURRENT_CLASS} !text-white/90`}>
+                Liên hệ
+              </span>
+            </nav>
+            <h1 className={`mt-3 ${SUBSECTION_TITLE_CLASS} !text-white md:text-2xl`}>
+              {cms.heroTitle}{" "}
+              <span className="text-accent">{cms.heroTitleAccent}</span>
+            </h1>
+            <p className={`mt-2 max-w-2xl ${SECTION_LEAD_CLASS} !text-white/75`}>
+              {cms.heroLead}
+            </p>
+          </div>
+        </section>
+      </div>
 
       <div className="bg-[#F4F8FB]">
         <div className="home-container space-y-5 py-6 md:space-y-6 md:py-8">
-          {/* Bản đồ — tách khỏi hero */}
-          <ContactMap
-            embedUrl={cms.mapEmbedUrl}
-            company={cms.mapCompany}
-            address={cms.mapAddress}
-            mapsUrl={cms.mapMapsUrl}
-            mapsCta={cms.mapMapsCta}
-          />
-
           {/* Info + Form + Instant */}
           <section className="grid gap-5 lg:grid-cols-[minmax(15rem,0.9fr)_minmax(0,1.4fr)_minmax(14rem,0.85fr)] lg:items-stretch lg:gap-5">
             <aside className="relative overflow-hidden rounded-2xl bg-navy p-6 text-white sm:p-7 lg:p-8">
@@ -345,6 +338,15 @@ export function ContactView({ cms }: { cms: CmsContact }) {
             </ul>
           </aside>
         </section>
+
+          {/* Bản đồ — cuối trang */}
+          <ContactMap
+            embedUrl={cms.mapEmbedUrl}
+            company={cms.mapCompany}
+            address={cms.mapAddress}
+            mapsUrl={cms.mapMapsUrl}
+            mapsCta={cms.mapMapsCta}
+          />
         </div>
       </div>
     </div>
