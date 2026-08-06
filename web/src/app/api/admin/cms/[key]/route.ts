@@ -355,17 +355,24 @@ export async function PUT(
         items: z.array(
           z.object({
             id: z.string(),
-            name: z.string().min(1),
-            logoUrl: z.string().optional(),
-            brandColor: z.string().optional(),
+            brandId: z.string().min(1).optional(),
             href: z.string().optional(),
             visible: z.boolean(),
+            /** Legacy fields — optional for older partners.json / migration */
+            name: z.string().optional(),
+            logoUrl: z.string().optional(),
+            brandColor: z.string().optional(),
           }),
         ),
       })
       .parse(body) satisfies CmsPartners;
-    await writeJsonFile("partners.json", data);
-    return NextResponse.json({ ok: true, data });
+    // Drop rows that are neither linked to Catalog nor legacy-named
+    const cleaned: CmsPartners = {
+      ...data,
+      items: data.items.filter((item) => Boolean(item.brandId || item.name)),
+    };
+    await writeJsonFile("partners.json", cleaned);
+    return NextResponse.json({ ok: true, data: cleaned });
   }
   if (key === "categories") {
     const iconKey = z.enum([
