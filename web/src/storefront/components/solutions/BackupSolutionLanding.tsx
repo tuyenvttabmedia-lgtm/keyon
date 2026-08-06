@@ -31,6 +31,7 @@ import {
   CTA_LABEL_CLASS,
   HERO_TITLE_CLASS,
   LINK_ACCENT_CLASS,
+  OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
@@ -71,10 +72,22 @@ type Props = {
 
 const ICON_SM = { size: 18, strokeWidth: 1.85, "aria-hidden": true as const };
 
-const HERO_POINTS: { title: string; Icon: LucideIcon }[] = [
-  { title: "Sao lưu tự động", Icon: CloudUpload },
-  { title: "An toàn & Mã hóa", Icon: Lock },
-  { title: "Khôi phục nhanh chóng", Icon: RefreshCw },
+const HERO_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
+  {
+    title: "Sao lưu tự động",
+    body: "Không bỏ sót dữ liệu quan trọng.",
+    Icon: CloudUpload,
+  },
+  {
+    title: "An toàn & Mã hóa",
+    body: "Bảo mật nhiều lớp, mã hóa đầu cuối.",
+    Icon: Lock,
+  },
+  {
+    title: "Khôi phục nhanh chóng",
+    body: "Phục hồi dữ liệu chỉ trong vài phút.",
+    Icon: RefreshCw,
+  },
 ];
 
 const DATA_PILLARS: { title: string; body: string; Icon: LucideIcon }[] = [
@@ -210,9 +223,9 @@ export function BackupSolutionLanding({ featured, usingFallback }: Props) {
   return (
     <div className="bg-white">
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden border-b border-border">
+      <section className="relative overflow-x-clip border-b border-border">
         <div
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_88%_18%,rgba(14,165,164,0.1),transparent_42%),radial-gradient(ellipse_at_10%_90%,rgba(14,165,233,0.06),transparent_48%)]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_88%_18%,rgba(14,165,164,0.12),transparent_42%),radial-gradient(ellipse_at_10%_90%,rgba(14,165,233,0.05),transparent_48%)]"
           aria-hidden
         />
         <div className="home-container relative py-8 md:py-10 lg:py-11">
@@ -232,26 +245,31 @@ export function BackupSolutionLanding({ featured, usingFallback }: Props) {
             <span className={BREADCRUMB_CURRENT_CLASS}>Backup & Khôi phục</span>
           </nav>
 
-          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-8 xl:gap-10">
+          <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] md:gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-12 xl:gap-14">
             <div className="min-w-0">
-              <h1 className={`max-w-[18ch] ${HERO_TITLE_CLASS}`}>
-                Dữ liệu của bạn. Luôn có đường quay trở lại.
+              <p className={`${OVERLINE_CLASS} text-accent`}>Backup & Khôi phục</p>
+              <h1 className={`mt-2.5 max-w-[520px] ${HERO_TITLE_CLASS}`}>
+                Dữ liệu của bạn.{" "}
+                <span className="text-accent">Luôn có đường quay trở lại.</span>
               </h1>
-              <p className={`mt-4 max-w-xl ${PAGE_LEAD_CLASS}`}>
+              <p className={`mt-4 max-w-[510px] ${PAGE_LEAD_CLASS}`}>
                 Giải pháp sao lưu tự động, an toàn — giúp cá nhân và doanh nghiệp
                 khôi phục nhanh khi sự cố, ransomware hoặc mất thiết bị.
               </p>
 
-              <ul className="mt-6 grid gap-3 sm:grid-cols-3 sm:gap-3">
+              <ul className="mt-6 grid gap-4 sm:grid-cols-3 sm:gap-3">
                 {HERO_POINTS.map((p) => (
-                  <li key={p.title} className="flex items-center gap-2.5">
+                  <li key={p.title} className="flex gap-2.5 sm:flex-col sm:items-start sm:gap-2.5">
                     <span
-                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent"
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent"
                       aria-hidden
                     >
                       <p.Icon {...ICON_SM} />
                     </span>
-                    <span className={CARD_TITLE_CLASS}>{p.title}</span>
+                    <div className="min-w-0">
+                      <p className={CARD_TITLE_CLASS}>{p.title}</p>
+                      <p className={`mt-0.5 ${BODY_MUTED_CLASS}`}>{p.body}</p>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -273,7 +291,7 @@ export function BackupSolutionLanding({ featured, usingFallback }: Props) {
               </div>
             </div>
 
-            <div className="relative mx-auto w-full max-w-[480px] lg:max-w-none">
+            <div className="relative w-full min-w-0">
               <BackupHeroArt />
             </div>
           </div>
@@ -518,183 +536,137 @@ export function BackupSolutionLanding({ featured, usingFallback }: Props) {
 }
 
 function BackupHeroArt() {
-  const circumference = 2 * Math.PI * 54;
-  const progress = 0.92;
-  const dash = circumference * progress;
-
   return (
     <div
-      className={`relative overflow-hidden rounded-[1.75rem] border border-border/80 bg-gradient-to-br from-[#0b1f33] via-[#0f2a3f] to-[#0c4a4a] p-4 sm:p-5 ${ELEVATION_FLOAT}`}
+      className="relative mx-auto aspect-[5/4.2] w-full max-w-[520px] lg:max-w-none"
       role="img"
-      aria-label="Minh họa sao lưu KEYON: đồng bộ 92%, dữ liệu đã bảo vệ, sẵn sàng khôi phục"
+      aria-label="Minh họa backup KEYON: đám mây bảo vệ, laptop Backup Complete và điểm khôi phục"
     >
-      {/* Atmosphere */}
+      {/* Soft teal atmosphere — light scene, not dark demo panel */}
       <div
-        className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-accent/35 blur-3xl"
+        className="pointer-events-none absolute inset-[6%] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(14,165,164,0.22)_0%,rgba(14,165,164,0.08)_45%,transparent_70%)] blur-2xl"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute -bottom-24 -left-10 h-52 w-52 rounded-full bg-sky-500/20 blur-3xl"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.06)_1px,transparent_0)] bg-[length:18px_18px] opacity-50"
+        className="pointer-events-none absolute inset-[18%] bg-[radial-gradient(circle_at_1px_1px,rgba(14,165,164,0.14)_1px,transparent_0)] bg-[length:16px_16px] opacity-50"
         aria-hidden
       />
 
-      <div className="relative aspect-[5/4.35] w-full">
-        {/* Live badge */}
-        <div
-          className={`absolute left-0 top-0 z-30 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur-md ${ELEVATION_HAIRLINE}`}
-        >
-          <span className="relative flex h-2 w-2" aria-hidden>
-            <span className="absolute inline-flex h-full w-full motion-safe:animate-ping rounded-full bg-emerald-400 opacity-60" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-          </span>
-          <span className={`${BADGE_CLASS} font-semibold text-white`}>Đang bảo vệ</span>
-        </div>
+      {/* Concentric platform */}
+      <div
+        className="pointer-events-none absolute bottom-[6%] left-1/2 z-[1] h-14 w-[72%] -translate-x-1/2"
+        aria-hidden
+      >
+        <span className="absolute inset-x-0 top-0 h-4 rounded-[100%] border border-accent/25 bg-accent/10" />
+        <span className="absolute inset-x-[10%] top-2 h-3 rounded-[100%] border border-accent/35 bg-accent/15" />
+        <span className="absolute inset-x-[22%] top-3.5 h-2.5 rounded-[100%] bg-accent/40 blur-[1px]" />
+        <span className="absolute inset-x-[34%] top-5 h-2 rounded-[100%] bg-accent/55 blur-[2px]" />
+      </div>
 
-        {/* Top-right status chip */}
-        <div
-          className={`absolute right-0 top-0 z-30 flex max-w-[11.5rem] items-center gap-2.5 rounded-2xl border border-white/15 bg-white/95 px-3 py-2.5 backdrop-blur-sm ${ELEVATION_FLOAT} motion-safe:home-hero-spark`}
-        >
+      {/* Center — glowing cloud + K */}
+      <div className="absolute inset-[8%_18%_28%_18%] z-10 flex items-center justify-center">
+        <div className="relative h-full w-full max-h-[240px] max-w-[280px]">
           <span
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-500 text-white"
+            className="pointer-events-none absolute inset-[12%] rounded-full bg-accent/35 blur-2xl"
+            aria-hidden
+          />
+          <svg
+            viewBox="0 0 280 200"
+            className="relative z-[1] h-full w-full drop-shadow-[0_16px_36px_rgba(14,165,164,0.35)]"
             aria-hidden
           >
-            <Check size={18} strokeWidth={2.6} />
-          </span>
-          <div className="min-w-0">
-            <p className={`${BADGE_CLASS} font-semibold text-navy`}>Backup Complete</p>
-            <p className="text-[11px] text-muted">Hôm nay · 14:20</p>
-          </div>
-        </div>
-
-        {/* Center progress orb */}
-        <div className="absolute inset-[14%_18%_28%_18%] z-10 flex flex-col items-center justify-center">
-          <div className="relative flex h-full w-full max-h-[220px] max-w-[220px] items-center justify-center">
-            <span
-              className="pointer-events-none absolute inset-[8%] rounded-full bg-accent/40 blur-2xl motion-safe:animate-pulse"
-              aria-hidden
+            <defs>
+              <linearGradient id="bkCloudFill" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#99f6e4" />
+                <stop offset="45%" stopColor="#2dd4bf" />
+                <stop offset="100%" stopColor="#0d9488" />
+              </linearGradient>
+              <filter id="bkCloudSoft" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="10" stdDeviation="12" floodColor="#0ea5a4" floodOpacity="0.35" />
+              </filter>
+            </defs>
+            <path
+              d="M78 148c-28 0-52-22-52-48s24-48 52-48c8-26 32-44 60-44 34 0 62 26 64 60 24 2 42 22 42 44 0 26-22 48-48 48H78Z"
+              fill="url(#bkCloudFill)"
+              filter="url(#bkCloudSoft)"
+              opacity="0.95"
             />
-            <svg viewBox="0 0 140 140" className="relative z-[1] h-full w-full" aria-hidden>
-              <defs>
-                <linearGradient id="bkRing" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#5eead4" />
-                  <stop offset="100%" stopColor="#0ea5a4" />
-                </linearGradient>
-                <filter id="bkGlow" x="-30%" y="-30%" width="160%" height="160%">
-                  <feDropShadow dx="0" dy="0" stdDeviation="4" floodColor="#2dd4bf" floodOpacity="0.55" />
-                </filter>
-              </defs>
-              <circle cx="70" cy="70" r="54" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="8" />
-              <circle
-                cx="70"
-                cy="70"
-                r="54"
-                fill="none"
-                stroke="url(#bkRing)"
-                strokeWidth="8"
-                strokeLinecap="round"
-                strokeDasharray={`${dash} ${circumference}`}
-                transform="rotate(-90 70 70)"
-                filter="url(#bkGlow)"
-              />
-              <circle cx="70" cy="70" r="42" fill="#06121f" stroke="rgba(94,234,212,0.25)" strokeWidth="1.5" />
-              <text
-                x="70"
-                y="66"
-                textAnchor="middle"
-                fontFamily="var(--font-display), system-ui, sans-serif"
-                fontSize="28"
-                fontWeight="800"
-                fill="#5eead4"
-              >
-                K
-              </text>
-              <text
-                x="70"
-                y="86"
-                textAnchor="middle"
-                fontFamily="var(--font-body), system-ui, sans-serif"
-                fontSize="11"
-                fontWeight="600"
-                fill="#94a3b8"
-              >
-                92% synced
-              </text>
-            </svg>
+            <circle cx="140" cy="100" r="34" fill="#0b1f33" />
+            <text
+              x="140"
+              y="112"
+              textAnchor="middle"
+              fontFamily="var(--font-display), system-ui, sans-serif"
+              fontSize="34"
+              fontWeight="800"
+              fill="#5eead4"
+            >
+              K
+            </text>
+          </svg>
+        </div>
+      </div>
+
+      {/* Left — laptop Backup Complete */}
+      <div
+        className={`absolute bottom-[14%] left-[0%] z-20 w-[44%] max-w-[210px] motion-safe:home-hero-spark ${ELEVATION_FLOAT}`}
+      >
+        <div className="overflow-hidden rounded-t-xl border border-slate-200/90 bg-[#0f172a]">
+          <div className="flex items-center gap-1 border-b border-white/10 px-2.5 py-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-rose-400/80" />
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-400/80" />
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/80" />
+          </div>
+          <div className="flex flex-col items-center px-3 py-5">
+            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-500 text-white shadow-[0_0_20px_rgba(16,185,129,0.45)]">
+              <Check size={22} strokeWidth={2.6} />
+            </span>
+            <p className={`mt-2.5 ${BADGE_CLASS} font-semibold text-white`}>Backup Complete</p>
+            <p className="mt-0.5 text-[10px] text-slate-400">Hôm nay · 14:20</p>
           </div>
         </div>
+        <div className="mx-auto h-2.5 w-[108%] rounded-b-md bg-gradient-to-b from-slate-500 to-slate-600" />
+        <div className="mx-auto h-1.5 w-[70%] rounded-b-full bg-slate-400" />
+      </div>
 
-        {/* Platform rings under orb */}
-        <div
-          className="pointer-events-none absolute bottom-[22%] left-1/2 z-[5] h-8 w-[58%] -translate-x-1/2"
+      {/* Right — protected folders */}
+      <div
+        className={`absolute right-[0%] top-[8%] z-20 w-[46%] max-w-[200px] rounded-2xl border border-border/80 bg-white/95 p-3.5 backdrop-blur-sm ${ELEVATION_FLOAT}`}
+      >
+        <p className={`${BADGE_CLASS} mb-2.5 font-semibold text-muted`}>Đã bảo vệ</p>
+        <ul className="space-y-2">
+          {[
+            { name: "Documents", tone: "bg-sky-100 text-sky-700" },
+            { name: "Images", tone: "bg-violet-100 text-violet-700" },
+            { name: "Projects", tone: "bg-amber-100 text-amber-800" },
+          ].map((f) => (
+            <li key={f.name} className="flex items-center gap-2">
+              <span
+                className={`flex h-7 w-7 items-center justify-center rounded-lg ${f.tone}`}
+                aria-hidden
+              >
+                <FolderOpen size={13} strokeWidth={2} />
+              </span>
+              <span className="truncate text-[11px] font-semibold text-navy">{f.name}</span>
+              <Check size={13} className="ml-auto shrink-0 text-accent" strokeWidth={2.6} />
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Right lower — Restore Point */}
+      <div
+        className={`absolute bottom-[18%] right-[2%] z-20 flex w-[48%] max-w-[210px] items-center gap-2.5 rounded-2xl border border-border/80 bg-white px-3 py-2.5 ${ELEVATION_FLOAT}`}
+      >
+        <span
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent"
           aria-hidden
         >
-          <span className="absolute inset-x-0 top-0 h-3 rounded-[100%] border border-accent/30 bg-accent/15 blur-[0.5px]" />
-          <span className="absolute inset-x-[12%] top-2 h-2.5 rounded-[100%] border border-accent/45 bg-accent/25" />
-          <span className="absolute inset-x-[28%] top-3.5 h-2 rounded-[100%] bg-accent/55 blur-[1px]" />
-        </div>
-
-        {/* Bottom-left protected folders */}
-        <div
-          className={`absolute bottom-0 left-0 z-30 w-[48%] max-w-[200px] rounded-2xl border border-white/20 bg-white/95 p-3 backdrop-blur-md ${ELEVATION_FLOAT}`}
-        >
-          <div className="mb-2 flex items-center justify-between gap-2">
-            <p className={`${BADGE_CLASS} font-semibold text-muted`}>Đã bảo vệ</p>
-            <CloudUpload size={14} className="text-accent" strokeWidth={2} aria-hidden />
-          </div>
-          <ul className="space-y-1.5">
-            {[
-              { name: "Documents", tone: "bg-sky-100 text-sky-700" },
-              { name: "Images", tone: "bg-violet-100 text-violet-700" },
-              { name: "Projects", tone: "bg-amber-100 text-amber-800" },
-            ].map((f) => (
-              <li key={f.name} className="flex items-center gap-2">
-                <span
-                  className={`flex h-6 w-6 items-center justify-center rounded-lg ${f.tone}`}
-                  aria-hidden
-                >
-                  <FolderOpen size={12} strokeWidth={2} />
-                </span>
-                <span className="truncate text-[11px] font-semibold text-navy">{f.name}</span>
-                <Check size={12} className="ml-auto shrink-0 text-accent" strokeWidth={2.6} />
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Bottom-right restore + encryption */}
-        <div className="absolute bottom-0 right-0 z-30 flex w-[46%] max-w-[200px] flex-col gap-2.5">
-          <div
-            className={`flex items-center gap-2.5 rounded-2xl border border-white/20 bg-white/95 px-3 py-2.5 backdrop-blur-md ${ELEVATION_FLOAT}`}
-          >
-            <span
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent"
-              aria-hidden
-            >
-              <History size={17} strokeWidth={1.9} />
-            </span>
-            <div className="min-w-0">
-              <p className={`${BADGE_CLASS} font-semibold text-navy`}>Restore Point</p>
-              <p className="text-[11px] text-muted">10:30 · Hôm nay</p>
-            </div>
-          </div>
-          <div
-            className={`flex items-center gap-2.5 rounded-2xl border border-accent/40 bg-accent px-3 py-2.5 text-white ${ELEVATION_FLOAT}`}
-          >
-            <span
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/15"
-              aria-hidden
-            >
-              <Lock size={15} strokeWidth={2} />
-            </span>
-            <div className="min-w-0">
-              <p className={`${BADGE_CLASS} font-semibold text-white`}>AES-256</p>
-              <p className="text-[11px] text-white/80">Mã hóa end-to-end</p>
-            </div>
-          </div>
+          <History size={18} strokeWidth={1.9} />
+        </span>
+        <div className="min-w-0">
+          <p className={`${BADGE_CLASS} font-semibold text-navy`}>Restore Point</p>
+          <p className="text-[11px] text-muted">10:30 AM · Hôm nay</p>
         </div>
       </div>
     </div>
