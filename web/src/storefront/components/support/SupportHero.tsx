@@ -6,7 +6,6 @@ import {
   BREADCRUMB_CLASS,
   BREADCRUMB_CURRENT_CLASS,
   HERO_TITLE_CLASS,
-  OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
 } from "@/storefront/typography";
 import { HOVER_LINK_ACCENT } from "@/storefront/effects";
@@ -44,10 +43,7 @@ export function SupportHero({ docs, suggestions }: Props) {
         {/* Desktop / tablet */}
         <div className="hidden md:grid md:grid-cols-12 md:items-start md:gap-8 lg:gap-10">
           <div className="min-w-0 md:col-span-7 lg:col-span-8">
-            <p className={`${OVERLINE_CLASS} tracking-[0.16em] text-accent`}>
-              Trung tâm hỗ trợ
-            </p>
-            <h1 className={`mt-2.5 max-w-[22ch] ${HERO_TITLE_CLASS}`}>
+            <h1 className={`max-w-[22ch] ${HERO_TITLE_CLASS}`}>
               Bạn cần KEYON hỗ trợ điều gì?
             </h1>
             <p className={`mt-3 max-w-xl ${PAGE_LEAD_CLASS}`}>
