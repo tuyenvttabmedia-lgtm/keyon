@@ -30,6 +30,7 @@ type Props = {
 function resolveRequestType(intent?: string, requestType?: string) {
   if (requestType?.trim()) return requestType.trim().toUpperCase();
   if (intent === "volume-quote") return "VOLUME_LICENSING";
+  if (intent === "subscription-consult" || intent === "business") return "SUBSCRIPTION";
   return "GENERAL";
 }
 

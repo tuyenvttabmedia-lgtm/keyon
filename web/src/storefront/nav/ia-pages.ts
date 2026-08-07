@@ -140,11 +140,18 @@ export const BUSINESS_PAGES: Record<string, IaPage> = {
     slug: "subscriptions",
     kicker: "Doanh nghiệp",
     title: "Subscription & Gia hạn",
-    subtitle: "Theo dõi subscription, renewal và chu kỳ sử dụng — nền tảng cho vận hành B2B / Pax8 về sau.",
-    bullets: ["Gia hạn theo gói subscription", "Theo dõi trong Tài khoản", "Tư vấn khi đến kỳ renew"],
-    primaryCta: { label: "Liên hệ kinh doanh", href: "/contact/sales" },
-    secondaryCta: { label: "Quản lý bản quyền", href: "/solutions/license-management" },
-    draftCapable: true,
+    subtitle:
+      "Theo dõi subscription, thời hạn và chu kỳ gia hạn tập trung — chủ động trước mỗi kỳ renew.",
+    bullets: [
+      "Theo dõi trạng thái và chu kỳ sử dụng",
+      "Nhận thông tin trước kỳ gia hạn",
+      "Tư vấn tiếp tục, điều chỉnh hoặc báo giá",
+    ],
+    primaryCta: {
+      label: "Tư vấn subscription",
+      href: "/contact/quote?intent=subscription-consult&requestType=SUBSCRIPTION",
+    },
+    secondaryCta: { label: "Tìm hiểu cách hoạt động", href: "/how-it-works" },
   },
   "licensing-consulting": {
     slug: "licensing-consulting",
