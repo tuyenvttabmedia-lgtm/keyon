@@ -8,6 +8,7 @@ import type { StorageSettingsPublic } from "@/server/storage/config";
 import type { PaymentSettingsPublic } from "@/server/payment/config";
 import type { SupplierApiSettingsPublic } from "@/server/supplier/config";
 import type { MailSettingsPublic } from "@/server/mail/config";
+import type { TelegramSettingsPublic } from "@/server/telegram/config";
 import {
   SETTINGS_TABS,
   type SettingsTab,
@@ -36,6 +37,10 @@ const TAB_HELP: Record<SettingsTab, { title: string; lead: string }> = {
     title: "Email / SMTP",
     lead: "Hybrid Admin + ENV. Dev dùng Mailpit; production Brevo / SMTP riêng.",
   },
+  telegram: {
+    title: "Telegram",
+    lead: "Nhận thông báo lead (liên hệ / báo giá) và monitoring. Bot token mã hóa AES; Chat ID lưu plain. Field trống → fallback ENV.",
+  },
   sepay: {
     title: "Thanh toán · SePay",
     lead: "Credential mã hóa AES. Field trống → fallback ENV.",
@@ -56,6 +61,7 @@ export function SettingsForm({
   initialPayment,
   initialSupplierApi,
   initialMail,
+  initialTelegram,
   initialTab = "chung",
   siteOrigin,
   siteHostname,
@@ -66,6 +72,7 @@ export function SettingsForm({
   initialPayment: PaymentSettingsPublic;
   initialSupplierApi: SupplierApiSettingsPublic;
   initialMail: MailSettingsPublic;
+  initialTelegram: TelegramSettingsPublic;
   initialTab?: SettingsTab;
   siteOrigin: string;
   siteHostname: string;
@@ -79,8 +86,10 @@ export function SettingsForm({
   const [payment, setPayment] = useState(initialPayment);
   const [supplierApi, setSupplierApi] = useState(initialSupplierApi);
   const [mail, setMail] = useState(initialMail);
+  const [telegram, setTelegram] = useState(initialTelegram);
   const [mailPass, setMailPass] = useState("");
   const [mailTestTo, setMailTestTo] = useState("");
+  const [telegramBotToken, setTelegramBotToken] = useState("");
   const [wasabiSecret, setWasabiSecret] = useState("");
   const [apiKey, setApiKey] = useState("");
   const [webhookSecret, setWebhookSecret] = useState("");
@@ -99,6 +108,7 @@ export function SettingsForm({
   useEffect(() => setPayment(initialPayment), [initialPayment]);
   useEffect(() => setSupplierApi(initialSupplierApi), [initialSupplierApi]);
   useEffect(() => setMail(initialMail), [initialMail]);
+  useEffect(() => setTelegram(initialTelegram), [initialTelegram]);
   useEffect(() => setTab(initialTab), [initialTab]);
 
   const siteDirty = useMemo(
@@ -174,6 +184,58 @@ export function SettingsForm({
       setMail(data.data);
       setMailPass("");
       setMsg("Đã lưu cấu hình Email / SMTP");
+    } catch (e) {
+      setMsg(e instanceof Error ? e.message : "Lỗi");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function saveTelegram() {
+    setLoading(true);
+    setMsg(null);
+    try {
+      const res = await fetch("/api/admin/telegram", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          enabled: telegram.enabled,
+          chatId: telegram.chatId,
+          ...(telegramBotToken.trim()
+            ? { botToken: telegramBotToken.trim() }
+            : {}),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Lỗi");
+      setTelegram(data.data);
+      setTelegramBotToken("");
+      setMsg("Đã lưu cấu hình Telegram");
+    } catch (e) {
+      setMsg(e instanceof Error ? e.message : "Lỗi");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function clearTelegramToken() {
+    setLoading(true);
+    setMsg(null);
+    try {
+      const res = await fetch("/api/admin/telegram", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          enabled: telegram.enabled,
+          chatId: telegram.chatId,
+          clearBotToken: true,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Lỗi");
+      setTelegram(data.data);
+      setTelegramBotToken("");
+      setMsg("Đã xóa Bot token đã lưu (fallback ENV nếu có)");
     } catch (e) {
       setMsg(e instanceof Error ? e.message : "Lỗi");
     } finally {
@@ -386,8 +448,27 @@ export function SettingsForm({
     }
   }
 
+  async function testTelegram() {
+    setLoading(true);
+    setMsg(null);
+    try {
+      const res = await fetch("/api/admin/telegram/test", { method: "POST" });
+      const data = await res.json();
+      if (data.data) setTelegram(data.data);
+      if (!res.ok || data.ok === false) {
+        throw new Error(data.error ?? "Test thất bại");
+      }
+      setMsg(data.message ?? "OK");
+    } catch (e) {
+      setMsg(e instanceof Error ? e.message : "Lỗi");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   function save() {
     if (tab === "email") return saveMail();
+    if (tab === "telegram") return saveTelegram();
     if (tab === "storage") return saveStorage();
     if (tab === "sepay") return savePayment();
     if (tab === "ncc") return saveSupplierApi();
@@ -648,6 +729,120 @@ export function SettingsForm({
                 from <code className="text-navy">{mail.resolved.from}</code>
               </p>
             )}
+          </div>
+        ) : null}
+
+        {tab === "telegram" ? (
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              <span
+                className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                  telegram.resolved.status === "ok"
+                    ? "bg-emerald-50 text-emerald-700"
+                    : telegram.resolved.status === "degraded"
+                      ? "bg-rose-50 text-rose-700"
+                      : telegram.resolved.status === "disabled"
+                        ? "bg-slate-100 text-slate-600"
+                        : "bg-amber-50 text-amber-800"
+                }`}
+              >
+                {telegram.resolved.status === "ok"
+                  ? "Sẵn sàng"
+                  : telegram.resolved.status === "degraded"
+                    ? "Lỗi gần đây"
+                    : telegram.resolved.status === "disabled"
+                      ? "Đã tắt"
+                      : "Chưa cấu hình"}
+              </span>
+              <span className="text-muted">
+                Nguồn:{" "}
+                <span className="font-medium text-navy">{telegram.resolved.source}</span>
+                {" · "}
+                Chat:{" "}
+                <span className="font-medium text-navy">
+                  {telegram.resolved.chatIdMasked}
+                </span>
+              </span>
+            </div>
+
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                className="h-4 w-4 rounded border-border text-accent focus:ring-accent"
+                checked={telegram.enabled}
+                onChange={(e) =>
+                  setTelegram({ ...telegram, enabled: e.target.checked })
+                }
+              />
+              <span className="font-medium text-navy">
+                Bật thông báo Telegram (lead + monitoring)
+              </span>
+            </label>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="block text-sm sm:col-span-2">
+                <span className="font-medium text-navy">
+                  Bot token
+                  {telegram.botTokenConfigured ? " (đã lưu)" : ""}
+                </span>
+                <input
+                  type="password"
+                  className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                  placeholder={
+                    telegram.botTokenConfigured
+                      ? "•••••••• (để trống nếu giữ)"
+                      : "123456:ABC…"
+                  }
+                  value={telegramBotToken}
+                  onChange={(e) => setTelegramBotToken(e.target.value)}
+                  autoComplete="new-password"
+                />
+              </label>
+              <label className="block text-sm sm:col-span-2">
+                <span className="font-medium text-navy">Chat ID</span>
+                <input
+                  className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                  placeholder="VD: 123456789 hoặc -100…"
+                  value={telegram.chatId}
+                  onChange={(e) =>
+                    setTelegram({ ...telegram, chatId: e.target.value })
+                  }
+                  autoComplete="off"
+                />
+              </label>
+            </div>
+
+            <p className="text-xs text-muted">
+              Tạo bot qua{" "}
+              <a
+                href="https://t.me/BotFather"
+                target="_blank"
+                rel="noreferrer"
+                className="font-medium text-accent hover:underline"
+              >
+                @BotFather
+              </a>
+              , chat với bot, lấy <code className="text-navy">chat_id</code> từ{" "}
+              <code className="text-navy">getUpdates</code>. Field trống → dùng{" "}
+              <code className="text-navy">TELEGRAM_BOT_TOKEN</code> /{" "}
+              <code className="text-navy">TELEGRAM_CHAT_ID</code> trong ENV.
+            </p>
+
+            <div className="rounded-lg border border-border bg-[#F7FAFC] px-3 py-3 text-xs text-muted">
+              <p>
+                Test gần nhất:{" "}
+                <span className="text-navy">
+                  {formatHealthTime(telegram.health.lastSuccessAt)}
+                </span>
+                {telegram.health.lastError ? (
+                  <>
+                    {" · "}
+                    Lỗi:{" "}
+                    <span className="text-rose-700">{telegram.health.lastError}</span>
+                  </>
+                ) : null}
+              </p>
+            </div>
           </div>
         ) : null}
 
@@ -1237,6 +1432,28 @@ export function SettingsForm({
               >
                 Gửi email thử
               </button>
+            </>
+          ) : null}
+          {tab === "telegram" ? (
+            <>
+              <button
+                type="button"
+                disabled={loading}
+                onClick={testTelegram}
+                className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-navy hover:bg-navy-soft disabled:opacity-50"
+              >
+                Gửi tin nhắn thử
+              </button>
+              {telegram.botTokenConfigured ? (
+                <button
+                  type="button"
+                  disabled={loading}
+                  onClick={clearTelegramToken}
+                  className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-navy hover:bg-navy-soft disabled:opacity-50"
+                >
+                  Xóa token đã lưu
+                </button>
+              ) : null}
             </>
           ) : null}
           {tab === "storage" ? (

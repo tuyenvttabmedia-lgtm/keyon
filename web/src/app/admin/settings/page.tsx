@@ -3,6 +3,7 @@ import { getStorageSettingsPublic } from "@/server/storage/config";
 import { getPaymentSettingsPublic } from "@/server/payment/config";
 import { getSupplierApiSettingsPublic } from "@/server/supplier/config";
 import { getMailSettingsPublic } from "@/server/mail/config";
+import { getTelegramSettingsPublic } from "@/server/telegram/config";
 import {
   buildSettingsStatus,
   parseSettingsTab,
@@ -33,13 +34,15 @@ export default async function AdminSettingsPage({
   const sp = await searchParams;
   const initialTab = parseSettingsTab(sp.tab);
 
-  const [settings, storage, payment, supplierApi, mail] = await Promise.all([
-    loadSiteSettings(),
-    getStorageSettingsPublic(),
-    getPaymentSettingsPublic(),
-    getSupplierApiSettingsPublic(),
-    getMailSettingsPublic(),
-  ]);
+  const [settings, storage, payment, supplierApi, mail, telegram] =
+    await Promise.all([
+      loadSiteSettings(),
+      getStorageSettingsPublic(),
+      getPaymentSettingsPublic(),
+      getSupplierApiSettingsPublic(),
+      getMailSettingsPublic(),
+      getTelegramSettingsPublic(),
+    ]);
 
   const statusCards = buildSettingsStatus({
     siteName: settings.siteName,
@@ -47,6 +50,7 @@ export default async function AdminSettingsPage({
     payment,
     storage,
     supplierApi,
+    telegram,
   });
 
   return (
@@ -55,7 +59,7 @@ export default async function AdminSettingsPage({
         <div>
           <h1 className={ADMIN_PAGE_TITLE_CLASS}>Cài đặt</h1>
           <p className="text-sm text-muted">
-            Hệ thống · SEO · Email · SePay · NCC API · Storage
+            Hệ thống · SEO · Email · Telegram · SePay · NCC API · Storage
           </p>
         </div>
         <Link
@@ -66,7 +70,7 @@ export default async function AdminSettingsPage({
         </Link>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         {statusCards.map((c) => (
           <Link
             key={c.label}
@@ -90,6 +94,7 @@ export default async function AdminSettingsPage({
         initialPayment={payment}
         initialSupplierApi={supplierApi}
         initialMail={mail}
+        initialTelegram={telegram}
         initialTab={initialTab}
         siteOrigin={getSiteOrigin()}
         siteHostname={getSiteHostname()}

@@ -653,6 +653,30 @@ export const defaultMailSettings: MailSettings = {
   },
 };
 
+/** Telegram bot for monitoring + lead alerts. Bot token AES-GCM encrypted at rest. */
+export type TelegramSettings = {
+  /** When false, web process skips Telegram pushes (ENV alone will not send). */
+  enabled: boolean;
+  botTokenEnc: string;
+  chatId: string;
+  health: {
+    lastSuccessAt: string | null;
+    lastFailedAt: string | null;
+    lastError: string | null;
+  };
+};
+
+export const defaultTelegramSettings: TelegramSettings = {
+  enabled: true,
+  botTokenEnc: "",
+  chatId: "",
+  health: {
+    lastSuccessAt: null,
+    lastFailedAt: null,
+    lastError: null,
+  },
+};
+
 /** Payment gateway (SePay). Secrets AES-GCM encrypted at rest. */
 export type PaymentSettings = {
   provider: "stub" | "sepay" | "payos" | "megapay";

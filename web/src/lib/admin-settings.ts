@@ -2,11 +2,13 @@ import type { MailSettingsPublic } from "@/server/mail/config";
 import type { PaymentSettingsPublic } from "@/server/payment/config";
 import type { StorageSettingsPublic } from "@/server/storage/config";
 import type { SupplierApiSettingsPublic } from "@/server/supplier/config";
+import type { TelegramSettingsPublic } from "@/server/telegram/config";
 
 export type SettingsTab =
   | "chung"
   | "seo"
   | "email"
+  | "telegram"
   | "storage"
   | "sepay"
   | "ncc";
@@ -15,6 +17,7 @@ export const SETTINGS_TABS: { id: SettingsTab; label: string }[] = [
   { id: "chung", label: "Chung" },
   { id: "seo", label: "SEO" },
   { id: "email", label: "Email / SMTP" },
+  { id: "telegram", label: "Telegram" },
   { id: "sepay", label: "SePay" },
   { id: "ncc", label: "NCC / Pax8" },
   { id: "storage", label: "Storage / Wasabi" },
@@ -25,6 +28,7 @@ export function parseSettingsTab(raw: string | undefined): SettingsTab {
     raw === "ncc" ||
     raw === "seo" ||
     raw === "email" ||
+    raw === "telegram" ||
     raw === "storage" ||
     raw === "sepay" ||
     raw === "chung"
@@ -45,6 +49,22 @@ export function mailStatusTone(
 ): "ok" | "warn" | "bad" {
   if (mail.resolved.status === "ok") return "ok";
   if (mail.resolved.status === "degraded") return "bad";
+  return "warn";
+}
+
+export function telegramStatusLabel(tg: TelegramSettingsPublic): string {
+  if (tg.resolved.status === "ok") return "OK";
+  if (tg.resolved.status === "degraded") return "Lỗi gần đây";
+  if (tg.resolved.status === "disabled") return "Đã tắt";
+  return "Chưa cấu hình";
+}
+
+export function telegramStatusTone(
+  tg: TelegramSettingsPublic,
+): "ok" | "warn" | "bad" | "neutral" {
+  if (tg.resolved.status === "ok") return "ok";
+  if (tg.resolved.status === "degraded") return "bad";
+  if (tg.resolved.status === "disabled") return "neutral";
   return "warn";
 }
 
@@ -94,8 +114,10 @@ export function buildSettingsStatus(input: {
   payment: PaymentSettingsPublic;
   storage: StorageSettingsPublic;
   supplierApi: SupplierApiSettingsPublic;
+  telegram: TelegramSettingsPublic;
 }): SettingsStatusCard[] {
   const mailTone = mailStatusTone(input.mail);
+  const tgTone = telegramStatusTone(input.telegram);
   return [
     {
       label: "Website",
@@ -110,6 +132,13 @@ export function buildSettingsStatus(input: {
       hint: `${input.mail.resolved.provider} · ${input.mail.resolved.source}`,
       tone: mailTone,
       tab: "email",
+    },
+    {
+      label: "Telegram",
+      value: telegramStatusLabel(input.telegram),
+      hint: `Nguồn: ${input.telegram.resolved.source}`,
+      tone: tgTone,
+      tab: "telegram",
     },
     {
       label: "Thanh toán",
