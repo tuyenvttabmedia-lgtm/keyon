@@ -12,14 +12,42 @@ import {
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
 } from "@/storefront/typography";
-import { ELEVATION_CARD_HOVER, ELEVATION_FLOAT, ELEVATION_HAIRLINE, HOVER_LIFT_CARD, TRANSITION_PANEL } from "@/storefront/effects";
-import { SAMPLE_SUBSCRIPTIONS, SECTION_PAD } from "./shared";
+import {
+  ELEVATION_CARD_HOVER,
+  ELEVATION_FLOAT,
+  ELEVATION_HAIRLINE,
+  HOVER_LIFT_CARD,
+  TRANSITION_PANEL,
+} from "@/storefront/effects";
+import { SECTION_PAD } from "./shared";
 
 const POINTS = [
-  { title: "Tổng quan subscription", Icon: LayoutDashboard },
-  { title: "Theo dõi trạng thái", Icon: ListChecks },
-  { title: "Mốc gia hạn", Icon: CalendarClock },
-  { title: "Lịch sử xử lý", Icon: History },
+  {
+    title: "Tổng quan subscription",
+    body: "Nhìn toàn bộ gói đang theo dõi ở một nơi.",
+    Icon: LayoutDashboard,
+  },
+  {
+    title: "Theo dõi trạng thái",
+    body: "Phân biệt đang dùng, sắp hạn hoặc cần xem xét.",
+    Icon: ListChecks,
+  },
+  {
+    title: "Mốc gia hạn",
+    body: "Biết trước kỳ cần xử lý để chủ động kế hoạch.",
+    Icon: CalendarClock,
+  },
+  {
+    title: "Lịch sử xử lý",
+    body: "Giữ dấu vết các lần xem xét và gia hạn.",
+    Icon: History,
+  },
+] as const;
+
+const STATUS_LEGEND = [
+  { label: "Đang hoạt động", hint: "Gói đang trong chu kỳ sử dụng", tone: "bg-accent/15 text-accent" },
+  { label: "Sắp gia hạn", hint: "Sắp đến mốc cần quyết định", tone: "bg-amber-50 text-amber-800" },
+  { label: "Cần xem xét", hint: "Cần xác nhận nhu cầu trước khi tiếp tục", tone: "bg-sky-50 text-sky-800" },
 ] as const;
 
 export function SubscriptionControlCenter() {
@@ -55,25 +83,34 @@ export function SubscriptionControlCenter() {
             <div
               className={`overflow-hidden rounded-2xl border border-border bg-white ${ELEVATION_FLOAT}`}
             >
-              <div className="flex items-center justify-between border-b border-border px-4 py-3 sm:px-5">
-                <div>
-                  <p className={CARD_TITLE_CLASS}>Bảng theo dõi</p>
-                  <p className={CARD_META_CLASS}>Conceptual UI — không dùng số liệu vận hành</p>
-                </div>
+              <div className="border-b border-border px-4 py-3 sm:px-5">
+                <p className={CARD_TITLE_CLASS}>Trạng thái theo dõi</p>
+                <p className={CARD_META_CLASS}>
+                  Cách KEYON phân loại subscription — không phải danh sách tài khoản thật
+                </p>
               </div>
               <ul className="divide-y divide-border">
-                {SAMPLE_SUBSCRIPTIONS.map((s) => (
+                {STATUS_LEGEND.map((s) => (
                   <li
-                    key={s.name}
+                    key={s.label}
                     className="flex flex-wrap items-center justify-between gap-3 px-4 py-3.5 sm:px-5"
                   >
-                    <div>
-                      <p className={CARD_TITLE_CLASS}>{s.name}</p>
-                      <p className={`mt-0.5 ${BODY_MUTED_CLASS}`}>{s.statusLabel}</p>
+                    <div className="min-w-0">
+                      <span
+                        className={`inline-flex rounded-md px-2 py-0.5 text-[12px] font-semibold ${s.tone}`}
+                      >
+                        {s.label}
+                      </span>
+                      <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{s.hint}</p>
                     </div>
-                    <span className="rounded-lg border border-border px-2.5 py-1 text-[12px] font-semibold text-navy">
-                      Xem trạng thái
-                    </span>
+                  </li>
+                ))}
+              </ul>
+              <ul className="grid gap-2 border-t border-border bg-[#F7FAFC] p-4 sm:grid-cols-2 sm:p-5">
+                {POINTS.map(({ title, body }) => (
+                  <li key={title} className="min-w-0">
+                    <p className="text-[12px] font-semibold text-navy">{title}</p>
+                    <p className={`mt-0.5 text-[12px] leading-snug text-muted`}>{body}</p>
                   </li>
                 ))}
               </ul>

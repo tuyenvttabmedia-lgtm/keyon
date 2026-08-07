@@ -117,7 +117,7 @@ export function SubscriptionProcess() {
               </h3>
               <p className={`mt-3 max-w-lg ${SECTION_LEAD_CLASS}`}>{current.previewBody}</p>
               <p className={`mt-5 ${CARD_META_CLASS}`}>
-                Minh họa luồng — không phải dữ liệu vận hành thực tế của KEYON.
+                Mô tả luồng vận hành — chưa gắn dữ liệu subscription cá nhân.
               </p>
             </div>
           </div>
