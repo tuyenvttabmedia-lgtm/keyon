@@ -14,6 +14,7 @@ import {
   Phone,
   Rocket,
   ShieldCheck,
+  UserRound,
   Wallet,
 } from "lucide-react";
 import {
@@ -61,7 +62,7 @@ const VOLUMES: {
     name: "Nhóm nhỏ",
     usersLabel: "5 người dùng",
     body: "Phù hợp startup, nhóm làm việc nhỏ",
-    people: 4,
+    people: 3,
     cta: "quote",
   },
   {
@@ -69,7 +70,7 @@ const VOLUMES: {
     name: "Nhóm vừa",
     usersLabel: "10 người dùng",
     body: "Phù hợp doanh nghiệp vừa và nhỏ",
-    people: 6,
+    people: 4,
     cta: "quote",
   },
   {
@@ -77,7 +78,7 @@ const VOLUMES: {
     name: "Doanh nghiệp",
     usersLabel: "50 người dùng",
     body: "Tối ưu cho doanh nghiệp quy mô vừa",
-    people: 12,
+    people: 5,
     cta: "quote",
   },
   {
@@ -85,7 +86,7 @@ const VOLUMES: {
     name: "Doanh nghiệp lớn",
     usersLabel: "100 người dùng",
     body: "Quản lý tập trung, triển khai nhanh",
-    people: 15,
+    people: 5,
     cta: "quote",
   },
   {
@@ -93,7 +94,7 @@ const VOLUMES: {
     name: "Enterprise",
     usersLabel: "100+ người dùng",
     body: "Giải pháp tùy chỉnh theo nhu cầu",
-    people: 14,
+    people: 4,
     showInfinity: true,
     cta: "consult",
   },
@@ -436,29 +437,29 @@ export function VolumeLicensingLanding() {
   );
 }
 
-/** Stick-figure people grid — teal-only (no rainbow), mockup-style. */
+/** Overlapping user avatars — professional facepile (teal-only). */
 function PeopleGlyph({ count, infinity }: { count: number; infinity?: boolean }) {
-  const n = Math.min(Math.max(count, 1), 15);
+  const n = Math.min(Math.max(count, 1), 5);
   return (
-    <div
-      className="mt-4 flex min-h-[56px] max-w-[140px] flex-wrap content-center justify-center gap-x-1.5 gap-y-1.5"
-      aria-hidden
-    >
-      {Array.from({ length: n }, (_, i) => (
-        <span
-          key={i}
-          className="inline-flex h-[22px] w-[14px] flex-col items-center text-accent"
-          style={{ opacity: 0.45 + ((i * 7) % 40) / 100 }}
-        >
-          <span className="h-[7px] w-[7px] rounded-full bg-current" />
-          <span className="mt-[3px] h-[11px] w-[11px] rounded-[3px] bg-current" />
-        </span>
-      ))}
-      {infinity ? (
-        <span className="ml-0.5 self-center text-[17px] font-bold leading-none text-accent">
-          ∞
-        </span>
-      ) : null}
+    <div className="mt-5 flex min-h-[40px] items-center justify-center" aria-hidden>
+      <div className="flex items-center">
+        {Array.from({ length: n }, (_, i) => (
+          <span
+            key={i}
+            className={`relative flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-accent-soft text-accent shadow-sm ${
+              i > 0 ? "-ml-2.5" : ""
+            }`}
+            style={{ zIndex: n - i }}
+          >
+            <UserRound size={16} strokeWidth={1.9} />
+          </span>
+        ))}
+        {infinity ? (
+          <span className="relative -ml-2.5 flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-accent text-[15px] font-bold leading-none text-white shadow-sm">
+            ∞
+          </span>
+        ) : null}
+      </div>
     </div>
   );
 }
