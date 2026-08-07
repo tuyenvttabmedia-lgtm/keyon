@@ -128,7 +128,7 @@ const TABS: { id: BackupTabId; label: string }[] = [
 const TRUST_STRIP: { title: string; Icon: LucideIcon }[] = [
   { title: "Kích hoạt nhanh", Icon: Zap },
   { title: "Thanh toán an toàn", Icon: Lock },
-  { title: "Hỗ trợ 24/7", Icon: Headphones },
+  { title: "Hỗ trợ tiếng Việt", Icon: Headphones },
   { title: "Bảo hành & cập nhật", Icon: ShieldCheck },
 ];
 
@@ -212,6 +212,7 @@ export const BACKUP_FALLBACK_FEATURED: BackupFeaturedProduct[] = [
 
 export function BackupSolutionLanding({ featured, usingFallback }: Props) {
   const [tab, setTab] = useState<BackupTabId>("endpoint");
+  const showFeatured = featured.length > 0;
 
   const products = useMemo(() => {
     const filtered = featured.filter((p) => p.tabs.includes(tab));
@@ -287,7 +288,7 @@ export function BackupSolutionLanding({ featured, usingFallback }: Props) {
                   Khám phá giải pháp →
                 </Link>
                 <Link
-                  href="/contact/sales"
+                  href="/contact/quote"
                   className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
                   <Headphones {...ICON_SM} />
@@ -332,6 +333,7 @@ export function BackupSolutionLanding({ featured, usingFallback }: Props) {
       </section>
 
       {/* ── Solution selector ────────────────────────────────── */}
+      {showFeatured ? (
       <section className="pb-9 md:pb-11">
         <div className="home-container">
           <header className="mb-5 flex flex-wrap items-end justify-between gap-3">
@@ -449,6 +451,7 @@ export function BackupSolutionLanding({ featured, usingFallback }: Props) {
           </div>
         </div>
       </section>
+      ) : null}
 
       {/* ── Recovery flow ────────────────────────────────────── */}
       <section className="relative overflow-hidden pb-9 md:pb-11">
@@ -525,7 +528,7 @@ export function BackupSolutionLanding({ featured, usingFallback }: Props) {
                   Khám phá giải pháp →
                 </Link>
                 <Link
-                  href="/contact/sales"
+                  href="/contact/quote"
                   className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-white/35 bg-transparent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
                   <Headphones {...ICON_SM} />

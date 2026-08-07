@@ -187,7 +187,7 @@ const WORK_MODES: {
       "Quản trị identity & bảo mật",
       "Tư vấn triển khai với KEYON",
     ],
-    href: "/contact/sales",
+    href: "/contact/quote",
     tools: [
       { name: "Microsoft 365 Business", brand: "m365" },
       { name: "Microsoft Teams", brand: "teams" },
@@ -212,6 +212,7 @@ export function ProductivitySolutionLanding({
   workSceneImageUrl,
 }: Props) {
   const products = featured.slice(0, 4);
+  const showFeatured = products.length > 0;
 
   return (
     <div className="bg-white">
@@ -271,7 +272,7 @@ export function ProductivitySolutionLanding({
                   Khám phá giải pháp →
                 </Link>
                 <Link
-                  href="/contact/sales"
+                  href="/contact/quote"
                   className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
                   <Headphones {...ICON_SM} />
@@ -322,6 +323,7 @@ export function ProductivitySolutionLanding({
       </section>
 
       {/* ── Products — left title + right cards (mockup) ─────── */}
+      {showFeatured ? (
       <section className="py-8 md:py-9">
         <div className="home-container">
           <div className="relative overflow-hidden rounded-2xl bg-navy px-5 py-6 sm:px-6 sm:py-7 lg:px-8 lg:py-8">
@@ -384,6 +386,7 @@ export function ProductivitySolutionLanding({
           </div>
         </div>
       </section>
+      ) : null}
 
       {/* ── Ecosystem + consult ──────────────────────────────── */}
       <section className="py-8 md:py-9">
@@ -438,7 +441,7 @@ export function ProductivitySolutionLanding({
                     doanh nghiệp.
                   </p>
                   <Link
-                    href="/contact/sales"
+                    href="/contact/quote"
                     className={`mt-5 inline-flex h-11 w-fit items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                   >
                     Liên hệ tư vấn
@@ -486,7 +489,7 @@ export function ProductivitySolutionLanding({
                   Khám phá giải pháp →
                 </Link>
                 <Link
-                  href="/contact/sales"
+                  href="/contact/quote"
                   className={`inline-flex h-12 items-center justify-center rounded-xl border border-white/35 bg-transparent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:bg-white/5 hover:text-accent`}
                 >
                   Liên hệ tư vấn

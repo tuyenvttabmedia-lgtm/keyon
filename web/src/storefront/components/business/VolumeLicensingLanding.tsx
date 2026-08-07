@@ -11,7 +11,6 @@ import {
   Headphones,
   LayoutGrid,
   MessageCircle,
-  Phone,
   Rocket,
   ShieldCheck,
   UserRound,
@@ -44,7 +43,6 @@ import {
 
 const ICON_SM = { size: 16, strokeWidth: 1.85 } as const;
 const ICON_MD = { size: 20, strokeWidth: 1.75 } as const;
-const HOTLINE = "1900 636 248";
 
 type VolumeId = "5" | "10" | "50" | "100" | "100+";
 
@@ -433,13 +431,12 @@ export function VolumeLicensingLanding() {
               >
                 Tư vấn miễn phí →
               </Link>
-              <a
-                href={`tel:${HOTLINE.replace(/\s/g, "")}`}
+              <Link
+                href="/contact/quote"
                 className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-white/30 bg-transparent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:text-accent`}
               >
-                <Phone size={16} strokeWidth={2} aria-hidden />
-                {HOTLINE}
-              </a>
+                Liên hệ báo giá
+              </Link>
             </div>
           </div>
         </div>

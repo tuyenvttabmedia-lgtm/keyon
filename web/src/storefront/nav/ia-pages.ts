@@ -36,7 +36,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
       "Gia hạn và theo dõi trong Tài khoản KEYON",
     ],
     primaryCta: { label: "Xem sản phẩm", href: "/products" },
-    secondaryCta: { label: "Liên hệ tư vấn", href: "/contact/sales" },
+    secondaryCta: { label: "Liên hệ tư vấn", href: "/contact/quote" },
     related: [
       { label: "Quản lý bản quyền", href: "/solutions/license-management" },
       { label: "Volume licensing", href: "/business/volume-licensing" },
@@ -54,7 +54,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
       "Gói cá nhân, đội nhóm và doanh nghiệp",
     ],
     primaryCta: { label: "Khám phá sản phẩm", href: "/products?cat=office" },
-    secondaryCta: { label: "Tư vấn giải pháp", href: "/contact/sales" },
+    secondaryCta: { label: "Tư vấn giải pháp", href: "/contact/quote" },
     related: [
       { label: "Microsoft", href: "/products?q=microsoft" },
       { label: "Giải pháp doanh nghiệp", href: "/business" },
@@ -72,7 +72,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
       "Tư vấn theo quy mô SME → Enterprise",
     ],
     primaryCta: { label: "Khám phá dịch vụ cloud", href: "/products?cat=cloud" },
-    secondaryCta: { label: "Liên hệ tư vấn", href: "/contact/sales" },
+    secondaryCta: { label: "Liên hệ tư vấn", href: "/contact/quote" },
   },
   security: {
     slug: "security",
@@ -81,7 +81,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
     subtitle: "Bảo vệ endpoint, dữ liệu và thiết bị với các gói bảo mật trên KEYON.",
     bullets: ["Endpoint / Antivirus / Internet Security", "Xem rõ loại nhận trước khi mua"],
     primaryCta: { label: "Xem sản phẩm bảo mật", href: "/products?cat=security" },
-    secondaryCta: { label: "Liên hệ tư vấn", href: "/contact/sales" },
+    secondaryCta: { label: "Liên hệ tư vấn", href: "/contact/quote" },
   },
   backup: {
     slug: "backup",
@@ -90,7 +90,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
     subtitle: "Sao lưu và khôi phục dữ liệu — endpoint, cloud và máy chủ (theo catalog hiện có).",
     bullets: ["Tìm gói backup trên cửa hàng", "Tư vấn khi cần triển khai tổ chức"],
     primaryCta: { label: "Tìm sản phẩm backup", href: "/products?q=backup" },
-    secondaryCta: { label: "Liên hệ tư vấn", href: "/contact/sales" },
+    secondaryCta: { label: "Liên hệ tư vấn", href: "/contact/quote" },
     draftCapable: true,
   },
   "license-management": {
@@ -106,7 +106,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
       "Báo cáo linh hoạt, hỗ trợ tiếng Việt",
     ],
     primaryCta: { label: "Vào Tài khoản", href: "/account" },
-    secondaryCta: { label: "Tư vấn miễn phí", href: "/contact/sales" },
+    secondaryCta: { label: "Tư vấn miễn phí", href: "/contact/quote" },
     related: [
       { label: "Bản quyền phần mềm", href: "/solutions/software-licensing" },
       { label: "Subscription & Gia hạn", href: "/business/subscriptions" },
@@ -151,7 +151,7 @@ export const BUSINESS_PAGES: Record<string, IaPage> = {
       label: "Tư vấn subscription",
       href: "/contact/quote?intent=subscription-consult&requestType=SUBSCRIPTION",
     },
-    secondaryCta: { label: "Tìm hiểu cách hoạt động", href: "/how-it-works" },
+    secondaryCta: { label: "Tìm hiểu cách hoạt động", href: "/business/subscriptions#lifecycle" },
   },
   "licensing-consulting": {
     slug: "licensing-consulting",

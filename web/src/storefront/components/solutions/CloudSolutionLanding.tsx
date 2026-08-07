@@ -96,7 +96,7 @@ const SERVICES: {
   {
     title: "Cloud Database",
     description: "Cơ sở dữ liệu managed — triển khai nhanh, vận hành ổn định.",
-    href: "/contact/sales",
+    href: "/contact/quote",
     Icon: Database,
     tone: "bg-teal-100 text-teal-800",
   },
@@ -110,7 +110,7 @@ const SERVICES: {
   {
     title: "Cloud Network",
     description: "Kết nối, bảo vệ cạnh biên và tối ưu băng thông dịch vụ.",
-    href: "/contact/sales",
+    href: "/contact/quote",
     Icon: Network,
     tone: "bg-violet-100 text-violet-700",
   },
@@ -142,7 +142,7 @@ const TRUST: { title: string; body: string; Icon: LucideIcon }[] = [
     Icon: ShieldCheck,
   },
   {
-    title: "Giám sát 24/7",
+    title: "Theo dõi vận hành",
     body: "Đội ngũ kỹ thuật hỗ trợ tiếng Việt sau triển khai.",
     Icon: Eye,
   },
@@ -194,10 +194,10 @@ const SEGMENTS: {
     items: [
       "Kiến trúc đa vùng",
       "Tiêu chuẩn bảo mật nghiêm ngặt",
-      "Hỗ trợ 24/7 theo SLA",
+      "Hỗ trợ tiếng Việt theo thỏa thuận",
       "Tư vấn & báo giá dự án",
     ],
-    href: "/contact/sales",
+    href: "/contact/quote",
     cta: "Liên hệ tư vấn →",
     highlight: false,
     Icon: Building2,
@@ -226,6 +226,8 @@ const PRODUCT_ICONS: Record<NonNullable<CloudFeaturedProduct["icon"]>, LucideIco
 };
 
 export function CloudSolutionLanding({ featured, usingFallback }: Props) {
+  const showFeatured = featured.length > 0;
+
   return (
     <div className="bg-white">
       {/* ── Hero ─────────────────────────────────────────────── */}
@@ -287,7 +289,7 @@ export function CloudSolutionLanding({ featured, usingFallback }: Props) {
                   Khám phá dịch vụ cloud →
                 </Link>
                 <Link
-                  href="/contact/sales"
+                  href="/contact/quote"
                   className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
                   <Headphones {...ICON_SM} />
@@ -451,6 +453,7 @@ export function CloudSolutionLanding({ featured, usingFallback }: Props) {
       </section>
 
       {/* ── Featured products ────────────────────────────────── */}
+      {showFeatured ? (
       <section className="border-t border-border bg-surface py-9 md:py-11 lg:py-12">
         <div className="home-container">
           <div className="mb-5 flex flex-col gap-2.5 sm:flex-row sm:items-end sm:justify-between">
@@ -507,6 +510,7 @@ export function CloudSolutionLanding({ featured, usingFallback }: Props) {
           </ul>
         </div>
       </section>
+      ) : null}
 
       {/* ── Process ──────────────────────────────────────────── */}
       <section className="py-9 md:py-11 lg:py-12">
@@ -573,7 +577,7 @@ export function CloudSolutionLanding({ featured, usingFallback }: Props) {
                   Khám phá dịch vụ cloud
                 </Link>
                 <Link
-                  href="/contact/sales"
+                  href="/contact/quote"
                   className={`inline-flex h-12 items-center justify-center rounded-xl border border-white/30 bg-transparent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:bg-white/5 hover:text-accent`}
                 >
                   Liên hệ tư vấn
@@ -592,7 +596,7 @@ export const CLOUD_FALLBACK_FEATURED: CloudFeaturedProduct[] = [
   {
     id: "fb-1",
     title: "Cloud Server",
-    href: "/contact/sales",
+    href: "/contact/quote",
     specs: ["CPU 2 vCPU · RAM 4GB", "SSD 80GB"],
     priceLabel: "280.000 đ / tháng",
     priceHint: "Giá tham khảo",
@@ -601,7 +605,7 @@ export const CLOUD_FALLBACK_FEATURED: CloudFeaturedProduct[] = [
   {
     id: "fb-2",
     title: "Cloud Server Pro",
-    href: "/contact/sales",
+    href: "/contact/quote",
     specs: ["CPU 4 vCPU · RAM 8GB", "SSD 160GB"],
     priceLabel: "520.000 đ / tháng",
     priceHint: "Giá tham khảo",
@@ -610,7 +614,7 @@ export const CLOUD_FALLBACK_FEATURED: CloudFeaturedProduct[] = [
   {
     id: "fb-3",
     title: "Cloud Storage 500GB",
-    href: "/contact/sales",
+    href: "/contact/quote",
     specs: ["Object storage", "Mở rộng linh hoạt"],
     priceLabel: "150.000 đ / tháng",
     priceHint: "Giá tham khảo",
@@ -628,7 +632,7 @@ export const CLOUD_FALLBACK_FEATURED: CloudFeaturedProduct[] = [
   {
     id: "fb-5",
     title: "Cloud Database",
-    href: "/contact/sales",
+    href: "/contact/quote",
     specs: ["Managed database", "Tư vấn trước triển khai"],
     priceLabel: "Liên hệ báo giá",
     icon: "database",

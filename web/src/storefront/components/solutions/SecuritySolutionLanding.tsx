@@ -91,11 +91,27 @@ const HERO_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
   },
 ];
 
-const STATS: { value: string; label: string; Icon: LucideIcon }[] = [
-  { value: "10.000+", label: "Doanh nghiệp tin dùng", Icon: BadgeCheck },
-  { value: "99,9%", label: "Khả năng phát hiện mối đe dọa", Icon: Shield },
-  { value: "24/7", label: "Giám sát và bảo vệ liên tục", Icon: Monitor },
-  { value: "30+", label: "Thương hiệu bảo mật hàng đầu", Icon: Lock },
+const TRUST_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
+  {
+    title: "License chính hãng",
+    body: "Nguồn cung rõ ràng — đúng loại nhận trước khi mua.",
+    Icon: BadgeCheck,
+  },
+  {
+    title: "Bảo vệ theo lớp",
+    body: "Endpoint, email, dữ liệu và danh tính theo từng gói.",
+    Icon: Shield,
+  },
+  {
+    title: "Triển khai trên KEYON",
+    body: "Nhận deliverable sau thanh toán — hỗ trợ tiếng Việt.",
+    Icon: Monitor,
+  },
+  {
+    title: "Gói theo quy mô",
+    body: "Cá nhân đến tổ chức — chọn đúng nhu cầu thực tế.",
+    Icon: Lock,
+  },
 ];
 
 const PILLARS: { title: string; body: string; Icon: LucideIcon }[] = [
@@ -235,6 +251,7 @@ export const SECURITY_FALLBACK_FEATURED: SecurityFeaturedProduct[] = [
 
 export function SecuritySolutionLanding({ featured, usingFallback }: Props) {
   const products = featured.slice(0, 5);
+  const showFeatured = products.length > 0;
 
   return (
     <div className="bg-white">
@@ -296,7 +313,7 @@ export function SecuritySolutionLanding({ featured, usingFallback }: Props) {
                   Khám phá giải pháp →
                 </Link>
                 <Link
-                  href="/contact/sales"
+                  href="/contact/quote"
                   className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
                   <Headphones {...ICON_SM} />
@@ -312,12 +329,12 @@ export function SecuritySolutionLanding({ featured, usingFallback }: Props) {
         </div>
       </section>
 
-      {/* ── Stats bar ────────────────────────────────────────── */}
+      {/* ── Trust points ─────────────────────────────────────── */}
       <section className="bg-navy">
         <div className="home-container py-6 md:py-7">
           <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
-            {STATS.map((s) => (
-              <li key={s.label} className="flex items-center gap-3.5">
+            {TRUST_POINTS.map((s) => (
+              <li key={s.title} className="flex items-start gap-3.5">
                 <span
                   className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-accent/40 text-accent"
                   aria-hidden
@@ -325,10 +342,8 @@ export function SecuritySolutionLanding({ featured, usingFallback }: Props) {
                   <s.Icon size={20} strokeWidth={1.8} />
                 </span>
                 <div className="min-w-0">
-                  <p className="font-display text-xl font-bold tabular-nums text-white sm:text-2xl">
-                    {s.value}
-                  </p>
-                  <p className="mt-0.5 text-sm text-slate-300">{s.label}</p>
+                  <p className={`${CARD_TITLE_CLASS} text-white`}>{s.title}</p>
+                  <p className="mt-0.5 text-sm text-slate-300">{s.body}</p>
                 </div>
               </li>
             ))}
@@ -368,6 +383,7 @@ export function SecuritySolutionLanding({ featured, usingFallback }: Props) {
       </section>
 
       {/* ── Products ─────────────────────────────────────────── */}
+      {showFeatured ? (
       <section className="pb-9 md:pb-11">
         <div className="home-container">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
@@ -446,6 +462,7 @@ export function SecuritySolutionLanding({ featured, usingFallback }: Props) {
           </div>
         </div>
       </section>
+      ) : null}
 
       {/* ── Why KEYON ────────────────────────────────────────── */}
       <section className="pb-8 md:pb-9">
@@ -545,7 +562,7 @@ export function SecuritySolutionLanding({ featured, usingFallback }: Props) {
                 </div>
               </div>
               <Link
-                href="/contact/sales"
+                href="/contact/quote"
                 className={`inline-flex h-11 shrink-0 items-center justify-center rounded-xl bg-white px-5 ${CTA_LABEL_CLASS} text-accent ${TRANSITION_UI} hover:bg-white/95`}
               >
                 Liên hệ tư vấn miễn phí →

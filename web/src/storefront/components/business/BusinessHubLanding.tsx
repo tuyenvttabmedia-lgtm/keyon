@@ -11,7 +11,6 @@ import {
   Headphones,
   LayoutGrid,
   MessageCircle,
-  Phone,
   RefreshCw,
   Rocket,
   ShoppingCart,
@@ -45,8 +44,6 @@ import {
 const ICON_MD = { size: 22, strokeWidth: 1.75 } as const;
 const ICON_SM = { size: 16, strokeWidth: 1.85 } as const;
 
-const HOTLINE = "1900 636 248";
-
 type BizCard = {
   id: string;
   title: string;
@@ -72,10 +69,10 @@ const BIZ_CARDS: BizCard[] = [
   {
     id: "subscriptions",
     title: "Subscription & Gia hạn",
-    body: "Theo dõi chu kỳ subscription, nhắc gia hạn và hỗ trợ renew đúng hạn.",
+    body: "Theo dõi chu kỳ subscription DN, nhắc gia hạn và hỗ trợ renew theo hợp đồng.",
     href: "/business/subscriptions",
     cta: "Tìm hiểu thêm",
-    features: ["Theo dõi chu kỳ", "Nhắc gia hạn tự động", "Hỗ trợ renew"],
+    features: ["Theo dõi chu kỳ", "Nhắc gia hạn", "Hỗ trợ renew managed"],
     Icon: RefreshCw,
     tone: "bg-violet-600 text-white",
   },
@@ -92,10 +89,10 @@ const BIZ_CARDS: BizCard[] = [
   {
     id: "license-mgmt",
     title: "Quản lý bản quyền",
-    body: "Theo dõi, phân bổ và tối ưu chi phí license trên một nền tảng.",
+    body: "Self-serve trong Tài khoản KEYON — theo dõi license đã mua, không thay subscription managed.",
     href: "/solutions/license-management",
     cta: "Tìm hiểu thêm",
-    features: ["Theo dõi tập trung", "Cảnh báo hết hạn", "Báo cáo chi phí"],
+    features: ["Theo dõi tập trung", "Nhắc hết hạn", "Trong tài khoản KEYON"],
     Icon: LayoutGrid,
     tone: "bg-orange-500 text-white",
   },
@@ -103,7 +100,7 @@ const BIZ_CARDS: BizCard[] = [
     id: "sales",
     title: "Liên hệ kinh doanh",
     body: "Đội ngũ B2B sẵn sàng tư vấn, báo giá và đồng hành triển khai dài hạn.",
-    href: "/contact/sales",
+    href: "/contact/quote",
     cta: "Liên hệ ngay",
     features: ["Tư vấn B2B", "Báo giá nhanh", "Đồng hành dài hạn"],
     Icon: Headphones,
@@ -142,7 +139,7 @@ const BENEFITS: { title: string; body: string; Icon: LucideIcon }[] = [
   },
   {
     title: "Tối ưu chi phí",
-    body: "Giải pháp linh hoạt, giúp tiết kiệm chi phí đến 30%+.",
+    body: "Chọn đúng gói theo quy mô, tránh mua thừa.",
     Icon: BadgePercent,
   },
   {
@@ -152,7 +149,7 @@ const BENEFITS: { title: string; body: string; Icon: LucideIcon }[] = [
   },
   {
     title: "Hỗ trợ chuyên sâu",
-    body: "Đội ngũ kỹ thuật & kinh doanh đồng hành 24/7.",
+    body: "Đội ngũ kỹ thuật & kinh doanh hỗ trợ tiếng Việt.",
     Icon: Headphones,
   },
 ];
@@ -253,13 +250,13 @@ export function BusinessHubLanding() {
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <Link
-                  href="/contact/sales"
+                  href="/contact/quote"
                   className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
                   Tư vấn giải pháp →
                 </Link>
                 <Link
-                  href="/contact/sales"
+                  href="/contact/quote"
                   className={`inline-flex h-12 items-center justify-center rounded-xl border border-white/30 bg-transparent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
                   Liên hệ kinh doanh
@@ -431,18 +428,17 @@ export function BusinessHubLanding() {
             </div>
             <div className="flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center">
               <Link
-                href="/contact/sales"
+                href="/contact/quote"
                 className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
               >
                 Tư vấn miễn phí →
               </Link>
-              <a
-                href={`tel:${HOTLINE.replace(/\s/g, "")}`}
+              <Link
+                href="/contact"
                 className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-accent/40 bg-white px-5 ${CTA_LABEL_CLASS} text-accent ${TRANSITION_UI} hover:border-accent hover:bg-accent-soft`}
               >
-                <Phone size={16} strokeWidth={2} aria-hidden />
-                {HOTLINE}
-              </a>
+                Liên hệ KEYON
+              </Link>
             </div>
           </div>
         </div>

@@ -258,7 +258,7 @@ const AUDIENCES: {
         name: "Microsoft 365 Business",
         price: "Báo giá",
         brand: "m365",
-        href: "/contact/sales",
+        href: "/contact/quote",
       },
       {
         name: "Windows 11 Pro Volume",
@@ -270,7 +270,7 @@ const AUDIENCES: {
         name: "Autodesk / Adobe",
         price: "Liên hệ",
         brand: "autodesk",
-        href: "/contact/sales",
+        href: "/contact/quote",
       },
     ],
     scene: "business",
@@ -307,13 +307,13 @@ const AUDIENCES: {
         name: "Microsoft 365 Enterprise",
         price: "Liên hệ",
         brand: "m365",
-        href: "/contact/sales",
+        href: "/contact/quote",
       },
       {
         name: "Adobe / Autodesk",
         price: "Liên hệ",
         brand: "adobe",
-        href: "/contact/sales",
+        href: "/contact/quote",
       },
     ],
     scene: "org",
@@ -358,7 +358,7 @@ const TRUST_BAR: { title: string; body: string; Icon: LucideIcon }[] = [
     Icon: Zap,
   },
   {
-    title: "Hỗ trợ 24/7",
+    title: "Hỗ trợ tiếng Việt",
     body: "Kênh hỗ trợ tiếng Việt",
     Icon: Headphones,
   },
@@ -429,6 +429,7 @@ export function SoftwareLicensingSolutionLanding({
   usingFallback,
 }: Props) {
   const products = featured.slice(0, 6);
+  const showFeatured = products.length > 0;
 
   return (
     <div className="bg-white">
@@ -491,7 +492,7 @@ export function SoftwareLicensingSolutionLanding({
                   Khám phá sản phẩm →
                 </Link>
                 <Link
-                  href="/contact/sales"
+                  href="/contact/quote"
                   className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-white/30 bg-transparent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
                   <Headphones {...ICON_SM} />
@@ -571,6 +572,7 @@ export function SoftwareLicensingSolutionLanding({
       </section>
 
       {/* ── Popular products ─────────────────────────────────── */}
+      {showFeatured ? (
       <section className="pb-9 md:pb-11">
         <div className="home-container">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
@@ -623,6 +625,7 @@ export function SoftwareLicensingSolutionLanding({
           </div>
         </div>
       </section>
+      ) : null}
 
       {/* ── 3 steps ──────────────────────────────────────────── */}
       <section className="pb-8 md:pb-9">

@@ -1,19 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
-  Award,
   Check,
-  Clock,
   Cloud,
-  Globe,
   HardDrive,
   Headphones,
   KeyRound,
   LayoutGrid,
-  Quote,
   Rocket,
   Shield,
   ShieldCheck,
@@ -22,14 +17,12 @@ import {
 } from "lucide-react";
 import {
   BODY_MUTED_CLASS,
-  CARD_META_CLASS,
   CARD_TITLE_CLASS,
   CTA_LABEL_CLASS,
   FONT_DISPLAY,
   PAGE_LEAD_CLASS,
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
-  STAT_VALUE_CLASS,
 } from "@/storefront/typography";
 import {
   ELEVATION_CARD_HOVER,
@@ -43,6 +36,7 @@ import {
   TRANSITION_UI,
 } from "@/storefront/effects";
 import { SolutionsIntroVideoCta } from "./SolutionsIntroVideoCta";
+import { SolutionFinalCta } from "./SolutionFinalCta";
 
 const ICON_MD = { size: 22, strokeWidth: 1.75 } as const;
 const ICON_SM = { size: 16, strokeWidth: 1.85 } as const;
@@ -63,25 +57,34 @@ const SOLUTION_CARDS: SolutionCard[] = [
     title: "Bản quyền phần mềm",
     body: "Mua và kích hoạt bản quyền chính hãng cho cá nhân, đội nhóm hoặc doanh nghiệp — đúng nhu cầu, đúng giá trị.",
     href: "/solutions/software-licensing",
-    features: ["Hơn 5.000 sản phẩm", "Kích hoạt tự động", "Giá cạnh tranh"],
+    features: ["Cá nhân & đội nhóm", "Kích hoạt rõ ràng", "Hỗ trợ tiếng Việt"],
     Icon: KeyRound,
     tone: "bg-accent-soft text-accent",
   },
   {
-    id: "license-management",
-    title: "Quản lý bản quyền",
-    body: "Theo dõi, phân bổ và tối ưu chi phí license trên một nền tảng — chủ động trước khi hết hạn.",
-    href: "/solutions/license-management",
-    features: ["Theo dõi & phân bổ license", "Cảnh báo gia hạn tự động", "Báo cáo chi tiết"],
-    Icon: LayoutGrid,
-    tone: "bg-violet-100 text-violet-700",
+    id: "productivity",
+    title: "Năng suất & Cộng tác",
+    body: "Microsoft 365, Office, Teams và công cụ cộng tác chính hãng — làm việc hiệu quả hơn mỗi ngày.",
+    href: "/solutions/productivity",
+    features: ["Office & Microsoft 365", "Làm việc nhóm", "Chia sẻ an toàn"],
+    Icon: Sparkles,
+    tone: "bg-orange-100 text-orange-800",
+  },
+  {
+    id: "cloud",
+    title: "Cloud",
+    body: "Cloud, hạ tầng và tư vấn triển khai — mở rộng theo nhu cầu vận hành của doanh nghiệp.",
+    href: "/solutions/cloud",
+    features: ["Hạ tầng cloud", "Theo nhu cầu tổ chức", "Tư vấn triển khai"],
+    Icon: Cloud,
+    tone: "bg-cyan-100 text-cyan-800",
   },
   {
     id: "security",
-    title: "Bảo mật & An toàn",
+    title: "Bảo mật",
     body: "Bảo vệ thiết bị, dữ liệu và endpoint với các gói bảo mật phù hợp quy mô doanh nghiệp.",
     href: "/solutions/security",
-    features: ["Bảo vệ thiết bị & dữ liệu", "Email / Endpoint security", "Giám sát 24/7"],
+    features: ["Endpoint & antivirus", "Bảo vệ dữ liệu", "Gói theo quy mô"],
     Icon: Shield,
     tone: "bg-sky-100 text-sky-800",
   },
@@ -90,36 +93,20 @@ const SOLUTION_CARDS: SolutionCard[] = [
     title: "Backup & Khôi phục",
     body: "Sao lưu linh hoạt và khôi phục nhanh khi sự cố — mã hóa an toàn cho endpoint đến máy chủ.",
     href: "/solutions/backup",
-    features: ["Sao lưu linh hoạt", "Khôi phục một chạm", "Mã hóa an toàn"],
+    features: ["Sao lưu endpoint/cloud", "Khôi phục khi sự cố", "Mã hóa an toàn"],
     Icon: HardDrive,
     tone: "bg-emerald-100 text-emerald-800",
   },
   {
-    id: "productivity",
-    title: "Năng suất & Cộng tác",
-    body: "Microsoft 365, Office, Teams và công cụ cộng tác chính hãng — làm việc hiệu quả hơn mỗi ngày.",
-    href: "/solutions/productivity",
-    features: ["Email & Lịch", "Cộng tác nhóm hiệu quả", "Chia sẻ an toàn"],
-    Icon: Sparkles,
-    tone: "bg-orange-100 text-orange-800",
-  },
-  {
-    id: "other",
-    title: "Giải pháp khác",
-    body: "Cloud, hạ tầng và tư vấn triển khai — mở rộng theo nhu cầu vận hành của doanh nghiệp.",
-    href: "/business",
-    features: ["Cloud & Hạ tầng", "Quản trị hệ thống", "Tư vấn & triển khai"],
-    Icon: Cloud,
-    tone: "bg-cyan-100 text-cyan-800",
+    id: "license-management",
+    title: "Quản lý bản quyền",
+    body: "Theo dõi, phân bổ và tối ưu chi phí license trên một nền tảng — chủ động trước khi hết hạn.",
+    href: "/solutions/license-management",
+    features: ["Theo dõi license", "Nhắc gia hạn", "Trong tài khoản KEYON"],
+    Icon: LayoutGrid,
+    tone: "bg-violet-100 text-violet-700",
   },
 ];
-
-const STATS = [
-  { value: "10.000+", label: "Doanh nghiệp tin dùng", Icon: ShieldCheck },
-  { value: "50+", label: "Quốc gia hỗ trợ", Icon: Globe },
-  { value: "24/7", label: "Hỗ trợ chuyên nghiệp", Icon: Clock },
-  { value: "99,99%", label: "Thời gian hoạt động", Icon: Award },
-] as const;
 
 const WHY_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
@@ -144,39 +131,6 @@ const WHY_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
   },
 ];
 
-const TESTIMONIALS = [
-  {
-    id: "tn",
-    company: "Trung Nguyên",
-    logo: "TN",
-    logoTone: "bg-[#1a1a1a] text-[#c4a35a]",
-    quote:
-      "KEYON giúp chúng tôi mua và quản lý bản quyền tập trung, quy trình rõ ràng hơn nhiều so với mua lẻ trước đây.",
-    name: "Nguyễn Minh Tuấn",
-    role: "IT Manager",
-  },
-  {
-    id: "tiki",
-    company: "Tiki",
-    logo: "tiki",
-    logoTone: "bg-[#1a94ff] text-white",
-    quote:
-      "Gói bảo mật và Office được giao nhanh, hỗ trợ kích hoạt kịp thời cho đội ngũ vận hành.",
-    name: "Trần Thu Hà",
-    role: "Procurement Lead",
-  },
-  {
-    id: "fpt",
-    company: "FPT Software",
-    logo: "FPT",
-    logoTone: "bg-[#f26f21] text-white",
-    quote:
-      "Chúng tôi dùng KEYON cho volume licensing — báo giá minh bạch, theo dõi gia hạn thuận tiện.",
-    name: "Lê Quang Huy",
-    role: "Infrastructure Lead",
-  },
-] as const;
-
 const HERO_FLOATS: {
   id: string;
   label: string;
@@ -197,7 +151,7 @@ const HERO_FLOATS: {
   },
   {
     id: "ml",
-    label: "Bảo mật & An toàn",
+    label: "Bảo mật",
     Icon: Shield,
     tone: "text-sky-700",
   },
@@ -220,8 +174,6 @@ export function SolutionsHubLanding({
 }: {
   introVideoUrl?: string | null;
 }) {
-  const [quoteIdx, setQuoteIdx] = useState(0);
-
   return (
     <div className="bg-white">
       {/* ── Hero ─────────────────────────────────────────────── */}
@@ -257,33 +209,6 @@ export function SolutionsHubLanding({
               <SolutionsHeroArt />
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ── Trust stats ──────────────────────────────────────── */}
-      <section className="border-y border-border bg-[#F4F8FB]">
-        <div className="home-container py-6 md:py-7">
-          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0">
-            {STATS.map((s, i) => (
-              <li
-                key={s.label}
-                className={`flex items-center gap-3.5 lg:px-5 ${
-                  i > 0 ? "lg:border-l lg:border-border" : ""
-                }`}
-              >
-                <span
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-accent shadow-sm ring-1 ring-border/80"
-                  aria-hidden
-                >
-                  <s.Icon {...ICON_MD} />
-                </span>
-                <div className="min-w-0">
-                  <p className={`${STAT_VALUE_CLASS} text-lg sm:text-xl`}>{s.value}</p>
-                  <p className={`mt-0.5 ${CARD_META_CLASS}`}>{s.label}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
         </div>
       </section>
 
@@ -357,7 +282,7 @@ export function SolutionsHubLanding({
                 doanh nghiệp với quy trình rõ ràng, sản phẩm chính hãng.
               </p>
               <Link
-                href="/contact/sales"
+                href="/contact/quote"
                 className={`mt-7 inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
               >
                 Liên hệ tư vấn →
@@ -384,73 +309,8 @@ export function SolutionsHubLanding({
         </div>
       </section>
 
-      {/* ── Testimonials ─────────────────────────────────────── */}
-      <section className="bg-white py-10 md:py-12 lg:py-14">
-        <div className="home-container">
-          <header className="mx-auto max-w-2xl text-center">
-            <h2 className={SECTION_TITLE_CLASS}>Khách hàng nói về KEYON</h2>
-          </header>
-
-          <div className="mt-9 hidden gap-5 lg:grid lg:grid-cols-3">
-            {TESTIMONIALS.map((t) => (
-              <TestimonialCard key={t.id} item={t} />
-            ))}
-          </div>
-
-          <div className="mt-9 lg:hidden">
-            <TestimonialCard item={TESTIMONIALS[quoteIdx]!} />
-          </div>
-
-          <div className="mt-7 flex items-center justify-center gap-2">
-            {TESTIMONIALS.map((t, i) => (
-              <button
-                key={t.id}
-                type="button"
-                aria-label={`Xem đánh giá ${i + 1}`}
-                aria-current={i === quoteIdx}
-                onClick={() => setQuoteIdx(i)}
-                className={`h-2 w-2 rounded-full ${TRANSITION_UI} ${
-                  i === quoteIdx ? "w-6 bg-accent" : "bg-border hover:bg-muted lg:bg-border"
-                } ${i === quoteIdx ? "" : "lg:opacity-70"}`}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
+      <SolutionFinalCta />
     </div>
-  );
-}
-
-function TestimonialCard({
-  item,
-}: {
-  item: (typeof TESTIMONIALS)[number];
-}) {
-  return (
-    <article
-      className={`flex h-full flex-col rounded-2xl border border-border bg-white p-6 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
-    >
-      <div className="flex items-center gap-3">
-        <Quote
-          className="h-7 w-7 shrink-0 text-accent"
-          strokeWidth={1.5}
-          aria-hidden
-        />
-        <div className="flex min-w-0 items-center gap-2.5">
-          <span
-            className={`inline-flex h-8 min-w-8 items-center justify-center rounded-md px-2 text-[11px] font-bold tracking-wide ${item.logoTone}`}
-          >
-            {item.logo}
-          </span>
-          <p className={`${CARD_TITLE_CLASS} truncate`}>{item.company}</p>
-        </div>
-      </div>
-      <p className={`mt-4 flex-1 ${BODY_MUTED_CLASS}`}>{item.quote}</p>
-      <div className="mt-6">
-        <p className={CARD_TITLE_CLASS}>{item.name}</p>
-        <p className={`mt-0.5 ${CARD_META_CLASS}`}>{item.role}</p>
-      </div>
-    </article>
   );
 }
 

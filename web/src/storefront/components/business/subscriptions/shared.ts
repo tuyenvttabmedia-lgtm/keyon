@@ -3,7 +3,7 @@
 export const SUB_CONSULT_HREF =
   "/contact/quote?intent=subscription-consult&requestType=SUBSCRIPTION";
 export const SUB_BUSINESS_HREF = "/contact/quote?intent=business";
-export const HOW_IT_WORKS_HREF = "/how-it-works";
+export const HOW_IT_WORKS_HREF = "/business/subscriptions#lifecycle";
 export const ACCOUNT_ASSETS_HREF = "/account/assets";
 export const PRODUCTS_HREF = "/products";
 

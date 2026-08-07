@@ -33,7 +33,7 @@ export function LifecycleTimeline() {
   const active = 3;
 
   return (
-    <section className={`bg-white ${SECTION_PAD}`}>
+    <section id="lifecycle" className={`scroll-mt-24 bg-white ${SECTION_PAD}`}>
       <div className="home-container">
         <header className="mx-auto max-w-2xl text-center">
           <h2 className={SECTION_TITLE_CLASS}>Một subscription, một vòng đời rõ ràng</h2>

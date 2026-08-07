@@ -20,14 +20,14 @@ export function FaqHomeSection({ data }: { data: FaqHome }) {
       <div className="home-container">
         <HomeSectionHeading
           title={data.title}
-          viewAllHref="/faq"
+          viewAllHref="/support"
           viewAllLabel="Xem tất cả FAQ →"
         />
         <ul className="mt-6 grid gap-3 md:grid-cols-2">
           {data.items.map((item) => (
             <li key={item.id}>
               <Link
-                href="/faq"
+                href="/support"
                 className={`group block h-full rounded-2xl border border-border/80 bg-white px-5 py-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/40 ${ELEVATION_CARD_HOVER}`}
               >
                 <p
@@ -43,7 +43,7 @@ export function FaqHomeSection({ data }: { data: FaqHome }) {
           ))}
         </ul>
         <p className="mt-4 text-center text-sm">
-          <Link href="/faq" className="font-medium text-accent hover:underline">
+          <Link href="/support" className="font-medium text-accent hover:underline">
             Xem thêm câu hỏi →
           </Link>
         </p>

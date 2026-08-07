@@ -162,10 +162,10 @@ const BRANDS: {
 ];
 
 const CTA_PERKS = [
-  "Không cần thẻ tín dụng",
+  "Theo dõi license sau khi mua",
   "Thiết lập nhanh trong 5 phút",
   "Hỗ trợ chuyên gia 1:1",
-  "Bảo mật đạt chuẩn quốc tế",
+  "Dữ liệu tài khoản được bảo vệ",
 ] as const;
 
 export function LicenseManagementSolutionLanding() {
@@ -224,13 +224,13 @@ export function LicenseManagementSolutionLanding() {
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
-                  href="/account"
+                  href="/register"
                   className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
-                  Khám phá giải pháp →
+                  Mở Tài khoản KEYON →
                 </Link>
                 <Link
-                  href="/contact/sales"
+                  href="/contact/quote"
                   className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-accent/40 bg-white px-6 ${CTA_LABEL_CLASS} text-accent ${TRANSITION_UI} hover:border-accent hover:bg-accent-soft`}
                 >
                   <Headphones {...ICON_SM} />
@@ -405,13 +405,13 @@ export function LicenseManagementSolutionLanding() {
                 </p>
                 <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
                   <Link
-                    href="/account"
+                    href="/register"
                     className={`inline-flex h-12 items-center justify-center rounded-xl bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:bg-white/95`}
                   >
-                    Dùng thử miễn phí →
+                    Mở Tài khoản KEYON →
                   </Link>
                   <Link
-                    href="/contact/sales"
+                    href="/contact/quote"
                     className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-white/50 bg-transparent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:border-white hover:bg-white/10`}
                   >
                     <Headphones {...ICON_SM} />

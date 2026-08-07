@@ -3,27 +3,22 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { IaLandingPage } from "@/storefront/components/marketing/IaLanding";
 import {
-  CLOUD_FALLBACK_FEATURED,
   CloudSolutionLanding,
   type CloudFeaturedProduct,
 } from "@/storefront/components/solutions/CloudSolutionLanding";
 import {
-  PRODUCTIVITY_FALLBACK_FEATURED,
   ProductivitySolutionLanding,
   type ProductivityFeaturedProduct,
 } from "@/storefront/components/solutions/ProductivitySolutionLanding";
 import {
-  LICENSING_FALLBACK_FEATURED,
   SoftwareLicensingSolutionLanding,
   type LicensingFeaturedProduct,
 } from "@/storefront/components/solutions/SoftwareLicensingSolutionLanding";
 import {
-  SECURITY_FALLBACK_FEATURED,
   SecuritySolutionLanding,
   type SecurityFeaturedProduct,
 } from "@/storefront/components/solutions/SecuritySolutionLanding";
 import {
-  BACKUP_FALLBACK_FEATURED,
   BackupSolutionLanding,
   type BackupFeaturedProduct,
 } from "@/storefront/components/solutions/BackupSolutionLanding";
@@ -150,7 +145,7 @@ async function loadCloudFeatured(): Promise<{
   if (cloudish.length > 0) {
     return { featured: cloudish, usingFallback: false };
   }
-  return { featured: CLOUD_FALLBACK_FEATURED, usingFallback: true };
+  return { featured: [], usingFallback: false };
 }
 
 function inferProductivityBrand(
@@ -227,7 +222,7 @@ async function loadProductivityFeatured(): Promise<{
   if (featured.length > 0) {
     return { featured, usingFallback: false };
   }
-  return { featured: PRODUCTIVITY_FALLBACK_FEATURED, usingFallback: true };
+  return { featured: [], usingFallback: false };
 }
 
 function inferLicensingBrand(name: string, brandName: string): LicensingFeaturedProduct["brand"] {
@@ -308,7 +303,7 @@ async function loadLicensingFeatured(): Promise<{
   if (featured.length > 0) {
     return { featured, usingFallback: false };
   }
-  return { featured: LICENSING_FALLBACK_FEATURED, usingFallback: true };
+  return { featured: [], usingFallback: false };
 }
 
 function inferSecurityBrand(name: string, brandName: string): SecurityFeaturedProduct["brand"] {
@@ -394,7 +389,7 @@ async function loadSecurityFeatured(): Promise<{
   if (featured.length > 0) {
     return { featured, usingFallback: false };
   }
-  return { featured: SECURITY_FALLBACK_FEATURED, usingFallback: true };
+  return { featured: [], usingFallback: false };
 }
 
 function inferBackupBrand(name: string, brandName: string): BackupFeaturedProduct["brand"] {
@@ -501,7 +496,7 @@ async function loadBackupFeatured(): Promise<{
   if (featured.length > 0) {
     return { featured, usingFallback: false };
   }
-  return { featured: BACKUP_FALLBACK_FEATURED, usingFallback: true };
+  return { featured: [], usingFallback: false };
 }
 
 export default async function SolutionPage({ params }: Props) {
