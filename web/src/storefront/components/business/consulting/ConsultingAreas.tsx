@@ -8,6 +8,7 @@ import {
 import {
   BODY_MUTED_CLASS,
   CARD_TITLE_CLASS,
+  SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
 } from "@/storefront/typography";
 import {
@@ -16,7 +17,7 @@ import {
   HOVER_LIFT_CARD,
   TRANSITION_PANEL,
 } from "@/storefront/effects";
-import { AREAS_ID, SECTION_PAD } from "./shared";
+import { AREAS_ID, SECTION_PAD, SURFACE_MUTED } from "./shared";
 
 const AREAS = [
   {
@@ -48,9 +49,12 @@ const AREAS = [
 export function ConsultingAreas() {
   return (
     <section id={AREAS_ID} className={`scroll-mt-24 bg-white ${SECTION_PAD}`}>
-      <div className="home-container px-5 md:px-0">
+      <div className="home-container">
         <header className="max-w-2xl">
           <h2 className={SECTION_TITLE_CLASS}>Các lĩnh vực tư vấn</h2>
+          <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
+            Khám phá theo nhóm sản phẩm — hoặc gửi yêu cầu nếu chưa xác định.
+          </p>
         </header>
 
         <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 md:mt-9">
@@ -58,16 +62,14 @@ export function ConsultingAreas() {
             <li key={title}>
               <Link
                 href={href}
-                className={`flex h-full flex-col rounded-2xl border border-border bg-[#F7FAFC] p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
+                className={`flex h-full flex-col p-5 ${SURFACE_MUTED} ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
               >
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-accent shadow-sm">
                   <Icon size={20} strokeWidth={1.75} aria-hidden />
                 </span>
                 <h3 className={`mt-4 ${CARD_TITLE_CLASS}`}>{title}</h3>
                 <p className={`mt-2 flex-1 ${BODY_MUTED_CLASS}`}>{body}</p>
-                <span className="mt-4 text-[13px] font-semibold text-accent">
-                  Tìm hiểu →
-                </span>
+                <span className="mt-4 text-[13px] font-semibold text-accent">Tìm hiểu →</span>
               </Link>
             </li>
           ))}

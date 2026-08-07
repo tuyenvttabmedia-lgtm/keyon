@@ -11,36 +11,37 @@ import {
   ELEVATION_HAIRLINE,
   TRANSITION_UI,
 } from "@/storefront/effects";
-import { goToConsultation, SECTION_PAD } from "./shared";
+import { goToConsultation, SECTION_PAD, SURFACE } from "./shared";
 
-/** Large consultation card — not a navy banner like Volume/Subscription. */
+/** Full-width consultation card — same container edge as other sections. */
 export function ConsultingFinalCTA() {
   return (
     <section className={`border-t border-border bg-[#F4F8FB] ${SECTION_PAD}`}>
-      <div className="home-container px-5 md:px-0">
+      <div className="home-container">
         <div
-          className={`relative overflow-hidden rounded-2xl border border-border bg-white px-6 py-8 sm:px-10 sm:py-10 md:px-12 md:py-12 ${ELEVATION_HAIRLINE}`}
+          className={`relative overflow-hidden px-6 py-8 sm:px-8 sm:py-9 md:flex md:items-center md:justify-between md:gap-8 md:px-10 md:py-10 ${SURFACE} ${ELEVATION_HAIRLINE}`}
         >
           <div
-            className="pointer-events-none absolute -right-6 -top-6 text-accent/15 sm:-right-2 sm:top-4"
+            className="pointer-events-none absolute -right-4 top-2 text-accent/12 md:right-6 md:top-1/2 md:-translate-y-1/2"
             aria-hidden
           >
-            <ArrowUpRight size={140} strokeWidth={1.15} />
+            <ArrowUpRight size={120} strokeWidth={1.15} />
           </div>
 
-          <div className="relative max-w-xl">
+          <div className="relative min-w-0 max-w-xl">
             <h2 className={SECTION_TITLE_CLASS}>Chưa chắc lựa chọn nào phù hợp?</h2>
-            <p className={`mt-3 ${SECTION_LEAD_CLASS}`}>
+            <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
               Mô tả nhu cầu. KEYON sẽ giúp bạn hiểu và so sánh các lựa chọn.
             </p>
-            <button
-              type="button"
-              onClick={() => goToConsultation()}
-              className={`mt-6 inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
-            >
-              Bắt đầu tư vấn
-            </button>
           </div>
+
+          <button
+            type="button"
+            onClick={() => goToConsultation()}
+            className={`relative mt-6 inline-flex h-12 shrink-0 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white md:mt-0 ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+          >
+            Bắt đầu tư vấn
+          </button>
         </div>
       </div>
     </section>

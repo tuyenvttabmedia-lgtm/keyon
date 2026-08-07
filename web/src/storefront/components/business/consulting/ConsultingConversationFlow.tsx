@@ -2,11 +2,12 @@ import {
   BODY_MUTED_CLASS,
   CARD_META_CLASS,
   CARD_TITLE_CLASS,
+  OVERLINE_CLASS,
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
 } from "@/storefront/typography";
 import { ELEVATION_HAIRLINE } from "@/storefront/effects";
-import { SECTION_PAD } from "./shared";
+import { SECTION_PAD, SURFACE } from "./shared";
 
 const STEPS = [
   {
@@ -36,50 +37,53 @@ const STEPS = [
   },
 ] as const;
 
-/** Conversation-thread process — distinct from volume/subscription timelines. */
+/** Conversation thread in a balanced 5/7 split — aligned with workspace section. */
 export function ConsultingConversationFlow() {
   return (
     <section className={`border-t border-border bg-[#F4F8FB] ${SECTION_PAD}`}>
-      <div className="home-container px-5 md:px-0">
-        <header className="mx-auto max-w-2xl text-center">
-          <h2 className={SECTION_TITLE_CLASS}>Quy trình tư vấn cùng KEYON</h2>
-          <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-            Dạng hội thoại — từ mô tả nhu cầu đến hỗ trợ mua khi đã chọn được sản phẩm.
-          </p>
-        </header>
+      <div className="home-container">
+        <div className="grid items-start gap-8 lg:grid-cols-12 lg:gap-10">
+          <header className="min-w-0 lg:col-span-5 lg:sticky lg:top-24">
+            <p className={`${OVERLINE_CLASS} tracking-[0.16em] text-accent`}>Quy trình</p>
+            <h2 className={`mt-2.5 ${SECTION_TITLE_CLASS}`}>Quy trình tư vấn cùng KEYON</h2>
+            <p className={`mt-3 ${SECTION_LEAD_CLASS}`}>
+              Dạng hội thoại — từ mô tả nhu cầu đến hỗ trợ mua khi đã chọn được sản phẩm.
+            </p>
+          </header>
 
-        <ol className="relative mx-auto mt-8 max-w-xl space-y-0 md:mt-10">
-          <div
-            className="pointer-events-none absolute bottom-6 left-[19px] top-6 w-px bg-border md:left-[23px]"
-            aria-hidden
-          />
-          {STEPS.map((step, i) => {
-            const n = String(i + 1).padStart(2, "0");
-            const keyonSide = step.who.startsWith("KEYON") && !step.who.includes("Bạn");
-            return (
-              <li key={step.title} className="relative z-[1] flex gap-3.5 pb-6 last:pb-0 md:gap-4">
-                <span
-                  className={`mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[12px] font-bold md:h-12 md:w-12 md:text-[13px] ${
-                    keyonSide
-                      ? "bg-accent text-white"
-                      : "border border-border bg-white text-navy"
-                  }`}
-                >
-                  {n}
-                </span>
-                <div
-                  className={`min-w-0 flex-1 rounded-2xl border border-border bg-white p-4 ${ELEVATION_HAIRLINE}`}
-                >
-                  <p className={`${CARD_META_CLASS} font-semibold uppercase tracking-wide text-accent`}>
-                    {step.who}
-                  </p>
-                  <h3 className={`mt-1 ${CARD_TITLE_CLASS}`}>{step.title}</h3>
-                  <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{step.body}</p>
-                </div>
-              </li>
-            );
-          })}
-        </ol>
+          <ol className="relative min-w-0 space-y-0 lg:col-span-7">
+            <div
+              className="pointer-events-none absolute bottom-4 left-[15px] top-4 w-px bg-border"
+              aria-hidden
+            />
+            {STEPS.map((step, i) => {
+              const n = String(i + 1).padStart(2, "0");
+              const keyonSide = step.who.startsWith("KEYON") && !step.who.includes("Bạn");
+              return (
+                <li key={step.title} className="relative z-[1] flex gap-3 pb-4 last:pb-0">
+                  <span
+                    className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[11px] font-bold ${
+                      keyonSide
+                        ? "bg-accent text-white"
+                        : "border border-border bg-white text-navy"
+                    }`}
+                  >
+                    {n}
+                  </span>
+                  <div className={`min-w-0 flex-1 p-4 ${SURFACE} ${ELEVATION_HAIRLINE}`}>
+                    <p
+                      className={`${CARD_META_CLASS} font-semibold uppercase tracking-wide text-accent`}
+                    >
+                      {step.who}
+                    </p>
+                    <h3 className={`mt-1 ${CARD_TITLE_CLASS}`}>{step.title}</h3>
+                    <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{step.body}</p>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
       </div>
     </section>
   );

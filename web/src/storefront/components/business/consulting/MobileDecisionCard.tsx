@@ -29,9 +29,7 @@ const OPTIONS: {
 /** Mobile-only decision card — not a scaled-down desktop illustration. */
 export function MobileDecisionCard() {
   return (
-    <div
-      className={`rounded-2xl border border-border bg-white p-4 sm:p-5 md:hidden ${ELEVATION_HAIRLINE}`}
-    >
+    <div className={`rounded-2xl border border-border bg-white p-4 sm:p-5 md:hidden ${ELEVATION_HAIRLINE}`}>
       <p className={CARD_TITLE_CLASS}>Bạn đang cần giải pháp nào?</p>
       <ul className="mt-3 space-y-2">
         {OPTIONS.map(({ id, label, Icon }) => (
