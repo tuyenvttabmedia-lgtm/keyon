@@ -385,15 +385,26 @@ export function VolumeLicensingLanding() {
               {PROCESS.map((step, i) => {
                 const n = String(i + 1).padStart(2, "0");
                 return (
-                  <li key={step.title} className="flex flex-col items-center text-center">
-                    <span className={`${BADGE_CLASS} mb-2 font-semibold text-muted`}>{n}</span>
+                  <li
+                    key={step.title}
+                    className={`group flex flex-col items-center rounded-2xl px-2 py-3 text-center ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:bg-accent-soft/50`}
+                  >
                     <span
-                      className={`flex h-12 w-12 items-center justify-center rounded-full border-2 border-accent/40 bg-white text-accent ${ELEVATION_HAIRLINE}`}
+                      className={`${BADGE_CLASS} mb-2 font-semibold text-muted ${TRANSITION_UI} group-hover:text-accent`}
+                    >
+                      {n}
+                    </span>
+                    <span
+                      className={`flex h-12 w-12 items-center justify-center rounded-full border-2 border-accent/40 bg-white text-accent ${ELEVATION_HAIRLINE} ${TRANSITION_UI} ${ELEVATION_CARD_HOVER} group-hover:border-accent group-hover:bg-accent group-hover:text-white`}
                       aria-hidden
                     >
                       <step.Icon {...ICON_MD} />
                     </span>
-                    <h3 className={`mt-3.5 ${CARD_TITLE_CLASS}`}>{step.title}</h3>
+                    <h3
+                      className={`mt-3.5 ${CARD_TITLE_CLASS} ${TRANSITION_UI} group-hover:text-accent`}
+                    >
+                      {step.title}
+                    </h3>
                     <p className={`mt-1.5 max-w-[16rem] ${BODY_MUTED_CLASS}`}>{step.body}</p>
                   </li>
                 );
