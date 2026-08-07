@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { ChevronRight, Clock3, Mail, Phone } from "lucide-react";
 import {
   BODY_MUTED_CLASS,

@@ -111,7 +111,7 @@ export function SupportSearch({ docs, suggestions, size = "hero" }: Props) {
             <ul className="max-h-[min(60vh,320px)] overflow-y-auto py-1">
               <li className={`px-4 py-2 ${CARD_META_CLASS}`}>Kết quả gợi ý</li>
               {results.map((r) => (
-                <li key={r.id} role="option">
+                <li key={r.id} role="option" aria-selected={false}>
                   <Link
                     href={r.kind === "faq" ? `${FAQ_HREF}?q=${encodeURIComponent(r.title)}` : r.href}
                     className="flex items-start justify-between gap-3 px-4 py-3 hover:bg-accent-soft/50"
