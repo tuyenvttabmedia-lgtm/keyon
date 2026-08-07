@@ -42,15 +42,7 @@ export function SolutionsSection({ data }: { data: Solutions }) {
       <div className="home-container">
         <div className="mb-6 flex flex-col gap-4 md:mb-8 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
-            {/* Section name is H2; marketing line stays smaller underneath. */}
-            <h2 className={SECTION_TITLE_CLASS}>
-              {data.kicker || data.title}
-            </h2>
-            {data.kicker ? (
-              <p className="mt-1.5 text-base font-semibold tracking-tight text-navy sm:text-lg">
-                {data.title}
-              </p>
-            ) : null}
+            <h2 className={SECTION_TITLE_CLASS}>{data.title}</h2>
             {data.subtitle ? (
               <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>{data.subtitle}</p>
             ) : null}

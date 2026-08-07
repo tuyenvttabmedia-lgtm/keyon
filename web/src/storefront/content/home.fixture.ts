@@ -275,8 +275,7 @@ export const homeFixture: HomeContent = {
   },
   solutions: {
     visible: true,
-    kicker: "Giải pháp cho doanh nghiệp",
-    title: "Bản quyền số. Quản lý đơn giản.",
+    title: "Giải pháp cho doanh nghiệp",
     subtitle:
       "Từ một vài giấy phép đến hàng trăm người dùng, KEYON giúp doanh nghiệp mua, triển khai và quản lý phần mềm dễ dàng hơn.",
     ctaLabel: "Khám phá giải pháp →",
