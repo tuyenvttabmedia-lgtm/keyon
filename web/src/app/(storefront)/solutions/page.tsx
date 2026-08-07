@@ -14,5 +14,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function SolutionsHubPage() {
-  return <SolutionsHubLanding />;
+  return (
+    <SolutionsHubLanding
+      introVideoUrl={process.env.NEXT_PUBLIC_SOLUTIONS_INTRO_VIDEO_URL ?? null}
+    />
+  );
 }

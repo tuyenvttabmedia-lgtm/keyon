@@ -13,7 +13,6 @@ import {
   Headphones,
   KeyRound,
   LayoutGrid,
-  Play,
   Quote,
   Rocket,
   Shield,
@@ -22,7 +21,6 @@ import {
   Users,
 } from "lucide-react";
 import {
-  BADGE_CLASS,
   BODY_MUTED_CLASS,
   CARD_META_CLASS,
   CARD_TITLE_CLASS,
@@ -44,6 +42,7 @@ import {
   TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
+import { SolutionsIntroVideoCta } from "./SolutionsIntroVideoCta";
 
 const ICON_MD = { size: 22, strokeWidth: 1.75 } as const;
 const ICON_SM = { size: 16, strokeWidth: 1.85 } as const;
@@ -216,7 +215,11 @@ const HERO_FLOATS: {
   },
 ];
 
-export function SolutionsHubLanding() {
+export function SolutionsHubLanding({
+  introVideoUrl,
+}: {
+  introVideoUrl?: string | null;
+}) {
   const [quoteIdx, setQuoteIdx] = useState(0);
 
   return (
@@ -246,16 +249,7 @@ export function SolutionsHubLanding() {
                 >
                   Khám phá giải pháp →
                 </a>
-                <Link
-                  href="/how-it-works"
-                  className={`inline-flex h-12 items-center justify-center gap-2.5 rounded-xl border border-border bg-white px-4 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
-                >
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-accent text-white">
-                    <Play size={12} fill="currentColor" strokeWidth={0} />
-                  </span>
-                  <span>Xem video giới thiệu</span>
-                  <span className={`${BADGE_CLASS} text-muted`}>02:18</span>
-                </Link>
+                <SolutionsIntroVideoCta videoUrl={introVideoUrl} />
               </div>
             </div>
 
