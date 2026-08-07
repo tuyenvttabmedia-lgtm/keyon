@@ -74,8 +74,7 @@ export function SupportHero({ docs, suggestions }: Props) {
 
         {/* Mobile */}
         <div className="md:hidden">
-          <p className={`${OVERLINE_CLASS} tracking-[0.16em] text-accent`}>Trung tâm hỗ trợ</p>
-          <h1 className={`mt-2 ${HERO_TITLE_CLASS}`}>
+          <h1 className={HERO_TITLE_CLASS}>
             Bạn cần KEYON
             <br />
             hỗ trợ điều gì?
