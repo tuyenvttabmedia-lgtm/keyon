@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   Building2,
@@ -14,7 +14,6 @@ import {
   Phone,
   Rocket,
   ShieldCheck,
-  Users,
   Wallet,
 } from "lucide-react";
 import {
@@ -25,7 +24,6 @@ import {
   CARD_META_CLASS,
   CARD_TITLE_CLASS,
   CTA_LABEL_CLASS,
-  FONT_DISPLAY,
   HERO_TITLE_CLASS,
   OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
@@ -47,46 +45,59 @@ const ICON_SM = { size: 16, strokeWidth: 1.85 } as const;
 const ICON_MD = { size: 20, strokeWidth: 1.75 } as const;
 const HOTLINE = "1900 636 248";
 
-type VolumeId = "5" | "10" | "50" | "100+";
+type VolumeId = "5" | "10" | "50" | "100" | "100+";
 
 const VOLUMES: {
   id: VolumeId;
-  label: string;
-  title: string;
+  name: string;
+  usersLabel: string;
   body: string;
+  people: number;
+  showInfinity?: boolean;
+  cta: "quote" | "consult";
 }[] = [
   {
     id: "5",
-    label: "5",
-    title: "5 người dùng",
-    body: "Phù hợp nhóm nhỏ hoặc doanh nghiệp đang bắt đầu chuẩn hóa bản quyền phần mềm.",
+    name: "Nhóm nhỏ",
+    usersLabel: "5 người dùng",
+    body: "Phù hợp startup, nhóm làm việc nhỏ",
+    people: 4,
+    cta: "quote",
   },
   {
     id: "10",
-    label: "10",
-    title: "10 người dùng",
-    body: "Phù hợp đội nhóm cần triển khai đồng bộ phần mềm và quản lý license thuận tiện hơn.",
+    name: "Nhóm vừa",
+    usersLabel: "10 người dùng",
+    body: "Phù hợp doanh nghiệp vừa và nhỏ",
+    people: 6,
+    cta: "quote",
   },
   {
     id: "50",
-    label: "50",
-    title: "50 người dùng",
-    body: "Phù hợp doanh nghiệp có nhiều người dùng, phòng ban hoặc nhu cầu quản lý bản quyền tập trung.",
+    name: "Doanh nghiệp",
+    usersLabel: "50 người dùng",
+    body: "Tối ưu cho doanh nghiệp quy mô vừa",
+    people: 12,
+    cta: "quote",
+  },
+  {
+    id: "100",
+    name: "Doanh nghiệp lớn",
+    usersLabel: "100 người dùng",
+    body: "Quản lý tập trung, triển khai nhanh",
+    people: 15,
+    cta: "quote",
   },
   {
     id: "100+",
-    label: "100+",
-    title: "100+ người dùng",
-    body: "Phù hợp triển khai quy mô lớn cần tư vấn cấp phép, triển khai và quản lý tập trung.",
+    name: "Enterprise",
+    usersLabel: "100+ người dùng",
+    body: "Giải pháp tùy chỉnh theo nhu cầu",
+    people: 14,
+    showInfinity: true,
+    cta: "consult",
   },
 ];
-
-const VOLUME_BENEFITS = [
-  "Tư vấn hình thức cấp phép phù hợp",
-  "Báo giá theo sản phẩm và số lượng",
-  "Hỗ trợ triển khai",
-  "Quản lý license tập trung",
-] as const;
 
 const HERO_POINTS: { title: string; Icon: LucideIcon }[] = [
   { title: "Tư vấn theo nhu cầu", Icon: MessageCircle },
@@ -166,10 +177,6 @@ function quoteHref(volume: VolumeId) {
 
 export function VolumeLicensingLanding() {
   const [volume, setVolume] = useState<VolumeId>("10");
-  const selected = useMemo(
-    () => VOLUMES.find((v) => v.id === volume) ?? VOLUMES[1]!,
-    [volume],
-  );
 
   return (
     <div className="bg-white">
@@ -245,7 +252,7 @@ export function VolumeLicensingLanding() {
         </div>
       </section>
 
-      {/* ── Volume selector ──────────────────────────────────── */}
+      {/* ── Volume scale cards (mockup layout, no fake discounts) ─ */}
       <section className="bg-white py-10 md:py-12 lg:py-14">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
@@ -253,76 +260,74 @@ export function VolumeLicensingLanding() {
               Doanh nghiệp của bạn cần bao nhiêu bản quyền?
             </h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Chọn quy mô dự kiến để KEYON hiểu nhu cầu và chuẩn bị phương án cấp phép phù hợp.
+              Chọn quy mô phù hợp số lượng người dùng của doanh nghiệp. KEYON sẽ tư vấn hình thức
+              cấp phép và gửi báo giá theo nhu cầu thực tế.
             </p>
           </header>
 
-          <div
-            role="radiogroup"
-            aria-label="Quy mô người dùng dự kiến"
-            className="mx-auto mt-8 grid max-w-2xl grid-cols-2 gap-2.5 sm:flex sm:flex-wrap sm:justify-center sm:gap-3"
-          >
+          <ul className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3">
             {VOLUMES.map((v) => {
               const active = v.id === volume;
               return (
-                <button
-                  key={v.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={active}
-                  onClick={() => setVolume(v.id)}
-                  className={`inline-flex h-12 min-w-0 flex-1 items-center justify-center rounded-xl border px-4 text-[15px] font-semibold tabular-nums sm:min-w-[5.5rem] sm:flex-none ${TRANSITION_UI} ${
-                    active
-                      ? "border-accent bg-accent-soft text-accent shadow-sm"
-                      : "border-border bg-white text-navy hover:border-accent/50"
-                  }`}
-                >
-                  {v.label}
-                </button>
+                <li key={v.id}>
+                  <article
+                    className={`flex h-full flex-col items-center rounded-2xl border bg-white px-4 py-5 text-center sm:px-5 sm:py-6 ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} ${
+                      active
+                        ? `border-accent bg-accent-soft/30 ring-1 ring-accent/20 ${ELEVATION_HAIRLINE}`
+                        : `border-border ${ELEVATION_HAIRLINE} hover:border-accent/35`
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setVolume(v.id)}
+                      className="w-full"
+                      aria-pressed={active}
+                    >
+                      <p className={`${CARD_TITLE_CLASS} text-[15px]`}>{v.name}</p>
+                      <p className={`mt-1 ${CARD_META_CLASS}`}>{v.usersLabel}</p>
+                      <div className="flex justify-center">
+                        <PeopleGlyph count={v.people} infinity={v.showInfinity} />
+                      </div>
+                      <p className={`mt-3 ${BODY_MUTED_CLASS}`}>{v.body}</p>
+                    </button>
+
+                    <Link
+                      href={quoteHref(v.id)}
+                      onClick={() => setVolume(v.id)}
+                      className={`mt-5 inline-flex h-10 w-full items-center justify-center rounded-xl text-[13px] font-semibold ${TRANSITION_UI} ${
+                        v.cta === "consult"
+                          ? `bg-accent text-white hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`
+                          : "border border-border bg-white text-navy hover:border-accent hover:text-accent"
+                      }`}
+                    >
+                      {v.cta === "consult" ? "Liên hệ tư vấn" : "Nhận báo giá"}
+                    </Link>
+                  </article>
+                </li>
               );
             })}
-          </div>
+          </ul>
 
-          <div
-            className={`mx-auto mt-7 max-w-3xl rounded-2xl border border-border bg-[#F7FAFC] p-5 sm:p-6 md:p-7 ${ELEVATION_HAIRLINE}`}
-          >
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div className="min-w-0">
-                <p className={`${BADGE_CLASS} font-semibold uppercase tracking-wide text-accent`}>
-                  Quy mô đã chọn
-                </p>
-                <h3 className={`mt-1.5 ${FONT_DISPLAY} text-xl font-bold text-navy sm:text-2xl`}>
-                  {selected.title}
-                </h3>
-                <p className={`mt-2 max-w-xl ${BODY_MUTED_CLASS}`}>{selected.body}</p>
-              </div>
+          {/* Bottom note bar (mockup) */}
+          <div className="mt-6 flex flex-col gap-4 rounded-2xl border border-border bg-[#F4F8FB] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-5">
+            <div className="flex min-w-0 items-start gap-3">
               <span
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent"
+                className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent"
                 aria-hidden
               >
-                <Users {...ICON_MD} />
+                <Building2 size={18} strokeWidth={1.8} />
               </span>
+              <p className="text-[13px] leading-relaxed text-muted">
+                Giá cuối cùng phụ thuộc vào sản phẩm, thời hạn và nhu cầu triển khai của doanh
+                nghiệp. Liên hệ KEYON để nhận báo giá chi tiết theo quy mô thực tế.
+              </p>
             </div>
-
-            <ul className="mt-5 grid gap-2.5 sm:grid-cols-2">
-              {VOLUME_BENEFITS.map((b) => (
-                <li key={b} className="flex items-start gap-2.5">
-                  <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
-                    <Check size={10} strokeWidth={3} aria-hidden />
-                  </span>
-                  <span className="text-[13px] leading-snug text-navy">{b}</span>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-6">
-              <Link
-                href={quoteHref(volume)}
-                className={`inline-flex h-12 w-full items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm sm:w-auto ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
-              >
-                Nhận báo giá →
-              </Link>
-            </div>
+            <Link
+              href={quoteHref(volume)}
+              className={`inline-flex h-10 shrink-0 items-center justify-center rounded-xl border border-accent/40 bg-white px-4 text-[13px] font-semibold text-accent ${TRANSITION_UI} hover:bg-accent-soft`}
+            >
+              Liên hệ kinh doanh →
+            </Link>
           </div>
         </div>
       </section>
@@ -427,6 +432,33 @@ export function VolumeLicensingLanding() {
           </div>
         </div>
       </section>
+    </div>
+  );
+}
+
+/** Stick-figure people grid — teal-only (no rainbow), mockup-style. */
+function PeopleGlyph({ count, infinity }: { count: number; infinity?: boolean }) {
+  const n = Math.min(Math.max(count, 1), 15);
+  return (
+    <div
+      className="mt-4 flex min-h-[56px] max-w-[140px] flex-wrap content-center justify-center gap-x-1.5 gap-y-1.5"
+      aria-hidden
+    >
+      {Array.from({ length: n }, (_, i) => (
+        <span
+          key={i}
+          className="inline-flex h-[22px] w-[14px] flex-col items-center text-accent"
+          style={{ opacity: 0.45 + ((i * 7) % 40) / 100 }}
+        >
+          <span className="h-[7px] w-[7px] rounded-full bg-current" />
+          <span className="mt-[3px] h-[11px] w-[11px] rounded-[3px] bg-current" />
+        </span>
+      ))}
+      {infinity ? (
+        <span className="ml-0.5 self-center text-[17px] font-bold leading-none text-accent">
+          ∞
+        </span>
+      ) : null}
     </div>
   );
 }

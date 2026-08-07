@@ -21,7 +21,7 @@ import {
   TRANSITION_UI,
 } from "@/storefront/effects";
 
-const VOLUMES = ["5", "10", "50", "100+"] as const;
+const VOLUMES = ["5", "10", "50", "100", "100+"] as const;
 
 const INPUT =
   `mt-1.5 h-11 w-full rounded-xl border border-border bg-white px-3 ${INPUT_TEXT_CLASS} outline-none ${TRANSITION_UI} focus:border-accent`;
