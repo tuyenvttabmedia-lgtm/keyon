@@ -126,10 +126,15 @@ export const BUSINESS_PAGES: Record<string, IaPage> = {
     slug: "volume-licensing",
     kicker: "Doanh nghiệp",
     title: "Mua bản quyền số lượng lớn",
-    subtitle: "Phù hợp 5 / 10 / 50 / 100+ người dùng — nhận tư vấn và báo giá theo nhu cầu.",
-    bullets: ["Volume / multi-seat theo điều kiện gói", "Báo giá và hỗ trợ triển khai", "Gắn với quản lý license trên KEYON"],
-    primaryCta: { label: "Yêu cầu báo giá", href: "/contact/sales" },
-    secondaryCta: { label: "Quản lý bản quyền", href: "/solutions/license-management" },
+    subtitle:
+      "Phù hợp 5 / 10 / 50 / 100+ người dùng — nhận tư vấn và báo giá theo nhu cầu.",
+    bullets: [
+      "Tư vấn hình thức cấp phép phù hợp",
+      "Báo giá theo sản phẩm và số lượng",
+      "Hỗ trợ triển khai và quản lý tập trung",
+    ],
+    primaryCta: { label: "Nhận báo giá", href: "/contact/sales?intent=volume-quote" },
+    secondaryCta: { label: "Tư vấn giải pháp", href: "/business/licensing-consulting" },
   },
   subscriptions: {
     slug: "subscriptions",
