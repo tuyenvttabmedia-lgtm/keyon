@@ -27,6 +27,7 @@ const CATEGORY_ICONS = {
 
 type Props = {
   items: FaqItem[];
+  initialQuery?: string;
 };
 
 function normalize(s: string) {
@@ -40,8 +41,8 @@ function categoryMeta(id: string) {
   return FAQ_CATEGORIES.find((c) => c.id === id) ?? FAQ_CATEGORIES[3];
 }
 
-export function FaqSupportView({ items }: Props) {
-  const [query, setQuery] = useState("");
+export function FaqSupportView({ items, initialQuery = "" }: Props) {
+  const [query, setQuery] = useState(initialQuery);
   const deferredQuery = useDeferredValue(query.trim());
   const [category, setCategory] = useState<FaqCategoryId | null>(null);
   const [openId, setOpenId] = useState<string | null>(null);

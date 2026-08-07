@@ -9,7 +9,12 @@ export async function generateMetadata(): Promise<Metadata> {
   return buildMainPageMetadata("/faq");
 }
 
-export default async function FaqPage() {
+type Props = {
+  searchParams: Promise<{ q?: string }>;
+};
+
+export default async function FaqPage({ searchParams }: Props) {
+  const sp = await searchParams;
   const faq = await getFaqForPage();
   const items = faq.map((f) => ({
     id: f.id,
@@ -18,5 +23,5 @@ export default async function FaqPage() {
     category: f.category,
   }));
 
-  return <FaqSupportView items={items} />;
+  return <FaqSupportView items={items} initialQuery={sp.q?.trim() || ""} />;
 }
