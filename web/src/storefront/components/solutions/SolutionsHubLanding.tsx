@@ -167,6 +167,12 @@ const HERO_FLOATS: {
     Icon: Sparkles,
     tone: "text-orange-600",
   },
+  {
+    id: "br",
+    label: "Cloud",
+    Icon: Cloud,
+    tone: "text-cyan-700",
+  },
 ];
 
 export function SolutionsHubLanding({
@@ -308,7 +314,7 @@ export function SolutionsHubLanding({
   );
 }
 
-/** Hero visual hub — compact K cluster + mesh + 5 cards (mockup). */
+/** Hero visual hub — compact K cluster + mesh + 6 solution cards. */
 function SolutionsHeroArt() {
   return (
     <div

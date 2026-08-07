@@ -66,7 +66,8 @@ export function ShopSidebar(props: Props) {
           {CATEGORY_ORDER.map((id) => {
             const meta = props.categories.find((c) => c.id === id);
             const count = meta?.count ?? 0;
-            if (!count && id === "other") return null;
+            // Hide empty categories (Security/Backup-era zeros mislead shoppers)
+            if (!count) return null;
             return (
               <CategoryRow
                 key={id}

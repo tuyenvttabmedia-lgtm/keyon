@@ -149,10 +149,23 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
     })
     .filter((p): p is PartnerItem => p !== null);
 
+  // Wave 5: only brands with ≥1 active sellable product (avoid empty /products?q=…)
+  const sellableBrandNames = new Set(
+    catalogRows
+      .filter((p) => p.variants.length > 0 && p.brand?.name)
+      .map((p) => p.brand!.name.trim().toLowerCase()),
+  );
+  partnerItems = partnerItems.filter((p) =>
+    sellableBrandNames.has(p.name.trim().toLowerCase()),
+  );
+
   // Soft default: featured catalog brands when CMS list empty after resolve
   if (partnerItems.length === 0) {
     partnerItems = catalogBrands
-      .filter((b) => b.featured)
+      .filter(
+        (b) =>
+          b.featured && sellableBrandNames.has(b.name.trim().toLowerCase()),
+      )
       .slice(0, 8)
       .map((b) => ({
         id: `brand_${b.id}`,
@@ -165,7 +178,11 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
 
   // Fixture fallback only if still empty (e.g. empty catalog)
   if (partnerItems.length === 0) {
-    partnerItems = homeFixture.partners.items.filter((p) => p.visible !== false);
+    partnerItems = homeFixture.partners.items.filter(
+      (p) =>
+        p.visible !== false &&
+        sellableBrandNames.has(p.name.trim().toLowerCase()),
+    );
   }
 
   const shopCounts: Record<ShopCategoryId, number> = {
@@ -224,7 +241,10 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
       return c.liveCount === undefined || c.liveCount > 0;
     })
     .slice(0, 8)
-    .map(({ liveCount: _n, ...rest }) => rest);
+    .map(({ liveCount, ...rest }) => {
+      void liveCount;
+      return rest;
+    });
 
   const shopCards = mapProductsToShopCards(
     catalogRows.filter((p) => p.variants.length > 0).slice(0, 8),

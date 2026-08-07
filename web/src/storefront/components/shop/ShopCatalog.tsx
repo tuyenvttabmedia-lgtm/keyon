@@ -228,25 +228,36 @@ export function ShopCatalog({
           </div>
 
           {pageItems.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-border bg-white px-6 py-16 text-center">
+            <div className="rounded-2xl border border-dashed border-border bg-white px-6 py-14 text-center sm:py-16">
               <p className={EMPTY_TITLE_CLASS}>Không tìm thấy sản phẩm</p>
-              <p className={`mt-1 ${EMPTY_BODY_CLASS}`}>Thử đổi bộ lọc hoặc xóa tất cả điều kiện.</p>
-              {hasActiveFilters ? (
-                <button
-                  type="button"
-                  onClick={clearFilters}
-                  className={`mt-4 inline-flex h-10 items-center rounded-xl bg-accent px-4 ${CTA_COMPACT_CLASS} text-white`}
-                >
-                  Xóa bộ lọc
-                </button>
-              ) : (
+              <p className={`mx-auto mt-2 max-w-md ${EMPTY_BODY_CLASS}`}>
+                {hasActiveFilters
+                  ? "Thử đổi bộ lọc hoặc xem toàn bộ catalog đang bán."
+                  : "Danh mục này chưa có sản phẩm đang bán. Bạn có thể xem catalog hoặc nhờ KEYON tư vấn."}
+              </p>
+              <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
+                {hasActiveFilters ? (
+                  <button
+                    type="button"
+                    onClick={clearFilters}
+                    className={`inline-flex h-10 items-center rounded-xl bg-accent px-4 ${CTA_COMPACT_CLASS} text-white`}
+                  >
+                    Xóa bộ lọc
+                  </button>
+                ) : null}
                 <Link
                   href="/products"
-                  className={`mt-4 inline-flex h-10 items-center rounded-xl border border-border px-4 ${CTA_COMPACT_CLASS} text-navy`}
+                  className={`inline-flex h-10 items-center rounded-xl border border-border px-4 ${CTA_COMPACT_CLASS} text-navy`}
                 >
-                  Tải lại trang
+                  Xem tất cả sản phẩm
                 </Link>
-              )}
+                <Link
+                  href="/contact/quote"
+                  className={`inline-flex h-10 items-center rounded-xl border border-border px-4 ${CTA_COMPACT_CLASS} text-navy`}
+                >
+                  Liên hệ tư vấn
+                </Link>
+              </div>
             </div>
           ) : view === "grid" ? (
             <div className="grid grid-cols-2 gap-3 sm:gap-3.5 md:grid-cols-3 lg:grid-cols-4">

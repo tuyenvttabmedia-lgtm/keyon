@@ -605,7 +605,12 @@ html {
   }
 
   .solutions-hero-card--bl {
-    left: 43%;
+    left: 22%;
+    bottom: 2%;
+  }
+
+  .solutions-hero-card--br {
+    right: 8%;
     bottom: 2%;
   }
 }
@@ -642,7 +647,12 @@ html {
   }
 
   .solutions-hero-card--bl {
-    left: 44%;
+    left: 24%;
+    bottom: 1.5%;
+  }
+
+  .solutions-hero-card--br {
+    right: 6%;
     bottom: 1.5%;
   }
 }
