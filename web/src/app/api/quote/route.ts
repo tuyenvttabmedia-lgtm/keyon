@@ -13,6 +13,7 @@ import {
   quoteRequestBodySchema,
 } from "@/lib/quote";
 import { hashIp, publicReferenceCode } from "@/server/quote/ids";
+import { notifyLeadTelegram } from "@/server/notify/lead-telegram";
 
 const log = childLogger("quote");
 
@@ -156,6 +157,25 @@ export async function POST(req: Request) {
             "quote mail failed",
           );
         }
+
+        void notifyLeadTelegram(
+          [
+            "KEYON — Yêu cầu báo giá mới",
+            `Mã: ${row.referenceCode}`,
+            `Loại: ${requestType}`,
+            `Công ty: ${body.companyName}`,
+            `Họ tên: ${body.fullName}`,
+            `Email: ${body.email}`,
+            `SĐT: ${phone}`,
+            `Quy mô: ${usersLabel}`,
+            `Sản phẩm: ${productLine}`,
+            `License: ${LICENSE_TYPE_LABEL[body.licenseType]}`,
+            `Thời hạn: ${TERM_LABEL[body.term]}`,
+            message ? `\n${message.slice(0, 600)}` : "",
+          ]
+            .filter(Boolean)
+            .join("\n"),
+        );
 
         log.info({ referenceCode: row.referenceCode, requestType }, "quote request created");
         return NextResponse.json({

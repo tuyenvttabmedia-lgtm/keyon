@@ -4,6 +4,7 @@ import { rateLimit } from "@/lib/rate-limit";
 import { defaultSettings, readJsonFile } from "@/server/cms/store";
 import { sendMail } from "@/server/mail";
 import { childLogger } from "@/lib/logger";
+import { notifyLeadTelegram } from "@/server/notify/lead-telegram";
 
 const log = childLogger("contact");
 
@@ -61,6 +62,18 @@ export async function POST(req: Request) {
       html,
       replyTo: body.email,
     });
+
+    void notifyLeadTelegram(
+      [
+        "KEYON — Liên hệ mới",
+        `Chủ đề: ${body.topic}`,
+        `Họ tên: ${body.name}`,
+        `Email: ${body.email}`,
+        `SĐT: ${body.phone || "—"}`,
+        "",
+        body.message.slice(0, 800),
+      ].join("\n"),
+    );
 
     log.info({ to, topic: body.topic }, "contact form mailed");
     return NextResponse.json({ ok: true });
