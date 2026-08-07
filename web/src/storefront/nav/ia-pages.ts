@@ -56,7 +56,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
     primaryCta: { label: "Khám phá sản phẩm", href: "/products?cat=office" },
     secondaryCta: { label: "Tư vấn giải pháp", href: "/contact/sales" },
     related: [
-      { label: "Microsoft", href: "/brands/microsoft" },
+      { label: "Microsoft", href: "/products?q=microsoft" },
       { label: "Giải pháp doanh nghiệp", href: "/business" },
     ],
   },

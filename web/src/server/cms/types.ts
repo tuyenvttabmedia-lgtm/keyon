@@ -412,7 +412,7 @@ export const defaultCmsFooter: CmsFooter = {
       links: [
         { label: "Windows", href: "/products?cat=windows" },
         { label: "Microsoft Office", href: "/products?cat=office" },
-        { label: "Adobe", href: "/brands/adobe" },
+        { label: "Adobe", href: "/products?q=adobe" },
         { label: "Bảo mật", href: "/products?cat=security" },
         { label: "Cloud & Server", href: "/products?cat=cloud" },
         { label: "Tất cả sản phẩm", href: "/products" },

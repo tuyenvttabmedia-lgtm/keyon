@@ -52,9 +52,9 @@ export const SHOP_COLLECTIONS: NavLink[] = [
 ];
 
 export const FEATURED_BRANDS: NavLink[] = [
-  { label: "Microsoft", href: "/brands/microsoft", description: "Windows, Office, Microsoft 365" },
-  { label: "Adobe", href: "/brands/adobe", description: "Sáng tạo, thiết kế và tài liệu" },
-  { label: "Autodesk", href: "/brands/autodesk", description: "Thiết kế, kỹ thuật và xây dựng" },
+  { label: "Microsoft", href: "/products?q=microsoft", description: "Windows, Office, Microsoft 365" },
+  { label: "Adobe", href: "/products?q=adobe", description: "Sáng tạo, thiết kế và tài liệu" },
+  { label: "Autodesk", href: "/products?q=autodesk", description: "Thiết kế, kỹ thuật và xây dựng" },
   { label: "Acronis", href: "/products?q=acronis", description: "Backup và bảo vệ dữ liệu" },
   { label: "Tất cả thương hiệu", href: "/brands" },
 ];
