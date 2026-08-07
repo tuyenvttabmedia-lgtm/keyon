@@ -101,7 +101,8 @@ export type SolutionItem = {
   id: string;
   title: string;
   description: string;
-  art: "bars" | "trend" | "shield" | "stack";
+  href: string;
+  art: "bars" | "trend" | "shield" | "stack" | "cloud" | "backup";
 };
 
 export type NewsItem = {
