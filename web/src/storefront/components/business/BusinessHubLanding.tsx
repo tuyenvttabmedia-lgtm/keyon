@@ -343,7 +343,7 @@ export function BusinessHubLanding() {
         </div>
       </section>
 
-      {/* ── Benefits + shield (mockup: 4 inline items + shield) ─ */}
+      {/* ── Benefits + shield (2×2 + shield, balanced height) ─ */}
       <section className="relative overflow-hidden bg-navy">
         <div
           className="pointer-events-none absolute inset-0"
@@ -353,29 +353,29 @@ export function BusinessHubLanding() {
               "radial-gradient(ellipse 42% 70% at 92% 50%, rgba(14,165,164,0.28), transparent 55%), radial-gradient(ellipse 35% 45% at 8% 85%, rgba(14,165,233,0.08), transparent 50%)",
           }}
         />
-        <div className="home-container relative py-6 md:py-7 lg:py-8">
-          <div className="mt-5 grid items-center gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(160px,0.22fr)] lg:gap-6 xl:gap-8">
+        <div className="home-container relative py-9 md:py-10 lg:py-11">
+          <div className="mt-5 grid min-h-[280px] items-center gap-8 md:min-h-[300px] lg:min-h-[320px] lg:grid-cols-[minmax(0,1fr)_minmax(200px,0.28fr)] lg:gap-10 xl:gap-12">
             <div className="min-w-0">
               <h2 className={`${SECTION_TITLE_CLASS} !text-white`}>KEYON giúp doanh nghiệp</h2>
-              <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4 xl:gap-5">
+              <ul className="mt-7 grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 sm:gap-y-10 lg:mt-8 lg:gap-x-10 lg:gap-y-12">
                 {BENEFITS.map((b) => (
-                  <li key={b.title} className="flex gap-2.5">
+                  <li key={b.title} className="flex gap-3.5">
                     <span
-                      className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center text-accent"
+                      className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-accent/45 text-accent"
                       aria-hidden
                     >
-                      <b.Icon size={22} strokeWidth={1.7} />
+                      <b.Icon size={20} strokeWidth={1.7} />
                     </span>
-                    <div className="min-w-0">
-                      <h3 className={`${CARD_TITLE_CLASS} !text-white`}>{b.title}</h3>
-                      <p className="mt-1 text-[13px] leading-snug text-slate-300">{b.body}</p>
+                    <div className="min-w-0 pt-0.5">
+                      <h3 className={`${CARD_TITLE_CLASS} !text-white text-[15px]`}>{b.title}</h3>
+                      <p className="mt-1.5 text-[13px] leading-relaxed text-slate-300">{b.body}</p>
                     </div>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="relative mx-auto w-full max-w-[168px] lg:mx-0 lg:max-w-none">
+            <div className="relative mx-auto w-full max-w-[200px] lg:mx-0 lg:max-w-[240px]">
               <BusinessShieldArt />
             </div>
           </div>
