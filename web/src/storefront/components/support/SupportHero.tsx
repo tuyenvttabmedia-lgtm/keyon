@@ -9,7 +9,7 @@ import {
   OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
 } from "@/storefront/typography";
-import { ELEVATION_FLOAT, HOVER_LINK_ACCENT } from "@/storefront/effects";
+import { HOVER_LINK_ACCENT } from "@/storefront/effects";
 import { SupportSearch } from "./SupportSearch";
 import { SupportQuickActions } from "./SupportQuickActions";
 import type { SuggestChip, SupportSearchDoc } from "./shared";
@@ -19,7 +19,10 @@ type Props = {
   suggestions: SuggestChip[];
 };
 
-/** Desktop: search-centered hero + secondary flat illustration. Mobile: dedicated compose. */
+/**
+ * Desktop: search-first + quick-access panel (mockup direction).
+ * Mobile: dedicated compose — no illustration.
+ */
 export function SupportHero({ docs, suggestions }: Props) {
   return (
     <section className="relative overflow-x-clip border-b border-border bg-[#F7FAFC]">
@@ -39,39 +42,37 @@ export function SupportHero({ docs, suggestions }: Props) {
         </nav>
 
         {/* Desktop / tablet */}
-        <div className="hidden md:block">
-          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,240px)] lg:gap-10">
-            <div className="min-w-0">
-              <p className={`${OVERLINE_CLASS} tracking-[0.16em] text-accent`}>
-                Trung tâm hỗ trợ
-              </p>
-              <h1 className={`mt-2.5 max-w-[22ch] ${HERO_TITLE_CLASS}`}>
-                Bạn cần KEYON hỗ trợ điều gì?
-              </h1>
-              <p className={`mt-3 max-w-xl ${PAGE_LEAD_CLASS}`}>
-                Tìm hướng dẫn, câu trả lời thường gặp hoặc gửi yêu cầu hỗ trợ cho đội ngũ KEYON.
-              </p>
-              <div className="mt-6 max-w-[680px]">
-                <SupportSearch docs={docs} suggestions={suggestions} size="hero" />
-              </div>
+        <div className="hidden md:grid md:grid-cols-12 md:items-start md:gap-8 lg:gap-10">
+          <div className="min-w-0 md:col-span-7 lg:col-span-8">
+            <p className={`${OVERLINE_CLASS} tracking-[0.16em] text-accent`}>
+              Trung tâm hỗ trợ
+            </p>
+            <h1 className={`mt-2.5 max-w-[22ch] ${HERO_TITLE_CLASS}`}>
+              Bạn cần KEYON hỗ trợ điều gì?
+            </h1>
+            <p className={`mt-3 max-w-xl ${PAGE_LEAD_CLASS}`}>
+              Tìm hướng dẫn, câu trả lời thường gặp hoặc gửi yêu cầu hỗ trợ cho đội ngũ KEYON.
+            </p>
+            <div className="mt-6 max-w-[680px]">
+              <SupportSearch docs={docs} suggestions={suggestions} size="hero" />
             </div>
 
-            <aside
-              className={`mx-auto hidden w-full max-w-[220px] flex-col items-center justify-center p-6 text-center lg:flex ${ELEVATION_FLOAT} rounded-2xl border border-border bg-white`}
+            {/* Secondary flat cue — never larger than search */}
+            <div
+              className="mt-8 hidden max-w-[680px] items-center gap-3 rounded-2xl border border-border bg-white/80 px-4 py-3 lg:flex"
               aria-hidden
             >
-              <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-soft text-accent">
-                <Headphones size={28} strokeWidth={1.6} />
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent">
+                <Headphones size={18} strokeWidth={1.75} />
               </span>
-              <p className="mt-3 text-[13px] font-semibold text-navy">Đội ngũ hỗ trợ KEYON</p>
-              <p className="mt-1 text-[12px] leading-relaxed text-muted">
-                Ưu tiên tự phục vụ — ticket khi cần theo dõi.
+              <p className="text-[13px] leading-snug text-muted">
+                Ưu tiên tìm FAQ / hướng dẫn trước — gửi ticket khi cần theo dõi xử lý.
               </p>
-            </aside>
+            </div>
           </div>
 
-          <div className="mt-8">
-            <SupportQuickActions layout="row" />
+          <div className="min-w-0 md:col-span-5 lg:col-span-4">
+            <SupportQuickActions layout="panel" />
           </div>
         </div>
 

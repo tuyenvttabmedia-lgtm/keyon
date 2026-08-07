@@ -5,10 +5,15 @@ import {
   MessageSquarePlus,
   Ticket,
 } from "lucide-react";
-import { BODY_MUTED_CLASS, CARD_TITLE_CLASS } from "@/storefront/typography";
+import {
+  BODY_MUTED_CLASS,
+  CARD_META_CLASS,
+  CARD_TITLE_CLASS,
+} from "@/storefront/typography";
 import {
   ELEVATION_CARD_HOVER,
   ELEVATION_HAIRLINE,
+  ELEVATION_FLOAT,
   HOVER_LIFT_CARD,
   TRANSITION_PANEL,
 } from "@/storefront/effects";
@@ -50,7 +55,43 @@ const ACTIONS = [
   },
 ] as const;
 
-export function SupportQuickActions({ layout }: { layout: "row" | "stack" }) {
+type Layout = "row" | "stack" | "panel";
+
+/** Quick actions — panel (desktop hero), stack (mobile), row (fallback). */
+export function SupportQuickActions({ layout }: { layout: Layout }) {
+  if (layout === "panel") {
+    return (
+      <div className={`p-4 sm:p-5 ${SURFACE} ${ELEVATION_FLOAT}`}>
+        <p className={`${CARD_META_CLASS} font-semibold uppercase tracking-wide text-accent`}>
+          Truy cập nhanh
+        </p>
+        <ul className="mt-3 divide-y divide-border">
+          {ACTIONS.map(({ title, short, href, Icon }) => (
+            <li key={title}>
+              <Link
+                href={href}
+                className={`flex min-h-[52px] items-center gap-3 py-3 ${TRANSITION_PANEL} hover:text-accent`}
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
+                  <Icon size={16} strokeWidth={1.85} aria-hidden />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className={`block text-[13px] font-semibold text-navy`}>{title}</span>
+                  <span className={`mt-0.5 block text-[12px] leading-snug text-muted`}>
+                    {short}
+                  </span>
+                </span>
+                <span className="shrink-0 text-muted" aria-hidden>
+                  →
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
   if (layout === "stack") {
     return (
       <ul className="space-y-2.5">
