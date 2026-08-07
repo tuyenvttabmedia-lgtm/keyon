@@ -31,6 +31,7 @@ function resolveRequestType(intent?: string, requestType?: string) {
   if (requestType?.trim()) return requestType.trim().toUpperCase();
   if (intent === "volume-quote") return "VOLUME_LICENSING";
   if (intent === "subscription-consult" || intent === "business") return "SUBSCRIPTION";
+  if (intent === "licensing-consult") return "LICENSING_CONSULTING";
   return "GENERAL";
 }
 

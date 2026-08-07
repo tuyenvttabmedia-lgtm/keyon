@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { IaLandingPage } from "@/storefront/components/marketing/IaLanding";
 import { VolumeLicensingLanding } from "@/storefront/components/business/VolumeLicensingLanding";
 import { SubscriptionsLanding } from "@/storefront/components/business/subscriptions/SubscriptionsLanding";
+import { LicensingConsultingLanding } from "@/storefront/components/business/consulting/LicensingConsultingLanding";
 import { BUSINESS_PAGES } from "@/storefront/nav/ia-pages";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
 
@@ -34,6 +35,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         "Theo dõi subscription, thời hạn và chu kỳ gia hạn tập trung — tư vấn phương án phù hợp với doanh nghiệp.",
     };
   }
+  if (slug === "licensing-consulting") {
+    return {
+      ...(await buildMainPageMetadata(`/business/${slug}`)),
+      title: "Tư vấn bản quyền | KEYON",
+      description:
+        "Chưa chắc nên chọn Office, Microsoft 365, Windows hay Security? KEYON hỗ trợ phân tích nhu cầu và tư vấn trước khi mua.",
+    };
+  }
   return {
     ...(await buildMainPageMetadata(`/business/${slug}`)),
     title: `${page.title} | KEYON`,
@@ -50,6 +59,9 @@ export default async function BusinessPage({ params }: Props) {
   }
   if (slug === "subscriptions") {
     return <SubscriptionsLanding />;
+  }
+  if (slug === "licensing-consulting") {
+    return <LicensingConsultingLanding />;
   }
   return <IaLandingPage page={page} hubLabel="Doanh nghiệp" hubHref="/business" />;
 }

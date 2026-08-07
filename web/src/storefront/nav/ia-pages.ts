@@ -157,10 +157,21 @@ export const BUSINESS_PAGES: Record<string, IaPage> = {
     slug: "licensing-consulting",
     kicker: "Doanh nghiệp",
     title: "Tư vấn bản quyền",
-    subtitle: "Chưa chắc nên chọn Office nào, Microsoft 365 nào, Windows hay Security? KEYON hỗ trợ tư vấn trước khi mua.",
-    bullets: ["Tư vấn chọn gói", "Phân biệt perpetual / subscription", "Phù hợp cá nhân, team và doanh nghiệp"],
-    primaryCta: { label: "Liên hệ tư vấn", href: "/contact/sales" },
-    secondaryCta: { label: "Xem giải pháp", href: "/solutions" },
+    subtitle:
+      "Chưa chắc nên chọn Office nào, Microsoft 365 nào, Windows hay Security? KEYON hỗ trợ tư vấn trước khi mua.",
+    bullets: [
+      "Hiểu rõ nhu cầu trước khi chọn sản phẩm",
+      "So sánh các phương án cấp phép",
+      "Hỗ trợ trước khi mua — Mua ngay khi đã chọn",
+    ],
+    primaryCta: {
+      label: "Nhận tư vấn",
+      href: "/business/licensing-consulting#consultation-form",
+    },
+    secondaryCta: {
+      label: "Xem lĩnh vực tư vấn",
+      href: "/business/licensing-consulting#consulting-areas",
+    },
   },
 };
 
