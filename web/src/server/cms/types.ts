@@ -216,6 +216,15 @@ export type CmsProductivity = {
   workSceneImageUrl: string;
 };
 
+/** Landing `/solutions` hub — video giới thiệu hero. */
+export type CmsSolutions = {
+  /**
+   * YouTube / youtu.be / Vimeo URL for hero “Xem video giới thiệu”.
+   * Empty → CTA falls back to Cách KEYON hoạt động.
+   */
+  introVideoUrl: string;
+};
+
 export type CmsFaqCategory = "payment" | "delivery" | "account" | "general";
 
 export type CmsFaqItem = {
@@ -312,6 +321,10 @@ export const defaultCmsProductivity: CmsProductivity = {
   heroImageUrl: "",
   consultImageUrl: "",
   workSceneImageUrl: "",
+};
+
+export const defaultCmsSolutions: CmsSolutions = {
+  introVideoUrl: "",
 };
 
 export const defaultCmsFaq: CmsFaqItem[] = [

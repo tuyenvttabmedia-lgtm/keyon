@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { defaultCmsSolutions, readJsonFile } from "@/server/cms/store";
 import { SolutionsHubLanding } from "@/storefront/components/solutions/SolutionsHubLanding";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
 
@@ -13,10 +14,10 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function SolutionsHubPage() {
+export default async function SolutionsHubPage() {
+  const cmsRaw = await readJsonFile("solutions.json", defaultCmsSolutions);
+  const cms = { ...defaultCmsSolutions, ...cmsRaw };
   return (
-    <SolutionsHubLanding
-      introVideoUrl={process.env.NEXT_PUBLIC_SOLUTIONS_INTRO_VIDEO_URL ?? null}
-    />
+    <SolutionsHubLanding introVideoUrl={cms.introVideoUrl.trim() || null} />
   );
 }

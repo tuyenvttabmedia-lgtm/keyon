@@ -45,7 +45,3 @@ export function toVideoEmbedUrl(raw: string | undefined | null): string | null {
 
   return null;
 }
-
-export function getSolutionsIntroVideoEmbedUrl(): string | null {
-  return toVideoEmbedUrl(process.env.NEXT_PUBLIC_SOLUTIONS_INTRO_VIDEO_URL);
-}

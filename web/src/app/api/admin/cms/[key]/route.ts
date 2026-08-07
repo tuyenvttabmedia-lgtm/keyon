@@ -11,6 +11,7 @@ import {
   defaultBlog,
   defaultCmsBanner,
   defaultCmsProductivity,
+  defaultCmsSolutions,
   defaultCmsFaq,
   defaultCmsFooter,
   defaultCmsHome,
@@ -29,6 +30,7 @@ import {
   type BlogPost,
   type CmsBanner,
   type CmsProductivity,
+  type CmsSolutions,
   type CmsCheckout,
   type CmsAccount,
   type CmsContact,
@@ -111,6 +113,7 @@ const FILES: Record<string, { file: string; fallback: unknown }> = {
   blog: { file: "blog.json", fallback: defaultBlog },
   banner: { file: "banner.json", fallback: defaultCmsBanner },
   productivity: { file: "productivity.json", fallback: defaultCmsProductivity },
+  solutions: { file: "solutions.json", fallback: defaultCmsSolutions },
   faq: { file: "faq.json", fallback: defaultCmsFaq },
   footer: { file: "footer.json", fallback: defaultCmsFooter },
   nav: { file: "nav.json", fallback: defaultCmsNav },
@@ -262,6 +265,33 @@ export async function PUT(
           String(body?.workSceneImageUrl ?? ""),
       }) satisfies CmsProductivity;
     await writeJsonFile("productivity.json", data);
+    return NextResponse.json({ ok: true, data });
+  }
+  if (key === "solutions") {
+    const data = z
+      .object({
+        introVideoUrl: z
+          .string()
+          .max(2000)
+          .refine(
+            (v) => {
+              const t = v.trim();
+              if (!t) return true;
+              try {
+                const u = new URL(t);
+                return /^https?:$/i.test(u.protocol);
+              } catch {
+                return false;
+              }
+            },
+            "URL video phải để trống hoặc là https hợp lệ",
+          ),
+      })
+      .parse({
+        introVideoUrl:
+          typeof body?.introVideoUrl === "string" ? body.introVideoUrl.trim() : "",
+      }) satisfies CmsSolutions;
+    await writeJsonFile("solutions.json", data);
     return NextResponse.json({ ok: true, data });
   }
   if (key === "faq") {
