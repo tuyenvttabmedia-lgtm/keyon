@@ -7,14 +7,15 @@ import {
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
 } from "@/storefront/typography";
+import { SUB_CONSULT_HREF, SECTION_PAD } from "./shared";
 import {
+  ELEVATION_CARD_HOVER,
   ELEVATION_CTA_HOVER,
   ELEVATION_HAIRLINE,
   HOVER_LIFT_CARD,
   TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
-import { SUB_CONSULT_HREF } from "./shared";
 
 const OPTIONS = [
   {
@@ -36,7 +37,7 @@ const OPTIONS = [
 
 export function RenewalDecision() {
   return (
-    <section className="border-y border-border bg-[#F7FAFC] py-10 md:py-12 lg:py-14">
+    <section className={`border-t border-border bg-[#F7FAFC] ${SECTION_PAD}`}>
       <div className="home-container">
         <div className="grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-10">
           <div className="min-w-0 lg:col-span-5">
@@ -57,7 +58,7 @@ export function RenewalDecision() {
             {OPTIONS.map(({ title, body, Icon }) => (
               <article
                 key={title}
-                className={`rounded-2xl border border-border bg-white p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD}`}
+                className={`rounded-2xl border border-border bg-white p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
               >
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-soft text-accent">
                   <Icon size={18} strokeWidth={1.85} aria-hidden />

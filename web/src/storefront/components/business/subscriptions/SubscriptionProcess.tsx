@@ -13,6 +13,7 @@ import {
   TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
+import { SECTION_PAD } from "./shared";
 
 const STEPS = [
   {
@@ -58,7 +59,7 @@ export function SubscriptionProcess() {
   const current = STEPS[active]!;
 
   return (
-    <section className="border-t border-border bg-[#F4F8FB] py-10 md:py-12 lg:py-14">
+    <section className={`border-t border-border bg-[#F4F8FB] ${SECTION_PAD}`}>
       <div className="home-container">
         <header className="max-w-2xl">
           <h2 className={SECTION_TITLE_CLASS}>Quy trình quản lý subscription</h2>
@@ -67,7 +68,7 @@ export function SubscriptionProcess() {
           </p>
         </header>
 
-        <div className="mt-9 grid gap-8 lg:grid-cols-12 lg:gap-10">
+        <div className="mt-8 grid gap-8 md:mt-9 lg:grid-cols-12 lg:gap-10">
           <ol className="relative space-y-0 lg:col-span-5">
             <div
               className="pointer-events-none absolute bottom-4 left-[15px] top-4 w-px bg-border"

@@ -12,8 +12,8 @@ import {
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
 } from "@/storefront/typography";
-import { ELEVATION_FLOAT, ELEVATION_HAIRLINE } from "@/storefront/effects";
-import { SAMPLE_SUBSCRIPTIONS } from "./shared";
+import { ELEVATION_CARD_HOVER, ELEVATION_FLOAT, ELEVATION_HAIRLINE, HOVER_LIFT_CARD, TRANSITION_PANEL } from "@/storefront/effects";
+import { SAMPLE_SUBSCRIPTIONS, SECTION_PAD } from "./shared";
 
 const POINTS = [
   { title: "Tổng quan subscription", Icon: LayoutDashboard },
@@ -24,7 +24,7 @@ const POINTS = [
 
 export function SubscriptionControlCenter() {
   return (
-    <section className="border-y border-border bg-[#F4F8FB] py-10 md:py-12 lg:py-14">
+    <section className={`border-t border-border bg-[#F4F8FB] ${SECTION_PAD}`}>
       <div className="home-container">
         <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-10">
           <div className="min-w-0 lg:col-span-5">
@@ -40,7 +40,7 @@ export function SubscriptionControlCenter() {
               {POINTS.map(({ title, Icon }) => (
                 <li
                   key={title}
-                  className={`flex items-center gap-3 rounded-xl border border-border bg-white px-3.5 py-3 ${ELEVATION_HAIRLINE}`}
+                  className={`flex items-center gap-3 rounded-xl border border-border bg-white px-3.5 py-3 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
                 >
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
                     <Icon size={16} strokeWidth={1.85} aria-hidden />

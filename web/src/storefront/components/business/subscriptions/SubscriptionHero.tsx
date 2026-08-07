@@ -6,7 +6,6 @@ import {
   BREADCRUMB_CURRENT_CLASS,
   CTA_LABEL_CLASS,
   HERO_TITLE_CLASS,
-  OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
 } from "@/storefront/typography";
 import {
@@ -44,7 +43,7 @@ export function SubscriptionHero() {
         aria-hidden
       />
       <div className="home-container relative py-8 md:py-10 lg:py-11">
-        <nav className={`mb-6 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
+        <nav className={`mb-5 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
           <Link href="/" className={HOVER_LINK_ACCENT}>
             Trang chủ
           </Link>
@@ -62,10 +61,7 @@ export function SubscriptionHero() {
 
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.46fr)_minmax(0,0.54fr)] lg:gap-10 xl:gap-12">
           <div className="min-w-0 max-w-[540px]">
-            <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
-              Subscription &amp; Gia hạn
-            </p>
-            <h1 className={`mt-3 max-w-[20ch] ${HERO_TITLE_CLASS}`}>
+            <h1 className={`max-w-[20ch] ${HERO_TITLE_CLASS}`}>
               Theo dõi subscription và chủ động mỗi kỳ gia hạn
             </h1>
             <p className={`mt-3.5 ${PAGE_LEAD_CLASS}`}>

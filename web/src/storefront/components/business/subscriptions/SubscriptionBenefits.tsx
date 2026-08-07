@@ -3,6 +3,7 @@ import {
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
 } from "@/storefront/typography";
+import { SECTION_PAD } from "./shared";
 
 const BENEFITS = [
   {
@@ -26,7 +27,7 @@ const BENEFITS = [
 /** Editorial split — not a 4-card grid. */
 export function SubscriptionBenefits() {
   return (
-    <section className="bg-white py-10 md:py-12 lg:py-14">
+    <section className={`bg-white ${SECTION_PAD}`}>
       <div className="home-container">
         <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
           <div className="min-w-0 lg:col-span-5">

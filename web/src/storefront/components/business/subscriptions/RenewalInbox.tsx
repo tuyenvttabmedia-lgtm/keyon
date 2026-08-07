@@ -7,12 +7,14 @@ import {
   SECTION_TITLE_CLASS,
 } from "@/storefront/typography";
 import {
+  ELEVATION_CARD_HOVER,
+  ELEVATION_CTA_HOVER,
   ELEVATION_HAIRLINE,
   HOVER_LIFT_CARD,
   TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
-import { SUB_CONSULT_HREF } from "./shared";
+import { CARD_SURFACE, SECTION_PAD, SUB_CONSULT_HREF } from "./shared";
 
 const ROWS = [
   {
@@ -43,24 +45,24 @@ const ROWS = [
 
 export function RenewalInbox() {
   return (
-    <section className="bg-white py-10 md:py-12 lg:py-14">
+    <section className={`bg-white ${SECTION_PAD}`}>
       <div className="home-container">
-        <header className="mx-auto max-w-2xl text-center">
+        <header className="max-w-3xl">
           <h2 className={SECTION_TITLE_CLASS}>Biết việc gì cần xử lý trước kỳ gia hạn</h2>
           <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
             Hàng đợi gia hạn dạng inbox — ưu tiên việc cần xem xét trước mốc quan trọng.
           </p>
         </header>
 
-        <ul className="mx-auto mt-9 max-w-3xl space-y-3">
+        <ul className="mt-8 space-y-3 md:mt-9">
           {ROWS.map((row) => (
             <li
               key={row.name}
-              className={`flex flex-col gap-3 rounded-2xl border border-border bg-white p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD}`}
+              className={`flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-5 sm:px-5 sm:py-4 ${CARD_SURFACE} ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
             >
-              <div className="flex min-w-0 items-start gap-3">
+              <div className="flex min-w-0 items-center gap-3.5">
                 <span
-                  className={`mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${row.tone}`}
+                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${row.tone}`}
                 >
                   <row.Icon size={18} strokeWidth={1.85} aria-hidden />
                 </span>
@@ -71,13 +73,13 @@ export function RenewalInbox() {
               </div>
               <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end">
                 <span
-                  className={`inline-flex h-10 items-center justify-center rounded-xl border border-border px-3.5 text-[13px] font-semibold text-navy ${TRANSITION_UI}`}
+                  className={`inline-flex h-10 items-center justify-center rounded-xl border border-border px-3.5 text-[13px] font-semibold text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
                   Xem chi tiết
                 </span>
                 <Link
                   href={SUB_CONSULT_HREF}
-                  className={`inline-flex h-10 items-center justify-center rounded-xl bg-accent px-3.5 text-[13px] font-semibold text-white ${TRANSITION_UI} hover:bg-accent-hover`}
+                  className={`inline-flex h-10 items-center justify-center rounded-xl bg-accent px-3.5 text-[13px] font-semibold text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
                   Yêu cầu tư vấn
                 </Link>

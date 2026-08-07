@@ -12,7 +12,13 @@ import {
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
 } from "@/storefront/typography";
-import { ELEVATION_HAIRLINE, TRANSITION_UI } from "@/storefront/effects";
+import {
+  ELEVATION_CARD_HOVER,
+  ELEVATION_HAIRLINE,
+  HOVER_LIFT_CARD,
+  TRANSITION_PANEL,
+} from "@/storefront/effects";
+import { SECTION_PAD } from "./shared";
 
 const STEPS: { title: string; body: string; Icon: LucideIcon }[] = [
   { title: "Kích hoạt", body: "Ghi nhận subscription mới vào hệ thống.", Icon: Rocket },
@@ -24,33 +30,33 @@ const STEPS: { title: string; body: string; Icon: LucideIcon }[] = [
 
 /** Horizontal lifecycle — visual signature for this landing. */
 export function LifecycleTimeline() {
-  const active = 3; // "Sắp gia hạn" — teal accent on current state
+  const active = 3;
 
   return (
-    <section className="bg-white py-10 md:py-12 lg:py-14">
+    <section className={`bg-white ${SECTION_PAD}`}>
       <div className="home-container">
         <header className="mx-auto max-w-2xl text-center">
           <h2 className={SECTION_TITLE_CLASS}>Một subscription, một vòng đời rõ ràng</h2>
           <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-            Từ kích hoạt đến gia hạn — từng giai thái nối tiếp, dễ theo dõi.
+            Từ kích hoạt đến gia hạn — từng trạng thái nối tiếp, dễ theo dõi.
           </p>
         </header>
 
-        <div className="relative mt-10">
+        <div className="relative mt-8 md:mt-9">
           <div
             className="pointer-events-none absolute left-[8%] right-[8%] top-[1.65rem] z-0 hidden h-0.5 bg-gradient-to-r from-border via-accent/40 to-border lg:block"
             aria-hidden
           />
-          <ol className="relative z-[1] grid gap-5 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3">
+          <ol className="relative z-[1] grid gap-4 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3">
             {STEPS.map((step, i) => {
               const isActive = i === active;
               return (
                 <li
                   key={step.title}
-                  className={`flex flex-col items-center rounded-2xl border px-3 py-4 text-center ${TRANSITION_UI} ${
+                  className={`flex flex-col items-center rounded-2xl border px-3 py-4 text-center ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} ${
                     isActive
                       ? "border-accent bg-accent-soft/40 ring-1 ring-accent/20"
-                      : `border-border bg-white ${ELEVATION_HAIRLINE}`
+                      : `border-border bg-white ${ELEVATION_HAIRLINE} hover:border-accent/35`
                   }`}
                 >
                   <span

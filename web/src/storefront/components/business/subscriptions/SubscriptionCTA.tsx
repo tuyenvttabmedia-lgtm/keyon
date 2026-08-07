@@ -10,12 +10,12 @@ import {
   ELEVATION_HAIRLINE,
   TRANSITION_UI,
 } from "@/storefront/effects";
-import { SUB_BUSINESS_HREF, SUB_CONSULT_HREF } from "./shared";
+import { SECTION_PAD, SUB_BUSINESS_HREF, SUB_CONSULT_HREF } from "./shared";
 
 /** White command panel on teal-tinted ground — not purple/navy volume banner. */
 export function SubscriptionCTA() {
   return (
-    <section className="bg-[#Eef7f7] py-10 md:py-12 lg:py-14">
+    <section className={`border-t border-border bg-[#Eef7f7] ${SECTION_PAD}`}>
       <div className="home-container">
         <div
           className={`rounded-2xl border border-border bg-white px-5 py-8 sm:px-8 md:px-10 md:py-10 ${ELEVATION_HAIRLINE}`}
