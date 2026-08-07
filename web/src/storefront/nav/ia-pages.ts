@@ -133,7 +133,7 @@ export const BUSINESS_PAGES: Record<string, IaPage> = {
       "Báo giá theo sản phẩm và số lượng",
       "Hỗ trợ triển khai và quản lý tập trung",
     ],
-    primaryCta: { label: "Nhận báo giá", href: "/contact/sales?intent=volume-quote" },
+    primaryCta: { label: "Nhận báo giá", href: "/contact/quote?intent=volume-quote" },
     secondaryCta: { label: "Tư vấn giải pháp", href: "/business/licensing-consulting" },
   },
   subscriptions: {

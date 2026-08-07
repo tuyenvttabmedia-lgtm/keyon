@@ -565,3 +565,42 @@ model UserNotification {
   @@index([userId, createdAt])
   @@index([userId, readAt])
 }
+
+enum QuoteRequestStatus {
+  NEW
+  IN_REVIEW
+  QUOTED
+  CLOSED
+  SPAM
+}
+
+/// Anonymous / guest enterprise quote request (not an Order)
+model QuoteRequest {
+  id                   String             @id @default(cuid())
+  /// Public reference shown to customer, e.g. QT-A1B2C3D4
+  referenceCode        String             @unique
+  status               QuoteRequestStatus @default(NEW)
+  requestType          String             @default("GENERAL")
+  fullName             String
+  email                String
+  phone                String
+  companyName          String
+  jobTitle             String?
+  /// Product slugs / free-text labels (JSON string[])
+  interestedProducts   Json               @default("[]")
+  estimatedUsers       String
+  estimatedUsersOther  Int?
+  licenseType          String             @default("UNDECIDED")
+  term                 String             @default("UNDECIDED")
+  message              String?
+  privacyAcceptedAt    DateTime
+  sourcePath           String?
+  ipHash               String?
+  userAgent            String?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  @@index([status, createdAt])
+  @@index([email, createdAt])
+  @@index([requestType, createdAt])
+}

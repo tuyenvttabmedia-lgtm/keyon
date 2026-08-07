@@ -173,7 +173,7 @@ function quoteHref(volume: VolumeId) {
     intent: "volume-quote",
     estimatedUsers: volume,
   });
-  return `/contact/sales?${q.toString()}`;
+  return `/contact/quote?${q.toString()}`;
 }
 
 export function VolumeLicensingLanding() {

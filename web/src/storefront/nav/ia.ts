@@ -145,7 +145,7 @@ export const IA_PRIMARY_NAV: PrimaryNavItem[] = [
           },
           {
             label: "Liên hệ kinh doanh",
-            href: "/contact/sales",
+            href: "/contact/quote",
             description: "CTA tư vấn B2B",
           },
         ],

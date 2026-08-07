@@ -1,23 +1,19 @@
-import type { Metadata } from "next";
-import { SalesQuoteForm } from "@/storefront/components/business/SalesQuoteForm";
-import { buildMainPageMetadata } from "@/server/seo/metadata";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    ...(await buildMainPageMetadata("/contact/sales")),
-    title: "Liên hệ kinh doanh | KEYON",
-    description:
-      "Tư vấn bản quyền doanh nghiệp, volume licensing và yêu cầu báo giá KEYON.",
-  };
-}
-
 type Props = {
-  searchParams: Promise<{ estimatedUsers?: string; intent?: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-export default async function ContactSalesPage({ searchParams }: Props) {
+/** Legacy sales quote URL → canonical /contact/quote */
+export default async function ContactSalesRedirect({ searchParams }: Props) {
   const sp = await searchParams;
-  return <SalesQuoteForm initialUsers={sp.estimatedUsers} />;
+  const q = new URLSearchParams();
+  for (const [key, value] of Object.entries(sp)) {
+    if (typeof value === "string" && value) q.set(key, value);
+    else if (Array.isArray(value) && value[0]) q.set(key, value[0]);
+  }
+  const qs = q.toString();
+  redirect(qs ? `/contact/quote?${qs}` : "/contact/quote");
 }
