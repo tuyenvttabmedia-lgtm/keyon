@@ -12,7 +12,6 @@ import {
   BREADCRUMB_CURRENT_CLASS,
   CTA_LABEL_CLASS,
   HERO_TITLE_CLASS,
-  OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
 } from "@/storefront/typography";
 import {
@@ -68,10 +67,7 @@ export function ConsultingHero() {
 
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] lg:gap-10 xl:gap-12">
           <div className="min-w-0">
-            <p className={`${OVERLINE_CLASS} tracking-[0.16em] text-accent`}>
-              Tư vấn bản quyền
-            </p>
-            <h1 className={`mt-2.5 max-w-[18ch] ${HERO_TITLE_CLASS}`}>
+            <h1 className={`max-w-[18ch] ${HERO_TITLE_CLASS}`}>
               Chọn đúng bản quyền cho nhu cầu của bạn
             </h1>
             <p className={`mt-3.5 max-w-xl ${PAGE_LEAD_CLASS}`}>

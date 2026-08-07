@@ -183,16 +183,14 @@ export function ConsultationForm() {
   return (
     <section id={FORM_ID} className={`scroll-mt-24 border-t border-border bg-white ${SECTION_PAD}`}>
       <div className="home-container">
-        <div className="grid items-start gap-8 lg:grid-cols-12 lg:gap-10">
-          <header className="min-w-0 lg:col-span-5 lg:sticky lg:top-24">
-            <h2 className={SECTION_TITLE_CLASS}>Mô tả nhu cầu của bạn</h2>
-            <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Không cần đăng nhập hay thanh toán — KEYON sẽ liên hệ tư vấn dựa trên thông tin bạn
-              gửi.
-            </p>
-          </header>
+        <header className="max-w-2xl">
+          <h2 className={SECTION_TITLE_CLASS}>Mô tả nhu cầu của bạn</h2>
+          <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
+            Không cần đăng nhập hay thanh toán — KEYON sẽ liên hệ tư vấn dựa trên thông tin bạn gửi.
+          </p>
+        </header>
 
-          <div className="min-w-0 lg:col-span-7">
+        <div className="mt-8 md:mt-9">
           {submitted ? (
             <div
               className={`rounded-2xl border border-accent/25 bg-accent-soft/40 p-6 ${ELEVATION_FLOAT}`}
@@ -216,7 +214,7 @@ export function ConsultationForm() {
           ) : (
             <form
               onSubmit={onSubmit}
-              className={`space-y-4 rounded-2xl border border-border bg-[#F7FAFC] p-5 sm:p-6 ${ELEVATION_FLOAT}`}
+              className={`space-y-4 rounded-2xl border border-border bg-[#F7FAFC] p-5 sm:p-6 md:p-7 ${ELEVATION_FLOAT}`}
               noValidate
             >
               <div className="grid gap-4 sm:grid-cols-2">
@@ -387,7 +385,6 @@ export function ConsultationForm() {
               </button>
             </form>
           )}
-          </div>
         </div>
       </div>
     </section>
