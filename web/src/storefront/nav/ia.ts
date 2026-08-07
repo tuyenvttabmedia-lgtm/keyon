@@ -177,7 +177,6 @@ export const IA_PRIMARY_NAV: PrimaryNavItem[] = [
     kind: "dropdown",
     links: [
       { label: "Trung tâm hỗ trợ", href: "/support" },
-      { label: "Hướng dẫn sử dụng", href: "/resources/guides" },
       { label: "Gửi yêu cầu hỗ trợ", href: "/account/tickets" },
       { label: "Liên hệ", href: "/contact" },
     ],
