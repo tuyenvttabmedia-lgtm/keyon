@@ -32,6 +32,7 @@ import {
   OPACITY_DISABLED,
   TRANSITION_UI,
 } from "@/storefront/effects";
+import { isPlaceholderHotline } from "@/storefront/components/support/shared";
 
 export type CheckoutOrderInfo = {
   id: string;
@@ -249,7 +250,7 @@ export function CheckoutSummaryAside({
           <a href={`mailto:${supportEmail}`} className={LINK_ACCENT_CLASS}>
             {cms.supportEmailLabel}: {supportEmail}
           </a>
-          {cms.supportPhone ? (
+          {cms.supportPhone.trim() && !isPlaceholderHotline(cms.supportPhone) ? (
             <a
               href={`tel:${cms.supportPhone.replace(/\s/g, "")}`}
               className={CTA_PRIMARY}

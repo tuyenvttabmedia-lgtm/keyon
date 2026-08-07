@@ -45,6 +45,7 @@ import {
   TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
+import { SolutionFinalCta } from "./SolutionFinalCta";
 
 export type BackupBrand = "acronis" | "aomei" | "veeam" | "microsoft" | "generic";
 
@@ -66,7 +67,6 @@ type BackupTabId = "endpoint" | "server" | "cloud" | "saas" | "dr";
 
 type Props = {
   featured: BackupFeaturedProduct[];
-  usingFallback?: boolean;
 };
 
 const ICON_SM = { size: 18, strokeWidth: 1.85, "aria-hidden": true as const };
@@ -161,56 +161,7 @@ const FLOW: { title: string; body: string; Icon: LucideIcon; highlight?: boolean
   },
 ];
 
-export const BACKUP_FALLBACK_FEATURED: BackupFeaturedProduct[] = [
-  {
-    id: "fb-acronis",
-    title: "Acronis Cyber Protect Home",
-    href: "/products?q=acronis",
-    brandLabel: "Acronis",
-    meta: "1 Device · 1 Year",
-    priceLabel: "1.290.000 đ / năm",
-    priceHint: "Giá tham khảo",
-    features: ["Backup + antivirus", "Khôi phục image", "Chống ransomware"],
-    brand: "acronis",
-    tabs: ["endpoint", "dr"],
-  },
-  {
-    id: "fb-aomei",
-    title: "AOMEI Backupper Professional",
-    href: "/products?q=aomei",
-    brandLabel: "AOMEI",
-    meta: "1 Device · Perpetual",
-    priceLabel: "990.000 đ",
-    priceHint: "Giá tham khảo",
-    features: ["Backup hệ thống", "Lịch tự động", "Khôi phục linh hoạt"],
-    brand: "aomei",
-    tabs: ["endpoint", "server"],
-  },
-  {
-    id: "fb-veeam",
-    title: "Veeam Backup & Replication",
-    href: "/products?q=veeam",
-    brandLabel: "Veeam",
-    meta: "Subscription · theo gói",
-    priceLabel: "Liên hệ",
-    features: ["Backup server / VM", "Replication", "Khôi phục nhanh"],
-    brand: "veeam",
-    tabs: ["server", "cloud", "dr"],
-  },
-  {
-    id: "fb-m365-backup",
-    title: "Microsoft 365 Backup",
-    href: "/products?q=microsoft+365+backup",
-    brandLabel: "Microsoft",
-    meta: "SaaS · theo người dùng",
-    priceLabel: "Liên hệ",
-    features: ["Exchange / OneDrive", "SharePoint / Teams", "Khôi phục theo điểm"],
-    brand: "microsoft",
-    tabs: ["saas", "cloud"],
-  },
-];
-
-export function BackupSolutionLanding({ featured, usingFallback }: Props) {
+export function BackupSolutionLanding({ featured }: Props) {
   const [tab, setTab] = useState<BackupTabId>("endpoint");
   const showFeatured = featured.length > 0;
 
@@ -339,11 +290,6 @@ export function BackupSolutionLanding({ featured, usingFallback }: Props) {
           <header className="mb-5 flex flex-wrap items-end justify-between gap-3">
             <div>
               <h2 className={SECTION_TITLE_CLASS}>Giải pháp Backup phù hợp với bạn</h2>
-              {usingFallback ? (
-                <p className={`mt-1 ${SECTION_LEAD_CLASS}`}>
-                  Giá tham khảo — xác nhận khi xem chi tiết hoặc tư vấn.
-                </p>
-              ) : null}
             </div>
             <Link href="/products?q=backup" className={LINK_ACCENT_CLASS}>
               Xem tất cả sản phẩm →
@@ -503,42 +449,14 @@ export function BackupSolutionLanding({ featured, usingFallback }: Props) {
         </div>
       </section>
 
-      {/* ── CTA ──────────────────────────────────────────────── */}
-      <section className="pb-9 md:pb-11">
-        <div className="home-container">
-          <div className="relative overflow-hidden rounded-2xl bg-navy px-5 py-8 sm:px-8 sm:py-9 lg:px-10">
-            <div
-              className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_85%_30%,rgba(14,165,164,0.2),transparent_45%)]"
-              aria-hidden
-            />
-            <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
-              <div className="max-w-xl">
-                <h2 className={`${SECTION_TITLE_CLASS} text-white`}>
-                  Đừng để mất dữ liệu mới bắt đầu sao lưu.
-                </h2>
-                <p className="mt-2 text-sm leading-relaxed text-slate-300 md:text-[15px]">
-                  Chọn gói backup phù hợp hôm nay — kích hoạt nhanh, khôi phục khi cần.
-                </p>
-              </div>
-              <div className="flex w-full shrink-0 flex-col gap-3 sm:w-auto sm:flex-row">
-                <Link
-                  href="/products?q=backup"
-                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:bg-white/95`}
-                >
-                  Khám phá giải pháp →
-                </Link>
-                <Link
-                  href="/contact/quote"
-                  className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-white/35 bg-transparent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:text-accent`}
-                >
-                  <Headphones {...ICON_SM} />
-                  Liên hệ tư vấn
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <SolutionFinalCta
+        title="Đừng để mất dữ liệu mới bắt đầu sao lưu."
+        subtitle="Chọn gói backup phù hợp hôm nay — kích hoạt nhanh, khôi phục khi cần."
+        primaryHref="/contact/quote"
+        primaryLabel="Liên hệ tư vấn →"
+        secondaryHref="/products?q=backup"
+        secondaryLabel="Khám phá giải pháp →"
+      />
     </div>
   );
 }

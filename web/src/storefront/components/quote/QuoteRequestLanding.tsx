@@ -41,6 +41,7 @@ import {
   TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
+import { isPlaceholderHotline } from "@/storefront/components/support/shared";
 import {
   ESTIMATED_USERS,
   ESTIMATED_USERS_LABEL,
@@ -154,6 +155,9 @@ export function QuoteRequestLanding({
   initial: QuoteInitial;
 }) {
   const mapped = mapEstimatedUsers(initial.estimatedUsers);
+  const showHotline =
+    Boolean(contact.hotlineValue?.trim()) &&
+    !isPlaceholderHotline(contact.hotlineValue!);
   const prefillProduct = useMemo(() => {
     if (!initial.productSlug) return null;
     return products.find((p) => p.slug === initial.productSlug) ?? null;
@@ -856,7 +860,7 @@ export function QuoteRequestLanding({
               </ul>
             </div>
 
-            {(contact.hotlineValue || contact.emailValue || contact.mapAddress) && (
+            {(showHotline || contact.emailValue || contact.mapAddress) && (
               <div className={`rounded-2xl border border-border bg-[#F7FAFC] p-5 ${ELEVATION_HAIRLINE}`}>
                 <h2 className={CARD_TITLE_CLASS}>Liên hệ trực tiếp</h2>
                 <ul className="mt-4 space-y-3 text-[13px] text-navy">
@@ -866,11 +870,11 @@ export function QuoteRequestLanding({
                       {contact.hoursValue}
                     </li>
                   ) : null}
-                  {contact.hotlineValue ? (
+                  {showHotline ? (
                     <li>
                       <span className="font-semibold">Hotline: </span>
                       <a
-                        href={`tel:${contact.hotlineValue.replace(/\s/g, "")}`}
+                        href={`tel:${contact.hotlineValue!.replace(/\s/g, "")}`}
                         className="text-accent hover:underline"
                       >
                         {contact.hotlineValue}

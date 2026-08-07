@@ -25,6 +25,7 @@ import {
   OPACITY_DISABLED_BUSY,
   TRANSITION_UI,
 } from "@/storefront/effects";
+import { isPlaceholderHotline } from "@/storefront/components/support/shared";
 
 const INPUT =
   `h-11 w-full rounded-xl border border-border bg-surface pl-10 pr-3 ${INPUT_TEXT_CLASS} outline-none ${TRANSITION_UI} focus:border-accent focus:bg-white`;
@@ -132,19 +133,21 @@ export function ContactView({ cms }: { cms: CmsContact }) {
                 {cms.infoLead}
               </p>
               <ul className="mt-7 space-y-5">
-                <InfoRow
-                  icon={<PhoneIcon />}
-                  label={cms.hotlineLabel}
-                  value={
-                    <a
-                      href={`tel:${cms.hotlineValue.replace(/\s/g, "")}`}
-                      className={`${TRANSITION_UI} hover:text-accent`}
-                    >
-                      {cms.hotlineValue}
-                    </a>
-                  }
-                  hint={cms.hotlineHint}
-                />
+                {cms.hotlineValue.trim() && !isPlaceholderHotline(cms.hotlineValue) ? (
+                  <InfoRow
+                    icon={<PhoneIcon />}
+                    label={cms.hotlineLabel}
+                    value={
+                      <a
+                        href={`tel:${cms.hotlineValue.replace(/\s/g, "")}`}
+                        className={`${TRANSITION_UI} hover:text-accent`}
+                      >
+                        {cms.hotlineValue}
+                      </a>
+                    }
+                    hint={cms.hotlineHint}
+                  />
+                ) : null}
                 <InfoRow
                   icon={<MailIcon />}
                   label={cms.emailLabel}

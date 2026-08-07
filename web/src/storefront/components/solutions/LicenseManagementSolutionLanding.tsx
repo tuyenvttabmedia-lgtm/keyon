@@ -40,6 +40,7 @@ import {
   TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
+import { SolutionFinalCta } from "./SolutionFinalCta";
 
 const ICON_SM = { size: 18, strokeWidth: 1.85, "aria-hidden": true as const };
 
@@ -160,13 +161,6 @@ const BRANDS: {
     href: "/products?q=autodesk",
   },
 ];
-
-const CTA_PERKS = [
-  "Theo dõi license sau khi mua",
-  "Thiết lập nhanh trong 5 phút",
-  "Hỗ trợ chuyên gia 1:1",
-  "Dữ liệu tài khoản được bảo vệ",
-] as const;
 
 export function LicenseManagementSolutionLanding() {
   return (
@@ -382,61 +376,14 @@ export function LicenseManagementSolutionLanding() {
       </section>
 
       {/* ── CTA ──────────────────────────────────────────────── */}
-      <section className="pb-9 md:pb-11">
-        <div className="home-container">
-          <div className="relative overflow-hidden rounded-2xl bg-accent px-5 py-8 sm:px-8 sm:py-9 lg:px-10">
-            <div
-              className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_15%_50%,rgba(255,255,255,0.14),transparent_40%),radial-gradient(ellipse_at_90%_20%,rgba(11,31,51,0.18),transparent_45%)]"
-              aria-hidden
-            />
-
-            <div className="relative grid items-center gap-8 lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:gap-10">
-              <div className="mx-auto hidden w-[120px] shrink-0 lg:block" aria-hidden>
-                <CtaShieldArt />
-              </div>
-
-              <div className="min-w-0 text-center lg:text-left">
-                <h2 className={`${SECTION_TITLE_CLASS} text-white`}>
-                  Sẵn sàng kiểm soát bản quyền hiệu quả hơn?
-                </h2>
-                <p className="mt-2 text-sm leading-relaxed text-white/85 md:text-[15px]">
-                  Tối ưu chi phí, giảm rủi ro hết hạn và nắm rõ toàn bộ license trên một
-                  nền tảng KEYON.
-                </p>
-                <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
-                  <Link
-                    href="/register"
-                    className={`inline-flex h-12 items-center justify-center rounded-xl bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:bg-white/95`}
-                  >
-                    Mở Tài khoản KEYON →
-                  </Link>
-                  <Link
-                    href="/contact/quote"
-                    className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-white/50 bg-transparent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:border-white hover:bg-white/10`}
-                  >
-                    <Headphones {...ICON_SM} />
-                    Liên hệ tư vấn
-                  </Link>
-                </div>
-              </div>
-
-              <ul className="mx-auto w-full max-w-xs space-y-2.5 lg:mx-0">
-                {CTA_PERKS.map((item) => (
-                  <li key={item} className="flex items-center gap-2.5 text-white">
-                    <span
-                      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/20"
-                      aria-hidden
-                    >
-                      <Check size={14} strokeWidth={2.6} />
-                    </span>
-                    <span className="text-sm font-medium leading-snug">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
+      <SolutionFinalCta
+        title="Sẵn sàng kiểm soát bản quyền hiệu quả hơn?"
+        subtitle="Tối ưu chi phí, giảm rủi ro hết hạn và nắm rõ toàn bộ license trên một nền tảng KEYON."
+        primaryHref="/contact/quote"
+        primaryLabel="Liên hệ tư vấn →"
+        secondaryHref="/register"
+        secondaryLabel="Mở Tài khoản KEYON →"
+      />
     </div>
   );
 }
@@ -694,42 +641,6 @@ function LicenseMgmtHeroArt() {
           </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-function CtaShieldArt() {
-  return (
-    <div className="relative mx-auto aspect-square w-full">
-      <span
-        className="pointer-events-none absolute inset-[18%] rounded-full bg-white/20 blur-xl"
-        aria-hidden
-      />
-      <svg viewBox="0 0 120 120" className="relative h-full w-full drop-shadow-[0_12px_28px_rgba(11,31,51,0.25)]" aria-hidden>
-        <defs>
-          <linearGradient id="lmShield" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-            <stop offset="100%" stopColor="#ccfbf1" stopOpacity="0.85" />
-          </linearGradient>
-        </defs>
-        <path
-          d="M60 10 22 28v30c0 28 18 52 38 60 20-8 38-32 38-60V28L60 10Z"
-          fill="url(#lmShield)"
-          stroke="rgba(255,255,255,0.55)"
-          strokeWidth="2"
-        />
-        <circle cx="60" cy="58" r="18" fill="#0b1f33" />
-        <path
-          d="M52 58.5 57.2 63.5 69 50.5"
-          fill="none"
-          stroke="#5eead4"
-          strokeWidth="3.2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <circle cx="94" cy="28" r="3" fill="#ffffff" opacity="0.85" />
-        <circle cx="28" cy="36" r="2" fill="#ffffff" opacity="0.55" />
-      </svg>
     </div>
   );
 }

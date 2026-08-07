@@ -46,6 +46,7 @@ import {
   TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
+import { SolutionFinalCta } from "./SolutionFinalCta";
 
 export type LicensingBrand =
   | "windows"
@@ -67,7 +68,6 @@ export type LicensingFeaturedProduct = {
 
 type Props = {
   featured: LicensingFeaturedProduct[];
-  usingFallback?: boolean;
 };
 
 type AudienceId = "personal" | "team" | "business" | "org";
@@ -369,64 +369,8 @@ const TRUST_BAR: { title: string; body: string; Icon: LucideIcon }[] = [
   },
 ];
 
-export const LICENSING_FALLBACK_FEATURED: LicensingFeaturedProduct[] = [
-  {
-    id: "fb-win11",
-    title: "Windows 11 Pro",
-    href: "/products?q=windows",
-    meta: "Retail · 1 PC",
-    priceLabel: "2.490.000 đ",
-    priceHint: "Giá tham khảo",
-    brand: "windows",
-  },
-  {
-    id: "fb-office",
-    title: "Office 2024 Professional",
-    href: "/products?cat=office",
-    meta: "Perpetual · 1 thiết bị",
-    priceLabel: "3.490.000 đ",
-    priceHint: "Giá tham khảo",
-    brand: "office",
-  },
-  {
-    id: "fb-m365",
-    title: "Microsoft 365 Business",
-    href: "/products?q=microsoft+365",
-    meta: "Subscription · / người dùng / năm",
-    priceLabel: "2.399.000 đ",
-    priceHint: "Giá tham khảo",
-    brand: "m365",
-  },
-  {
-    id: "fb-adobe",
-    title: "Adobe Creative Cloud",
-    href: "/products?q=adobe",
-    meta: "Subscription",
-    priceLabel: "Liên hệ",
-    brand: "adobe",
-  },
-  {
-    id: "fb-win11h",
-    title: "Windows 11 Home",
-    href: "/products?q=windows",
-    meta: "Retail · 1 PC",
-    priceLabel: "1.890.000 đ",
-    priceHint: "Giá tham khảo",
-    brand: "windows",
-  },
-  {
-    id: "fb-autodesk",
-    title: "Autodesk AutoCAD",
-    href: "/products?q=autodesk",
-    meta: "Subscription",
-    priceLabel: "Liên hệ",
-    brand: "autodesk",
-  },
-];
-
 export function SoftwareLicensingSolutionLanding({
   featured,
-  usingFallback,
 }: Props) {
   const products = featured.slice(0, 6);
   const showFeatured = products.length > 0;
@@ -578,11 +522,6 @@ export function SoftwareLicensingSolutionLanding({
           <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
             <div>
               <h2 className={SECTION_TITLE_CLASS}>Sản phẩm bản quyền phổ biến</h2>
-              {usingFallback ? (
-                <p className={`mt-1 ${SECTION_LEAD_CLASS}`}>
-                  Giá tham khảo — xác nhận khi xem chi tiết hoặc tư vấn.
-                </p>
-              ) : null}
             </div>
             <Link href="/products" className={LINK_ACCENT_CLASS}>
               Xem tất cả sản phẩm →
@@ -722,6 +661,8 @@ export function SoftwareLicensingSolutionLanding({
           </ul>
         </div>
       </section>
+
+      <SolutionFinalCta />
     </div>
   );
 }

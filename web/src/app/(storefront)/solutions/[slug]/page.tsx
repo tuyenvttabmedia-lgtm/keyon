@@ -505,25 +505,23 @@ export default async function SolutionPage({ params }: Props) {
   if (!page) notFound();
 
   if (slug === "cloud") {
-    const { featured, usingFallback } = await loadCloudFeatured();
-    return <CloudSolutionLanding featured={featured} usingFallback={usingFallback} />;
+    const { featured } = await loadCloudFeatured();
+    return <CloudSolutionLanding featured={featured} />;
   }
 
   if (slug === "software-licensing") {
-    const { featured, usingFallback } = await loadLicensingFeatured();
-    return (
-      <SoftwareLicensingSolutionLanding featured={featured} usingFallback={usingFallback} />
-    );
+    const { featured } = await loadLicensingFeatured();
+    return <SoftwareLicensingSolutionLanding featured={featured} />;
   }
 
   if (slug === "security") {
-    const { featured, usingFallback } = await loadSecurityFeatured();
-    return <SecuritySolutionLanding featured={featured} usingFallback={usingFallback} />;
+    const { featured } = await loadSecurityFeatured();
+    return <SecuritySolutionLanding featured={featured} />;
   }
 
   if (slug === "backup") {
-    const { featured, usingFallback } = await loadBackupFeatured();
-    return <BackupSolutionLanding featured={featured} usingFallback={usingFallback} />;
+    const { featured } = await loadBackupFeatured();
+    return <BackupSolutionLanding featured={featured} />;
   }
 
   if (slug === "license-management") {
@@ -531,7 +529,7 @@ export default async function SolutionPage({ params }: Props) {
   }
 
   if (slug === "productivity") {
-    const [{ featured, usingFallback }, cmsRaw, storage] = await Promise.all([
+    const [{ featured }, cmsRaw, storage] = await Promise.all([
       loadProductivityFeatured(),
       readJsonFile("productivity.json", defaultCmsProductivity),
       resolveStorage(),
@@ -545,7 +543,6 @@ export default async function SolutionPage({ params }: Props) {
     return (
       <ProductivitySolutionLanding
         featured={featured}
-        usingFallback={usingFallback}
         heroImageUrl={resolveMediaUrl(cms.heroImageUrl, mediaBase) || cms.heroImageUrl || undefined}
         consultImageUrl={
           resolveMediaUrl(cms.consultImageUrl, mediaBase) || cms.consultImageUrl || undefined

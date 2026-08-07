@@ -128,7 +128,7 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
           id: p.id,
           name: brand.name,
           logoUrl: resolvePartnerLogo(brand.logoUrl),
-          href: p.href?.trim() || `/brands/${brand.slug}`,
+          href: p.href?.trim() || `/products?q=${encodeURIComponent(brand.slug)}`,
           visible: true,
         };
       }
@@ -158,7 +158,7 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
         id: `brand_${b.id}`,
         name: b.name,
         logoUrl: resolvePartnerLogo(b.logoUrl),
-        href: `/brands/${b.slug}`,
+        href: `/products?q=${encodeURIComponent(b.slug)}`,
         visible: true,
       }));
   }
@@ -238,14 +238,9 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
       reviewCount: undefined,
     };
   });
-  /** Prefer live catalog; pad with fixture so Home always shows up to 5 compact cards. */
-  const featuredMerged = fillFeaturedSlots(
-    featuredFromCatalog,
-    homeFixture.featured.items,
-    5,
-  );
+  /** Prefer live catalog only — never pad with fixture demo prices. */
   const featuredItems = ProductRatingsService.applyToFeatured(
-    featuredMerged,
+    featuredFromCatalog.slice(0, 5),
     ratingMap,
   );
 
@@ -373,33 +368,6 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
     },
   };
 });
-
-/** Catalog first, then fixture fillers — keep Home featured row dense (up to `limit`). */
-function fillFeaturedSlots(
-  catalog: FeaturedProduct[],
-  fallback: FeaturedProduct[],
-  limit: number,
-): FeaturedProduct[] {
-  const out: FeaturedProduct[] = [];
-  const seen = new Set<string>();
-  const keyOf = (p: FeaturedProduct) =>
-    `${p.brandName}|${p.productName}`.toLowerCase().trim();
-
-  for (const list of [catalog, fallback]) {
-    for (const p of list) {
-      const key = keyOf(p);
-      if (seen.has(key)) continue;
-      seen.add(key);
-      out.push({
-        ...p,
-        rating: p.rating,
-        reviewCount: p.reviewCount,
-      });
-      if (out.length >= limit) return out;
-    }
-  }
-  return out;
-}
 
 function toCategoryIcon(key?: CmsCategoryIconKey): CategoryIconKey {
   if (!key) return "other";

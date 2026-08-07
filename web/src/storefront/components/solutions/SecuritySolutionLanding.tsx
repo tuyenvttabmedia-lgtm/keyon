@@ -45,6 +45,7 @@ import {
   TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
+import { SolutionFinalCta } from "./SolutionFinalCta";
 
 export type SecurityBrand =
   | "bitdefender"
@@ -68,7 +69,6 @@ export type SecurityFeaturedProduct = {
 
 type Props = {
   featured: SecurityFeaturedProduct[];
-  usingFallback?: boolean;
 };
 
 const ICON_SM = { size: 18, strokeWidth: 1.85, "aria-hidden": true as const };
@@ -192,64 +192,7 @@ const STEPS: { n: string; title: string; body: string; Icon: LucideIcon }[] = [
   },
 ];
 
-export const SECURITY_FALLBACK_FEATURED: SecurityFeaturedProduct[] = [
-  {
-    id: "fb-bitdefender",
-    title: "Bitdefender Total Security",
-    href: "/products?q=bitdefender",
-    brandLabel: "Bitdefender",
-    meta: "1 Device · 1 Year",
-    priceLabel: "790.000 đ / năm",
-    priceHint: "Giá tham khảo",
-    features: ["Bảo vệ đa lớp", "Chống ransomware", "VPN cơ bản (theo gói)"],
-    brand: "bitdefender",
-  },
-  {
-    id: "fb-kaspersky",
-    title: "Kaspersky Internet Security",
-    href: "/products?q=kaspersky",
-    brandLabel: "Kaspersky",
-    meta: "1 Device · 1 Year",
-    priceLabel: "690.000 đ / năm",
-    priceHint: "Giá tham khảo",
-    features: ["Chống malware", "Bảo vệ ngân hàng", "Kiểm soát phụ huynh"],
-    brand: "kaspersky",
-  },
-  {
-    id: "fb-eset",
-    title: "ESET NOD32 Antivirus",
-    href: "/products?q=eset",
-    brandLabel: "ESET",
-    meta: "1 Device · 1 Year",
-    priceLabel: "590.000 đ / năm",
-    priceHint: "Giá tham khảo",
-    features: ["Nhẹ tài nguyên", "Phát hiện chủ động", "Cập nhật liên tục"],
-    brand: "eset",
-  },
-  {
-    id: "fb-symantec",
-    title: "Norton 360 Deluxe",
-    href: "/products?q=norton",
-    brandLabel: "Symantec / Norton",
-    meta: "1 Device · 1 Year",
-    priceLabel: "850.000 đ / năm",
-    priceHint: "Giá tham khảo",
-    features: ["Antivirus + VPN", "Dark Web Monitoring", "Cloud backup (theo gói)"],
-    brand: "symantec",
-  },
-  {
-    id: "fb-acronis",
-    title: "Acronis Cyber Protect Home",
-    href: "/products?q=acronis",
-    brandLabel: "Acronis",
-    meta: "1 Device · 1 Year",
-    priceLabel: "Liên hệ",
-    features: ["Antivirus + Backup", "Chống ransomware", "Khôi phục nhanh"],
-    brand: "acronis",
-  },
-];
-
-export function SecuritySolutionLanding({ featured, usingFallback }: Props) {
+export function SecuritySolutionLanding({ featured }: Props) {
   const products = featured.slice(0, 5);
   const showFeatured = products.length > 0;
 
@@ -389,11 +332,6 @@ export function SecuritySolutionLanding({ featured, usingFallback }: Props) {
           <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
             <div>
               <h2 className={SECTION_TITLE_CLASS}>Giải pháp bảo mật phù hợp với bạn</h2>
-              {usingFallback ? (
-                <p className={`mt-1 ${SECTION_LEAD_CLASS}`}>
-                  Giá tham khảo — xác nhận khi xem chi tiết hoặc tư vấn.
-                </p>
-              ) : null}
             </div>
             <Link href="/products?cat=security" className={LINK_ACCENT_CLASS}>
               Xem tất cả sản phẩm →
@@ -540,37 +478,14 @@ export function SecuritySolutionLanding({ featured, usingFallback }: Props) {
         </div>
       </section>
 
-      {/* ── Bottom CTA ───────────────────────────────────────── */}
-      <section className="pb-9 md:pb-11">
-        <div className="home-container">
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-accent via-[#0d9a93] to-[#0a6e6a] px-5 py-6 sm:px-8 sm:py-7">
-            <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-              <div className="flex items-start gap-3 sm:items-center">
-                <span
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/20 text-white"
-                  aria-hidden
-                >
-                  <Headphones size={20} strokeWidth={1.85} />
-                </span>
-                <div>
-                  <p className={`${SECTION_TITLE_CLASS} text-[1.15rem] text-white sm:text-xl`}>
-                    Chưa biết giải pháp nào phù hợp?
-                  </p>
-                  <p className="mt-1 text-sm text-white/85">
-                    Đội ngũ KEYON hỗ trợ chọn gói bảo mật theo thiết bị và ngân sách.
-                  </p>
-                </div>
-              </div>
-              <Link
-                href="/contact/quote"
-                className={`inline-flex h-11 shrink-0 items-center justify-center rounded-xl bg-white px-5 ${CTA_LABEL_CLASS} text-accent ${TRANSITION_UI} hover:bg-white/95`}
-              >
-                Liên hệ tư vấn miễn phí →
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <SolutionFinalCta
+        title="Chưa biết giải pháp nào phù hợp?"
+        subtitle="Đội ngũ KEYON hỗ trợ chọn gói bảo mật theo thiết bị và ngân sách."
+        primaryHref="/contact/quote"
+        primaryLabel="Liên hệ tư vấn miễn phí →"
+        secondaryHref="/products?cat=security"
+        secondaryLabel="Xem sản phẩm bảo mật"
+      />
     </div>
   );
 }

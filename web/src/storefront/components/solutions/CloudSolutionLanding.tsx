@@ -51,6 +51,7 @@ import {
   TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
+import { SolutionFinalCta } from "./SolutionFinalCta";
 
 export type CloudFeaturedProduct = {
   id: string;
@@ -64,8 +65,6 @@ export type CloudFeaturedProduct = {
 
 type Props = {
   featured: CloudFeaturedProduct[];
-  /** True when showing illustrative fallback cards (no catalog SKUs). */
-  usingFallback?: boolean;
 };
 
 const ICON_SM = { size: 18, strokeWidth: 1.85, "aria-hidden": true as const };
@@ -225,7 +224,7 @@ const PRODUCT_ICONS: Record<NonNullable<CloudFeaturedProduct["icon"]>, LucideIco
   database: Database,
 };
 
-export function CloudSolutionLanding({ featured, usingFallback }: Props) {
+export function CloudSolutionLanding({ featured }: Props) {
   const showFeatured = featured.length > 0;
 
   return (
@@ -460,9 +459,7 @@ export function CloudSolutionLanding({ featured, usingFallback }: Props) {
             <div>
               <h2 className={SECTION_TITLE_CLASS}>Sản phẩm & dịch vụ nổi bật</h2>
               <p className={`mt-2 max-w-xl ${SECTION_LEAD_CLASS}`}>
-                {usingFallback
-                  ? "Cấu hình tham khảo — xác nhận giá và tồn kho khi tư vấn hoặc xem catalog."
-                  : "Gói đang có trên catalog KEYON — xem chi tiết trước khi mua."}
+                Gói đang có trên catalog KEYON — xem chi tiết trước khi mua.
               </p>
             </div>
             <Link href="/products?cat=cloud" className={`shrink-0 ${LINK_ACCENT_CLASS}`}>
@@ -548,96 +545,17 @@ export function CloudSolutionLanding({ featured, usingFallback }: Props) {
         </div>
       </section>
 
-      {/* ── CTA ──────────────────────────────────────────────── */}
-      <section className="pb-10 md:pb-12">
-        <div className="home-container">
-          <div className="relative overflow-hidden rounded-2xl bg-navy px-6 py-8 sm:px-10 sm:py-10 lg:px-12">
-            <div
-              className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-accent/20 blur-3xl"
-              aria-hidden
-            />
-            <div
-              className="pointer-events-none absolute -bottom-24 left-10 h-48 w-48 rounded-full bg-sky-500/10 blur-3xl"
-              aria-hidden
-            />
-            <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
-              <div className="max-w-xl">
-                <h2 className={`${SECTION_TITLE_CLASS} text-white`}>
-                  Sẵn sàng đưa doanh nghiệp lên cloud?
-                </h2>
-                <p className="mt-2.5 text-sm leading-relaxed text-slate-300 md:text-[15px]">
-                  Nhận tư vấn cấu hình, báo giá và hỗ trợ triển khai từ đội ngũ KEYON.
-                </p>
-              </div>
-              <div className="flex w-full shrink-0 flex-col gap-3 sm:w-auto sm:flex-row">
-                <Link
-                  href="/products?cat=cloud"
-                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
-                >
-                  Khám phá dịch vụ cloud
-                </Link>
-                <Link
-                  href="/contact/quote"
-                  className={`inline-flex h-12 items-center justify-center rounded-xl border border-white/30 bg-transparent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:bg-white/5 hover:text-accent`}
-                >
-                  Liên hệ tư vấn
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <SolutionFinalCta
+        title="Sẵn sàng đưa doanh nghiệp lên cloud?"
+        subtitle="Nhận tư vấn cấu hình, báo giá và hỗ trợ triển khai từ đội ngũ KEYON."
+        primaryHref="/contact/quote"
+        primaryLabel="Liên hệ tư vấn →"
+        secondaryHref="/products?cat=cloud"
+        secondaryLabel="Khám phá dịch vụ cloud"
+      />
     </div>
   );
 }
-
-/** Illustrative cards when catalog has no cloud SKUs — prices are reference only. */
-export const CLOUD_FALLBACK_FEATURED: CloudFeaturedProduct[] = [
-  {
-    id: "fb-1",
-    title: "Cloud Server",
-    href: "/contact/quote",
-    specs: ["CPU 2 vCPU · RAM 4GB", "SSD 80GB"],
-    priceLabel: "280.000 đ / tháng",
-    priceHint: "Giá tham khảo",
-    icon: "server",
-  },
-  {
-    id: "fb-2",
-    title: "Cloud Server Pro",
-    href: "/contact/quote",
-    specs: ["CPU 4 vCPU · RAM 8GB", "SSD 160GB"],
-    priceLabel: "520.000 đ / tháng",
-    priceHint: "Giá tham khảo",
-    icon: "pro",
-  },
-  {
-    id: "fb-3",
-    title: "Cloud Storage 500GB",
-    href: "/contact/quote",
-    specs: ["Object storage", "Mở rộng linh hoạt"],
-    priceLabel: "150.000 đ / tháng",
-    priceHint: "Giá tham khảo",
-    icon: "storage",
-  },
-  {
-    id: "fb-4",
-    title: "Cloud Backup",
-    href: "/solutions/backup",
-    specs: ["Endpoint · cloud · server", "Khôi phục khi sự cố"],
-    priceLabel: "190.000 đ / tháng",
-    priceHint: "Giá tham khảo",
-    icon: "backup",
-  },
-  {
-    id: "fb-5",
-    title: "Cloud Database",
-    href: "/contact/quote",
-    specs: ["Managed database", "Tư vấn trước triển khai"],
-    priceLabel: "Liên hệ báo giá",
-    icon: "database",
-  },
-];
 
 /* ── Brand marks (simplified, recognizable) ─────────────────────────────── */
 

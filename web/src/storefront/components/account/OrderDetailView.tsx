@@ -11,6 +11,7 @@ import {
   IconShieldCheck,
 } from "@/storefront/components/icons/StoreIcons";
 import type { OrderTimelineStep } from "@/storefront/lib/order-timeline";
+import { isPlaceholderHotline } from "@/storefront/components/support/shared";
 import {
   BADGE_CLASS,
   BREADCRUMB_CLASS,
@@ -438,13 +439,17 @@ export function OrderDetailView({
       <div className={`rounded-2xl border border-border bg-white px-4 py-3.5 text-center sm:px-6 ${ELEVATION_NONE}`}>
         <p className={SECTION_LEAD_CLASS}>
           {cms.contactBarLead}{" "}
-          <a
-            href={`tel:${cms.contactPhone.replace(/\s/g, "")}`}
-            className={LINK_ACCENT_CLASS}
-          >
-            {cms.contactPhone}
-          </a>
-          {" · "}
+          {cms.contactPhone.trim() && !isPlaceholderHotline(cms.contactPhone) ? (
+            <>
+              <a
+                href={`tel:${cms.contactPhone.replace(/\s/g, "")}`}
+                className={LINK_ACCENT_CLASS}
+              >
+                {cms.contactPhone}
+              </a>
+              {" · "}
+            </>
+          ) : null}
           <a href={`mailto:${cms.contactEmail}`} className={LINK_ACCENT_CLASS}>
             {cms.contactEmail}
           </a>

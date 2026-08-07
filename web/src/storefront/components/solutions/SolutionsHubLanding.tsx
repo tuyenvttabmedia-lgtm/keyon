@@ -281,12 +281,6 @@ export function SolutionsHubLanding({
                 Từ tư vấn chọn gói đến kích hoạt và hỗ trợ dài hạn — KEYON đồng hành
                 doanh nghiệp với quy trình rõ ràng, sản phẩm chính hãng.
               </p>
-              <Link
-                href="/contact/quote"
-                className={`mt-7 inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
-              >
-                Liên hệ tư vấn →
-              </Link>
             </div>
 
             <ul className="space-y-5 sm:space-y-6">

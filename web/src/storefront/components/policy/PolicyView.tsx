@@ -18,6 +18,7 @@ import {
   TRANSITION_UI,
 } from "@/storefront/effects";
 import { IconHeadset } from "@/storefront/components/icons/StoreIcons";
+import { isPlaceholderHotline } from "@/storefront/components/support/shared";
 import { POLICY_ICONS } from "./policy-icons";
 
 export function PolicyView({ cms }: { cms: CmsPolicy }) {
@@ -108,22 +109,24 @@ function SupportBar({ cms }: { cms: CmsPolicy }) {
       </Link>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:gap-6 lg:shrink-0">
-        <a
-          href={`tel:${cms.supportPhone.replace(/\s/g, "")}`}
-          className={`flex items-start gap-2.5 ${TRANSITION_UI} hover:opacity-90`}
-        >
-          <span className="mt-0.5 text-accent">
-            <PhoneGlyph />
-          </span>
-          <span>
-            <span className={`block ${CARD_TITLE_CLASS}`}>
-              {cms.supportPhone}
+        {cms.supportPhone.trim() && !isPlaceholderHotline(cms.supportPhone) ? (
+          <a
+            href={`tel:${cms.supportPhone.replace(/\s/g, "")}`}
+            className={`flex items-start gap-2.5 ${TRANSITION_UI} hover:opacity-90`}
+          >
+            <span className="mt-0.5 text-accent">
+              <PhoneGlyph />
             </span>
-            <span className={`block text-xs text-muted`}>
-              {cms.supportPhoneHint}
+            <span>
+              <span className={`block ${CARD_TITLE_CLASS}`}>
+                {cms.supportPhone}
+              </span>
+              <span className={`block text-xs text-muted`}>
+                {cms.supportPhoneHint}
+              </span>
             </span>
-          </span>
-        </a>
+          </a>
+        ) : null}
         <a
           href={`mailto:${cms.supportEmail}`}
           className={`flex items-start gap-2.5 ${TRANSITION_UI} hover:opacity-90`}

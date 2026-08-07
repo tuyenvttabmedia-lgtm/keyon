@@ -11,7 +11,6 @@ import {
   Cloud,
   Headphones,
   Home,
-  Rocket,
   ShieldCheck,
   Users,
   Video,
@@ -44,6 +43,7 @@ import {
   TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
+import { SolutionFinalCta } from "./SolutionFinalCta";
 
 export type ProductivityBrand =
   | "m365"
@@ -67,7 +67,6 @@ export type ProductivityFeaturedProduct = {
 
 type Props = {
   featured: ProductivityFeaturedProduct[];
-  usingFallback?: boolean;
   /** CMS: hero banner trong organic blob. */
   heroImageUrl?: string;
   /** CMS: ảnh tư vấn cột phải ecosystem. */
@@ -206,7 +205,6 @@ const ECOSYSTEM_CHECKS = [
 
 export function ProductivitySolutionLanding({
   featured,
-  usingFallback,
   heroImageUrl,
   consultImageUrl,
   workSceneImageUrl,
@@ -332,15 +330,9 @@ export function ProductivitySolutionLanding({
                 <h2 className={`${SECTION_TITLE_CLASS} text-white`}>
                   Công cụ phù hợp cho bạn ngày hôm nay
                 </h2>
-                {usingFallback ? (
-                  <p className="mt-2 text-sm leading-relaxed text-slate-300">
-                    Giá tham khảo — xác nhận khi xem chi tiết hoặc tư vấn.
-                  </p>
-                ) : (
-                  <p className="mt-2 text-sm leading-relaxed text-slate-300">
-                    License chính hãng trên KEYON.
-                  </p>
-                )}
+                <p className="mt-2 text-sm leading-relaxed text-slate-300">
+                  License chính hãng trên KEYON.
+                </p>
                 <Link
                   href="/products?cat=office"
                   className={`mt-4 inline-flex h-10 items-center justify-center rounded-xl border border-white/35 bg-transparent px-3.5 ${CTA_COMPACT_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:text-accent`}
@@ -456,49 +448,14 @@ export function ProductivitySolutionLanding({
         </div>
       </section>
 
-      {/* ── CTA ──────────────────────────────────────────────── */}
-      <section className="pb-8 md:pb-10">
-        <div className="home-container">
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-navy via-[#0b2a3a] to-[#0a3d42] px-6 py-8 sm:px-10 sm:py-9 lg:px-12">
-            <div
-              className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-accent/15 blur-3xl"
-              aria-hidden
-            />
-            <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
-              <div className="flex max-w-xl items-start gap-4">
-                <span
-                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent text-white"
-                  aria-hidden
-                >
-                  <Rocket size={22} strokeWidth={1.8} />
-                </span>
-                <div>
-                  <h2 className={`${SECTION_TITLE_CLASS} text-white`}>
-                    Sẵn sàng nâng tầm hiệu suất làm việc?
-                  </h2>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-300 md:text-[15px]">
-                    Bắt đầu hành trình làm việc thông minh hơn cùng KEYON ngay hôm nay.
-                  </p>
-                </div>
-              </div>
-              <div className="flex w-full shrink-0 flex-col gap-3 sm:w-auto sm:flex-row">
-                <Link
-                  href="/products?cat=office"
-                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
-                >
-                  Khám phá giải pháp →
-                </Link>
-                <Link
-                  href="/contact/quote"
-                  className={`inline-flex h-12 items-center justify-center rounded-xl border border-white/35 bg-transparent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:bg-white/5 hover:text-accent`}
-                >
-                  Liên hệ tư vấn
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <SolutionFinalCta
+        title="Sẵn sàng nâng tầm hiệu suất làm việc?"
+        subtitle="Bắt đầu hành trình làm việc thông minh hơn cùng KEYON ngay hôm nay."
+        primaryHref="/contact/quote"
+        primaryLabel="Liên hệ tư vấn →"
+        secondaryHref="/products?cat=office"
+        secondaryLabel="Khám phá giải pháp →"
+      />
     </div>
   );
 }
@@ -593,46 +550,6 @@ function WorkModesPanel({ workSceneImageUrl }: { workSceneImageUrl?: string }) {
     </div>
   );
 }
-
-/** Illustrative cards when catalog has no matching SKUs — prices are reference only. */
-export const PRODUCTIVITY_FALLBACK_FEATURED: ProductivityFeaturedProduct[] = [
-  {
-    id: "fb-m365",
-    title: "Microsoft 365 Business Standard",
-    href: "/products?q=microsoft+365",
-    description: "Office + Teams + OneDrive cho doanh nghiệp.",
-    priceLabel: "2.399.000 đ / người dùng / năm",
-    priceHint: "Giá tham khảo",
-    brand: "m365",
-  },
-  {
-    id: "fb-teams",
-    title: "Microsoft Teams",
-    href: "/products?q=teams",
-    description: "Họp trực tuyến, chat và cộng tác nhóm.",
-    priceLabel: "1.190.000 đ / người dùng / năm",
-    priceHint: "Giá tham khảo",
-    brand: "teams",
-  },
-  {
-    id: "fb-office",
-    title: "Office 2024 Professional",
-    href: "/products?cat=office",
-    description: "Word, Excel, PowerPoint cài đặt trên máy.",
-    priceLabel: "3.490.000 đ / thiết bị",
-    priceHint: "Giá tham khảo",
-    brand: "office",
-  },
-  {
-    id: "fb-onedrive",
-    title: "OneDrive for Business",
-    href: "/products?q=onedrive",
-    description: "Lưu trữ đám mây và đồng bộ file an toàn.",
-    priceLabel: "690.000 đ / người dùng / năm",
-    priceHint: "Giá tham khảo",
-    brand: "onedrive",
-  },
-];
 
 /* ── Scenes / portraits ─────────────────────────────────────────────────── */
 

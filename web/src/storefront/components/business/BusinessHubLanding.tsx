@@ -300,7 +300,7 @@ export function BusinessHubLanding() {
             </p>
           </header>
 
-          <ul className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3.5">
+          <ul className="mt-9 grid gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 lg:gap-3.5">
             {BIZ_CARDS.map((card) => (
               <li key={card.id}>
                 <article
@@ -393,7 +393,7 @@ export function BusinessHubLanding() {
               className="pointer-events-none absolute left-[10%] right-[10%] top-[1.85rem] z-0 hidden h-px border-t border-dashed border-border lg:block"
               aria-hidden
             />
-            <ol className="relative z-[1] grid gap-6 sm:grid-cols-2 lg:grid-cols-5 lg:gap-4">
+            <ol className="relative z-[1] grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
               {PROCESS.map((step, i) => {
                 const n = String(i + 1).padStart(2, "0");
                 return (

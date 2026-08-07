@@ -186,8 +186,15 @@ function PartnerSlide({ item }: { item: PartnerItem }) {
   const className = `inline-flex h-14 w-[168px] shrink-0 items-center justify-center rounded-xl border border-border/80 bg-white px-5 py-3 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/50 ${ELEVATION_CARD_HOVER}`;
 
   if (item.href) {
+    const external = /^https?:\/\//i.test(item.href);
     return (
-      <a href={item.href} className={className} target="_blank" rel="noopener noreferrer">
+      <a
+        href={item.href}
+        className={className}
+        {...(external
+          ? { target: "_blank", rel: "noopener noreferrer" }
+          : {})}
+      >
         {inner}
       </a>
     );
