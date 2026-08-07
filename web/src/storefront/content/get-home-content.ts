@@ -188,13 +188,14 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
 
   const categorySource =
     categories.items?.length > 0 ? categories.items : defaultCmsCategories.items;
+  // Wave 5: hide empty shop tiles; do not alias Backup→Cloud (misleading counts).
   const categoryItems: CategoryItem[] = categorySource
     .filter((c) => c.visible !== false)
     .slice()
     .sort((a, b) => a.sortOrder - b.sortOrder)
-    .slice(0, 8)
     .map((c) => {
-      const shopCat = shopCatFromCmsIcon(c.iconKey);
+      const shopCat =
+        c.iconKey === "backup" ? null : shopCatFromCmsIcon(c.iconKey);
       const liveCount =
         shopCat && shopCat !== "all" ? shopCounts[shopCat] : undefined;
       const countLabel =
@@ -213,8 +214,17 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
         icon: toCategoryIcon(c.iconKey),
         iconUrl: c.iconUrl,
         accentColor: c.accentColor,
+        liveCount,
       };
-    });
+    })
+    .filter((c) => {
+      if (c.icon === "backup" || c.icon === "security") {
+        return (c.liveCount ?? 0) > 0;
+      }
+      return c.liveCount === undefined || c.liveCount > 0;
+    })
+    .slice(0, 8)
+    .map(({ liveCount: _n, ...rest }) => rest);
 
   const shopCards = mapProductsToShopCards(
     catalogRows.filter((p) => p.variants.length > 0).slice(0, 8),

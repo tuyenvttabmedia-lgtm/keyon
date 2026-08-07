@@ -41,21 +41,20 @@ export type DropdownNavItem = {
 
 export type PrimaryNavItem = MegaNavItem | DropdownNavItem;
 
-/** Shop Collections (merchandising) — map to /products filters, not Category DB. */
+/** Shop Collections — only collections with sellable catalog coverage (Wave 5). */
 export const SHOP_COLLECTIONS: NavLink[] = [
   { label: "Windows", href: "/products?cat=windows", description: "Hệ điều hành" },
   { label: "Microsoft Office", href: "/products?cat=office", description: "Office & năng suất" },
-  { label: "Bảo mật", href: "/products?cat=security", description: "Bảo vệ thiết bị và dữ liệu" },
-  { label: "Cloud & Server", href: "/products?cat=cloud", description: "Hạ tầng và dịch vụ cloud" },
-  { label: "Backup", href: "/products?q=backup", description: "Sao lưu và khôi phục" },
+  { label: "Adobe", href: "/products?cat=adobe", description: "PDF & sáng tạo" },
+  { label: "Cloud & Server", href: "/products?cat=cloud", description: "Server / hạ tầng" },
   { label: "Tất cả sản phẩm", href: "/products" },
 ];
 
+/** Featured brands — only brands with ≥1 active product (Wave 5). */
 export const FEATURED_BRANDS: NavLink[] = [
   { label: "Microsoft", href: "/products?q=microsoft", description: "Windows, Office, Microsoft 365" },
   { label: "Adobe", href: "/products?q=adobe", description: "Sáng tạo, thiết kế và tài liệu" },
   { label: "Autodesk", href: "/products?q=autodesk", description: "Thiết kế, kỹ thuật và xây dựng" },
-  { label: "Acronis", href: "/products?q=acronis", description: "Backup và bảo vệ dữ liệu" },
   { label: "Tất cả thương hiệu", href: "/brands" },
 ];
 
