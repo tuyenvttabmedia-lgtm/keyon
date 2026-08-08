@@ -289,9 +289,14 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
       category: f.category ?? "general",
     }));
 
+  // IA merge: section is “Doanh nghiệp”; ignore stale CMS title “Giải pháp”.
+  const cmsSolutionsTitle = cmsHome.solutionsTitle?.trim();
   const solutions = {
     ...homeFixture.solutions,
-    title: cmsHome.solutionsTitle || homeFixture.solutions.title,
+    title:
+      cmsSolutionsTitle && cmsSolutionsTitle !== "Giải pháp"
+        ? cmsSolutionsTitle
+        : homeFixture.solutions.title,
     subtitle: cmsHome.solutionsSubtitle || homeFixture.solutions.subtitle,
   };
 

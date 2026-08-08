@@ -7,7 +7,6 @@ import type { HomeContent } from "./types";
 export const homeFixture: HomeContent = {
   navigation: [
     { label: "Sản phẩm", href: "/products" },
-    { label: "Giải pháp", href: "/solutions" },
     { label: "Doanh nghiệp", href: "/business" },
     { label: "Tài nguyên", href: "/resources" },
     { label: "Hỗ trợ", href: "/support" },
@@ -200,21 +199,14 @@ export const homeFixture: HomeContent = {
   },
   solutions: {
     visible: true,
-    title: "Giải pháp",
+    title: "Doanh nghiệp",
     subtitle:
-      "Từ một vài giấy phép đến hàng trăm người dùng, KEYON giúp doanh nghiệp mua, triển khai và quản lý phần mềm dễ dàng hơn.",
-    ctaLabel: "Khám phá giải pháp →",
-    ctaHref: "/solutions",
+      "Từ vài giấy phép đến hàng trăm người dùng — KEYON giúp tổ chức chọn đúng gói, mua theo quy mô và quản lý tập trung. Cá nhân mua lẻ trên Sản phẩm.",
+    ctaLabel: "Khám phá giải pháp doanh nghiệp →",
+    ctaHref: "/business",
     secondaryCtaLabel: "Liên hệ tư vấn",
     secondaryCtaHref: "/contact/quote",
     items: [
-      {
-        id: "software-licensing",
-        title: "Bản quyền phần mềm",
-        description: "Cá nhân, đội nhóm và doanh nghiệp.",
-        href: "/solutions/software-licensing",
-        art: "bars",
-      },
       {
         id: "productivity",
         title: "Năng suất & Cộng tác",
@@ -249,6 +241,13 @@ export const homeFixture: HomeContent = {
         description: "Theo dõi license, gia hạn, tài khoản KEYON.",
         href: "/solutions/license-management",
         art: "stack",
+      },
+      {
+        id: "volume",
+        title: "Mua số lượng lớn",
+        description: "Volume licensing · báo giá theo quy mô.",
+        href: "/business/volume-licensing",
+        art: "bars",
       },
     ],
   },
@@ -322,21 +321,21 @@ export const homeFixture: HomeContent = {
         ],
       },
       {
-        title: "Giải pháp",
+        title: "Doanh nghiệp",
         links: [
-          { label: "Bản quyền phần mềm", href: "/solutions/software-licensing" },
+          { label: "Tổng quan doanh nghiệp", href: "/business" },
           { label: "Năng suất & Cộng tác", href: "/solutions/productivity" },
           { label: "Cloud", href: "/solutions/cloud" },
           { label: "Bảo mật", href: "/solutions/security" },
           { label: "Backup & Khôi phục", href: "/solutions/backup" },
           { label: "Quản lý bản quyền", href: "/solutions/license-management" },
+          { label: "Volume licensing", href: "/business/volume-licensing" },
+          { label: "Liên hệ kinh doanh", href: "/contact/quote" },
         ],
       },
       {
-        title: "Doanh nghiệp & Hỗ trợ",
+        title: "Hỗ trợ",
         links: [
-          { label: "Giải pháp doanh nghiệp", href: "/business" },
-          { label: "Volume licensing", href: "/business/volume-licensing" },
           { label: "Tài nguyên", href: "/resources" },
           { label: "Trung tâm hỗ trợ", href: "/support" },
           { label: "FAQ", href: "/faq" },

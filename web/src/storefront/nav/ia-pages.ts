@@ -16,35 +16,19 @@ export type IaPage = {
   draftCapable?: boolean;
 };
 
-export const SOLUTIONS_HUB = {
-  title: "Giải pháp KEYON",
-  subtitle:
-    "Không chỉ mua key — chọn đúng hướng giải quyết: bản quyền, năng suất, cloud, bảo mật, backup và quản lý license.",
-};
+/** Active topic landings (hub `/solutions` redirects to `/business`). */
+export const ACTIVE_SOLUTION_SLUGS = [
+  "productivity",
+  "cloud",
+  "security",
+  "backup",
+  "license-management",
+] as const;
 
 export const SOLUTION_PAGES: Record<string, IaPage> = {
-  "software-licensing": {
-    slug: "software-licensing",
-    kicker: "Giải pháp",
-    title: "Bản quyền phần mềm",
-    subtitle:
-      "Mua và quản lý bản quyền cho cá nhân, đội nhóm hoặc doanh nghiệp — perpetual, subscription và volume (theo điều kiện từng gói).",
-    bullets: [
-      "Bản quyền cá nhân và đội nhóm",
-      "Perpetual / Subscription (theo sản phẩm)",
-      "Volume licensing — báo giá doanh nghiệp",
-      "Gia hạn và theo dõi trong Tài khoản KEYON",
-    ],
-    primaryCta: { label: "Xem sản phẩm", href: "/products" },
-    secondaryCta: { label: "Liên hệ tư vấn", href: "/contact/quote" },
-    related: [
-      { label: "Quản lý bản quyền", href: "/solutions/license-management" },
-      { label: "Volume licensing", href: "/business/volume-licensing" },
-    ],
-  },
   productivity: {
     slug: "productivity",
-    kicker: "Giải pháp",
+    kicker: "Doanh nghiệp",
     title: "Năng suất & Cộng tác",
     subtitle:
       "Microsoft 365, Office, Teams và công cụ cộng tác chính hãng — kích hoạt nhanh, hỗ trợ tiếng Việt.",
@@ -62,7 +46,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
   },
   cloud: {
     slug: "cloud",
-    kicker: "Giải pháp",
+    kicker: "Doanh nghiệp",
     title: "Cloud",
     subtitle:
       "Cloud linh hoạt cho doanh nghiệp hiện đại — hạ tầng, storage, backup và tư vấn triển khai trên KEYON.",
@@ -76,7 +60,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
   },
   security: {
     slug: "security",
-    kicker: "Giải pháp",
+    kicker: "Doanh nghiệp",
     title: "Bảo mật",
     subtitle: "Bảo vệ endpoint, dữ liệu và thiết bị với các gói bảo mật trên KEYON.",
     bullets: ["Endpoint / Antivirus / Internet Security", "Xem rõ loại nhận trước khi mua"],
@@ -85,7 +69,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
   },
   backup: {
     slug: "backup",
-    kicker: "Giải pháp",
+    kicker: "Doanh nghiệp",
     title: "Backup & Khôi phục",
     subtitle: "Sao lưu và khôi phục dữ liệu — endpoint, cloud và máy chủ (theo catalog hiện có).",
     bullets: ["Tìm gói backup trên cửa hàng", "Tư vấn khi cần triển khai tổ chức"],
@@ -95,7 +79,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
   },
   "license-management": {
     slug: "license-management",
-    kicker: "Giải pháp · Canonical",
+    kicker: "Doanh nghiệp · Canonical",
     title: "Quản lý bản quyền",
     subtitle:
       "Kiểm soát toàn bộ license trên một nền tảng — theo dõi sử dụng, cảnh báo gia hạn và tối ưu chi phí.",
@@ -108,9 +92,9 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
     primaryCta: { label: "Vào Tài khoản", href: "/account" },
     secondaryCta: { label: "Tư vấn miễn phí", href: "/contact/quote" },
     related: [
-      { label: "Bản quyền phần mềm", href: "/solutions/software-licensing" },
       { label: "Subscription & Gia hạn", href: "/business/subscriptions" },
       { label: "Volume licensing", href: "/business/volume-licensing" },
+      { label: "Giải pháp doanh nghiệp", href: "/business" },
     ],
   },
 };

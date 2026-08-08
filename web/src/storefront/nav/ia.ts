@@ -2,6 +2,7 @@
  * KEYON IA v1 — Navigation / merchandising layer.
  * Frozen: NAV-01..05 — Brand ≠ Category ≠ Collection ≠ Solution ≠ Navigation.
  * Phase 2: Collections remain merchandising config (not Prisma Category).
+ * Wave IA-merge: Solutions topics live under Doanh nghiệp (no separate Giải pháp mega).
  */
 
 export type NavLink = {
@@ -58,6 +59,64 @@ export const FEATURED_BRANDS: NavLink[] = [
   { label: "Tất cả thương hiệu", href: "/brands" },
 ];
 
+/** Topic landings under Doanh nghiệp (kept `/solutions/*` URLs). */
+export const BUSINESS_TOPIC_LINKS: NavLink[] = [
+  {
+    label: "Năng suất & Cộng tác",
+    href: "/solutions/productivity",
+    description: "Office, Microsoft 365, làm việc nhóm",
+  },
+  {
+    label: "Cloud",
+    href: "/solutions/cloud",
+    description: "Hạ tầng và dịch vụ cloud",
+  },
+  {
+    label: "Bảo mật",
+    href: "/solutions/security",
+    description: "Endpoint, antivirus, bảo vệ dữ liệu",
+  },
+  {
+    label: "Backup & Khôi phục",
+    href: "/solutions/backup",
+    description: "Sao lưu endpoint, cloud và máy chủ",
+  },
+  {
+    label: "Quản lý bản quyền",
+    href: "/solutions/license-management",
+    description: "Theo dõi license, gia hạn, tài khoản KEYON",
+  },
+];
+
+/** Buying motions for organizations. */
+export const BUSINESS_SERVICE_LINKS: NavLink[] = [
+  {
+    label: "Tổng quan doanh nghiệp",
+    href: "/business",
+    description: "Landing B2B — mua, triển khai, quản lý",
+  },
+  {
+    label: "Mua bản quyền số lượng lớn",
+    href: "/business/volume-licensing",
+    description: "5 / 10 / 50 / 100+ users · báo giá",
+  },
+  {
+    label: "Subscription & Gia hạn",
+    href: "/business/subscriptions",
+    description: "Quản lý subscription và renewal",
+  },
+  {
+    label: "Tư vấn bản quyền",
+    href: "/business/licensing-consulting",
+    description: "Chọn đúng gói Office / Windows / Security",
+  },
+  {
+    label: "Liên hệ kinh doanh",
+    href: "/contact/quote",
+    description: "CTA tư vấn B2B",
+  },
+];
+
 /** Top-level header navigation (desktop mega / dropdown). */
 export const IA_PRIMARY_NAV: PrimaryNavItem[] = [
   {
@@ -71,90 +130,20 @@ export const IA_PRIMARY_NAV: PrimaryNavItem[] = [
     ],
   },
   {
-    id: "solutions",
-    label: "Giải pháp",
-    href: "/solutions",
-    kind: "mega",
-    columns: [
-      {
-        title: "Theo nhu cầu",
-        links: [
-          {
-            label: "Bản quyền phần mềm",
-            href: "/solutions/software-licensing",
-            description: "Cá nhân, đội nhóm và doanh nghiệp",
-          },
-          {
-            label: "Năng suất & Cộng tác",
-            href: "/solutions/productivity",
-            description: "Office, Microsoft 365, làm việc nhóm",
-          },
-          {
-            label: "Cloud",
-            href: "/solutions/cloud",
-            description: "Hạ tầng và dịch vụ cloud",
-          },
-          {
-            label: "Bảo mật",
-            href: "/solutions/security",
-            description: "Endpoint, antivirus, bảo vệ dữ liệu",
-          },
-          {
-            label: "Backup & Khôi phục",
-            href: "/solutions/backup",
-            description: "Sao lưu endpoint, cloud và máy chủ",
-          },
-          {
-            label: "Quản lý bản quyền",
-            href: "/solutions/license-management",
-            description: "Theo dõi license, gia hạn, tài khoản KEYON",
-          },
-        ],
-      },
-    ],
-  },
-  {
     id: "business",
     label: "Doanh nghiệp",
     href: "/business",
     kind: "mega",
     columns: [
-      {
-        title: "Dành cho tổ chức",
-        links: [
-          {
-            label: "Giải pháp cho doanh nghiệp",
-            href: "/business",
-            description: "Landing B2B tổng quan",
-          },
-          {
-            label: "Mua bản quyền số lượng lớn",
-            href: "/business/volume-licensing",
-            description: "5 / 10 / 50 / 100+ users · báo giá",
-          },
-          {
-            label: "Subscription & Gia hạn",
-            href: "/business/subscriptions",
-            description: "Quản lý subscription và renewal",
-          },
-          {
-            label: "Tư vấn bản quyền",
-            href: "/business/licensing-consulting",
-            description: "Chọn đúng gói Office / Windows / Security",
-          },
-          {
-            label: "Liên hệ kinh doanh",
-            href: "/contact/quote",
-            description: "CTA tư vấn B2B",
-          },
-        ],
-      },
+      { title: "Theo nhu cầu", links: BUSINESS_TOPIC_LINKS },
+      { title: "Mua & dịch vụ", links: BUSINESS_SERVICE_LINKS },
     ],
     promo: {
-      title: "Quản lý bản quyền tập trung",
-      description: "Theo dõi license của doanh nghiệp tại một nơi trên KEYON.",
-      href: "/solutions/license-management",
-      ctaLabel: "Tìm hiểu →",
+      title: "Cá nhân mua ở Sản phẩm",
+      description:
+        "Mua lẻ Windows, Office, Adobe… trên cửa hàng. Doanh nghiệp dùng mục này để tư vấn và mua theo quy mô.",
+      href: "/products",
+      ctaLabel: "Xem sản phẩm →",
     },
   },
   {

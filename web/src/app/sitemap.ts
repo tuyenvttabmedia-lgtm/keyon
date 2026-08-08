@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { defaultBlog, readJsonFile, type BlogPost } from "@/server/cms/store";
 import { loadPublishedStaticPages } from "@/server/cms/static-pages";
 import { MAIN_SEO_PATHS } from "@/lib/seo-main-pages";
+import { ACTIVE_SOLUTION_SLUGS, BUSINESS_PAGES } from "@/storefront/nav/ia-pages";
 import { resourcePostHref } from "@/storefront/lib/resources";
 import { absoluteUrl } from "@/server/seo/site-url";
 
@@ -16,6 +17,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: path === "/" ? "daily" : "weekly",
     priority: path === "/" ? 1 : 0.7,
   }));
+
+  for (const slug of ACTIVE_SOLUTION_SLUGS) {
+    entries.push({
+      url: absoluteUrl(`/solutions/${slug}`),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.65,
+    });
+  }
+  for (const slug of Object.keys(BUSINESS_PAGES)) {
+    entries.push({
+      url: absoluteUrl(`/business/${slug}`),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.65,
+    });
+  }
 
   const [products, brands, postsRaw, staticPages] = await Promise.all([
     prisma.product.findMany({

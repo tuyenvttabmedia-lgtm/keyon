@@ -11,10 +11,6 @@ import {
   type ProductivityFeaturedProduct,
 } from "@/storefront/components/solutions/ProductivitySolutionLanding";
 import {
-  SoftwareLicensingSolutionLanding,
-  type LicensingFeaturedProduct,
-} from "@/storefront/components/solutions/SoftwareLicensingSolutionLanding";
-import {
   SecuritySolutionLanding,
   type SecurityFeaturedProduct,
 } from "@/storefront/components/solutions/SecuritySolutionLanding";
@@ -42,7 +38,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const page = SOLUTION_PAGES[slug];
-  if (!page) return buildMainPageMetadata("/solutions");
+  if (!page) return buildMainPageMetadata("/business");
   if (slug === "cloud") {
     return {
       ...(await buildMainPageMetadata("/solutions/cloud")),
@@ -57,14 +53,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: "Năng suất & Cộng tác | KEYON",
       description:
         "Microsoft 365, Office, Teams và công cụ cộng tác chính hãng trên KEYON — kích hoạt nhanh, hỗ trợ tiếng Việt.",
-    };
-  }
-  if (slug === "software-licensing") {
-    return {
-      ...(await buildMainPageMetadata("/solutions/software-licensing")),
-      title: "Bản quyền phần mềm | KEYON",
-      description:
-        "Mua và quản lý bản quyền phần mềm chính hãng — perpetual, subscription và volume cho cá nhân đến doanh nghiệp.",
     };
   }
   if (slug === "security") {
@@ -219,87 +207,6 @@ async function loadProductivityFeatured(): Promise<{
 
   scored.sort((a, b) => b.score - a.score);
   const featured = scored.slice(0, 4).map((s) => s.item);
-  if (featured.length > 0) {
-    return { featured, usingFallback: false };
-  }
-  return { featured: [], usingFallback: false };
-}
-
-function inferLicensingBrand(name: string, brandName: string): LicensingFeaturedProduct["brand"] {
-  const n = `${name} ${brandName}`.toLowerCase();
-  if (n.includes("adobe")) return "adobe";
-  if (n.includes("autodesk") || n.includes("autocad") || n.includes("revit")) return "autodesk";
-  if (n.includes("windows")) return "windows";
-  if (n.includes("365") || n.includes("microsoft 365") || n.includes("m365")) return "m365";
-  if (n.includes("office")) return "office";
-  return "generic";
-}
-
-async function loadLicensingFeatured(): Promise<{
-  featured: LicensingFeaturedProduct[];
-  usingFallback: boolean;
-}> {
-  const products = await prisma.product.findMany({
-    where: { active: true },
-    include: {
-      brand: true,
-      variants: { where: { active: true }, orderBy: { priceVnd: "asc" }, take: 1 },
-    },
-    orderBy: { name: "asc" },
-    take: 80,
-  });
-
-  const scored: { score: number; item: LicensingFeaturedProduct }[] = [];
-  for (const p of products) {
-    const variant = p.variants[0];
-    if (!variant) continue;
-    const cat =
-      p.categoryKey &&
-      (PRODUCT_CATEGORY_KEYS as readonly string[]).includes(p.categoryKey)
-        ? p.categoryKey
-        : inferCategory(p.brand.name, p.name);
-    const nameL = p.name.toLowerCase();
-    const brandL = p.brand.name.toLowerCase();
-
-    const isLicensing =
-      cat === "windows" ||
-      cat === "office" ||
-      nameL.includes("windows") ||
-      nameL.includes("office") ||
-      nameL.includes("365") ||
-      nameL.includes("adobe") ||
-      nameL.includes("autodesk") ||
-      nameL.includes("autocad") ||
-      brandL.includes("microsoft") ||
-      brandL.includes("adobe") ||
-      brandL.includes("autodesk");
-    if (!isLicensing) continue;
-
-    let score = 0;
-    if (nameL.includes("windows 11")) score += 55;
-    else if (nameL.includes("windows")) score += 45;
-    else if (nameL.includes("office 2024") || nameL.includes("office 2021")) score += 42;
-    else if (nameL.includes("365")) score += 40;
-    else if (nameL.includes("adobe")) score += 35;
-    else if (nameL.includes("autodesk") || nameL.includes("autocad")) score += 30;
-    else if (nameL.includes("office")) score += 28;
-    if (cat === "windows" || cat === "office") score += 8;
-
-    scored.push({
-      score,
-      item: {
-        id: p.id,
-        title: p.name,
-        href: `/products/${p.slug}`,
-        meta: `${p.brand.name} · License`,
-        priceLabel: `Từ ${variant.priceVnd.toLocaleString("vi-VN")}đ`,
-        brand: inferLicensingBrand(p.name, p.brand.name),
-      },
-    });
-  }
-
-  scored.sort((a, b) => b.score - a.score);
-  const featured = scored.slice(0, 6).map((s) => s.item);
   if (featured.length > 0) {
     return { featured, usingFallback: false };
   }
@@ -509,11 +416,6 @@ export default async function SolutionPage({ params }: Props) {
     return <CloudSolutionLanding featured={featured} />;
   }
 
-  if (slug === "software-licensing") {
-    const { featured } = await loadLicensingFeatured();
-    return <SoftwareLicensingSolutionLanding featured={featured} />;
-  }
-
   if (slug === "security") {
     const { featured } = await loadSecurityFeatured();
     return <SecuritySolutionLanding featured={featured} />;
@@ -554,5 +456,5 @@ export default async function SolutionPage({ params }: Props) {
     );
   }
 
-  return <IaLandingPage page={page} hubLabel="Giải pháp" hubHref="/solutions" />;
+  return <IaLandingPage page={page} hubLabel="Doanh nghiệp" hubHref="/business" />;
 }

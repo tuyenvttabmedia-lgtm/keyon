@@ -418,21 +418,21 @@ export const defaultCmsFooter: CmsFooter = {
       ],
     },
     {
-      title: "Giải pháp",
+      title: "Doanh nghiệp",
       links: [
-        { label: "Bản quyền phần mềm", href: "/solutions/software-licensing" },
+        { label: "Tổng quan doanh nghiệp", href: "/business" },
         { label: "Năng suất & Cộng tác", href: "/solutions/productivity" },
         { label: "Cloud", href: "/solutions/cloud" },
         { label: "Bảo mật", href: "/solutions/security" },
         { label: "Backup & Khôi phục", href: "/solutions/backup" },
         { label: "Quản lý bản quyền", href: "/solutions/license-management" },
+        { label: "Volume licensing", href: "/business/volume-licensing" },
+        { label: "Liên hệ kinh doanh", href: "/contact/quote" },
       ],
     },
     {
-      title: "Doanh nghiệp & Hỗ trợ",
+      title: "Hỗ trợ",
       links: [
-        { label: "Giải pháp doanh nghiệp", href: "/business" },
-        { label: "Volume licensing", href: "/business/volume-licensing" },
         { label: "Tài nguyên", href: "/resources" },
         { label: "Trung tâm hỗ trợ", href: "/support" },
         { label: "FAQ", href: "/faq" },
@@ -464,7 +464,6 @@ export const defaultCmsNav: CmsNav = {
   tagline: "Digital License Platform",
   items: [
     { label: "Sản phẩm", href: "/products" },
-    { label: "Giải pháp", href: "/solutions" },
     { label: "Doanh nghiệp", href: "/business" },
     { label: "Tài nguyên", href: "/resources" },
     { label: "Hỗ trợ", href: "/support" },

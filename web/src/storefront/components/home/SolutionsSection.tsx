@@ -31,7 +31,7 @@ const ART_THEME: Record<
 };
 
 /**
- * Home solutions — mirrors mega-nav Giải pháp (6 items, clickable).
+ * Home “Doanh nghiệp” topics — mirrors mega-nav Doanh nghiệp (topic + volume).
  * Source list lives in home.fixture; keep titles/hrefs in sync with ia.ts.
  */
 export function SolutionsSection({ data }: { data: Solutions }) {
