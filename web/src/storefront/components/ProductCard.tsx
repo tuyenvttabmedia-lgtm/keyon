@@ -20,12 +20,18 @@ type Props = {
   item: FeaturedProduct;
   /** Compact card for mobile/tablet carousels (show ~2 peeks). */
   compact?: boolean;
+  /** LCP hint for above-the-fold featured images. */
+  priority?: boolean;
 };
 
 /**
  * Featured Home product card — mockup: art · title · package · stars · price · CTA.
  */
-export function ProductCard({ item, compact = false }: Props) {
+export function ProductCard({
+  item,
+  compact = false,
+  priority = false,
+}: Props) {
   const cta = item.ctaLabel?.trim() || "Thanh toán ngay";
 
   return (
@@ -48,6 +54,7 @@ export function ProductCard({ item, compact = false }: Props) {
               height={140}
               className={`h-full w-auto object-contain ${compact ? "max-h-[88px]" : "max-h-[140px]"}`}
               unoptimized
+              priority={priority}
             />
           ) : (
             <ProductArt

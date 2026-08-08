@@ -16,10 +16,12 @@ import {
   Users,
 } from "lucide-react";
 import {
+  BODY_CLASS,
   BODY_MUTED_CLASS,
   CARD_TITLE_CLASS,
   CTA_LABEL_CLASS,
   FONT_DISPLAY,
+  LINK_FIELD_CLASS,
   PAGE_LEAD_CLASS,
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
@@ -241,7 +243,7 @@ export function SolutionsHubLanding({
                   >
                     <card.Icon {...ICON_MD} />
                   </span>
-                  <h3 className={`mt-5 ${CARD_TITLE_CLASS} text-[15px]`}>{card.title}</h3>
+                  <h3 className={`mt-5 ${CARD_TITLE_CLASS}`}>{card.title}</h3>
                   <p className={`mt-2 ${BODY_MUTED_CLASS}`}>{card.body}</p>
                   <ul className="mt-5 space-y-2.5">
                     {card.features.map((f) => (
@@ -249,13 +251,13 @@ export function SolutionsHubLanding({
                         <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
                           <Check size={10} strokeWidth={3} aria-hidden />
                         </span>
-                        <span className="text-[13px] leading-snug text-navy">{f}</span>
+                        <span className={`${BODY_CLASS} leading-snug`}>{f}</span>
                       </li>
                     ))}
                   </ul>
                   <Link
                     href={card.href}
-                    className={`mt-auto inline-flex items-center gap-1 pt-6 text-[13px] font-semibold text-accent ${TRANSITION_UI} ${HOVER_LINK_ACCENT}`}
+                    className={`mt-auto inline-flex items-center gap-1 pt-6 ${LINK_FIELD_CLASS} ${TRANSITION_UI} ${HOVER_LINK_ACCENT}`}
                   >
                     Tìm hiểu thêm
                     <span aria-hidden>→</span>

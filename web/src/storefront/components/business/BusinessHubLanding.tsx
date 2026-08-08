@@ -18,12 +18,14 @@ import {
 } from "lucide-react";
 import {
   BADGE_CLASS,
+  BODY_CLASS,
   BODY_MUTED_CLASS,
   CARD_META_CLASS,
   CARD_TITLE_CLASS,
   CTA_LABEL_CLASS,
   FONT_DISPLAY,
   HERO_TITLE_CLASS,
+  LINK_FIELD_CLASS,
   OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
   SECTION_LEAD_CLASS,
@@ -312,7 +314,7 @@ export function BusinessHubLanding() {
                   >
                     <card.Icon {...ICON_MD} />
                   </span>
-                  <h3 className={`mt-4 text-center ${CARD_TITLE_CLASS} text-[15px]`}>
+                  <h3 className={`mt-4 text-center ${CARD_TITLE_CLASS}`}>
                     {card.title}
                   </h3>
                   <p className={`mt-2 text-center ${BODY_MUTED_CLASS}`}>{card.body}</p>
@@ -322,13 +324,13 @@ export function BusinessHubLanding() {
                         <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
                           <Check size={10} strokeWidth={3} aria-hidden />
                         </span>
-                        <span className="text-[13px] leading-snug text-navy">{f}</span>
+                        <span className={`${BODY_CLASS} leading-snug`}>{f}</span>
                       </li>
                     ))}
                   </ul>
                   <Link
                     href={card.href}
-                    className={`mt-auto inline-flex items-center justify-center gap-1 pt-5 text-[13px] font-semibold text-accent ${TRANSITION_UI} ${HOVER_LINK_ACCENT}`}
+                    className={`mt-auto inline-flex items-center justify-center gap-1 pt-5 ${LINK_FIELD_CLASS} ${TRANSITION_UI} ${HOVER_LINK_ACCENT}`}
                   >
                     {card.cta}
                     <span aria-hidden>→</span>
@@ -364,8 +366,8 @@ export function BusinessHubLanding() {
                     <b.Icon size={20} strokeWidth={1.7} />
                   </span>
                   <div className="min-w-0 pt-0.5">
-                    <h3 className={`${CARD_TITLE_CLASS} !text-[15px] !text-white`}>{b.title}</h3>
-                    <p className="mt-1.5 text-[13px] leading-relaxed text-slate-300">{b.body}</p>
+                    <h3 className={`${CARD_TITLE_CLASS} !text-white`}>{b.title}</h3>
+                    <p className={`mt-1.5 ${BODY_MUTED_CLASS} !text-slate-300`}>{b.body}</p>
                   </div>
                 </li>
               ))}

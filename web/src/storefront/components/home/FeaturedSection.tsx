@@ -33,20 +33,20 @@ export function FeaturedSection({ data }: { data: Featured }) {
           <>
             <div className="-mx-4 px-4 lg:hidden">
               <div className="home-snap-x gap-2.5 pb-1">
-                {items.map((item: FeaturedProduct) => (
+                {items.map((item: FeaturedProduct, i) => (
                   <div
                     key={item.id}
                     className="w-[calc(50vw-1.35rem)] max-w-[200px] md:w-[calc(38vw-1rem)] md:max-w-[210px]"
                   >
-                    <ProductCard item={item} compact />
+                    <ProductCard item={item} compact priority={i < 2} />
                   </div>
                 ))}
               </div>
             </div>
 
             <Reveal stagger className="hidden lg:grid lg:grid-cols-5 lg:gap-3.5">
-              {items.map((item: FeaturedProduct) => (
-                <ProductCard key={item.id} item={item} />
+              {items.map((item: FeaturedProduct, i) => (
+                <ProductCard key={item.id} item={item} priority={i < 2} />
               ))}
             </Reveal>
           </>

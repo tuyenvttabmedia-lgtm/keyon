@@ -33,7 +33,12 @@ import {
 import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
 import type { ShopCategoryId } from "@/storefront/components/shop/types";
 import { mapProductsToShopCards } from "@/storefront/lib/related-products";
-import type { FeaturedProduct, FaqItem, PartnerItem } from "./types";
+import type {
+  FeaturedProduct,
+  FaqItem,
+  FooterColumn,
+  PartnerItem,
+} from "./types";
 
 /**
  * Home content: fixture + overlay CMS (hero, nav, footer, news, partners, categories, ratings, why banner).
@@ -388,7 +393,10 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
         nav.brandName?.trim() ||
         defaultCmsFooter.brandName,
       blurb: footer.blurb || homeFixture.footer.blurb,
-      columns: footer.columns.length ? footer.columns : homeFixture.footer.columns,
+      columns: sanitizeFooterColumns(
+        footer.columns.length ? footer.columns : homeFixture.footer.columns,
+        shopCounts,
+      ),
       copyright: footer.copyright || homeFixture.footer.copyright,
       legalLinks: footer.legalLinks.length
         ? footer.legalLinks
@@ -398,6 +406,31 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
     },
   };
 });
+
+/** Drop empty shop-category footer links; normalize a few known CTA paths. */
+function sanitizeFooterColumns(
+  columns: FooterColumn[],
+  shopCounts: Record<ShopCategoryId, number>,
+): FooterColumn[] {
+  return columns.map((col) => ({
+    ...col,
+    links: col.links
+      .map((link) => {
+        let href = link.href?.trim() || "";
+        if (href === "/products?q=adobe") href = "/products?cat=adobe";
+        if (href === "/contact/sales") href = "/contact/quote";
+        return href !== link.href ? { ...link, href } : link;
+      })
+      .filter((link) => {
+        const href = link.href || "";
+        const m = href.match(/[?&]cat=([a-z]+)/i);
+        if (!m) return true;
+        const cat = m[1] as ShopCategoryId;
+        if (!(cat in shopCounts)) return true;
+        return shopCounts[cat] > 0;
+      }),
+  }));
+}
 
 function toCategoryIcon(key?: CmsCategoryIconKey): CategoryIconKey {
   if (!key) return "other";
