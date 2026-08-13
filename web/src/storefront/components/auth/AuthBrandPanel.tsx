@@ -30,7 +30,7 @@ const DEFAULT_BULLETS = [
   "Lưu và quản lý trong Tài khoản",
 ];
 
-/** Desktop brand column — padding synced with form pane. */
+/** Desktop brand column — content + ambient K, synced with form pane padding. */
 export function AuthBrandPanel({
   headline,
   subtext = DEFAULT_SUB,
@@ -41,7 +41,7 @@ export function AuthBrandPanel({
   const showBullets = !tall && bullets.length > 0;
 
   return (
-    <aside className="relative hidden overflow-hidden bg-navy-soft [container-type:inline-size] lg:flex lg:flex-col">
+    <aside className="relative hidden overflow-hidden bg-navy-soft lg:flex lg:flex-col">
       <div
         className={`auth-brand-k ${tall ? "auth-brand-k--tall" : "auth-brand-k--compact"}`}
         aria-hidden
@@ -49,11 +49,7 @@ export function AuthBrandPanel({
         <span className={`auth-brand-k-letter ${FONT_DISPLAY}`}>K</span>
       </div>
 
-      <div
-        className={`relative z-10 flex h-full flex-col px-8 py-8 sm:px-8 md:px-10 md:py-10 lg:px-12 lg:py-12 ${
-          tall ? "justify-between gap-8" : "justify-center gap-10"
-        }`}
-      >
+      <div className="relative z-10 flex h-full flex-col justify-start gap-6 px-8 py-8 sm:px-8 md:px-10 md:py-10 lg:gap-7 lg:px-12 lg:py-12">
         <div className="max-w-[24rem] shrink-0">
           <p className={`${OVERLINE_CLASS} text-accent`}>KEYON Account</p>
           <h2 className={`mt-3 ${SECTION_TITLE_CLASS}`}>{headline}</h2>
@@ -62,11 +58,11 @@ export function AuthBrandPanel({
         </div>
 
         {tall ? (
-          <ol className="flex flex-col gap-2.5">
+          <ol className="flex max-w-[26rem] flex-col gap-2.5">
             {features!.map((f, i) => (
               <li
                 key={f.title}
-                className={`flex gap-3 rounded-xl border border-border/60 bg-white/70 px-3.5 py-3 ${ELEVATION_NONE} backdrop-blur-[2px]`}
+                className={`flex gap-3 rounded-xl border border-border/60 bg-white/80 px-3.5 py-3 ${ELEVATION_NONE}`}
               >
                 <span
                   className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft ${FONT_DISPLAY} text-xs font-bold text-accent`}
@@ -85,7 +81,7 @@ export function AuthBrandPanel({
         ) : null}
 
         {showBullets ? (
-          <ul className={`shrink-0 space-y-2.5 ${BODY_MUTED_CLASS}`}>
+          <ul className={`max-w-[24rem] space-y-2.5 ${BODY_MUTED_CLASS}`}>
             {bullets.map((line) => (
               <li key={line} className="flex items-start gap-2.5">
                 <span
