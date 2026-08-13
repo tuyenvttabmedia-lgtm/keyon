@@ -4,8 +4,6 @@ import {
   loadPublishedStaticPages,
   loadStaticPageBySlug,
 } from "@/server/cms/static-pages";
-import { isHtmlBody, legacyBodyToHtml } from "@/server/cms/blog-utils";
-import { sanitizeBlogHtml } from "@/lib/sanitize-blog-html";
 import {
   BREADCRUMB_CLASS,
   BREADCRUMB_CURRENT_CLASS,
@@ -15,6 +13,7 @@ import {
 } from "@/storefront/typography";
 import { ELEVATION_HAIRLINE, TRANSITION_UI } from "@/storefront/effects";
 import { PolicyDetailView } from "@/storefront/components/policy/PolicyDetailView";
+import { StaticPageHtml } from "@/storefront/components/StaticPageHtml";
 import { loadPolicyCms } from "@/storefront/components/policy/load-policy-cms";
 
 export const dynamic = "force-dynamic";
@@ -80,10 +79,6 @@ function SimpleStaticPageView({
 }: {
   page: NonNullable<Awaited<ReturnType<typeof loadStaticPageBySlug>>>;
 }) {
-  const html = sanitizeBlogHtml(
-    isHtmlBody(page.body) ? page.body : legacyBodyToHtml(page.body),
-  );
-
   return (
     <div className="bg-[#F4F8FB]">
       <section className="relative overflow-hidden bg-navy text-white">
@@ -114,9 +109,9 @@ function SimpleStaticPageView({
         <article
           className={`rounded-2xl border border-border bg-white p-6 sm:p-8 ${ELEVATION_HAIRLINE}`}
         >
-          <div
+          <StaticPageHtml
+            body={page.body}
             className="prose prose-slate max-w-none prose-headings:text-navy prose-p:text-muted prose-li:text-muted prose-a:text-accent prose-strong:text-navy"
-            dangerouslySetInnerHTML={{ __html: html }}
           />
           <p className={`mt-8 border-t border-border pt-4 ${CARD_TITLE_CLASS}`}>
             <Link href="/" className="text-accent hover:underline">
