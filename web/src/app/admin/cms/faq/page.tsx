@@ -13,7 +13,9 @@ export default async function AdminCmsFaqPage() {
         <h1 className={ADMIN_PAGE_TITLE_CLASS}>
           CMS · FAQ
         </h1>
-        <p className="text-sm text-muted">Quản lý câu hỏi — hiện Home / trang FAQ</p>
+        <p className="text-sm text-muted">
+          Danh sách gọn · tìm / lọc · sửa trong panel — phù hợp hàng trăm câu hỏi
+        </p>
       </div>
       <CmsSubnav active="/admin/cms/faq" />
       <FaqForm initial={faq} />
