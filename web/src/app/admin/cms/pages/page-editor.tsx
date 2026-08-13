@@ -134,8 +134,8 @@ export function StaticPageEditor({
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
-      <div className="space-y-4 rounded-2xl border border-border bg-card p-5 sm:p-6">
+    <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_220px] xl:items-start">
+      <div className="min-w-0 space-y-4 rounded-2xl border border-border bg-card p-4 sm:p-5">
         <input
           className={`w-full border-0 border-b border-border bg-transparent pb-2 outline-none ${ADMIN_PAGE_TITLE_CLASS}`}
           value={form.title}
@@ -159,7 +159,7 @@ export function StaticPageEditor({
             placeholder="Một–hai câu mô tả trang"
           />
         </label>
-        <div>
+        <div className="min-w-0">
           <p className={`${FORM_LABEL_CLASS} mb-2`}>Nội dung</p>
           <RichTextEditor
             value={form.body}
@@ -169,7 +169,7 @@ export function StaticPageEditor({
         </div>
       </div>
 
-      <aside className="space-y-4">
+      <aside className="space-y-4 xl:sticky xl:top-4 xl:self-start">
         <div className="space-y-3 rounded-2xl border border-border bg-card p-4">
           <p className="font-semibold text-navy">Xuất bản</p>
           <p className="text-xs text-muted">

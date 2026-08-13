@@ -179,15 +179,15 @@ export function BlogEditor({
   const ogImg = form.ogImageUrl?.trim() || form.coverUrl;
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(280px,32%)]">
-      <div className="space-y-4">
+    <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_240px] xl:items-start">
+      <div className="min-w-0 space-y-4">
         {dirty ? (
           <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
             Bạn có thay đổi chưa lưu
           </p>
         ) : null}
 
-        <div className="rounded-2xl border border-border bg-card p-5 space-y-4">
+        <div className="min-w-0 space-y-4 rounded-2xl border border-border bg-card p-4 sm:p-5">
           <input
             className={`w-full border-0 border-b border-border bg-transparent pb-2 outline-none ${ADMIN_PAGE_TITLE_CLASS}`}
             value={form.title}
@@ -219,7 +219,7 @@ export function BlogEditor({
             </span>
           </label>
 
-          <div>
+          <div className="min-w-0">
             <p className="mb-2 text-xs font-medium text-muted">Nội dung</p>
             <RichTextEditor
               value={form.body}

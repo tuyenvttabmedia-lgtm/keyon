@@ -1068,21 +1068,35 @@ html {
 
 /* Admin TipTap + storefront HTML from CMS/blog */
 .keyon-editor-prose,
+.keyon-editor-prose.ProseMirror,
+.ProseMirror.keyon-editor-prose {
+  box-sizing: border-box;
+  color: #334155;
+  font-size: 0.975rem;
+  line-height: 1.75;
+  max-width: none;
+  min-height: 520px;
+  outline: none;
+  padding: 1rem 1.15rem 1.75rem;
+  width: 100%;
+}
+
 .blog-prose,
 .policy-prose {
   color: #334155;
   font-size: 0.975rem;
   line-height: 1.75;
+  max-width: none;
+  width: 100%;
 }
 
-.keyon-editor-prose .ProseMirror {
-  min-height: 420px;
-  padding: 1rem 1.1rem 1.5rem;
-  outline: none;
+.keyon-editor-shell {
+  width: 100%;
+  max-width: none;
 }
 
-.keyon-editor-prose .ProseMirror p.is-editor-empty:first-child::before,
-.keyon-editor-prose .ProseMirror .is-empty::before {
+.keyon-editor-prose p.is-editor-empty:first-child::before,
+.keyon-editor-prose .is-empty::before {
   color: #94a3b8;
   content: attr(data-placeholder);
   float: left;

@@ -221,8 +221,8 @@ export function RichTextEditor({
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-      <div className="sticky top-0 z-10 flex flex-wrap items-center gap-0.5 border-b border-border bg-[#f8fafc] px-2 py-1.5">
+    <div className="keyon-editor-shell w-full min-w-0 max-w-none overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+      <div className="sticky top-0 z-10 flex w-full flex-wrap items-center gap-0.5 border-b border-border bg-[#f8fafc] px-2 py-1.5">
         {!htmlMode && editor ? (
           <>
             <ToolbarBtn
@@ -452,8 +452,8 @@ export function RichTextEditor({
           </div>
         </div>
       ) : (
-        <div className="bg-white px-1 py-1">
-          <EditorContent editor={editor} />
+        <div className="w-full min-w-0 bg-white">
+          <EditorContent editor={editor} className="w-full min-w-0" />
         </div>
       )}
 
