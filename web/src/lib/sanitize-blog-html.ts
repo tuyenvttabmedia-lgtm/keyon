@@ -1,4 +1,4 @@
-import DOMPurify from "isomorphic-dompurify";
+import sanitizeHtml from "sanitize-html";
 
 const ALLOWED_TAGS = [
   "p",
@@ -28,36 +28,24 @@ const ALLOWED_TAGS = [
   "span",
 ];
 
-const ALLOWED_ATTR = [
-  "href",
-  "target",
-  "rel",
-  "src",
-  "alt",
-  "title",
-  "width",
-  "height",
-  "colspan",
-  "rowspan",
-  "class",
-];
-
-/** Sanitize TipTap HTML before persist / storefront render. */
+/** Sanitize TipTap HTML before persist / storefront render (Node + browser safe). */
 export function sanitizeBlogHtml(html: string): string {
   if (!html?.trim()) return "";
-  return DOMPurify.sanitize(html, {
-    ALLOWED_TAGS,
-    ALLOWED_ATTR,
-    ALLOW_DATA_ATTR: false,
-    FORBID_TAGS: ["script", "style", "iframe", "object", "embed", "form", "input"],
-    FORBID_ATTR: [
-      "onerror",
-      "onclick",
-      "onload",
-      "onmouseover",
-      "onfocus",
-      "onblur",
-      "style",
-    ],
+  return sanitizeHtml(html, {
+    allowedTags: ALLOWED_TAGS,
+    allowedAttributes: {
+      a: ["href", "name", "target", "rel", "class"],
+      img: ["src", "alt", "title", "width", "height", "class"],
+      th: ["colspan", "rowspan", "class"],
+      td: ["colspan", "rowspan", "class"],
+      "*": ["class"],
+    },
+    allowedSchemes: ["http", "https", "mailto", "tel"],
+    allowProtocolRelative: false,
+    transformTags: {
+      a: sanitizeHtml.simpleTransform("a", {
+        rel: "noopener noreferrer",
+      }),
+    },
   });
 }

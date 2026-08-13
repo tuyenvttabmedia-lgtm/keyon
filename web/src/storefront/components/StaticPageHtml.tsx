@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { isHtmlBody, legacyBodyToHtml } from "@/server/cms/blog-utils";
 import { sanitizeBlogHtml } from "@/lib/sanitize-blog-html";
 
-/** Client-side sanitize — isomorphic-dompurify/jsdom is not safe on Node 20 SSR. */
+/** Sanitize TipTap HTML for static / policy pages (Node-safe). */
 export function StaticPageHtml({
   body,
   className,
