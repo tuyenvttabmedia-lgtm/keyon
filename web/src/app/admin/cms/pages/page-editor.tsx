@@ -2,8 +2,11 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { CmsStaticPage } from "@/server/cms/types";
+import { legacyBodyToHtml } from "@/server/cms/blog-utils";
+import { sanitizeBlogHtml } from "@/lib/sanitize-blog-html";
+import { RichTextEditor } from "@/app/admin/blog/rich-text-editor";
 import {
   ADMIN_PAGE_TITLE_CLASS,
   FORM_LABEL_CLASS,
@@ -31,7 +34,14 @@ export function StaticPageEditor({
   isNew: boolean;
 }) {
   const router = useRouter();
-  const [form, setForm] = useState(initial);
+  const seeded = useMemo(
+    () => ({
+      ...initial,
+      body: legacyBodyToHtml(initial.body),
+    }),
+    [initial],
+  );
+  const [form, setForm] = useState(seeded);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -83,7 +93,7 @@ export function StaticPageEditor({
       title,
       slug,
       description: form.description.trim(),
-      body: form.body,
+      body: sanitizeBlogHtml(form.body),
       status,
       updatedAt: now,
       publishedAt:
@@ -149,22 +159,13 @@ export function StaticPageEditor({
             placeholder="Một–hai câu mô tả trang"
           />
         </label>
-        <label className="block">
-          <span className={FORM_LABEL_CLASS}>
-            Nội dung —{" "}
-            <span className="font-normal text-muted">
-              ## tiêu đề · đoạn văn · - bullet · &gt; callout
-            </span>
-          </span>
-          <textarea
-            rows={22}
-            className={`mt-1 w-full rounded-lg border border-border px-3 py-2 font-mono text-[13px] leading-relaxed ${INPUT_TEXT_CLASS}`}
+        <div>
+          <p className={`${FORM_LABEL_CLASS} mb-2`}>Nội dung</p>
+          <RichTextEditor
             value={form.body}
-            onChange={(e) => setForm({ ...form, body: e.target.value })}
-            placeholder="## 1. Mục đầu tiên&#10;Nội dung…"
-            spellCheck={false}
+            onChange={(html) => setForm((prev) => ({ ...prev, body: html }))}
           />
-        </label>
+        </div>
       </div>
 
       <aside className="space-y-4">
@@ -172,7 +173,11 @@ export function StaticPageEditor({
           <p className="font-semibold text-navy">Xuất bản</p>
           <p className="text-xs text-muted">
             URL công khai:{" "}
-            <Link href={publicPath} className="font-mono text-accent hover:underline" target="_blank">
+            <Link
+              href={publicPath}
+              className="font-mono text-accent hover:underline"
+              target="_blank"
+            >
               {publicPath}
             </Link>
           </p>
@@ -278,7 +283,8 @@ export function StaticPageEditor({
               onChange={(e) =>
                 setForm({
                   ...form,
-                  iconKey: (e.target.value || undefined) as CmsStaticPage["iconKey"],
+                  iconKey: (e.target.value ||
+                    undefined) as CmsStaticPage["iconKey"],
                 })
               }
             >

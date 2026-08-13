@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { CmsPolicy, CmsPolicyItem } from "@/server/cms/types";
+import { isHtmlBody } from "@/server/cms/blog-utils";
+import { sanitizeBlogHtml } from "@/lib/sanitize-blog-html";
 import {
   BODY_CLASS,
   BODY_MUTED_CLASS,
@@ -10,7 +12,6 @@ import {
   BREADCRUMB_CURRENT_CLASS,
   CARD_TITLE_CLASS,
   CTA_COMPACT_CLASS,
-  CTA_LABEL_CLASS,
   SECTION_LEAD_CLASS,
   SUBSECTION_TITLE_CLASS,
 } from "@/storefront/typography";
@@ -116,7 +117,14 @@ export function PolicyDetailView({
   /** Public path prefix for sidebar links */
   basePath?: string;
 }) {
-  const parsed = parsePolicyBody(item.body);
+  const htmlBody = useMemo(() => {
+    if (!isHtmlBody(item.body)) return null;
+    return sanitizeBlogHtml(item.body);
+  }, [item.body]);
+  const parsed = useMemo(
+    () => (htmlBody ? null : parsePolicyBody(item.body)),
+    [htmlBody, item.body],
+  );
   const openCount = Math.max(0, cms.openSectionCount ?? 2);
   const [openAcc, setOpenAcc] = useState<Record<number, boolean>>({});
 
@@ -169,7 +177,7 @@ export function PolicyDetailView({
       <div className="bg-[#F4F8FB]">
         <div className="home-container py-6 md:py-8">
           <div
-            className={`grid gap-5 rounded-2xl border border-border bg-white p-4 sm:p-5 lg:grid-cols-[minmax(14rem,0.85fr)_minmax(0,1.65fr)] lg:gap-6 lg:p-6 ${ELEVATION_HAIRLINE}`}
+            className={`grid gap-5 rounded-2xl border border-border bg-white p-4 sm:p-5 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-5 lg:p-6 xl:grid-cols-[14rem_minmax(0,1fr)] ${ELEVATION_HAIRLINE}`}
           >
             {/* Sidebar */}
             <aside className="space-y-4">
@@ -253,57 +261,66 @@ export function PolicyDetailView({
                 ) : null}
               </div>
 
-              {parsed.intro.length > 0 ? (
-                <div className="mt-5 space-y-3">
-                  {parsed.intro.map((p, i) => (
-                    <p key={i} className={BODY_MUTED_CLASS}>
-                      {p}
-                    </p>
-                  ))}
-                </div>
-              ) : null}
-
-              <div className="mt-6 space-y-5">
-                {parsed.sections.map((sec, i) => {
-                  const isAccordion = i >= openCount;
-                  const expanded = !isAccordion || Boolean(openAcc[i]);
-
-                  if (!isAccordion) {
-                    return (
-                      <section key={i}>
-                        <h2 className={SUBSECTION_TITLE_CLASS}>{sec.title}</h2>
-                        <div className="mt-3 space-y-3">
-                          <SectionBlocks
-                            blocks={sec.blocks}
-                            checkStyle={i === 0}
-                          />
-                        </div>
-                      </section>
-                    );
-                  }
-
-                  return (
-                    <div key={i} className="border-b border-border">
-                      <button
-                        type="button"
-                        onClick={() => toggle(i)}
-                        className={`flex w-full items-center justify-between gap-3 py-3.5 text-left ${TRANSITION_UI}`}
-                        aria-expanded={expanded}
-                      >
-                        <span className={`${CARD_TITLE_CLASS} !text-[15px]`}>
-                          {sec.title}
-                        </span>
-                        <Chevron open={expanded} />
-                      </button>
-                      {expanded ? (
-                        <div className="space-y-3 pb-4">
-                          <SectionBlocks blocks={sec.blocks} />
-                        </div>
-                      ) : null}
+              {htmlBody ? (
+                <div
+                  className="policy-prose prose prose-slate mt-5 max-w-none prose-headings:text-navy prose-p:text-muted prose-li:text-muted prose-a:text-accent prose-strong:text-navy"
+                  dangerouslySetInnerHTML={{ __html: htmlBody }}
+                />
+              ) : (
+                <>
+                  {parsed!.intro.length > 0 ? (
+                    <div className="mt-5 space-y-3">
+                      {parsed!.intro.map((p, i) => (
+                        <p key={i} className={BODY_MUTED_CLASS}>
+                          {p}
+                        </p>
+                      ))}
                     </div>
-                  );
-                })}
-              </div>
+                  ) : null}
+
+                  <div className="mt-6 space-y-5">
+                    {parsed!.sections.map((sec, i) => {
+                      const isAccordion = i >= openCount;
+                      const expanded = !isAccordion || Boolean(openAcc[i]);
+
+                      if (!isAccordion) {
+                        return (
+                          <section key={i}>
+                            <h2 className={SUBSECTION_TITLE_CLASS}>{sec.title}</h2>
+                            <div className="mt-3 space-y-3">
+                              <SectionBlocks
+                                blocks={sec.blocks}
+                                checkStyle={i === 0}
+                              />
+                            </div>
+                          </section>
+                        );
+                      }
+
+                      return (
+                        <div key={i} className="border-b border-border">
+                          <button
+                            type="button"
+                            onClick={() => toggle(i)}
+                            className={`flex w-full items-center justify-between gap-3 py-3.5 text-left ${TRANSITION_UI}`}
+                            aria-expanded={expanded}
+                          >
+                            <span className={`${CARD_TITLE_CLASS} !text-[15px]`}>
+                              {sec.title}
+                            </span>
+                            <Chevron open={expanded} />
+                          </button>
+                          {expanded ? (
+                            <div className="space-y-3 pb-4">
+                              <SectionBlocks blocks={sec.blocks} />
+                            </div>
+                          ) : null}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
             </article>
           </div>
         </div>

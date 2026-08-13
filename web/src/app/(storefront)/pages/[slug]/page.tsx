@@ -4,8 +4,9 @@ import {
   loadPublishedStaticPages,
   loadStaticPageBySlug,
 } from "@/server/cms/static-pages";
+import { isHtmlBody, legacyBodyToHtml } from "@/server/cms/blog-utils";
+import { sanitizeBlogHtml } from "@/lib/sanitize-blog-html";
 import {
-  BODY_MUTED_CLASS,
   BREADCRUMB_CLASS,
   BREADCRUMB_CURRENT_CLASS,
   CARD_TITLE_CLASS,
@@ -79,11 +80,9 @@ function SimpleStaticPageView({
 }: {
   page: NonNullable<Awaited<ReturnType<typeof loadStaticPageBySlug>>>;
 }) {
-  const sections = page.body
-    .replace(/\r\n/g, "\n")
-    .split(/\n{2,}/)
-    .map((c) => c.trim())
-    .filter(Boolean);
+  const html = sanitizeBlogHtml(
+    isHtmlBody(page.body) ? page.body : legacyBodyToHtml(page.body),
+  );
 
   return (
     <div className="bg-[#F4F8FB]">
@@ -115,33 +114,10 @@ function SimpleStaticPageView({
         <article
           className={`rounded-2xl border border-border bg-white p-6 sm:p-8 ${ELEVATION_HAIRLINE}`}
         >
-          <div className="space-y-4">
-            {sections.map((chunk, i) => {
-              if (chunk.startsWith("## ")) {
-                return (
-                  <h2 key={i} className={SUBSECTION_TITLE_CLASS}>
-                    {chunk.replace(/^##\s+/, "")}
-                  </h2>
-                );
-              }
-              if (chunk.split("\n").every((l) => /^[-*]\s+/.test(l.trim()))) {
-                return (
-                  <ul key={i} className="list-disc space-y-1 pl-5">
-                    {chunk.split("\n").map((l) => (
-                      <li key={l} className={BODY_MUTED_CLASS}>
-                        {l.replace(/^[-*]\s+/, "").trim()}
-                      </li>
-                    ))}
-                  </ul>
-                );
-              }
-              return (
-                <p key={i} className={BODY_MUTED_CLASS}>
-                  {chunk.replace(/\n/g, " ")}
-                </p>
-              );
-            })}
-          </div>
+          <div
+            className="prose prose-slate max-w-none prose-headings:text-navy prose-p:text-muted prose-li:text-muted prose-a:text-accent prose-strong:text-navy"
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
           <p className={`mt-8 border-t border-border pt-4 ${CARD_TITLE_CLASS}`}>
             <Link href="/" className="text-accent hover:underline">
               ← Về trang chủ

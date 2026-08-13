@@ -412,14 +412,32 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
   };
 });
 
-/** Drop empty shop-category footer links; normalize a few known CTA paths. */
+/** Drop empty shop-category footer links; dedupe hrefs; trim noisy business lists. */
 function sanitizeFooterColumns(
   columns: FooterColumn[],
   shopCounts: Record<ShopCategoryId, number>,
 ): FooterColumn[] {
-  return columns.map((col) => ({
-    ...col,
-    links: col.links
+  const BUSINESS_HREFS = new Set([
+    "/business",
+    "/business/volume-licensing",
+    "/business/subscriptions",
+    "/business/licensing-consulting",
+    "/contact/quote",
+  ]);
+
+  const seen = new Set<string>();
+
+  return columns.map((col) => {
+    const title = col.title.trim().toLowerCase();
+    const isBusiness =
+      title.includes("doanh nghiệp") || title.includes("doanh nghiep");
+    const isCompany =
+      title.includes("công ty") ||
+      title.includes("cong ty") ||
+      title.includes("thông tin") ||
+      title.includes("thong tin");
+
+    let links = col.links
       .map((link) => {
         let href = link.href?.trim() || "";
         if (href === "/products?q=adobe") href = "/products?cat=adobe";
@@ -433,8 +451,40 @@ function sanitizeFooterColumns(
         const cat = m[1] as ShopCategoryId;
         if (!(cat in shopCounts)) return true;
         return shopCounts[cat] > 0;
-      }),
-  }));
+      });
+
+    // Drop deep /solutions/* dump from Business — keep hub CTAs only
+    if (isBusiness) {
+      links = links.filter((l) => {
+        const href = (l.href || "").split("?")[0]!;
+        if (href.startsWith("/solutions/")) return false;
+        if (BUSINESS_HREFS.has(href)) return true;
+        return href.startsWith("/business");
+      });
+    }
+
+    // Company column: no sales CTA (lives under Doanh nghiệp)
+    if (isCompany) {
+      links = links.filter((l) => {
+        const href = (l.href || "").split("?")[0]!;
+        return href !== "/contact/quote";
+      });
+    }
+
+    // Global href dedupe (first column wins)
+    links = links.filter((l) => {
+      const key = (l.href || "").trim().toLowerCase();
+      if (!key || seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    return {
+      ...col,
+      title: isCompany && title.includes("thông tin") ? "Công ty" : col.title,
+      links,
+    };
+  });
 }
 
 function toCategoryIcon(key?: CmsCategoryIconKey): CategoryIconKey {

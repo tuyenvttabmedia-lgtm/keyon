@@ -41,7 +41,7 @@ export function SiteFooter({
   return (
     <footer className="mt-auto bg-footer text-slate-400">
       <div className="home-container">
-        <div className="py-10 lg:grid lg:grid-cols-5 lg:gap-8 lg:py-12">
+        <div className="py-10 lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,3.2fr)] lg:gap-10 lg:py-12">
           <div className="mb-8 lg:mb-0">
             <Link
               href="/"
@@ -83,16 +83,19 @@ export function SiteFooter({
             </div>
           </div>
 
-          <div className="lg:col-span-4">
+          <div>
             <FooterAccordions columns={columns} />
-            <div className="hidden gap-8 lg:grid lg:grid-cols-4">
+            <div className="hidden gap-8 lg:grid lg:grid-cols-4 lg:gap-6 xl:gap-8">
               {columns.map((col) => (
-                <div key={col.title}>
+                <div key={col.title} className="min-w-0">
                   <p className="mb-3 text-sm font-semibold text-white">{col.title}</p>
-                  <ul className="space-y-2 text-sm">
+                  <ul className="space-y-2.5 text-sm">
                     {col.links.map((link) => (
-                      <li key={link.href + link.label}>
-                        <Link href={link.href} className={footerLink}>
+                      <li key={link.href + link.label} className="min-w-0">
+                        <Link
+                          href={link.href}
+                          className={`${footerLink} break-words`}
+                        >
                           {link.label}
                         </Link>
                       </li>
@@ -106,9 +109,11 @@ export function SiteFooter({
       </div>
 
       <div className="border-t border-white/10">
-        <div className="home-container flex flex-col gap-4 py-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-          <span className="text-xs text-slate-500">{copyright}</span>
-          <div className="flex flex-wrap items-center gap-2">
+        <div className="home-container grid gap-4 py-4 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+          <span className="text-xs text-slate-500 sm:justify-self-start">
+            {copyright}
+          </span>
+          <div className="flex flex-wrap items-center gap-2 sm:justify-self-center">
             {paymentBadges.map((p) => (
               <span
                 key={p}
@@ -118,7 +123,7 @@ export function SiteFooter({
               </span>
             ))}
           </div>
-          <div className="flex flex-wrap items-center gap-2 text-xs">
+          <div className="flex flex-wrap items-center gap-2 text-xs sm:justify-self-end">
             {legalLinks.map((link, i) => (
               <span key={link.href + link.label} className="flex items-center gap-2">
                 {i > 0 ? <span className="text-slate-600" aria-hidden>|</span> : null}
