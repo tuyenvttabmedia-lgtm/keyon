@@ -162,25 +162,54 @@ export function FooterForm({ initial }: { initial: CmsFooter }) {
           </div>
 
           <div className="space-y-3 rounded-2xl border border-border bg-card p-6">
-            <div className="flex items-center justify-between gap-2">
-              <p className="text-sm font-medium text-navy">
-                Legal links (thanh dưới footer)
-              </p>
-              <button
-                type="button"
-                className="text-xs font-medium text-accent hover:underline"
-                onClick={() =>
-                  setForm({
-                    ...form,
-                    legalLinks: [
-                      ...form.legalLinks,
-                      { label: "Chính sách", href: "/policy/privacy" },
-                    ],
-                  })
-                }
-              >
-                + Thêm
-              </button>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <p className="text-sm font-medium text-navy">
+                  Legal links (thanh dưới footer)
+                </p>
+                <p className="mt-0.5 text-xs text-muted">
+                  Nên hiện đủ chính sách bắt buộc (BCT): điều khoản, bảo mật,
+                  thanh toán, giao hàng, hoàn tiền, khiếu nại + hub /policy.
+                  Không chỉ 1 link hub — khó kiểm tra khi đăng ký.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  className="rounded-lg border border-accent/30 bg-accent-soft px-3 py-1.5 text-xs font-medium text-accent"
+                  onClick={() =>
+                    setForm({
+                      ...form,
+                      legalLinks: [
+                        { label: "Điều khoản", href: "/policy/terms" },
+                        { label: "Bảo mật", href: "/policy/privacy" },
+                        { label: "Thanh toán", href: "/policy/payment" },
+                        { label: "Giao hàng", href: "/policy/delivery" },
+                        { label: "Hoàn tiền", href: "/policy/refund" },
+                        { label: "Khiếu nại", href: "/policy/complaint" },
+                        { label: "Tất cả chính sách", href: "/policy" },
+                      ],
+                    })
+                  }
+                >
+                  Áp dụng bộ BCT
+                </button>
+                <button
+                  type="button"
+                  className="text-xs font-medium text-accent hover:underline"
+                  onClick={() =>
+                    setForm({
+                      ...form,
+                      legalLinks: [
+                        ...form.legalLinks,
+                        { label: "Chính sách", href: "/policy/privacy" },
+                      ],
+                    })
+                  }
+                >
+                  + Thêm
+                </button>
+              </div>
             </div>
             {form.legalLinks.map((link, i) => (
               <div key={i} className="flex gap-2">

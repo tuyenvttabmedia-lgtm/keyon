@@ -155,11 +155,11 @@ export function SiteFooter({
       </div>
 
       <div className="border-t border-white/10">
-        <div className="home-container grid gap-4 py-4 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
-          <span className="text-xs text-slate-500 sm:justify-self-start">
+        <div className="home-container flex flex-col gap-4 py-4 lg:grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1.4fr)] lg:items-start lg:gap-6">
+          <span className="text-xs text-slate-500 lg:pt-1">
             {copyright}
           </span>
-          <div className="flex flex-wrap items-center gap-2 sm:justify-self-center">
+          <div className="flex flex-wrap items-center gap-2 lg:justify-self-center">
             {paymentBadges.map((p) => (
               <span
                 key={p}
@@ -169,26 +169,22 @@ export function SiteFooter({
               </span>
             ))}
           </div>
-          <div className="flex flex-wrap items-center gap-2 text-xs sm:justify-self-end">
-            {legalLinks.map((link, i) => (
-              <span
+          <nav
+            aria-label="Chính sách"
+            className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs lg:justify-end"
+          >
+            {legalLinks.map((link) => (
+              <FooterHref
                 key={link.href + link.label}
-                className="flex items-center gap-2"
+                href={link.href}
+                className={`text-slate-500 ${TRANSITION_COLORS} ${MOTION_NORMAL} hover:text-white hover:underline hover:underline-offset-4 ${
+                  link.href === "/policy" ? "font-medium text-slate-300" : ""
+                }`}
               >
-                {i > 0 ? (
-                  <span className="text-slate-600" aria-hidden>
-                    |
-                  </span>
-                ) : null}
-                <FooterHref
-                  href={link.href}
-                  className={`text-slate-500 ${TRANSITION_COLORS} ${MOTION_NORMAL} hover:text-white hover:underline hover:underline-offset-4`}
-                >
-                  {link.label}
-                </FooterHref>
-              </span>
+                {link.label}
+              </FooterHref>
             ))}
-          </div>
+          </nav>
         </div>
       </div>
     </footer>

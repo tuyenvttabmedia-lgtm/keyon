@@ -18,7 +18,10 @@ export default async function AdminCmsHomePage() {
         <h1 className={ADMIN_PAGE_TITLE_CLASS}>
           CMS · Trang chủ
         </h1>
-        <p className="text-sm text-muted">Chỉnh Hero — Draft/Publish tối giản</p>
+        <p className="text-sm text-muted">
+          Bản đồ section khớp trang chủ · nối tới CMS liên quan (đối tác, FAQ,
+          footer…)
+        </p>
       </div>
       <CmsSubnav active="/admin/cms" />
       <CmsHomeForm initial={home} />

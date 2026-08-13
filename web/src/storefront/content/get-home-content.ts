@@ -544,15 +544,30 @@ function sanitizeLegalLinks(
     let label = (raw.label || "").trim();
     if (!label) continue;
 
-    // Legacy CMS often pointed every policy at /policy or /terms
     const lower = label.toLowerCase();
-    if (href === "/policy" || href === "/terms" || href === "/policy/") {
-      if (lower.includes("bảo mật") || lower.includes("bao mat"))
+
+    // Hub “Tất cả chính sách” must stay on /policy
+    const isHub =
+      lower.includes("tất cả") ||
+      lower.includes("tat ca") ||
+      lower === "chính sách" ||
+      lower === "chinh sach";
+
+    // Legacy CMS often pointed every policy at /policy or /terms
+    if (
+      !isHub &&
+      (href === "/policy" || href === "/terms" || href === "/policy/")
+    ) {
+      if (lower.includes("bảo mật") || lower.includes("bao mat") || lower === "bảo mật")
         href = "/policy/privacy";
       else if (lower.includes("thanh toán") || lower.includes("thanh toan"))
         href = "/policy/payment";
       else if (lower.includes("giao hàng") || lower.includes("giao hang"))
         href = "/policy/delivery";
+      else if (lower.includes("hoàn tiền") || lower.includes("hoan tien") || lower.includes("hoàn trả"))
+        href = "/policy/refund";
+      else if (lower.includes("khiếu nại") || lower.includes("khieu nai"))
+        href = "/policy/complaint";
       else if (
         lower.includes("bảo hành") ||
         lower.includes("bao hanh") ||
@@ -562,20 +577,71 @@ function sanitizeLegalLinks(
         href = "/policy/warranty";
       else if (lower.includes("điều khoản") || lower.includes("dieu khoan"))
         href = "/policy/terms";
+      else if (lower.includes("hỗ trợ") || lower.includes("ho tro"))
+        href = "/policy/support";
       else href = "/policy/terms";
     }
     if (href === "/terms") href = "/policy/terms";
+    if (isHub) href = "/policy";
 
-    // Shorter legal labels
-    if (lower.includes("giao hàng điện tử")) label = "Giao hàng điện tử";
-    if (lower.includes("quy định sản phẩm") || lower.includes("sản phẩm số"))
+    // Short, scannable labels for the bottom bar
+    if (lower.includes("bảo mật") || lower.includes("bao mat")) label = "Bảo mật";
+    else if (lower.includes("thanh toán") || lower.includes("thanh toan"))
+      label = "Thanh toán";
+    else if (lower.includes("giao hàng") || lower.includes("giao hang"))
+      label = "Giao hàng";
+    else if (lower.includes("hoàn tiền") || lower.includes("hoan tien") || lower.includes("hoàn trả"))
+      label = "Hoàn tiền";
+    else if (lower.includes("khiếu nại") || lower.includes("khieu nai"))
+      label = "Khiếu nại";
+    else if (lower.includes("điều khoản") || lower.includes("dieu khoan"))
+      label = "Điều khoản";
+    else if (lower.includes("bảo hành") || lower.includes("bao hanh"))
       label = "Bảo hành";
+    else if (isHub) label = "Tất cả chính sách";
 
     const key = href.toLowerCase();
     if (!key || seen.has(key)) continue;
     seen.add(key);
     out.push({ label, href });
   }
+
+  // Ensure BCT-critical policies exist even if CMS list is incomplete
+  const REQUIRED = [
+    { label: "Điều khoản", href: "/policy/terms" },
+    { label: "Bảo mật", href: "/policy/privacy" },
+    { label: "Thanh toán", href: "/policy/payment" },
+    { label: "Giao hàng", href: "/policy/delivery" },
+    { label: "Hoàn tiền", href: "/policy/refund" },
+    { label: "Khiếu nại", href: "/policy/complaint" },
+  ] as const;
+  for (const req of REQUIRED) {
+    if (!seen.has(req.href)) {
+      out.push({ ...req });
+      seen.add(req.href);
+    }
+  }
+  if (!seen.has("/policy")) {
+    out.push({ label: "Tất cả chính sách", href: "/policy" });
+  }
+
+  // Prefer stable BCT order
+  const ORDER = [
+    "/policy/terms",
+    "/policy/privacy",
+    "/policy/payment",
+    "/policy/delivery",
+    "/policy/refund",
+    "/policy/complaint",
+    "/policy/warranty",
+    "/policy/support",
+    "/policy",
+  ];
+  out.sort((a, b) => {
+    const ia = ORDER.indexOf(a.href);
+    const ib = ORDER.indexOf(b.href);
+    return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+  });
 
   return out.length ? out : FALLBACK;
 }

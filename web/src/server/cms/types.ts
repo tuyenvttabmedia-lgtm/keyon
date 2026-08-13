@@ -451,10 +451,12 @@ export const defaultCmsFooter: CmsFooter = {
   copyright: "© 2026 KEYON. All rights reserved.",
   legalLinks: [
     { label: "Điều khoản", href: "/policy/terms" },
-    { label: "Chính sách bảo mật", href: "/policy/privacy" },
-    { label: "Chính sách thanh toán", href: "/policy/payment" },
-    { label: "Giao hàng điện tử", href: "/policy/delivery" },
-    { label: "Bảo hành", href: "/policy/warranty" },
+    { label: "Bảo mật", href: "/policy/privacy" },
+    { label: "Thanh toán", href: "/policy/payment" },
+    { label: "Giao hàng", href: "/policy/delivery" },
+    { label: "Hoàn tiền", href: "/policy/refund" },
+    { label: "Khiếu nại", href: "/policy/complaint" },
+    { label: "Tất cả chính sách", href: "/policy" },
   ],
 };
 
