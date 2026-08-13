@@ -1048,46 +1048,40 @@ html {
   position: absolute;
   font-family: var(--font-display), var(--font-inter), system-ui, sans-serif;
   font-weight: 800;
-  line-height: 0.9;
-  letter-spacing: -0.06em;
+  line-height: 1;
+  letter-spacing: -0.05em;
   color: var(--navy);
   user-select: none;
 }
 
-/*
- * Login / forgot / reset — full “K” mark in lower-right,
- * mostly inside the panel (not a clipped fragment).
- */
+/* Login: full K sits in the lower open area — inset so it is not clipped */
 .auth-brand-k--compact .auth-brand-k-letter {
-  right: 6%;
-  bottom: 10%;
-  font-size: 10.5rem;
-  opacity: 0.1;
+  right: 1.75rem;
+  bottom: 1.75rem;
+  font-size: 8.75rem;
+  opacity: 0.09;
 }
 
-/*
- * Register — mid-panel mark behind the feature stack,
- * soft enough to not fight white cards.
- */
+/* Register: soft K behind the intro (above feature cards) */
 .auth-brand-k--tall .auth-brand-k-letter {
-  right: 0;
-  top: 38%;
+  right: 1.5rem;
+  top: 5.5rem;
   bottom: auto;
-  font-size: 12rem;
-  opacity: 0.075;
-  transform: translateY(-50%);
+  font-size: 7.5rem;
+  opacity: 0.07;
 }
 
 @media (min-width: 1280px) {
   .auth-brand-k--compact .auth-brand-k-letter {
-    font-size: 12rem;
-    right: 8%;
-    bottom: 12%;
+    font-size: 9.5rem;
+    right: 2rem;
+    bottom: 2rem;
   }
 
   .auth-brand-k--tall .auth-brand-k-letter {
-    font-size: 13.5rem;
-    right: 2%;
+    font-size: 8.25rem;
+    right: 1.75rem;
+    top: 6rem;
   }
 }
 
