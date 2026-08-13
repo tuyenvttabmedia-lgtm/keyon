@@ -120,7 +120,7 @@ export default function ResetPasswordPage() {
         footer={
           <>
             <AuthOrDivider />
-            <p className="text-center">
+            <p className={`text-center ${BODY_MUTED_CLASS}`}>
               <Link href="/login" className={LINK_ACCENT_CLASS}>
                 Quay lại đăng nhập
               </Link>

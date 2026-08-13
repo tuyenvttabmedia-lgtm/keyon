@@ -31,7 +31,7 @@ const DEFAULT_BULLETS = [
   "Lưu và quản lý trong Tài khoản",
 ];
 
-/** Desktop brand column — navy-soft + faint K */
+/** Desktop brand column — navy-soft + faint K. Padding synced with form pane. */
 export function AuthBrandPanel({
   headline,
   subtext = DEFAULT_SUB,
@@ -41,23 +41,19 @@ export function AuthBrandPanel({
   const hasFeatures = Boolean(features?.length);
 
   return (
-    <aside className="relative hidden overflow-hidden bg-navy-soft lg:block">
+    <aside className="relative hidden overflow-hidden bg-navy-soft lg:flex lg:flex-col">
       <span
         className={`pointer-events-none absolute select-none font-[family-name:var(--font-display)] font-bold leading-none text-navy/[0.05] ${
           hasFeatures
             ? "bottom-[-4%] right-[-8%] text-[14rem]"
-            : "left-[42%] top-[46%] -translate-x-1/2 -translate-y-1/2 text-[22rem]"
+            : "bottom-[-6%] right-[-6%] text-[18rem]"
         }`}
         aria-hidden
       >
         K
       </span>
 
-      <div
-        className={`relative z-10 flex h-full flex-col px-8 py-10 xl:px-10 xl:py-12 ${
-          hasFeatures ? "" : "min-h-[520px] justify-between"
-        }`}
-      >
+      <div className="relative z-10 flex h-full flex-col px-8 py-8 sm:px-8 md:px-10 md:py-10 lg:px-10 lg:py-12">
         <div className="max-w-[22rem] shrink-0">
           <p className={`${OVERLINE_CLASS} text-accent`}>KEYON Account</p>
           <h2 className={`mt-3 ${SECTION_TITLE_CLASS}`}>{headline}</h2>
@@ -86,11 +82,13 @@ export function AuthBrandPanel({
               </li>
             ))}
           </ol>
-        ) : null}
+        ) : (
+          <div className="flex-1" aria-hidden />
+        )}
 
         <ul
-          className={`shrink-0 space-y-2.5 ${BODY_MUTED_CLASS} ${
-            hasFeatures ? "border-t border-border/60 pt-5" : "pt-2"
+          className={`mt-auto shrink-0 space-y-2.5 ${BODY_MUTED_CLASS} ${
+            hasFeatures ? "border-t border-border/60 pt-5" : "pt-8"
           }`}
         >
           {bullets.map((line) => (

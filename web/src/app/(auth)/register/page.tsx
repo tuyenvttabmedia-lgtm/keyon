@@ -34,7 +34,6 @@ export default async function RegisterPage() {
 
   return (
     <AuthSplitShell
-      formAlign="start"
       headline="Tạo tài khoản để quản lý giấy phép trong KEYON"
       subtext="Điền thông tin một lần — KEYON dùng để giao license, hỗ trợ và lưu trong Tài khoản."
       features={REGISTER_FEATURES}
