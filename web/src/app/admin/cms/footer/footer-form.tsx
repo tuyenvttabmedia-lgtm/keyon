@@ -12,6 +12,12 @@ export function FooterForm({ initial }: { initial: CmsFooter }) {
     <CmsSaveForm initial={initial} apiKey="footer">
       {(form, setForm) => (
         <div className="space-y-6">
+          <p className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+            Frontend sẽ tự gọn cột Doanh nghiệp (bỏ /solutions), đổi tên “Thông
+            tin…” → “Công ty”, và sửa legal link trỏ nhầm vào /policy. Sau khi
+            lưu, hard-refresh trang chủ để xem.
+          </p>
+
           <BrandSection form={form} setForm={setForm} />
 
           <div className="space-y-4 rounded-2xl border border-border bg-card p-6">
@@ -29,46 +35,185 @@ export function FooterForm({ initial }: { initial: CmsFooter }) {
               <input
                 className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
                 value={form.copyright}
-                onChange={(e) => setForm({ ...form, copyright: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, copyright: e.target.value })
+                }
               />
             </label>
-            {form.columns.map((col, ci) => (
-              <div key={ci} className="space-y-2 rounded-xl border border-border p-4">
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm font-medium text-navy">Cột menu</p>
+                <button
+                  type="button"
+                  className="text-xs font-medium text-accent hover:underline"
+                  onClick={() =>
+                    setForm({
+                      ...form,
+                      columns: [
+                        ...form.columns,
+                        {
+                          title: "Cột mới",
+                          links: [{ label: "Link", href: "/" }],
+                        },
+                      ],
+                    })
+                  }
+                >
+                  + Thêm cột
+                </button>
+              </div>
+
+              {form.columns.map((col, ci) => (
+                <div
+                  key={ci}
+                  className="space-y-2 rounded-xl border border-border p-4"
+                >
+                  <div className="flex gap-2">
+                    <input
+                      className="w-full rounded-lg border border-border px-3 py-2 text-sm font-medium outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
+                      value={col.title}
+                      onChange={(e) => {
+                        const columns = [...form.columns];
+                        columns[ci] = { ...col, title: e.target.value };
+                        setForm({ ...form, columns });
+                      }}
+                      placeholder="Tiêu đề cột"
+                    />
+                    <button
+                      type="button"
+                      className="shrink-0 px-2 text-xs text-danger hover:underline"
+                      onClick={() => {
+                        if (!confirm(`Xóa cột “${col.title}”?`)) return;
+                        setForm({
+                          ...form,
+                          columns: form.columns.filter((_, i) => i !== ci),
+                        });
+                      }}
+                    >
+                      Xóa cột
+                    </button>
+                  </div>
+                  <p className="text-[11px] text-muted">
+                    Label · đường dẫn (vd. /about hoặc mailto:support@keyon.vn)
+                  </p>
+                  {col.links.map((link, li) => (
+                    <div key={li} className="flex gap-2">
+                      <input
+                        className="min-w-0 flex-1 rounded-lg border border-border px-2 py-1.5 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
+                        value={link.label}
+                        onChange={(e) => {
+                          const columns = [...form.columns];
+                          const links = [...col.links];
+                          links[li] = { ...link, label: e.target.value };
+                          columns[ci] = { ...col, links };
+                          setForm({ ...form, columns });
+                        }}
+                        placeholder="Nhãn"
+                      />
+                      <input
+                        className="min-w-0 flex-[1.2] rounded-lg border border-border px-2 py-1.5 font-mono text-xs outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
+                        value={link.href}
+                        onChange={(e) => {
+                          const columns = [...form.columns];
+                          const links = [...col.links];
+                          links[li] = { ...link, href: e.target.value };
+                          columns[ci] = { ...col, links };
+                          setForm({ ...form, columns });
+                        }}
+                        placeholder="/path hoặc mailto:"
+                      />
+                      <button
+                        type="button"
+                        className="shrink-0 px-1 text-xs text-danger"
+                        onClick={() => {
+                          const columns = [...form.columns];
+                          columns[ci] = {
+                            ...col,
+                            links: col.links.filter((_, i) => i !== li),
+                          };
+                          setForm({ ...form, columns });
+                        }}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    className="text-xs font-medium text-accent hover:underline"
+                    onClick={() => {
+                      const columns = [...form.columns];
+                      columns[ci] = {
+                        ...col,
+                        links: [
+                          ...col.links,
+                          { label: "Link mới", href: "/" },
+                        ],
+                      };
+                      setForm({ ...form, columns });
+                    }}
+                  >
+                    + Thêm link
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-3 rounded-2xl border border-border bg-card p-6">
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-sm font-medium text-navy">
+                Legal links (thanh dưới footer)
+              </p>
+              <button
+                type="button"
+                className="text-xs font-medium text-accent hover:underline"
+                onClick={() =>
+                  setForm({
+                    ...form,
+                    legalLinks: [
+                      ...form.legalLinks,
+                      { label: "Chính sách", href: "/policy/privacy" },
+                    ],
+                  })
+                }
+              >
+                + Thêm
+              </button>
+            </div>
+            {form.legalLinks.map((link, i) => (
+              <div key={i} className="flex gap-2">
                 <input
-                  className="w-full rounded-lg border border-border px-3 py-2 text-sm font-medium outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
-                  value={col.title}
+                  className="min-w-0 flex-1 rounded-lg border border-border px-2 py-1.5 text-sm"
+                  value={link.label}
                   onChange={(e) => {
-                    const columns = [...form.columns];
-                    columns[ci] = { ...col, title: e.target.value };
-                    setForm({ ...form, columns });
+                    const legalLinks = [...form.legalLinks];
+                    legalLinks[i] = { ...link, label: e.target.value };
+                    setForm({ ...form, legalLinks });
                   }}
                 />
-                {col.links.map((link, li) => (
-                  <div key={li} className="grid gap-2 sm:grid-cols-2">
-                    <input
-                      className="rounded-lg border border-border px-2 py-1.5 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
-                      value={link.label}
-                      onChange={(e) => {
-                        const columns = [...form.columns];
-                        const links = [...col.links];
-                        links[li] = { ...link, label: e.target.value };
-                        columns[ci] = { ...col, links };
-                        setForm({ ...form, columns });
-                      }}
-                    />
-                    <input
-                      className="rounded-lg border border-border px-2 py-1.5 font-mono text-xs outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
-                      value={link.href}
-                      onChange={(e) => {
-                        const columns = [...form.columns];
-                        const links = [...col.links];
-                        links[li] = { ...link, href: e.target.value };
-                        columns[ci] = { ...col, links };
-                        setForm({ ...form, columns });
-                      }}
-                    />
-                  </div>
-                ))}
+                <input
+                  className="min-w-0 flex-[1.2] rounded-lg border border-border px-2 py-1.5 font-mono text-xs"
+                  value={link.href}
+                  onChange={(e) => {
+                    const legalLinks = [...form.legalLinks];
+                    legalLinks[i] = { ...link, href: e.target.value };
+                    setForm({ ...form, legalLinks });
+                  }}
+                />
+                <button
+                  type="button"
+                  className="px-1 text-xs text-danger"
+                  onClick={() =>
+                    setForm({
+                      ...form,
+                      legalLinks: form.legalLinks.filter((_, j) => j !== i),
+                    })
+                  }
+                >
+                  ×
+                </button>
               </div>
             ))}
           </div>
@@ -143,7 +288,9 @@ function BrandSection({
 
       <label className="block text-sm">
         <span className="font-medium text-navy">Tên thương hiệu</span>
-        <span className="ml-1 text-xs text-muted">(fallback khi chưa có logo)</span>
+        <span className="ml-1 text-xs text-muted">
+          (fallback khi chưa có logo)
+        </span>
         <input
           className="mt-1 h-9 w-full max-w-md rounded-lg border border-border px-3 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
           value={form.brandName}

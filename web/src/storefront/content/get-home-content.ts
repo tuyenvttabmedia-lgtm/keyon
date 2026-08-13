@@ -403,16 +403,18 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
         shopCounts,
       ),
       copyright: footer.copyright || homeFixture.footer.copyright,
-      legalLinks: footer.legalLinks.length
-        ? footer.legalLinks
-        : homeFixture.footer.legalLinks,
+      legalLinks: sanitizeLegalLinks(
+        footer.legalLinks.length
+          ? footer.legalLinks
+          : homeFixture.footer.legalLinks,
+      ),
       supportEmail: "support@keyon.vn",
       paymentBadges: ["VietQR", "Chuyển khoản"],
     },
   };
 });
 
-/** Drop empty shop-category footer links; dedupe hrefs; trim noisy business lists. */
+/** Drop empty shop-category footer links; trim noisy business lists; keep company intact. */
 function sanitizeFooterColumns(
   columns: FooterColumn[],
   shopCounts: Record<ShopCategoryId, number>,
@@ -425,66 +427,157 @@ function sanitizeFooterColumns(
     "/contact/quote",
   ]);
 
+  /** Only dedupe across product / business / support — never strip company identity links. */
+  const seenNav = new Set<string>();
+
+  return columns
+    .map((col) => {
+      const title = col.title.trim().toLowerCase();
+      // "Thông tin doanh nghiệp" must be company, NOT business
+      const isCompany =
+        title.includes("công ty") ||
+        title.includes("cong ty") ||
+        title.includes("thông tin") ||
+        title.includes("thong tin") ||
+        title === "company" ||
+        title === "about";
+      const isBusiness =
+        !isCompany &&
+        (title === "doanh nghiệp" ||
+          title === "doanh nghiep" ||
+          title.startsWith("doanh nghiệp") ||
+          title.startsWith("doanh nghiep") ||
+          title === "business");
+
+      let links = col.links
+        .map((link) => {
+          let href = link.href?.trim() || "";
+          let label = link.label?.trim() || "";
+          if (href === "/products?q=adobe") href = "/products?cat=adobe";
+          if (href === "/contact/sales") href = "/contact/quote";
+          // Shorten very long address labels in company column
+          if (isCompany && href === "/contact" && label.length > 48) {
+            label = "Hà Nội, Việt Nam";
+          }
+          if (isCompany && (href === "/about" || href.startsWith("/about"))) {
+            if (/công\s*ty/i.test(label) || label.length > 40) {
+              label = "Về KEYON";
+            }
+          }
+          return href !== link.href || label !== link.label
+            ? { ...link, href, label }
+            : link;
+        })
+        .filter((link) => {
+          const href = link.href || "";
+          if (!href || !link.label?.trim()) return false;
+          const m = href.match(/[?&]cat=([a-z]+)/i);
+          if (!m) return true;
+          const cat = m[1] as ShopCategoryId;
+          if (!(cat in shopCounts)) return true;
+          return shopCounts[cat] > 0;
+        });
+
+      // Business: hub CTAs only — drop /solutions/* dump
+      if (isBusiness) {
+        links = links.filter((l) => {
+          const href = (l.href || "").split("?")[0]!;
+          if (href.startsWith("/solutions/")) return false;
+          if (BUSINESS_HREFS.has(href)) return true;
+          return href.startsWith("/business");
+        });
+      }
+
+      // Company: drop sales CTA only (lives under Doanh nghiệp)
+      if (isCompany) {
+        links = links.filter((l) => {
+          const path = (l.href || "").split("?")[0]!;
+          return path !== "/contact/quote";
+        });
+      }
+
+      // Nav-style dedupe (skip company so address/email/about always show)
+      if (!isCompany) {
+        links = links.filter((l) => {
+          const key = (l.href || "").trim().toLowerCase();
+          if (!key || seenNav.has(key)) return false;
+          seenNav.add(key);
+          return true;
+        });
+      } else {
+        // Still dedupe within the company column itself
+        const local = new Set<string>();
+        links = links.filter((l) => {
+          const key = (l.href || "").trim().toLowerCase();
+          if (!key || local.has(key)) return false;
+          local.add(key);
+          return true;
+        });
+      }
+
+      return {
+        ...col,
+        title: isCompany
+          ? title.includes("thông tin") || title.includes("thong tin")
+            ? "Công ty"
+            : col.title
+          : isBusiness && title.includes("tổng")
+            ? col.title
+            : col.title,
+        links,
+      };
+    })
+    .filter((col) => col.links.length > 0 || col.title.trim().length > 0);
+}
+
+function sanitizeLegalLinks(
+  links: { label: string; href: string }[],
+): { label: string; href: string }[] {
+  const FALLBACK = homeFixture.footer.legalLinks;
+  if (!links.length) return FALLBACK;
+
   const seen = new Set<string>();
+  const out: { label: string; href: string }[] = [];
 
-  return columns.map((col) => {
-    const title = col.title.trim().toLowerCase();
-    const isBusiness =
-      title.includes("doanh nghiệp") || title.includes("doanh nghiep");
-    const isCompany =
-      title.includes("công ty") ||
-      title.includes("cong ty") ||
-      title.includes("thông tin") ||
-      title.includes("thong tin");
+  for (const raw of links) {
+    let href = (raw.href || "").trim();
+    let label = (raw.label || "").trim();
+    if (!label) continue;
 
-    let links = col.links
-      .map((link) => {
-        let href = link.href?.trim() || "";
-        if (href === "/products?q=adobe") href = "/products?cat=adobe";
-        if (href === "/contact/sales") href = "/contact/quote";
-        return href !== link.href ? { ...link, href } : link;
-      })
-      .filter((link) => {
-        const href = link.href || "";
-        const m = href.match(/[?&]cat=([a-z]+)/i);
-        if (!m) return true;
-        const cat = m[1] as ShopCategoryId;
-        if (!(cat in shopCounts)) return true;
-        return shopCounts[cat] > 0;
-      });
-
-    // Drop deep /solutions/* dump from Business — keep hub CTAs only
-    if (isBusiness) {
-      links = links.filter((l) => {
-        const href = (l.href || "").split("?")[0]!;
-        if (href.startsWith("/solutions/")) return false;
-        if (BUSINESS_HREFS.has(href)) return true;
-        return href.startsWith("/business");
-      });
+    // Legacy CMS often pointed every policy at /policy or /terms
+    const lower = label.toLowerCase();
+    if (href === "/policy" || href === "/terms" || href === "/policy/") {
+      if (lower.includes("bảo mật") || lower.includes("bao mat"))
+        href = "/policy/privacy";
+      else if (lower.includes("thanh toán") || lower.includes("thanh toan"))
+        href = "/policy/payment";
+      else if (lower.includes("giao hàng") || lower.includes("giao hang"))
+        href = "/policy/delivery";
+      else if (
+        lower.includes("bảo hành") ||
+        lower.includes("bao hanh") ||
+        lower.includes("sản phẩm số") ||
+        lower.includes("san pham so")
+      )
+        href = "/policy/warranty";
+      else if (lower.includes("điều khoản") || lower.includes("dieu khoan"))
+        href = "/policy/terms";
+      else href = "/policy/terms";
     }
+    if (href === "/terms") href = "/policy/terms";
 
-    // Company column: no sales CTA (lives under Doanh nghiệp)
-    if (isCompany) {
-      links = links.filter((l) => {
-        const href = (l.href || "").split("?")[0]!;
-        return href !== "/contact/quote";
-      });
-    }
+    // Shorter legal labels
+    if (lower.includes("giao hàng điện tử")) label = "Giao hàng điện tử";
+    if (lower.includes("quy định sản phẩm") || lower.includes("sản phẩm số"))
+      label = "Bảo hành";
 
-    // Global href dedupe (first column wins)
-    links = links.filter((l) => {
-      const key = (l.href || "").trim().toLowerCase();
-      if (!key || seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
+    const key = href.toLowerCase();
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    out.push({ label, href });
+  }
 
-    return {
-      ...col,
-      title: isCompany && title.includes("thông tin") ? "Công ty" : col.title,
-      links,
-    };
-  });
+  return out.length ? out : FALLBACK;
 }
 
 function toCategoryIcon(key?: CmsCategoryIconKey): CategoryIconKey {

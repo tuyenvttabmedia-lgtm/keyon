@@ -5,7 +5,12 @@ import Link from "next/link";
 import { useState } from "react";
 import type { FooterColumn, NavItem } from "@/storefront/content/types";
 import { resolveMediaUrl } from "@/lib/media-url";
-import { EASE_STANDARD, MOTION_NORMAL, TRANSITION_COLORS, TRANSITION_UI } from "@/storefront/effects";
+import {
+  EASE_STANDARD,
+  MOTION_NORMAL,
+  TRANSITION_COLORS,
+  TRANSITION_UI,
+} from "@/storefront/effects";
 
 type Props = {
   logoUrl?: string;
@@ -19,6 +24,33 @@ type Props = {
 };
 
 const footerLink = `inline-block text-slate-400 ${TRANSITION_COLORS} ${MOTION_NORMAL} ${EASE_STANDARD} hover:text-white hover:underline hover:underline-offset-4`;
+
+function isExternalHref(href: string) {
+  return /^(mailto:|tel:|https?:\/\/)/i.test(href);
+}
+
+function FooterHref({
+  href,
+  className,
+  children,
+}: {
+  href: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  if (isExternalHref(href)) {
+    return (
+      <a href={href} className={className}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link href={href} className={className}>
+      {children}
+    </Link>
+  );
+}
 
 /** Digital Home footer — navy · accordion on mobile · multi-col on desktop */
 export function SiteFooter({
@@ -38,6 +70,8 @@ export function SiteFooter({
     { label: "Email", href: `mailto:${supportEmail}`, letter: "✉" },
     { label: "Liên hệ", href: "/contact", letter: "?" },
   ];
+  const visibleColumns = columns.filter((c) => c.links.length > 0);
+
   return (
     <footer className="mt-auto bg-footer text-slate-400">
       <div className="home-container">
@@ -68,7 +102,9 @@ export function SiteFooter({
                 </>
               )}
             </Link>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-400">{blurb}</p>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-400">
+              {blurb}
+            </p>
             <div className="mt-5 flex gap-2">
               {social.map((s) => (
                 <a
@@ -84,20 +120,30 @@ export function SiteFooter({
           </div>
 
           <div>
-            <FooterAccordions columns={columns} />
-            <div className="hidden gap-8 lg:grid lg:grid-cols-4 lg:gap-6 xl:gap-8">
-              {columns.map((col) => (
+            <FooterAccordions columns={visibleColumns} />
+            <div
+              className={`hidden gap-8 lg:grid lg:gap-6 xl:gap-8 ${
+                visibleColumns.length >= 4
+                  ? "lg:grid-cols-4"
+                  : visibleColumns.length === 3
+                    ? "lg:grid-cols-3"
+                    : "lg:grid-cols-2"
+              }`}
+            >
+              {visibleColumns.map((col) => (
                 <div key={col.title} className="min-w-0">
-                  <p className="mb-3 text-sm font-semibold text-white">{col.title}</p>
+                  <p className="mb-3 text-sm font-semibold text-white">
+                    {col.title}
+                  </p>
                   <ul className="space-y-2.5 text-sm">
                     {col.links.map((link) => (
                       <li key={link.href + link.label} className="min-w-0">
-                        <Link
+                        <FooterHref
                           href={link.href}
                           className={`${footerLink} break-words`}
                         >
                           {link.label}
-                        </Link>
+                        </FooterHref>
                       </li>
                     ))}
                   </ul>
@@ -125,14 +171,21 @@ export function SiteFooter({
           </div>
           <div className="flex flex-wrap items-center gap-2 text-xs sm:justify-self-end">
             {legalLinks.map((link, i) => (
-              <span key={link.href + link.label} className="flex items-center gap-2">
-                {i > 0 ? <span className="text-slate-600" aria-hidden>|</span> : null}
-                <Link
+              <span
+                key={link.href + link.label}
+                className="flex items-center gap-2"
+              >
+                {i > 0 ? (
+                  <span className="text-slate-600" aria-hidden>
+                    |
+                  </span>
+                ) : null}
+                <FooterHref
                   href={link.href}
                   className={`text-slate-500 ${TRANSITION_COLORS} ${MOTION_NORMAL} hover:text-white hover:underline hover:underline-offset-4`}
                 >
                   {link.label}
-                </Link>
+                </FooterHref>
               </span>
             ))}
           </div>
@@ -175,9 +228,9 @@ function FooterAccordions({ columns }: { columns: FooterColumn[] }) {
               <ul className="space-y-2.5 pb-4 text-sm">
                 {col.links.map((link) => (
                   <li key={link.href + link.label}>
-                    <Link href={link.href} className={footerLink}>
+                    <FooterHref href={link.href} className={footerLink}>
                       {link.label}
-                    </Link>
+                    </FooterHref>
                   </li>
                 ))}
               </ul>
