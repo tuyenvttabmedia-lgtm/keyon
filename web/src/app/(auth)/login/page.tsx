@@ -14,7 +14,10 @@ export default async function LoginPage() {
   if (session) redirect(session.role === "CUSTOMER" ? "/account" : "/admin");
 
   return (
-    <AuthSplitShell headline="Quản lý giấy phép trong Tài khoản KEYON">
+    <AuthSplitShell
+      headline="Quản lý giấy phép trong Tài khoản KEYON"
+      subtext="Đăng nhập để xem đơn, license và hỗ trợ — thanh toán rõ, giao hàng tách biệt."
+    >
       <AuthCard
         title="Đăng nhập"
         footer={

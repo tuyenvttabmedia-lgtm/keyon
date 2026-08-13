@@ -25,7 +25,7 @@ const DEFAULT_SUB =
   "Thanh toán rõ ràng, đơn giản và bảo mật. Lưu trữ và quản lý giấy phép mọi lúc, mọi nơi.";
 
 const DEFAULT_BULLETS = [
-  "Thanh toán rõ ràng, tách biệt giao hàng",
+  "Thanh toán rõ · giao hàng tách biệt",
   "Nhận đúng loại: key / tài khoản / kích hoạt",
   "Lưu và quản lý trong Tài khoản",
 ];
@@ -38,23 +38,20 @@ export function AuthBrandPanel({
   bullets = DEFAULT_BULLETS,
 }: Props) {
   const tall = Boolean(features?.length);
+  const showBullets = !tall && bullets.length > 0;
 
   return (
-    <aside className="relative hidden overflow-hidden bg-navy-soft lg:flex lg:flex-col">
-      <span
-        className={`pointer-events-none absolute select-none font-[family-name:var(--font-display)] font-bold leading-none text-navy/[0.05] ${
-          tall
-            ? "bottom-[-4%] right-[-8%] text-[14rem]"
-            : "bottom-[-8%] right-[-8%] text-[18rem]"
-        }`}
+    <aside className="relative hidden overflow-hidden bg-navy-soft [container-type:inline-size] lg:flex lg:flex-col">
+      <div
+        className={`auth-brand-k ${tall ? "auth-brand-k--tall" : "auth-brand-k--compact"}`}
         aria-hidden
       >
-        K
-      </span>
+        <span className={`auth-brand-k-letter ${FONT_DISPLAY}`}>K</span>
+      </div>
 
       <div
         className={`relative z-10 flex h-full flex-col px-8 py-8 sm:px-8 md:px-10 md:py-10 lg:px-12 lg:py-12 ${
-          tall ? "" : "justify-center"
+          tall ? "justify-between gap-8" : "justify-center gap-10"
         }`}
       >
         <div className="max-w-[24rem] shrink-0">
@@ -65,11 +62,11 @@ export function AuthBrandPanel({
         </div>
 
         {tall ? (
-          <ol className="my-8 flex flex-1 flex-col justify-evenly gap-3">
+          <ol className="flex flex-col gap-2.5">
             {features!.map((f, i) => (
               <li
                 key={f.title}
-                className={`flex gap-3 rounded-xl border border-border/70 bg-white/55 px-3.5 py-3 ${ELEVATION_NONE} backdrop-blur-[2px]`}
+                className={`flex gap-3 rounded-xl border border-border/60 bg-white/70 px-3.5 py-3 ${ELEVATION_NONE} backdrop-blur-[2px]`}
               >
                 <span
                   className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft ${FONT_DISPLAY} text-xs font-bold text-accent`}
@@ -87,21 +84,19 @@ export function AuthBrandPanel({
           </ol>
         ) : null}
 
-        <ul
-          className={`shrink-0 space-y-2.5 ${BODY_MUTED_CLASS} ${
-            tall ? "mt-auto border-t border-border/60 pt-5" : "mt-8"
-          }`}
-        >
-          {bullets.map((line) => (
-            <li key={line} className="flex items-start gap-2.5">
-              <span
-                className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
-                aria-hidden
-              />
-              {line}
-            </li>
-          ))}
-        </ul>
+        {showBullets ? (
+          <ul className={`shrink-0 space-y-2.5 ${BODY_MUTED_CLASS}`}>
+            {bullets.map((line) => (
+              <li key={line} className="flex items-start gap-2.5">
+                <span
+                  className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
+                  aria-hidden
+                />
+                {line}
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
     </aside>
   );

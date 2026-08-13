@@ -11,20 +11,16 @@ import { RegisterForm } from "./register-form";
 
 const REGISTER_FEATURES = [
   {
-    title: "Thông tin tài khoản đầy đủ",
-    detail: "Họ tên, SĐT, ngày sinh và địa chỉ — dùng lại khi hỗ trợ đơn hàng.",
+    title: "Hồ sơ dùng lại",
+    detail: "Họ tên, SĐT, địa chỉ — hỗ trợ đơn nhanh hơn.",
   },
   {
-    title: "Bảo mật từ lúc tạo tài khoản",
-    detail: "Mật khẩu riêng; đổi và quản lý sau trong mục Bảo mật.",
+    title: "Bảo mật sẵn sàng",
+    detail: "Mật khẩu riêng; đổi sau trong mục Bảo mật.",
   },
   {
-    title: "License trong Tài khoản",
-    detail: "Sau thanh toán, key/license lưu ở Tài sản — xem lại mọi lúc.",
-  },
-  {
-    title: "Theo dõi đơn & thông báo",
-    detail: "Trạng thái đơn, giao license và hỗ trợ tập trung một nơi.",
+    title: "License & đơn một nơi",
+    detail: "Key/license và trạng thái đơn trong Tài khoản.",
   },
 ];
 
@@ -34,14 +30,9 @@ export default async function RegisterPage() {
 
   return (
     <AuthSplitShell
-      headline="Tạo tài khoản để quản lý giấy phép trong KEYON"
-      subtext="Điền thông tin một lần — KEYON dùng để giao license, hỗ trợ và lưu trong Tài khoản."
+      headline="Tạo Tài khoản KEYON"
+      subtext="Điền một lần — giao license, hỗ trợ và theo dõi đơn."
       features={REGISTER_FEATURES}
-      bullets={[
-        "Thanh toán rõ · giao hàng tách biệt",
-        "Đúng loại nhận: key / tài khoản / kích hoạt",
-        "Chỉnh sửa hồ sơ bất cứ lúc nào",
-      ]}
     >
       <AuthCard
         title="Tạo tài khoản"
