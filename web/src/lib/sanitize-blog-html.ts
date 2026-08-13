@@ -77,7 +77,7 @@ export function sanitizeBlogHtml(html: string): string {
       a: sanitizeHtml.simpleTransform("a", {
         rel: "noopener noreferrer",
       }),
-      strike: sanitizeHtml.simpleTransform("s"),
+      strike: sanitizeHtml.simpleTransform("s", {}),
     },
   });
 }
