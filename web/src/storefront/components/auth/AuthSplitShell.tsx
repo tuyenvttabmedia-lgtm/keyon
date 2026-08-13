@@ -16,7 +16,7 @@ type ShellProps = {
 
 /**
  * Auth body under Home header/footer.
- * Width = home-container (1200). Desktop: brand | form (equal cols, top-aligned).
+ * Equal columns; brand + form share the same top padding and content edge.
  */
 export function AuthSplitShell({
   headline,
@@ -25,17 +25,27 @@ export function AuthSplitShell({
   bullets,
   children,
 }: ShellProps) {
+  const tall = Boolean(features?.length);
+
   return (
     <div className="flex flex-1 flex-col bg-background py-8 md:py-10 lg:py-12">
       <div className="home-container">
-        <div className="grid w-full overflow-hidden rounded-2xl border border-border bg-card lg:grid-cols-2 lg:items-stretch">
+        <div
+          className={`grid w-full overflow-hidden rounded-2xl border border-border bg-card lg:grid-cols-2 lg:items-stretch ${
+            tall ? "" : "lg:min-h-[560px]"
+          }`}
+        >
           <AuthBrandPanel
             headline={headline}
             subtext={subtext}
             features={features}
             bullets={bullets}
           />
-          <div className="flex items-start justify-center px-5 py-8 sm:px-8 md:px-10 md:py-10 lg:px-10 lg:py-12">
+          <div
+            className={`flex justify-center px-5 py-8 sm:px-8 md:px-10 md:py-10 lg:px-12 lg:py-12 ${
+              tall ? "items-start" : "items-center"
+            }`}
+          >
             {children}
           </div>
         </div>

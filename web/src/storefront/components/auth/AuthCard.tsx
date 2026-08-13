@@ -20,8 +20,8 @@ type Props = {
  */
 export function AuthCard({ title, subtitle, children, footer }: Props) {
   return (
-    <div className="mx-auto w-full max-w-[400px]">
-      <div className="mb-7 text-center">
+    <div className="w-full max-w-[400px]">
+      <div className="mb-7">
         <h1 className={PAGE_TITLE_CLASS}>{title}</h1>
         {subtitle ? (
           <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>{subtitle}</p>

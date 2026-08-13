@@ -17,7 +17,6 @@ export type AuthBrandFeature = {
 type Props = {
   headline: string;
   subtext?: string;
-  /** Mid block — fills tall panes (register) without empty stretch */
   features?: AuthBrandFeature[];
   bullets?: string[];
 };
@@ -31,37 +30,41 @@ const DEFAULT_BULLETS = [
   "Lưu và quản lý trong Tài khoản",
 ];
 
-/** Desktop brand column — navy-soft + faint K. Padding synced with form pane. */
+/** Desktop brand column — padding synced with form pane. */
 export function AuthBrandPanel({
   headline,
   subtext = DEFAULT_SUB,
   features,
   bullets = DEFAULT_BULLETS,
 }: Props) {
-  const hasFeatures = Boolean(features?.length);
+  const tall = Boolean(features?.length);
 
   return (
     <aside className="relative hidden overflow-hidden bg-navy-soft lg:flex lg:flex-col">
       <span
         className={`pointer-events-none absolute select-none font-[family-name:var(--font-display)] font-bold leading-none text-navy/[0.05] ${
-          hasFeatures
+          tall
             ? "bottom-[-4%] right-[-8%] text-[14rem]"
-            : "bottom-[-6%] right-[-6%] text-[18rem]"
+            : "bottom-[-8%] right-[-8%] text-[18rem]"
         }`}
         aria-hidden
       >
         K
       </span>
 
-      <div className="relative z-10 flex h-full flex-col px-8 py-8 sm:px-8 md:px-10 md:py-10 lg:px-10 lg:py-12">
-        <div className="max-w-[22rem] shrink-0">
+      <div
+        className={`relative z-10 flex h-full flex-col px-8 py-8 sm:px-8 md:px-10 md:py-10 lg:px-12 lg:py-12 ${
+          tall ? "" : "justify-center"
+        }`}
+      >
+        <div className="max-w-[24rem] shrink-0">
           <p className={`${OVERLINE_CLASS} text-accent`}>KEYON Account</p>
           <h2 className={`mt-3 ${SECTION_TITLE_CLASS}`}>{headline}</h2>
           <div className="mt-4 h-1 w-11 rounded-full bg-accent" />
           <p className={`mt-4 ${SECTION_LEAD_CLASS}`}>{subtext}</p>
         </div>
 
-        {hasFeatures ? (
+        {tall ? (
           <ol className="my-8 flex flex-1 flex-col justify-evenly gap-3">
             {features!.map((f, i) => (
               <li
@@ -82,13 +85,11 @@ export function AuthBrandPanel({
               </li>
             ))}
           </ol>
-        ) : (
-          <div className="flex-1" aria-hidden />
-        )}
+        ) : null}
 
         <ul
-          className={`mt-auto shrink-0 space-y-2.5 ${BODY_MUTED_CLASS} ${
-            hasFeatures ? "border-t border-border/60 pt-5" : "pt-8"
+          className={`shrink-0 space-y-2.5 ${BODY_MUTED_CLASS} ${
+            tall ? "mt-auto border-t border-border/60 pt-5" : "mt-8"
           }`}
         >
           {bullets.map((line) => (
