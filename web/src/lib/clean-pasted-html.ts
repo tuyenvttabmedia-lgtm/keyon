@@ -5,7 +5,7 @@
 export function cleanPastedHtml(html: string): string {
   if (!html?.trim()) return "";
 
-  let out = html
+  const out = html
     .replace(/<!--\[if[\s\S]*?<!\[endif\]-->/gi, "")
     .replace(/<!--[\s\S]*?-->/g, "")
     .replace(/<\/?(?:o|w|v|m):[^>]*>/gi, "")
