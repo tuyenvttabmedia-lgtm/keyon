@@ -1035,53 +1035,36 @@ html {
   flex-shrink: 0;
 }
 
-/* Auth brand column — ambient K watermark (login compact / register tall) */
+/* Auth brand column — logo K watermark, centered behind copy */
 .auth-brand-k {
   pointer-events: none;
   position: absolute;
   inset: 0;
-  overflow: hidden;
   z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
-.auth-brand-k-letter {
-  position: absolute;
-  font-family: var(--font-display), var(--font-inter), system-ui, sans-serif;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.05em;
-  color: var(--navy);
+.auth-brand-k-img {
+  width: min(72%, 22rem);
+  height: auto;
+  max-height: 78%;
+  object-fit: contain;
   user-select: none;
 }
 
-/* Login: full K sits in the lower open area — inset so it is not clipped */
-.auth-brand-k--compact .auth-brand-k-letter {
-  right: 1.75rem;
-  bottom: 1.75rem;
-  font-size: 8.75rem;
-  opacity: 0.09;
+/* Login / forgot / reset — stronger peek behind short copy */
+.auth-brand-k--compact .auth-brand-k-img {
+  opacity: 0.16;
+  transform: translateY(4%);
 }
 
-/* Register: soft K behind the intro (above feature cards) */
-.auth-brand-k--tall .auth-brand-k-letter {
-  right: 1.5rem;
-  top: 5.5rem;
-  bottom: auto;
-  font-size: 7.5rem;
-  opacity: 0.07;
-}
-
-@media (min-width: 1280px) {
-  .auth-brand-k--compact .auth-brand-k-letter {
-    font-size: 9.5rem;
-    right: 2rem;
-    bottom: 2rem;
-  }
-
-  .auth-brand-k--tall .auth-brand-k-letter {
-    font-size: 8.25rem;
-    right: 1.75rem;
-    top: 6rem;
-  }
+/* Register — a touch softer so feature cards stay readable */
+.auth-brand-k--tall .auth-brand-k-img {
+  opacity: 0.12;
+  transform: translateY(-2%);
+  width: min(68%, 20rem);
 }
 

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   BODY_MUTED_CLASS,
   CARD_META_CLASS,
@@ -30,7 +31,7 @@ const DEFAULT_BULLETS = [
   "Lưu và quản lý trong Tài khoản",
 ];
 
-/** Desktop brand column — content + ambient K, synced with form pane padding. */
+/** Desktop brand column — large logo-K watermark centered behind copy. */
 export function AuthBrandPanel({
   headline,
   subtext = DEFAULT_SUB,
@@ -42,11 +43,20 @@ export function AuthBrandPanel({
 
   return (
     <aside className="relative hidden overflow-hidden bg-navy-soft lg:flex lg:flex-col">
+      {/* Logo K — large, centered, peeks behind text (same mark as KEYON wordmark) */}
       <div
         className={`auth-brand-k ${tall ? "auth-brand-k--tall" : "auth-brand-k--compact"}`}
         aria-hidden
       >
-        <span className={`auth-brand-k-letter ${FONT_DISPLAY}`}>K</span>
+        <Image
+          src="/brand/keyon-k.png"
+          alt=""
+          width={234}
+          height={262}
+          className="auth-brand-k-img"
+          priority
+          unoptimized
+        />
       </div>
 
       <div className="relative z-10 flex h-full flex-col justify-start gap-6 px-8 py-8 sm:px-8 md:px-10 md:py-10 lg:gap-7 lg:px-12 lg:py-12">
@@ -62,7 +72,7 @@ export function AuthBrandPanel({
             {features!.map((f, i) => (
               <li
                 key={f.title}
-                className={`flex gap-3 rounded-xl border border-border/60 bg-white/80 px-3.5 py-3 ${ELEVATION_NONE}`}
+                className={`flex gap-3 rounded-xl border border-border/60 bg-white/85 px-3.5 py-3 ${ELEVATION_NONE}`}
               >
                 <span
                   className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft ${FONT_DISPLAY} text-xs font-bold text-accent`}
