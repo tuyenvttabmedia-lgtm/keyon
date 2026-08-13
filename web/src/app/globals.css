@@ -1066,3 +1066,210 @@ html {
   width: min(82%, 24rem);
 }
 
+/* Admin TipTap + storefront HTML from CMS/blog */
+.keyon-editor-prose,
+.blog-prose,
+.policy-prose {
+  color: #334155;
+  font-size: 0.975rem;
+  line-height: 1.75;
+}
+
+.keyon-editor-prose .ProseMirror {
+  min-height: 420px;
+  padding: 1rem 1.1rem 1.5rem;
+  outline: none;
+}
+
+.keyon-editor-prose .ProseMirror p.is-editor-empty:first-child::before,
+.keyon-editor-prose .ProseMirror .is-empty::before {
+  color: #94a3b8;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.keyon-editor-prose h2,
+.blog-prose h2,
+.policy-prose h2 {
+  color: #0f172a;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 1.35em 0 0.55em;
+}
+
+.keyon-editor-prose h3,
+.blog-prose h3,
+.policy-prose h3 {
+  color: #0f172a;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 1.2em 0 0.45em;
+}
+
+.keyon-editor-prose h4,
+.blog-prose h4,
+.policy-prose h4 {
+  color: #0f172a;
+  font-size: 1.05rem;
+  font-weight: 650;
+  margin: 1.1em 0 0.4em;
+}
+
+.keyon-editor-prose p,
+.blog-prose p,
+.policy-prose p {
+  margin: 0.65em 0;
+}
+
+.keyon-editor-prose ul,
+.blog-prose ul,
+.policy-prose ul {
+  list-style: disc;
+  margin: 0.65em 0;
+  padding-left: 1.35rem;
+}
+
+.keyon-editor-prose ol,
+.blog-prose ol,
+.policy-prose ol {
+  list-style: decimal;
+  margin: 0.65em 0;
+  padding-left: 1.35rem;
+}
+
+.keyon-editor-prose li,
+.blog-prose li,
+.policy-prose li {
+  margin: 0.25em 0;
+}
+
+.keyon-editor-prose li p,
+.blog-prose li p,
+.policy-prose li p {
+  margin: 0.15em 0;
+}
+
+.keyon-editor-prose blockquote,
+.blog-prose blockquote,
+.policy-prose blockquote {
+  border-left: 3px solid #0ea5a4;
+  color: #475569;
+  margin: 1em 0;
+  padding: 0.25em 0 0.25em 1em;
+}
+
+.keyon-editor-prose a,
+.blog-prose a,
+.policy-prose a {
+  color: #0ea5a4;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.keyon-editor-prose img,
+.blog-prose img,
+.policy-prose img {
+  border-radius: 0.75rem;
+  display: block;
+  height: auto;
+  margin: 1em 0;
+  max-width: 100%;
+}
+
+.keyon-editor-prose hr,
+.blog-prose hr,
+.policy-prose hr {
+  border: 0;
+  border-top: 1px solid #e5e7eb;
+  margin: 1.5em 0;
+}
+
+.keyon-editor-prose table,
+.blog-prose table,
+.policy-prose table {
+  border-collapse: collapse;
+  margin: 1em 0;
+  width: 100%;
+}
+
+.keyon-editor-prose th,
+.keyon-editor-prose td,
+.blog-prose th,
+.blog-prose td,
+.policy-prose th,
+.policy-prose td {
+  border: 1px solid #e2e8f0;
+  padding: 0.5rem 0.65rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.keyon-editor-prose th,
+.blog-prose th,
+.policy-prose th {
+  background: #f8fafc;
+  font-weight: 600;
+}
+
+.keyon-editor-prose pre,
+.blog-prose pre,
+.policy-prose pre {
+  background: #0f172a;
+  border-radius: 0.75rem;
+  color: #e2e8f0;
+  font-size: 0.85rem;
+  margin: 1em 0;
+  overflow-x: auto;
+  padding: 0.9rem 1rem;
+}
+
+.keyon-editor-prose code,
+.blog-prose code,
+.policy-prose code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9em;
+}
+
+.keyon-editor-prose :not(pre) > code,
+.blog-prose :not(pre) > code,
+.policy-prose :not(pre) > code {
+  background: #f1f5f9;
+  border-radius: 0.35rem;
+  padding: 0.1em 0.35em;
+}
+
+.keyon-editor-prose iframe.keyon-yt,
+.keyon-editor-prose div[data-youtube-video],
+.blog-prose iframe,
+.policy-prose iframe {
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 0.75rem;
+  display: block;
+  height: auto;
+  margin: 1em 0;
+  max-width: 100%;
+  width: 100%;
+}
+
+.keyon-editor-prose [style*="text-align: center"],
+.blog-prose [style*="text-align: center"],
+.policy-prose [style*="text-align: center"] {
+  text-align: center;
+}
+
+.keyon-editor-prose [style*="text-align: right"],
+.blog-prose [style*="text-align: right"],
+.policy-prose [style*="text-align: right"] {
+  text-align: right;
+}
+
+.keyon-editor-prose [style*="text-align: justify"],
+.blog-prose [style*="text-align: justify"],
+.policy-prose [style*="text-align: justify"] {
+  text-align: justify;
+}
+

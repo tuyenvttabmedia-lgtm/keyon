@@ -164,6 +164,7 @@ export function StaticPageEditor({
           <RichTextEditor
             value={form.body}
             onChange={(html) => setForm((prev) => ({ ...prev, body: html }))}
+            mediaPurpose="cms"
           />
         </div>
       </div>
