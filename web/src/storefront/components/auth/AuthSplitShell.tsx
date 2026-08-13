@@ -16,7 +16,8 @@ type ShellProps = {
 
 /**
  * Auth body under Home header/footer.
- * Equal columns; brand + form share the same top padding and content edge.
+ * Must NOT wrap `.home-container` in `display:flex` — auto margins then
+ * shrink-wrap to content (login ~866px vs register ~1044px). Home uses block.
  */
 export function AuthSplitShell({
   headline,
@@ -28,7 +29,7 @@ export function AuthSplitShell({
   const tall = Boolean(features?.length);
 
   return (
-    <div className="flex flex-1 flex-col bg-background py-8 md:py-10 lg:py-12">
+    <div className="w-full flex-1 bg-background py-8 md:py-10 lg:py-12">
       <div className="home-container">
         <div
           className={`grid w-full overflow-hidden rounded-2xl border border-border bg-card lg:grid-cols-2 lg:items-stretch ${
@@ -42,7 +43,7 @@ export function AuthSplitShell({
             bullets={bullets}
           />
           <div
-            className={`flex justify-center px-5 py-8 sm:px-8 md:px-10 md:py-10 lg:px-12 lg:py-12 ${
+            className={`flex justify-start px-5 py-8 sm:px-8 md:px-10 md:py-10 lg:px-12 lg:py-12 ${
               tall ? "items-start" : "items-center"
             }`}
           >
