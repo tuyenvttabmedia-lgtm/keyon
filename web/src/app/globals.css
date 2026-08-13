@@ -1048,23 +1048,21 @@ html {
 }
 
 .auth-brand-k-img {
-  width: min(72%, 22rem);
+  width: min(88%, 26rem);
   height: auto;
-  max-height: 78%;
+  max-height: 86%;
   object-fit: contain;
   user-select: none;
 }
 
-/* Login / forgot / reset — stronger peek behind short copy */
+/* Login — clear logo-K peek behind short copy */
 .auth-brand-k--compact .auth-brand-k-img {
-  opacity: 0.16;
-  transform: translateY(4%);
+  opacity: 0.22;
 }
 
-/* Register — a touch softer so feature cards stay readable */
+/* Register — slightly softer so feature cards stay readable */
 .auth-brand-k--tall .auth-brand-k-img {
-  opacity: 0.12;
-  transform: translateY(-2%);
-  width: min(68%, 20rem);
+  opacity: 0.18;
+  width: min(82%, 24rem);
 }
 
