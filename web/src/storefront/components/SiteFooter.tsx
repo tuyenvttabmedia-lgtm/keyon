@@ -154,9 +154,9 @@ export function SiteFooter({
                 <img
                   src={bctSrc}
                   alt={bctAlt}
-                  width={196}
-                  height={75}
-                  className="h-auto w-full max-w-[196px] object-contain object-left"
+                  width={176}
+                  height={44}
+                  className="h-11 w-auto max-w-[176px] object-contain object-left"
                 />
               </a>
             ) : null}
