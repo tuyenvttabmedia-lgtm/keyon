@@ -2,7 +2,10 @@
  * KEYON IA v1 — Navigation / merchandising layer.
  * Frozen: NAV-01..05 — Brand ≠ Category ≠ Collection ≠ Solution ≠ Navigation.
  * Phase 2: Collections remain merchandising config (not Prisma Category).
- * Wave IA-merge: Solutions topics live under Doanh nghiệp (no separate Giải pháp mega).
+ *
+ * Solution  = problem-oriented landings (`/solutions/*` + hub `/solutions`).
+ * Business  = buying motions (`/business/*` + hub `/business`).
+ * Header: Sản phẩm · Giải pháp · Doanh nghiệp · Tài nguyên · Hỗ trợ (ADR-006).
  */
 
 export type NavLink = {
@@ -59,34 +62,71 @@ export const FEATURED_BRANDS: NavLink[] = [
   { label: "Tất cả thương hiệu", href: "/brands" },
 ];
 
-/** Topic landings under Doanh nghiệp (kept `/solutions/*` URLs). */
-export const BUSINESS_TOPIC_LINKS: NavLink[] = [
+export type SolutionTopicArt =
+  | "bars"
+  | "trend"
+  | "shield"
+  | "stack"
+  | "cloud"
+  | "backup";
+
+export const SOLUTION_TOPICS: {
+  id: string;
+  label: string;
+  href: string;
+  description: string;
+  art: SolutionTopicArt;
+}[] = [
   {
+    id: "productivity",
     label: "Năng suất & Cộng tác",
     href: "/solutions/productivity",
     description: "Office, Microsoft 365, làm việc nhóm",
+    art: "trend",
   },
   {
+    id: "cloud",
     label: "Cloud",
     href: "/solutions/cloud",
     description: "Hạ tầng và dịch vụ cloud",
+    art: "cloud",
   },
   {
+    id: "security",
     label: "Bảo mật",
     href: "/solutions/security",
     description: "Endpoint, antivirus, bảo vệ dữ liệu",
+    art: "shield",
   },
   {
+    id: "backup",
     label: "Backup & Khôi phục",
     href: "/solutions/backup",
     description: "Sao lưu endpoint, cloud và máy chủ",
+    art: "backup",
   },
   {
+    id: "license-management",
     label: "Quản lý bản quyền",
     href: "/solutions/license-management",
     description: "Theo dõi license, gia hạn, tài khoản KEYON",
+    art: "stack",
   },
 ];
+
+export const BUSINESS_TOPIC_LINKS: NavLink[] = SOLUTION_TOPICS.map(
+  ({ label, href, description }) => ({ label, href, description }),
+);
+
+export function solutionTopicCards() {
+  return SOLUTION_TOPICS.map((t) => ({
+    id: t.id,
+    title: t.label,
+    description: t.description,
+    href: t.href,
+    art: t.art,
+  }));
+}
 
 /** Buying motions for organizations. */
 export const BUSINESS_SERVICE_LINKS: NavLink[] = [
@@ -130,14 +170,25 @@ export const IA_PRIMARY_NAV: PrimaryNavItem[] = [
     ],
   },
   {
+    id: "solutions",
+    label: "Giải pháp",
+    href: "/solutions",
+    kind: "mega",
+    columns: [{ title: "Theo nhu cầu", links: BUSINESS_TOPIC_LINKS }],
+    promo: {
+      title: "Mua theo quy mô",
+      description:
+        "Volume, subscription, tư vấn bản quyền và báo giá B2B — dành cho tổ chức.",
+      href: "/business",
+      ctaLabel: "Dành cho doanh nghiệp →",
+    },
+  },
+  {
     id: "business",
     label: "Doanh nghiệp",
     href: "/business",
     kind: "mega",
-    columns: [
-      { title: "Theo nhu cầu", links: BUSINESS_TOPIC_LINKS },
-      { title: "Mua & dịch vụ", links: BUSINESS_SERVICE_LINKS },
-    ],
+    columns: [{ title: "Mua & dịch vụ", links: BUSINESS_SERVICE_LINKS }],
     promo: {
       title: "Cá nhân mua ở Sản phẩm",
       description:

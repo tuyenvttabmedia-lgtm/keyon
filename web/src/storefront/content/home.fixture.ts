@@ -7,6 +7,7 @@ import type { HomeContent } from "./types";
 export const homeFixture: HomeContent = {
   navigation: [
     { label: "Sản phẩm", href: "/products" },
+    { label: "Giải pháp", href: "/solutions" },
     { label: "Doanh nghiệp", href: "/business" },
     { label: "Tài nguyên", href: "/resources" },
     { label: "Hỗ trợ", href: "/support" },
@@ -199,13 +200,13 @@ export const homeFixture: HomeContent = {
   },
   solutions: {
     visible: true,
-    title: "Doanh nghiệp",
+    title: "Giải pháp",
     subtitle:
-      "Từ vài giấy phép đến hàng trăm người dùng — KEYON giúp tổ chức chọn đúng gói, mua theo quy mô và quản lý tập trung. Cá nhân mua lẻ trên Sản phẩm.",
-    ctaLabel: "Khám phá giải pháp doanh nghiệp →",
-    ctaHref: "/business",
-    secondaryCtaLabel: "Liên hệ tư vấn",
-    secondaryCtaHref: "/contact/quote",
+      "Chọn hướng theo việc bạn cần làm. Mua theo quy mô, gia hạn và tư vấn B2B nằm ở Doanh nghiệp.",
+    ctaLabel: "Khám phá giải pháp →",
+    ctaHref: "/solutions",
+    secondaryCtaLabel: "Dành cho doanh nghiệp",
+    secondaryCtaHref: "/business",
     items: [
       {
         id: "productivity",
@@ -241,13 +242,6 @@ export const homeFixture: HomeContent = {
         description: "Theo dõi license, gia hạn, tài khoản KEYON.",
         href: "/solutions/license-management",
         art: "stack",
-      },
-      {
-        id: "volume",
-        title: "Mua số lượng lớn",
-        description: "Volume licensing · báo giá theo quy mô.",
-        href: "/business/volume-licensing",
-        art: "bars",
       },
     ],
   },
@@ -323,6 +317,7 @@ export const homeFixture: HomeContent = {
         title: "Doanh nghiệp",
         links: [
           { label: "Tổng quan", href: "/business" },
+          { label: "Giải pháp theo nhu cầu", href: "/solutions" },
           { label: "Volume licensing", href: "/business/volume-licensing" },
           { label: "Subscriptions", href: "/business/subscriptions" },
           { label: "Tư vấn bản quyền", href: "/business/licensing-consulting" },

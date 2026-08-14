@@ -26,6 +26,7 @@ import { prisma } from "@/lib/db";
 import { resolveMediaUrl } from "@/lib/media-url";
 import { resolveStorage } from "@/server/storage/config";
 import { resourcePostHref } from "@/storefront/lib/resources";
+import { solutionTopicCards } from "@/storefront/nav/ia";
 import {
   inferCategory,
   shopCatFromCmsIcon,
@@ -289,15 +290,20 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
       category: f.category ?? "general",
     }));
 
-  // IA merge: section is “Doanh nghiệp”; ignore stale CMS title “Giải pháp”.
+  // Stale CMS title “Doanh nghiệp” came from the IA-merge; treat as Giải pháp.
   const cmsSolutionsTitle = cmsHome.solutionsTitle?.trim();
   const solutions = {
     ...homeFixture.solutions,
     title:
-      cmsSolutionsTitle && cmsSolutionsTitle !== "Giải pháp"
+      cmsSolutionsTitle && cmsSolutionsTitle !== "Doanh nghiệp"
         ? cmsSolutionsTitle
         : homeFixture.solutions.title,
     subtitle: cmsHome.solutionsSubtitle || homeFixture.solutions.subtitle,
+    ctaLabel: homeFixture.solutions.ctaLabel,
+    ctaHref: "/solutions",
+    secondaryCtaLabel: homeFixture.solutions.secondaryCtaLabel,
+    secondaryCtaHref: "/business",
+    items: solutionTopicCards(),
   };
 
   const why = {
@@ -484,10 +490,11 @@ function sanitizeFooterColumns(
           return shopCounts[cat] > 0;
         });
 
-      // Business: hub CTAs only — drop /solutions/* dump
+      // Business column: buying hubs + solutions hub — not /solutions/* dump
       if (isBusiness) {
         links = links.filter((l) => {
           const href = (l.href || "").split("?")[0]!;
+          if (href === "/solutions") return true;
           if (href.startsWith("/solutions/")) return false;
           if (BUSINESS_HREFS.has(href)) return true;
           return href.startsWith("/business");

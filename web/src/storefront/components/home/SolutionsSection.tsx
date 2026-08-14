@@ -31,8 +31,7 @@ const ART_THEME: Record<
 };
 
 /**
- * Home “Doanh nghiệp” topics — mirrors mega-nav Doanh nghiệp (topic + volume).
- * Source list lives in home.fixture; keep titles/hrefs in sync with ia.ts.
+ * Home + `/solutions` hub cards — same list as Giải pháp mega (`SOLUTION_TOPICS`).
  */
 export function SolutionsSection({ data }: { data: Solutions }) {
   if (!data.visible || data.items.length === 0) return null;
@@ -67,15 +66,21 @@ export function SolutionsSection({ data }: { data: Solutions }) {
           </div>
         </div>
 
-        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
-          {data.items.map((item, index) => (
-            <li key={item.id}>
-              <SolutionCard item={item} index={index} />
-            </li>
-          ))}
-        </ul>
+        <SolutionTopicGrid items={data.items} />
       </div>
     </section>
+  );
+}
+
+export function SolutionTopicGrid({ items }: { items: SolutionItem[] }) {
+  return (
+    <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
+      {items.map((item, index) => (
+        <li key={item.id}>
+          <SolutionCard item={item} index={index} />
+        </li>
+      ))}
+    </ul>
   );
 }
 

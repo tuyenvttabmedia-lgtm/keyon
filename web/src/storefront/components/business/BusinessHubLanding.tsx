@@ -42,6 +42,7 @@ import {
   TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
+import { SOLUTION_TOPICS } from "@/storefront/nav/ia";
 
 const ICON_MD = { size: 22, strokeWidth: 1.75 } as const;
 const ICON_SM = { size: 16, strokeWidth: 1.85 } as const;
@@ -235,7 +236,7 @@ export function BusinessHubLanding() {
           <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.46fr)_minmax(0,0.54fr)] md:gap-10 lg:gap-12">
             <div className="min-w-0 w-full max-w-[540px]">
               <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
-                Giải pháp cho doanh nghiệp
+                Doanh nghiệp
               </p>
               <h1
                 className={`mt-3 max-w-[18ch] ${HERO_TITLE_CLASS} !text-white`}
@@ -258,10 +259,10 @@ export function BusinessHubLanding() {
                   Tư vấn giải pháp →
                 </Link>
                 <Link
-                  href="/contact/quote"
+                  href="/solutions"
                   className={`inline-flex h-12 items-center justify-center rounded-xl border border-white/30 bg-transparent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
-                  Liên hệ kinh doanh
+                  Giải pháp theo nhu cầu
                 </Link>
               </div>
             </div>
@@ -295,10 +296,10 @@ export function BusinessHubLanding() {
       <section className="bg-[#F4F8FB] py-10 md:py-12 lg:py-14">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
-            <h2 className={SECTION_TITLE_CLASS}>Các giải pháp dành cho doanh nghiệp</h2>
+            <h2 className={SECTION_TITLE_CLASS}>Mua, gia hạn & tư vấn</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Từ mua số lượng lớn, subscription đến tư vấn và quản lý license — chọn đúng hướng
-              cho tổ chức của bạn.
+              Cách KEYON phục vụ tổ chức — khác với các hướng giải pháp theo nhu
+              cầu (năng suất, cloud, bảo mật…).
             </p>
           </header>
 
@@ -339,6 +340,28 @@ export function BusinessHubLanding() {
               </li>
             ))}
           </ul>
+
+          <p className={`mt-10 text-center ${SECTION_LEAD_CLASS}`}>
+            Chọn theo việc cần làm — năng suất, cloud, bảo mật, backup, quản lý
+            license?
+          </p>
+          <ul className="mt-4 flex flex-wrap justify-center gap-2">
+            {SOLUTION_TOPICS.map((t) => (
+              <li key={t.id}>
+                <Link
+                  href={t.href}
+                  className={`inline-flex h-9 items-center rounded-full border border-border bg-white px-3.5 ${LINK_FIELD_CLASS} ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+                >
+                  {t.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 text-center">
+            <Link href="/solutions" className={`${LINK_FIELD_CLASS} ${HOVER_LINK_ACCENT}`}>
+              Tất cả giải pháp →
+            </Link>
+          </p>
         </div>
       </section>
 

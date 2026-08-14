@@ -210,15 +210,14 @@ export function CmsHomeForm({ initial }: { initial: CmsHome }) {
 
       <SectionCard
         step={4}
-        title="Doanh nghiệp / Giải pháp"
-        source="Card giải pháp lấy từ fixture · chỉ ghi đè tiêu đề/phụ đề"
+        title="Giải pháp"
+        source="Card lấy từ IA (SOLUTION_TOPICS) · chỉ ghi đè tiêu đề/phụ đề"
       >
         <Field
           label="Tiêu đề section"
           value={form.solutionsTitle ?? ""}
           onChange={(v) => set("solutionsTitle", v)}
-          placeholder="Doanh nghiệp"
-          hint='Tránh để đúng chữ "Giải pháp" — frontend sẽ dùng tiêu đề fixture.'
+          placeholder="Giải pháp"
         />
         <Field
           label="Phụ đề"

@@ -13,9 +13,9 @@ export function FooterForm({ initial }: { initial: CmsFooter }) {
       {(form, setForm) => (
         <div className="space-y-6">
           <p className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
-            Frontend sẽ tự gọn cột Doanh nghiệp (bỏ /solutions), đổi tên “Thông
-            tin…” → “Công ty”, và sửa legal link trỏ nhầm vào /policy. Sau khi
-            lưu, hard-refresh trang chủ để xem.
+            Frontend sẽ tự gọn cột Doanh nghiệp (bỏ dump /solutions/*), đổi tên
+            “Thông tin…” → “Công ty”, và sửa legal link trỏ nhầm vào /policy. Sau
+            khi lưu, hard-refresh trang chủ để xem.
           </p>
 
           <BrandSection form={form} setForm={setForm} />

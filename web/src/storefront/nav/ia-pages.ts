@@ -16,7 +16,7 @@ export type IaPage = {
   draftCapable?: boolean;
 };
 
-/** Active topic landings (hub `/solutions` redirects to `/business`). */
+/** Active topic landings under hub `/solutions`. */
 export const ACTIVE_SOLUTION_SLUGS = [
   "productivity",
   "cloud",
@@ -28,7 +28,7 @@ export const ACTIVE_SOLUTION_SLUGS = [
 export const SOLUTION_PAGES: Record<string, IaPage> = {
   productivity: {
     slug: "productivity",
-    kicker: "Doanh nghiệp",
+    kicker: "Giải pháp",
     title: "Năng suất & Cộng tác",
     subtitle:
       "Microsoft 365, Office, Teams và công cụ cộng tác chính hãng — kích hoạt nhanh, hỗ trợ tiếng Việt.",
@@ -41,12 +41,12 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
     secondaryCta: { label: "Tư vấn giải pháp", href: "/contact/quote" },
     related: [
       { label: "Microsoft", href: "/products?q=microsoft" },
-      { label: "Giải pháp doanh nghiệp", href: "/business" },
+      { label: "Tất cả giải pháp", href: "/solutions" },
     ],
   },
   cloud: {
     slug: "cloud",
-    kicker: "Doanh nghiệp",
+    kicker: "Giải pháp",
     title: "Cloud",
     subtitle:
       "Cloud linh hoạt cho doanh nghiệp hiện đại — hạ tầng, storage, backup và tư vấn triển khai trên KEYON.",
@@ -60,7 +60,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
   },
   security: {
     slug: "security",
-    kicker: "Doanh nghiệp",
+    kicker: "Giải pháp",
     title: "Bảo mật",
     subtitle: "Bảo vệ endpoint, dữ liệu và thiết bị với các gói bảo mật trên KEYON.",
     bullets: ["Endpoint / Antivirus / Internet Security", "Xem rõ loại nhận trước khi mua"],
@@ -69,7 +69,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
   },
   backup: {
     slug: "backup",
-    kicker: "Doanh nghiệp",
+    kicker: "Giải pháp",
     title: "Backup & Khôi phục",
     subtitle: "Sao lưu và khôi phục dữ liệu — endpoint, cloud và máy chủ (theo catalog hiện có).",
     bullets: ["Tìm gói backup trên cửa hàng", "Tư vấn khi cần triển khai tổ chức"],
@@ -79,7 +79,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
   },
   "license-management": {
     slug: "license-management",
-    kicker: "Doanh nghiệp · Canonical",
+    kicker: "Giải pháp",
     title: "Quản lý bản quyền",
     subtitle:
       "Kiểm soát toàn bộ license trên một nền tảng — theo dõi sử dụng, cảnh báo gia hạn và tối ưu chi phí.",
@@ -94,15 +94,15 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
     related: [
       { label: "Subscription & Gia hạn", href: "/business/subscriptions" },
       { label: "Volume licensing", href: "/business/volume-licensing" },
-      { label: "Giải pháp doanh nghiệp", href: "/business" },
+      { label: "Tất cả giải pháp", href: "/solutions" },
     ],
   },
 };
 
 export const BUSINESS_HUB = {
-  title: "Giải pháp cho doanh nghiệp",
+  title: "Dành cho doanh nghiệp",
   subtitle:
-    "Bản quyền phần mềm và cloud cho tổ chức — mua, triển khai và quản lý trên một nền tảng. Cá nhân vẫn mua lẻ bình thường trên Sản phẩm.",
+    "Mua theo quy mô, gia hạn subscription, tư vấn bản quyền và quản lý license. Cá nhân mua lẻ trên Sản phẩm; chọn hướng theo nhu cầu ở Giải pháp.",
 };
 
 export const BUSINESS_PAGES: Record<string, IaPage> = {
