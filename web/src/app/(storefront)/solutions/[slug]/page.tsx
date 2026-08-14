@@ -19,7 +19,7 @@ import {
   type BackupFeaturedProduct,
 } from "@/storefront/components/solutions/BackupSolutionLanding";
 import { LicenseManagementSolutionLanding } from "@/storefront/components/solutions/LicenseManagementSolutionLanding";
-import { SoftwareLicensingLanding } from "@/storefront/components/solutions/SoftwareLicensingLanding";
+import { ByNeedSolutionLanding } from "@/storefront/components/solutions/ByNeedSolutionLanding";
 import { SOLUTION_PAGES } from "@/storefront/nav/ia-pages";
 import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
 import { inferCategory } from "@/storefront/components/shop/shop-utils";
@@ -40,12 +40,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const page = SOLUTION_PAGES[slug];
   if (!page) return buildMainPageMetadata("/business");
-  if (slug === "software-licensing") {
+  if (slug === "by-need") {
     return {
-      ...(await buildMainPageMetadata("/solutions/software-licensing")),
-      title: "Bản quyền phần mềm | KEYON",
+      ...(await buildMainPageMetadata("/solutions/by-need")),
+      title: "Giải pháp theo nhu cầu | KEYON",
       description:
-        "License chính hãng đúng nhu cầu: perpetual, subscription hoặc volume — nhận hàng rõ ràng, hỗ trợ tiếng Việt.",
+        "Kết hợp năng suất, hạ tầng, bảo mật và sao lưu đúng quy mô sử dụng — tư vấn mix trên KEYON.",
     };
   }
   if (slug === "cloud") {
@@ -420,8 +420,8 @@ export default async function SolutionPage({ params }: Props) {
   const page = SOLUTION_PAGES[slug];
   if (!page) notFound();
 
-  if (slug === "software-licensing") {
-    return <SoftwareLicensingLanding />;
+  if (slug === "by-need") {
+    return <ByNeedSolutionLanding />;
   }
 
   if (slug === "cloud") {

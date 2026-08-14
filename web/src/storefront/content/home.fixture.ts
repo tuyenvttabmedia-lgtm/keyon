@@ -209,13 +209,6 @@ export const homeFixture: HomeContent = {
     secondaryCtaHref: "/business",
     items: [
       {
-        id: "software-licensing",
-        title: "Bản quyền phần mềm",
-        description: "Chọn đúng loại license chính hãng — cá nhân, đội nhóm, tổ chức",
-        href: "/solutions/software-licensing",
-        art: "bars",
-      },
-      {
         id: "productivity",
         title: "Năng suất & Cộng tác",
         description: "Office, Microsoft 365, làm việc nhóm.",
@@ -249,6 +242,13 @@ export const homeFixture: HomeContent = {
         description: "Theo dõi license, gia hạn, tài khoản KEYON.",
         href: "/solutions/license-management",
         art: "stack",
+      },
+      {
+        id: "by-need",
+        title: "Giải pháp theo nhu cầu",
+        description: "Kết hợp sản phẩm phù hợp với quy mô sử dụng",
+        href: "/solutions/by-need",
+        art: "bars",
       },
     ],
   },

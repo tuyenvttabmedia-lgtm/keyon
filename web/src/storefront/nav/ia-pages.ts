@@ -18,31 +18,32 @@ export type IaPage = {
 
 /** Topic landings (`/solutions/{slug}`). Hub is `/solutions`. */
 export const ACTIVE_SOLUTION_SLUGS = [
-  "software-licensing",
   "productivity",
   "cloud",
   "security",
   "backup",
   "license-management",
+  "by-need",
 ] as const;
 
 export const SOLUTION_PAGES: Record<string, IaPage> = {
-  "software-licensing": {
-    slug: "software-licensing",
+  "by-need": {
+    slug: "by-need",
     kicker: "Giải pháp",
-    title: "Bản quyền phần mềm",
+    title: "Giải pháp theo nhu cầu",
     subtitle:
-      "License chính hãng đúng nhu cầu — perpetual, subscription hoặc volume. Nhận hàng rõ ràng, hỗ trợ tiếng Việt.",
+      "Kết hợp năng suất, hạ tầng, bảo mật và sao lưu đúng quy mô — không mua rời từng SKU rồi mới ghép.",
     bullets: [
-      "Retail / OEM / Volume / Subscription — ghi rõ trên từng gói",
-      "Giao key hoặc tài khoản theo đúng loại đã mua",
-      "Cá nhân, đội nhóm và tổ chức trên cùng một nền tảng",
+      "Chọn hướng theo việc cần làm, rồi chốt gói trên Sản phẩm",
+      "Đội nhóm và tổ chức: tư vấn mix theo số người dùng",
+      "Khác quản lý bản quyền — đây là bước chọn mix, không phải theo dõi license đã có",
     ],
-    primaryCta: { label: "Khám phá sản phẩm", href: "/products" },
-    secondaryCta: { label: "Tư vấn bản quyền", href: "/business/licensing-consulting" },
+    primaryCta: { label: "Nhận tư vấn mix", href: "/business/licensing-consulting" },
+    secondaryCta: { label: "Tất cả giải pháp", href: "/solutions" },
     related: [
-      { label: "Quản lý bản quyền", href: "/solutions/license-management" },
-      { label: "Tất cả giải pháp", href: "/solutions" },
+      { label: "Năng suất & Cộng tác", href: "/solutions/productivity" },
+      { label: "Cloud & Hạ tầng", href: "/solutions/cloud" },
+      { label: "Bảo mật", href: "/solutions/security" },
     ],
   },
   productivity: {
