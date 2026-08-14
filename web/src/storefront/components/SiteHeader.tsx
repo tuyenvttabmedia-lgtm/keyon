@@ -264,12 +264,18 @@ function MegaPanel({
   onNavigate: () => void;
 }) {
   const colCount = item.columns.length + (item.promo ? 1 : 0);
+  const footer = item.footerCta ?? {
+    href: item.href,
+    label: `Xem tất cả ${item.label.toLowerCase()} →`,
+  };
   return (
     <div
       id={id}
       role="region"
       aria-label={item.label}
-      className="absolute left-1/2 top-full z-50 w-[min(92vw,720px)] -translate-x-1/2 pt-2"
+      className={`absolute left-1/2 top-full z-50 -translate-x-1/2 pt-2 ${
+        colCount <= 1 ? "w-[min(92vw,380px)]" : "w-[min(92vw,720px)]"
+      }`}
     >
       <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-lg shadow-slate-900/8">
         <div
@@ -316,11 +322,11 @@ function MegaPanel({
         </div>
         <div className="flex items-center justify-between border-t border-border bg-surface/50 px-5 py-3">
           <Link
-            href={item.href}
+            href={footer.href}
             className={`text-sm font-semibold text-navy ${linkEase} hover:text-accent`}
             onClick={onNavigate}
           >
-            Xem tất cả {item.label.toLowerCase()} →
+            {footer.label}
           </Link>
         </div>
       </div>

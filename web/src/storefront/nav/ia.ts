@@ -2,9 +2,10 @@
  * KEYON IA v1 — Navigation / merchandising layer.
  * Frozen: NAV-01..05 — Brand ≠ Category ≠ Collection ≠ Solution ≠ Navigation.
  *
- * One enterprise hub: `/business`. Topic landings stay at `/solutions/*`
- * (NAV-02). Hub `/solutions` redirects here so Giải pháp không tách thành
- * một catalog trùng với Doanh nghiệp.
+ * Sản phẩm  = what to buy (`/products`, brands, collections).
+ * Giải pháp = what need to solve (`/solutions/*` + hub `/solutions`).
+ * Doanh nghiệp = how to buy/renew/consult with KEYON (`/business/*`).
+ * The three megas must not list the same destinations.
  */
 
 export type NavLink = {
@@ -32,6 +33,7 @@ export type MegaNavItem = {
   kind: "mega";
   columns: MegaColumn[];
   promo?: MegaPromo;
+  footerCta?: { label: string; href: string };
 };
 
 export type DropdownNavItem = {
@@ -44,21 +46,56 @@ export type DropdownNavItem = {
 
 export type PrimaryNavItem = MegaNavItem | DropdownNavItem;
 
-/** Shop Collections — only collections with sellable catalog coverage (Wave 5). */
+/** Shop collections — category / query filters, not brand names (NAV-01). */
 export const SHOP_COLLECTIONS: NavLink[] = [
-  { label: "Windows", href: "/products?cat=windows", description: "Hệ điều hành" },
-  { label: "Microsoft Office", href: "/products?cat=office", description: "Office & năng suất" },
-  { label: "Adobe", href: "/products?cat=adobe", description: "PDF & sáng tạo" },
-  { label: "Cloud & Server", href: "/products?cat=cloud", description: "Server / hạ tầng" },
-  { label: "Tất cả sản phẩm", href: "/products" },
+  {
+    label: "Hệ điều hành",
+    href: "/products?cat=windows",
+    description: "Windows, Windows Server",
+  },
+  {
+    label: "Office & Năng suất",
+    href: "/products?cat=office",
+    description: "Office, Microsoft 365",
+  },
+  {
+    label: "Cloud & Hạ tầng",
+    href: "/products?cat=cloud",
+    description: "Server, cloud, Azure",
+  },
+  {
+    label: "Bảo mật",
+    href: "/products?cat=security",
+    description: "Antivirus & endpoint",
+  },
+  {
+    label: "Backup & Khôi phục",
+    href: "/products?q=backup",
+    description: "Bảo vệ và phục hồi dữ liệu",
+  },
 ];
 
-/** Featured brands — only brands with ≥1 active product (Wave 5). */
+/** Featured brands — only brands with catalog coverage (Wave 5). */
 export const FEATURED_BRANDS: NavLink[] = [
-  { label: "Microsoft", href: "/products?q=microsoft", description: "Windows, Office, Microsoft 365" },
-  { label: "Adobe", href: "/products?q=adobe", description: "Sáng tạo, thiết kế và tài liệu" },
-  { label: "Autodesk", href: "/products?q=autodesk", description: "Thiết kế, kỹ thuật và xây dựng" },
-  { label: "Tất cả thương hiệu", href: "/brands" },
+  {
+    label: "Microsoft",
+    href: "/products?q=microsoft",
+    description: "Windows, Office, Microsoft 365",
+  },
+  {
+    label: "Adobe",
+    href: "/products?q=adobe",
+    description: "Creative Cloud, Acrobat",
+  },
+  {
+    label: "Autodesk",
+    href: "/products?q=autodesk",
+    description: "AutoCAD, kỹ thuật",
+  },
+  {
+    label: "Xem tất cả thương hiệu →",
+    href: "/brands",
+  },
 ];
 
 export type SolutionTopicArt =
@@ -69,6 +106,7 @@ export type SolutionTopicArt =
   | "cloud"
   | "backup";
 
+/** Outcome-oriented topics — Home, `/solutions` hub, Giải pháp mega. */
 export const SOLUTION_TOPICS: {
   id: string;
   label: string;
@@ -80,42 +118,56 @@ export const SOLUTION_TOPICS: {
     id: "productivity",
     label: "Năng suất & Cộng tác",
     href: "/solutions/productivity",
-    description: "Office, Microsoft 365, làm việc nhóm",
+    description: "Làm việc hiệu quả hơn với Microsoft 365, Office",
     art: "trend",
   },
   {
     id: "cloud",
-    label: "Cloud",
+    label: "Cloud & Hạ tầng",
     href: "/solutions/cloud",
-    description: "Hạ tầng và dịch vụ cloud",
+    description: "Xây dựng và vận hành cloud, server và workload",
     art: "cloud",
   },
   {
     id: "security",
-    label: "Bảo mật",
+    label: "Bảo mật & Bảo vệ dữ liệu",
     href: "/solutions/security",
-    description: "Endpoint, antivirus, bảo vệ dữ liệu",
+    description: "Bảo vệ endpoint, email và dữ liệu doanh nghiệp",
     art: "shield",
   },
   {
     id: "backup",
-    label: "Backup & Khôi phục",
+    label: "Sao lưu & Khôi phục",
     href: "/solutions/backup",
-    description: "Sao lưu endpoint, cloud và máy chủ",
+    description: "Backup, disaster recovery",
     art: "backup",
   },
   {
     id: "license-management",
-    label: "Quản lý bản quyền",
+    label: "Quản lý phần mềm & bản quyền",
     href: "/solutions/license-management",
-    description: "Theo dõi license, gia hạn, tài khoản KEYON",
+    description: "Theo dõi tập trung license, gia hạn và tài sản số",
     art: "stack",
   },
 ];
 
-export const BUSINESS_TOPIC_LINKS: NavLink[] = SOLUTION_TOPICS.map(
-  ({ label, href, description }) => ({ label, href, description }),
-);
+const SOLUTION_NEED_IDS = [
+  "productivity",
+  "cloud",
+  "security",
+  "backup",
+] as const;
+
+export const SOLUTION_NEED_LINKS: NavLink[] = SOLUTION_TOPICS.filter((t) =>
+  (SOLUTION_NEED_IDS as readonly string[]).includes(t.id),
+).map(({ label, href, description }) => ({ label, href, description }));
+
+export const SOLUTION_ORG_LINKS: NavLink[] = SOLUTION_TOPICS.filter(
+  (t) => t.id === "license-management",
+).map(({ label, href, description }) => ({ label, href, description }));
+
+/** @deprecated Use SOLUTION_NEED_LINKS — kept for older imports. */
+export const BUSINESS_TOPIC_LINKS: NavLink[] = SOLUTION_NEED_LINKS;
 
 export function solutionTopicCards() {
   return SOLUTION_TOPICS.map((t) => ({
@@ -127,36 +179,84 @@ export function solutionTopicCards() {
   }));
 }
 
-/** Buying motions for organizations. */
-export const BUSINESS_SERVICE_LINKS: NavLink[] = [
-  {
-    label: "Tổng quan doanh nghiệp",
-    href: "/business",
-    description: "Landing B2B — mua, triển khai, quản lý",
-  },
+export const BUSINESS_BUY_LINKS: NavLink[] = [
   {
     label: "Mua bản quyền số lượng lớn",
     href: "/business/volume-licensing",
-    description: "5 / 10 / 50 / 100+ users · báo giá",
+    description: "5 / 10 / 50 / 100+ license · báo giá cho tổ chức",
   },
   {
     label: "Subscription & Gia hạn",
     href: "/business/subscriptions",
-    description: "Quản lý subscription và renewal",
+    description: "Quản lý thuê bao, renewal và chu kỳ sử dụng",
   },
+];
+
+export const BUSINESS_ADVISORY_LINKS: NavLink[] = [
   {
     label: "Tư vấn bản quyền",
     href: "/business/licensing-consulting",
-    description: "Chọn đúng gói Office / Windows / Security",
+    description: "Chọn đúng sản phẩm và mô hình cấp phép",
   },
   {
     label: "Liên hệ kinh doanh",
     href: "/contact/quote",
-    description: "CTA tư vấn B2B",
+    description: "Nhận tư vấn và báo giá",
   },
 ];
 
-/** Top-level header navigation (desktop mega / dropdown). */
+/** @deprecated Prefer BUSINESS_BUY_LINKS + BUSINESS_ADVISORY_LINKS */
+export const BUSINESS_SERVICE_LINKS: NavLink[] = [
+  ...BUSINESS_BUY_LINKS,
+  ...BUSINESS_ADVISORY_LINKS,
+];
+
+export const RESOURCE_LINKS: NavLink[] = [
+  {
+    label: "Hướng dẫn phần mềm",
+    href: "/resources/guides",
+    description: "Cài đặt, kích hoạt, sử dụng",
+  },
+  {
+    label: "Kiến thức bản quyền",
+    href: "/resources/insights",
+    description: "License, subscription, renewal",
+  },
+  {
+    label: "Tin tức & Cập nhật",
+    href: "/resources/news",
+    description: "Sản phẩm, công nghệ, ưu đãi",
+  },
+  {
+    label: "FAQ",
+    href: "/faq",
+    description: "Câu hỏi thường gặp",
+  },
+];
+
+export const SUPPORT_LINKS: NavLink[] = [
+  {
+    label: "Trung tâm hỗ trợ",
+    href: "/support",
+    description: "Tìm câu trả lời nhanh",
+  },
+  {
+    label: "Hướng dẫn nhận hàng",
+    href: "/how-it-works",
+    description: "Key / tài khoản / kích hoạt",
+  },
+  {
+    label: "Gửi yêu cầu hỗ trợ",
+    href: "/account/tickets",
+    description: "Tạo ticket và theo dõi xử lý",
+  },
+  {
+    label: "Liên hệ",
+    href: "/contact",
+    description: "Email và các kênh hỗ trợ",
+  },
+];
+
 export const IA_PRIMARY_NAV: PrimaryNavItem[] = [
   {
     id: "products",
@@ -164,9 +264,21 @@ export const IA_PRIMARY_NAV: PrimaryNavItem[] = [
     href: "/products",
     kind: "mega",
     columns: [
-      { title: "Thương hiệu", links: FEATURED_BRANDS },
-      { title: "Khám phá", links: SHOP_COLLECTIONS },
+      { title: "Theo danh mục", links: SHOP_COLLECTIONS },
+      { title: "Thương hiệu nổi bật", links: FEATURED_BRANDS },
     ],
+    footerCta: { label: "Xem tất cả sản phẩm →", href: "/products" },
+  },
+  {
+    id: "solutions",
+    label: "Giải pháp",
+    href: "/solutions",
+    kind: "mega",
+    columns: [
+      { title: "Giải pháp theo nhu cầu", links: SOLUTION_NEED_LINKS },
+      { title: "Dành cho tổ chức", links: SOLUTION_ORG_LINKS },
+    ],
+    footerCta: { label: "Khám phá tất cả giải pháp →", href: "/solutions" },
   },
   {
     id: "business",
@@ -174,43 +286,32 @@ export const IA_PRIMARY_NAV: PrimaryNavItem[] = [
     href: "/business",
     kind: "mega",
     columns: [
-      { title: "Theo nhu cầu", links: BUSINESS_TOPIC_LINKS },
-      { title: "Mua & dịch vụ", links: BUSINESS_SERVICE_LINKS },
+      { title: "Mua & quản lý", links: BUSINESS_BUY_LINKS },
+      { title: "Tư vấn", links: BUSINESS_ADVISORY_LINKS },
     ],
-    promo: {
-      title: "Cá nhân mua ở Sản phẩm",
-      description:
-        "Mua lẻ Windows, Office, Adobe… trên cửa hàng. Doanh nghiệp dùng mục này để tư vấn và mua theo quy mô.",
-      href: "/products",
-      ctaLabel: "Xem sản phẩm →",
+    footerCta: {
+      label: "Khám phá dịch vụ doanh nghiệp →",
+      href: "/business",
     },
   },
   {
     id: "resources",
     label: "Tài nguyên",
     href: "/resources",
-    kind: "dropdown",
-    links: [
-      { label: "Kiến thức", href: "/resources/insights" },
-      { label: "Hướng dẫn", href: "/resources/guides" },
-      { label: "Tin tức", href: "/resources/news" },
-      { label: "FAQ", href: "/faq" },
-    ],
+    kind: "mega",
+    columns: [{ title: "Kiến thức", links: RESOURCE_LINKS }],
+    footerCta: { label: "Xem tất cả tài nguyên →", href: "/resources" },
   },
   {
     id: "support",
     label: "Hỗ trợ",
     href: "/support",
-    kind: "dropdown",
-    links: [
-      { label: "Trung tâm hỗ trợ", href: "/support" },
-      { label: "Gửi yêu cầu hỗ trợ", href: "/account/tickets" },
-      { label: "Liên hệ", href: "/contact" },
-    ],
+    kind: "mega",
+    columns: [{ title: "Hỗ trợ", links: SUPPORT_LINKS }],
+    footerCta: { label: "Trung tâm hỗ trợ →", href: "/support" },
   },
 ];
 
-/** Flat top links for mobile accordion roots / footer helpers */
 export function iaTopLinks(): NavLink[] {
   return IA_PRIMARY_NAV.map((n) => ({ label: n.label, href: n.href }));
 }

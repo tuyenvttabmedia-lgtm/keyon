@@ -212,8 +212,8 @@ export function SecuritySolutionLanding({ featured }: Props) {
             <span aria-hidden className="text-muted-soft">
               ›
             </span>
-            <Link href="/business" className={HOVER_LINK_ACCENT}>
-              Doanh nghiệp
+            <Link href="/solutions" className={HOVER_LINK_ACCENT}>
+              Giải pháp
             </Link>
             <span aria-hidden className="text-muted-soft">
               ›

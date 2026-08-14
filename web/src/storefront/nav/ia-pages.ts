@@ -16,7 +16,7 @@ export type IaPage = {
   draftCapable?: boolean;
 };
 
-/** Topic landings (`/solutions/{slug}`). Hub `/solutions` → `/business`. */
+/** Topic landings (`/solutions/{slug}`). Hub is `/solutions`. */
 export const ACTIVE_SOLUTION_SLUGS = [
   "productivity",
   "cloud",
@@ -28,7 +28,7 @@ export const ACTIVE_SOLUTION_SLUGS = [
 export const SOLUTION_PAGES: Record<string, IaPage> = {
   productivity: {
     slug: "productivity",
-    kicker: "Doanh nghiệp",
+    kicker: "Giải pháp",
     title: "Năng suất & Cộng tác",
     subtitle:
       "Microsoft 365, Office, Teams và công cụ cộng tác chính hãng — kích hoạt nhanh, hỗ trợ tiếng Việt.",
@@ -41,13 +41,13 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
     secondaryCta: { label: "Tư vấn giải pháp", href: "/contact/quote" },
     related: [
       { label: "Microsoft", href: "/products?q=microsoft" },
-      { label: "Doanh nghiệp", href: "/business" },
+      { label: "Tất cả giải pháp", href: "/solutions" },
     ],
   },
   cloud: {
     slug: "cloud",
-    kicker: "Doanh nghiệp",
-    title: "Cloud",
+    kicker: "Giải pháp",
+    title: "Cloud & Hạ tầng",
     subtitle:
       "Cloud linh hoạt cho doanh nghiệp hiện đại — hạ tầng, storage, backup và tư vấn triển khai trên KEYON.",
     bullets: [
@@ -60,8 +60,8 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
   },
   security: {
     slug: "security",
-    kicker: "Doanh nghiệp",
-    title: "Bảo mật",
+    kicker: "Giải pháp",
+    title: "Bảo mật & Bảo vệ dữ liệu",
     subtitle: "Bảo vệ endpoint, dữ liệu và thiết bị với các gói bảo mật trên KEYON.",
     bullets: ["Endpoint / Antivirus / Internet Security", "Xem rõ loại nhận trước khi mua"],
     primaryCta: { label: "Xem sản phẩm bảo mật", href: "/products?cat=security" },
@@ -69,8 +69,8 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
   },
   backup: {
     slug: "backup",
-    kicker: "Doanh nghiệp",
-    title: "Backup & Khôi phục",
+    kicker: "Giải pháp",
+    title: "Sao lưu & Khôi phục",
     subtitle: "Sao lưu và khôi phục dữ liệu — endpoint, cloud và máy chủ (theo catalog hiện có).",
     bullets: ["Tìm gói backup trên cửa hàng", "Tư vấn khi cần triển khai tổ chức"],
     primaryCta: { label: "Tìm sản phẩm backup", href: "/products?q=backup" },
@@ -79,8 +79,8 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
   },
   "license-management": {
     slug: "license-management",
-    kicker: "Doanh nghiệp",
-    title: "Quản lý bản quyền",
+    kicker: "Giải pháp",
+    title: "Quản lý phần mềm & bản quyền",
     subtitle:
       "Kiểm soát toàn bộ license trên một nền tảng — theo dõi sử dụng, cảnh báo gia hạn và tối ưu chi phí.",
     bullets: [
@@ -94,15 +94,15 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
     related: [
       { label: "Subscription & Gia hạn", href: "/business/subscriptions" },
       { label: "Volume licensing", href: "/business/volume-licensing" },
-      { label: "Doanh nghiệp", href: "/business" },
+      { label: "Tất cả giải pháp", href: "/solutions" },
     ],
   },
 };
 
 export const BUSINESS_HUB = {
-  title: "Giải pháp cho doanh nghiệp",
+  title: "Dành cho doanh nghiệp",
   subtitle:
-    "Theo nhu cầu (năng suất, cloud, bảo mật…) cùng mua theo quy mô, gia hạn và tư vấn — một hub. Cá nhân mua lẻ trên Sản phẩm.",
+    "Mua theo quy mô, gia hạn subscription và tư vấn bản quyền với KEYON. Cá nhân mua lẻ trên Sản phẩm. Nhu cầu theo việc cần làm nằm ở Giải pháp.",
 };
 
 export const BUSINESS_PAGES: Record<string, IaPage> = {

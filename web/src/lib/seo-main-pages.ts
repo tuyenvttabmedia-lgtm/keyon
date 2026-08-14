@@ -12,6 +12,7 @@ export type MainSeoPageKey =
   | "/faq"
   | "/support"
   | "/business"
+  | "/solutions"
   | "/resources"
   | "/resources/insights"
   | "/resources/guides"
@@ -26,6 +27,7 @@ export const MAIN_SEO_PAGES: {
   { path: "/", label: "Trang chủ" },
   { path: "/products", label: "Trang sản phẩm" },
   { path: "/business", label: "Doanh nghiệp" },
+  { path: "/solutions", label: "Giải pháp" },
   { path: "/resources", label: "Tài nguyên" },
   { path: "/resources/insights", label: "Kiến thức" },
   { path: "/resources/guides", label: "Hướng dẫn" },

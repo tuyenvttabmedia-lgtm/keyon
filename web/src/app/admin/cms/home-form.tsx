@@ -210,14 +210,14 @@ export function CmsHomeForm({ initial }: { initial: CmsHome }) {
 
       <SectionCard
         step={4}
-        title="Giải pháp doanh nghiệp"
-        source="Cùng card với /business · chỉ ghi đè tiêu đề/phụ đề"
+        title="Giải pháp"
+        source="Card = SOLUTION_TOPICS · CTA → /solutions · chỉ ghi đè tiêu đề/phụ đề"
       >
         <Field
           label="Tiêu đề section"
           value={form.solutionsTitle ?? ""}
           onChange={(v) => set("solutionsTitle", v)}
-          placeholder="Giải pháp doanh nghiệp"
+          placeholder="Giải pháp"
         />
         <Field
           label="Phụ đề"

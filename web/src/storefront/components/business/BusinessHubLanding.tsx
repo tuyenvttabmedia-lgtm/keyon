@@ -42,8 +42,6 @@ import {
   TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
-import { SolutionTopicGrid } from "@/storefront/components/home/SolutionsSection";
-import { solutionTopicCards } from "@/storefront/nav/ia";
 
 const ICON_MD = { size: 22, strokeWidth: 1.75 } as const;
 const ICON_SM = { size: 16, strokeWidth: 1.85 } as const;
@@ -227,7 +225,7 @@ export function BusinessHubLanding() {
           <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.46fr)_minmax(0,0.54fr)] md:gap-10 lg:gap-12">
             <div className="min-w-0 w-full max-w-[540px]">
               <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
-                Giải pháp doanh nghiệp
+                Doanh nghiệp
               </p>
               <h1
                 className={`mt-3 max-w-[18ch] ${HERO_TITLE_CLASS} !text-white`}
@@ -250,10 +248,10 @@ export function BusinessHubLanding() {
                   Tư vấn giải pháp →
                 </Link>
                 <Link
-                  href="#theo-nhu-cau"
+                  href="/contact/quote"
                   className={`inline-flex h-12 items-center justify-center rounded-xl border border-white/30 bg-transparent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
-                  Xem các hướng giải pháp
+                  Liên hệ kinh doanh
                 </Link>
               </div>
             </div>
@@ -283,30 +281,14 @@ export function BusinessHubLanding() {
         </div>
       </section>
 
-      {/* ── Topic cards (same as Home) ──────────────────────── */}
-      <section
-        id="theo-nhu-cau"
-        className="scroll-mt-24 bg-[#F4F8FB] py-10 md:py-12 lg:py-14"
-      >
-        <div className="home-container">
-          <header className="mx-auto mb-8 max-w-2xl text-center md:mb-9">
-            <h2 className={SECTION_TITLE_CLASS}>Theo nhu cầu</h2>
-            <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Cùng bộ giải pháp trên trang chủ — chọn hướng rồi xem landing chi
-              tiết.
-            </p>
-          </header>
-          <SolutionTopicGrid items={solutionTopicCards()} />
-        </div>
-      </section>
-
       {/* ── Buying motions ───────────────────────────────────── */}
-      <section className="bg-white py-10 md:py-12 lg:py-14">
+      <section className="bg-[#F4F8FB] py-10 md:py-12 lg:py-14">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Mua, gia hạn & tư vấn</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Volume, subscription, tư vấn trước khi mua và liên hệ kinh doanh.
+              Cách tổ chức mua và triển khai với KEYON — khác với giải pháp theo
+              nhu cầu ở menu Giải pháp.
             </p>
           </header>
 

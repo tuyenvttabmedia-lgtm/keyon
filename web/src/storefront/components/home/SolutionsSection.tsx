@@ -31,7 +31,7 @@ const ART_THEME: Record<
 };
 
 /**
- * Home “Giải pháp doanh nghiệp” — same topic cards as `/business#theo-nhu-cau`.
+ * Home Giải pháp — same topic cards as `/solutions` hub (`SOLUTION_TOPICS`).
  */
 export function SolutionsSection({ data }: { data: Solutions }) {
   if (!data.visible || data.items.length === 0) return null;

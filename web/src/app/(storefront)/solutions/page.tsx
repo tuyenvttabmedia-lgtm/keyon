@@ -1,6 +1,18 @@
-import { permanentRedirect } from "next/navigation";
+import type { Metadata } from "next";
+import { SolutionsHubLanding } from "@/storefront/components/solutions/SolutionsHubLanding";
+import { buildMainPageMetadata } from "@/server/seo/metadata";
 
-/** Hub `/solutions` = Doanh nghiệp. Topic landings stay at `/solutions/{slug}`. */
-export default function SolutionsHubRedirectPage() {
-  permanentRedirect("/business");
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    ...(await buildMainPageMetadata("/solutions")),
+    title: "Giải pháp | KEYON",
+    description:
+      "Giải pháp KEYON theo nhu cầu: năng suất, cloud & hạ tầng, bảo mật, sao lưu và quản lý bản quyền.",
+  };
+}
+
+export default function SolutionsHubPage() {
+  return <SolutionsHubLanding />;
 }
