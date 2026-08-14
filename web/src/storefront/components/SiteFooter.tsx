@@ -55,6 +55,35 @@ function FooterHref({
   );
 }
 
+function SocialIcon({ name }: { name: "mail" | "help" }) {
+  const common = {
+    width: 14,
+    height: 14,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 2,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    "aria-hidden": true,
+  };
+  if (name === "mail") {
+    return (
+      <svg {...common}>
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="m3 7 9 6 9-6" />
+      </svg>
+    );
+  }
+  return (
+    <svg {...common}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M9.5 9.5a2.5 2.5 0 0 1 5 1c0 1.5-2.5 2-2.5 3.5" />
+      <path d="M12 17.5h.01" />
+    </svg>
+  );
+}
+
 /** Digital Home footer — navy · accordion on mobile · multi-col on desktop */
 export function SiteFooter({
   logoUrl: logoUrlProp,
@@ -73,8 +102,8 @@ export function SiteFooter({
   const logoUrl = resolveMediaUrl(logoUrlProp) || undefined;
   const mark = name.charAt(0).toUpperCase() || "K";
   const social = [
-    { label: "Email", href: `mailto:${supportEmail}`, letter: "✉" },
-    { label: "Liên hệ", href: "/contact", letter: "?" },
+    { label: "Email", href: `mailto:${supportEmail}`, icon: "mail" as const },
+    { label: "Liên hệ", href: "/contact", icon: "help" as const },
   ];
   const visibleColumns = columns.filter((c) => c.links.length > 0);
   const bctSrc = resolveMediaUrl(bctImageUrl) || "/brand/bct-thong-bao.svg";
@@ -118,16 +147,16 @@ export function SiteFooter({
                 href={bctLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`mt-5 inline-block ${TRANSITION_UI} hover:opacity-90`}
+                className={`mt-5 inline-block max-w-xs ${TRANSITION_UI} hover:opacity-90`}
                 aria-label={bctAlt}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={bctSrc}
                   alt={bctAlt}
-                  width={160}
-                  height={61}
-                  className="h-[52px] w-auto max-w-[168px] object-contain object-left"
+                  width={320}
+                  height={122}
+                  className="h-auto w-full max-w-[280px] object-contain object-left"
                 />
               </a>
             ) : null}
@@ -169,25 +198,25 @@ export function SiteFooter({
       </div>
 
       <div className="border-t border-white/10">
-        <div className="home-container flex flex-col gap-4 py-4 lg:grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1.4fr)] lg:items-start lg:gap-6">
-          <span className="text-xs text-slate-500 lg:pt-1">
+        <div className="home-container flex flex-col gap-4 py-3.5 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-6">
+          <span className="flex items-center text-xs leading-none text-slate-500">
             {copyright}
           </span>
-          <div className="flex flex-wrap items-center gap-2 lg:justify-self-center">
+          <div className="flex items-center gap-2">
             {social.map((s) => (
               <a
                 key={s.label}
                 href={s.href}
-                className={`inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-xs font-semibold text-white ${TRANSITION_UI} hover:border-accent hover:bg-accent/15 hover:text-accent`}
+                className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/15 text-white ${TRANSITION_UI} hover:border-accent hover:bg-accent/15 hover:text-accent`}
                 aria-label={s.label}
               >
-                {s.letter}
+                <SocialIcon name={s.icon} />
               </a>
             ))}
           </div>
           <nav
             aria-label="Chính sách"
-            className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs lg:justify-end"
+            className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs leading-5 lg:justify-end"
           >
             {legalLinks.map((link) => (
               <FooterHref

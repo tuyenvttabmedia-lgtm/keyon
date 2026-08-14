@@ -381,7 +381,7 @@ function BctSection({
       </div>
 
       <div className="flex flex-wrap items-start gap-4">
-        <div className="flex h-[72px] w-[188px] shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border bg-white p-2">
+        <div className="flex h-[88px] w-[240px] shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border bg-white p-2">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={preview}
