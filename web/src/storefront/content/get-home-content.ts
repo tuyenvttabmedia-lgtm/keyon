@@ -492,7 +492,7 @@ function sanitizeFooterColumns(
           return shopCounts[cat] > 0;
         });
 
-      // Business column: buying hubs — not /solutions/* dump (hub /solutions 301s)
+      // Business column: buying hubs — allow /solutions hub, drop /solutions/* dump
       if (isBusiness) {
         links = links.filter((l) => {
           const href = (l.href || "").split("?")[0]!;

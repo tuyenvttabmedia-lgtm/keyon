@@ -18,6 +18,7 @@ export type IaPage = {
 
 /** Topic landings (`/solutions/{slug}`). Hub is `/solutions`. */
 export const ACTIVE_SOLUTION_SLUGS = [
+  "software-licensing",
   "productivity",
   "cloud",
   "security",
@@ -26,6 +27,24 @@ export const ACTIVE_SOLUTION_SLUGS = [
 ] as const;
 
 export const SOLUTION_PAGES: Record<string, IaPage> = {
+  "software-licensing": {
+    slug: "software-licensing",
+    kicker: "Giải pháp",
+    title: "Bản quyền phần mềm",
+    subtitle:
+      "License chính hãng đúng nhu cầu — perpetual, subscription hoặc volume. Nhận hàng rõ ràng, hỗ trợ tiếng Việt.",
+    bullets: [
+      "Retail / OEM / Volume / Subscription — ghi rõ trên từng gói",
+      "Giao key hoặc tài khoản theo đúng loại đã mua",
+      "Cá nhân, đội nhóm và tổ chức trên cùng một nền tảng",
+    ],
+    primaryCta: { label: "Khám phá sản phẩm", href: "/products" },
+    secondaryCta: { label: "Tư vấn bản quyền", href: "/business/licensing-consulting" },
+    related: [
+      { label: "Quản lý bản quyền", href: "/solutions/license-management" },
+      { label: "Tất cả giải pháp", href: "/solutions" },
+    ],
+  },
   productivity: {
     slug: "productivity",
     kicker: "Giải pháp",

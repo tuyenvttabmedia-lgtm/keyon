@@ -115,6 +115,13 @@ export const SOLUTION_TOPICS: {
   art: SolutionTopicArt;
 }[] = [
   {
+    id: "software-licensing",
+    label: "Bản quyền phần mềm",
+    href: "/solutions/software-licensing",
+    description: "Chọn đúng loại license chính hãng — cá nhân, đội nhóm, tổ chức",
+    art: "bars",
+  },
+  {
     id: "productivity",
     label: "Năng suất & Cộng tác",
     href: "/solutions/productivity",
@@ -162,8 +169,8 @@ export const SOLUTION_NEED_LINKS: NavLink[] = SOLUTION_TOPICS.filter((t) =>
   (SOLUTION_NEED_IDS as readonly string[]).includes(t.id),
 ).map(({ label, href, description }) => ({ label, href, description }));
 
-export const SOLUTION_ORG_LINKS: NavLink[] = SOLUTION_TOPICS.filter(
-  (t) => t.id === "license-management",
+export const SOLUTION_ORG_LINKS: NavLink[] = SOLUTION_TOPICS.filter((t) =>
+  t.id === "software-licensing" || t.id === "license-management",
 ).map(({ label, href, description }) => ({ label, href, description }));
 
 /** @deprecated Use SOLUTION_NEED_LINKS — kept for older imports. */

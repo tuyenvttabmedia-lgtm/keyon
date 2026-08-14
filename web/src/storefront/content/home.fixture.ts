@@ -209,6 +209,13 @@ export const homeFixture: HomeContent = {
     secondaryCtaHref: "/business",
     items: [
       {
+        id: "software-licensing",
+        title: "Bản quyền phần mềm",
+        description: "Chọn đúng loại license chính hãng — cá nhân, đội nhóm, tổ chức",
+        href: "/solutions/software-licensing",
+        art: "bars",
+      },
+      {
         id: "productivity",
         title: "Năng suất & Cộng tác",
         description: "Office, Microsoft 365, làm việc nhóm.",
