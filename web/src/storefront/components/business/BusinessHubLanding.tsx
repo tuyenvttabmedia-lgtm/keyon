@@ -79,6 +79,16 @@ const BIZ_CARDS: BizCard[] = [
     tone: "bg-violet-600 text-white",
   },
   {
+    id: "contracts",
+    title: "Hợp đồng & đơn hàng",
+    body: "Xem đơn và license tổ chức sau đăng nhập. PO / gia hạn qua đội kinh doanh.",
+    href: "/business/contracts",
+    cta: "Tìm hiểu thêm",
+    features: ["Đơn trên Tài khoản", "Chưa phải cổng HĐ pháp lý", "Liên hệ khi cần PO"],
+    Icon: FileText,
+    tone: "bg-orange-600 text-white",
+  },
+  {
     id: "consulting",
     title: "Tư vấn bản quyền",
     body: "Chưa chắc chọn gói nào? KEYON tư vấn trước khi mua — đúng nhu cầu, đúng ngân sách.",
@@ -87,6 +97,16 @@ const BIZ_CARDS: BizCard[] = [
     features: ["Tư vấn chọn gói", "Perpetual vs subscription", "Đề xuất theo quy mô"],
     Icon: MessageCircle,
     tone: "bg-sky-600 text-white",
+  },
+  {
+    id: "implementation",
+    title: "Dịch vụ triển khai",
+    body: "Bàn giao và kích hoạt bản quyền theo quy mô — không giả catalog MSP cloud.",
+    href: "/business/implementation",
+    cta: "Tìm hiểu thêm",
+    features: ["Onboarding sau mua", "Checklist cho IT", "Form loại triển khai"],
+    Icon: Rocket,
+    tone: "bg-navy text-white",
   },
   {
     id: "sales",
@@ -285,9 +305,9 @@ export function BusinessHubLanding() {
       <section className="bg-[#F4F8FB] py-10 md:py-12 lg:py-14">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
-            <h2 className={SECTION_TITLE_CLASS}>Mua, gia hạn & tư vấn</h2>
+            <h2 className={SECTION_TITLE_CLASS}>Mua, gia hạn, triển khai & đơn DN</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Cách tổ chức mua và triển khai với KEYON — khác với giải pháp theo
+              Cách tổ chức mua và làm việc với KEYON — khác với giải pháp theo
               nhu cầu ở menu Giải pháp.
             </p>
           </header>

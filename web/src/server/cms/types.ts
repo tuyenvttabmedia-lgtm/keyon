@@ -430,6 +430,8 @@ export const defaultCmsFooter: CmsFooter = {
         { label: "Volume licensing", href: "/business/volume-licensing" },
         { label: "Subscriptions", href: "/business/subscriptions" },
         { label: "Tư vấn bản quyền", href: "/business/licensing-consulting" },
+        { label: "Dịch vụ triển khai", href: "/business/implementation" },
+        { label: "Hợp đồng & đơn hàng", href: "/business/contracts" },
         { label: "Báo giá doanh nghiệp", href: "/contact/quote" },
       ],
     },

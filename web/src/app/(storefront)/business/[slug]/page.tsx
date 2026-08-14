@@ -4,6 +4,8 @@ import { IaLandingPage } from "@/storefront/components/marketing/IaLanding";
 import { VolumeLicensingLanding } from "@/storefront/components/business/VolumeLicensingLanding";
 import { SubscriptionsLanding } from "@/storefront/components/business/subscriptions/SubscriptionsLanding";
 import { LicensingConsultingLanding } from "@/storefront/components/business/consulting/LicensingConsultingLanding";
+import { ImplementationLanding } from "@/storefront/components/business/ImplementationLanding";
+import { ContractsLanding } from "@/storefront/components/business/ContractsLanding";
 import { BUSINESS_PAGES } from "@/storefront/nav/ia-pages";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
 
@@ -43,6 +45,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         "Chưa chắc nên chọn Office, Microsoft 365, Windows hay Security? KEYON hỗ trợ phân tích nhu cầu và tư vấn trước khi mua.",
     };
   }
+  if (slug === "implementation") {
+    return {
+      ...(await buildMainPageMetadata(`/business/${slug}`)),
+      title: "Dịch vụ triển khai | KEYON",
+      description:
+        "Bàn giao và kích hoạt bản quyền theo quy mô tổ chức — onboarding IT, không phải catalog MSP cloud.",
+    };
+  }
+  if (slug === "contracts") {
+    return {
+      ...(await buildMainPageMetadata(`/business/${slug}`)),
+      title: "Hợp đồng & đơn hàng doanh nghiệp | KEYON",
+      description:
+        "Theo dõi đơn hàng và license tổ chức trên Tài khoản KEYON. PO và gia hạn qua đội kinh doanh.",
+    };
+  }
   return {
     ...(await buildMainPageMetadata(`/business/${slug}`)),
     title: `${page.title} | KEYON`,
@@ -62,6 +80,12 @@ export default async function BusinessPage({ params }: Props) {
   }
   if (slug === "licensing-consulting") {
     return <LicensingConsultingLanding />;
+  }
+  if (slug === "implementation") {
+    return <ImplementationLanding />;
+  }
+  if (slug === "contracts") {
+    return <ContractsLanding />;
   }
   return <IaLandingPage page={page} hubLabel="Doanh nghiệp" hubHref="/business" />;
 }

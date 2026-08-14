@@ -438,6 +438,8 @@ function sanitizeFooterColumns(
     "/business/volume-licensing",
     "/business/subscriptions",
     "/business/licensing-consulting",
+    "/business/implementation",
+    "/business/contracts",
     "/contact/quote",
   ]);
 

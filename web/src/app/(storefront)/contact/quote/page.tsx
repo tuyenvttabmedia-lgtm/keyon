@@ -32,7 +32,13 @@ function resolveRequestType(intent?: string, requestType?: string) {
   if (intent === "volume-quote") return "VOLUME_LICENSING";
   if (intent === "subscription-consult" || intent === "business") return "SUBSCRIPTION";
   if (intent === "licensing-consult") return "LICENSING_CONSULTING";
+  if (intent === "implementation") return "IMPLEMENTATION";
   return "GENERAL";
+}
+
+function resolveSourcePath(intent?: string) {
+  if (intent === "implementation") return "/business/implementation";
+  return "/contact/quote";
 }
 
 export default async function ContactQuotePage({ searchParams }: Props) {
@@ -65,7 +71,7 @@ export default async function ContactQuotePage({ searchParams }: Props) {
         estimatedUsers: sp.estimatedUsers,
         productSlug: sp.product,
         requestType: resolveRequestType(sp.intent, sp.requestType),
-        sourcePath: "/contact/quote",
+        sourcePath: resolveSourcePath(sp.intent),
       }}
     />
   );

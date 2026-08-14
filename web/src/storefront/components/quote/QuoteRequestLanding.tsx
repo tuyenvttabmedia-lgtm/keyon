@@ -109,6 +109,46 @@ const SUPPORT_STEPS = [
   "Hỗ trợ triển khai sau khi chốt",
 ] as const;
 
+const IMPLEMENTATION_STEPS = [
+  "Tiếp nhận phạm vi bàn giao / kích hoạt",
+  "Rà soát loại nhận và quy mô",
+  "Kế hoạch rollout cho IT",
+  "Hỗ trợ kích hoạt và checklist bàn giao",
+] as const;
+
+function quoteHeroCopy(requestType: string): {
+  overline: string;
+  title: string;
+  lead: string;
+  crumb: string;
+  sidebarTitle: string;
+  steps: readonly string[];
+  messagePlaceholder: string;
+} {
+  if (requestType === "IMPLEMENTATION") {
+    return {
+      overline: "Dịch vụ triển khai",
+      title: "Yêu cầu hỗ trợ bàn giao và kích hoạt",
+      lead: "Mô tả sản phẩm đã (sắp) mua, số người dùng và đội IT phụ trách. KEYON tiếp nhận như báo giá — không tự tạo đơn trên giỏ hàng.",
+      crumb: "Dịch vụ triển khai",
+      sidebarTitle: "Luồng triển khai",
+      steps: IMPLEMENTATION_STEPS,
+      messagePlaceholder:
+        "Ví dụ: đã mua Microsoft 365 cho 40 máy, cần checklist kích hoạt và hỗ trợ gán seat cho IT…",
+    };
+  }
+  return {
+    overline: "Yêu cầu báo giá",
+    title: "Nhận tư vấn và báo giá phù hợp với nhu cầu doanh nghiệp",
+    lead: "Cho KEYON biết nhu cầu của bạn. Đội ngũ tư vấn sẽ dựa trên thông tin cung cấp để đề xuất phương án bản quyền phù hợp.",
+    crumb: "Yêu cầu báo giá",
+    sidebarTitle: "Luồng báo giá doanh nghiệp",
+    steps: SUPPORT_STEPS,
+    messagePlaceholder:
+      "Ví dụ: sản phẩm đang quan tâm, số lượng người dùng, thời gian dự kiến triển khai hoặc yêu cầu đặc biệt…",
+  };
+}
+
 const PROCESS = [
   { title: "Gửi yêu cầu", body: "Điền thông tin và nhu cầu bản quyền." },
   { title: "Tiếp nhận & phân tích", body: "KEYON rà soát quy mô và sản phẩm quan tâm." },
@@ -189,6 +229,7 @@ export function QuoteRequestLanding({
 
   const requestType = (initial.requestType || "GENERAL").toUpperCase();
   const sourcePath = initial.sourcePath || "/contact/quote";
+  const hero = quoteHeroCopy(requestType);
 
   const productResults = useMemo(() => {
     const q = productQuery.trim().toLowerCase();
@@ -372,18 +413,17 @@ export function QuoteRequestLanding({
             <span aria-hidden className="text-muted-soft">
               ›
             </span>
-            <span className={BREADCRUMB_CURRENT_CLASS}>Yêu cầu báo giá</span>
+            <span className={BREADCRUMB_CURRENT_CLASS}>{hero.crumb}</span>
           </nav>
 
           <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.72fr)] lg:gap-12">
             <div className="min-w-0 max-w-xl">
-              <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>Yêu cầu báo giá</p>
+              <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>{hero.overline}</p>
               <h1 className={`mt-3 ${HERO_TITLE_CLASS}`}>
-                Nhận tư vấn và báo giá phù hợp với nhu cầu doanh nghiệp
+                {hero.title}
               </h1>
               <p className={`mt-3 ${PAGE_LEAD_CLASS}`}>
-                Cho KEYON biết nhu cầu của bạn. Đội ngũ tư vấn sẽ dựa trên thông tin cung cấp để
-                đề xuất phương án bản quyền phù hợp.
+                {hero.lead}
               </p>
               <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-3">
                 {[
@@ -410,14 +450,14 @@ export function QuoteRequestLanding({
                   <Send size={20} strokeWidth={1.8} />
                 </span>
                 <div>
-                  <p className={CARD_TITLE_CLASS}>Luồng báo giá doanh nghiệp</p>
+                  <p className={CARD_TITLE_CLASS}>{hero.sidebarTitle}</p>
                   <p className={`mt-1 ${CARD_META_CLASS}`}>
                     Không cần tài khoản · Không đưa vào giỏ hàng · Báo giá trước khi thanh toán
                   </p>
                 </div>
               </div>
               <ol className="mt-5 space-y-2.5">
-                {SUPPORT_STEPS.map((s, i) => (
+                {hero.steps.map((s, i) => (
                   <li key={s} className="flex items-start gap-2.5 text-[13px] text-navy">
                     <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy text-[10px] font-bold text-white">
                       {i + 1}
@@ -712,7 +752,7 @@ export function QuoteRequestLanding({
                         className={`${TEXTAREA} ${errors.message ? INPUT_ERR : ""}`}
                         value={form.message}
                         onChange={(e) => setField("message", e.target.value)}
-                        placeholder="Ví dụ: sản phẩm đang quan tâm, số lượng người dùng, thời gian dự kiến triển khai hoặc yêu cầu đặc biệt…"
+                        placeholder={hero.messagePlaceholder}
                       />
                       <div className="mt-1 flex items-center justify-between gap-3">
                         <FieldError message={errors.message} />
@@ -846,7 +886,7 @@ export function QuoteRequestLanding({
             <div className={`rounded-2xl border border-border bg-white p-5 ${ELEVATION_HAIRLINE}`}>
               <h2 className={CARD_TITLE_CLASS}>Chúng tôi sẽ hỗ trợ bạn</h2>
               <ul className="mt-4 space-y-3">
-                {SUPPORT_STEPS.map((s, i) => (
+                {hero.steps.map((s, i) => (
                   <li key={s} className="flex items-start gap-2.5">
                     <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
                       <Check size={11} strokeWidth={3} aria-hidden />

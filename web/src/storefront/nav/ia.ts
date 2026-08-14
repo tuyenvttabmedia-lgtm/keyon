@@ -197,6 +197,11 @@ export const BUSINESS_BUY_LINKS: NavLink[] = [
     href: "/business/subscriptions",
     description: "Quản lý thuê bao, renewal và chu kỳ sử dụng",
   },
+  {
+    label: "Hợp đồng & đơn hàng",
+    href: "/business/contracts",
+    description: "Theo dõi giao dịch DN trên Tài khoản — chưa phải cổng HĐ pháp lý",
+  },
 ];
 
 export const BUSINESS_ADVISORY_LINKS: NavLink[] = [
@@ -204,6 +209,11 @@ export const BUSINESS_ADVISORY_LINKS: NavLink[] = [
     label: "Tư vấn bản quyền",
     href: "/business/licensing-consulting",
     description: "Chọn đúng sản phẩm và mô hình cấp phép",
+  },
+  {
+    label: "Dịch vụ triển khai",
+    href: "/business/implementation",
+    description: "Bàn giao và kích hoạt bản quyền theo quy mô",
   },
   {
     label: "Liên hệ kinh doanh",

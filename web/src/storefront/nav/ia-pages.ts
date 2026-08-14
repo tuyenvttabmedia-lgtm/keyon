@@ -122,7 +122,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
 export const BUSINESS_HUB = {
   title: "Dành cho doanh nghiệp",
   subtitle:
-    "Mua theo quy mô, gia hạn subscription và tư vấn bản quyền với KEYON. Cá nhân mua lẻ trên Sản phẩm. Nhu cầu theo việc cần làm nằm ở Giải pháp.",
+    "Mua theo quy mô, gia hạn, bàn giao triển khai và theo dõi đơn DN với KEYON. Cá nhân mua lẻ trên Sản phẩm. Nhu cầu theo việc cần làm nằm ở Giải pháp.",
 };
 
 export const BUSINESS_PAGES: Record<string, IaPage> = {
@@ -176,6 +176,37 @@ export const BUSINESS_PAGES: Record<string, IaPage> = {
       label: "Xem lĩnh vực tư vấn",
       href: "/business/licensing-consulting#consulting-areas",
     },
+  },
+  implementation: {
+    slug: "implementation",
+    kicker: "Doanh nghiệp",
+    title: "Dịch vụ triển khai",
+    subtitle:
+      "Bàn giao và kích hoạt bản quyền theo quy mô — không phải catalog MSP Azure/Intune.",
+    bullets: [
+      "Onboarding sau mua: key, tài khoản, checklist cho IT",
+      "Khác tư vấn bản quyền — triển khai sau khi đã (sắp) có license",
+      "Yêu cầu đi form báo giá loại triển khai — không tự tạo đơn trên giỏ hàng",
+    ],
+    primaryCta: {
+      label: "Gửi yêu cầu triển khai",
+      href: "/contact/quote?intent=implementation",
+    },
+    secondaryCta: { label: "Tư vấn chọn gói", href: "/business/licensing-consulting" },
+  },
+  contracts: {
+    slug: "contracts",
+    kicker: "Doanh nghiệp",
+    title: "Hợp đồng & đơn hàng",
+    subtitle:
+      "Theo dõi đơn và license tổ chức sau đăng nhập. Chưa phải cổng hợp đồng pháp lý.",
+    bullets: [
+      "Đơn hàng: Tài khoản → Đơn hàng (Order hiện có)",
+      "PO / gia hạn tập trung: liên hệ kinh doanh",
+      "Bảng hợp đồng pháp lý trên web chưa mở — pha sau khi có nghiệp vụ",
+    ],
+    primaryCta: { label: "Xem đơn hàng", href: "/account/orders" },
+    secondaryCta: { label: "Liên hệ kinh doanh", href: "/contact/quote?intent=business" },
   },
 };
 
