@@ -32,7 +32,7 @@ export default async function OrdersPage() {
     OR: [{ userId: session.id }, { email: session.email }],
   };
 
-  const [cmsRaw, orders] = await Promise.all([
+  const [cmsRaw, orders, quote] = await Promise.all([
     readJsonFile("account.json", defaultCmsAccount),
     prisma.order.findMany({
       where,
@@ -47,6 +47,11 @@ export default async function OrdersPage() {
         payments: { orderBy: { createdAt: "desc" }, take: 1 },
       },
       take: 100,
+    }),
+    prisma.quoteRequest.findFirst({
+      where: { email: session.email },
+      orderBy: { createdAt: "desc" },
+      select: { companyName: true },
     }),
   ]);
 
@@ -85,5 +90,11 @@ export default async function OrdersPage() {
     };
   });
 
-  return <OrdersView cms={cms} items={items} />;
+  return (
+    <OrdersView
+      cms={cms}
+      items={items}
+      companyName={quote?.companyName?.trim() || null}
+    />
+  );
 }

@@ -40,6 +40,8 @@ export type OrdersListQuery = {
   /** Inclusive VND bounds */
   minVnd?: string;
   maxVnd?: string;
+  /** Company name (QuoteRequest) or email domain — not a Core Company id. */
+  company?: string;
   page?: number;
   pageSize?: PageSize;
 };
@@ -77,6 +79,8 @@ export type AdminOrderListRow = {
   jobStatus: string | null;
   waitingInbox: boolean;
   timeline: OrderTimelinePreview;
+  /** Quote company name, else email domain. */
+  companyLabel: string;
 };
 
 /** Relative age for ops prioritization */

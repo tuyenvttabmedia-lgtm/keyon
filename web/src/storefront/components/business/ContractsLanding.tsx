@@ -120,7 +120,8 @@ export function ContractsLanding() {
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Bạn theo dõi được gì hôm nay</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Đọc từ đơn hàng và tài sản đã có trên Tài khoản.
+              Đọc từ đơn hàng và tài sản đã có trên Tài khoản. Đội KEYON lọc đơn
+              theo công ty / domain email trong Admin → Đơn hàng.
             </p>
           </header>
           <ul className="mt-9 grid gap-4 md:grid-cols-3">

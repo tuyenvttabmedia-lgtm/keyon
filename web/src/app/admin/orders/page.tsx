@@ -30,6 +30,7 @@ export default async function AdminOrdersPage({
     salesMotion: query.salesMotion,
     minVnd: query.minVnd,
     maxVnd: query.maxVnd,
+    company: query.company,
   };
   const [list, summary, options] = await Promise.all([
     queryAdminOrders(query),
@@ -41,7 +42,7 @@ export default async function AdminOrdersPage({
     <div className="space-y-4">
       <AdminPageHeader
         title="Đơn hàng"
-        lead="Order Workspace · dual status · xử lý nhanh"
+        lead="Order Workspace · lọc theo công ty / domain · dual status"
         crumbs={[{ label: "Đơn hàng" }]}
       />
 
@@ -63,6 +64,7 @@ export default async function AdminOrdersPage({
           salesMotion={query.salesMotion ?? "all"}
           minVnd={query.minVnd ?? ""}
           maxVnd={query.maxVnd ?? ""}
+          company={query.company ?? ""}
           pageSize={list.pageSize}
           total={list.total}
           page={list.page}
@@ -70,6 +72,7 @@ export default async function AdminOrdersPage({
           brands={options.brands}
           products={options.products}
           providers={options.providers}
+          companies={options.companies}
           summary={summary}
         />
       </Suspense>

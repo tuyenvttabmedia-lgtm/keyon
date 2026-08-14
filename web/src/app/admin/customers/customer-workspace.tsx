@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState, type ReactNode } from "react";
 import type { CustomerWorkspaceData } from "@/server/admin/customer-detail";
 import { customerInitials } from "@/lib/admin-customers";
+import { emailDomain, isConsumerEmailDomain } from "@/lib/company-order-filter";
 import { CopyTextButton } from "@/app/admin/orders/copy-button";
 import { OrderNotesForm } from "@/app/admin/orders/order-notes-form";
 import { DualStatus } from "@/storefront/components/account/AccountNav";
@@ -51,6 +52,7 @@ function Panel({
 export function CustomerWorkspace({ data }: { data: CustomerWorkspaceData }) {
   const { user, kpi } = data;
   const initials = customerInitials(user.name, user.email);
+  const orgDomain = emailDomain(user.email);
   const [orderQ, setOrderQ] = useState("");
   const [orderStatus, setOrderStatus] = useState("all");
 
@@ -117,6 +119,14 @@ export function CustomerWorkspace({ data }: { data: CustomerWorkspaceData }) {
           </a>
           <CopyTextButton text={user.email} label="Copy Email" />
           <CopyTextButton text={user.id} label="Copy ID" />
+          {orgDomain && !isConsumerEmailDomain(orgDomain) ? (
+            <Link
+              href={`/admin/orders?company=${encodeURIComponent(orgDomain)}`}
+              className="rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-navy hover:bg-navy-soft"
+            >
+              Đơn cùng domain
+            </Link>
+          ) : null}
         </div>
       </div>
 

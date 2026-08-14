@@ -15,6 +15,11 @@ import {
   type AdminOrderListRow,
 } from "@/lib/admin-orders";
 import { receiveFromDeliverable } from "@/storefront/lib/customer-labels";
+import {
+  emailDomain,
+  isConsumerEmailDomain,
+  parseCompanyFilter,
+} from "@/lib/company-order-filter";
 
 export type {
   DatePreset,
@@ -153,7 +158,34 @@ function receiveTypes(receive: ReceiveFilter): DeliverableType[] | null {
   return ["EXTERNAL_PORTAL", "SUBSCRIPTION"];
 }
 
-function buildWhere(input: OrdersListQuery): Prisma.OrderWhereInput {
+async function companyOrderWhere(
+  raw: string,
+): Promise<Prisma.OrderWhereInput | undefined> {
+  const parsed = parseCompanyFilter(raw);
+  if (!parsed.domain && !parsed.name) return undefined;
+
+  const or: Prisma.OrderWhereInput[] = [];
+  if (parsed.domain) {
+    or.push({
+      email: { endsWith: `@${parsed.domain}`, mode: "insensitive" },
+    });
+  }
+  if (parsed.name) {
+    const quotes = await prisma.quoteRequest.findMany({
+      where: { companyName: { contains: parsed.name, mode: "insensitive" } },
+      select: { email: true },
+      take: 400,
+    });
+    const emails = [...new Set(quotes.map((q) => q.email))];
+    if (emails.length) or.push({ email: { in: emails } });
+    or.push({ email: { contains: parsed.name, mode: "insensitive" } });
+  }
+  if (or.length === 0) return { id: "__none__" };
+  if (or.length === 1) return or[0];
+  return { OR: or };
+}
+
+async function buildWhere(input: OrdersListQuery): Promise<Prisma.OrderWhereInput> {
   const chip = input.chip ?? "all";
   const date = input.date ?? "all";
   const q = (input.q ?? "").trim();
@@ -182,6 +214,9 @@ function buildWhere(input: OrdersListQuery): Prisma.OrderWhereInput {
       ],
     });
   }
+
+  const companyPart = await companyOrderWhere(input.company ?? "");
+  if (companyPart) parts.push(companyPart);
 
   const minVnd = parseVnd(input.minVnd);
   const maxVnd = parseVnd(input.maxVnd);
@@ -239,7 +274,7 @@ export async function queryAdminOrders(input: OrdersListQuery) {
     ? (input.pageSize as PageSize)
     : 20;
   const page = Math.max(1, input.page ?? 1);
-  const where = buildWhere(input);
+  const where = await buildWhere(input);
 
   const [total, orders] = await Promise.all([
     prisma.order.count({ where }),
@@ -351,11 +386,12 @@ export async function queryAdminOrders(input: OrdersListQuery) {
         fulfillmentAt,
         deliveredAt: firstDelivery?.createdAt ?? o.completedAt,
       },
+      companyLabel: "",
     };
   });
 
   return {
-    rows,
+    rows: await attachCompanyLabels(rows),
     total,
     page,
     pageSize,
@@ -363,11 +399,34 @@ export async function queryAdminOrders(input: OrdersListQuery) {
   };
 }
 
+async function attachCompanyLabels(
+  rows: AdminOrderListRow[],
+): Promise<AdminOrderListRow[]> {
+  const emails = [...new Set(rows.map((r) => r.email))];
+  if (emails.length === 0) return rows;
+  const quotes = await prisma.quoteRequest.findMany({
+    where: { email: { in: emails } },
+    orderBy: { createdAt: "desc" },
+    select: { email: true, companyName: true },
+  });
+  const byEmail = new Map<string, string>();
+  for (const q of quotes) {
+    const key = q.email.toLowerCase();
+    const name = q.companyName.trim();
+    if (!byEmail.has(key) && name) byEmail.set(key, name);
+  }
+  return rows.map((r) => ({
+    ...r,
+    companyLabel:
+      byEmail.get(r.email.toLowerCase()) ?? emailDomain(r.email) ?? "—",
+  }));
+}
+
 /** KPI respects date + search + brand/product/receive/provider/…; ignores status chip. */
 export async function queryOrdersSummary(
   input: Omit<OrdersListQuery, "chip" | "page" | "pageSize">,
 ) {
-  const base = buildWhere({ ...input, chip: "all" });
+  const base = await buildWhere({ ...input, chip: "all" });
   const range = resolveCreatedAtRange(
     input.date ?? "all",
     input.from,
@@ -414,25 +473,67 @@ export async function queryOrdersSummary(
 }
 
 export async function loadOrderFilterOptions() {
-  const [brands, products, providerRows] = await Promise.all([
-    prisma.brand.findMany({
-      orderBy: { name: "asc" },
-      select: { id: true, name: true },
-    }),
-    prisma.product.findMany({
-      orderBy: { name: "asc" },
-      select: { id: true, name: true, brandId: true },
-    }),
-    prisma.payment.findMany({
-      distinct: ["provider"],
-      select: { provider: true },
-      orderBy: { provider: "asc" },
-    }),
-  ]);
+  const [brands, products, providerRows, recentEmails, quoteNames] =
+    await Promise.all([
+      prisma.brand.findMany({
+        orderBy: { name: "asc" },
+        select: { id: true, name: true },
+      }),
+      prisma.product.findMany({
+        orderBy: { name: "asc" },
+        select: { id: true, name: true, brandId: true },
+      }),
+      prisma.payment.findMany({
+        distinct: ["provider"],
+        select: { provider: true },
+        orderBy: { provider: "asc" },
+      }),
+      prisma.order.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 800,
+        select: { email: true },
+      }),
+      prisma.quoteRequest.groupBy({
+        by: ["companyName"],
+        _count: { companyName: true },
+        orderBy: { _count: { companyName: "desc" } },
+        take: 12,
+      }),
+    ]);
+
+  const domainCount = new Map<string, number>();
+  for (const row of recentEmails) {
+    const d = emailDomain(row.email);
+    if (!d || isConsumerEmailDomain(d)) continue;
+    domainCount.set(d, (domainCount.get(d) ?? 0) + 1);
+  }
+  const companies: { label: string; value: string }[] = [
+    ...[...domainCount.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 12)
+      .map(([domain, n]) => ({
+        label: `${domain} (${n})`,
+        value: domain,
+      })),
+  ];
+  const seen = new Set(companies.map((c) => c.value.toLowerCase()));
+  for (const q of quoteNames) {
+    const name = q.companyName.trim();
+    if (!name || name.length < 2) continue;
+    const key = name.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    companies.push({
+      label: `${name} (${q._count.companyName})`,
+      value: name,
+    });
+  }
+
   return {
     brands,
     products,
     providers: providerRows.map((p) => p.provider).filter(Boolean),
+    companies: companies.slice(0, 18),
   };
 }
 
@@ -494,6 +595,7 @@ export function parseOrdersSearchParams(
       : "all",
     minVnd: one("minVnd") ?? "",
     maxVnd: one("maxVnd") ?? "",
+    company: one("company") ?? "",
     page: Math.max(1, Number(one("page") ?? 1) || 1),
     pageSize,
   };

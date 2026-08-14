@@ -73,9 +73,11 @@ type SpendPeriod = "12m" | "6m" | "all";
 export function OrdersView({
   cms,
   items,
+  companyName = null,
 }: {
   cms: AccountCopy;
   items: OrderListItem[];
+  companyName?: string | null;
 }) {
   const [tab, setTab] = useState<OrderListTab>("all");
   const [query, setQuery] = useState("");
@@ -85,6 +87,7 @@ export function OrdersView({
   const [spendPeriod, setSpendPeriod] = useState<SpendPeriod>("12m");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+  const searchRef = useRef<HTMLInputElement>(null);
 
   const counts = useMemo(() => {
     const c = { all: items.length, success: 0, processing: 0, cancelled: 0 };
@@ -169,7 +172,11 @@ export function OrdersView({
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
         <div className="min-w-0 lg:max-w-[20rem]">
           <h1 className={PAGE_TITLE_CLASS}>{cms.ordersPageTitle}</h1>
-          <p className={`mt-1.5 ${SECTION_LEAD_CLASS}`}>{cms.ordersPageLead}</p>
+          <p className={`mt-1.5 ${SECTION_LEAD_CLASS}`}>
+            {companyName
+              ? `Đơn gắn tài khoản này · ${companyName}. Không gồm đơn của đồng nghiệp khác cùng công ty.`
+              : cms.ordersPageLead}
+          </p>
         </div>
         <section className={`${CARD} w-fit max-w-full shrink-0 !px-4 !py-3`}>
           <div className="flex items-center gap-3 sm:gap-3.5">
@@ -238,6 +245,7 @@ export function OrdersView({
               <SearchIcon />
             </span>
             <input
+              ref={searchRef}
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
@@ -250,7 +258,8 @@ export function OrdersView({
           <button
             type="button"
             className={`${BTN_OUTLINE} !h-9`}
-            title="Bộ lọc nâng cao sẽ bổ sung sau"
+            title="Tìm theo mã đơn, sản phẩm hoặc mã thanh toán"
+            onClick={() => searchRef.current?.focus()}
           >
             <FilterIcon />
             {cms.ordersFilterCta}

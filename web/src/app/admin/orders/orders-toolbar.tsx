@@ -15,6 +15,7 @@ import {
   FIELD_CAPTION_CLASS,
   FIELD_VALUE_NUM_CLASS,
 } from "@/storefront/typography";
+import { TRANSITION_UI } from "@/storefront/effects";
 
 export type OrdersSummaryProps = {
   awaitingPayment: number;
@@ -68,6 +69,7 @@ export function OrdersToolbar({
   salesMotion,
   minVnd,
   maxVnd,
+  company,
   pageSize,
   total,
   page,
@@ -75,6 +77,7 @@ export function OrdersToolbar({
   brands,
   products,
   providers,
+  companies,
   summary,
 }: {
   q: string;
@@ -89,6 +92,7 @@ export function OrdersToolbar({
   salesMotion: SalesMotionFilter;
   minVnd: string;
   maxVnd: string;
+  company: string;
   pageSize: PageSize;
   total: number;
   page: number;
@@ -96,6 +100,7 @@ export function OrdersToolbar({
   brands: BrandOpt[];
   products: ProductOpt[];
   providers: string[];
+  companies: { label: string; value: string }[];
   summary: OrdersSummaryProps;
 }) {
   const router = useRouter();
@@ -107,6 +112,7 @@ export function OrdersToolbar({
   const [draftTo, setDraftTo] = useState(to);
   const [draftMin, setDraftMin] = useState(minVnd);
   const [draftMax, setDraftMax] = useState(maxVnd);
+  const [draftCompany, setDraftCompany] = useState(company);
 
   useEffect(() => setSearch(q), [q]);
   useEffect(() => {
@@ -117,6 +123,8 @@ export function OrdersToolbar({
     setDraftMin(minVnd);
     setDraftMax(maxVnd);
   }, [minVnd, maxVnd]);
+
+  useEffect(() => setDraftCompany(company), [company]);
 
   const push = useCallback(
     (patch: Record<string, string | null>, resetPage = true) => {
@@ -241,6 +249,28 @@ export function OrdersToolbar({
           />
         </label>
 
+        <label className="min-w-[180px] flex-1 text-xs">
+          <span className="font-medium text-navy">Công ty / domain</span>
+          <input
+            className="mt-1 w-full rounded-lg border border-border bg-card px-2.5 py-1.5 text-sm"
+            placeholder="acme.com hoặc tên trên báo giá"
+            value={draftCompany}
+            onChange={(e) => setDraftCompany(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                push({ company: draftCompany.trim() || null });
+              }
+            }}
+          />
+        </label>
+        <button
+          type="button"
+          className="rounded-lg bg-navy px-3 py-1.5 text-sm font-semibold text-white"
+          onClick={() => push({ company: draftCompany.trim() || null })}
+        >
+          Lọc công ty
+        </button>
+
         <label className="text-xs">
           <span className="font-medium text-navy">Thời gian</span>
           <select
@@ -359,6 +389,43 @@ export function OrdersToolbar({
           </select>
         </label>
       </div>
+
+      {companies.length > 0 ? (
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className={`${FIELD_CAPTION_CLASS} shrink-0`}>Công ty gần đây</span>
+          {companies.map((c) => {
+            const active = company.toLowerCase() === c.value.toLowerCase();
+            return (
+              <button
+                key={c.value}
+                type="button"
+                onClick={() =>
+                  push({ company: active ? null : c.value })
+                }
+                className={`rounded-full border px-2.5 py-1 ${BADGE_CLASS} ${TRANSITION_UI} ${
+                  active
+                    ? "border-accent bg-accent-soft text-accent"
+                    : "border-border bg-card text-navy hover:border-accent/40"
+                }`}
+              >
+                {c.label}
+              </button>
+            );
+          })}
+          {company ? (
+            <button
+              type="button"
+              className={`rounded-full border border-border px-2.5 py-1 ${BADGE_CLASS} text-muted`}
+              onClick={() => {
+                setDraftCompany("");
+                push({ company: null });
+              }}
+            >
+              Xóa lọc công ty
+            </button>
+          ) : null}
+        </div>
+      ) : null}
 
       <div className="flex flex-wrap items-end gap-2">
         <label className="text-xs">
