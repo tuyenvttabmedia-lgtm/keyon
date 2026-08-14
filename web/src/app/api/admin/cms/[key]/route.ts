@@ -330,6 +330,10 @@ export async function PUT(
         ),
         copyright: z.string(),
         legalLinks: z.array(link),
+        bctVisible: z.boolean().optional(),
+        bctHref: z.string().optional(),
+        bctImageUrl: z.string().optional(),
+        bctAlt: z.string().optional(),
       })
       .parse({
         ...body,
@@ -342,6 +346,18 @@ export async function PUT(
             ? resolveMediaUrl(body.logoUrl.trim(), mediaBase) ||
               body.logoUrl.trim()
             : undefined,
+        bctVisible: Boolean(body?.bctVisible),
+        bctHref:
+          typeof body?.bctHref === "string" ? body.bctHref.trim() : "",
+        bctImageUrl:
+          typeof body?.bctImageUrl === "string" && body.bctImageUrl.trim()
+            ? resolveMediaUrl(body.bctImageUrl.trim(), mediaBase) ||
+              body.bctImageUrl.trim()
+            : "",
+        bctAlt:
+          typeof body?.bctAlt === "string" && body.bctAlt.trim()
+            ? body.bctAlt.trim()
+            : defaultCmsFooter.bctAlt,
       }) satisfies CmsFooter;
     await writeJsonFile("footer.json", data);
     return NextResponse.json({ ok: true, data });

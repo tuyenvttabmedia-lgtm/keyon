@@ -236,6 +236,9 @@ export type HomeContent = {
     legalLinks: NavItem[];
     contactLines?: string[];
     supportEmail?: string;
-    paymentBadges?: string[];
+    bctVisible?: boolean;
+    bctHref?: string;
+    bctImageUrl?: string;
+    bctAlt?: string;
   };
 };

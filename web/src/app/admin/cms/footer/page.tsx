@@ -8,9 +8,14 @@ export const dynamic = "force-dynamic";
 export default async function AdminCmsFooterPage() {
   const raw = await readJsonFile("footer.json", defaultCmsFooter);
   const footer = {
+    ...defaultCmsFooter,
     ...raw,
     brandName: raw.brandName?.trim() || defaultCmsFooter.brandName,
     logoUrl: raw.logoUrl?.trim() || undefined,
+    bctVisible: Boolean(raw.bctVisible),
+    bctHref: raw.bctHref ?? defaultCmsFooter.bctHref,
+    bctImageUrl: raw.bctImageUrl ?? "",
+    bctAlt: raw.bctAlt ?? defaultCmsFooter.bctAlt,
   };
   return (
     <div className="space-y-4">
@@ -19,7 +24,7 @@ export default async function AdminCmsFooterPage() {
           CMS · Footer
         </h1>
         <p className="text-sm text-muted">
-          Logo, blurb, cột link, legal — lưu file
+          Logo, BCT, cột link, legal — lưu file
         </p>
       </div>
       <CmsSubnav active="/admin/cms/footer" />

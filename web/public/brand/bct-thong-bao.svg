@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 61" width="160" height="61" role="img" aria-label="Da thong bao Bo Cong Thuong">
+  <rect width="160" height="61" rx="4" fill="#C8102E"/>
+  <rect x="4" y="4" width="152" height="53" rx="2" fill="#fff"/>
+  <circle cx="30" cy="30.5" r="18" fill="#C8102E"/>
+  <circle cx="30" cy="30.5" r="14" fill="#F4C430"/>
+  <path fill="#C8102E" d="M30 16.5l3.2 9.8h10.3l-8.3 6 3.2 9.8L30 36.1l-8.4 6 3.2-9.8-8.3-6h10.3z"/>
+  <text x="54" y="24" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700" fill="#C8102E">DA THONG BAO</text>
+  <text x="54" y="38" font-family="Arial, Helvetica, sans-serif" font-size="8.5" font-weight="700" fill="#1d4ed8">BO CONG THUONG</text>
+  <text x="54" y="50" font-family="Arial, Helvetica, sans-serif" font-size="6.5" fill="#475569">online.gov.vn</text>
+</svg>

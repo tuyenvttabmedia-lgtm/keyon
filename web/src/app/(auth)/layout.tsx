@@ -32,6 +32,11 @@ export default async function AuthLayout({
         columns={home.footer.columns}
         copyright={home.footer.copyright}
         legalLinks={home.footer.legalLinks}
+        supportEmail={home.footer.supportEmail}
+        bctVisible={home.footer.bctVisible}
+        bctHref={home.footer.bctHref}
+        bctImageUrl={home.footer.bctImageUrl}
+        bctAlt={home.footer.bctAlt}
       />
     </>
   );

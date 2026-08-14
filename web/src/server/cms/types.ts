@@ -245,6 +245,11 @@ export type CmsFooter = {
   columns: { title: string; links: { label: string; href: string }[] }[];
   copyright: string;
   legalLinks: { label: string; href: string }[];
+  /** Bộ Công Thương “Đã thông báo” badge under brand column. */
+  bctVisible?: boolean;
+  bctHref?: string;
+  bctImageUrl?: string;
+  bctAlt?: string;
 };
 
 export type CmsNav = {
@@ -458,6 +463,10 @@ export const defaultCmsFooter: CmsFooter = {
     { label: "Khiếu nại", href: "/policy/complaint" },
     { label: "Tất cả chính sách", href: "/policy" },
   ],
+  bctVisible: false,
+  bctHref: "https://online.gov.vn/",
+  bctImageUrl: "",
+  bctAlt: "Đã thông báo Bộ Công Thương",
 };
 
 export const defaultCmsNav: CmsNav = {

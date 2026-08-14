@@ -20,7 +20,10 @@ type Props = {
   copyright: string;
   legalLinks: NavItem[];
   supportEmail?: string;
-  paymentBadges?: string[];
+  bctVisible?: boolean;
+  bctHref?: string;
+  bctImageUrl?: string;
+  bctAlt?: string;
 };
 
 const footerLink = `inline-block text-slate-400 ${TRANSITION_COLORS} ${MOTION_NORMAL} ${EASE_STANDARD} hover:text-white hover:underline hover:underline-offset-4`;
@@ -61,7 +64,10 @@ export function SiteFooter({
   copyright,
   legalLinks,
   supportEmail = "support@keyon.vn",
-  paymentBadges = ["VietQR", "Chuyển khoản"],
+  bctVisible = false,
+  bctHref = "https://online.gov.vn/",
+  bctImageUrl = "/brand/bct-thong-bao.svg",
+  bctAlt = "Đã thông báo Bộ Công Thương",
 }: Props) {
   const name = brandNameProp?.trim() || "KEYON";
   const logoUrl = resolveMediaUrl(logoUrlProp) || undefined;
@@ -71,6 +77,8 @@ export function SiteFooter({
     { label: "Liên hệ", href: "/contact", letter: "?" },
   ];
   const visibleColumns = columns.filter((c) => c.links.length > 0);
+  const bctSrc = resolveMediaUrl(bctImageUrl) || "/brand/bct-thong-bao.svg";
+  const bctLink = bctHref?.trim() || "https://online.gov.vn/";
 
   return (
     <footer className="mt-auto bg-footer text-slate-400">
@@ -105,18 +113,24 @@ export function SiteFooter({
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-400">
               {blurb}
             </p>
-            <div className="mt-5 flex gap-2">
-              {social.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  className={`inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-xs font-semibold text-white ${TRANSITION_UI} hover:border-accent hover:bg-accent/15 hover:text-accent`}
-                  aria-label={s.label}
-                >
-                  {s.letter}
-                </a>
-              ))}
-            </div>
+            {bctVisible ? (
+              <a
+                href={bctLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`mt-5 inline-block ${TRANSITION_UI} hover:opacity-90`}
+                aria-label={bctAlt}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={bctSrc}
+                  alt={bctAlt}
+                  width={160}
+                  height={61}
+                  className="h-[52px] w-auto max-w-[168px] object-contain object-left"
+                />
+              </a>
+            ) : null}
           </div>
 
           <div>
@@ -160,13 +174,15 @@ export function SiteFooter({
             {copyright}
           </span>
           <div className="flex flex-wrap items-center gap-2 lg:justify-self-center">
-            {paymentBadges.map((p) => (
-              <span
-                key={p}
-                className={`rounded-md border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-slate-400 ${TRANSITION_UI} hover:border-white/25 hover:text-white`}
+            {social.map((s) => (
+              <a
+                key={s.label}
+                href={s.href}
+                className={`inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-xs font-semibold text-white ${TRANSITION_UI} hover:border-accent hover:bg-accent/15 hover:text-accent`}
+                aria-label={s.label}
               >
-                {p}
-              </span>
+                {s.letter}
+              </a>
             ))}
           </div>
           <nav

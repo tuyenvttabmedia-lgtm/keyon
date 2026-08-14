@@ -409,7 +409,13 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
           : homeFixture.footer.legalLinks,
       ),
       supportEmail: "support@keyon.vn",
-      paymentBadges: ["VietQR", "Chuyển khoản"],
+      bctVisible: Boolean(footer.bctVisible),
+      bctHref: footer.bctHref?.trim() || defaultCmsFooter.bctHref,
+      bctImageUrl:
+        resolveMediaUrl(footer.bctImageUrl, mediaBase) ||
+        footer.bctImageUrl?.trim() ||
+        "/brand/bct-thong-bao.svg",
+      bctAlt: footer.bctAlt?.trim() || defaultCmsFooter.bctAlt,
     },
   };
 });

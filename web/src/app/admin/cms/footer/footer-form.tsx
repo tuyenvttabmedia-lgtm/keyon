@@ -19,6 +19,7 @@ export function FooterForm({ initial }: { initial: CmsFooter }) {
           </p>
 
           <BrandSection form={form} setForm={setForm} />
+          <BctSection form={form} setForm={setForm} />
 
           <div className="space-y-4 rounded-2xl border border-border bg-card p-6">
             <label className="block text-sm">
@@ -335,6 +336,105 @@ function BrandSection({
         onSelect={(items) => {
           if (items[0]?.url) {
             setForm({ ...form, logoUrl: items[0].url });
+          }
+          setPickerOpen(false);
+        }}
+      />
+    </div>
+  );
+}
+
+function BctSection({
+  form,
+  setForm,
+}: {
+  form: CmsFooter;
+  setForm: (v: CmsFooter) => void;
+}) {
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const preview =
+    resolveMediaUrl(form.bctImageUrl) || "/brand/bct-thong-bao.svg";
+
+  return (
+    <div className="space-y-4 rounded-2xl border border-border bg-card p-6">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="text-sm font-medium text-navy">
+            Logo thông báo Bộ Công Thương
+          </p>
+          <p className="mt-0.5 text-xs text-muted">
+            Hiện dưới cột thương hiệu footer (chỗ icon mạng xã hội cũ). Tắt khi
+            chưa có mã đăng ký; bật và dán URL hồ sơ trên online.gov.vn khi đã
+            thông báo.
+          </p>
+        </div>
+        <label className="flex items-center gap-2 text-sm font-medium text-navy">
+          <input
+            type="checkbox"
+            checked={Boolean(form.bctVisible)}
+            onChange={(e) =>
+              setForm({ ...form, bctVisible: e.target.checked })
+            }
+          />
+          Hiện trên footer
+        </label>
+      </div>
+
+      <div className="flex flex-wrap items-start gap-4">
+        <div className="flex h-[72px] w-[188px] shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border bg-white p-2">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={preview}
+            alt={form.bctAlt || "Đã thông báo Bộ Công Thương"}
+            className="h-full w-full object-contain object-left"
+          />
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            className="h-9 rounded-lg border border-border bg-white px-3 text-sm font-medium hover:border-accent"
+            onClick={() => setPickerOpen(true)}
+          >
+            {form.bctImageUrl ? "Đổi ảnh BCT" : "Chọn ảnh từ Media"}
+          </button>
+          {form.bctImageUrl ? (
+            <button
+              type="button"
+              className="h-9 rounded-lg px-3 text-sm text-danger hover:underline"
+              onClick={() => setForm({ ...form, bctImageUrl: "" })}
+            >
+              Dùng ảnh mặc định
+            </button>
+          ) : null}
+        </div>
+      </div>
+
+      <label className="block text-sm">
+        <span className="font-medium text-navy">Link hồ sơ BCT</span>
+        <input
+          className="mt-1 h-9 w-full rounded-lg border border-border px-3 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
+          value={form.bctHref ?? ""}
+          onChange={(e) => setForm({ ...form, bctHref: e.target.value })}
+          placeholder="https://online.gov.vn/Home/WebDetails?id=…"
+        />
+      </label>
+      <label className="block text-sm">
+        <span className="font-medium text-navy">Alt text</span>
+        <input
+          className="mt-1 h-9 w-full max-w-md rounded-lg border border-border px-3 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
+          value={form.bctAlt ?? ""}
+          onChange={(e) => setForm({ ...form, bctAlt: e.target.value })}
+          placeholder="Đã thông báo Bộ Công Thương"
+        />
+      </label>
+
+      <MediaPicker
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        title="Chọn logo thông báo BCT"
+        onSelect={(items) => {
+          if (items[0]?.url) {
+            setForm({ ...form, bctImageUrl: items[0].url });
           }
           setPickerOpen(false);
         }}

@@ -308,7 +308,6 @@ export const homeFixture: HomeContent = {
     blurb:
       "Nền tảng phân phối và quản lý bản quyền phần mềm, cloud và dịch vụ số.",
     supportEmail: "support@keyon.vn",
-    paymentBadges: ["VietQR", "Chuyển khoản"],
     columns: [
       {
         title: "Sản phẩm",
@@ -359,5 +358,9 @@ export const homeFixture: HomeContent = {
       { label: "Tất cả chính sách", href: "/policy" },
     ],
     contactLines: ["support@keyon.vn", "Hà Nội, Việt Nam"],
+    bctVisible: false,
+    bctHref: "https://online.gov.vn/",
+    bctImageUrl: "",
+    bctAlt: "Đã thông báo Bộ Công Thương",
   },
 };
