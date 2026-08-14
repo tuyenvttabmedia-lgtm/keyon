@@ -10,10 +10,10 @@ type Props = {
 
 /** Light shared chrome for Solutions landings (breadcrumb + optional overline). */
 export function SolutionPageChrome({
-  kicker = "Giải pháp",
+  kicker = "Doanh nghiệp",
   crumbs = [
     { label: "Trang chủ", href: "/" },
-    { label: "Giải pháp", href: "/solutions" },
+    { label: "Doanh nghiệp", href: "/business" },
   ],
 }: Props) {
   return (

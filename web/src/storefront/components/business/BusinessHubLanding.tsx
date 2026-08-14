@@ -42,7 +42,8 @@ import {
   TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
-import { SOLUTION_TOPICS } from "@/storefront/nav/ia";
+import { SolutionTopicGrid } from "@/storefront/components/home/SolutionsSection";
+import { solutionTopicCards } from "@/storefront/nav/ia";
 
 const ICON_MD = { size: 22, strokeWidth: 1.75 } as const;
 const ICON_SM = { size: 16, strokeWidth: 1.85 } as const;
@@ -88,16 +89,6 @@ const BIZ_CARDS: BizCard[] = [
     features: ["Tư vấn chọn gói", "Perpetual vs subscription", "Đề xuất theo quy mô"],
     Icon: MessageCircle,
     tone: "bg-sky-600 text-white",
-  },
-  {
-    id: "license-mgmt",
-    title: "Quản lý bản quyền",
-    body: "Self-serve trong Tài khoản KEYON — theo dõi license đã mua, không thay subscription managed.",
-    href: "/solutions/license-management",
-    cta: "Tìm hiểu thêm",
-    features: ["Theo dõi tập trung", "Nhắc hết hạn", "Trong tài khoản KEYON"],
-    Icon: LayoutGrid,
-    tone: "bg-orange-500 text-white",
   },
   {
     id: "sales",
@@ -236,7 +227,7 @@ export function BusinessHubLanding() {
           <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.46fr)_minmax(0,0.54fr)] md:gap-10 lg:gap-12">
             <div className="min-w-0 w-full max-w-[540px]">
               <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
-                Doanh nghiệp
+                Giải pháp doanh nghiệp
               </p>
               <h1
                 className={`mt-3 max-w-[18ch] ${HERO_TITLE_CLASS} !text-white`}
@@ -259,10 +250,10 @@ export function BusinessHubLanding() {
                   Tư vấn giải pháp →
                 </Link>
                 <Link
-                  href="/solutions"
+                  href="#theo-nhu-cau"
                   className={`inline-flex h-12 items-center justify-center rounded-xl border border-white/30 bg-transparent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
-                  Giải pháp theo nhu cầu
+                  Xem các hướng giải pháp
                 </Link>
               </div>
             </div>
@@ -292,14 +283,30 @@ export function BusinessHubLanding() {
         </div>
       </section>
 
-      {/* ── Solution cards ───────────────────────────────────── */}
-      <section className="bg-[#F4F8FB] py-10 md:py-12 lg:py-14">
+      {/* ── Topic cards (same as Home) ──────────────────────── */}
+      <section
+        id="theo-nhu-cau"
+        className="scroll-mt-24 bg-[#F4F8FB] py-10 md:py-12 lg:py-14"
+      >
+        <div className="home-container">
+          <header className="mx-auto mb-8 max-w-2xl text-center md:mb-9">
+            <h2 className={SECTION_TITLE_CLASS}>Theo nhu cầu</h2>
+            <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
+              Cùng bộ giải pháp trên trang chủ — chọn hướng rồi xem landing chi
+              tiết.
+            </p>
+          </header>
+          <SolutionTopicGrid items={solutionTopicCards()} />
+        </div>
+      </section>
+
+      {/* ── Buying motions ───────────────────────────────────── */}
+      <section className="bg-white py-10 md:py-12 lg:py-14">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Mua, gia hạn & tư vấn</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Cách KEYON phục vụ tổ chức — khác với các hướng giải pháp theo nhu
-              cầu (năng suất, cloud, bảo mật…).
+              Volume, subscription, tư vấn trước khi mua và liên hệ kinh doanh.
             </p>
           </header>
 
@@ -340,28 +347,6 @@ export function BusinessHubLanding() {
               </li>
             ))}
           </ul>
-
-          <p className={`mt-10 text-center ${SECTION_LEAD_CLASS}`}>
-            Chọn theo việc cần làm — năng suất, cloud, bảo mật, backup, quản lý
-            license?
-          </p>
-          <ul className="mt-4 flex flex-wrap justify-center gap-2">
-            {SOLUTION_TOPICS.map((t) => (
-              <li key={t.id}>
-                <Link
-                  href={t.href}
-                  className={`inline-flex h-9 items-center rounded-full border border-border bg-white px-3.5 ${LINK_FIELD_CLASS} ${TRANSITION_UI} hover:border-accent hover:text-accent`}
-                >
-                  {t.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-3 text-center">
-            <Link href="/solutions" className={`${LINK_FIELD_CLASS} ${HOVER_LINK_ACCENT}`}>
-              Tất cả giải pháp →
-            </Link>
-          </p>
         </div>
       </section>
 

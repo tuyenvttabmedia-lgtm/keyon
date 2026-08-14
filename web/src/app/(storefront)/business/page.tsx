@@ -9,7 +9,7 @@ export async function generateMetadata(): Promise<Metadata> {
     ...(await buildMainPageMetadata("/business")),
     title: "Doanh nghiệp | KEYON",
     description:
-      "Volume licensing, subscription, tư vấn bản quyền và quản lý license cho tổ chức trên KEYON.",
+      "Giải pháp doanh nghiệp KEYON: năng suất, cloud, bảo mật, backup, quản lý license — cùng volume, gia hạn và tư vấn B2B.",
   };
 }
 

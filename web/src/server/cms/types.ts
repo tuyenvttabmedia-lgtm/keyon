@@ -426,7 +426,6 @@ export const defaultCmsFooter: CmsFooter = {
       title: "Doanh nghiệp",
       links: [
         { label: "Tổng quan", href: "/business" },
-        { label: "Giải pháp theo nhu cầu", href: "/solutions" },
         { label: "Volume licensing", href: "/business/volume-licensing" },
         { label: "Subscriptions", href: "/business/subscriptions" },
         { label: "Tư vấn bản quyền", href: "/business/licensing-consulting" },
@@ -475,7 +474,6 @@ export const defaultCmsNav: CmsNav = {
   tagline: "Digital License Platform",
   items: [
     { label: "Sản phẩm", href: "/products" },
-    { label: "Giải pháp", href: "/solutions" },
     { label: "Doanh nghiệp", href: "/business" },
     { label: "Tài nguyên", href: "/resources" },
     { label: "Hỗ trợ", href: "/support" },

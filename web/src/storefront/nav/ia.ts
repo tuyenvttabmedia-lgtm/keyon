@@ -1,11 +1,10 @@
 /**
  * KEYON IA v1 — Navigation / merchandising layer.
  * Frozen: NAV-01..05 — Brand ≠ Category ≠ Collection ≠ Solution ≠ Navigation.
- * Phase 2: Collections remain merchandising config (not Prisma Category).
  *
- * Solution  = problem-oriented landings (`/solutions/*` + hub `/solutions`).
- * Business  = buying motions (`/business/*` + hub `/business`).
- * Header: Sản phẩm · Giải pháp · Doanh nghiệp · Tài nguyên · Hỗ trợ (ADR-006).
+ * One enterprise hub: `/business`. Topic landings stay at `/solutions/*`
+ * (NAV-02). Hub `/solutions` redirects here so Giải pháp không tách thành
+ * một catalog trùng với Doanh nghiệp.
  */
 
 export type NavLink = {
@@ -170,25 +169,14 @@ export const IA_PRIMARY_NAV: PrimaryNavItem[] = [
     ],
   },
   {
-    id: "solutions",
-    label: "Giải pháp",
-    href: "/solutions",
-    kind: "mega",
-    columns: [{ title: "Theo nhu cầu", links: BUSINESS_TOPIC_LINKS }],
-    promo: {
-      title: "Mua theo quy mô",
-      description:
-        "Volume, subscription, tư vấn bản quyền và báo giá B2B — dành cho tổ chức.",
-      href: "/business",
-      ctaLabel: "Dành cho doanh nghiệp →",
-    },
-  },
-  {
     id: "business",
     label: "Doanh nghiệp",
     href: "/business",
     kind: "mega",
-    columns: [{ title: "Mua & dịch vụ", links: BUSINESS_SERVICE_LINKS }],
+    columns: [
+      { title: "Theo nhu cầu", links: BUSINESS_TOPIC_LINKS },
+      { title: "Mua & dịch vụ", links: BUSINESS_SERVICE_LINKS },
+    ],
     promo: {
       title: "Cá nhân mua ở Sản phẩm",
       description:

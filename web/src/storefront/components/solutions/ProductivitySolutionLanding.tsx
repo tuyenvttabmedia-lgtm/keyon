@@ -228,8 +228,8 @@ export function ProductivitySolutionLanding({
             <span aria-hidden className="text-muted-soft">
               ›
             </span>
-            <Link href="/solutions" className={HOVER_LINK_ACCENT}>
-              Giải pháp
+            <Link href="/business" className={HOVER_LINK_ACCENT}>
+              Doanh nghiệp
             </Link>
             <span aria-hidden className="text-muted-soft">
               ›

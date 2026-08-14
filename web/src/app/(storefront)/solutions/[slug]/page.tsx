@@ -456,5 +456,5 @@ export default async function SolutionPage({ params }: Props) {
     );
   }
 
-  return <IaLandingPage page={page} hubLabel="Giải pháp" hubHref="/solutions" />;
+  return <IaLandingPage page={page} hubLabel="Doanh nghiệp" hubHref="/business" />;
 }

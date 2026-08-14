@@ -290,19 +290,21 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
       category: f.category ?? "general",
     }));
 
-  // Stale CMS title “Doanh nghiệp” came from the IA-merge; treat as Giải pháp.
+  // One hub: Home cards = /business “Theo nhu cầu”. Ignore stale CMS “Giải pháp”.
   const cmsSolutionsTitle = cmsHome.solutionsTitle?.trim();
   const solutions = {
     ...homeFixture.solutions,
     title:
-      cmsSolutionsTitle && cmsSolutionsTitle !== "Doanh nghiệp"
+      cmsSolutionsTitle &&
+      cmsSolutionsTitle !== "Giải pháp" &&
+      cmsSolutionsTitle !== "Doanh nghiệp"
         ? cmsSolutionsTitle
         : homeFixture.solutions.title,
     subtitle: cmsHome.solutionsSubtitle || homeFixture.solutions.subtitle,
     ctaLabel: homeFixture.solutions.ctaLabel,
-    ctaHref: "/solutions",
+    ctaHref: "/business",
     secondaryCtaLabel: homeFixture.solutions.secondaryCtaLabel,
-    secondaryCtaHref: "/business",
+    secondaryCtaHref: "/contact/quote",
     items: solutionTopicCards(),
   };
 
@@ -490,12 +492,11 @@ function sanitizeFooterColumns(
           return shopCounts[cat] > 0;
         });
 
-      // Business column: buying hubs + solutions hub — not /solutions/* dump
+      // Business column: buying hubs — not /solutions/* dump (hub /solutions 301s)
       if (isBusiness) {
         links = links.filter((l) => {
           const href = (l.href || "").split("?")[0]!;
-          if (href === "/solutions") return true;
-          if (href.startsWith("/solutions/")) return false;
+          if (href.startsWith("/solutions")) return false;
           if (BUSINESS_HREFS.has(href)) return true;
           return href.startsWith("/business");
         });
