@@ -147,16 +147,16 @@ export function SiteFooter({
                 href={bctLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`mt-5 inline-block max-w-xs ${TRANSITION_UI} hover:opacity-90`}
+                className={`mt-5 inline-block ${TRANSITION_UI} hover:opacity-90`}
                 aria-label={bctAlt}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={bctSrc}
                   alt={bctAlt}
-                  width={320}
-                  height={122}
-                  className="h-auto w-full max-w-[280px] object-contain object-left"
+                  width={224}
+                  height={85}
+                  className="h-auto w-full max-w-[224px] object-contain object-left"
                 />
               </a>
             ) : null}
