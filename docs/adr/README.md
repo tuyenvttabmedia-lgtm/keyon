@@ -32,6 +32,7 @@ Tài liệu = hợp đồng. Code phải chứng minh hợp đồng (exit tests)
 | [ADR-008](./ADR-008-org-order-access.md) | Org-scoped Order/license read (B3.2) | **Accepted** — không cột Order |
 | [ADR-009](./ADR-009-order-commercial-ref.md) | HĐ/PO trên Order (B4.1) | **Accepted** — OrderNote, không cột Order |
 | [ADR-010](./ADR-010-commercial-agreement.md) | CommercialAgreement (B4.2) | **Accepted** — join table, không cột Order |
+| [ADR-011](./ADR-011-org-order-pin.md) | Pin Order ↔ Organization (B3.3) | **Accepted** — join table, không cột Order |
 
 Chi tiết dài: `LICENSE-POOL-v1.md`, `INVENTORY-READ-MODEL-v1.md`, `PAYMENT-ARCHITECTURE-v1.md`.
 

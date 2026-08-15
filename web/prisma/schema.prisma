@@ -163,6 +163,7 @@ model Organization {
 
   memberships OrganizationMembership[]
   agreements  CommercialAgreement[]
+  orderLinks  OrganizationOrder[]
 }
 
 model OrganizationMembership {
@@ -178,6 +179,19 @@ model OrganizationMembership {
 
   @@unique([organizationId, userId])
   @@index([userId, status])
+}
+
+/// B3.3 — pin Order to org without Order.organizationId (ADR-011).
+model OrganizationOrder {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  orderId        String
+  order          Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+
+  @@unique([organizationId, orderId])
+  @@index([orderId])
 }
 
 /// B4.2 — one commercial frame linking many Orders. Not a Contract-as-Order. No Payment.
@@ -451,6 +465,7 @@ model Order {
   reservedLicenses LicenseItem[] @relation("LicenseReservedByOrder")
   internalNotes    OrderNote[]
   agreementLinks   CommercialAgreementOrder[]
+  organizationLinks OrganizationOrder[]
 }
 
 /// Staff-only internal notes on an order (ops workspace)

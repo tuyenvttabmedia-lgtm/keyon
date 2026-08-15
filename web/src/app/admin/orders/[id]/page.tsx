@@ -137,6 +137,11 @@ export default async function AdminOrderDetailPage({
           },
         },
       },
+      organizationLinks: {
+        include: {
+          organization: { select: { id: true, name: true } },
+        },
+      },
     },
   });
   if (!order) notFound();
@@ -560,6 +565,29 @@ export default async function AdminOrderDetailPage({
                 Gắn đơn vào khung nhiều Order tại{" "}
                 <Link href="/admin/agreements" className="text-accent hover:underline">
                   Khung HĐ
+                </Link>
+                .
+              </p>
+            )}
+            {order.organizationLinks.length ? (
+              <ul className="mt-4 space-y-2 border-t border-border pt-4">
+                {order.organizationLinks.map((l) => (
+                  <li key={l.id} className="text-sm">
+                    <Link
+                      href={`/admin/organizations/${l.organization.id}`}
+                      className="font-medium text-navy hover:text-accent"
+                    >
+                      {l.organization.name}
+                    </Link>
+                    <p className="text-xs text-muted">Tổ chức (ghim B3.3)</p>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-3 text-xs text-muted">
+                Ghim đơn vào tổ chức tại{" "}
+                <Link href="/admin/organizations" className="text-accent hover:underline">
+                  Tổ chức
                 </Link>
                 .
               </p>

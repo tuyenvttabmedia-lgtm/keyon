@@ -162,3 +162,56 @@ export async function patchMembership(
   });
   return next;
 }
+
+export const orgLinkOrderSchema = z.object({
+  orderCode: z.string().trim().min(1).max(40),
+});
+
+/** Staff pin. Never infers from domain. Does not change Order.status. */
+export async function pinOrderByCode(
+  organizationId: string,
+  orderCode: string,
+  actorId: string,
+) {
+  const org = await prisma.organization.findUnique({
+    where: { id: organizationId },
+    select: { id: true },
+  });
+  if (!org) throw new AppError("Không tìm thấy tổ chức", 404);
+
+  const code = orderCode.trim();
+  const order = await prisma.order.findFirst({
+    where: { code: { equals: code, mode: "insensitive" } },
+    select: { id: true, code: true, status: true },
+  });
+  if (!order) throw new AppError("Không tìm thấy đơn", 404);
+
+  try {
+    const link = await prisma.organizationOrder.create({
+      data: { organizationId, orderId: order.id },
+    });
+    await audit("organization.pin_order", "Organization", organizationId, actorId, {
+      orderId: order.id,
+      orderCode: order.code,
+      linkId: link.id,
+    });
+    return { linkId: link.id, orderId: order.id, orderCode: order.code };
+  } catch {
+    throw new AppError("Đơn đã gắn tổ chức này", 409);
+  }
+}
+
+export async function unpinOrder(
+  organizationId: string,
+  orderId: string,
+  actorId: string,
+) {
+  const link = await prisma.organizationOrder.findUnique({
+    where: { organizationId_orderId: { organizationId, orderId } },
+  });
+  if (!link) throw new AppError("Đơn chưa gắn tổ chức này", 404);
+  await prisma.organizationOrder.delete({ where: { id: link.id } });
+  await audit("organization.unpin_order", "Organization", organizationId, actorId, {
+    orderId,
+  });
+}

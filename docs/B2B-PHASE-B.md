@@ -21,14 +21,14 @@ Thay đổi abstraction Product / Order / Payment / Fulfillment đã freeze → 
 
 ---
 
-## Hiện trạng (sau B4.2 + B5)
+## Hiện trạng (sau B3.3)
 
 | Có | Không |
 |----|--------|
 | `QuoteRequest.companyName` (lead) | `organizationId` trên Quote / Order |
 | Admin heuristic domain/tên lead | Auto-join từ email domain |
-| Organization + Membership (staff gán tay) | Pin Order vào org (B3.3) |
-| Portal: Order/license account **+ peer ACTIVE cùng org** | Share tickets / domain auth |
+| Organization + Membership (staff gán tay) | Auto-pin Order từ domain |
+| Portal: peer ACTIVE **+ đơn staff ghim** (`OrganizationOrder`) | Share tickets / domain auth |
 | HĐ/PO staff qua `OrderNote` (ADR-009) | Cột `poNumber` trên Order |
 | Khung HĐ nhiều đơn (ADR-010 join) | `Order.agreementId`; Payment trên HĐ |
 | SKU bàn giao: `QUOTE_REQUIRED` + `MANUAL` + `DIGITAL_FILE` | `ServiceOrder` / enum `SERVICE` / Pool cho dịch vụ |
@@ -89,6 +89,10 @@ Thay đổi abstraction Product / Order / Payment / Fulfillment đã freeze → 
 
 **Cấm:** suy ra membership từ domain; gắn `organizationId` lên QuoteRequest “cho tiện”.
 
+### B3.3 Pin Order ↔ Organization — **ADR-011, đã implement (join)**
+
+Bảng `OrganizationOrder`. **Không** `Order.organizationId`. Staff ghim theo mã đơn. Portal ACTIVE đọc đơn đã ghim. Chi tiết: `docs/adr/ADR-011-org-order-pin.md`.
+
 ---
 
 ## B4 — Commercial reference → CommercialAgreement
@@ -120,7 +124,7 @@ SKU: `KEYON-SVC-HANDOVER` · slug `keyon-license-handover`. Upsert: `npm run cat
 
 1. Có đụng Core Stable besides Outer / bugfix có bằng chứng? → Reject hoặc ADR.  
 2. Heuristic domain/companyName có lọt sang authorization? → Reject.  
-3. Portal có đọc Order ngoài account? → Chỉ qua ADR-008 membership ACTIVE; domain = Reject.  
+3. Portal có đọc Order ngoài account? → Chỉ qua ADR-008 membership ACTIVE + ADR-011 pin; domain = Reject.  
 4. Có ServiceOrder/ServicePayment/Contract-as-Order? → Reject.  
 5. Có migrate trước ADR khi đụng abstraction freeze? → Reject.
 
@@ -131,6 +135,7 @@ B1 intake (lead)
  → B2 admin heuristic (suggestion only)
  → B3.1 Org + Membership
  → B3.2 org-scoped access (ADR-008, xong)
+ → B3.3 pin Order ↔ org (ADR-011 join, xong)
  → B4.1 Order reference (ADR-009 OrderNote, xong)
  → B4.2 CommercialAgreement (ADR-010 join, xong)
  → B5 service SKU (MANUAL + DIGITAL_FILE, xong)

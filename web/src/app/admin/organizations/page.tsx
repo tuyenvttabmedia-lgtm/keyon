@@ -24,7 +24,7 @@ export default async function AdminOrganizationsPage() {
     <div className="space-y-4">
       <AdminPageHeader
         title="Tổ chức"
-        lead="B3.1 · gán tay thành viên. Chưa cấp quyền xem đơn chung. Không suy từ email domain."
+        lead="Gán tay thành viên ACTIVE và ghim đơn. Không suy từ email domain."
         crumbs={[{ label: "Tổ chức" }]}
         actions={
           <Link

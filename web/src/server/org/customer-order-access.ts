@@ -6,9 +6,10 @@ export type CustomerActor = { id: string; email: string };
 export type OrgPeerAccounts = {
   userIds: string[];
   emails: string[];
+  organizationIds?: string[];
 };
 
-/** ACTIVE co-members across orgs the actor belongs to. Empty extra peers if none. */
+/** ACTIVE co-members + org ids the actor belongs to. Empty extra peers if none. */
 export async function loadOrgPeerAccounts(
   userId: string,
 ): Promise<OrgPeerAccounts> {
@@ -17,11 +18,12 @@ export async function loadOrgPeerAccounts(
     select: { organizationId: true },
   });
   if (mine.length === 0) {
-    return { userIds: [userId], emails: [] };
+    return { userIds: [userId], emails: [], organizationIds: [] };
   }
+  const organizationIds = [...new Set(mine.map((m) => m.organizationId))];
   const peers = await prisma.organizationMembership.findMany({
     where: {
-      organizationId: { in: mine.map((m) => m.organizationId) },
+      organizationId: { in: organizationIds },
       status: "ACTIVE",
     },
     select: {
@@ -32,6 +34,7 @@ export async function loadOrgPeerAccounts(
   return {
     userIds: [...new Set(peers.map((p) => p.userId))],
     emails: [...new Set(peers.map((p) => normalizeEmail(p.user.email)))],
+    organizationIds,
   };
 }
 
@@ -61,18 +64,36 @@ export function orderWhereForActor(
   for (const email of extraEmails) {
     or.push({ email: { equals: email, mode: "insensitive" } });
   }
+  const orgIds = peers.organizationIds ?? [];
+  if (orgIds.length) {
+    or.push({
+      organizationLinks: { some: { organizationId: { in: orgIds } } },
+    });
+  }
   return { OR: or };
 }
 
 export async function customerCanAccessOrder(
   actor: CustomerActor,
-  order: { userId: string | null; email: string },
+  order: { id?: string; userId: string | null; email: string },
 ): Promise<boolean> {
   if (order.userId === actor.id) return true;
   if (normalizeEmail(order.email) === normalizeEmail(actor.email)) return true;
   const peers = await loadOrgPeerAccounts(actor.id);
   if (order.userId && peers.userIds.includes(order.userId)) return true;
-  return peers.emails.includes(normalizeEmail(order.email));
+  if (peers.emails.includes(normalizeEmail(order.email))) return true;
+  const orgIds = peers.organizationIds ?? [];
+  if (order.id && orgIds.length) {
+    const pin = await prisma.organizationOrder.findFirst({
+      where: {
+        orderId: order.id,
+        organizationId: { in: orgIds },
+      },
+      select: { id: true },
+    });
+    if (pin) return true;
+  }
+  return false;
 }
 
 export function isSharedOrgOrder(

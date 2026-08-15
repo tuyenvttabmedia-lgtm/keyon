@@ -25,7 +25,7 @@ export async function POST(req: Request) {
         id: true,
         orderItem: {
           select: {
-            order: { select: { userId: true, email: true } },
+            order: { select: { id: true, userId: true, email: true } },
           },
         },
       },

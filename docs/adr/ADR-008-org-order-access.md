@@ -21,7 +21,7 @@ Gắn `Order.organizationId` sẽ đụng schema Core Order. Heuristic email dom
 3. **Cấm:** email domain, `QuoteRequest.companyName`, membership INVITED/DISABLED.
 4. Phạm vi: `/account`, `/account/orders`, chi tiết đơn, `/account/assets`, chi tiết license, `POST /api/deliveries/resend`. Tickets / notifications / profile PII **không** share.
 5. Staff Admin không đổi (vẫn full). Role OWNER vs MEMBER: **cùng quyền đọc** ở B3.2.
-6. `Order.organizationId` (pin đơn vào org độc lập người mua) = **B3.3**, ADR + migrate sau nếu nghiệp vụ cần.
+6. Pin đơn độc lập người mua = **B3.3** qua join `OrganizationOrder` ([ADR-011](./ADR-011-org-order-pin.md)) — **không** cột `Order.organizationId`.
 
 ## Schema / migration
 

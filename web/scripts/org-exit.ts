@@ -1,5 +1,5 @@
 /**
- * Organization B3.1 exit O1–O6 + ADR-008 B3.2 exit A1–A7
+ * Organization B3.1 exit O1–O6 + ADR-008 B3.2 A1–A7 + ADR-011 B3.3 P1–P6
  * npm run test:org
  */
 import { readFileSync } from "fs";
@@ -267,6 +267,109 @@ function a7() {
   }
 }
 
+function p1() {
+  const schema = read(schemaPath);
+  const orderBlock = schema.match(/model Order \{[\s\S]*?\n\}/)?.[0] ?? "";
+  if (!/organizationId/.test(orderBlock)) {
+    pass("P1", "Order schema không organizationId");
+  } else {
+    fail("P1", "Order có organizationId");
+  }
+}
+
+function p2() {
+  const schema = read(schemaPath);
+  if (/model OrganizationOrder\b/.test(schema)) {
+    pass("P2", "Có OrganizationOrder");
+  } else {
+    fail("P2", "Thiếu OrganizationOrder");
+  }
+}
+
+function p3() {
+  const helper = read(helperPath);
+  const hasLink = /organizationLinks/.test(helper);
+  const where = orderWhereForActor(
+    { id: "u1", email: "a@x.com" },
+    {
+      userIds: ["u1"],
+      emails: ["a@x.com"],
+      organizationIds: ["org1"],
+    },
+  );
+  const or = Array.isArray(where.OR) ? where.OR : [];
+  const hasOrg = JSON.stringify(or).includes("organizationLinks");
+  if (hasLink && hasOrg) {
+    pass("P3", "Helper where gồm organizationLinks khi ACTIVE org");
+  } else {
+    fail("P3", `src=${hasLink} where=${hasOrg}`);
+  }
+}
+
+function p4() {
+  const src = read(join(srcRoot, "server", "org", "org-admin.ts"));
+  const joinCreate = /organizationOrder\.create/.test(src);
+  const noOrderUpdate = !/prisma\.order\.update/.test(src);
+  if (joinCreate && noOrderUpdate) {
+    pass("P4", "Pin qua join, không order.update");
+  } else {
+    fail("P4", `join=${joinCreate} noUpdate=${noOrderUpdate}`);
+  }
+}
+
+function p5() {
+  const tickets = read(ticketsPath);
+  const ticketsApi = read(
+    join(srcRoot, "app", "api", "account", "tickets", "route.ts"),
+  );
+  const leaked =
+    /organizationOrder|organizationLinks/.test(tickets) ||
+    /organizationOrder|organizationLinks/.test(ticketsApi);
+  if (!leaked) {
+    pass("P5", "Tickets không pin org");
+  } else {
+    fail("P5", "tickets đọc OrganizationOrder");
+  }
+}
+
+async function p6() {
+  const order = await prisma.order.findFirst({
+    select: { id: true, status: true },
+    orderBy: { createdAt: "desc" },
+  });
+  const org = await prisma.organization.create({
+    data: { name: `__exit_pin_${Date.now()}` },
+  });
+  if (!order) {
+    await prisma.organization.delete({ where: { id: org.id } });
+    pass("P6", "Tạo org OK; skip pin (không có Order)");
+    return;
+  }
+  await prisma.organizationOrder.create({
+    data: { organizationId: org.id, orderId: order.id },
+  });
+  const afterPin = await prisma.order.findUnique({
+    where: { id: order.id },
+    select: { status: true },
+  });
+  await prisma.organizationOrder.deleteMany({
+    where: { organizationId: org.id, orderId: order.id },
+  });
+  const afterUnpin = await prisma.order.findUnique({
+    where: { id: order.id },
+    select: { status: true },
+  });
+  await prisma.organization.delete({ where: { id: org.id } });
+  if (afterPin?.status === order.status && afterUnpin?.status === order.status) {
+    pass("P6", "Pin/unpin không đổi Order.status");
+  } else {
+    fail(
+      "P6",
+      `status ${order.status} → pin ${afterPin?.status} unpin ${afterUnpin?.status}`,
+    );
+  }
+}
+
 async function main() {
   o1();
   o2();
@@ -279,6 +382,11 @@ async function main() {
   a5();
   a6();
   a7();
+  p1();
+  p2();
+  p3();
+  p4();
+  p5();
   try {
     await o4();
   } catch (e) {
@@ -289,11 +397,16 @@ async function main() {
   } catch (e) {
     fail("O5", e instanceof Error ? e.message : String(e));
   }
+  try {
+    await p6();
+  } catch (e) {
+    fail("P6", e instanceof Error ? e.message : String(e));
+  }
   const failed = results.filter((r) => !r.ok);
   console.log(
     failed.length
       ? `\nORG EXIT ${failed.map((f) => f.id).join(", ")} FAIL`
-      : "\nORG EXIT O1–O6 + A1–A7 PASS",
+      : "\nORG EXIT O1–O6 + A1–A7 + P1–P6 PASS",
   );
   process.exit(failed.length ? 1 : 0);
 }
