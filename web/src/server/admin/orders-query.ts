@@ -158,6 +158,7 @@ function receiveTypes(receive: ReceiveFilter): DeliverableType[] | null {
   return ["EXTERNAL_PORTAL", "SUBSCRIPTION"];
 }
 
+/** Admin list filter only — not membership, not storefront auth. */
 async function companyOrderWhere(
   raw: string,
 ): Promise<Prisma.OrderWhereInput | undefined> {

@@ -174,7 +174,7 @@ export function OrdersView({
           <h1 className={PAGE_TITLE_CLASS}>{cms.ordersPageTitle}</h1>
           <p className={`mt-1.5 ${SECTION_LEAD_CLASS}`}>
             {companyName
-              ? `Đơn gắn tài khoản này · ${companyName}. Không gồm đơn của đồng nghiệp khác cùng công ty.`
+              ? `Đơn của tài khoản này. “${companyName}” chỉ là tên trên yêu cầu báo giá (lead), không phải công ty dùng chung đơn.`
               : cms.ordersPageLead}
           </p>
         </div>

@@ -1,4 +1,7 @@
-/** Heuristic company key from Order.email — no Core Company table. */
+/**
+ * Admin-only search hints from Order.email / QuoteRequest.companyName.
+ * Not an Organization. Never use for authorization or customer data access.
+ */
 
 const CONSUMER_EMAIL_DOMAINS = new Set([
   "gmail.com",

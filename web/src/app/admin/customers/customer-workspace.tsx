@@ -124,7 +124,7 @@ export function CustomerWorkspace({ data }: { data: CustomerWorkspaceData }) {
               href={`/admin/orders?company=${encodeURIComponent(orgDomain)}`}
               className="rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-navy hover:bg-navy-soft"
             >
-              Đơn cùng domain
+              Đơn (gợi ý domain)
             </Link>
           ) : null}
         </div>

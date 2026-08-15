@@ -31,6 +31,8 @@ Tài liệu = hợp đồng. Code phải chứng minh hợp đồng (exit tests)
 
 Chi tiết dài: `LICENSE-POOL-v1.md`, `INVENTORY-READ-MODEL-v1.md`, `PAYMENT-ARCHITECTURE-v1.md`.
 
+Working (not Frozen): [Phase B B2B](../B2B-PHASE-B.md) — Org / HĐ / service SKU. Không amend ADR-001…006 cho đến khi đủ trigger + Amendment Rule.
+
 ---
 
 ## Core Stable

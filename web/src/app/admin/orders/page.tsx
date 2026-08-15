@@ -42,7 +42,7 @@ export default async function AdminOrdersPage({
     <div className="space-y-4">
       <AdminPageHeader
         title="Đơn hàng"
-        lead="Order Workspace · lọc theo công ty / domain · dual status"
+        lead="Order Workspace · gợi ý tìm theo domain/tên lead — không phải quyền công ty"
         crumbs={[{ label: "Đơn hàng" }]}
       />
 

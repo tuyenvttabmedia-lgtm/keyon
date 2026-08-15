@@ -204,8 +204,11 @@ export function OrdersList({ rows }: { rows: AdminOrderListRow[] }) {
                       <span className="max-w-[180px] truncate">{o.email}</span>
                     </span>
                     {o.companyLabel ? (
-                      <span className="max-w-[160px] truncate" title={o.companyLabel}>
-                        {o.companyLabel}
+                      <span
+                        className="max-w-[160px] truncate"
+                        title={`Gợi ý lead/domain, không phải Organization: ${o.companyLabel}`}
+                      >
+                        Gợi ý: {o.companyLabel}
                       </span>
                     ) : null}
                     <span className="inline-flex items-center gap-1">

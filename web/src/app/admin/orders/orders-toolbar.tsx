@@ -250,10 +250,10 @@ export function OrdersToolbar({
         </label>
 
         <label className="min-w-[180px] flex-1 text-xs">
-          <span className="font-medium text-navy">Công ty / domain</span>
+          <span className="font-medium text-navy">Gợi ý công ty (tìm kiếm)</span>
           <input
             className="mt-1 w-full rounded-lg border border-border bg-card px-2.5 py-1.5 text-sm"
-            placeholder="acme.com hoặc tên trên báo giá"
+            placeholder="domain hoặc tên trên báo giá — không phải Org"
             value={draftCompany}
             onChange={(e) => setDraftCompany(e.target.value)}
             onKeyDown={(e) => {
@@ -268,7 +268,7 @@ export function OrdersToolbar({
           className="rounded-lg bg-navy px-3 py-1.5 text-sm font-semibold text-white"
           onClick={() => push({ company: draftCompany.trim() || null })}
         >
-          Lọc công ty
+          Lọc gợi ý
         </button>
 
         <label className="text-xs">
@@ -392,7 +392,7 @@ export function OrdersToolbar({
 
       {companies.length > 0 ? (
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className={`${FIELD_CAPTION_CLASS} shrink-0`}>Công ty gần đây</span>
+          <span className={`${FIELD_CAPTION_CLASS} shrink-0`}>Gợi ý (không phải Org)</span>
           {companies.map((c) => {
             const active = company.toLowerCase() === c.value.toLowerCase();
             return (
@@ -421,7 +421,7 @@ export function OrdersToolbar({
                 push({ company: null });
               }}
             >
-              Xóa lọc công ty
+              Xóa gợi ý
             </button>
           ) : null}
         </div>

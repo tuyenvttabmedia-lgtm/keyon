@@ -574,7 +574,8 @@ enum QuoteRequestStatus {
   SPAM
 }
 
-/// Anonymous / guest enterprise quote request (not an Order)
+/// Anonymous / guest enterprise quote request (not an Order).
+/// companyName is lead text only — not an Organization and not an authorization key.
 model QuoteRequest {
   id                   String             @id @default(cuid())
   /// Public reference shown to customer, e.g. QT-A1B2C3D4
