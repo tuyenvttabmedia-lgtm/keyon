@@ -28,7 +28,7 @@ export const DELIVERABLE_ADMIN_LABELS: Record<DeliverableType, string> = {
   KEY: "Key / mã kích hoạt",
   ACCOUNT: "Tài khoản",
   SUBSCRIPTION: "Subscription",
-  DIGITAL_FILE: "File số",
+  DIGITAL_FILE: "Hồ sơ bàn giao / file",
   EXTERNAL_PORTAL: "Cổng kích hoạt ngoài",
 };
 
@@ -40,7 +40,7 @@ export const LICENSE_MODEL_ADMIN_LABELS: Record<LicenseModel, string> = {
 
 export const SALES_MOTION_ADMIN_LABELS: Record<SalesMotion, string> = {
   SELF_SERVE: "Tự mua (checkout)",
-  QUOTE_REQUIRED: "Báo giá / liên hệ",
+  QUOTE_REQUIRED: "Báo giá; gói MANUAL vẫn thanh toán được",
 };
 
 export const FULFILLMENT_OPTIONS = Object.keys(

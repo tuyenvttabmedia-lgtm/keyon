@@ -21,7 +21,7 @@ Thay đổi abstraction Product / Order / Payment / Fulfillment đã freeze → 
 
 ---
 
-## Hiện trạng (sau B4.1)
+## Hiện trạng (sau B5)
 
 | Có | Không |
 |----|--------|
@@ -30,6 +30,7 @@ Thay đổi abstraction Product / Order / Payment / Fulfillment đã freeze → 
 | Organization + Membership (staff gán tay) | Pin Order vào org (B3.3) |
 | Portal: Order/license account **+ peer ACTIVE cùng org** | Share tickets / domain auth |
 | HĐ/PO staff qua `OrderNote` (ADR-009) | Cột `poNumber` trên Order; `CommercialAgreement` |
+| SKU bàn giao: `QUOTE_REQUIRED` + `MANUAL` + `DIGITAL_FILE` | `ServiceOrder` / enum `SERVICE` / Pool cho dịch vụ |
 
 ---
 
@@ -114,17 +115,11 @@ Chỉ khi Trigger B.
 
 ---
 
-## B5 — Service SKU (khi có gói bán thật)
+## B5 — Service SKU — **đã implement (enum hiện có)**
 
-**Trigger:** KEYON bán gói triển khai/dịch vụ như SKU (giá, thanh toán), không chỉ form lead.
+Gói bàn giao: `SalesMotion.QUOTE_REQUIRED` + `FulfillmentStrategy.MANUAL` + `DeliverableType.DIGITAL_FILE`. Checkout được (trả tiền → inbox). **Không** License Pool. Pax8 `QUOTE_REQUIRED` + `SEMI_AUTOMATED` vẫn chỉ báo giá.
 
-| | |
-|--|--|
-| **Schema** | Ưu tiên **enum hiện có**: `SalesMotion.QUOTE_REQUIRED` + `FulfillmentStrategy.MANUAL`. **Cấm** License Pool consume. **Cấm** `ServiceOrder` / `ServicePayment`. Deliverable type mới (vd. SERVICE) = đổi Variant/Fulfillment abstraction → **dừng + ADR**. |
-| **Migration** | Catalog rows nếu không đổi enum. Đổi enum/strategy → sau ADR. |
-| **API** | Checkout/quote → **Order** + **Payment** như hiện tại; job fulfillment MANUAL/inbox. |
-| **State** | Cùng Order/Payment/Fulfillment. Không state máy song song. Webhook → Payment → Fulfillment — **không** webhook → Pool. |
-| **ADR** | Không nếu chỉ dùng MANUAL + QUOTE_REQUIRED đã freeze. **Có** nếu thêm strategy/deliverable/state. ADR-002: dịch vụ **không** vào Pool. |
+SKU: `KEYON-SVC-HANDOVER` · slug `keyon-license-handover`. Upsert: `npm run catalog:ensure-service-sku`.
 
 ---
 
@@ -144,6 +139,6 @@ B1 intake (lead)
  → B3.1 Org + Membership
  → B3.2 org-scoped access (ADR-008, xong)
  → B4.1 Order reference (ADR-009 OrderNote, xong)
- → B4.2 CommercialAgreement khi đủ trigger (ADR)
- → B5 service SKU (Pool cấm; ADR nếu đổi enum)
+ → B4.2 CommercialAgreement khi đủ trigger (ADR) — **chưa**
+ → B5 service SKU (MANUAL + DIGITAL_FILE, xong)
 ```

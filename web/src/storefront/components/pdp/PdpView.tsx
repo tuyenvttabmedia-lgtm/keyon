@@ -36,6 +36,7 @@ import {
   TAB_ACTIVE_CLASS,
   TAB_CLASS,
 } from "@/storefront/typography";
+import { QUOTE_HREF, QUOTE_LABEL } from "@/storefront/lib/cta";
 import type { PdpProductData, PdpTabId, PdpVariantOption } from "./types";
 import {
   ELEVATION_CTA_HOVER,
@@ -657,7 +658,11 @@ function PurchaseColumn({
           required
           value={email}
           onChange={(e) => onEmail(e.target.value)}
-          placeholder="Email nhận license"
+          placeholder={
+            variant.receiveKind === "activation" && !variant.fulfillmentInstant
+              ? "Email nhận bàn giao"
+              : "Email nhận license"
+          }
           className={`mt-4 w-full rounded-xl border border-border bg-white px-3.5 py-2.5 ${INPUT_TEXT_CLASS} outline-none transition focus:border-accent`}
         />
       ) : null}
@@ -688,6 +693,14 @@ function PurchaseColumn({
           Gói này hiện cần báo giá / chưa mở mua tự phục vụ.
         </div>
       )}
+      {variant.quoteRequired ? (
+        <Link
+          href={`${QUOTE_HREF}?intent=implementation`}
+          className={`mt-3 inline-flex h-11 w-full items-center justify-center rounded-xl border border-border bg-white px-5 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+        >
+          {QUOTE_LABEL}
+        </Link>
+      ) : null}
 
       <ul className="mt-4 grid grid-cols-3 gap-2 border-t border-border pt-4">
         {[

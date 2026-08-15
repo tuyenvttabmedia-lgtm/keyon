@@ -111,6 +111,8 @@ export function ProductEditForm(props: Props) {
         priceVnd: form.priceVnd,
         galleryUrls: form.galleryUrls,
         fulfillmentStrategy: form.fulfillmentStrategy,
+        deliverableType: form.deliverableType,
+        salesMotion: form.salesMotion,
         publishing: form.productActive,
       });
       if (warnings.length && form.productActive) {

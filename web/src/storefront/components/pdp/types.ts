@@ -13,6 +13,7 @@ export type PdpVariantOption = {
   slaPromise?: string | null;
   canBuy: boolean;
   fulfillmentInstant: boolean;
+  quoteRequired?: boolean;
 };
 
 export type PdpProductData = {

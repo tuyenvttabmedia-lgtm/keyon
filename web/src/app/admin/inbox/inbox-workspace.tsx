@@ -639,8 +639,11 @@ export function InboxWorkspace({ jobs, kpi, staffLabel }: Props) {
                       "Một dòng KEY thuần (không JSON)."}
                     {selected.deliverableType === "ACCOUNT" &&
                       'JSON: { "username", "password" }.'}
+                    {selected.deliverableType === "DIGITAL_FILE" &&
+                      "Hồ sơ bàn giao dịch vụ — không dán license pool."}
                     {selected.deliverableType !== "KEY" &&
                       selected.deliverableType !== "ACCOUNT" &&
+                      selected.deliverableType !== "DIGITAL_FILE" &&
                       "Nội dung kích hoạt / hướng dẫn cho khách."}
                   </p>
                   <textarea
@@ -662,7 +665,9 @@ export function InboxWorkspace({ jobs, kpi, staffLabel }: Props) {
                         ? "XXXXX-XXXXX-XXXXX-XXXXX"
                         : selected.deliverableType === "ACCOUNT"
                           ? '{\n  "username": "",\n  "password": ""\n}'
-                          : "URL / hướng dẫn kích hoạt"
+                          : selected.deliverableType === "DIGITAL_FILE"
+                            ? "Tóm tắt bàn giao / checklist đã xong (không phải key kho)"
+                            : "URL / hướng dẫn kích hoạt"
                     }
                   />
                   {payload.trim() && !validation.ok ? (

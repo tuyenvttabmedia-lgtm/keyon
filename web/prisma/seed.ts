@@ -138,6 +138,9 @@ async function main() {
   const norton = await prisma.brand.create({
     data: { name: "Norton", slug: "norton", supplierId: external.id },
   });
+  const keyon = await prisma.brand.create({
+    data: { name: "KEYON", slug: "keyon", supplierId: external.id },
+  });
 
   type Spec = {
     brandId: string;
@@ -344,6 +347,23 @@ async function main() {
       price: 320_000,
       cost: 250_000,
       upstream: "pax8-product-placeholder",
+    },
+    {
+      brandId: keyon.id,
+      name: "Bàn giao bản quyền KEYON",
+      slug: "keyon-license-handover",
+      description:
+        "Gói bàn giao và kích hoạt bản quyền — Order + Payment + MANUAL, không License Pool.",
+      sku: "KEYON-SVC-HANDOVER",
+      variantName: "Gói chuẩn",
+      strategy: FulfillmentStrategy.MANUAL,
+      deliverable: DeliverableType.DIGITAL_FILE,
+      license: LicenseModel.MAINTENANCE,
+      sales: SalesMotion.QUOTE_REQUIRED,
+      sla: "Theo lịch sau thanh toán (giờ làm việc)",
+      supplierId: external.id,
+      price: 1_990_000,
+      cost: 0,
     },
   ];
 

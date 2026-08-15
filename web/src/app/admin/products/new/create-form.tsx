@@ -207,6 +207,8 @@ export function ProductCreateForm({
         priceVnd: form.priceVnd,
         galleryUrls: form.galleryUrls,
         fulfillmentStrategy: form.fulfillmentStrategy,
+        deliverableType: form.deliverableType,
+        salesMotion: form.salesMotion,
         publishing: form.publishNow,
       });
       if (warnings.length && form.publishNow) {

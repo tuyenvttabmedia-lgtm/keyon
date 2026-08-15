@@ -39,6 +39,7 @@ import {
   TRANSITION_UI,
 } from "@/storefront/effects";
 import { IMPLEMENTATION_QUOTE_HREF } from "@/storefront/lib/cta";
+import { SERVICE_HANDOVER_HREF } from "@/storefront/lib/service-sku";
 
 const ICON_SM = { size: 16, strokeWidth: 1.85 } as const;
 const ICON_MD = { size: 20, strokeWidth: 1.75 } as const;
@@ -160,16 +161,16 @@ export function ImplementationLanding() {
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Link
-                href={IMPLEMENTATION_QUOTE_HREF}
+                href={SERVICE_HANDOVER_HREF}
                 className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
               >
-                Gửi yêu cầu triển khai →
+                Mua gói bàn giao →
               </Link>
               <Link
-                href="/business/licensing-consulting"
+                href={IMPLEMENTATION_QUOTE_HREF}
                 className={`inline-flex h-12 items-center justify-center rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
               >
-                Chỉ cần tư vấn chọn gói
+                Gửi yêu cầu tùy chỉnh
               </Link>
             </div>
           </div>

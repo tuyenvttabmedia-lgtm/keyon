@@ -12,6 +12,7 @@ export type CatalogPublishInput = {
   sku: string;
   fulfillmentStrategy: FulfillmentStrategy | string;
   deliverableType?: DeliverableType | string;
+  salesMotion?: string;
   supplierId?: string | null;
   /** When true, enforce publish-ready rules */
   publishing: boolean;
@@ -75,6 +76,24 @@ export function catalogPublishWarnings(input: CatalogPublishInput): CatalogValid
     warnings.push({
       field: "galleryUrls",
       message: "Chưa có gallery — PDP sẽ dùng ảnh demo cho đến khi upload Media",
+    });
+  }
+  if (
+    input.salesMotion === "QUOTE_REQUIRED" &&
+    input.fulfillmentStrategy === "INSTANT"
+  ) {
+    warnings.push({
+      field: "salesMotion",
+      message: "QUOTE_REQUIRED + Instant không mở checkout — khách chỉ gửi báo giá",
+    });
+  }
+  if (
+    input.fulfillmentStrategy === "MANUAL" &&
+    input.deliverableType === "KEY"
+  ) {
+    warnings.push({
+      field: "deliverableType",
+      message: "Gói MANUAL kiểu dịch vụ nên DIGITAL_FILE — KEY dễ nhầm kho Instant",
     });
   }
   return warnings;

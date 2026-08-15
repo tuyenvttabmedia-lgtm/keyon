@@ -30,6 +30,7 @@ import {
   PRODUCT_CATEGORY_KEYS,
 } from "@/storefront/lib/product-cms";
 import { mapProductsToShopCards } from "@/storefront/lib/related-products";
+import { variantAllowsCheckout, variantShowsQuoteCta } from "@/lib/variant-checkout";
 import {
   resolveWithGlobalFallback,
   toNextMetadata,
@@ -134,11 +135,7 @@ export default async function ProductPage({
       v.compareAtPriceVnd && v.compareAtPriceVnd > v.priceVnd
         ? v.compareAtPriceVnd
         : undefined;
-    const canBuy =
-      v.salesMotion === "SELF_SERVE" &&
-      (v.fulfillmentStrategy === "INSTANT" ||
-        v.fulfillmentStrategy === "MANUAL" ||
-        v.fulfillmentStrategy === "SEMI_AUTOMATED");
+    const canBuy = variantAllowsCheckout(v);
     return {
       id: v.id,
       name: v.name,
@@ -151,6 +148,7 @@ export default async function ProductPage({
       slaPromise: v.slaPromise,
       canBuy,
       fulfillmentInstant: v.fulfillmentStrategy === "INSTANT",
+      quoteRequired: variantShowsQuoteCta(v),
     };
   });
 

@@ -14,6 +14,8 @@ export function receiveFromDeliverable(type: DeliverableType): {
     case "EXTERNAL_PORTAL":
     case "SUBSCRIPTION":
       return { kind: "activation", label: "Kích hoạt" };
+    case "DIGITAL_FILE":
+      return { kind: "activation", label: "Hồ sơ bàn giao" };
     default:
       return { kind: "key", label: "Key" };
   }

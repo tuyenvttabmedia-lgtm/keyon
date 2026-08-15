@@ -6,6 +6,7 @@ import { AppError } from "@/lib/errors";
 import { emitPaymentEvent } from "@/server/payment/events";
 import { childLogger } from "@/lib/logger";
 import { randomBytes } from "crypto";
+import { variantAllowsCheckout } from "@/lib/variant-checkout";
 
 const log = childLogger("checkout");
 
@@ -25,7 +26,7 @@ export async function createCheckoutOrder(input: {
     include: { product: true },
   });
   if (!variant || !variant.active) throw new AppError("Variant not available", 404);
-  if (variant.salesMotion === "QUOTE_REQUIRED") {
+  if (!variantAllowsCheckout(variant)) {
     throw new AppError("Sản phẩm này cần nhận báo giá — chưa hỗ trợ mua ngay", 400);
   }
   if (
