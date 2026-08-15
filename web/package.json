@@ -28,6 +28,7 @@
     "test:commercial-ref": "tsx --env-file=.env.local --env-file=.env scripts/commercial-ref-exit.ts",
     "catalog:ensure-service-sku": "tsx --env-file=.env.local --env-file=.env scripts/ensure-service-sku.ts",
     "test:service-sku": "tsx --env-file=.env.local --env-file=.env scripts/service-sku-exit.ts",
+    "test:agreements": "tsx --env-file=.env.local --env-file=.env scripts/agreement-exit.ts",
     "pilot:snapshot": "tsx --env-file=.env.local --env-file=.env scripts/pilot-snapshot.ts"
   },
   "prisma": {

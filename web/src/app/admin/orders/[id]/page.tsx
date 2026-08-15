@@ -130,6 +130,13 @@ export default async function AdminOrderDetailPage({
           author: { select: { id: true, email: true, name: true } },
         },
       },
+      agreementLinks: {
+        include: {
+          agreement: {
+            select: { id: true, title: true, reference: true, status: true },
+          },
+        },
+      },
     },
   });
   if (!order) notFound();
@@ -530,6 +537,33 @@ export default async function AdminOrderDetailPage({
               poNumber={commercial?.poNumber ?? ""}
               contractRef={commercial?.contractRef ?? ""}
             />
+            {order.agreementLinks.length ? (
+              <ul className="mt-4 space-y-2 border-t border-border pt-4">
+                {order.agreementLinks.map((l) => (
+                  <li key={l.id} className="text-sm">
+                    <Link
+                      href={`/admin/agreements/${l.agreement.id}`}
+                      className="font-medium text-navy hover:text-accent"
+                    >
+                      {l.agreement.title}
+                    </Link>
+                    <p className="text-xs text-muted">
+                      Khung HĐ
+                      {l.agreement.reference ? ` · ${l.agreement.reference}` : ""}{" "}
+                      · {l.agreement.status}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-3 text-xs text-muted">
+                Gắn đơn vào khung nhiều Order tại{" "}
+                <Link href="/admin/agreements" className="text-accent hover:underline">
+                  Khung HĐ
+                </Link>
+                .
+              </p>
+            )}
           </Panel>
           <Panel id="notes" title="Notes (nội bộ)">
             <OrderNotesForm orderId={order.id} />

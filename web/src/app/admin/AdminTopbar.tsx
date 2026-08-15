@@ -10,6 +10,7 @@ const TITLE_BY_PREFIX: { prefix: string; title: string }[] = [
   { prefix: "/admin/inbox", title: "Inbox fulfillment" },
   { prefix: "/admin/customers", title: "Khách hàng" },
   { prefix: "/admin/organizations", title: "Tổ chức" },
+  { prefix: "/admin/agreements", title: "Khung HĐ" },
   { prefix: "/admin/payments", title: "Thanh toán" },
   { prefix: "/admin/tickets", title: "Hỗ trợ" },
   { prefix: "/admin/notifications", title: "Thông báo" },

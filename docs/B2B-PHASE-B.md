@@ -21,7 +21,7 @@ Thay đổi abstraction Product / Order / Payment / Fulfillment đã freeze → 
 
 ---
 
-## Hiện trạng (sau B5)
+## Hiện trạng (sau B4.2 + B5)
 
 | Có | Không |
 |----|--------|
@@ -29,7 +29,8 @@ Thay đổi abstraction Product / Order / Payment / Fulfillment đã freeze → 
 | Admin heuristic domain/tên lead | Auto-join từ email domain |
 | Organization + Membership (staff gán tay) | Pin Order vào org (B3.3) |
 | Portal: Order/license account **+ peer ACTIVE cùng org** | Share tickets / domain auth |
-| HĐ/PO staff qua `OrderNote` (ADR-009) | Cột `poNumber` trên Order; `CommercialAgreement` |
+| HĐ/PO staff qua `OrderNote` (ADR-009) | Cột `poNumber` trên Order |
+| Khung HĐ nhiều đơn (ADR-010 join) | `Order.agreementId`; Payment trên HĐ |
 | SKU bàn giao: `QUOTE_REQUIRED` + `MANUAL` + `DIGITAL_FILE` | `ServiceOrder` / enum `SERVICE` / Pool cho dịch vụ |
 
 ---
@@ -101,17 +102,9 @@ Staff ghi số PO/HĐ bằng `OrderNote` marker `[KEYON-COMMERCIAL]`. **Không**
 
 Cột `poNumber`/`contractRef` trên Order = B4.1b, **sau ADR + migrate** nếu cần index.
 
-### B4.2 CommercialAgreement
+### B4.2 CommercialAgreement — **ADR-010, đã implement (join, không cột Order)**
 
-Chỉ khi Trigger B.
-
-| | |
-|--|--|
-| **Schema** | Bảng mới `CommercialAgreement`; Order *trỏ tới* agreement (`agreementId`). Header ≠ Order. |
-| **Migration** | Sau ADR. Additive. Không thay `Order.status`. |
-| **API** | Admin CRUD agreement; list Order theo agreement. |
-| **State** | Lifecycle **của agreement** (nếu có) tách khỏi Order/Payment. |
-| **ADR** | **Bắt buộc.** Cấm thay thế Order bằng Contract. Cấm Payment đi agreement mà bỏ Order. |
+Bảng `CommercialAgreement` + `CommercialAgreementOrder`. **Không** `Order.agreementId`. Admin `/admin/agreements`. Không Payment trên HĐ. Chi tiết: `docs/adr/ADR-010-commercial-agreement.md`.
 
 ---
 
@@ -139,6 +132,6 @@ B1 intake (lead)
  → B3.1 Org + Membership
  → B3.2 org-scoped access (ADR-008, xong)
  → B4.1 Order reference (ADR-009 OrderNote, xong)
- → B4.2 CommercialAgreement khi đủ trigger (ADR) — **chưa**
+ → B4.2 CommercialAgreement (ADR-010 join, xong)
  → B5 service SKU (MANUAL + DIGITAL_FILE, xong)
 ```

@@ -102,6 +102,7 @@ export function staffCanSeeAdminPath(role: UserRole, href: string): boolean {
       href.startsWith("/admin/orders") ||
       href.startsWith("/admin/customers") ||
       href.startsWith("/admin/organizations") ||
+      href.startsWith("/admin/agreements") ||
       href.startsWith("/admin/tickets") ||
       href.startsWith("/admin/notifications")
     );
@@ -116,6 +117,7 @@ export function staffCanSeeAdminPath(role: UserRole, href: string): boolean {
     href.startsWith("/admin/inbox") ||
     href.startsWith("/admin/customers") ||
     href.startsWith("/admin/organizations") ||
+    href.startsWith("/admin/agreements") ||
     href.startsWith("/admin/tickets") ||
     href.startsWith("/admin/notifications") ||
     href.startsWith("/admin/stock") ||

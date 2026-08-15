@@ -26,6 +26,13 @@ enum OrganizationMembershipStatus {
   DISABLED
 }
 
+/// Header lifecycle of a commercial frame — never OrderStatus / PaymentStatus.
+enum CommercialAgreementStatus {
+  DRAFT
+  ACTIVE
+  CLOSED
+}
+
 enum LicenseModel {
   PERPETUAL
   SUBSCRIPTION
@@ -155,6 +162,7 @@ model Organization {
   updatedAt DateTime @updatedAt
 
   memberships OrganizationMembership[]
+  agreements  CommercialAgreement[]
 }
 
 model OrganizationMembership {
@@ -170,6 +178,38 @@ model OrganizationMembership {
 
   @@unique([organizationId, userId])
   @@index([userId, status])
+}
+
+/// B4.2 — one commercial frame linking many Orders. Not a Contract-as-Order. No Payment.
+model CommercialAgreement {
+  id             String                     @id @default(cuid())
+  title          String
+  reference      String?
+  organizationId String?
+  organization   Organization?              @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  status         CommercialAgreementStatus  @default(DRAFT)
+  startsAt       DateTime?
+  endsAt         DateTime?
+  note           String?
+  createdAt      DateTime                   @default(now())
+  updatedAt      DateTime                   @updatedAt
+
+  orderLinks CommercialAgreementOrder[]
+
+  @@index([organizationId])
+  @@index([status, createdAt])
+}
+
+model CommercialAgreementOrder {
+  id          String               @id @default(cuid())
+  agreementId String
+  agreement   CommercialAgreement  @relation(fields: [agreementId], references: [id], onDelete: Cascade)
+  orderId     String
+  order       Order                @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  createdAt   DateTime             @default(now())
+
+  @@unique([agreementId, orderId])
+  @@index([orderId])
 }
 
 /// Browser/device session registry (JWT jti ↔ row).
@@ -410,6 +450,7 @@ model Order {
   fulfillmentJobs  FulfillmentJob[]
   reservedLicenses LicenseItem[] @relation("LicenseReservedByOrder")
   internalNotes    OrderNote[]
+  agreementLinks   CommercialAgreementOrder[]
 }
 
 /// Staff-only internal notes on an order (ops workspace)

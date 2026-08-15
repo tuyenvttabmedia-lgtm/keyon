@@ -69,6 +69,7 @@ const GROUPS: NavGroup[] = [
       { href: "/admin/inbox", label: "Inbox", match: "prefix", icon: Inbox },
       { href: "/admin/customers", label: "Khách hàng", match: "prefix", icon: Users },
       { href: "/admin/organizations", label: "Tổ chức", match: "prefix", icon: Building2 },
+      { href: "/admin/agreements", label: "Khung HĐ", match: "prefix", icon: FileText },
       { href: "/admin/payments", label: "Thanh toán", match: "prefix", icon: CreditCard },
       { href: "/admin/tickets", label: "Hỗ trợ", match: "prefix", icon: LifeBuoy },
       {
