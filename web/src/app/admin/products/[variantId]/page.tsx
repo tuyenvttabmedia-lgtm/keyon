@@ -162,6 +162,7 @@ export default async function AdminProductEditPage({
         receiveLabel={receive.label}
         sku={variant.sku}
         fulfillmentStrategy={variant.fulfillmentStrategy}
+        deliverableType={variant.deliverableType}
         supplierId={variant.supplierId}
       />
     </div>

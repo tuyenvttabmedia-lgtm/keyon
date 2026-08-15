@@ -61,6 +61,7 @@ type Props = {
   receiveLabel: string;
   sku: string;
   fulfillmentStrategy: string;
+  deliverableType: string;
   supplierId: string | null;
 };
 
