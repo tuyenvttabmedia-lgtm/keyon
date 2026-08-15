@@ -42,6 +42,8 @@ export type OrdersListQuery = {
   maxVnd?: string;
   /** Company name (QuoteRequest) or email domain — not a Core Company id. */
   company?: string;
+  /** PO / contract text on OrderNote commercial marker. */
+  ref?: string;
   page?: number;
   pageSize?: PageSize;
 };
@@ -81,6 +83,8 @@ export type AdminOrderListRow = {
   timeline: OrderTimelinePreview;
   /** Quote company name, else email domain. */
   companyLabel: string;
+  /** Latest staff PO/HĐ from OrderNote — not Order columns. */
+  commercialLabel: string | null;
 };
 
 /** Relative age for ops prioritization */

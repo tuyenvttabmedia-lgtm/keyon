@@ -147,6 +147,13 @@ export function OrderQuickMenu({ row }: { row: AdminOrderListRow }) {
           Gửi lại Deliverable
         </button>
         <Link
+          href={`/admin/orders/${row.id}#commercial`}
+          className={itemClass}
+          onClick={() => setOpen(false)}
+        >
+          Ghi HĐ / PO
+        </Link>
+        <Link
           href={`/admin/orders/${row.id}#notes`}
           className={itemClass}
           onClick={() => setOpen(false)}

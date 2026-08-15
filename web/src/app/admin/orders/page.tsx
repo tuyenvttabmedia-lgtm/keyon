@@ -31,6 +31,7 @@ export default async function AdminOrdersPage({
     minVnd: query.minVnd,
     maxVnd: query.maxVnd,
     company: query.company,
+    ref: query.ref,
   };
   const [list, summary, options] = await Promise.all([
     queryAdminOrders(query),
@@ -65,6 +66,7 @@ export default async function AdminOrdersPage({
           minVnd={query.minVnd ?? ""}
           maxVnd={query.maxVnd ?? ""}
           company={query.company ?? ""}
+          commercialRef={query.ref ?? ""}
           pageSize={list.pageSize}
           total={list.total}
           page={list.page}

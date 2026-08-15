@@ -25,6 +25,7 @@
     "test:internal": "tsx --env-file=.env.local --env-file=.env scripts/internal-test-exit.ts",
     "test:pax8": "tsx --env-file=.env.local --env-file=.env scripts/pax8-exit.ts",
     "test:org": "tsx --env-file=.env.local --env-file=.env scripts/org-exit.ts",
+    "test:commercial-ref": "tsx --env-file=.env.local --env-file=.env scripts/commercial-ref-exit.ts",
     "pilot:snapshot": "tsx --env-file=.env.local --env-file=.env scripts/pilot-snapshot.ts"
   },
   "prisma": {

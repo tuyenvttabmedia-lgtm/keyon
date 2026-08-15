@@ -70,6 +70,7 @@ export function OrdersToolbar({
   minVnd,
   maxVnd,
   company,
+  commercialRef,
   pageSize,
   total,
   page,
@@ -93,6 +94,7 @@ export function OrdersToolbar({
   minVnd: string;
   maxVnd: string;
   company: string;
+  commercialRef: string;
   pageSize: PageSize;
   total: number;
   page: number;
@@ -113,6 +115,7 @@ export function OrdersToolbar({
   const [draftMin, setDraftMin] = useState(minVnd);
   const [draftMax, setDraftMax] = useState(maxVnd);
   const [draftCompany, setDraftCompany] = useState(company);
+  const [draftRef, setDraftRef] = useState(commercialRef);
 
   useEffect(() => setSearch(q), [q]);
   useEffect(() => {
@@ -125,6 +128,7 @@ export function OrdersToolbar({
   }, [minVnd, maxVnd]);
 
   useEffect(() => setDraftCompany(company), [company]);
+  useEffect(() => setDraftRef(commercialRef), [commercialRef]);
 
   const push = useCallback(
     (patch: Record<string, string | null>, resetPage = true) => {
@@ -269,6 +273,28 @@ export function OrdersToolbar({
           onClick={() => push({ company: draftCompany.trim() || null })}
         >
           Lọc gợi ý
+        </button>
+
+        <label className="min-w-[160px] text-xs">
+          <span className="font-medium text-navy">HĐ / PO</span>
+          <input
+            className="mt-1 w-full rounded-lg border border-border bg-card px-2.5 py-1.5 text-sm"
+            placeholder="Số PO hoặc HĐ đã ghi"
+            value={draftRef}
+            onChange={(e) => setDraftRef(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                push({ ref: draftRef.trim() || null });
+              }
+            }}
+          />
+        </label>
+        <button
+          type="button"
+          className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm font-semibold text-navy"
+          onClick={() => push({ ref: draftRef.trim() || null })}
+        >
+          Lọc HĐ/PO
         </button>
 
         <label className="text-xs">

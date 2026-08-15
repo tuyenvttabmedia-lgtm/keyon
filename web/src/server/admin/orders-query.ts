@@ -20,6 +20,11 @@ import {
   isConsumerEmailDomain,
   parseCompanyFilter,
 } from "@/lib/company-order-filter";
+import {
+  COMMERCIAL_REF_MARKER,
+  commercialRefLabel,
+  latestCommercialRef,
+} from "@/server/admin/commercial-ref";
 
 export type {
   DatePreset,
@@ -219,6 +224,20 @@ async function buildWhere(input: OrdersListQuery): Promise<Prisma.OrderWhereInpu
   const companyPart = await companyOrderWhere(input.company ?? "");
   if (companyPart) parts.push(companyPart);
 
+  const ref = (input.ref ?? "").trim();
+  if (ref) {
+    parts.push({
+      internalNotes: {
+        some: {
+          AND: [
+            { body: { startsWith: COMMERCIAL_REF_MARKER } },
+            { body: { contains: ref, mode: "insensitive" } },
+          ],
+        },
+      },
+    });
+  }
+
   const minVnd = parseVnd(input.minVnd);
   const maxVnd = parseVnd(input.maxVnd);
   if (minVnd != null || maxVnd != null) {
@@ -388,11 +407,12 @@ export async function queryAdminOrders(input: OrdersListQuery) {
         deliveredAt: firstDelivery?.createdAt ?? o.completedAt,
       },
       companyLabel: "",
+      commercialLabel: null,
     };
   });
 
   return {
-    rows: await attachCompanyLabels(rows),
+    rows: await attachCommercialLabels(await attachCompanyLabels(rows)),
     total,
     page,
     pageSize,
@@ -420,6 +440,33 @@ async function attachCompanyLabels(
     ...r,
     companyLabel:
       byEmail.get(r.email.toLowerCase()) ?? emailDomain(r.email) ?? "—",
+  }));
+}
+
+async function attachCommercialLabels(
+  rows: AdminOrderListRow[],
+): Promise<AdminOrderListRow[]> {
+  const ids = rows.map((r) => r.id);
+  if (ids.length === 0) return rows;
+  const notes = await prisma.orderNote.findMany({
+    where: {
+      orderId: { in: ids },
+      body: { startsWith: COMMERCIAL_REF_MARKER },
+    },
+    orderBy: { createdAt: "desc" },
+    select: { orderId: true, body: true, createdAt: true },
+  });
+  const byOrder = new Map<string, { body: string; createdAt: Date }[]>();
+  for (const n of notes) {
+    const list = byOrder.get(n.orderId) ?? [];
+    list.push(n);
+    byOrder.set(n.orderId, list);
+  }
+  return rows.map((r) => ({
+    ...r,
+    commercialLabel: commercialRefLabel(
+      latestCommercialRef(byOrder.get(r.id) ?? []),
+    ),
   }));
 }
 
@@ -597,6 +644,7 @@ export function parseOrdersSearchParams(
     minVnd: one("minVnd") ?? "",
     maxVnd: one("maxVnd") ?? "",
     company: one("company") ?? "",
+    ref: one("ref") ?? "",
     page: Math.max(1, Number(one("page") ?? 1) || 1),
     pageSize,
   };

@@ -21,7 +21,7 @@ Thay đổi abstraction Product / Order / Payment / Fulfillment đã freeze → 
 
 ---
 
-## Hiện trạng (sau B3.2)
+## Hiện trạng (sau B4.1)
 
 | Có | Không |
 |----|--------|
@@ -29,6 +29,7 @@ Thay đổi abstraction Product / Order / Payment / Fulfillment đã freeze → 
 | Admin heuristic domain/tên lead | Auto-join từ email domain |
 | Organization + Membership (staff gán tay) | Pin Order vào org (B3.3) |
 | Portal: Order/license account **+ peer ACTIVE cùng org** | Share tickets / domain auth |
+| HĐ/PO staff qua `OrderNote` (ADR-009) | Cột `poNumber` trên Order; `CommercialAgreement` |
 
 ---
 
@@ -93,15 +94,11 @@ Thay đổi abstraction Product / Order / Payment / Fulfillment đã freeze → 
 **Trigger A (reference):** ops cần số HĐ/PO trên **một** Order.  
 **Trigger B (agreement):** một khung thương mại **nhiều Order** hoặc term/lifecycle riêng (hiệu lực, renew, thanh toán theo kỳ).
 
-### B4.1 Reference trên Order (ưu tiên đầu)
+### B4.1 Reference trên Order — **ADR-009, đã implement (OrderNote)**
 
-| | |
-|--|--|
-| **Schema** | Field tham chiếu trên **Order** (vd. `poNumber`, `contractRef`) = **đụng Core Order**. |
-| **Migration** | **Cấm** cho đến khi ADR PASS. Tạm thời: `OrderNote` (staff) — Outer, không schema Order. |
-| **API** | Admin ghi/đọc reference. Không API “ký HĐ”. |
-| **State** | **Không** thêm Order status. PAID/COMPLETED giữ ADR-004/005. |
-| **ADR** | **Bắt buộc** trước khi thêm cột Order. |
+Staff ghi số PO/HĐ bằng `OrderNote` marker `[KEYON-COMMERCIAL]`. **Không** cột Order. Chi tiết: `docs/adr/ADR-009-order-commercial-ref.md`.
+
+Cột `poNumber`/`contractRef` trên Order = B4.1b, **sau ADR + migrate** nếu cần index.
 
 ### B4.2 CommercialAgreement
 
@@ -146,7 +143,7 @@ B1 intake (lead)
  → B2 admin heuristic (suggestion only)
  → B3.1 Org + Membership
  → B3.2 org-scoped access (ADR-008, xong)
- → B4.1 Order reference (ADR) hoặc OrderNote tạm
+ → B4.1 Order reference (ADR-009 OrderNote, xong)
  → B4.2 CommercialAgreement khi đủ trigger (ADR)
  → B5 service SKU (Pool cấm; ADR nếu đổi enum)
 ```

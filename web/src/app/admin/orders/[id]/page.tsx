@@ -19,6 +19,12 @@ import {
 import { CancelOrderButton } from "../cancel-button";
 import { CopyTextButton } from "../copy-button";
 import { OrderNotesForm } from "../order-notes-form";
+import { CommercialRefForm } from "../commercial-ref-form";
+import {
+  commercialRefLabel,
+  latestCommercialRef,
+  parseCommercialRefNote,
+} from "@/server/admin/commercial-ref";
 import { ResendDeliverableButton } from "../resend-deliverable-button";
 import {
   ADMIN_PAGE_TITLE_CLASS,
@@ -254,6 +260,9 @@ export default async function AdminOrderDetailPage({
     ["WAITING_HUMAN", "WAITING_STOCK", "FAILED"].includes(j.status),
   );
 
+  const commercial = latestCommercialRef(order.internalNotes);
+  const commercialLabel = commercialRefLabel(commercial);
+
   const licenses = order.items.flatMap((item) => [
     ...item.reservedLicenses.map((l) => ({
       ...l,
@@ -280,6 +289,7 @@ export default async function AdminOrderDetailPage({
               {order.email}
               {order.user?.name ? ` · ${order.user.name}` : ""} ·{" "}
               {order.createdAt.toLocaleString("vi-VN")}
+              {commercialLabel ? ` · ${commercialLabel}` : ""}
             </p>
             <div className="mt-2">
               <DualStatus payment={payUi} fulfillment={fulfillUi} />
@@ -310,6 +320,7 @@ export default async function AdminOrderDetailPage({
               ["payment", "Payment"],
               ["delivery", "Delivery"],
               ["license", "License"],
+              ["commercial", "HĐ / PO"],
               ["notes", "Notes"],
               ["audit", "Audit"],
             ] as const
@@ -513,21 +524,40 @@ export default async function AdminOrderDetailPage({
         </Panel>
 
         <div className="space-y-4">
+          <Panel id="commercial" title="HĐ / PO (tham chiếu)">
+            <CommercialRefForm
+              orderId={order.id}
+              poNumber={commercial?.poNumber ?? ""}
+              contractRef={commercial?.contractRef ?? ""}
+            />
+          </Panel>
           <Panel id="notes" title="Notes (nội bộ)">
             <OrderNotesForm orderId={order.id} />
             <ul className="mt-4 space-y-3 border-t border-border pt-4">
               {order.internalNotes.length === 0 ? (
                 <li className="text-sm text-muted">Chưa có ghi chú.</li>
               ) : (
-                order.internalNotes.map((n) => (
-                  <li key={n.id} className="text-sm">
-                    <p className="whitespace-pre-wrap text-navy">{n.body}</p>
-                    <p className="mt-1 text-xs text-muted">
-                      {n.author?.name || n.author?.email || "Staff"} ·{" "}
-                      {n.createdAt.toLocaleString("vi-VN")}
-                    </p>
-                  </li>
-                ))
+                order.internalNotes.map((n) => {
+                  const tagged = parseCommercialRefNote(n.body);
+                  return (
+                    <li key={n.id} className="text-sm">
+                      {tagged ? (
+                        <p className="text-navy">
+                          <span className="mr-1.5 rounded-full border border-border px-2 py-0.5 text-[11px] font-semibold text-muted">
+                            HĐ/PO
+                          </span>
+                          {commercialRefLabel(tagged)}
+                        </p>
+                      ) : (
+                        <p className="whitespace-pre-wrap text-navy">{n.body}</p>
+                      )}
+                      <p className="mt-1 text-xs text-muted">
+                        {n.author?.name || n.author?.email || "Staff"} ·{" "}
+                        {n.createdAt.toLocaleString("vi-VN")}
+                      </p>
+                    </li>
+                  );
+                })
               )}
             </ul>
           </Panel>

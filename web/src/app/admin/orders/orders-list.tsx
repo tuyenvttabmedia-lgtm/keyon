@@ -211,6 +211,14 @@ export function OrdersList({ rows }: { rows: AdminOrderListRow[] }) {
                         Gợi ý: {o.companyLabel}
                       </span>
                     ) : null}
+                    {o.commercialLabel ? (
+                      <span
+                        className="max-w-[180px] truncate"
+                        title="Tham chiếu HĐ/PO trên ghi chú nội bộ, không phải cột Order"
+                      >
+                        {o.commercialLabel}
+                      </span>
+                    ) : null}
                     <span className="inline-flex items-center gap-1">
                       <Icon name="time" className="h-3 w-3" />
                       {formatTime(o.createdAt)}
