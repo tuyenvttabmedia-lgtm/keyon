@@ -8,6 +8,7 @@ import type { UserRole } from "@prisma/client";
 import type { LucideIcon } from "lucide-react";
 import {
   Activity,
+  Building2,
   Bell,
   Boxes,
   CreditCard,
@@ -67,6 +68,7 @@ const GROUPS: NavGroup[] = [
       { href: "/admin/orders", label: "Đơn hàng", match: "prefix", icon: ShoppingCart },
       { href: "/admin/inbox", label: "Inbox", match: "prefix", icon: Inbox },
       { href: "/admin/customers", label: "Khách hàng", match: "prefix", icon: Users },
+      { href: "/admin/organizations", label: "Tổ chức", match: "prefix", icon: Building2 },
       { href: "/admin/payments", label: "Thanh toán", match: "prefix", icon: CreditCard },
       { href: "/admin/tickets", label: "Hỗ trợ", match: "prefix", icon: LifeBuoy },
       {

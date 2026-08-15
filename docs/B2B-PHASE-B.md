@@ -21,14 +21,14 @@ Thay đổi abstraction Product / Order / Payment / Fulfillment đã freeze → 
 
 ---
 
-## Hiện trạng (sau B1–B2)
+## Hiện trạng (sau B3.1)
 
 | Có | Không |
 |----|--------|
-| `QuoteRequest.companyName` (lead) | Organization, Membership |
-| Admin lọc Order theo domain / tên lead (**gợi ý**) | `organizationId` trên Quote hoặc Order |
-| Portal: Order theo account | Company-wide access |
-| Order / Payment / Fulfillment / Pool như ADR | Contract table, ServiceOrder |
+| `QuoteRequest.companyName` (lead) | `organizationId` trên Quote / Order |
+| Admin heuristic domain/tên lead | Company-wide portal access |
+| **Organization + Membership (staff gán tay)** | Auto-join từ email domain |
+| Portal: Order theo account | B3.2 org-scoped Order/license |
 
 ---
 

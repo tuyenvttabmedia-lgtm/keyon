@@ -14,6 +14,18 @@ enum UserRole {
   CS
 }
 
+/// B3.1 org membership — not staff UserRole. Does not grant Order access (B3.2).
+enum OrganizationMembershipRole {
+  OWNER
+  MEMBER
+}
+
+enum OrganizationMembershipStatus {
+  INVITED
+  ACTIVE
+  DISABLED
+}
+
 enum LicenseModel {
   PERPETUAL
   SUBSCRIPTION
@@ -130,6 +142,34 @@ model User {
   tickets       SupportTicket[]
   authSessions  AuthSession[]
   totpBackupCodes TotpBackupCode[]
+  organizationMemberships OrganizationMembership[]
+}
+
+/// B2B legal entity — staff-created. Never inferred from email domain (ADR-007).
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  taxId     String?
+  note      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships OrganizationMembership[]
+}
+
+model OrganizationMembership {
+  id             String                         @id @default(cuid())
+  organizationId String
+  organization   Organization                   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User                           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           OrganizationMembershipRole     @default(MEMBER)
+  status         OrganizationMembershipStatus   @default(ACTIVE)
+  createdAt      DateTime                       @default(now())
+  updatedAt      DateTime                       @updatedAt
+
+  @@unique([organizationId, userId])
+  @@index([userId, status])
 }
 
 /// Browser/device session registry (JWT jti ↔ row).

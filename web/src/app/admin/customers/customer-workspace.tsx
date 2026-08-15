@@ -127,6 +127,12 @@ export function CustomerWorkspace({ data }: { data: CustomerWorkspaceData }) {
               Đơn (gợi ý domain)
             </Link>
           ) : null}
+          <Link
+            href={`/admin/organizations/new?email=${encodeURIComponent(user.email)}`}
+            className="rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-navy hover:bg-navy-soft"
+          >
+            Gán tổ chức
+          </Link>
         </div>
       </div>
 
@@ -134,6 +140,7 @@ export function CustomerWorkspace({ data }: { data: CustomerWorkspaceData }) {
         {(
           [
             ["profile", "Profile"],
+            ["orgs", "Tổ chức"],
             ["licenses", "Licenses"],
             ["orders", "Orders"],
             ["payments", "Payments"],
@@ -223,6 +230,38 @@ export function CustomerWorkspace({ data }: { data: CustomerWorkspaceData }) {
           )}
         </Panel>
       </div>
+
+      <Panel
+        id="orgs"
+        title="Tổ chức (membership)"
+        action={
+          <Link
+            href={`/admin/organizations/new?email=${encodeURIComponent(user.email)}`}
+            className={`${LINK_ACCENT_CLASS} text-xs`}
+          >
+            Tạo / gán
+          </Link>
+        }
+      >
+        {data.organizations.length === 0 ? (
+          <p className={`text-sm ${BODY_MUTED_CLASS}`}>
+            Chưa gán org. Membership không cho xem đơn của thành viên khác.
+          </p>
+        ) : (
+          <ul className="space-y-2 text-sm">
+            {data.organizations.map((o) => (
+              <li key={o.id} className="flex flex-wrap items-center justify-between gap-2">
+                <Link href={`/admin/organizations/${o.id}`} className={LINK_ACCENT_CLASS}>
+                  {o.name}
+                </Link>
+                <span className="text-xs text-muted">
+                  {o.role} · {o.status}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Panel>
 
       <Panel
         id="licenses"

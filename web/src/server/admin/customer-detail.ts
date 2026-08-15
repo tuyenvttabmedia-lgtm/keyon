@@ -75,6 +75,12 @@ export type CustomerWorkspaceData = {
     createdAt: string;
     adminNote: string | null;
   }[];
+  organizations: {
+    id: string;
+    name: string;
+    role: string;
+    status: string;
+  }[];
   orderNotes: {
     id: string;
     orderId: string;
@@ -182,6 +188,14 @@ export async function loadCustomerWorkspace(
       _max: { paidAt: true, completedAt: true, createdAt: true },
     }),
   ]);
+
+  const memberships = await prisma.organizationMembership
+    .findMany({
+      where: { userId: id },
+      orderBy: { createdAt: "desc" },
+      include: { organization: { select: { id: true, name: true } } },
+    })
+    .catch(() => []);
 
   const orderIds = orders.map((o) => o.id);
   let rawNotes: {
@@ -374,6 +388,12 @@ export async function loadCustomerWorkspace(
       status: t.status,
       createdAt: t.createdAt.toISOString(),
       adminNote: t.adminNote,
+    })),
+    organizations: memberships.map((m) => ({
+      id: m.organization.id,
+      name: m.organization.name,
+      role: m.role,
+      status: m.status,
     })),
     orderNotes,
     timeline,

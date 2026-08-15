@@ -28,6 +28,7 @@ Tài liệu = hợp đồng. Code phải chứng minh hợp đồng (exit tests)
 | [ADR-004](./ADR-004-payment-domain.md) | Payment Domain | **Frozen** (implement SePay theo ADR) |
 | [ADR-005](./ADR-005-fulfillment-strategy.md) | Fulfillment Strategy | **Frozen** |
 | [ADR-006](./ADR-006-storefront-ia.md) | Storefront IA / Navigation (NAV-01…05) | **Accepted** (Phase 1+2) |
+| [ADR-007](./ADR-007-organization-membership.md) | Organization + Membership (B3.1) | **Accepted** — không đụng Order/Pool |
 
 Chi tiết dài: `LICENSE-POOL-v1.md`, `INVENTORY-READ-MODEL-v1.md`, `PAYMENT-ARCHITECTURE-v1.md`.
 
