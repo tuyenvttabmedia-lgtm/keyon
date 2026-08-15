@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { resendDelivery } from "@/server/fulfillment";
 import { toErrorResponse } from "@/lib/errors";
 import { rateLimit } from "@/lib/rate-limit";
+import { customerCanAccessOrder } from "@/server/org/customer-order-access";
 
 const schema = z.object({ deliveryId: z.string().min(1) });
 
@@ -34,9 +35,10 @@ export async function POST(req: Request) {
     }
 
     const order = delivery.orderItem.order;
-    const ownsOrder =
-      (order.userId && order.userId === session.id) ||
-      order.email.toLowerCase() === session.email.toLowerCase();
+    const ownsOrder = await customerCanAccessOrder(
+      { id: session.id, email: session.email },
+      order,
+    );
     if (!ownsOrder && !isStaff(session.role)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }

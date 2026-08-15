@@ -9,6 +9,11 @@ import {
 } from "@/storefront/components/account/OrdersView";
 import { orderListStatus } from "@/storefront/lib/order-list-status";
 import { parseStringList } from "@/storefront/lib/product-cms";
+import {
+  isSharedOrgOrder,
+  loadOrgPeerAccounts,
+  orderWhereForActor,
+} from "@/server/org/customer-order-access";
 
 export const dynamic = "force-dynamic";
 
@@ -28,9 +33,10 @@ export default async function OrdersPage() {
   const session = await readSession();
   if (!session) redirect("/login");
 
-  const where = {
-    OR: [{ userId: session.id }, { email: session.email }],
-  };
+  const actor = { id: session.id, email: session.email };
+  const peers = await loadOrgPeerAccounts(session.id);
+  const where = orderWhereForActor(actor, peers);
+  const hasOrgShare = peers.userIds.some((id) => id !== session.id);
 
   const [cmsRaw, orders, quote] = await Promise.all([
     readJsonFile("account.json", defaultCmsAccount),
@@ -87,6 +93,7 @@ export default async function OrdersPage() {
       paymentMethodLabel: paymentMethodLabel(payment?.provider),
       paymentReference:
         payment?.providerTransactionId || payment?.paymentReference || null,
+      sharedOrg: isSharedOrgOrder(actor, o),
     };
   });
 
@@ -95,6 +102,7 @@ export default async function OrdersPage() {
       cms={cms}
       items={items}
       companyName={quote?.companyName?.trim() || null}
+      hasOrgShare={hasOrgShare}
     />
   );
 }

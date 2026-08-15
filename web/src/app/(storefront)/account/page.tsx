@@ -14,6 +14,7 @@ import {
 } from "@/storefront/components/account/OverviewView";
 import { orderListStatus } from "@/storefront/lib/order-list-status";
 import { parseStringList } from "@/storefront/lib/product-cms";
+import { customerOrderWhere } from "@/server/org/customer-order-access";
 
 export const dynamic = "force-dynamic";
 
@@ -32,9 +33,10 @@ export default async function AccountOverviewPage() {
   const session = await readSession();
   if (!session) redirect("/login");
 
-  const where = {
-    OR: [{ userId: session.id }, { email: session.email }],
-  };
+  const where = await customerOrderWhere({
+    id: session.id,
+    email: session.email,
+  });
 
   const [cmsRaw, orders, deliveries, notifications] = await Promise.all([
     readJsonFile("account.json", defaultCmsAccount),

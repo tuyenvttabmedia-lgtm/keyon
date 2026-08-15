@@ -14,6 +14,7 @@ import { receiveFromDeliverable } from "@/storefront/lib/customer-labels";
 import { parseStringList } from "@/storefront/lib/product-cms";
 import { CATEGORY_LABELS } from "@/storefront/components/shop/shop-utils";
 import type { ShopCategoryId } from "@/storefront/components/shop/types";
+import { customerOrderWhere } from "@/server/org/customer-order-access";
 
 export const dynamic = "force-dynamic";
 
@@ -37,14 +38,17 @@ export default async function AssetsPage() {
   const session = await readSession();
   if (!session) redirect("/login");
 
+  const orderWhere = await customerOrderWhere({
+    id: session.id,
+    email: session.email,
+  });
+
   const [cmsRaw, deliveries] = await Promise.all([
     readJsonFile("account.json", defaultCmsAccount),
     prisma.delivery.findMany({
       where: {
         orderItem: {
-          order: {
-            OR: [{ userId: session.id }, { email: session.email }],
-          },
+          order: orderWhere,
         },
       },
       orderBy: { createdAt: "desc" },

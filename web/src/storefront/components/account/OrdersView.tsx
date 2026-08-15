@@ -66,6 +66,7 @@ export type OrderListItem = {
   quantity: number;
   paymentMethodLabel: string;
   paymentReference: string | null;
+  sharedOrg?: boolean;
 };
 
 type SpendPeriod = "12m" | "6m" | "all";
@@ -74,10 +75,12 @@ export function OrdersView({
   cms,
   items,
   companyName = null,
+  hasOrgShare = false,
 }: {
   cms: AccountCopy;
   items: OrderListItem[];
   companyName?: string | null;
+  hasOrgShare?: boolean;
 }) {
   const [tab, setTab] = useState<OrderListTab>("all");
   const [query, setQuery] = useState("");
@@ -173,9 +176,13 @@ export function OrdersView({
         <div className="min-w-0 lg:max-w-[20rem]">
           <h1 className={PAGE_TITLE_CLASS}>{cms.ordersPageTitle}</h1>
           <p className={`mt-1.5 ${SECTION_LEAD_CLASS}`}>
-            {companyName
-              ? `Đơn của tài khoản này. “${companyName}” chỉ là tên trên yêu cầu báo giá (lead), không phải công ty dùng chung đơn.`
-              : cms.ordersPageLead}
+            {hasOrgShare
+              ? companyName
+                ? `Đơn của bạn và thành viên ACTIVE cùng tổ chức. “${companyName}” trên báo giá không cấp quyền xem đơn.`
+                : "Đơn của bạn và thành viên ACTIVE cùng tổ chức. Cùng domain email không đủ để xem đơn chung."
+              : companyName
+                ? `Đơn của tài khoản này. “${companyName}” chỉ là tên trên yêu cầu báo giá (lead), không phải công ty dùng chung đơn.`
+                : cms.ordersPageLead}
           </p>
         </div>
         <section className={`${CARD} w-fit max-w-full shrink-0 !px-4 !py-3`}>
@@ -506,6 +513,9 @@ function OrderRow({
             {item.statusLabel}
           </span>
           <p className={`mt-1 truncate ${CARD_META_CLASS}`}>{item.statusSub}</p>
+          {item.sharedOrg ? (
+            <p className={`mt-0.5 truncate ${CARD_META_CLASS}`}>Tổ chức</p>
+          ) : null}
         </div>
 
         <div className="flex min-w-0 items-center justify-end">

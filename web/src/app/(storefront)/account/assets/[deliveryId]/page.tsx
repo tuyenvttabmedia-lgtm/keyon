@@ -19,6 +19,7 @@ import {
   SUBSECTION_TITLE_CLASS,
 } from "@/storefront/typography";
 import { CARD_PORTAL, HOVER_LINK_ACCENT } from "@/storefront/effects";
+import { customerCanAccessOrder } from "@/server/org/customer-order-access";
 
 export const dynamic = "force-dynamic";
 
@@ -51,7 +52,11 @@ export default async function AssetDetailPage({
   const order = delivery.orderItem.order;
   const staff = isStaff(session.role);
   const allowed =
-    staff || order.userId === session.id || order.email === session.email;
+    staff ||
+    (await customerCanAccessOrder(
+      { id: session.id, email: session.email },
+      order,
+    ));
   if (!allowed) redirect("/account/assets");
 
   const owner = await prisma.user.findUnique({

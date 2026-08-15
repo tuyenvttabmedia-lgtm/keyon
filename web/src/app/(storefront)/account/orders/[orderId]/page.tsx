@@ -12,6 +12,7 @@ import { resolveAccountCopy } from "@/storefront/lib/account-cms";
 import { mergeCheckoutCms } from "@/storefront/lib/checkout-cms";
 import { parseStringList } from "@/storefront/lib/product-cms";
 import { buildCustomerOrderTimeline } from "@/storefront/lib/order-timeline";
+import { customerCanAccessOrder } from "@/server/org/customer-order-access";
 
 export const dynamic = "force-dynamic";
 
@@ -45,7 +46,11 @@ export default async function OrderDetailPage({
 
   const staff = isStaff(session.role);
   const allowed =
-    staff || order.userId === session.id || order.email === session.email;
+    staff ||
+    (await customerCanAccessOrder(
+      { id: session.id, email: session.email },
+      order,
+    ));
   if (!allowed) redirect("/account/orders");
 
   const owner = await prisma.user.findUnique({

@@ -13,7 +13,7 @@ Thay đổi abstraction Product / Order / Payment / Fulfillment đã freeze → 
 
 1. **QuoteRequest = lead.** `companyName` (và tương đương Business Request) là dữ liệu lead. Không giả định Organization. **Không** thêm `organizationId` khi chưa có Org domain.
 2. **Admin heuristic ≠ identity.** Email domain + `QuoteRequest.companyName` chỉ để **tìm / hiển thị gợi ý**. Cấm dùng cho authorization hoặc customer data access.
-3. **Customer portal = account scope.** Chỉ Order của chính `userId` / email tài khoản. Không “cùng domain xem chung đơn”.
+3. **Customer portal mặc định = account scope.** Share đơn/license chỉ qua membership ACTIVE (ADR-008). Không “cùng domain xem chung đơn”.
 4. **Org trước, access sau.** Nhiều user một doanh nghiệp → `Organization` + `OrganizationMembership` **trước**. Đó là nền bắt buộc trước company-wide order/license access.
 5. **HĐ/PO không thay Order.** Đầu: metadata reference gắn Order nếu chỉ cần số HĐ/PO. `CommercialAgreement` chỉ khi một agreement **liên kết nhiều Order** hoặc có lifecycle/term riêng.
 6. **Service SKU không dùng License Pool.** Tái sử dụng Order + Payment; fulfillment manual/service. **Không** `ServiceOrder` / `ServicePayment` song song.
@@ -21,14 +21,14 @@ Thay đổi abstraction Product / Order / Payment / Fulfillment đã freeze → 
 
 ---
 
-## Hiện trạng (sau B3.1)
+## Hiện trạng (sau B3.2)
 
 | Có | Không |
 |----|--------|
 | `QuoteRequest.companyName` (lead) | `organizationId` trên Quote / Order |
-| Admin heuristic domain/tên lead | Company-wide portal access |
-| **Organization + Membership (staff gán tay)** | Auto-join từ email domain |
-| Portal: Order theo account | B3.2 org-scoped Order/license |
+| Admin heuristic domain/tên lead | Auto-join từ email domain |
+| Organization + Membership (staff gán tay) | Pin Order vào org (B3.3) |
+| Portal: Order/license account **+ peer ACTIVE cùng org** | Share tickets / domain auth |
 
 ---
 
@@ -80,9 +80,9 @@ Thay đổi abstraction Product / Order / Payment / Fulfillment đã freeze → 
 | **State** | Membership status (invited/active) — **không** phải Order state. |
 | **ADR** | **Có ADR mới** (identity/B2B), vì đây là mô hình ủy quyền. **Không** sửa ADR-002…005. |
 
-### B3.2 Company-wide order/license access (sau B3.1)
+### B3.2 Company-wide order/license access — **ADR-008, đã implement**
 
-Gắn `Order.organizationId` / đọc license theo org = **đụng Order + quyền trên deliverable** → **dừng**, ADR (có thể amend phạm vi Order access, không đổi máy trạng thái Order nếu không cần).
+Đọc Order/license theo membership ACTIVE. **Không** `Order.organizationId`. Chi tiết: `docs/adr/ADR-008-org-order-access.md`.
 
 **Cấm:** suy ra membership từ domain; gắn `organizationId` lên QuoteRequest “cho tiện”.
 
@@ -135,7 +135,7 @@ Chỉ khi Trigger B.
 
 1. Có đụng Core Stable besides Outer / bugfix có bằng chứng? → Reject hoặc ADR.  
 2. Heuristic domain/companyName có lọt sang authorization? → Reject.  
-3. Portal có đọc Order ngoài account? → Reject (trừ sau B3.2 + ADR).  
+3. Portal có đọc Order ngoài account? → Chỉ qua ADR-008 membership ACTIVE; domain = Reject.  
 4. Có ServiceOrder/ServicePayment/Contract-as-Order? → Reject.  
 5. Có migrate trước ADR khi đụng abstraction freeze? → Reject.
 
@@ -145,7 +145,7 @@ Chỉ khi Trigger B.
 B1 intake (lead)
  → B2 admin heuristic (suggestion only)
  → B3.1 Org + Membership
- → B3.2 org-scoped access (ADR)
+ → B3.2 org-scoped access (ADR-008, xong)
  → B4.1 Order reference (ADR) hoặc OrderNote tạm
  → B4.2 CommercialAgreement khi đủ trigger (ADR)
  → B5 service SKU (Pool cấm; ADR nếu đổi enum)
