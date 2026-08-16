@@ -144,10 +144,10 @@ export function HowItWorksJourney({
           go(index - 1);
         }
       }}
-      className={`overflow-hidden rounded-2xl border border-border bg-white outline-none ${ELEVATION_HAIRLINE}`}
+      className={`flex flex-col overflow-hidden rounded-2xl border border-border bg-white outline-none ${ELEVATION_HAIRLINE}`}
     >
-      <div className="grid lg:grid-cols-[minmax(240px,300px)_minmax(0,1fr)]">
-        <aside className="bg-gradient-to-br from-[#0b1f33] via-[#102a43] to-accent px-6 py-8 text-white md:px-7">
+      <div className="grid min-h-0 flex-1 lg:grid-cols-[minmax(240px,300px)_minmax(0,1fr)] lg:grid-rows-1 lg:items-stretch">
+        <aside className="flex flex-col bg-gradient-to-br from-[#0b1f33] via-[#102a43] to-accent px-6 py-8 text-white md:px-7">
           <p className={`${OVERLINE_CLASS} text-accent-soft`}>Hành trình mua</p>
           <TitleTag className={`mt-3 ${SECTION_TITLE_CLASS} !text-white`}>
             {title}
@@ -203,7 +203,7 @@ export function HowItWorksJourney({
             })}
           </div>
 
-          <div className="mt-6 flex flex-wrap gap-2">
+          <div className="mt-auto flex flex-wrap gap-2 pt-6">
             <button
               type="button"
               aria-pressed={playing}
@@ -222,9 +222,9 @@ export function HowItWorksJourney({
           </div>
         </aside>
 
-        <div className="overflow-hidden bg-surface">
+        <div className="relative min-h-[420px] overflow-hidden bg-surface lg:min-h-0 lg:self-stretch">
           <div
-            className={`flex ${TRANSITION_PANEL}`}
+            className={`flex min-h-[420px] ${TRANSITION_PANEL} lg:absolute lg:inset-0 lg:min-h-0`}
             style={{
               width: `${STEP_COUNT * 100}%`,
               transform: `translateX(-${(index * 100) / STEP_COUNT}%)`,
@@ -233,11 +233,11 @@ export function HowItWorksJourney({
             {STEPS.map((s, i) => (
               <article
                 key={s.tab}
-                className="grid shrink-0 gap-6 p-6 md:grid-cols-[minmax(0,1.05fr)_minmax(200px,0.95fr)] md:items-center md:p-8"
+                className="grid h-full shrink-0 gap-6 p-6 md:grid-cols-[minmax(0,1.05fr)_minmax(200px,0.95fr)] md:items-stretch md:p-8"
                 style={{ width: `${100 / STEP_COUNT}%` }}
                 aria-hidden={i !== index}
               >
-                <div>
+                <div className="flex flex-col justify-center">
                   <p className={`${OVERLINE_CLASS} text-accent`}>{s.eyebrow}</p>
                   <h2 className={`mt-2 ${SECTION_TITLE_CLASS}`}>{s.title}</h2>
                   <p className={`mt-3 max-w-[36ch] ${BODY_MUTED_CLASS}`}>{s.desc}</p>
@@ -254,7 +254,7 @@ export function HowItWorksJourney({
                   </div>
                 </div>
                 <div
-                  className={`relative min-h-[220px] overflow-hidden rounded-2xl border border-border bg-white p-4 ${ELEVATION_HAIRLINE}`}
+                  className={`relative flex h-full min-h-[220px] flex-col overflow-hidden rounded-2xl border border-border bg-white p-4 ${ELEVATION_HAIRLINE}`}
                   aria-hidden
                 >
                   <span
@@ -307,7 +307,7 @@ export function HowItWorksJourney({
 function StepVisual({ step }: { step: number }) {
   if (step === 1) {
     return (
-      <div className="relative z-[1] space-y-3">
+      <div className="relative z-[1] flex h-full flex-1 flex-col justify-center space-y-3">
         <div className="flex items-center justify-between gap-2">
           <p className={CARD_TITLE_CLASS}>Thanh toán đơn</p>
           <span className={`${BADGE_CLASS} rounded-full bg-accent-soft px-2 py-0.5 text-accent`}>
@@ -324,7 +324,7 @@ function StepVisual({ step }: { step: number }) {
   }
   if (step === 2) {
     return (
-      <div className="relative z-[1] space-y-3">
+      <div className="relative z-[1] flex h-full flex-1 flex-col justify-center space-y-3">
         <div className="flex items-center justify-between gap-2">
           <p className={CARD_TITLE_CLASS}>Tài sản · License</p>
           <span className={`${BADGE_CLASS} rounded-full bg-accent-soft px-2 py-0.5 text-accent`}>
@@ -347,7 +347,7 @@ function StepVisual({ step }: { step: number }) {
     );
   }
   return (
-    <div className="relative z-[1] space-y-3">
+    <div className="relative z-[1] flex h-full flex-1 flex-col justify-center space-y-3">
       <div className="flex items-center justify-between gap-2">
         <p className={CARD_TITLE_CLASS}>Gói trên cửa hàng</p>
         <span className={`${BADGE_CLASS} rounded-full bg-accent-soft px-2 py-0.5 text-accent`}>
