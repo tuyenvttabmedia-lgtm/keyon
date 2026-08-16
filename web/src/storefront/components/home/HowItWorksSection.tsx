@@ -1,27 +1,23 @@
-import Link from "next/link";
 import type { HomeContent } from "@/storefront/content/types";
 import { HowItWorksJourney } from "@/storefront/components/support/HowItWorksJourney";
-import { LINK_ACCENT_CLASS } from "@/storefront/typography";
 
-/**
- * Home — same 3-step journey as `/how-it-works` (mockup v2).
- */
+/** Home — 3-step journey (owner mockup: header + stepper + equal cards). */
 export function HowItWorksSection({ data }: { data: HomeContent["howItWorks"] }) {
   if (!data.visible) return null;
 
   const subtitle =
     data.subtitle ??
-    "Ba bước rõ ràng — từ chọn gói đến giữ giấy phép trong Tài khoản.";
+    "Chỉ với 3 bước đơn giản để sở hữu license chính hãng và kích hoạt nhanh chóng.";
 
   return (
-    <section id="how-it-works" className="scroll-mt-20 bg-white py-6 md:py-7 lg:py-9">
+    <section id="how-it-works" className="scroll-mt-20 bg-white py-8 md:py-10 lg:py-12">
       <div className="home-container">
-        <HowItWorksJourney heading="h2" title={data.title} lead={subtitle} />
-        <p className="mt-3 text-right">
-          <Link href="/how-it-works" className={LINK_ACCENT_CLASS}>
-            Quản lý license & hỗ trợ →
-          </Link>
-        </p>
+        <HowItWorksJourney
+          heading="h2"
+          title={data.title}
+          lead={subtitle}
+          ctaHref="/how-it-works"
+        />
       </div>
     </section>
   );

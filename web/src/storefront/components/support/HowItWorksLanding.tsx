@@ -38,7 +38,7 @@ export function HowItWorksLanding() {
 
       <section className="py-8 md:py-10 lg:py-12">
         <div className="home-container">
-          <HowItWorksJourney heading="h1" />
+          <HowItWorksJourney heading="h1" ctaHref="/account/assets" />
 
           <article
             className={`mt-4 rounded-2xl border border-border bg-white p-5 md:p-6 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
