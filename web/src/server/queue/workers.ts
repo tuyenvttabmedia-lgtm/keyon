@@ -21,6 +21,7 @@ export function startWorkers() {
         await markPaymentSucceeded({
           paymentReference: job.data.paymentReference,
           rawPayload: job.data.rawPayload,
+          amountVnd: job.data.amountVnd,
         });
       }
     },

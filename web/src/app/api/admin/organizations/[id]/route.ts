@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { isStaff, readSession } from "@/lib/auth";
-import { assertStaffCapability } from "@/lib/staff-access";
+import { assertAdminRole, assertStaffCapability } from "@/lib/staff-access";
 import { toErrorResponse } from "@/lib/errors";
 import {
   deleteOrganization,
@@ -36,7 +36,7 @@ export async function DELETE(
     if (!session || !isStaff(session.role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    assertStaffCapability(session.role, "customers", "Không có quyền xóa tổ chức");
+    assertAdminRole(session.role, "Chỉ ADMIN được xóa tổ chức");
     const { id } = await params;
     await deleteOrganization(id, session.id);
     return NextResponse.json({ ok: true });

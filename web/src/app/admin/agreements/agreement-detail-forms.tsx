@@ -43,6 +43,7 @@ export function AgreementDetailForms({
   initialNote,
   orgs,
   orders,
+  canDelete = false,
 }: {
   agreementId: string;
   initialTitle: string;
@@ -54,6 +55,7 @@ export function AgreementDetailForms({
   initialNote: string;
   orgs: OrgOpt[];
   orders: LinkedOrder[];
+  canDelete?: boolean;
 }) {
   const router = useRouter();
   const [title, setTitle] = useState(initialTitle);
@@ -281,6 +283,7 @@ export function AgreementDetailForms({
         )}
         {error ? <p className={FORM_ERROR_CLASS}>{error}</p> : null}
 
+        {canDelete ? (
         <div className="border-t border-border pt-4">
           <p className="font-semibold text-navy">Xóa khung HĐ</p>
           <p className={`mt-1 ${BODY_MUTED_CLASS}`}>
@@ -295,6 +298,7 @@ export function AgreementDetailForms({
             Xóa khung HĐ
           </button>
         </div>
+        ) : null}
       </section>
     </div>
   );

@@ -24,6 +24,7 @@ export const QUEUE_NAMES = {
 export type PaymentJobData = {
   type: "mark_succeeded";
   paymentReference: string;
+  amountVnd?: number | null;
   rawPayload?: Record<string, string | number | boolean | null>;
 };
 
@@ -67,10 +68,11 @@ export function getEmailQueue() {
 export async function enqueuePaymentSucceeded(
   paymentReference: string,
   rawPayload?: PaymentJobData["rawPayload"],
+  amountVnd?: number | null,
 ) {
   await getPaymentQueue().add(
     "mark_succeeded",
-    { type: "mark_succeeded", paymentReference, rawPayload },
+    { type: "mark_succeeded", paymentReference, rawPayload, amountVnd },
     {
       jobId: `pay_${paymentReference}`,
       removeOnComplete: 1000,

@@ -9,6 +9,7 @@ import { emitPaymentEvent } from "./events";
 import { paymentKpis } from "./kpis";
 import { childLogger } from "@/lib/logger";
 import { LicensePoolService } from "@/server/license-pool";
+import { parseVndAmount } from "./amount";
 
 const log = childLogger("payment.money");
 
@@ -80,6 +81,25 @@ export async function markPaymentSucceeded(input: MarkPaidInput | string): Promi
 
   if (existing.status === "EXPIRED" || existing.status === "CANCELLED") {
     throw new AppError(`Payment is ${existing.status}`, 409, "PAYMENT_TERMINAL");
+  }
+
+  if (existing.provider !== "stub") {
+    const paid = parseVndAmount(normalized.amountVnd);
+    if (paid == null || paid !== existing.amountVnd) {
+      log.warn(
+        {
+          paymentReference,
+          expected: existing.amountVnd,
+          got: normalized.amountVnd,
+        },
+        "reject payment — amount mismatch",
+      );
+      throw new AppError(
+        "Số tiền webhook không khớp đơn — không đánh PAID",
+        409,
+        "PAYMENT_AMOUNT_MISMATCH",
+      );
+    }
   }
 
   const payment = await prisma.$transaction(async (tx) => {

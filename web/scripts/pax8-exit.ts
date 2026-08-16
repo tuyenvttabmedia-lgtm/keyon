@@ -212,6 +212,7 @@ async function x6x7() {
     providerEventId: `pax8_evt_${Date.now()}`,
     providerTransactionId: `pax8_tx_${Date.now()}`,
     providerPaidAt: new Date(),
+    amountVnd: checkout.order.totalVnd,
   });
   await processFulfillmentForOrder(checkout.order.id);
 

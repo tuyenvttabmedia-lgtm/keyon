@@ -45,7 +45,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: true });
     }
 
-    await enqueuePaymentSucceeded(verified.paymentReference, verified.rawPayload ?? {}).catch(
+    await enqueuePaymentSucceeded(
+      verified.paymentReference,
+      verified.rawPayload ?? {},
+      verified.amountVnd,
+    ).catch(
       (err) => log.warn({ err }, "queue enqueue failed — inline fallback"),
     );
 

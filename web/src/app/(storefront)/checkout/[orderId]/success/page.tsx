@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { readSession } from "@/lib/auth";
 import { decryptPayload } from "@/lib/crypto";
 import { prisma } from "@/lib/db";
+import { customerCanAccessOrder } from "@/server/org/customer-order-access";
 import {
   defaultCmsCheckout,
   readJsonFile,
@@ -56,12 +57,28 @@ export default async function CheckoutSuccessPage({
     : null;
 
   const deliveryRow = line?.deliveries[0];
+  const paid = payment?.status === "SUCCEEDED";
   let licensePlain: string | null = null;
-  if (deliveryRow) {
-    try {
-      licensePlain = decryptPayload(deliveryRow.payloadEnc);
-    } catch {
-      licensePlain = null;
+  let licenseAccess: "ok" | "login" | "pending" = "pending";
+  if (!session) {
+    licenseAccess = "login";
+  } else if (paid) {
+    const allowed = await customerCanAccessOrder(
+      { id: session.id, email: session.email },
+      { id: order.id, userId: order.userId, email: order.email },
+    );
+    if (allowed && deliveryRow) {
+      try {
+        licensePlain = decryptPayload(deliveryRow.payloadEnc);
+        licenseAccess = "ok";
+      } catch {
+        licensePlain = null;
+        licenseAccess = "pending";
+      }
+    } else if (allowed) {
+      licenseAccess = "pending";
+    } else {
+      licenseAccess = "login";
     }
   }
 
@@ -101,6 +118,7 @@ export default async function CheckoutSuccessPage({
       paidAtLabel={paidAtLabel}
       methodTitle={methodTitle}
       licensePlain={licensePlain}
+      licenseAccess={licenseAccess}
       recommended={recommended}
       order={{
         id: order.id,

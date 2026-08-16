@@ -106,6 +106,7 @@ export async function runInternalE2E(): Promise<E2EResult> {
       providerEventId: `it7_evt_${Date.now()}`,
       providerTransactionId: `it7_tx_${Date.now()}`,
       providerPaidAt: new Date(),
+      amountVnd: checkout.order.totalVnd,
     });
     const pay = await prisma.payment.findUniqueOrThrow({
       where: { paymentReference },

@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { readSession } from "@/lib/auth";
 import { AdminPageHeader } from "../../ui/AdminPageHeader";
 import { AgreementDetailForms } from "../agreement-detail-forms";
 
@@ -16,6 +17,7 @@ export default async function AdminAgreementDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const session = await readSession();
   const [row, orgs] = await Promise.all([
     prisma.commercialAgreement.findUnique({
       where: { id },
@@ -71,6 +73,7 @@ export default async function AdminAgreementDetailPage({
           status: l.order.status,
           totalVnd: l.order.totalVnd,
         }))}
+        canDelete={session?.role === "ADMIN"}
       />
     </div>
   );

@@ -16,7 +16,7 @@ import {
   verifySepayHmacSignature,
   verifySepayPgIpnSecret,
 } from "./sepay-auth";
-import { isSepayPgIpnPayload, mapSepayPgIpn } from "./sepay-types";
+import { isSepayPgIpnPayload, mapSepayPgIpn, parseVndAmount } from "./sepay-types";
 
 function appBaseUrl(): string {
   return (process.env.NEXT_PUBLIC_APP_URL ?? "https://keyon.vn").replace(/\/$/, "");
@@ -48,7 +48,13 @@ export const sepayPaymentProvider: PaymentProvider = {
         : JSON.stringify(body);
 
     if (sepay.mode === "payment_gateway") {
-      return verifyPgIpn(input.headers, body, sepay.ipnSecretKey);
+      const hmacHeader =
+        input.headers["x-sepay-signature"] ??
+        input.headers["X-SePay-Signature"] ??
+        input.headers["X-Sepay-Signature"];
+      if (!hmacHeader) {
+        return verifyPgIpn(input.headers, body, sepay.ipnSecretKey);
+      }
     }
     return verifyBankWebhook(input.headers, body, rawBody, sepay);
   },
@@ -186,8 +192,21 @@ async function verifyBankWebhook(
 ): Promise<VerifyWebhookResult> {
   const hmacSecret = sepay.webhookSecret;
   const apiKey = sepay.apiKey;
+  const productionBank =
+    sepay.environment === "production" || process.env.NODE_ENV === "production";
 
-  if (hmacSecret) {
+  if (productionBank) {
+    if (!hmacSecret) {
+      throw new AppError(
+        "SePay production bắt buộc HMAC webhook secret — không nhận API key thuần",
+        501,
+        "PAYMENT_NOT_CONFIGURED",
+      );
+    }
+    if (!verifySepayHmacSignature(headers, rawBody, hmacSecret)) {
+      throw new AppError("Invalid SePay HMAC signature", 401, "SEPAY_SIG");
+    }
+  } else if (hmacSecret) {
     if (!verifySepayHmacSignature(headers, rawBody, hmacSecret)) {
       throw new AppError("Invalid SePay HMAC signature", 401, "SEPAY_SIG");
     }
@@ -241,10 +260,10 @@ async function verifyBankWebhook(
           : null,
     providerReference: eventId,
     providerPaidAt,
-    amountVnd: typeof data.transferAmount === "number" ? data.transferAmount : null,
+    amountVnd: parseVndAmount(data.transferAmount ?? data.transfer_amount),
     rawPayload: {
       id: eventId,
-      transferAmount: typeof data.transferAmount === "number" ? data.transferAmount : null,
+      transferAmount: parseVndAmount(data.transferAmount ?? data.transfer_amount),
       code: paymentReference,
       gateway: data.gateway != null ? String(data.gateway) : null,
       integrationMode: "bank_webhook",

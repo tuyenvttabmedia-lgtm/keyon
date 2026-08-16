@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { readSession } from "@/lib/auth";
 import { AdminPageHeader } from "../../ui/AdminPageHeader";
 import { OrgDetailForms } from "../org-detail-forms";
 
@@ -11,6 +12,7 @@ export default async function AdminOrganizationDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const session = await readSession();
   const org = await prisma.organization.findUnique({
     where: { id },
     include: {
@@ -59,6 +61,7 @@ export default async function AdminOrganizationDetailPage({
           email: l.order.email,
           status: l.order.status,
         }))}
+        canDelete={session?.role === "ADMIN"}
       />
     </div>
   );

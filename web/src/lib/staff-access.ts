@@ -77,6 +77,15 @@ export function assertStaffCapability(
   }
 }
 
+export function assertAdminRole(
+  role: UserRole,
+  message = "Chỉ ADMIN được thực hiện thao tác này",
+) {
+  if (role !== "ADMIN") {
+    throw new AppError(message, 403);
+  }
+}
+
 /** Settings / mail / payment / storage / NCC API — ADMIN only. */
 export function assertSettingsAdmin(role: UserRole) {
   assertStaffCapability(

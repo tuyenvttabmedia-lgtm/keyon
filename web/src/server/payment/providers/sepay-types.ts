@@ -1,3 +1,7 @@
+import { parseVndAmount } from "../amount";
+
+export { parseVndAmount };
+
 export type SepayPgIpnPayload = {
   timestamp?: number;
   notification_type?: string;
@@ -34,10 +38,7 @@ export function mapSepayPgIpn(payload: SepayPgIpnPayload): {
 
   const amountRaw =
     payload.order?.order_amount ?? payload.transaction?.transaction_amount ?? null;
-  const amountVnd =
-    amountRaw != null && Number.isFinite(Number(amountRaw))
-      ? Math.round(Number(amountRaw))
-      : null;
+  const amountVnd = parseVndAmount(amountRaw);
 
   const providerTransactionId = payload.transaction?.transaction_id
     ? String(payload.transaction.transaction_id)

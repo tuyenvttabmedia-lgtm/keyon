@@ -40,6 +40,7 @@ export function OrgDetailForms({
   initialNote,
   members,
   pinnedOrders,
+  canDelete = false,
 }: {
   orgId: string;
   initialName: string;
@@ -47,6 +48,7 @@ export function OrgDetailForms({
   initialNote: string;
   members: OrgMemberRow[];
   pinnedOrders: OrgPinnedOrder[];
+  canDelete?: boolean;
 }) {
   const router = useRouter();
   const [name, setName] = useState(initialName);
@@ -389,20 +391,22 @@ export function OrgDetailForms({
         )}
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-5">
-        <p className="font-semibold text-navy">Xóa tổ chức</p>
-        <p className={`mt-1 ${BODY_MUTED_CLASS}`}>
-          Gỡ membership và ghim đơn. Không xóa User, Order hay khung HĐ (khung chỉ mất liên kết org).
-        </p>
-        <button
-          type="button"
-          disabled={busy}
-          onClick={() => void deleteOrg()}
-          className={`mt-4 rounded-xl border border-danger/30 bg-white px-4 py-2 ${CTA_COMPACT_CLASS} text-danger disabled:opacity-50`}
-        >
-          Xóa tổ chức
-        </button>
-      </section>
+      {canDelete ? (
+        <section className="rounded-2xl border border-border bg-card p-5">
+          <p className="font-semibold text-navy">Xóa tổ chức</p>
+          <p className={`mt-1 ${BODY_MUTED_CLASS}`}>
+            Gỡ membership và ghim đơn. Không xóa User, Order hay khung HĐ (khung chỉ mất liên kết org).
+          </p>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => void deleteOrg()}
+            className={`mt-4 rounded-xl border border-danger/30 bg-white px-4 py-2 ${CTA_COMPACT_CLASS} text-danger disabled:opacity-50`}
+          >
+            Xóa tổ chức
+          </button>
+        </section>
+      ) : null}
     </div>
   );
 }

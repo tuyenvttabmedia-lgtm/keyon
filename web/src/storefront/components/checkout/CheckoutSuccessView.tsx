@@ -68,6 +68,7 @@ export type CheckoutSuccessViewProps = {
   isLoggedIn: boolean;
   orderDetailHref: string;
   licensePlain: string | null;
+  licenseAccess?: "ok" | "login" | "pending";
   recommended: ShopProduct[];
 };
 
@@ -80,6 +81,7 @@ export function CheckoutSuccessView({
   isLoggedIn,
   orderDetailHref,
   licensePlain,
+  licenseAccess = "pending",
   recommended,
 }: CheckoutSuccessViewProps) {
   const money = checkoutMoney(item, order.totalVnd);
@@ -157,7 +159,7 @@ export function CheckoutSuccessView({
                         {item.productName}
                         {item.variantName ? ` – ${item.variantName}` : ""}
                       </p>
-                      {licensePlain ? (
+                      {licensePlain && licenseAccess === "ok" ? (
                         <span
                           className={`rounded-full bg-accent-soft px-2.5 py-0.5 ${BADGE_CLASS} text-accent`}
                         >
@@ -176,7 +178,7 @@ export function CheckoutSuccessView({
               ) : null}
 
               <div className="mt-5">
-                {licensePlain ? (
+                {licensePlain && licenseAccess === "ok" ? (
                   <LicenseKeyReveal
                     value={licensePlain}
                     label={cms.licenseKeyLabel}
@@ -184,6 +186,14 @@ export function CheckoutSuccessView({
                     hideLabel={cms.licenseHideLabel}
                     copyLabel={cms.licenseCopyLabel}
                   />
+                ) : licenseAccess === "login" ? (
+                  <p className={`rounded-xl border border-border bg-surface px-3.5 py-3 ${BODY_MUTED_CLASS}`}>
+                    License không hiện trên trang này khi chưa đăng nhập.{" "}
+                    <Link href={orderDetailHref} className={LINK_ACCENT_CLASS}>
+                      Đăng nhập bằng email trên đơn
+                    </Link>{" "}
+                    để lấy key trong Tài khoản / Tài sản.
+                  </p>
                 ) : (
                   <p className="rounded-xl border border-amber-100 bg-amber-50 px-3.5 py-3 text-sm text-amber-900">
                     {cms.licensePendingNote}

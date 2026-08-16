@@ -125,8 +125,10 @@ async function p1() {
   });
   if (r.qrImageUrl?.includes("vietqr") && r.qrImageUrl.includes("pay_TEST_QR")) {
     pass("1", `QR created — ${r.qrImageUrl.slice(0, 60)}…`);
+  } else if (r.integrationMode === "payment_gateway" && r.checkoutUrl) {
+    pass("1", "Sandbox PG checkout (QR when environment=production)");
   } else {
-    fail("1", `qr=${r.qrImageUrl}`);
+    fail("1", `qr=${r.qrImageUrl} mode=${r.integrationMode}`);
   }
 }
 
@@ -177,6 +179,7 @@ async function p3() {
     paymentReference: ref,
     providerEventId: eventId,
     providerTransactionId: "tx1",
+    amountVnd: 50_000,
     rawPayload: { id: eventId },
   });
   await processFulfillmentForOrder(order.id);
@@ -221,6 +224,7 @@ async function p4() {
     providerEventId: `evt_flow_${Date.now()}`,
     providerTransactionId: "tx_flow",
     providerPaidAt: new Date(),
+    amountVnd: 50_000,
   });
   const pay = await prisma.payment.findUniqueOrThrow({ where: { paymentReference: ref } });
   await processFulfillmentForOrder(order.id);
@@ -294,12 +298,26 @@ async function p7() {
     quantity: 1,
   });
   const paidAt = new Date("2026-07-21T12:00:00Z");
+  let underpayBlocked = false;
+  try {
+    await markPaymentSucceeded({
+      paymentReference: ref,
+      providerEventId: `evt_low_${Date.now()}`,
+      amountVnd: 1,
+    });
+  } catch (e) {
+    underpayBlocked = e instanceof AppError && e.code === "PAYMENT_AMOUNT_MISMATCH";
+  }
+  const stillAwaiting = await prisma.payment.findUniqueOrThrow({
+    where: { paymentReference: ref },
+  });
   await markPaymentSucceeded({
     paymentReference: ref,
     providerEventId: `evt_rec_${Date.now()}`,
     providerTransactionId: "bank_tx_99",
     providerReference: "prov_ref_99",
     providerPaidAt: paidAt,
+    amountVnd: 50_000,
   });
   const pay = await prisma.payment.findUniqueOrThrow({ where: { paymentReference: ref } });
   if (
@@ -308,9 +326,11 @@ async function p7() {
     pay.providerEventId &&
     pay.providerPaidAt &&
     pay.currency === "VND" &&
-    pay.amountVnd === 50_000
+    pay.amountVnd === 50_000 &&
+    underpayBlocked &&
+    stillAwaiting.status === "AWAITING"
   ) {
-    pass("7", "Reconciliation fields populated");
+    pass("7", "Reconciliation fields + underpay blocked");
   } else {
     fail("7", JSON.stringify(pay));
   }
@@ -378,6 +398,7 @@ async function p10() {
     providerEventId: verified.providerEventId,
     providerTransactionId: verified.providerTransactionId,
     providerPaidAt: verified.providerPaidAt,
+    amountVnd: verified.amountVnd,
     rawPayload: verified.rawPayload,
   });
   await processFulfillmentForOrder(order.id);
@@ -385,7 +406,12 @@ async function p10() {
   const delivery = await prisma.delivery.findFirst({
     where: { orderItemId: order.items[0]!.id },
   });
-  if (qr.qrImageUrl && verified.success && order2.status !== "PENDING_PAYMENT" && delivery) {
+  if (
+    (qr.qrImageUrl || qr.checkoutUrl) &&
+    verified.success &&
+    order2.status !== "PENDING_PAYMENT" &&
+    delivery
+  ) {
     pass("10", `E2E QR→webhook→PAID→delivery order=${order2.status}`);
   } else {
     fail("10", `qr=${!!qr.qrImageUrl} order=${order2.status} delivery=${!!delivery}`);

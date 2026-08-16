@@ -1,4 +1,5 @@
 import { decryptPayload, encryptPayload } from "@/lib/crypto";
+import { AppError } from "@/lib/errors";
 import {
   defaultPaymentSettings,
   readJsonFile,
@@ -284,6 +285,18 @@ export async function savePaymentSettings(input: {
 
   const environment =
     input.sepay.environment === "production" ? "production" : "sandbox";
+
+  if (environment === "production") {
+    const hasHmac =
+      Boolean(webhookSecretEnc) || Boolean(process.env.SEPAY_WEBHOOK_SECRET?.trim());
+    if (!hasHmac) {
+      throw new AppError(
+        "SePay production cần HMAC webhook secret (không dùng API key thuần)",
+        400,
+        "PAYMENT_NOT_CONFIGURED",
+      );
+    }
+  }
 
   const next: PaymentSettings = {
     provider: input.provider,
