@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { HomeContent } from "@/storefront/content/types";
 import {
   IconCard,
@@ -8,6 +9,7 @@ import {
 import {
   BADGE_CLASS,
   CARD_TITLE_CLASS,
+  LINK_ACCENT_CLASS,
   OVERLINE_CLASS,
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
@@ -37,9 +39,14 @@ export function HowItWorksSection({ data }: { data: HomeContent["howItWorks"] })
   return (
     <section id="how-it-works" className="scroll-mt-20 bg-white py-6 md:py-7 lg:py-9">
       <div className="home-container">
-        <div className="mb-5 max-w-2xl lg:mb-6">
-          <h2 className={SECTION_TITLE_CLASS}>{data.title}</h2>
-          <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>{subtitle}</p>
+        <div className="mb-5 flex max-w-2xl flex-col gap-3 lg:mb-6 lg:max-w-none lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <h2 className={SECTION_TITLE_CLASS}>{data.title}</h2>
+            <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>{subtitle}</p>
+          </div>
+          <Link href="/how-it-works" className={`${LINK_ACCENT_CLASS} shrink-0`}>
+            Xem hành trình →
+          </Link>
         </div>
 
         <div className="relative">

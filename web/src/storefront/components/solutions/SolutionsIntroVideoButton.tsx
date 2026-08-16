@@ -26,7 +26,7 @@ export function SolutionsIntroVideoButton({ embedUrl }: Props) {
   if (!embedUrl) {
     return (
       <Link
-        href="/#how-it-works"
+        href="/how-it-works"
         className={`inline-flex h-11 items-center justify-center rounded-xl border border-border bg-white px-5 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
       >
         Xem cách KEYON hoạt động
