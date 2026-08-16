@@ -71,30 +71,32 @@ export function HowItWorksJourney({
   const CardHeading = heading === "h1" ? "h2" : "h3";
 
   return (
-    <section aria-label="Cách KEYON hoạt động" className="flex flex-col gap-8 md:gap-10">
-      <header className="mx-auto max-w-2xl text-center">
-        <p className={`${OVERLINE_CLASS} text-accent`}>{kicker}</p>
-        <TitleTag className={`mt-2 ${SECTION_TITLE_CLASS}`}>{title}</TitleTag>
-        <p className={`mx-auto mt-3 max-w-[46ch] ${SECTION_LEAD_CLASS}`}>{lead}</p>
-      </header>
+    <section aria-label="Cách KEYON hoạt động" className="flex flex-col gap-6 md:gap-8">
+      <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-10">
+        <header>
+          <p className={`${OVERLINE_CLASS} text-accent`}>{kicker}</p>
+          <TitleTag className={`mt-2 ${SECTION_TITLE_CLASS}`}>{title}</TitleTag>
+          <p className={`mt-3 max-w-[46ch] ${SECTION_LEAD_CLASS}`}>{lead}</p>
+        </header>
 
-      <ol className="relative mx-auto grid w-full max-w-3xl grid-cols-3 gap-2">
-        <span
-          className="pointer-events-none absolute left-[16.5%] right-[16.5%] top-5 border-t border-dashed border-border"
-          aria-hidden
-        />
-        {STEPS.map((s, i) => (
-          <li key={s.tab} className="relative z-[1] flex flex-col items-center text-center">
-            <span
-              className={`inline-flex h-10 w-10 items-center justify-center rounded-full bg-accent text-white ${CTA_COMPACT_CLASS}`}
-            >
-              {String(i + 1).padStart(2, "0")}
-            </span>
-            <p className={`mt-3 ${CARD_TITLE_CLASS}`}>{s.tab}</p>
-            <p className={`mt-0.5 max-w-[16ch] ${CARD_META_CLASS}`}>{s.hint}</p>
-          </li>
-        ))}
-      </ol>
+        <ol className="relative grid grid-cols-3 gap-2">
+          <span
+            className="pointer-events-none absolute left-[16.5%] right-[16.5%] top-5 border-t border-dashed border-border"
+            aria-hidden
+          />
+          {STEPS.map((s, i) => (
+            <li key={s.tab} className="relative z-[1] flex flex-col items-center text-center">
+              <span
+                className={`inline-flex h-10 w-10 items-center justify-center rounded-full bg-accent text-white ${CTA_COMPACT_CLASS}`}
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <p className={`mt-3 ${CARD_TITLE_CLASS}`}>{s.tab}</p>
+              <p className={`mt-0.5 max-w-[16ch] ${CARD_META_CLASS}`}>{s.hint}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
 
       <div className="grid items-stretch gap-4 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] lg:gap-0">
         <StepCard heading={CardHeading} step={STEPS[0]} visual="catalog" />
