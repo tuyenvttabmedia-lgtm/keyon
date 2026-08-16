@@ -101,6 +101,18 @@ export async function updateAgreement(
   return row;
 }
 
+export async function deleteAgreement(id: string, actorId: string) {
+  const existing = await prisma.commercialAgreement.findUnique({
+    where: { id },
+    select: { id: true, title: true },
+  });
+  if (!existing) throw new AppError("Không tìm thấy khung HĐ", 404);
+  await prisma.commercialAgreement.delete({ where: { id } });
+  await audit("agreement.delete", "CommercialAgreement", id, actorId, {
+    title: existing.title,
+  });
+}
+
 export async function linkOrderByCode(
   agreementId: string,
   orderCode: string,

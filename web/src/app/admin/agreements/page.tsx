@@ -29,7 +29,7 @@ export default async function AdminAgreementsPage() {
     <div className="space-y-4">
       <AdminPageHeader
         title="Khung HĐ"
-        lead="B4.2 · một khung gắn nhiều Order. Không thay thế đơn, không thanh toán trên HĐ."
+        lead="Một khung gắn nhiều Order. Xóa khung ở trang chi tiết — không xóa đơn, không thanh toán trên HĐ."
         crumbs={[{ label: "Khung HĐ" }]}
         actions={
           <Link

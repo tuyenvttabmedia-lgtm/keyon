@@ -68,6 +68,18 @@ export async function updateOrganization(
   return org;
 }
 
+export async function deleteOrganization(id: string, actorId: string) {
+  const existing = await prisma.organization.findUnique({
+    where: { id },
+    select: { id: true, name: true },
+  });
+  if (!existing) throw new AppError("Không tìm thấy tổ chức", 404);
+  await prisma.organization.delete({ where: { id } });
+  await audit("organization.delete", "Organization", id, actorId, {
+    name: existing.name,
+  });
+}
+
 /** Staff assigns an existing CUSTOMER. Never creates a user. Never infers from domain. */
 export async function addMemberByEmail(
   organizationId: string,

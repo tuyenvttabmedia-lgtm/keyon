@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
+  BODY_MUTED_CLASS,
+  CTA_COMPACT_CLASS,
   FORM_ERROR_CLASS,
   FORM_LABEL_CLASS,
   INPUT_TEXT_CLASS,
@@ -132,6 +134,30 @@ export function AgreementDetailForms({
     }
   }
 
+  async function deleteAgreement() {
+    if (
+      !window.confirm(
+        "Xóa khung HĐ này? Đơn hàng không bị xóa — chỉ gỡ liên kết khung.",
+      )
+    ) {
+      return;
+    }
+    setError(null);
+    setBusy(true);
+    try {
+      const res = await fetch(`/api/admin/agreements/${agreementId}`, {
+        method: "DELETE",
+      });
+      const data = (await res.json()) as { error?: string };
+      if (!res.ok) throw new Error(data.error ?? "Xóa khung HĐ thất bại");
+      router.push("/admin/agreements");
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Xóa khung HĐ thất bại");
+      setBusy(false);
+    }
+  }
+
   return (
     <div className="grid gap-4 lg:grid-cols-2">
       <form onSubmit={save} className="space-y-4 rounded-2xl border border-border bg-card p-5">
@@ -254,6 +280,21 @@ export function AgreementDetailForms({
           </table>
         )}
         {error ? <p className={FORM_ERROR_CLASS}>{error}</p> : null}
+
+        <div className="border-t border-border pt-4">
+          <p className="font-semibold text-navy">Xóa khung HĐ</p>
+          <p className={`mt-1 ${BODY_MUTED_CLASS}`}>
+            Không xóa Order hay thanh toán. Chỉ xóa khung và các dòng gắn đơn.
+          </p>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => void deleteAgreement()}
+            className={`mt-3 rounded-xl border border-danger/30 bg-white px-4 py-2 ${CTA_COMPACT_CLASS} text-danger disabled:opacity-50`}
+          >
+            Xóa khung HĐ
+          </button>
+        </div>
       </section>
     </div>
   );

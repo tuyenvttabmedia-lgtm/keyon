@@ -5,6 +5,8 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   BADGE_CLASS,
+  BODY_MUTED_CLASS,
+  CTA_COMPACT_CLASS,
   FORM_ERROR_CLASS,
   FORM_LABEL_CLASS,
   INPUT_TEXT_CLASS,
@@ -161,6 +163,30 @@ export function OrgDetailForms({
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gỡ đơn thất bại");
     } finally {
+      setBusy(false);
+    }
+  }
+
+  async function deleteOrg() {
+    if (
+      !window.confirm(
+        "Xóa tổ chức này? Thành viên và ghim đơn sẽ mất. Đơn hàng và khung HĐ không bị xóa.",
+      )
+    ) {
+      return;
+    }
+    setError(null);
+    setBusy(true);
+    try {
+      const res = await fetch(`/api/admin/organizations/${orgId}`, {
+        method: "DELETE",
+      });
+      const data = (await res.json()) as { error?: string };
+      if (!res.ok) throw new Error(data.error ?? "Xóa tổ chức thất bại");
+      router.push("/admin/organizations");
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Xóa tổ chức thất bại");
       setBusy(false);
     }
   }
@@ -361,6 +387,21 @@ export function OrgDetailForms({
             </table>
           </div>
         )}
+      </section>
+
+      <section className="rounded-2xl border border-border bg-card p-5">
+        <p className="font-semibold text-navy">Xóa tổ chức</p>
+        <p className={`mt-1 ${BODY_MUTED_CLASS}`}>
+          Gỡ membership và ghim đơn. Không xóa User, Order hay khung HĐ (khung chỉ mất liên kết org).
+        </p>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => void deleteOrg()}
+          className={`mt-4 rounded-xl border border-danger/30 bg-white px-4 py-2 ${CTA_COMPACT_CLASS} text-danger disabled:opacity-50`}
+        >
+          Xóa tổ chức
+        </button>
       </section>
     </div>
   );
