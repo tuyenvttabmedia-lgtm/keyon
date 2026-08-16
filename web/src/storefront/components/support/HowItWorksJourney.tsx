@@ -60,18 +60,41 @@ function usePrefersReducedMotion() {
   return reduced;
 }
 
+type Props = {
+  heading?: "h1" | "h2";
+  title?: string;
+  lead?: string;
+};
+
 /** Interactive 3-step journey (mockup v2). Autoplay respects reduced motion. */
-export function HowItWorksJourney() {
+export function HowItWorksJourney({
+  heading = "h1",
+  title = "Cách KEYON hoạt động",
+  lead = "Ba bước rõ ràng — từ chọn gói đến giữ giấy phép trong Tài khoản.",
+}: Props) {
   const reduced = usePrefersReducedMotion();
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
+  const [inView, setInView] = useState(true);
   const [progress, setProgress] = useState(0);
   const progressRef = useRef(0);
   const started = useRef(false);
+  const rootRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     progressRef.current = progress;
   }, [progress]);
+
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setInView(Boolean(entry?.isIntersecting)),
+      { threshold: 0.35 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   useEffect(() => {
     if (started.current) return;
@@ -86,7 +109,7 @@ export function HowItWorksJourney() {
   }, []);
 
   useEffect(() => {
-    if (!playing || reduced) return;
+    if (!playing || reduced || !inView) return;
     const origin = performance.now() - progressRef.current * STEP_MS;
     let raf = 0;
     const tick = (now: number) => {
@@ -100,33 +123,37 @@ export function HowItWorksJourney() {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [playing, reduced, index, go]);
+  }, [playing, reduced, inView, index, go]);
 
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setPlaying(false);
-      if (e.key === "ArrowRight") go(index + 1);
-      if (e.key === "ArrowLeft") go(index - 1);
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [go, index]);
-
+  const TitleTag = heading === "h1" ? "h1" : "h2";
   const fill = `${Math.round(progress * 1000) / 10}%`;
 
   return (
     <section
+      ref={rootRef}
+      tabIndex={0}
       aria-label="Cách KEYON hoạt động"
-      className={`overflow-hidden rounded-2xl border border-border bg-white ${ELEVATION_HAIRLINE}`}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") setPlaying(false);
+        if (e.key === "ArrowRight") {
+          e.preventDefault();
+          go(index + 1);
+        }
+        if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          go(index - 1);
+        }
+      }}
+      className={`overflow-hidden rounded-2xl border border-border bg-white outline-none ${ELEVATION_HAIRLINE}`}
     >
       <div className="grid lg:grid-cols-[minmax(240px,300px)_minmax(0,1fr)]">
         <aside className="bg-gradient-to-br from-[#0b1f33] via-[#102a43] to-accent px-6 py-8 text-white md:px-7">
           <p className={`${OVERLINE_CLASS} text-accent-soft`}>Hành trình mua</p>
-          <h1 className={`mt-3 ${SECTION_TITLE_CLASS} !text-white`}>
-            Cách KEYON hoạt động
-          </h1>
+          <TitleTag className={`mt-3 ${SECTION_TITLE_CLASS} !text-white`}>
+            {title}
+          </TitleTag>
           <p className={`mt-3 max-w-[28ch] ${PAGE_LEAD_CLASS} !text-white/75`}>
-            Ba bước rõ ràng — từ chọn gói đến giữ giấy phép trong Tài khoản.
+            {lead}
           </p>
 
           <div className="mt-7 flex flex-col gap-2" role="tablist" aria-label="Các bước">

@@ -3,9 +3,9 @@ import {
   AppWindow,
   Cloud,
   CreditCard,
-  Monitor,
+  Package,
   Shield,
-  UserRound,
+  Monitor,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -59,10 +59,10 @@ const TOPICS: {
     Icon: CreditCard,
   },
   {
-    title: "Tài khoản & Đơn hàng",
-    hints: "Tài khoản · Đơn hàng · License",
-    href: "/account",
-    Icon: UserRound,
+    title: "Cách nhận hàng",
+    hints: "Chọn gói · Thanh toán · Tài khoản",
+    href: "/how-it-works",
+    Icon: Package,
   },
 ];
 

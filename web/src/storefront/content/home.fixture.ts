@@ -115,7 +115,7 @@ export const homeFixture: HomeContent = {
     visible: true,
     title: "Cách KEYON hoạt động",
     subtitle:
-      "Bốn bước rõ ràng — từ chọn gói đến quản lý giấy phép trong Tài khoản.",
+      "Ba bước rõ ràng — từ chọn gói đến giữ giấy phép trong Tài khoản.",
     steps: [
       {
         id: "h1",
