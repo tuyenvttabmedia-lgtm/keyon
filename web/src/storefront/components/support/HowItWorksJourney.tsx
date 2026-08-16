@@ -13,10 +13,8 @@ import {
   TAB_CLASS,
 } from "@/storefront/typography";
 import {
-  EASE_STANDARD,
   ELEVATION_HAIRLINE,
-  MOTION_SLOW,
-  TRANSITION_TRANSFORM,
+  TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
 
@@ -199,7 +197,7 @@ export function HowItWorksJourney() {
 
         <div className="overflow-hidden bg-surface">
           <div
-            className={`flex ${TRANSITION_TRANSFORM} ${MOTION_SLOW} ${EASE_STANDARD}`}
+            className={`flex ${TRANSITION_PANEL}`}
             style={{
               width: `${STEP_COUNT * 100}%`,
               transform: `translateX(-${(index * 100) / STEP_COUNT}%)`,
