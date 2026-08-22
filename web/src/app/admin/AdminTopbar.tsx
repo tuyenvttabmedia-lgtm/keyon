@@ -8,6 +8,7 @@ import { Z_HEADER } from "@/storefront/effects";
 const TITLE_BY_PREFIX: { prefix: string; title: string }[] = [
   { prefix: "/admin/orders", title: "Đơn hàng" },
   { prefix: "/admin/inbox", title: "Inbox fulfillment" },
+  { prefix: "/admin/quote-requests", title: "Yêu cầu báo giá" },
   { prefix: "/admin/customers", title: "Khách hàng" },
   { prefix: "/admin/organizations", title: "Tổ chức" },
   { prefix: "/admin/agreements", title: "Khung HĐ" },

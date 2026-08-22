@@ -18,7 +18,8 @@ export type StaffCapability =
   | "customers"
   | "tickets"
   | "notifications"
-  | "orders";
+  | "orders"
+  | "quote_requests";
 
 const ROLE_CAPS: Record<"ADMIN" | "FULFILLMENT" | "CS", ReadonlySet<StaffCapability>> = {
   ADMIN: new Set([
@@ -38,6 +39,7 @@ const ROLE_CAPS: Record<"ADMIN" | "FULFILLMENT" | "CS", ReadonlySet<StaffCapabil
     "tickets",
     "notifications",
     "orders",
+    "quote_requests",
   ]),
   FULFILLMENT: new Set([
     "orders",
@@ -54,6 +56,7 @@ const ROLE_CAPS: Record<"ADMIN" | "FULFILLMENT" | "CS", ReadonlySet<StaffCapabil
     "customers",
     "tickets",
     "notifications",
+    "quote_requests",
   ]),
 };
 
@@ -113,7 +116,8 @@ export function staffCanSeeAdminPath(role: UserRole, href: string): boolean {
       href.startsWith("/admin/organizations") ||
       href.startsWith("/admin/agreements") ||
       href.startsWith("/admin/tickets") ||
-      href.startsWith("/admin/notifications")
+      href.startsWith("/admin/notifications") ||
+      href.startsWith("/admin/quote-requests")
     );
   }
 

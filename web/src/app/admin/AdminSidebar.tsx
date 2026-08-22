@@ -14,6 +14,7 @@ import {
   CreditCard,
   FileText,
   ImageIcon,
+  FileInput,
   Inbox,
   KeyRound,
   LayoutDashboard,
@@ -67,6 +68,12 @@ const GROUPS: NavGroup[] = [
     items: [
       { href: "/admin/orders", label: "Đơn hàng", match: "prefix", icon: ShoppingCart },
       { href: "/admin/inbox", label: "Inbox", match: "prefix", icon: Inbox },
+      {
+        href: "/admin/quote-requests",
+        label: "Yêu cầu BG",
+        match: "prefix",
+        icon: FileInput,
+      },
       { href: "/admin/customers", label: "Khách hàng", match: "prefix", icon: Users },
       { href: "/admin/organizations", label: "Tổ chức", match: "prefix", icon: Building2 },
       { href: "/admin/agreements", label: "Khung HĐ", match: "prefix", icon: FileText },
