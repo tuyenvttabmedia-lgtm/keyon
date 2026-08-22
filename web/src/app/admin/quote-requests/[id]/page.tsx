@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { loadQuoteRequestDetail } from "@/server/admin/quote-request-detail";
+import {
+  loadQuoteRequestDetail,
+  loadStaffAssigneeOptions,
+} from "@/server/admin/quote-request-detail";
 import { QuoteRequestWorkspace } from "../quote-request-workspace";
 import { LINK_ACCENT_CLASS } from "@/storefront/typography";
 
@@ -12,7 +15,10 @@ export default async function AdminQuoteRequestDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const data = await loadQuoteRequestDetail(id);
+  const [data, staffOptions] = await Promise.all([
+    loadQuoteRequestDetail(id),
+    loadStaffAssigneeOptions(),
+  ]);
   if (!data) notFound();
 
   return (
@@ -20,7 +26,7 @@ export default async function AdminQuoteRequestDetailPage({
       <Link href="/admin/quote-requests" className={LINK_ACCENT_CLASS}>
         ← Yêu cầu báo giá
       </Link>
-      <QuoteRequestWorkspace data={data} />
+      <QuoteRequestWorkspace data={data} staffOptions={staffOptions} />
     </div>
   );
 }

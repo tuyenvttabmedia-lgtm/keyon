@@ -70,6 +70,7 @@ export function QuoteRequestsList({
                 <th className={`px-4 py-3 ${TABLE_HEADER_CLASS}`}>Công ty</th>
                 <th className={`px-4 py-3 ${TABLE_HEADER_CLASS}`}>Nhu cầu</th>
                 <th className={`px-4 py-3 ${TABLE_HEADER_CLASS}`}>Trạng thái</th>
+                <th className={`px-4 py-3 ${TABLE_HEADER_CLASS}`}>Phụ trách</th>
                 <th className={`px-4 py-3 ${TABLE_HEADER_CLASS}`} />
               </tr>
             </thead>
@@ -116,6 +117,11 @@ export function QuoteRequestsList({
                         className={`rounded-full px-2.5 py-0.5 ${BADGE_CLASS} ${tone.bg} ${tone.text}`}
                       >
                         {QUOTE_REQUEST_STATUS_LABEL[r.status]}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={`${TABLE_CELL_CLASS} text-navy`}>
+                        {r.assigneeLabel || "—"}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-right">

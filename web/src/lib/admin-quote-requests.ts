@@ -58,6 +58,7 @@ export type AdminQuoteRequestListRow = {
   term: string;
   createdAt: string;
   productSummary: string;
+  assigneeLabel: string | null;
 };
 
 export type QuoteRequestsKpi = Record<

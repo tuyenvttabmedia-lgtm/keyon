@@ -14,6 +14,7 @@ import {
 } from "@/lib/quote";
 import { hashIp, publicReferenceCode } from "@/server/quote/ids";
 import { notifyLeadTelegram } from "@/server/notify/lead-telegram";
+import { runQuoteRequestFollowUp } from "@/server/quote/quote-request-ops";
 
 const log = childLogger("quote");
 
@@ -94,7 +95,7 @@ export async function POST(req: Request) {
             ipHash: hashIp(ip),
             userAgent: ua,
           },
-          select: { referenceCode: true },
+          select: { id: true, referenceCode: true },
         });
 
         const settings = await readJsonFile("settings.json", defaultSettings);
@@ -176,6 +177,15 @@ export async function POST(req: Request) {
             .filter(Boolean)
             .join("\n"),
         );
+
+        void runQuoteRequestFollowUp({
+          quoteRequestId: row.id,
+          referenceCode: row.referenceCode,
+          fullName: body.fullName,
+          email: body.email,
+          companyName: body.companyName,
+          message,
+        });
 
         log.info({ referenceCode: row.referenceCode, requestType }, "quote request created");
         return NextResponse.json({

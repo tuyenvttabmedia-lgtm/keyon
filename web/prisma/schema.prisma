@@ -150,6 +150,7 @@ model User {
   authSessions  AuthSession[]
   totpBackupCodes TotpBackupCode[]
   organizationMemberships OrganizationMembership[]
+  assignedQuoteRequests QuoteRequest[] @relation("QuoteAssignee")
 }
 
 /// B2B legal entity — staff-created. Never inferred from email domain (ADR-007).
@@ -641,6 +642,7 @@ model SupportTicket {
   adminNote String?
   createdAt DateTime            @default(now())
   updatedAt DateTime            @updatedAt
+  quoteRequest QuoteRequest?
 
   @@index([userId, createdAt])
   @@index([status, createdAt])
@@ -694,10 +696,17 @@ model QuoteRequest {
   sourcePath           String?
   ipHash               String?
   userAgent            String?
+  /// Internal CS note — not shown to customer
+  adminNote            String?
+  assigneeId           String?
+  assignee             User?              @relation("QuoteAssignee", fields: [assigneeId], references: [id])
+  supportTicketId      String?            @unique
+  supportTicket        SupportTicket?     @relation(fields: [supportTicketId], references: [id])
   createdAt            DateTime           @default(now())
   updatedAt            DateTime           @updatedAt
 
   @@index([status, createdAt])
   @@index([email, createdAt])
   @@index([requestType, createdAt])
+  @@index([assigneeId, status])
 }

@@ -3,7 +3,10 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import type { AdminQuoteRequestDetail } from "@/server/admin/quote-request-detail";
+import type {
+  AdminQuoteRequestDetail,
+  StaffAssigneeOption,
+} from "@/server/admin/quote-request-detail";
 import {
   QUOTE_REQUEST_STATUSES,
   QUOTE_REQUEST_STATUS_LABEL,
@@ -46,31 +49,57 @@ function usersLabel(
   return ESTIMATED_USERS_LABEL[key] ?? estimatedUsers;
 }
 
+function isDirty(
+  data: AdminQuoteRequestDetail,
+  status: string,
+  adminNote: string,
+  assigneeId: string,
+) {
+  return (
+    status !== data.status ||
+    adminNote !== (data.adminNote ?? "") ||
+    (assigneeId || null) !== (data.assigneeId || null)
+  );
+}
+
 export function QuoteRequestWorkspace({
   data,
+  staffOptions,
 }: {
   data: AdminQuoteRequestDetail;
+  staffOptions: StaffAssigneeOption[];
 }) {
   const router = useRouter();
   const [status, setStatus] = useState(data.status);
+  const [adminNote, setAdminNote] = useState(data.adminNote ?? "");
+  const [assigneeId, setAssigneeId] = useState(data.assigneeId ?? "");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const tone = quoteStatusTone(
     status as (typeof QUOTE_REQUEST_STATUSES)[number],
   );
+  const dirty = isDirty(data, status, adminNote, assigneeId);
 
-  async function saveStatus() {
+  async function save() {
     setBusy(true);
     setMsg(null);
     try {
       const res = await fetch(`/api/admin/quote-requests/${data.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
+        body: JSON.stringify({
+          status,
+          adminNote: adminNote.trim() || null,
+          assigneeId: assigneeId || null,
+        }),
       });
       const body = await res.json();
       if (!res.ok) throw new Error(body.error ?? "Cập nhật thất bại");
-      setMsg("Đã cập nhật trạng thái.");
+      setMsg(
+        status !== data.status
+          ? "Đã lưu. Khách được email thông báo trạng thái mới (trừ Spam)."
+          : "Đã lưu.",
+      );
       router.refresh();
     } catch (e) {
       setMsg(e instanceof Error ? e.message : "Lỗi");
@@ -145,6 +174,21 @@ export function QuoteRequestWorkspace({
                 </dd>
               </div>
             </dl>
+            {data.customerUserId ? (
+              <p className={`mt-3 ${CARD_META_CLASS}`}>
+                Tài khoản KEYON:{" "}
+                <Link
+                  href={`/admin/customers/${data.customerUserId}`}
+                  className={LINK_ACCENT_CLASS}
+                >
+                  Xem khách hàng
+                </Link>
+              </p>
+            ) : (
+              <p className={`mt-3 ${CARD_META_CLASS}`}>
+                Chưa có tài khoản KEYON với email này.
+              </p>
+            )}
           </section>
 
           <section className="rounded-2xl border border-border bg-card p-5">
@@ -201,7 +245,8 @@ export function QuoteRequestWorkspace({
           <section className="rounded-2xl border border-border bg-card p-5">
             <h2 className={CARD_TITLE_CLASS}>Xử lý</h2>
             <p className={`mt-1 ${CARD_META_CLASS}`}>
-              Luồng: Mới → Đang xử lý → Đã báo giá → Đóng
+              Luồng: Mới → Đang xử lý → Đã báo giá → Đóng. Đổi trạng thái sẽ
+              gửi email cho khách.
             </p>
             <label className="mt-3 block text-sm">
               <span className="font-medium text-navy">Trạng thái</span>
@@ -218,13 +263,41 @@ export function QuoteRequestWorkspace({
                 ))}
               </select>
             </label>
+            <label className="mt-3 block text-sm">
+              <span className="font-medium text-navy">Nhân viên phụ trách</span>
+              <select
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm"
+                value={assigneeId}
+                disabled={busy}
+                onChange={(e) => setAssigneeId(e.target.value)}
+              >
+                <option value="">— Chưa gán —</option>
+                {staffOptions.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="mt-3 block text-sm">
+              <span className="font-medium text-navy">Ghi chú nội bộ</span>
+              <textarea
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm"
+                rows={4}
+                maxLength={5000}
+                disabled={busy}
+                value={adminNote}
+                onChange={(e) => setAdminNote(e.target.value)}
+                placeholder="Ghi chú CS — không gửi cho khách"
+              />
+            </label>
             <button
               type="button"
-              disabled={busy || status === data.status}
-              onClick={() => void saveStatus()}
+              disabled={busy || !dirty}
+              onClick={() => void save()}
               className={`mt-3 w-full ${ADMIN_BTN_PRIMARY}`}
             >
-              {busy ? "Đang lưu…" : "Lưu trạng thái"}
+              {busy ? "Đang lưu…" : "Lưu"}
             </button>
             {msg ? (
               <p
@@ -239,11 +312,12 @@ export function QuoteRequestWorkspace({
             ) : null}
             <p className={`mt-3 ${CARD_META_CLASS}`}>
               Cập nhật lần cuối: {fmtDate(data.updatedAt)}
+              {data.assigneeLabel ? ` · PV: ${data.assigneeLabel}` : ""}
             </p>
           </section>
 
           <section className="rounded-2xl border border-border bg-card p-5">
-            <h2 className={CARD_TITLE_CLASS}>Nguồn</h2>
+            <h2 className={CARD_TITLE_CLASS}>Liên kết</h2>
             <dl className="mt-3 space-y-2">
               <div>
                 <dt className={CARD_META_CLASS}>Trang gửi</dt>
@@ -258,6 +332,21 @@ export function QuoteRequestWorkspace({
                     </Link>
                   ) : (
                     "—"
+                  )}
+                </dd>
+              </div>
+              <div>
+                <dt className={CARD_META_CLASS}>Ticket portal</dt>
+                <dd className="text-sm text-navy">
+                  {data.supportTicketId ? (
+                    <Link
+                      href="/admin/tickets"
+                      className={LINK_ACCENT_CLASS}
+                    >
+                      Đã tạo ticket (xem Hỗ trợ)
+                    </Link>
+                  ) : (
+                    "Chưa có — chỉ tạo khi email trùng tài khoản khách"
                   )}
                 </dd>
               </div>

@@ -149,6 +149,7 @@ export async function queryAdminQuoteRequests(
         term: true,
         interestedProducts: true,
         createdAt: true,
+        assignee: { select: { name: true, email: true } },
       },
     }),
     prisma.quoteRequest.count({ where }),
@@ -175,6 +176,9 @@ export async function queryAdminQuoteRequests(
       term: r.term,
       createdAt: r.createdAt.toISOString(),
       productSummary: productSummary(r.interestedProducts),
+      assigneeLabel: r.assignee
+        ? r.assignee.name?.trim() || r.assignee.email
+        : null,
     })),
     totalMatched,
     kpi,

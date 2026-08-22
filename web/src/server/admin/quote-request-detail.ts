@@ -4,6 +4,12 @@ import { prisma } from "@/lib/db";
 
 export type QuoteRequestProduct = { slug?: string; name: string };
 
+export type StaffAssigneeOption = {
+  id: string;
+  label: string;
+  email: string;
+};
+
 export type AdminQuoteRequestDetail = {
   id: string;
   referenceCode: string;
@@ -21,6 +27,11 @@ export type AdminQuoteRequestDetail = {
   term: string;
   message: string | null;
   sourcePath: string | null;
+  adminNote: string | null;
+  assigneeId: string | null;
+  assigneeLabel: string | null;
+  supportTicketId: string | null;
+  customerUserId: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -44,11 +55,40 @@ function parseProducts(raw: unknown): QuoteRequestProduct[] {
     .filter((x): x is QuoteRequestProduct => x != null);
 }
 
+export async function loadStaffAssigneeOptions(): Promise<StaffAssigneeOption[]> {
+  const rows = await prisma.user.findMany({
+    where: {
+      role: { in: ["ADMIN", "CS", "FULFILLMENT"] },
+      disabledAt: null,
+    },
+    orderBy: [{ role: "asc" }, { name: "asc" }, { email: "asc" }],
+    select: { id: true, name: true, email: true, role: true },
+    take: 100,
+  });
+  return rows.map((u) => ({
+    id: u.id,
+    email: u.email,
+    label: u.name?.trim()
+      ? `${u.name.trim()} (${u.email})`
+      : `${u.email} · ${u.role}`,
+  }));
+}
+
 export async function loadQuoteRequestDetail(
   id: string,
 ): Promise<AdminQuoteRequestDetail | null> {
-  const row = await prisma.quoteRequest.findUnique({ where: { id } });
+  const row = await prisma.quoteRequest.findUnique({
+    where: { id },
+    include: {
+      assignee: { select: { name: true, email: true } },
+    },
+  });
   if (!row) return null;
+
+  const customer = await prisma.user.findFirst({
+    where: { email: row.email.toLowerCase(), role: "CUSTOMER" },
+    select: { id: true },
+  });
 
   return {
     id: row.id,
@@ -67,6 +107,13 @@ export async function loadQuoteRequestDetail(
     term: row.term,
     message: row.message,
     sourcePath: row.sourcePath,
+    adminNote: row.adminNote,
+    assigneeId: row.assigneeId,
+    assigneeLabel: row.assignee
+      ? row.assignee.name?.trim() || row.assignee.email
+      : null,
+    supportTicketId: row.supportTicketId,
+    customerUserId: customer?.id ?? null,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };

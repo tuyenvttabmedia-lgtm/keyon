@@ -21,7 +21,7 @@ export default async function AdminQuoteRequestsPage({
     <div className="space-y-4">
       <AdminPageHeader
         title="Yêu cầu báo giá"
-        lead="Leads từ form /contact/quote — lưu DB + email hỗ trợ"
+        lead="Leads từ /contact/quote — email xác nhận khách + quản lý trạng thái"
         crumbs={[{ label: "Yêu cầu báo giá" }]}
       />
 
