@@ -321,7 +321,19 @@ export function UserDetail({
                 </dd>
               </div>
             </dl>
-            {canManage ? (
+            {user.isSelf ? (
+              <div className="mt-4">
+                <Link
+                  href="/account/security#password"
+                  className="inline-flex rounded-lg bg-accent px-3 py-1.5 text-sm font-semibold text-white"
+                >
+                  Đổi mật khẩu
+                </Link>
+                <p className="mt-2 text-xs text-muted">
+                  Nhập mật khẩu hiện tại để đặt mật khẩu mới — không cần email.
+                </p>
+              </div>
+            ) : canManage ? (
               <div className="mt-4 flex flex-wrap gap-2">
                 <button
                   type="button"
@@ -329,7 +341,7 @@ export function UserDetail({
                   onClick={() => void requestPasswordReset()}
                   className="rounded-lg border border-border px-3 py-1.5 text-sm font-semibold text-navy disabled:opacity-50"
                 >
-                  Đặt lại mật khẩu
+                  Đặt lại mật khẩu (email)
                 </button>
                 {user.disabled ? (
                   <button

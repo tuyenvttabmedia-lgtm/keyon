@@ -217,6 +217,9 @@ export function AdminSidebar({
         <p className={`truncate ${FIELD_VALUE_CLASS}`}>{email}</p>
         <p className={`mt-0.5 ${CARD_META_CLASS}`}>{staffRoleLabel(role)}</p>
         <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1">
+          <Link href="/account/security" className={LINK_ACCENT_CLASS}>
+            Bảo mật
+          </Link>
           <Link href="/" className={LINK_ACCENT_CLASS}>
             Storefront
           </Link>
