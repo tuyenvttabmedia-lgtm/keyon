@@ -536,6 +536,29 @@ export function SettingsForm({
                 onChange={(e) => setForm({ ...form, supportEmail: e.target.value })}
               />
             </label>
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-border bg-[#f8fafc] px-4 py-3 text-sm">
+              <input
+                type="checkbox"
+                className="mt-1"
+                checked={Boolean(form.quotePublicTrackingEnabled)}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    quotePublicTrackingEnabled: e.target.checked,
+                  })
+                }
+              />
+              <span>
+                <span className="font-medium text-navy">
+                  Tra cứu báo giá công khai (QT- + OTP email)
+                </span>
+                <span className="mt-1 block text-muted">
+                  Bật khi volume lớn — khách tra trạng thái tại{" "}
+                  <code className="text-xs">/contact/quote/status</code> bằng mã
+                  QT- và mã OTP gửi qua email. Tắt mặc định.
+                </span>
+              </span>
+            </label>
             <p className="rounded-lg border border-dashed border-border bg-[#f8fafc] px-3 py-2 text-xs text-muted">
               Logo thương hiệu quản lý tại{" "}
               <Link href="/admin/media" className="text-accent hover:underline">

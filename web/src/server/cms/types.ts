@@ -156,6 +156,8 @@ export type PageSeoOverride = {
 export type SiteSettings = {
   siteName: string;
   supportEmail: string;
+  /** Guest quote lookup via QT- + email OTP at /contact/quote/status */
+  quotePublicTrackingEnabled?: boolean;
   seoTitle: string;
   seoDescription: string;
   ogImageUrl?: string;
@@ -588,6 +590,7 @@ export const defaultCmsProductRatings: CmsProductRatings = {
 export const defaultSettings: SiteSettings = {
   siteName: "KEYON",
   supportEmail: "support@keyon.vn",
+  quotePublicTrackingEnabled: false,
   seoTitle: "KEYON — Phần mềm bản quyền chính hãng",
   seoDescription:
     "Mua phần mềm bản quyền — thanh toán rõ, nhận hàng rõ, quản lý trong Tài khoản.",

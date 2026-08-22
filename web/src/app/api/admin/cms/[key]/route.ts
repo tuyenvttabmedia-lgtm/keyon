@@ -81,6 +81,7 @@ const pageSeoOverrideSchema = z.object({
 const settingsSchema = z.object({
   siteName: z.string().min(1).max(120),
   supportEmail: z.string().email().max(200),
+  quotePublicTrackingEnabled: z.boolean().optional(),
   seoTitle: z.string().min(1).max(200),
   seoDescription: z.string().min(1).max(500),
   ogImageUrl: z

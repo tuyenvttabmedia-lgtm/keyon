@@ -189,10 +189,12 @@ export function QuoteRequestLanding({
   products,
   contact,
   initial,
+  publicTrackingEnabled = false,
 }: {
   products: ProductOption[];
   contact: QuoteContactInfo;
   initial: QuoteInitial;
+  publicTrackingEnabled?: boolean;
 }) {
   const mapped = mapEstimatedUsers(initial.estimatedUsers);
   const showHotline =
@@ -476,7 +478,10 @@ export function QuoteRequestLanding({
         <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
           <div className="min-w-0 lg:col-span-8">
             {submitted ? (
-              <SuccessPanel referenceCode={referenceCode} />
+              <SuccessPanel
+                referenceCode={referenceCode}
+                publicTrackingEnabled={publicTrackingEnabled}
+              />
             ) : (
               <div className={`rounded-2xl border border-border bg-white p-5 sm:p-6 md:p-7 ${ELEVATION_HAIRLINE}`}>
                 <Stepper step={step} />
@@ -1059,7 +1064,17 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-function SuccessPanel({ referenceCode }: { referenceCode: string | null }) {
+function SuccessPanel({
+  referenceCode,
+  publicTrackingEnabled,
+}: {
+  referenceCode: string | null;
+  publicTrackingEnabled: boolean;
+}) {
+  const trackHref =
+    referenceCode && publicTrackingEnabled
+      ? `/contact/quote/status?ref=${encodeURIComponent(referenceCode)}`
+      : null;
   return (
     <div className={`rounded-2xl border border-border bg-white p-6 sm:p-8 text-center ${ELEVATION_HAIRLINE}`}>
       <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-accent-soft text-accent">
@@ -1072,6 +1087,15 @@ function SuccessPanel({ referenceCode }: { referenceCode: string | null }) {
       {referenceCode ? (
         <p className={`mt-4 text-[15px] font-semibold text-navy`}>
           Mã yêu cầu: <span className="text-accent">{referenceCode}</span>
+        </p>
+      ) : null}
+      {trackHref ? (
+        <p className={`mx-auto mt-3 max-w-md ${CARD_META_CLASS}`}>
+          Kiểm tra email xác nhận hoặc{" "}
+          <Link href={trackHref} className={HOVER_LINK_ACCENT}>
+            tra cứu trạng thái
+          </Link>{" "}
+          bằng mã QT- và OTP.
         </p>
       ) : null}
       <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">

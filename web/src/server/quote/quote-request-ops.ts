@@ -6,6 +6,10 @@ import { prisma } from "@/lib/db";
 import { QUOTE_REQUEST_STATUS_LABEL } from "@/lib/admin-quote-requests";
 import { defaultCmsContact, defaultSettings, readJsonFile } from "@/server/cms/store";
 import { sendMail } from "@/server/mail";
+import {
+  isQuotePublicTrackingEnabled,
+  quoteTrackStatusPath,
+} from "@/server/quote/tracking";
 
 const log = childLogger("quote-ops");
 
@@ -77,9 +81,15 @@ export async function sendQuoteConfirmationEmail(input: {
 }) {
   const ctx = await contactContext();
   const firstName = input.fullName.trim().split(/\s+/)[0] || input.fullName;
+  const trackingEnabled = await isQuotePublicTrackingEnabled();
+  const trackUrl = trackingEnabled
+    ? `${siteBaseUrl()}${quoteTrackStatusPath(input.referenceCode)}`
+    : null;
   const ticketLine = input.hasPortalTicket
     ? `<p>Bạn có thể theo dõi trong <a href="${siteBaseUrl()}/account/tickets">Tài khoản KEYON → Hỗ trợ</a>.</p>`
-    : "";
+    : trackingEnabled
+      ? `<p>Tra cứu trạng thái: <a href="${trackUrl}">${trackUrl}</a> (mã QT- + OTP email).</p>`
+      : "";
 
   const subject = `[${ctx.siteName}] Đã nhận yêu cầu báo giá ${input.referenceCode}`;
   const text = [
@@ -94,7 +104,12 @@ export async function sendQuoteConfirmationEmail(input: {
     `Hotline: ${ctx.hotline}`,
     `Email: ${ctx.supportEmail}`,
     `Giờ làm việc: ${ctx.hours}`,
-  ].join("\n");
+    trackingEnabled && !input.hasPortalTicket
+      ? `Tra cứu: ${trackUrl}`
+      : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
 
   const html = mailShell({
     ...ctx,

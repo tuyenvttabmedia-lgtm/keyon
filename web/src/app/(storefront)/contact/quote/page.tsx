@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { prisma } from "@/lib/db";
 import { defaultCmsContact, readJsonFile } from "@/server/cms/store";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
+import { isQuotePublicTrackingEnabled } from "@/server/quote/tracking";
 import {
   QuoteRequestLanding,
   type QuoteContactInfo,
@@ -43,7 +44,7 @@ function resolveSourcePath(intent?: string) {
 
 export default async function ContactQuotePage({ searchParams }: Props) {
   const sp = await searchParams;
-  const [products, cmsRaw] = await Promise.all([
+  const [products, cmsRaw, publicTrackingEnabled] = await Promise.all([
     prisma.product.findMany({
       where: { active: true },
       orderBy: [{ name: "asc" }],
@@ -51,6 +52,7 @@ export default async function ContactQuotePage({ searchParams }: Props) {
       take: 200,
     }),
     readJsonFile("contact-page.json", defaultCmsContact),
+    isQuotePublicTrackingEnabled(),
   ]);
   const cms = { ...defaultCmsContact, ...cmsRaw };
 
@@ -73,6 +75,7 @@ export default async function ContactQuotePage({ searchParams }: Props) {
         requestType: resolveRequestType(sp.intent, sp.requestType),
         sourcePath: resolveSourcePath(sp.intent),
       }}
+      publicTrackingEnabled={publicTrackingEnabled}
     />
   );
 }

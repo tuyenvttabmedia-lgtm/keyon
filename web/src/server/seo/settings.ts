@@ -38,6 +38,7 @@ export function normalizeSiteSettings(raw: Partial<SiteSettings> | null | undefi
     supportEmail:
       (base.supportEmail || defaultSettings.supportEmail).trim() ||
       defaultSettings.supportEmail,
+    quotePublicTrackingEnabled: Boolean(base.quotePublicTrackingEnabled),
     seoTitle: (base.seoTitle || defaultSettings.seoTitle).trim(),
     seoDescription: (base.seoDescription || defaultSettings.seoDescription).trim(),
     ogImageUrl: base.ogImageUrl?.trim() || undefined,
