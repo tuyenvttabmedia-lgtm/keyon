@@ -37,7 +37,7 @@ sudo -u "$USER_NAME" -H bash -lc "
   export PATH='$NODE_DIR':\$PATH
   cd '$WEB_ROOT'
   '$PM2_BIN' start '$WEB_ROOT/node_modules/next/dist/bin/next' --name keyon-web -- start -H 127.0.0.1 -p 3000
-  '$PM2_BIN' start '$WEB_ROOT/node_modules/tsx/dist/cli.mjs' --name keyon-worker -- src/worker.ts
+  '$PM2_BIN' start '$WEB_ROOT/node_modules/tsx/dist/cli.mjs' --name keyon-worker --cwd '$WEB_ROOT' -- --env-file=.env.local --env-file=.env scripts/worker.ts
   '$PM2_BIN' save
 "
 
