@@ -14,9 +14,17 @@ SRC_DIR="$(cd "$(dirname "$0")" && pwd)"
 mkdir -p "$OPS_DIR" /var/backups/keyon /etc/ssl/cloudflare /opt/keyon/web/data/ops
 chmod 700 /var/backups/keyon
 
-install -m 0755 "$SRC_DIR/backup-postgres-daily.sh" "$OPS_DIR/backup-postgres-daily.sh"
-install -m 0755 "$SRC_DIR/host-watchdog.sh" "$OPS_DIR/host-watchdog.sh" 2>/dev/null || true
-install -m 0755 "$SRC_DIR/install-security-hardening.sh" "$OPS_DIR/install-security-hardening.sh"
+copy_ops() {
+  local src="$1" dest="$2"
+  if [[ "$(readlink -f "$src" 2>/dev/null || echo "$src")" == "$(readlink -f "$dest" 2>/dev/null || echo "$dest")" ]]; then
+    chmod 0755 "$dest" 2>/dev/null || true
+    return 0
+  fi
+  install -m 0755 "$src" "$dest"
+}
+copy_ops "$SRC_DIR/backup-postgres-daily.sh" "$OPS_DIR/backup-postgres-daily.sh"
+copy_ops "$SRC_DIR/host-watchdog.sh" "$OPS_DIR/host-watchdog.sh"
+copy_ops "$SRC_DIR/install-security-hardening.sh" "$OPS_DIR/install-security-hardening.sh"
 
 echo "== unattended-upgrades =="
 export DEBIAN_FRONTEND=noninteractive
