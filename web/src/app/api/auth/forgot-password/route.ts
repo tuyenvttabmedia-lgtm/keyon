@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
-import { z } from "zod";
+import { z, ZodError } from "zod";
 import { prisma } from "@/lib/db";
 import { issuePasswordReset } from "@/server/auth/password-reset";
+import { rateLimit } from "@/lib/rate-limit";
+import { clientIp } from "@/server/auth/sessions";
 
 const bodySchema = z.object({
   email: z.string().email(),
@@ -9,6 +11,15 @@ const bodySchema = z.object({
 
 export async function POST(req: Request) {
   try {
+    const ip = clientIp(req) ?? "unknown";
+    const rl = rateLimit(`forgot-password:${ip}`, 8, 60 * 60_000);
+    if (!rl.ok) {
+      return NextResponse.json(
+        { error: "Quá nhiều yêu cầu. Thử lại sau." },
+        { status: 429 },
+      );
+    }
+
     const body = bodySchema.parse(await req.json());
     const user = await prisma.user.findUnique({
       where: { email: body.email.toLowerCase() },
@@ -31,9 +42,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json(response);
   } catch (e) {
-    return NextResponse.json(
-      { error: e instanceof Error ? e.message : "Bad request" },
-      { status: 400 },
-    );
+    if (e instanceof ZodError) {
+      return NextResponse.json({ error: "Dữ liệu không hợp lệ" }, { status: 400 });
+    }
+    return NextResponse.json({ error: "Bad request" }, { status: 400 });
   }
 }

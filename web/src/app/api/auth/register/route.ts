@@ -17,7 +17,8 @@ const log = childLogger("auth.register");
 
 export async function POST(req: Request) {
   try {
-    const rl = rateLimit("register:ip", 20);
+    const ip = clientIp(req) ?? "unknown";
+    const rl = rateLimit(`register:ip:${ip}`, 8, 60 * 60_000);
     if (!rl.ok) {
       return NextResponse.json({ error: "Too many requests" }, { status: 429 });
     }

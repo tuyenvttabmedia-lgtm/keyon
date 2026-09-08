@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { z } from "zod";
+import { z, ZodError } from "zod";
 import { prisma } from "@/lib/db";
 import { verifyPassword } from "@/lib/password";
 import {
@@ -14,6 +14,7 @@ import {
 } from "@/server/auth/sessions";
 import { verifyTotpCode } from "@/lib/totp";
 import { decryptPayload } from "@/lib/crypto";
+import { rateLimit } from "@/lib/rate-limit";
 
 const bodySchema = z.object({
   email: z.string().email(),
@@ -23,8 +24,25 @@ const bodySchema = z.object({
 
 export async function POST(req: Request) {
   try {
+    const ip = clientIp(req) ?? "unknown";
+    const rlIp = rateLimit(`login:ip:${ip}`, 20, 15 * 60_000);
+    if (!rlIp.ok) {
+      return NextResponse.json(
+        { error: "Quá nhiều lần đăng nhập. Thử lại sau 15 phút." },
+        { status: 429 },
+      );
+    }
+
     const json = await req.json();
     const body = bodySchema.parse(json);
+    const emailKey = body.email.toLowerCase();
+    const rlEmail = rateLimit(`login:email:${emailKey}`, 10, 15 * 60_000);
+    if (!rlEmail.ok) {
+      return NextResponse.json(
+        { error: "Quá nhiều lần đăng nhập. Thử lại sau 15 phút." },
+        { status: 429 },
+      );
+    }
     const user = await prisma.user.findUnique({
       where: { email: body.email.toLowerCase() },
     });
@@ -103,9 +121,9 @@ export async function POST(req: Request) {
       totpRequired: roleRequiresTotp(user.role) && !user.totpEnabledAt,
     });
   } catch (e) {
-    return NextResponse.json(
-      { error: e instanceof Error ? e.message : "Bad request" },
-      { status: 400 },
-    );
+    if (e instanceof ZodError) {
+      return NextResponse.json({ error: "Dữ liệu không hợp lệ" }, { status: 400 });
+    }
+    return NextResponse.json({ error: "Bad request" }, { status: 400 });
   }
 }
