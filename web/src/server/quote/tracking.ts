@@ -171,8 +171,8 @@ export async function requestQuoteTrackOtp(input: {
     return { ok: true };
   }
 
-  const rlIp = rateLimit(`quote-track-otp:ip:${input.ip}`, 12, 60 * 60_000);
-  const rlEmail = rateLimit(`quote-track-otp:email:${email}`, 5, 60 * 60_000);
+  const rlIp = await rateLimit(`quote-track-otp:ip:${input.ip}`, 12, 60 * 60_000);
+  const rlEmail = await rateLimit(`quote-track-otp:email:${email}`, 5, 60 * 60_000);
   if (!rlIp.ok || !rlEmail.ok) {
     return { ok: true };
   }
@@ -249,7 +249,7 @@ export async function verifyQuoteTrackOtp(input: {
     return { ok: false, error: "Thông tin không hợp lệ" };
   }
 
-  const rl = rateLimit(`quote-track-verify:${input.ip}`, 20, 60 * 60_000);
+  const rl = await rateLimit(`quote-track-verify:${input.ip}`, 20, 60 * 60_000);
   if (!rl.ok) {
     return { ok: false, error: "Quá nhiều lần thử. Thử lại sau." };
   }

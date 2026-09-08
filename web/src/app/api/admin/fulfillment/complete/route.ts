@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       "fulfillment",
       "Không có quyền hoàn tất giao hàng thủ công",
     );
-    const rl = rateLimit(`fulfill-complete:${session.id}`, 60);
+    const rl = await rateLimit(`fulfill-complete:${session.id}`, 60);
     if (!rl.ok) {
       return NextResponse.json({ error: "Too many requests" }, { status: 429 });
     }

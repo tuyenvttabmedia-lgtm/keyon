@@ -55,4 +55,17 @@ Cài: unattended-upgrades · sysctl · SSH no-password · Cloudflare Authenticat
 **Cloudflare (bắt buộc sau khi cài):** SSL/TLS → Origin Server → **Authenticated Origin Pulls → ON**.  
 SSL/TLS encryption mode: **Full (strict)**. Bật WAF Managed Rules + Bot Fight Mode trên dashboard.
 
-Backup tay: `/opt/keyon/ops/backup-postgres-daily.sh`
+Backup tay: `/opt/keyon/ops/backup-postgres-daily.sh`  
+Offsite Wasabi (khi đã có `WASABI_*`): `/opt/keyon/ops/backup-offsite-wasabi.sh`
+
+## App user (non-root)
+
+```bash
+bash ops/install-app-user.sh
+```
+
+PM2 chạy dưới user `keyon`. Deploy sau khi build:
+
+```bash
+sudo -u keyon -H bash -lc 'cd /opt/keyon/web && pm2 restart keyon-web keyon-worker --update-env'
+```

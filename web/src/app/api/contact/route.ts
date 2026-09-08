@@ -24,7 +24,7 @@ function clientIp(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const rl = rateLimit(`contact:${clientIp(req)}`, 8, 60_000);
+    const rl = await rateLimit(`contact:${clientIp(req)}`, 8, 60_000);
     if (!rl.ok) {
       return NextResponse.json(
         { error: "Quá nhiều yêu cầu. Thử lại sau ít phút." },

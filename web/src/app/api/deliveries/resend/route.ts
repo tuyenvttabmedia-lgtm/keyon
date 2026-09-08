@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   try {
     const session = await readSession();
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    const rl = rateLimit(`resend:${session.id}`, 20);
+    const rl = await rateLimit(`resend:${session.id}`, 20);
     if (!rl.ok) {
       return NextResponse.json({ error: "Too many requests" }, { status: 429 });
     }

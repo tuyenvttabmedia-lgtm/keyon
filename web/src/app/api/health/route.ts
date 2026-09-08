@@ -8,7 +8,14 @@ import { readWorkerHeartbeat, getQueueDepths } from "@/server/monitoring";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+function wantsFullDetail(req: Request): boolean {
+  const host = (req.headers.get("host") ?? "").split(",")[0]?.trim() ?? "";
+  return host.startsWith("127.0.0.1") || host.startsWith("localhost");
+}
+
+export async function GET(req: Request) {
+  const full = wantsFullDetail(req);
+
   const checks: Record<string, "ok" | "error" | string> = {
     app: "ok",
     paymentProvider: await PaymentService.providerName(),
@@ -24,7 +31,7 @@ export async function GET() {
 
   try {
     const pong = await getRedisConnection().ping();
-    checks.redis = pong === "PONG" ? "ok" : pong;
+    checks.redis = pong === "PONG" ? "ok" : "error";
   } catch {
     checks.redis = "error";
   }
@@ -41,6 +48,33 @@ export async function GET() {
     checks.worker = "error";
   }
 
+  const paymentProvider = String(checks.paymentProvider);
+  const stubInProduction =
+    paymentProvider === "stub" && process.env.NODE_ENV === "production";
+
+  const healthy =
+    checks.database === "ok" &&
+    checks.redis === "ok" &&
+    checks.worker === "ok" &&
+    !stubInProduction;
+
+  const publicBody = {
+    status: healthy ? "healthy" : "degraded",
+    checks: {
+      app: checks.app,
+      database: checks.database,
+      redis: checks.redis,
+      worker: checks.worker,
+      paymentProvider: checks.paymentProvider,
+      storage: checks.storage,
+    },
+    timestamp: new Date().toISOString(),
+  };
+
+  if (!full) {
+    return NextResponse.json(publicBody, { status: healthy ? 200 : 503 });
+  }
+
   let queues: Awaited<ReturnType<typeof getQueueDepths>> | null = null;
   try {
     queues = await getQueueDepths();
@@ -51,16 +85,6 @@ export async function GET() {
 
   const inv = InventoryReadModel.health();
   checks.inventory = inv.inventory_healthy ? "ok" : "error";
-
-  const paymentProvider = String(checks.paymentProvider);
-  const stubInProduction =
-    paymentProvider === "stub" && process.env.NODE_ENV === "production";
-
-  const healthy =
-    checks.database === "ok" &&
-    checks.redis === "ok" &&
-    checks.worker === "ok" &&
-    !stubInProduction;
 
   const warnings: string[] = [];
   if (stubInProduction) {
@@ -74,13 +98,12 @@ export async function GET() {
 
   return NextResponse.json(
     {
-      status: healthy ? "healthy" : "degraded",
+      ...publicBody,
       checks,
       worker,
       queues,
       inventory: inv,
       warnings: warnings.length ? warnings : undefined,
-      timestamp: new Date().toISOString(),
     },
     { status: healthy ? 200 : 503 },
   );

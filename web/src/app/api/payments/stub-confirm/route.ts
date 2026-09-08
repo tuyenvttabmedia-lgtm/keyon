@@ -16,7 +16,7 @@ export async function POST(req: Request) {
       throw new AppError("Stub confirm không khả dụng khi cổng thanh toán thật đang bật", 403);
     }
     const ip = req.headers.get("x-forwarded-for") ?? "local";
-    const rl = rateLimit(`stub-confirm:${ip}`, 30);
+    const rl = await rateLimit(`stub-confirm:${ip}`, 30);
     if (!rl.ok) {
       return NextResponse.json({ error: "Too many requests" }, { status: 429 });
     }

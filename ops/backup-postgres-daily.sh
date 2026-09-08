@@ -44,3 +44,8 @@ chmod -R go-rwx "$OUT_DIR"
 find "$BACKUP_ROOT" -mindepth 1 -maxdepth 1 -type d -mtime +"$KEEP_DAYS" -exec rm -rf {} +
 
 echo "BACKUP_OK $OUT_DIR ($(du -h "$OUT_DIR/database.dump" | awk '{print $1}'))"
+
+# Optional Wasabi offsite (no-op if credentials empty)
+if [[ -x "$APP_ROOT/ops/backup-offsite-wasabi.sh" ]]; then
+  LATEST="$OUT_DIR" STAMP="$STAMP" "$APP_ROOT/ops/backup-offsite-wasabi.sh" || echo "offsite_warn"
+fi

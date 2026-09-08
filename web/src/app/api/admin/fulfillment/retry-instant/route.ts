@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       "fulfillment",
       "Không có quyền retry Instant",
     );
-    const rl = rateLimit(`fulfill-retry-instant:${session.id}`, 40);
+    const rl = await rateLimit(`fulfill-retry-instant:${session.id}`, 40);
     if (!rl.ok) {
       return NextResponse.json({ error: "Too many requests" }, { status: 429 });
     }

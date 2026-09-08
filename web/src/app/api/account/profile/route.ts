@@ -17,7 +17,7 @@ export async function PATCH(req: Request) {
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const rl = rateLimit(`profile:${session.id}`, 30);
+    const rl = await rateLimit(`profile:${session.id}`, 30);
     if (!rl.ok) {
       return NextResponse.json({ error: "Too many requests" }, { status: 429 });
     }

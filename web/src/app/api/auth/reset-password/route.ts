@@ -20,7 +20,7 @@ function secret() {
 export async function POST(req: Request) {
   try {
     const ip = clientIp(req) ?? "unknown";
-    const rl = rateLimit(`reset-password:${ip}`, 10, 60 * 60_000);
+    const rl = await rateLimit(`reset-password:${ip}`, 10, 60 * 60_000);
     if (!rl.ok) {
       return NextResponse.json(
         { error: "Quá nhiều yêu cầu. Thử lại sau." },

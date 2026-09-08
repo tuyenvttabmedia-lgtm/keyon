@@ -23,8 +23,10 @@ copy_ops() {
   install -m 0755 "$src" "$dest"
 }
 copy_ops "$SRC_DIR/backup-postgres-daily.sh" "$OPS_DIR/backup-postgres-daily.sh"
+copy_ops "$SRC_DIR/backup-offsite-wasabi.sh" "$OPS_DIR/backup-offsite-wasabi.sh"
 copy_ops "$SRC_DIR/host-watchdog.sh" "$OPS_DIR/host-watchdog.sh"
 copy_ops "$SRC_DIR/install-security-hardening.sh" "$OPS_DIR/install-security-hardening.sh"
+copy_ops "$SRC_DIR/install-app-user.sh" "$OPS_DIR/install-app-user.sh"
 
 echo "== unattended-upgrades =="
 export DEBIAN_FRONTEND=noninteractive

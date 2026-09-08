@@ -19,7 +19,7 @@ const schema = z.object({
 export async function POST(req: Request) {
   try {
     const ip = clientIp(req);
-    const rl = rateLimit(`quote-track-verify-route:${ip}`, 30, 60_000);
+    const rl = await rateLimit(`quote-track-verify-route:${ip}`, 30, 60_000);
     if (!rl.ok) {
       return NextResponse.json(
         { error: "Quá nhiều lần thử. Thử lại sau." },

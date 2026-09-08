@@ -25,7 +25,7 @@ const bodySchema = z.object({
 export async function POST(req: Request) {
   try {
     const ip = clientIp(req) ?? "unknown";
-    const rlIp = rateLimit(`login:ip:${ip}`, 20, 15 * 60_000);
+    const rlIp = await rateLimit(`login:ip:${ip}`, 20, 15 * 60_000);
     if (!rlIp.ok) {
       return NextResponse.json(
         { error: "Quá nhiều lần đăng nhập. Thử lại sau 15 phút." },
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     const json = await req.json();
     const body = bodySchema.parse(json);
     const emailKey = body.email.toLowerCase();
-    const rlEmail = rateLimit(`login:email:${emailKey}`, 10, 15 * 60_000);
+    const rlEmail = await rateLimit(`login:email:${emailKey}`, 10, 15 * 60_000);
     if (!rlEmail.ok) {
       return NextResponse.json(
         { error: "Quá nhiều lần đăng nhập. Thử lại sau 15 phút." },

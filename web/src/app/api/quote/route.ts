@@ -44,7 +44,7 @@ function fieldErrors(err: z.ZodError) {
 export async function POST(req: Request) {
   try {
     const ip = clientIp(req);
-    const rl = rateLimit(`quote:${ip}`, 5, 60_000);
+    const rl = await rateLimit(`quote:${ip}`, 5, 60_000);
     if (!rl.ok) {
       return NextResponse.json(
         { error: "Quá nhiều yêu cầu. Thử lại sau ít phút." },
