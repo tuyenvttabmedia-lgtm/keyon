@@ -138,13 +138,30 @@ while IFS= read -r line; do
   [[ -z "$line" ]] && continue
   append_finding high suspicious_process "$line"
   append_alert error malware_process "Suspicious process: $line"
-done < <(ps -eo pid,cmd --no-headers 2>/dev/null | grep -E 'syslog-ng-[0-9a-f]{6,}|\.syslog-|kdevtmpfsi|xmrig|cryptonight|syslog-helper' | grep -v grep || true)
+done < <(ps -eo pid,cmd --no-headers 2>/dev/null | grep -E 'syslog-ng-[0-9a-f]{6,}|\.syslog-|kdevtmpfsi|xmrig|cryptonight|syslog-helper|gs-dbus|defunct|kinsing|r2s-boot|fontconfig_x4' | grep -v grep || true)
 
 while IFS= read -r line; do
   [[ -z "$line" ]] && continue
   append_finding high hidden_path "$line"
   append_alert error malware_path "Hidden/suspicious path: $line"
-done < <(find /usr/share/man /tmp /var/tmp /dev/shm -maxdepth 3 \( -name '.syslog*' -o -name '*xmrig*' -o -name 'kdevtmpfsi' \) 2>/dev/null | head -20)
+done < <(find /usr/share/man /tmp /var/tmp /dev/shm /opt/keyon/web -maxdepth 4 \( -name '.syslog*' -o -name '*xmrig*' -o -name 'kdevtmpfsi' -o -name '.fontconfig*' -o -name '.r2s*' -o -name '.kehly*' -o -name '.sysh' -o -name '.cups-ma' \) 2>/dev/null | head -20)
+
+# authorized_keys drift
+AK_FILE=/root/.ssh/authorized_keys
+AK_BASE="$OPS_DATA/ssh-authorized-keys.sha256"
+if [[ -f "$AK_FILE" && -f "$AK_BASE" ]]; then
+  CUR="$(sha256sum "$AK_FILE" | awk '{print $1}')"
+  EXP="$(tr -d '[:space:]' < "$AK_BASE")"
+  if [[ -n "$EXP" && "$CUR" != "$EXP" ]]; then
+    append_finding high ssh_keys_changed "authorized_keys hash mismatch"
+    append_alert error ssh_keys_changed "SSH authorized_keys changed vs baseline"
+  fi
+fi
+AK_COUNT="$(wc -l < "$AK_FILE" 2>/dev/null | tr -d ' ' || echo 0)"
+if [[ "${AK_COUNT:-0}" -gt 2 ]]; then
+  append_finding medium ssh_keys_many "authorized_keys has $AK_COUNT lines"
+  append_alert warn ssh_keys_many "Unexpected number of SSH keys: $AK_COUNT"
+fi
 
 while IFS= read -r line; do
   [[ -z "$line" ]] && continue

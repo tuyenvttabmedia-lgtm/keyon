@@ -42,3 +42,17 @@ Uptime ngoài: tạo check HTTP `https://keyon.vn/api/health` trên UptimeRobot 
 /opt/keyon/ops/host-watchdog.sh
 /opt/keyon/ops/host-watchdog.sh --security-full
 ```
+
+## Security hardening (VPS)
+
+```bash
+cd /opt/keyon
+bash ops/install-security-hardening.sh
+```
+
+Cài: unattended-upgrades · sysctl · SSH no-password · Cloudflare Authenticated Origin Pulls · backup Postgres hàng ngày (`/var/backups/keyon`, 7 ngày) · baseline `authorized_keys` cho watchdog.
+
+**Cloudflare (bắt buộc sau khi cài):** SSL/TLS → Origin Server → **Authenticated Origin Pulls → ON**.  
+SSL/TLS encryption mode: **Full (strict)**. Bật WAF Managed Rules + Bot Fight Mode trên dashboard.
+
+Backup tay: `/opt/keyon/ops/backup-postgres-daily.sh`
