@@ -16,17 +16,16 @@ import {
   IconUser,
 } from "@/storefront/components/auth/AuthField";
 import { TurnstileField } from "@/storefront/components/auth/TurnstileField";
+import { useTurnstileSiteKey } from "@/storefront/components/auth/use-turnstile-site-key";
 import {
   BODY_MUTED_CLASS,
   FORM_ERROR_CLASS,
   LINK_ACCENT_CLASS,
 } from "@/storefront/typography";
 
-const TURNSTILE_SITE_KEY =
-  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() || "";
-
 export function RegisterForm() {
   const router = useRouter();
+  const turnstileSiteKey = useTurnstileSiteKey();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -52,7 +51,7 @@ export function RegisterForm() {
       setError("Mật khẩu xác nhận không khớp");
       return;
     }
-    if (TURNSTILE_SITE_KEY && !turnstileToken) {
+    if (turnstileSiteKey && !turnstileToken) {
       setError("Vui lòng xác nhận bạn không phải robot");
       return;
     }
@@ -191,9 +190,9 @@ export function RegisterForm() {
           </Link>
         </span>
       </label>
-      {TURNSTILE_SITE_KEY ? (
+      {turnstileSiteKey ? (
         <TurnstileField
-          siteKey={TURNSTILE_SITE_KEY}
+          siteKey={turnstileSiteKey}
           onToken={setTurnstileToken}
         />
       ) : null}

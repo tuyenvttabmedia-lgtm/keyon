@@ -9,6 +9,7 @@ import type { PaymentSettingsPublic } from "@/server/payment/config";
 import type { SupplierApiSettingsPublic } from "@/server/supplier/config";
 import type { MailSettingsPublic } from "@/server/mail/config";
 import type { TelegramSettingsPublic } from "@/server/telegram/config";
+import type { TurnstileSettingsPublic } from "@/server/turnstile/config";
 import {
   SETTINGS_TABS,
   type SettingsTab,
@@ -41,6 +42,10 @@ const TAB_HELP: Record<SettingsTab, { title: string; lead: string }> = {
     title: "Telegram",
     lead: "Nhận thông báo lead (liên hệ / báo giá) và monitoring. Bot token mã hóa AES; Chat ID lưu plain. Field trống → fallback ENV.",
   },
+  turnstile: {
+    title: "Cloudflare Turnstile",
+    lead: "Chống bot trên login / đăng ký / quên mật khẩu / liên hệ. Secret mã hóa AES. Không cần sửa .env trên VPS.",
+  },
   sepay: {
     title: "Thanh toán · SePay",
     lead: "Credential mã hóa AES. Field trống → fallback ENV.",
@@ -62,6 +67,7 @@ export function SettingsForm({
   initialSupplierApi,
   initialMail,
   initialTelegram,
+  initialTurnstile,
   initialTab = "chung",
   siteOrigin,
   siteHostname,
@@ -73,6 +79,7 @@ export function SettingsForm({
   initialSupplierApi: SupplierApiSettingsPublic;
   initialMail: MailSettingsPublic;
   initialTelegram: TelegramSettingsPublic;
+  initialTurnstile: TurnstileSettingsPublic;
   initialTab?: SettingsTab;
   siteOrigin: string;
   siteHostname: string;
@@ -87,9 +94,11 @@ export function SettingsForm({
   const [supplierApi, setSupplierApi] = useState(initialSupplierApi);
   const [mail, setMail] = useState(initialMail);
   const [telegram, setTelegram] = useState(initialTelegram);
+  const [turnstile, setTurnstile] = useState(initialTurnstile);
   const [mailPass, setMailPass] = useState("");
   const [mailTestTo, setMailTestTo] = useState("");
   const [telegramBotToken, setTelegramBotToken] = useState("");
+  const [turnstileSecret, setTurnstileSecret] = useState("");
   const [wasabiSecret, setWasabiSecret] = useState("");
   const [apiKey, setApiKey] = useState("");
   const [webhookSecret, setWebhookSecret] = useState("");
@@ -109,6 +118,7 @@ export function SettingsForm({
   useEffect(() => setSupplierApi(initialSupplierApi), [initialSupplierApi]);
   useEffect(() => setMail(initialMail), [initialMail]);
   useEffect(() => setTelegram(initialTelegram), [initialTelegram]);
+  useEffect(() => setTurnstile(initialTurnstile), [initialTurnstile]);
   useEffect(() => setTab(initialTab), [initialTab]);
 
   const siteDirty = useMemo(
@@ -236,6 +246,76 @@ export function SettingsForm({
       setTelegram(data.data);
       setTelegramBotToken("");
       setMsg("Đã xóa Bot token đã lưu (fallback ENV nếu có)");
+    } catch (e) {
+      setMsg(e instanceof Error ? e.message : "Lỗi");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function saveTurnstile() {
+    setLoading(true);
+    setMsg(null);
+    try {
+      const res = await fetch("/api/admin/turnstile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          enabled: turnstile.enabled,
+          siteKey: turnstile.siteKey,
+          ...(turnstileSecret.trim()
+            ? { secretKey: turnstileSecret.trim() }
+            : {}),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Lỗi");
+      setTurnstile(data.data);
+      setTurnstileSecret("");
+      setMsg("Đã lưu cấu hình Turnstile");
+    } catch (e) {
+      setMsg(e instanceof Error ? e.message : "Lỗi");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function clearTurnstileSecret() {
+    setLoading(true);
+    setMsg(null);
+    try {
+      const res = await fetch("/api/admin/turnstile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          enabled: turnstile.enabled,
+          siteKey: turnstile.siteKey,
+          clearSecret: true,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Lỗi");
+      setTurnstile(data.data);
+      setTurnstileSecret("");
+      setMsg("Đã xóa Secret Turnstile (fallback ENV nếu có)");
+    } catch (e) {
+      setMsg(e instanceof Error ? e.message : "Lỗi");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function testTurnstile() {
+    setLoading(true);
+    setMsg(null);
+    try {
+      const res = await fetch("/api/admin/turnstile/test", { method: "POST" });
+      const data = await res.json();
+      if (data.data) setTurnstile(data.data);
+      if (!res.ok || data.ok === false) {
+        throw new Error(data.error ?? "Test thất bại");
+      }
+      setMsg(data.message ?? "OK");
     } catch (e) {
       setMsg(e instanceof Error ? e.message : "Lỗi");
     } finally {
@@ -469,6 +549,7 @@ export function SettingsForm({
   function save() {
     if (tab === "email") return saveMail();
     if (tab === "telegram") return saveTelegram();
+    if (tab === "turnstile") return saveTurnstile();
     if (tab === "storage") return saveStorage();
     if (tab === "sepay") return savePayment();
     if (tab === "ncc") return saveSupplierApi();
@@ -862,6 +943,118 @@ export function SettingsForm({
                     {" · "}
                     Lỗi:{" "}
                     <span className="text-rose-700">{telegram.health.lastError}</span>
+                  </>
+                ) : null}
+              </p>
+            </div>
+          </div>
+        ) : null}
+
+        {tab === "turnstile" ? (
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              <span
+                className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                  turnstile.resolved.status === "ok"
+                    ? "bg-emerald-50 text-emerald-700"
+                    : turnstile.resolved.status === "degraded"
+                      ? "bg-rose-50 text-rose-700"
+                      : turnstile.resolved.status === "disabled"
+                        ? "bg-slate-100 text-slate-600"
+                        : "bg-amber-50 text-amber-800"
+                }`}
+              >
+                {turnstile.resolved.status === "ok"
+                  ? "Sẵn sàng"
+                  : turnstile.resolved.status === "degraded"
+                    ? "Lỗi gần đây"
+                    : turnstile.resolved.status === "disabled"
+                      ? "Đã tắt"
+                      : "Chưa cấu hình"}
+              </span>
+              <span className="text-muted">
+                Nguồn:{" "}
+                <span className="font-medium text-navy">
+                  {turnstile.resolved.source}
+                </span>
+              </span>
+            </div>
+
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                className="h-4 w-4 rounded border-border text-accent focus:ring-accent"
+                checked={turnstile.enabled}
+                onChange={(e) =>
+                  setTurnstile({ ...turnstile, enabled: e.target.checked })
+                }
+              />
+              <span className="font-medium text-navy">
+                Bật Turnstile trên form công khai
+              </span>
+            </label>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="block text-sm sm:col-span-2">
+                <span className="font-medium text-navy">Site key (công khai)</span>
+                <input
+                  className="mt-1 w-full rounded-lg border border-border px-3 py-2 font-mono text-sm"
+                  placeholder="0x4AAAA…"
+                  value={turnstile.siteKey}
+                  onChange={(e) =>
+                    setTurnstile({ ...turnstile, siteKey: e.target.value })
+                  }
+                  autoComplete="off"
+                />
+              </label>
+              <label className="block text-sm sm:col-span-2">
+                <span className="font-medium text-navy">
+                  Secret key
+                  {turnstile.secretConfigured ? " (đã lưu)" : ""}
+                </span>
+                <input
+                  type="password"
+                  className="mt-1 w-full rounded-lg border border-border px-3 py-2 font-mono text-sm"
+                  placeholder={
+                    turnstile.secretConfigured
+                      ? "•••••••• (để trống nếu giữ)"
+                      : "0x4AAAA…"
+                  }
+                  value={turnstileSecret}
+                  onChange={(e) => setTurnstileSecret(e.target.value)}
+                  autoComplete="new-password"
+                />
+              </label>
+            </div>
+
+            <p className="text-xs text-muted">
+              Tạo widget tại{" "}
+              <a
+                href="https://dash.cloudflare.com/?to=/:account/turnstile"
+                target="_blank"
+                rel="noreferrer"
+                className="font-medium text-accent hover:underline"
+              >
+                Cloudflare Turnstile
+              </a>{" "}
+              (domain <code className="text-navy">keyon.vn</code>). Secret mã hóa
+              AES trên server — không cần SSH sửa <code className="text-navy">.env</code>.
+              Field trống → fallback ENV nếu có.
+            </p>
+
+            <div className="rounded-lg border border-border bg-[#F7FAFC] px-3 py-3 text-xs text-muted">
+              <p>
+                Kiểm tra gần nhất:{" "}
+                <span className="text-navy">
+                  {formatHealthTime(turnstile.health.lastSuccessAt)}
+                </span>
+                {turnstile.health.lastError ? (
+                  <>
+                    {" · "}
+                    Lỗi:{" "}
+                    <span className="text-rose-700">
+                      {turnstile.health.lastError}
+                    </span>
                   </>
                 ) : null}
               </p>
@@ -1475,6 +1668,28 @@ export function SettingsForm({
                   className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-navy hover:bg-navy-soft disabled:opacity-50"
                 >
                   Xóa token đã lưu
+                </button>
+              ) : null}
+            </>
+          ) : null}
+          {tab === "turnstile" ? (
+            <>
+              <button
+                type="button"
+                disabled={loading}
+                onClick={testTurnstile}
+                className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-navy hover:bg-navy-soft disabled:opacity-50"
+              >
+                Kiểm tra Secret
+              </button>
+              {turnstile.secretConfigured ? (
+                <button
+                  type="button"
+                  disabled={loading}
+                  onClick={clearTurnstileSecret}
+                  className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-navy hover:bg-navy-soft disabled:opacity-50"
+                >
+                  Xóa secret đã lưu
                 </button>
               ) : null}
             </>

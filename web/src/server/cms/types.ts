@@ -706,6 +706,29 @@ export const defaultTelegramSettings: TelegramSettings = {
   },
 };
 
+/** Cloudflare Turnstile — secret AES-GCM; site key is public by design. */
+export type TurnstileSettings = {
+  enabled: boolean;
+  siteKey: string;
+  secretKeyEnc: string;
+  health: {
+    lastSuccessAt: string | null;
+    lastFailedAt: string | null;
+    lastError: string | null;
+  };
+};
+
+export const defaultTurnstileSettings: TurnstileSettings = {
+  enabled: false,
+  siteKey: "",
+  secretKeyEnc: "",
+  health: {
+    lastSuccessAt: null,
+    lastFailedAt: null,
+    lastError: null,
+  },
+};
+
 /** Payment gateway (SePay). Secrets AES-GCM encrypted at rest. */
 export type PaymentSettings = {
   provider: "stub" | "sepay" | "payos" | "megapay";

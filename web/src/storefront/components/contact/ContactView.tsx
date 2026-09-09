@@ -26,10 +26,8 @@ import {
   TRANSITION_UI,
 } from "@/storefront/effects";
 import { TurnstileField } from "@/storefront/components/auth/TurnstileField";
+import { useTurnstileSiteKey } from "@/storefront/components/auth/use-turnstile-site-key";
 import { isPlaceholderHotline } from "@/storefront/components/support/shared";
-
-const TURNSTILE_SITE_KEY =
-  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() || "";
 
 const INPUT =
   `h-11 w-full rounded-xl border border-border bg-surface pl-10 pr-3 ${INPUT_TEXT_CLASS} outline-none ${TRANSITION_UI} focus:border-accent focus:bg-white`;
@@ -37,6 +35,7 @@ const TEXTAREA =
   `w-full rounded-xl border border-border bg-surface px-3 py-2.5 pl-10 ${INPUT_TEXT_CLASS} outline-none ${TRANSITION_UI} focus:border-accent focus:bg-white`;
 
 export function ContactView({ cms }: { cms: CmsContact }) {
+  const turnstileSiteKey = useTurnstileSiteKey();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -56,7 +55,7 @@ export function ContactView({ cms }: { cms: CmsContact }) {
       setErr("Vui lòng đồng ý với Chính sách bảo mật.");
       return;
     }
-    if (TURNSTILE_SITE_KEY && !turnstileToken) {
+    if (turnstileSiteKey && !turnstileToken) {
       setErr("Vui lòng xác nhận bạn không phải robot");
       return;
     }
@@ -289,9 +288,9 @@ export function ContactView({ cms }: { cms: CmsContact }) {
                 </span>
               </label>
 
-              {TURNSTILE_SITE_KEY ? (
+              {turnstileSiteKey ? (
                 <TurnstileField
-                  siteKey={TURNSTILE_SITE_KEY}
+                  siteKey={turnstileSiteKey}
                   onToken={setTurnstileToken}
                 />
               ) : null}

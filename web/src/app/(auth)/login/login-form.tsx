@@ -11,17 +11,16 @@ import {
   IconMail,
 } from "@/storefront/components/auth/AuthField";
 import { TurnstileField } from "@/storefront/components/auth/TurnstileField";
+import { useTurnstileSiteKey } from "@/storefront/components/auth/use-turnstile-site-key";
 import {
   BODY_MUTED_CLASS,
   FORM_ERROR_CLASS,
   LINK_ACCENT_CLASS,
 } from "@/storefront/typography";
 
-const TURNSTILE_SITE_KEY =
-  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() || "";
-
 export function LoginForm() {
   const router = useRouter();
+  const turnstileSiteKey = useTurnstileSiteKey();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [totpCode, setTotpCode] = useState("");
@@ -45,7 +44,7 @@ export function LoginForm() {
     setLoading(true);
     setError(null);
     try {
-      if (TURNSTILE_SITE_KEY && !turnstileToken) {
+      if (turnstileSiteKey && !turnstileToken) {
         throw new Error("Vui lòng xác nhận bạn không phải robot");
       }
       const res = await fetch("/api/auth/login", {
@@ -137,9 +136,9 @@ export function LoginForm() {
           describedBy={error ? "login-form-error" : undefined}
         />
       ) : null}
-      {TURNSTILE_SITE_KEY ? (
+      {turnstileSiteKey ? (
         <TurnstileField
-          siteKey={TURNSTILE_SITE_KEY}
+          siteKey={turnstileSiteKey}
           onToken={setTurnstileToken}
         />
       ) : null}

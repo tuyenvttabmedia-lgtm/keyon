@@ -4,6 +4,7 @@ import { getPaymentSettingsPublic } from "@/server/payment/config";
 import { getSupplierApiSettingsPublic } from "@/server/supplier/config";
 import { getMailSettingsPublic } from "@/server/mail/config";
 import { getTelegramSettingsPublic } from "@/server/telegram/config";
+import { getTurnstileSettingsPublic } from "@/server/turnstile/config";
 import {
   buildSettingsStatus,
   parseSettingsTab,
@@ -34,7 +35,7 @@ export default async function AdminSettingsPage({
   const sp = await searchParams;
   const initialTab = parseSettingsTab(sp.tab);
 
-  const [settings, storage, payment, supplierApi, mail, telegram] =
+  const [settings, storage, payment, supplierApi, mail, telegram, turnstile] =
     await Promise.all([
       loadSiteSettings(),
       getStorageSettingsPublic(),
@@ -42,6 +43,7 @@ export default async function AdminSettingsPage({
       getSupplierApiSettingsPublic(),
       getMailSettingsPublic(),
       getTelegramSettingsPublic(),
+      getTurnstileSettingsPublic(),
     ]);
 
   const statusCards = buildSettingsStatus({
@@ -51,6 +53,7 @@ export default async function AdminSettingsPage({
     storage,
     supplierApi,
     telegram,
+    turnstile,
   });
 
   return (
@@ -59,7 +62,7 @@ export default async function AdminSettingsPage({
         <div>
           <h1 className={ADMIN_PAGE_TITLE_CLASS}>Cài đặt</h1>
           <p className="text-sm text-muted">
-            Hệ thống · SEO · Email · Telegram · SePay · NCC API · Storage
+            Hệ thống · SEO · Email · Telegram · Turnstile · SePay · NCC · Storage
           </p>
         </div>
         <Link
@@ -70,7 +73,7 @@ export default async function AdminSettingsPage({
         </Link>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7">
         {statusCards.map((c) => (
           <Link
             key={c.label}
@@ -95,6 +98,7 @@ export default async function AdminSettingsPage({
         initialSupplierApi={supplierApi}
         initialMail={mail}
         initialTelegram={telegram}
+        initialTurnstile={turnstile}
         initialTab={initialTab}
         siteOrigin={getSiteOrigin()}
         siteHostname={getSiteHostname()}
