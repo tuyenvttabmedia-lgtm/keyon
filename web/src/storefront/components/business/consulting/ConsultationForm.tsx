@@ -30,6 +30,8 @@ import {
   SECTION_PAD,
   type InterestId,
 } from "./shared";
+import { TurnstileField } from "@/storefront/components/auth/TurnstileField";
+import { useTurnstileSiteKey } from "@/storefront/components/auth/use-turnstile-site-key";
 
 type CustomerType = "PERSONAL" | "BUSINESS";
 type EstimatedUsers = (typeof ESTIMATED_USERS)[number];
@@ -82,6 +84,8 @@ export function ConsultationForm() {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const turnstileSiteKey = useTurnstileSiteKey();
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [referenceCode, setReferenceCode] = useState<string | null>(null);
 
@@ -135,6 +139,11 @@ export function ConsultationForm() {
 
     setLoading(true);
     try {
+      if (turnstileSiteKey && !turnstileToken) {
+        setFormError("Vui lòng xác nhận bạn không phải robot");
+        setLoading(false);
+        return;
+      }
       const companyName =
         form.customerType === "PERSONAL" ? "Cá nhân" : form.companyName.trim();
       const interestName = interestLabel(form.interestedIn);
@@ -156,6 +165,7 @@ export function ConsultationForm() {
           requestType: "LICENSING_CONSULTING",
           sourcePath: "/business/licensing-consulting",
           companyUrl: form.companyUrl,
+          turnstileToken: turnstileToken ?? undefined,
         }),
       });
       const data = (await res.json().catch(() => ({}))) as {
@@ -366,6 +376,13 @@ export function ConsultationForm() {
                 </span>
               </label>
               <FieldError message={errors.privacyAccepted} />
+
+              {turnstileSiteKey ? (
+                <TurnstileField
+                  siteKey={turnstileSiteKey}
+                  onToken={setTurnstileToken}
+                />
+              ) : null}
 
               {formError ? (
                 <p className={`flex items-start gap-1.5 ${FORM_ERROR_CLASS}`} role="alert">

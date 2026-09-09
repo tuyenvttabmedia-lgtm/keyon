@@ -286,6 +286,23 @@ export async function savePaymentSettings(input: {
   const environment =
     input.sepay.environment === "production" ? "production" : "sandbox";
 
+  if (environment === "sandbox" && process.env.NODE_ENV === "production") {
+    // Allowed for PG testing, but Admin + health must scream — do not silently treat as live bank.
+    // Soft gate: require merchant credentials so random default sandbox cannot take payments.
+    const hasMerchant =
+      Boolean(merchantSecretEnc) ||
+      Boolean(process.env.SEPAY_PG_SECRET_KEY?.trim()) ||
+      Boolean((input.sepay.merchantId ?? "").trim()) ||
+      Boolean(current.sepay.merchantId?.trim());
+    if (!hasMerchant) {
+      throw new AppError(
+        "SePay sandbox trên production cần Merchant ID + Merchant Secret (hoặc chuyển environment = production + HMAC)",
+        400,
+        "PAYMENT_NOT_CONFIGURED",
+      );
+    }
+  }
+
   if (environment === "production") {
     const hasHmac =
       Boolean(webhookSecretEnc) || Boolean(process.env.SEPAY_WEBHOOK_SECRET?.trim());

@@ -15,6 +15,8 @@ import {
 import { hashIp, publicReferenceCode } from "@/server/quote/ids";
 import { notifyLeadTelegram } from "@/server/notify/lead-telegram";
 import { runQuoteRequestFollowUp } from "@/server/quote/quote-request-ops";
+import { assertTurnstileToken } from "@/server/auth/turnstile";
+import { toErrorResponse } from "@/lib/errors";
 
 const log = childLogger("quote");
 
@@ -53,6 +55,10 @@ export async function POST(req: Request) {
     }
 
     const raw = await req.json();
+    await assertTurnstileToken(
+      typeof raw?.turnstileToken === "string" ? raw.turnstileToken : undefined,
+      ip,
+    );
     // Honeypot: treat filled companyUrl as soft success (no store)
     if (typeof raw?.companyUrl === "string" && raw.companyUrl.trim()) {
       log.warn({ ip }, "quote honeypot tripped");
@@ -211,6 +217,6 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
-    return NextResponse.json({ error: "Gửi yêu cầu thất bại" }, { status: 400 });
+    return toErrorResponse(e, "quote");
   }
 }

@@ -42,6 +42,8 @@ import {
   TRANSITION_UI,
 } from "@/storefront/effects";
 import { isPlaceholderHotline } from "@/storefront/components/support/shared";
+import { TurnstileField } from "@/storefront/components/auth/TurnstileField";
+import { useTurnstileSiteKey } from "@/storefront/components/auth/use-turnstile-site-key";
 import {
   ESTIMATED_USERS,
   ESTIMATED_USERS_LABEL,
@@ -224,6 +226,8 @@ export function QuoteRequestLanding({
   const [errors, setErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const turnstileSiteKey = useTurnstileSiteKey();
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [referenceCode, setReferenceCode] = useState<string | null>(null);
   const [productQuery, setProductQuery] = useState("");
@@ -337,6 +341,9 @@ export function QuoteRequestLanding({
 
     setLoading(true);
     try {
+      if (turnstileSiteKey && !turnstileToken) {
+        throw new Error("Vui lòng xác nhận bạn không phải robot");
+      }
       const res = await fetch("/api/quote", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -357,6 +364,7 @@ export function QuoteRequestLanding({
           requestType,
           sourcePath,
           companyUrl: form.companyUrl,
+          turnstileToken: turnstileToken ?? undefined,
         }),
       });
       const data = (await res.json()) as {
@@ -842,6 +850,13 @@ export function QuoteRequestLanding({
                       </span>
                     </label>
                     <FieldError message={errors.privacyAccepted} />
+
+                    {turnstileSiteKey ? (
+                      <TurnstileField
+                        siteKey={turnstileSiteKey}
+                        onToken={setTurnstileToken}
+                      />
+                    ) : null}
 
                     {formError ? (
                       <p className={`flex items-start gap-1.5 ${FORM_ERROR_CLASS}`} role="alert">
