@@ -40,26 +40,56 @@ if [[ -s "$TMP_V6" ]]; then
   done < "$TMP_V6"
 fi
 
-# SSH allowlist: current session IP (failsafe) + optional KEYON_SSH_ALLOW_IP
-SSH_IP=""
-if [[ -n "${SSH_CONNECTION:-}" ]]; then
-  SSH_IP="$(echo "$SSH_CONNECTION" | awk '{print $1}')"
-elif [[ -n "${SSH_CLIENT:-}" ]]; then
-  SSH_IP="$(echo "$SSH_CLIENT" | awk '{print $1}')"
+# Prefer Tailscale SSH (stable) over pinning dynamic home IP.
+# Set KEYON_PIN_SSH_CLIENT_IP=1 only for emergency break-glass from current public IP.
+PREFER_TS="${KEYON_PREFER_TAILSCALE_SSH:-1}"
+if [[ "$PREFER_TS" == "1" ]] && command -v tailscale >/dev/null 2>&1 && tailscale ip -4 >/dev/null 2>&1; then
+  ufw allow 41641/udp comment 'Tailscale-WG' >/dev/null || true
+  ufw allow in on tailscale0 comment 'Tailscale-iface' >/dev/null || true
+  ufw allow from 100.64.0.0/10 to any port 22 proto tcp comment 'KEYON-SSH-TS' >/dev/null || true
+  echo "ssh_mode=tailscale"
+elif [[ "${KEYON_PIN_SSH_CLIENT_IP:-0}" == "1" ]]; then
+  SSH_IP=""
+  if [[ -n "${SSH_CONNECTION:-}" ]]; then
+    SSH_IP="$(echo "$SSH_CONNECTION" | awk '{print $1}')"
+  elif [[ -n "${SSH_CLIENT:-}" ]]; then
+    SSH_IP="$(echo "$SSH_CLIENT" | awk '{print $1}')"
+  fi
+  EXTRA="${KEYON_SSH_ALLOW_IP:-}"
+  allow_ssh() {
+    local ip="$1"
+    [[ -z "$ip" ]] && return 0
+    ufw allow from "$ip" to any port 22 proto tcp comment 'KEYON-SSH' >/dev/null || true
+    echo "ssh_allow $ip"
+  }
+  allow_ssh "$SSH_IP"
+  if [[ -n "$EXTRA" && "$EXTRA" != "$SSH_IP" ]]; then
+    allow_ssh "$EXTRA"
+  fi
+  echo "ssh_mode=client_ip_pin"
+else
+  echo "ssh_mode=unchanged (enable Tailscale or KEYON_PIN_SSH_CLIENT_IP=1)"
 fi
-EXTRA="${KEYON_SSH_ALLOW_IP:-}"
 
-allow_ssh() {
-  local ip="$1"
-  [[ -z "$ip" ]] && return 0
-  # skip if looks like private/docker weirdness without public
-  ufw allow from "$ip" to any port 22 proto tcp comment 'KEYON-SSH' >/dev/null || true
-  echo "ssh_allow $ip"
-}
-
-allow_ssh "$SSH_IP"
-if [[ -n "$EXTRA" && "$EXTRA" != "$SSH_IP" ]]; then
-  allow_ssh "$EXTRA"
+# Stealth: drop ICMP echo-request so casual ping scans do not confirm the host
+if [[ -f /etc/ufw/before.rules ]] && ! grep -q 'KEYON-ICMP-STEALTH' /etc/ufw/before.rules; then
+  python3 - <<'PY'
+from pathlib import Path
+import re
+p = Path("/etc/ufw/before.rules")
+t = p.read_text()
+t2, n = re.subn(
+    r"-A ufw-before-input -p icmp --icmp-type echo-request -j ACCEPT",
+    "-A ufw-before-input -p icmp --icmp-type echo-request -j DROP  # KEYON-ICMP-STEALTH",
+    t,
+    count=1,
+)
+if n:
+    p.write_text(t2)
+    print("icmp_stealth_patched")
+else:
+    print("icmp_rule_not_found_skip")
+PY
 fi
 
 # Remove wide-open web rules (keep labeled CF rules)
@@ -81,8 +111,8 @@ for line in out.splitlines():
         # Only remove open SSH if we have at least one KEYON-SSH rule
         nums.append(("ssh", n))
 
-# Check KEYON-SSH exists
-has_ssh_pin = "KEYON-SSH" in out
+# Check KEYON-SSH / Tailscale pin exists before deleting open SSH
+has_ssh_pin = ("KEYON-SSH" in out) or ("KEYON-SSH-TS" in out)
 to_del = []
 for item in nums:
     if isinstance(item, tuple):
@@ -91,7 +121,17 @@ for item in nums:
     else:
         to_del.append(item)
 
-for n in sorted((int(x) for x in to_del), reverse=True):
+# If Tailscale mode: also drop legacy KEYON-SSH home-IP pins (not KEYON-SSH-TS)
+if "KEYON-SSH-TS" in out:
+    for line in out.splitlines():
+        m = re.match(r"\[\s*(\d+)\]\s+(.*)", line)
+        if not m:
+            continue
+        n, rest = m.group(1), m.group(2)
+        if "KEYON-SSH" in rest and "KEYON-SSH-TS" not in rest and "ALLOW IN" in rest:
+            to_del.append(n)
+
+for n in sorted({int(x) for x in to_del}, reverse=True):
     subprocess.run(["ufw", "--force", "delete", str(n)], check=False)
     print(f"deleted_rule {n}")
 print(f"ssh_pin={has_ssh_pin}")
@@ -101,6 +141,4 @@ ufw reload >/dev/null || true
 echo "=== ufw status ==="
 ufw status numbered | head -80
 echo "FIREWALL_CLOUDFLARE_LOCK_OK"
-if [[ -z "$SSH_IP" && -z "$EXTRA" ]]; then
-  echo "WARN: could not detect SSH client IP — port 22 may still be open from Anywhere"
-fi
+echo "NOTE: Cloudflare A/AAAA for the site must stay Proxied (orange) — dashboard still shows origin IP privately."
