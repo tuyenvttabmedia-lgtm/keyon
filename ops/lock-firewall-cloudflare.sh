@@ -21,10 +21,11 @@ curl -fsSL --max-time 30 https://www.cloudflare.com/ips-v6 -o "$TMP_V6" || true
 ufw --force enable >/dev/null || true
 ufw default deny incoming >/dev/null || true
 ufw default allow outgoing >/dev/null || true
-ufw allow on lo >/dev/null || true
+# Loopback is usually already allowed; skip invalid "allow on lo" syntax
 
 # Allow CF → 80/443 (commented so we can refresh later)
 while read -r cidr; do
+  cidr="${cidr%$'\r'}"
   [[ -z "$cidr" || "$cidr" =~ ^# ]] && continue
   ufw allow from "$cidr" to any port 80 proto tcp comment 'CF-HTTP' >/dev/null || true
   ufw allow from "$cidr" to any port 443 proto tcp comment 'CF-HTTPS' >/dev/null || true
@@ -32,6 +33,7 @@ done < "$TMP_V4"
 
 if [[ -s "$TMP_V6" ]]; then
   while read -r cidr; do
+    cidr="${cidr%$'\r'}"
     [[ -z "$cidr" || "$cidr" =~ ^# ]] && continue
     ufw allow from "$cidr" to any port 80 proto tcp comment 'CF-HTTP6' >/dev/null || true
     ufw allow from "$cidr" to any port 443 proto tcp comment 'CF-HTTPS6' >/dev/null || true
