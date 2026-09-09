@@ -29,6 +29,7 @@ copy_ops "$SRC_DIR/install-security-hardening.sh" "$OPS_DIR/install-security-har
 copy_ops "$SRC_DIR/install-app-user.sh" "$OPS_DIR/install-app-user.sh"
 copy_ops "$SRC_DIR/lock-firewall-cloudflare.sh" "$OPS_DIR/lock-firewall-cloudflare.sh"
 copy_ops "$SRC_DIR/enable-redis-auth.sh" "$OPS_DIR/enable-redis-auth.sh"
+copy_ops "$SRC_DIR/allow-ssh-tailscale.sh" "$OPS_DIR/allow-ssh-tailscale.sh"
 
 echo "== unattended-upgrades =="
 export DEBIAN_FRONTEND=noninteractive
