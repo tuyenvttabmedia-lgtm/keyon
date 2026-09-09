@@ -102,21 +102,36 @@ export async function markPaymentSucceeded(input: MarkPaidInput | string): Promi
     }
   }
 
-  const payment = await prisma.$transaction(async (tx) => {
+  const result = await prisma.$transaction(async (tx) => {
     if (normalized.providerEventId) {
-      await tx.paymentWebhookReceipt.create({
-        data: {
-          id: id(),
-          providerEventId: normalized.providerEventId,
-          paymentReference,
-          provider: existing.provider,
-          rawPayload: normalized.rawPayload ?? undefined,
-        },
-      });
+      try {
+        await tx.paymentWebhookReceipt.create({
+          data: {
+            id: id(),
+            providerEventId: normalized.providerEventId,
+            paymentReference,
+            provider: existing.provider,
+            rawPayload: normalized.rawPayload ?? undefined,
+          },
+        });
+      } catch {
+        // Unique providerEventId → concurrent duplicate
+        const payment = await tx.payment.findUniqueOrThrow({
+          where: { paymentReference },
+        });
+        return {
+          payment,
+          duplicateWebhook: true,
+          alreadyPaid: payment.status === "SUCCEEDED",
+        };
+      }
     }
 
-    const updated = await tx.payment.update({
-      where: { id: existing.id },
+    const bumped = await tx.payment.updateMany({
+      where: {
+        id: existing.id,
+        status: { in: ["CREATED", "AWAITING"] },
+      },
       data: {
         status: "SUCCEEDED",
         succeededAt: new Date(),
@@ -126,6 +141,24 @@ export async function markPaymentSucceeded(input: MarkPaidInput | string): Promi
         providerPaidAt: normalized.providerPaidAt ?? new Date(),
         rawPayload: normalized.rawPayload ?? undefined,
       },
+    });
+
+    if (bumped.count === 0) {
+      const current = await tx.payment.findUniqueOrThrow({
+        where: { id: existing.id },
+      });
+      if (current.status === "SUCCEEDED") {
+        return {
+          payment: current,
+          duplicateWebhook: true,
+          alreadyPaid: true,
+        };
+      }
+      throw new AppError(`Payment is ${current.status}`, 409, "PAYMENT_TERMINAL");
+    }
+
+    const updated = await tx.payment.findUniqueOrThrow({
+      where: { id: existing.id },
     });
 
     await tx.order.update({
@@ -141,8 +174,18 @@ export async function markPaymentSucceeded(input: MarkPaidInput | string): Promi
       },
     });
 
-    return updated;
+    return {
+      payment: updated,
+      duplicateWebhook: false,
+      alreadyPaid: false,
+    };
   });
+
+  if (result.duplicateWebhook || result.alreadyPaid) {
+    return result;
+  }
+
+  const payment = result.payment;
 
   paymentKpis.payment_succeeded++;
   await audit("payment.succeeded", "Payment", payment.id, null, { paymentReference });

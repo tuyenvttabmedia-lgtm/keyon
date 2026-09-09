@@ -12,7 +12,8 @@ const securityHeaders = [
     key: "Strict-Transport-Security",
     value: "max-age=31536000; includeSubDomains",
   },
-  // Baseline CSP — tighten later once Admin inline styles are tokenized
+  // Baseline CSP — style-src still needs unsafe-inline (Tailwind/Next).
+  // script-src keeps unsafe-inline until nonce rollout; Turnstile host allowlisted.
   {
     key: "Content-Security-Policy",
     value: [
@@ -22,10 +23,12 @@ const securityHeaders = [
       "frame-ancestors 'self'",
       "object-src 'none'",
       "img-src 'self' data: blob: https:",
-      "font-src 'self' data: https:",
+      "font-src 'self' data:",
       "style-src 'self' 'unsafe-inline'",
-      "script-src 'self' 'unsafe-inline'",
-      "connect-src 'self' https: wss:",
+      "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
+      "frame-src 'self' https://challenges.cloudflare.com",
+      "connect-src 'self' https://challenges.cloudflare.com https:",
+      "upgrade-insecure-requests",
     ].join("; "),
   },
 ];

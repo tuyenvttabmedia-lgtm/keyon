@@ -15,11 +15,15 @@ import {
   IconPhone,
   IconUser,
 } from "@/storefront/components/auth/AuthField";
+import { TurnstileField } from "@/storefront/components/auth/TurnstileField";
 import {
   BODY_MUTED_CLASS,
   FORM_ERROR_CLASS,
   LINK_ACCENT_CLASS,
 } from "@/storefront/typography";
+
+const TURNSTILE_SITE_KEY =
+  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() || "";
 
 export function RegisterForm() {
   const router = useRouter();
@@ -33,6 +37,7 @@ export function RegisterForm() {
   const [agree, setAgree] = useState(true);
   const [showPw, setShowPw] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -47,6 +52,10 @@ export function RegisterForm() {
       setError("Mật khẩu xác nhận không khớp");
       return;
     }
+    if (TURNSTILE_SITE_KEY && !turnstileToken) {
+      setError("Vui lòng xác nhận bạn không phải robot");
+      return;
+    }
     setLoading(true);
     try {
       const res = await fetch("/api/auth/register", {
@@ -59,6 +68,7 @@ export function RegisterForm() {
           dateOfBirth: dateOfBirth || undefined,
           address: address.trim() || undefined,
           password,
+          turnstileToken: turnstileToken ?? undefined,
         }),
       });
       const data = await res.json();
@@ -181,6 +191,12 @@ export function RegisterForm() {
           </Link>
         </span>
       </label>
+      {TURNSTILE_SITE_KEY ? (
+        <TurnstileField
+          siteKey={TURNSTILE_SITE_KEY}
+          onToken={setTurnstileToken}
+        />
+      ) : null}
       {error ? (
         <p id="register-form-error" role="alert" className={FORM_ERROR_CLASS}>
           {error}

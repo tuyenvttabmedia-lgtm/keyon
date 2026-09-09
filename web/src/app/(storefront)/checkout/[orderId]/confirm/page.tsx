@@ -4,6 +4,7 @@ import {
   buildCheckoutPaymentUi,
   loadCheckoutContext,
 } from "@/storefront/lib/checkout-load";
+import { mintCheckoutPollToken } from "@/server/checkout/poll-token";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,7 @@ export default async function CheckoutConfirmPage({
   const { method: methodId, payment: paymentFlag } = await searchParams;
   const ctx = await loadCheckoutContext(orderId);
   const paymentUi = await buildCheckoutPaymentUi(ctx.payment, ctx.orderStatus);
+  const pollToken = mintCheckoutPollToken(orderId);
 
   const selected =
     ctx.cms.paymentMethods.find((m) => m.id === methodId) ??
@@ -47,6 +49,7 @@ export default async function CheckoutConfirmPage({
       cms={ctx.cms}
       order={ctx.order}
       item={ctx.item}
+      pollToken={pollToken}
       methodTitle={
         paymentUi.integrationMode === "payment_gateway"
           ? "Cổng thanh toán SePay"

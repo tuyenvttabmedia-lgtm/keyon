@@ -25,7 +25,11 @@ import {
   OPACITY_DISABLED_BUSY,
   TRANSITION_UI,
 } from "@/storefront/effects";
+import { TurnstileField } from "@/storefront/components/auth/TurnstileField";
 import { isPlaceholderHotline } from "@/storefront/components/support/shared";
+
+const TURNSTILE_SITE_KEY =
+  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() || "";
 
 const INPUT =
   `h-11 w-full rounded-xl border border-border bg-surface pl-10 pr-3 ${INPUT_TEXT_CLASS} outline-none ${TRANSITION_UI} focus:border-accent focus:bg-white`;
@@ -39,6 +43,7 @@ export function ContactView({ cms }: { cms: CmsContact }) {
   const [topic, setTopic] = useState("");
   const [message, setMessage] = useState("");
   const [privacy, setPrivacy] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [ok, setOk] = useState<string | null>(null);
@@ -49,6 +54,10 @@ export function ContactView({ cms }: { cms: CmsContact }) {
     setOk(null);
     if (!privacy) {
       setErr("Vui lòng đồng ý với Chính sách bảo mật.");
+      return;
+    }
+    if (TURNSTILE_SITE_KEY && !turnstileToken) {
+      setErr("Vui lòng xác nhận bạn không phải robot");
       return;
     }
     setLoading(true);
@@ -64,6 +73,7 @@ export function ContactView({ cms }: { cms: CmsContact }) {
           phone,
           topic: topicLabel,
           message,
+          turnstileToken: turnstileToken ?? undefined,
         }),
       });
       const data = await res.json();
@@ -75,6 +85,7 @@ export function ContactView({ cms }: { cms: CmsContact }) {
       setTopic("");
       setMessage("");
       setPrivacy(false);
+      setTurnstileToken(null);
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Lỗi");
     } finally {
@@ -277,6 +288,13 @@ export function ContactView({ cms }: { cms: CmsContact }) {
                   và cho phép KEYON xử lý thông tin của tôi.
                 </span>
               </label>
+
+              {TURNSTILE_SITE_KEY ? (
+                <TurnstileField
+                  siteKey={TURNSTILE_SITE_KEY}
+                  onToken={setTurnstileToken}
+                />
+              ) : null}
 
               {err ? (
                 <p id="contact-form-error" role="alert" className={FORM_ERROR_CLASS}>

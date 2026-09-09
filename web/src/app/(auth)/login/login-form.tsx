@@ -10,11 +10,15 @@ import {
   IconLock,
   IconMail,
 } from "@/storefront/components/auth/AuthField";
+import { TurnstileField } from "@/storefront/components/auth/TurnstileField";
 import {
   BODY_MUTED_CLASS,
   FORM_ERROR_CLASS,
   LINK_ACCENT_CLASS,
 } from "@/storefront/typography";
+
+const TURNSTILE_SITE_KEY =
+  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() || "";
 
 export function LoginForm() {
   const router = useRouter();
@@ -24,6 +28,7 @@ export function LoginForm() {
   const [needsTotp, setNeedsTotp] = useState(false);
   const [showPw, setShowPw] = useState(false);
   const [remember, setRemember] = useState(true);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -40,6 +45,9 @@ export function LoginForm() {
     setLoading(true);
     setError(null);
     try {
+      if (TURNSTILE_SITE_KEY && !turnstileToken) {
+        throw new Error("Vui lòng xác nhận bạn không phải robot");
+      }
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -47,6 +55,7 @@ export function LoginForm() {
           email,
           password,
           remember,
+          turnstileToken: turnstileToken ?? undefined,
           ...(needsTotp || totpCode ? { totpCode } : {}),
         }),
       });
@@ -128,7 +137,15 @@ export function LoginForm() {
           describedBy={error ? "login-form-error" : undefined}
         />
       ) : null}
-      <div className={`flex items-center justify-between gap-3 pt-0.5 ${BODY_MUTED_CLASS}`}>
+      {TURNSTILE_SITE_KEY ? (
+        <TurnstileField
+          siteKey={TURNSTILE_SITE_KEY}
+          onToken={setTurnstileToken}
+        />
+      ) : null}
+      <div
+        className={`flex items-center justify-between gap-3 pt-0.5 ${BODY_MUTED_CLASS}`}
+      >
         <label className="inline-flex cursor-pointer items-center gap-2">
           <input
             type="checkbox"

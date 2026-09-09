@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { AuthSubmitButton } from "@/storefront/components/auth/AuthCard";
 import { AuthField, IconMail } from "@/storefront/components/auth/AuthField";
+import { TurnstileField } from "@/storefront/components/auth/TurnstileField";
 import {
   BODY_CLASS,
   BODY_MUTED_CLASS,
@@ -12,8 +13,12 @@ import {
   LINK_ACCENT_CLASS,
 } from "@/storefront/typography";
 
+const TURNSTILE_SITE_KEY =
+  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() || "";
+
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const [resetUrl, setResetUrl] = useState<string | null>(null);
@@ -24,10 +29,16 @@ export function ForgotPasswordForm() {
     setLoading(true);
     setError(null);
     try {
+      if (TURNSTILE_SITE_KEY && !turnstileToken) {
+        throw new Error("Vui lòng xác nhận bạn không phải robot");
+      }
       const res = await fetch("/api/auth/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({
+          email,
+          turnstileToken: turnstileToken ?? undefined,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Lỗi");
@@ -47,7 +58,9 @@ export function ForgotPasswordForm() {
           Nếu email tồn tại, chúng tôi đã chuẩn bị link đặt lại mật khẩu.
         </p>
         {resetUrl ? (
-          <p className={`rounded-lg bg-accent-soft p-3 text-left ${FORM_SUCCESS_CLASS}`}>
+          <p
+            className={`rounded-lg bg-accent-soft p-3 text-left ${FORM_SUCCESS_CLASS}`}
+          >
             Dev:{" "}
             <Link href={resetUrl} className={LINK_ACCENT_CLASS}>
               Mở link đặt lại
@@ -72,6 +85,12 @@ export function ForgotPasswordForm() {
         autoComplete="email"
         leftIcon={<IconMail />}
       />
+      {TURNSTILE_SITE_KEY ? (
+        <TurnstileField
+          siteKey={TURNSTILE_SITE_KEY}
+          onToken={setTurnstileToken}
+        />
+      ) : null}
       {error && <p className={FORM_ERROR_CLASS}>{error}</p>}
       <AuthSubmitButton loading={loading} loadingLabel="Đang gửi…">
         Gửi link đặt lại

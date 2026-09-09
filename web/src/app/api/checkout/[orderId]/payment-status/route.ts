@@ -1,18 +1,26 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { verifyCheckoutPollToken } from "@/server/checkout/poll-token";
 
 export const dynamic = "force-dynamic";
 
 /**
- * Lightweight poll for checkout confirm — order id is UUID (same exposure as confirm page).
+ * Lightweight poll for checkout confirm — requires short-lived HMAC poll token
+ * minted on the confirm page (not open by UUID alone).
  */
 export async function GET(
-  _req: Request,
+  req: Request,
   ctx: { params: Promise<{ orderId: string }> },
 ) {
   const { orderId } = await ctx.params;
   if (!orderId || orderId.length < 10) {
     return NextResponse.json({ error: "Invalid order" }, { status: 400 });
+  }
+
+  const url = new URL(req.url);
+  const token = url.searchParams.get("token");
+  if (!verifyCheckoutPollToken(token, orderId)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   const order = await prisma.order.findUnique({

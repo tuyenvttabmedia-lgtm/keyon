@@ -15,11 +15,17 @@ import {
 import { verifyTotpCode } from "@/lib/totp";
 import { decryptPayload } from "@/lib/crypto";
 import { rateLimit } from "@/lib/rate-limit";
+import { AppError } from "@/lib/errors";
+import {
+  assertTurnstileToken,
+} from "@/server/auth/turnstile";
 
 const bodySchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
   totpCode: z.string().optional(),
+  turnstileToken: z.string().optional(),
+  remember: z.boolean().optional(),
 });
 
 export async function POST(req: Request) {
@@ -35,6 +41,7 @@ export async function POST(req: Request) {
 
     const json = await req.json();
     const body = bodySchema.parse(json);
+    await assertTurnstileToken(body.turnstileToken, ip);
     const emailKey = body.email.toLowerCase();
     const rlEmail = await rateLimit(`login:email:${emailKey}`, 10, 15 * 60_000);
     if (!rlEmail.ok) {
@@ -123,6 +130,9 @@ export async function POST(req: Request) {
   } catch (e) {
     if (e instanceof ZodError) {
       return NextResponse.json({ error: "Dữ liệu không hợp lệ" }, { status: 400 });
+    }
+    if (e instanceof AppError) {
+      return NextResponse.json({ error: e.message }, { status: e.status });
     }
     return NextResponse.json({ error: "Bad request" }, { status: 400 });
   }

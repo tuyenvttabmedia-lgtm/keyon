@@ -3,10 +3,13 @@ import { z, ZodError } from "zod";
 import { prisma } from "@/lib/db";
 import { issuePasswordReset } from "@/server/auth/password-reset";
 import { rateLimit } from "@/lib/rate-limit";
+import { AppError } from "@/lib/errors";
 import { clientIp } from "@/server/auth/sessions";
+import { assertTurnstileToken } from "@/server/auth/turnstile";
 
 const bodySchema = z.object({
   email: z.string().email(),
+  turnstileToken: z.string().optional(),
 });
 
 export async function POST(req: Request) {
@@ -21,6 +24,7 @@ export async function POST(req: Request) {
     }
 
     const body = bodySchema.parse(await req.json());
+    await assertTurnstileToken(body.turnstileToken, ip);
     const user = await prisma.user.findUnique({
       where: { email: body.email.toLowerCase() },
       select: { id: true, email: true, disabledAt: true },
@@ -44,6 +48,9 @@ export async function POST(req: Request) {
   } catch (e) {
     if (e instanceof ZodError) {
       return NextResponse.json({ error: "Dữ liệu không hợp lệ" }, { status: 400 });
+    }
+    if (e instanceof AppError) {
+      return NextResponse.json({ error: e.message }, { status: e.status });
     }
     return NextResponse.json({ error: "Bad request" }, { status: 400 });
   }

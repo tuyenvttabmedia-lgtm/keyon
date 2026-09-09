@@ -8,10 +8,17 @@ import {
   setSessionCookie,
 } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { rateLimit } from "@/lib/rate-limit";
 import { clientIp, createAuthSession } from "@/server/auth/sessions";
 
 export async function POST(req: Request) {
   try {
+    const ip = clientIp(req) ?? "unknown";
+    const rl = await rateLimit(`verify-email:${ip}`, 20, 15 * 60_000);
+    if (!rl.ok) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
+
     const body = z.object({ token: z.string().min(10) }).parse(await req.json());
     const result = await consumeEmailVerifyToken(body.token);
 

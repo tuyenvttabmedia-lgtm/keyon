@@ -11,6 +11,7 @@ import { rateLimit } from "@/lib/rate-limit";
 import { toErrorResponse } from "@/lib/errors";
 import { clientIp, createAuthSession } from "@/server/auth/sessions";
 import { sendVerifyEmail } from "@/server/auth/email-verify";
+import { assertTurnstileToken } from "@/server/auth/turnstile";
 import { childLogger } from "@/lib/logger";
 
 const log = childLogger("auth.register");
@@ -23,7 +24,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Too many requests" }, { status: 429 });
     }
 
-    const body = registerProfileSchema.parse(await req.json());
+    const raw = await req.json();
+    await assertTurnstileToken(
+      typeof raw?.turnstileToken === "string" ? raw.turnstileToken : undefined,
+      ip,
+    );
+    const body = registerProfileSchema.parse(raw);
     const email = body.email.toLowerCase();
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {

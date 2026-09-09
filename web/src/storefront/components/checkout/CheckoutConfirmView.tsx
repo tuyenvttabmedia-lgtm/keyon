@@ -51,6 +51,8 @@ export type CheckoutConfirmViewProps = {
   cms: CmsCheckout;
   order: CheckoutOrderInfo;
   item: CheckoutItemInfo | null;
+  /** HMAC poll token for /api/checkout/.../payment-status */
+  pollToken: string;
   payment: {
     paymentReference: string;
     expiresAt: string | null;
@@ -65,6 +67,7 @@ export function CheckoutConfirmView({
   cms,
   order,
   item,
+  pollToken,
   payment,
   methodTitle,
 }: CheckoutConfirmViewProps) {
@@ -85,7 +88,7 @@ export function CheckoutConfirmView({
     async function tick() {
       try {
         const res = await fetch(
-          `/api/checkout/${order.id}/payment-status`,
+          `/api/checkout/${order.id}/payment-status?token=${encodeURIComponent(pollToken)}`,
           { cache: "no-store" },
         );
         if (!res.ok || cancelled) return;
@@ -111,7 +114,7 @@ export function CheckoutConfirmView({
       cancelled = true;
       if (timer) clearTimeout(timer);
     };
-  }, [order.id, router]);
+  }, [order.id, pollToken, router]);
 
   async function reloadQr() {
     setReloading(true);

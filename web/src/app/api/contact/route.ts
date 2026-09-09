@@ -5,6 +5,8 @@ import { defaultSettings, readJsonFile } from "@/server/cms/store";
 import { sendMail } from "@/server/mail";
 import { childLogger } from "@/lib/logger";
 import { notifyLeadTelegram } from "@/server/notify/lead-telegram";
+import { assertTurnstileToken } from "@/server/auth/turnstile";
+import { toErrorResponse } from "@/lib/errors";
 
 const log = childLogger("contact");
 
@@ -14,6 +16,7 @@ const bodySchema = z.object({
   phone: z.string().trim().max(40).optional().or(z.literal("")),
   topic: z.string().trim().min(1).max(80),
   message: z.string().trim().min(10).max(5000),
+  turnstileToken: z.string().optional(),
 });
 
 function clientIp(req: Request) {
@@ -24,7 +27,8 @@ function clientIp(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const rl = await rateLimit(`contact:${clientIp(req)}`, 8, 60_000);
+    const ip = clientIp(req);
+    const rl = await rateLimit(`contact:${ip}`, 8, 60_000);
     if (!rl.ok) {
       return NextResponse.json(
         { error: "Quá nhiều yêu cầu. Thử lại sau ít phút." },
@@ -33,6 +37,7 @@ export async function POST(req: Request) {
     }
 
     const body = bodySchema.parse(await req.json());
+    await assertTurnstileToken(body.turnstileToken, ip);
     const settings = await readJsonFile("settings.json", defaultSettings);
     const to = settings.supportEmail || "support@keyon.vn";
 
@@ -78,18 +83,7 @@ export async function POST(req: Request) {
     log.info({ to, topic: body.topic }, "contact form mailed");
     return NextResponse.json({ ok: true });
   } catch (e) {
-    log.error(
-      { err: e instanceof Error ? e.message : e },
-      "contact form failed",
-    );
-    if (e instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Dữ liệu không hợp lệ" },
-        { status: 400 },
-      );
-    }
-    const msg = e instanceof Error ? e.message : "Gửi thất bại";
-    return NextResponse.json({ error: msg }, { status: 400 });
+    return toErrorResponse(e, "contact");
   }
 }
 
