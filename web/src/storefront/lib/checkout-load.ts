@@ -1,5 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import type { OrderStatus, Payment } from "@prisma/client";
+import { readSession } from "@/lib/auth";
+import { maskEmail } from "@/lib/mask-email";
 import { prisma } from "@/lib/db";
 import {
   defaultCmsCheckout,
@@ -15,6 +17,7 @@ import {
 import { mergeCheckoutCms } from "@/storefront/lib/checkout-cms";
 import { paymentStatusForCustomer } from "@/storefront/lib/order-status";
 import { parseStringList } from "@/storefront/lib/product-cms";
+import { customerCanAccessOrder } from "@/server/org/customer-order-access";
 import type {
   CheckoutItemInfo,
   CheckoutOrderInfo,
@@ -83,6 +86,15 @@ export async function loadCheckoutContext(orderId: string): Promise<LoadedChecko
     ? deliveryPromiseLabel(line.variant.fulfillmentStrategy)
     : null;
 
+  const session = await readSession();
+  const owns =
+    session != null &&
+    (await customerCanAccessOrder(
+      { id: session.id, email: session.email },
+      { id: order.id, userId: order.userId, email: order.email },
+    ));
+  const emailForUi = owns ? order.email : maskEmail(order.email);
+
   return {
     cms,
     supportEmail: settings.supportEmail,
@@ -91,7 +103,7 @@ export async function loadCheckoutContext(orderId: string): Promise<LoadedChecko
     order: {
       id: order.id,
       code: order.code,
-      email: order.email,
+      email: emailForUi,
       totalVnd: order.totalVnd,
       productHref: product ? `/products/${product.slug}` : "/products",
     },

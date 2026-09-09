@@ -1,6 +1,5 @@
+import { requireStaffSession } from "@/server/auth/require-staff";
 import { NextResponse } from "next/server";
-import { isStaff, readSession } from "@/lib/auth";
-import { assertStaffCapability } from "@/lib/staff-access";
 import { toErrorResponse } from "@/lib/errors";
 import { unlinkOrder } from "@/server/admin/agreements";
 
@@ -9,11 +8,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string; orderId: string }> },
 ) {
   try {
-    const session = await readSession();
-    if (!session || !isStaff(session.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    assertStaffCapability(session.role, "orders", "Không có quyền gỡ đơn khỏi HĐ");
+    const session = await requireStaffSession({ capability: "orders" });
     const { id, orderId } = await params;
     await unlinkOrder(id, orderId, session.id);
     return NextResponse.json({ ok: true });

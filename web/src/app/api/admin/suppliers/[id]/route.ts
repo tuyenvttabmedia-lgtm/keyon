@@ -1,9 +1,8 @@
+import { requireStaffSession } from "@/server/auth/require-staff";
 import { NextResponse } from "next/server";
-import { isStaff, readSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { audit } from "@/lib/audit";
 import { toErrorResponse, AppError } from "@/lib/errors";
-import { assertStaffCapability } from "@/lib/staff-access";
 import { supplierWriteSchema } from "@/lib/admin-suppliers";
 
 export async function PATCH(
@@ -11,15 +10,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const session = await readSession();
-    if (!session || !isStaff(session.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    assertStaffCapability(
-      session.role,
-      "suppliers_mutate",
-      "Không có quyền sửa nhà cung cấp",
-    );
+    const session = await requireStaffSession({ capability: "suppliers_mutate" });
 
     const { id } = await params;
     const body = supplierWriteSchema.parse(await req.json());

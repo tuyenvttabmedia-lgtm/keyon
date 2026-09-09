@@ -1,25 +1,18 @@
 import { NextResponse } from "next/server";
-import { readSession } from "@/lib/auth";
 import { resolvePayment } from "@/server/payment/config";
 import { resetPaymentCache } from "@/server/payment/service";
 import {
   buildSepayPgCheckoutFields,
   getSepayPgCheckoutUrl,
 } from "@/server/payment/providers/sepay-pg";
-
-async function requireAdmin() {
-  const session = await readSession();
-  if (!session || session.role !== "ADMIN") return null;
-  return session;
-}
+import { toErrorResponse } from "@/lib/errors";
+import { requireAdminSession } from "@/server/auth/require-staff";
 
 /** Validate SePay config for active mode (PG sandbox vs bank production). */
 export async function POST() {
-  if (!(await requireAdmin())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   try {
+    await requireAdminSession({ capability: "payments" });
+
     resetPaymentCache();
     const resolved = await resolvePayment();
     const { sepay, provider } = resolved;
@@ -110,6 +103,9 @@ export async function POST() {
           : `Bank webhook OK (auth: ${authMode})`,
     });
   } catch (e) {
+    if (e && typeof e === "object" && "status" in e) {
+      return toErrorResponse(e);
+    }
     return NextResponse.json(
       { ok: false, error: e instanceof Error ? e.message : "Test failed" },
       { status: 400 },

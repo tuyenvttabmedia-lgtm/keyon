@@ -1,6 +1,5 @@
+import { requireStaffSession } from "@/server/auth/require-staff";
 import { NextResponse } from "next/server";
-import { isStaff, readSession } from "@/lib/auth";
-import { assertStaffCapability } from "@/lib/staff-access";
 import { toErrorResponse } from "@/lib/errors";
 import {
   agreementLinkOrderSchema,
@@ -12,11 +11,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const session = await readSession();
-    if (!session || !isStaff(session.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    assertStaffCapability(session.role, "orders", "Không có quyền gắn đơn vào HĐ");
+    const session = await requireStaffSession({ capability: "orders" });
     const { id } = await params;
     const body = agreementLinkOrderSchema.parse(await req.json());
     const result = await linkOrderByCode(id, body.orderCode, session.id);

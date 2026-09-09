@@ -1,6 +1,6 @@
+import { requireStaffSession } from "@/server/auth/require-staff";
 import { NextResponse } from "next/server";
-import { isStaff, readSession } from "@/lib/auth";
-import { assertAdminRole, assertStaffCapability } from "@/lib/staff-access";
+import { assertAdminRole } from "@/lib/staff-access";
 import { toErrorResponse } from "@/lib/errors";
 import {
   deleteOrganization,
@@ -13,11 +13,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const session = await readSession();
-    if (!session || !isStaff(session.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    assertStaffCapability(session.role, "customers", "Không có quyền sửa tổ chức");
+    const session = await requireStaffSession({ capability: "customers" });
     const { id } = await params;
     const body = orgUpdateSchema.parse(await req.json());
     const org = await updateOrganization(id, body, session.id);
@@ -32,10 +28,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const session = await readSession();
-    if (!session || !isStaff(session.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const session = await requireStaffSession({ capability: "customers" });
     assertAdminRole(session.role, "Chỉ ADMIN được xóa tổ chức");
     const { id } = await params;
     await deleteOrganization(id, session.id);

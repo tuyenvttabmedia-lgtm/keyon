@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { isStaff, readSession } from "@/lib/auth";
-import { prisma } from "@/lib/db";
+import { rateLimit } from "@/lib/rate-limit";
 import { decryptPayload } from "@/lib/crypto";
 import { audit } from "@/lib/audit";
 import { AppError, toErrorResponse } from "@/lib/errors";
-import { assertStaffCapability } from "@/lib/staff-access";
+import { prisma } from "@/lib/db";
+import { requireStaffSession } from "@/server/auth/require-staff";
 
 /** Staff reveal — additive admin route; does not change Pool API. */
 export async function POST(
@@ -12,15 +12,11 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const session = await readSession();
-    if (!session || !isStaff(session.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const session = await requireStaffSession({ capability: "stock_mutate" });
+    const rl = await rateLimit(`stock-reveal:${session.id}`, 30);
+    if (!rl.ok) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
     }
-    assertStaffCapability(
-      session.role,
-      "stock_mutate",
-      "Không có quyền xem plaintext license",
-    );
 
     const { id } = await params;
     const item = await prisma.licenseItem.findUnique({ where: { id } });

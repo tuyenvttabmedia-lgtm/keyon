@@ -11,13 +11,21 @@ import {
   totpOtpauthUrl,
   verifyTotpCode,
 } from "@/lib/totp";
+import { rateLimit } from "@/lib/rate-limit";
 import { roleRequiresTotp } from "@/server/auth/sessions";
+import { assertSameOriginMutation } from "@/server/auth/csrf";
 
 /** Start setup — returns secret + otpauth URL (not yet enabled). */
 export async function POST(req: Request) {
+  await assertSameOriginMutation({ method: "POST" });
   const session = await readSession();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const rl = await rateLimit(`totp:${session.id}`, 20);
+  if (!rl.ok) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }
 
   const body = z

@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { readSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { audit } from "@/lib/audit";
 import { toErrorResponse, AppError } from "@/lib/errors";
@@ -8,16 +7,14 @@ import {
   revokeAllAuthSessions,
   revokeAuthSessionById,
 } from "@/server/auth/sessions";
+import { requireAdminSession } from "@/server/auth/require-staff";
 
 export async function GET(
   _req: Request,
   ctx: { params: Promise<{ id: string }> },
 ) {
   try {
-    const session = await readSession();
-    if (!session || session.role !== "ADMIN") {
-      throw new AppError("Chỉ Quản trị viên được xem phiên nhân viên", 403);
-    }
+    await requireAdminSession({ capability: "users", method: "GET" });
 
     const { id } = await ctx.params;
     const target = await prisma.user.findUnique({
@@ -59,10 +56,10 @@ export async function DELETE(
   ctx: { params: Promise<{ id: string }> },
 ) {
   try {
-    const session = await readSession();
-    if (!session || session.role !== "ADMIN") {
-      throw new AppError("Chỉ Quản trị viên được thu hồi phiên", 403);
-    }
+    const session = await requireAdminSession({
+      capability: "users",
+      method: "DELETE",
+    });
 
     const { id } = await ctx.params;
     const target = await prisma.user.findUnique({

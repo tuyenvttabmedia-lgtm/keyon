@@ -4,12 +4,16 @@ import { readSession, isStaff } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { toErrorResponse } from "@/lib/errors";
 import { rateLimit } from "@/lib/rate-limit";
+import { requireStaffSession } from "@/server/auth/require-staff";
 
 export async function GET() {
   try {
     const session = await readSession();
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    if (isStaff(session.role)) {
+      await requireStaffSession({ capability: "tickets", method: "GET" });
     }
     const tickets = await prisma.supportTicket.findMany({
       where: isStaff(session.role) ? undefined : { userId: session.id },

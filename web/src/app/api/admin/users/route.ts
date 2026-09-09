@@ -1,19 +1,16 @@
 import { randomBytes } from "crypto";
 import { NextResponse } from "next/server";
-import { readSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { audit } from "@/lib/audit";
 import { toErrorResponse, AppError } from "@/lib/errors";
 import { hashPassword } from "@/lib/password";
 import { staffCreateSchema } from "@/lib/admin-users";
 import { issuePasswordReset } from "@/server/auth/password-reset";
+import { requireAdminSession } from "@/server/auth/require-staff";
 
 export async function POST(req: Request) {
   try {
-    const session = await readSession();
-    if (!session || session.role !== "ADMIN") {
-      throw new AppError("Chỉ Quản trị viên được tạo tài khoản nhân viên", 403);
-    }
+    const session = await requireAdminSession({ capability: "users" });
 
     const body = staffCreateSchema.parse(await req.json());
     const existing = await prisma.user.findUnique({

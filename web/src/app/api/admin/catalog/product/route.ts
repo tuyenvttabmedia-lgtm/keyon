@@ -1,10 +1,9 @@
+import { requireStaffSession } from "@/server/auth/require-staff";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { isStaff, readSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { audit } from "@/lib/audit";
 import { toErrorResponse, AppError } from "@/lib/errors";
-import { assertStaffCapability } from "@/lib/staff-access";
 import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
 import {
   formatIssues,
@@ -61,15 +60,7 @@ const schema = z.object({
 
 export async function POST(req: Request) {
   try {
-    const session = await readSession();
-    if (!session || !isStaff(session.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    assertStaffCapability(
-      session.role,
-      "catalog_mutate",
-      "Không có quyền tạo catalog",
-    );
+    const session = await requireStaffSession({ capability: "catalog_mutate" });
     const body = schema.parse(await req.json());
     const publishing = body.active === true;
 

@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 /** GET /api/monitoring/metrics — staff with monitoring + 2FA */
 export async function GET() {
   try {
-    await requireStaffSession({ capability: "monitoring" });
+    await requireStaffSession({ capability: "monitoring", method: "GET" });
     const snapshot = await collectMonitoringSnapshot();
     return NextResponse.json(snapshot);
   } catch (e) {

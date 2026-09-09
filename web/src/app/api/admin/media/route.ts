@@ -1,6 +1,5 @@
+import { requireStaffSession } from "@/server/auth/require-staff";
 import { NextResponse } from "next/server";
-import { isStaff, readSession } from "@/lib/auth";
-import { staffHasCapability } from "@/lib/staff-access";
 import { StorageService } from "@/server/storage";
 import {
   listBrandMedia,
@@ -9,13 +8,7 @@ import {
 } from "@/server/media/service";
 
 export async function GET(req: Request) {
-  const session = await readSession();
-  if (!session || !isStaff(session.role)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-  if (!staffHasCapability(session.role, "media_mutate")) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
+  await requireStaffSession({ capability: "media_mutate", method: "GET" });
 
   const url = new URL(req.url);
   const includeBrand = url.searchParams.get("brand") !== "0";
@@ -65,13 +58,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const session = await readSession();
-  if (!session || !isStaff(session.role)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-  if (!staffHasCapability(session.role, "media_mutate")) {
-    return NextResponse.json({ error: "Không có quyền tải media" }, { status: 403 });
-  }
+  await requireStaffSession({ capability: "media_mutate" });
 
   try {
     const form = await req.formData();

@@ -1,26 +1,17 @@
 import { NextResponse } from "next/server";
-import { isStaff, readSession } from "@/lib/auth";
-import { staffHasCapability } from "@/lib/staff-access";
 import { resolveSupplierApi } from "@/server/supplier/config";
 import {
   getSupplierProvisioner,
   resetSupplierProvisionerCache,
 } from "@/server/supplier";
-
-async function requireAdmin() {
-  const session = await readSession();
-  if (!session || !isStaff(session.role)) return null;
-  if (!staffHasCapability(session.role, "settings")) return null;
-  return session;
-}
+import { toErrorResponse } from "@/lib/errors";
+import { requireStaffSession } from "@/server/auth/require-staff";
 
 /** Validate Pax8 (and reserved NCC) config resolve — stub always OK; http checks creds. */
 export async function POST() {
-  if (!(await requireAdmin())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   try {
+    await requireStaffSession({ capability: "settings" });
+
     resetSupplierProvisionerCache();
     const resolved = await resolveSupplierApi();
     const { pax8, pacisoft } = resolved;
@@ -77,6 +68,9 @@ export async function POST() {
       httpLiveEnabled: false,
     });
   } catch (e) {
+    if (e && typeof e === "object" && "status" in e) {
+      return toErrorResponse(e);
+    }
     return NextResponse.json(
       { ok: false, error: e instanceof Error ? e.message : "Test failed" },
       { status: 400 },

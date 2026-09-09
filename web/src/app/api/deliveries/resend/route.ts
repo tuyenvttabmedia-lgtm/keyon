@@ -6,6 +6,7 @@ import { resendDelivery } from "@/server/fulfillment";
 import { toErrorResponse } from "@/lib/errors";
 import { rateLimit } from "@/lib/rate-limit";
 import { customerCanAccessOrder } from "@/server/org/customer-order-access";
+import { requireStaffSession } from "@/server/auth/require-staff";
 
 const schema = z.object({ deliveryId: z.string().min(1) });
 

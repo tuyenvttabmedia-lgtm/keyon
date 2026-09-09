@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { isStaff, readSession } from "@/lib/auth";
 import { AppError, toErrorResponse } from "@/lib/errors";
-import { assertStaffCapability } from "@/lib/staff-access";
+import { sanitizeBlogHtml } from "@/lib/sanitize-blog-html";
 import { MAIN_SEO_PATHS } from "@/lib/seo-main-pages";
 import { resolveMediaUrl } from "@/lib/media-url";
 import { normalizeSiteSettings } from "@/server/seo/settings";
 import { resolveStorage } from "@/server/storage/config";
+import { assertSafeInternalHref } from "@/server/auth/csrf";
+import { requireStaffSession } from "@/server/auth/require-staff";
 import {
   defaultBlog,
   defaultCmsBanner,
@@ -46,21 +47,19 @@ import {
   type SiteSettings,
 } from "@/server/cms/store";
 
-async function requireAdmin() {
-  const session = await readSession();
-  if (!session || !isStaff(session.role)) return null;
-  return session;
-}
-
-function requireSettingsAdmin(
-  session: NonNullable<Awaited<ReturnType<typeof requireAdmin>>>,
-) {
-  assertStaffCapability(
-    session.role,
-    "settings",
-    "Không có quyền cấu hình SEO / cài đặt hệ thống",
+const safeInternalHref = z
+  .string()
+  .refine(
+    (v) => {
+      try {
+        assertSafeInternalHref(v, "href");
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    "Phải là đường dẫn nội bộ (bắt đầu bằng /)",
   );
-}
 
 const pageSeoOverrideSchema = z.object({
   title: z.string().max(200).optional(),
@@ -136,19 +135,11 @@ export async function GET(
   ctx: { params: Promise<{ key: string }> },
 ) {
   try {
-    const session = await requireAdmin();
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
     const { key } = await ctx.params;
     if (key === "settings") {
-      requireSettingsAdmin(session);
+      await requireStaffSession({ capability: "settings", method: "GET" });
     } else {
-      assertStaffCapability(
-        session.role,
-        "cms_mutate",
-        "Không có quyền xem CMS",
-      );
+      await requireStaffSession({ capability: "cms_mutate", method: "GET" });
     }
     const entry = FILES[key];
     if (!entry) return NextResponse.json({ error: "Unknown key" }, { status: 404 });
@@ -167,22 +158,13 @@ export async function PUT(
   ctx: { params: Promise<{ key: string }> },
 ) {
   try {
-  const session = await requireAdmin();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
   const { key } = await ctx.params;
-  const body = await req.json();
-
   if (key === "settings") {
-    requireSettingsAdmin(session);
+    await requireStaffSession({ capability: "settings" });
   } else {
-    assertStaffCapability(
-      session.role,
-      "cms_mutate",
-      "Không có quyền sửa CMS",
-    );
+    await requireStaffSession({ capability: "cms_mutate" });
   }
+  const body = await req.json();
 
   if (key === "settings") {
     const cleanedBody = {
@@ -207,7 +189,7 @@ export async function PUT(
         heroTitleAccent: z.string().optional(),
         heroSubtitle: z.string(),
         heroCta: z.string(),
-        heroCtaHref: z.string(),
+        heroCtaHref: safeInternalHref,
         whyTitle: z.string().optional(),
         whySubtitle: z.string().optional(),
         howTitle: z.string().optional(),
@@ -217,7 +199,7 @@ export async function PUT(
         ctaTitle: z.string().optional(),
         ctaSubtitle: z.string().optional(),
         ctaLabel: z.string().optional(),
-        ctaHref: z.string().optional(),
+        ctaHref: safeInternalHref.optional(),
         published: z.boolean(),
       })
       .parse(body) satisfies CmsHome;
@@ -225,7 +207,12 @@ export async function PUT(
     return NextResponse.json({ ok: true, data });
   }
   if (key === "blog") {
-    const data = z.array(z.any()).parse(body) as BlogPost[];
+    const raw = z.array(z.record(z.string(), z.unknown())).parse(body);
+    const data = raw.map((post) => {
+      const bodyHtml =
+        typeof post.body === "string" ? sanitizeBlogHtml(post.body) : "";
+      return { ...post, body: bodyHtml } as BlogPost;
+    });
     await writeJsonFile("blog.json", data);
     return NextResponse.json({ ok: true, count: data.length });
   }
@@ -234,7 +221,7 @@ export async function PUT(
       .object({
         title: z.string(),
         ctaLabel: z.string(),
-        ctaHref: z.string(),
+        ctaHref: safeInternalHref,
         imageUrl: z.string(),
         visible: z.boolean(),
       })
@@ -823,7 +810,9 @@ export async function PUT(
       updatedAt: z.string(),
       publishedAt: z.string().optional(),
     });
-    const data = z.array(pageSchema).parse(body) as CmsStaticPage[];
+    const data = (z.array(pageSchema).parse(body) as CmsStaticPage[]).map(
+      (p) => ({ ...p, body: sanitizeBlogHtml(p.body) }),
+    );
     const slugs = data.map((p) => p.slug);
     if (new Set(slugs).size !== slugs.length) {
       return NextResponse.json(

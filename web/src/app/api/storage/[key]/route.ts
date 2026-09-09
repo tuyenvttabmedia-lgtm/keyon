@@ -8,7 +8,7 @@ export async function GET(
   ctx: { params: Promise<{ key: string }> },
 ) {
   try {
-    await requireStaffSession({ capability: "storage" });
+    await requireStaffSession({ capability: "storage", method: "GET" });
     const { key } = await ctx.params;
     const decoded = decodeURIComponent(key);
     if (!decoded || decoded.includes("..") || decoded.startsWith("/")) {

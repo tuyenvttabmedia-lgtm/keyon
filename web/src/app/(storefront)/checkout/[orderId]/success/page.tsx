@@ -16,17 +16,9 @@ import {
 } from "@/storefront/lib/customer-labels";
 import { parseStringList } from "@/storefront/lib/product-cms";
 import { mapProductsToShopCards } from "@/storefront/lib/related-products";
+import { maskEmail } from "@/lib/mask-email";
 
 export const dynamic = "force-dynamic";
-
-function maskEmail(email: string): string {
-  const at = email.indexOf("@");
-  if (at < 1) return "***";
-  const user = email.slice(0, at);
-  const domain = email.slice(at + 1);
-  const keep = user.slice(0, Math.min(2, user.length));
-  return `${keep}***@${domain}`;
-}
 
 export default async function CheckoutSuccessPage({
   params,

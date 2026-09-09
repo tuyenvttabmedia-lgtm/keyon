@@ -1,21 +1,18 @@
 import { NextResponse } from "next/server";
-import { readSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { audit } from "@/lib/audit";
 import { toErrorResponse, AppError } from "@/lib/errors";
 import { isStaffRole, staffPatchSchema, staffStatusSchema } from "@/lib/admin-users";
 import { revokeAllAuthSessions } from "@/server/auth/sessions";
 import { issuePasswordReset } from "@/server/auth/password-reset";
+import { requireAdminSession } from "@/server/auth/require-staff";
 
 export async function PATCH(
   req: Request,
   ctx: { params: Promise<{ id: string }> },
 ) {
   try {
-    const session = await readSession();
-    if (!session || session.role !== "ADMIN") {
-      throw new AppError("Chỉ Quản trị viên được sửa tài khoản nhân viên", 403);
-    }
+    const session = await requireAdminSession({ capability: "users", method: "PATCH" });
 
     const { id } = await ctx.params;
     const raw = await req.json();

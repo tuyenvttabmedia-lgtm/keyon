@@ -11,7 +11,7 @@ export async function GET(
   ctx: { params: Promise<{ sku: string }> },
 ) {
   try {
-    await requireStaffSession({ capability: "fulfillment" });
+    await requireStaffSession({ capability: "fulfillment", method: "GET" });
     const { sku } = await ctx.params;
     const detail = await InventoryReadModel.getBySku(decodeURIComponent(sku));
     return NextResponse.json({

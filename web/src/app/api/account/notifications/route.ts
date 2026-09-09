@@ -3,6 +3,7 @@ import { z } from "zod";
 import { readSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { toErrorResponse } from "@/lib/errors";
+import { assertSafeInternalHref } from "@/server/auth/csrf";
 import { requireStaffSession } from "@/server/auth/require-staff";
 
 export async function GET() {
@@ -65,6 +66,7 @@ export async function POST(req: Request) {
   try {
     await requireStaffSession({ capability: "notifications" });
     const body = adminCreateSchema.parse(await req.json());
+    const href = assertSafeInternalHref(body.href);
     if (body.broadcast) {
       const users = await prisma.user.findMany({
         where: { role: "CUSTOMER" },
@@ -76,7 +78,7 @@ export async function POST(req: Request) {
           userId: u.id,
           title: body.title,
           body: body.body,
-          href: body.href,
+          href,
         })),
       });
       return NextResponse.json({ ok: true, count: users.length });
@@ -97,7 +99,7 @@ export async function POST(req: Request) {
         userId,
         title: body.title,
         body: body.body,
-        href: body.href,
+        href,
       },
     });
     return NextResponse.json({ notification: n });

@@ -1,6 +1,6 @@
+import { requireStaffSession } from "@/server/auth/require-staff";
 import { NextResponse } from "next/server";
-import { isStaff, readSession } from "@/lib/auth";
-import { assertAdminRole, assertStaffCapability } from "@/lib/staff-access";
+import { assertAdminRole } from "@/lib/staff-access";
 import { toErrorResponse } from "@/lib/errors";
 import {
   agreementUpdateSchema,
@@ -13,11 +13,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const session = await readSession();
-    if (!session || !isStaff(session.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    assertStaffCapability(session.role, "orders", "Không có quyền sửa khung HĐ");
+    const session = await requireStaffSession({ capability: "orders" });
     const { id } = await params;
     const body = agreementUpdateSchema.parse(await req.json());
     const row = await updateAgreement(id, body, session.id);
@@ -32,10 +28,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const session = await readSession();
-    if (!session || !isStaff(session.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const session = await requireStaffSession({ capability: "orders" });
     assertAdminRole(session.role, "Chỉ ADMIN được xóa khung HĐ");
     const { id } = await params;
     await deleteAgreement(id, session.id);

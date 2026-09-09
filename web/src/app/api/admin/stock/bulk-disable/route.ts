@@ -1,7 +1,6 @@
+import { requireStaffSession } from "@/server/auth/require-staff";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { isStaff, readSession } from "@/lib/auth";
-import { assertStaffCapability } from "@/lib/staff-access";
 import { LicensePoolService } from "@/server/license-pool";
 import { AppError, toErrorResponse } from "@/lib/errors";
 import { audit } from "@/lib/audit";
@@ -13,15 +12,7 @@ const schema = z.object({
 
 export async function POST(req: Request) {
   try {
-    const session = await readSession();
-    if (!session || !isStaff(session.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    assertStaffCapability(
-      session.role,
-      "stock_mutate",
-      "Không có quyền disable license",
-    );
+    const session = await requireStaffSession({ capability: "stock_mutate" });
 
     const body = schema.parse(await req.json());
     let disabled = 0;

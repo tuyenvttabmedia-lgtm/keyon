@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { isStaff, readSession } from "@/lib/auth";
 import { replaceDelivery } from "@/server/fulfillment/replace";
 import { toErrorResponse } from "@/lib/errors";
-import { assertStaffCapability } from "@/lib/staff-access";
+import { requireStaffSession } from "@/server/auth/require-staff";
 
 const schema = z.object({
   deliveryId: z.string().min(1),
@@ -13,15 +12,7 @@ const schema = z.object({
 
 export async function POST(req: Request) {
   try {
-    const session = await readSession();
-    if (!session || !isStaff(session.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    assertStaffCapability(
-      session.role,
-      "fulfillment",
-      "Không có quyền thay thế deliverable",
-    );
+    const session = await requireStaffSession({ capability: "fulfillment" });
     const body = schema.parse(await req.json());
     const delivery = await replaceDelivery({
       deliveryId: body.deliveryId,

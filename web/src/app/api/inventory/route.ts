@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 /** GET /api/inventory — Inventory Read Model list (ADMIN / FULFILLMENT) */
 export async function GET() {
   try {
-    await requireStaffSession({ capability: "fulfillment" });
+    await requireStaffSession({ capability: "fulfillment", method: "GET" });
     const started = Date.now();
     const items = await InventoryReadModel.listInstantSkus();
     const health = InventoryReadModel.health();

@@ -1,7 +1,6 @@
+import { requireStaffSession } from "@/server/auth/require-staff";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { isStaff, readSession } from "@/lib/auth";
-import { assertStaffCapability } from "@/lib/staff-access";
 import { prisma } from "@/lib/db";
 import { audit } from "@/lib/audit";
 import { toErrorResponse, AppError } from "@/lib/errors";
@@ -32,15 +31,7 @@ function clampPrice(n: number): number {
 
 export async function POST(req: Request) {
   try {
-    const session = await readSession();
-    if (!session || !isStaff(session.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    assertStaffCapability(
-      session.role,
-      "catalog_mutate",
-      "Không có quyền bulk catalog",
-    );
+    const session = await requireStaffSession({ capability: "catalog_mutate" });
     const body = schema.parse(await req.json());
 
     const variants = await prisma.productVariant.findMany({

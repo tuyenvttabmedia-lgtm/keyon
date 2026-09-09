@@ -1,7 +1,6 @@
+import { requireStaffSession } from "@/server/auth/require-staff";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { isStaff, readSession } from "@/lib/auth";
-import { assertStaffCapability } from "@/lib/staff-access";
 import { prisma } from "@/lib/db";
 import { decryptPayload } from "@/lib/crypto";
 import { AppError, toErrorResponse } from "@/lib/errors";
@@ -34,15 +33,7 @@ async function existingKeysForVariant(variantId: string): Promise<Set<string>> {
 
 export async function POST(req: Request) {
   try {
-    const session = await readSession();
-    if (!session || !isStaff(session.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    assertStaffCapability(
-      session.role,
-      "stock_mutate",
-      "Không có quyền xem preview kho",
-    );
+    const session = await requireStaffSession({ capability: "stock_mutate" });
 
     const body = schema.parse(await req.json());
     const variant = await prisma.productVariant.findUnique({

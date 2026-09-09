@@ -1,21 +1,14 @@
 import { NextResponse } from "next/server";
-import { readSession } from "@/lib/auth";
 import { StorageService, resetStorageCache } from "@/server/storage";
 import { resolveStorage } from "@/server/storage/config";
-
-async function requireAdmin() {
-  const session = await readSession();
-  if (!session || session.role !== "ADMIN") return null;
-  return session;
-}
+import { toErrorResponse } from "@/lib/errors";
+import { requireAdminSession } from "@/server/auth/require-staff";
 
 /** Upload a tiny probe object to verify Wasabi (or local) credentials. */
 export async function POST() {
-  if (!(await requireAdmin())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   try {
+    await requireAdminSession({ capability: "storage" });
+
     resetStorageCache();
     const resolved = await resolveStorage();
     if (resolved.driver !== "wasabi") {
@@ -47,6 +40,9 @@ export async function POST() {
       probeUrl: stored.url,
     });
   } catch (e) {
+    if (e && typeof e === "object" && "status" in e) {
+      return toErrorResponse(e);
+    }
     return NextResponse.json(
       {
         ok: false,

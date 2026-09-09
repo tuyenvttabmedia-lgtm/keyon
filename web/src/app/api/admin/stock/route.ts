@@ -1,11 +1,10 @@
+import { requireStaffSession } from "@/server/auth/require-staff";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { isStaff, readSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { decryptPayload, encryptPayload } from "@/lib/crypto";
 import { audit } from "@/lib/audit";
 import { AppError, toErrorResponse } from "@/lib/errors";
-import { assertStaffCapability } from "@/lib/staff-access";
 import {
   applyDbDuplicates,
   countPreview,
@@ -19,12 +18,7 @@ const schema = z.object({
 
 export async function POST(req: Request) {
   try {
-    const session = await readSession();
-    if (!session || !isStaff(session.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    assertStaffCapability(session.role, "stock_mutate", "Không có quyền nhập kho");
-
+    const session = await requireStaffSession({ capability: "stock_mutate" });
     const body = schema.parse(await req.json());
     const variant = await prisma.productVariant.findUnique({
       where: { id: body.variantId },

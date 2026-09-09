@@ -1,24 +1,19 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { isStaff, readSession } from "@/lib/auth";
-import { staffHasCapability } from "@/lib/staff-access";
 import { getMailSettingsPublic } from "@/server/mail/config";
 import { sendMail } from "@/server/mail";
-
-async function requireAdmin() {
-  const session = await readSession();
-  if (!session || !isStaff(session.role)) return null;
-  if (!staffHasCapability(session.role, "settings")) return null;
-  return session;
-}
+import { toErrorResponse } from "@/lib/errors";
+import { rateLimit } from "@/lib/rate-limit";
+import { requireStaffSession } from "@/server/auth/require-staff";
 
 export async function POST(req: Request) {
-  const session = await requireAdmin();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   try {
+    const session = await requireStaffSession({ capability: "settings" });
+    const rl = await rateLimit(`mail-test:${session.id}`, 10);
+    if (!rl.ok) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
+
     const body = z
       .object({
         to: z.string().trim().email("Email nhận thử không hợp lệ"),
@@ -39,6 +34,9 @@ export async function POST(req: Request) {
       data: await getMailSettingsPublic(),
     });
   } catch (e) {
+    if (e && typeof e === "object" && "status" in e && (e as { status: number }).status !== 400) {
+      return toErrorResponse(e);
+    }
     const error =
       e instanceof z.ZodError
         ? (e.issues[0]?.message ?? "Email nhận thử không hợp lệ")

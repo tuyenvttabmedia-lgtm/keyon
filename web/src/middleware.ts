@@ -35,10 +35,56 @@ function redirectPublic(req: NextRequest, path: string) {
 
 /**
  * Server-side Admin path gate (complements client AdminPathGuard).
- * Role from JWT only — APIs still enforce capabilities + DB session.
+ * Role from JWT only — APIs still enforce capabilities + DB session + TOTP.
+ * Also blocks cross-site cookie mutations on /api/* (CSRF).
  */
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  const method = req.method.toUpperCase();
+
+  if (
+    pathname.startsWith("/api/") &&
+    method !== "GET" &&
+    method !== "HEAD" &&
+    method !== "OPTIONS"
+  ) {
+    // Webhooks / public payment callbacks must stay Origin-agnostic
+    const csrfExempt =
+      pathname.startsWith("/api/payments/webhook") ||
+      pathname.startsWith("/api/webhooks") ||
+      pathname.startsWith("/api/health");
+    if (!csrfExempt) {
+      const secFetchSite = (req.headers.get("sec-fetch-site") ?? "").toLowerCase();
+      if (secFetchSite === "cross-site") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      const origin = req.headers.get("origin");
+      if (origin) {
+        try {
+          const hostname = new URL(origin).hostname.toLowerCase();
+          const envBase = (process.env.NEXT_PUBLIC_APP_URL ?? "").replace(/\/$/, "");
+          const allowed = new Set(["keyon.vn", "www.keyon.vn"]);
+          if (envBase) {
+            try {
+              allowed.add(new URL(envBase).hostname.toLowerCase());
+            } catch {
+              /* ignore */
+            }
+          }
+          if (process.env.NODE_ENV !== "production") {
+            allowed.add("localhost");
+            allowed.add("127.0.0.1");
+          }
+          if (!allowed.has(hostname)) {
+            return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+          }
+        } catch {
+          return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+        }
+      }
+    }
+  }
+
   if (!pathname.startsWith("/admin")) {
     return NextResponse.next();
   }
@@ -74,5 +120,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin", "/admin/:path*"],
+  matcher: ["/admin", "/admin/:path*", "/api/:path*"],
 };

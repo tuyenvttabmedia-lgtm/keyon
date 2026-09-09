@@ -1,7 +1,6 @@
+import { requireStaffSession } from "@/server/auth/require-staff";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { isStaff, readSession } from "@/lib/auth";
-import { staffHasCapability } from "@/lib/staff-access";
 import { deleteMedia, updateMedia } from "@/server/media/service";
 
 const patchSchema = z.object({
@@ -14,13 +13,7 @@ export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const session = await readSession();
-  if (!session || !isStaff(session.role)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-  if (!staffHasCapability(session.role, "media_mutate")) {
-    return NextResponse.json({ error: "Không có quyền sửa media" }, { status: 403 });
-  }
+  await requireStaffSession({ capability: "media_mutate" });
 
   const { id } = await params;
   if (id.startsWith("brand:")) {
@@ -47,13 +40,7 @@ export async function DELETE(
   _req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const session = await readSession();
-  if (!session || !isStaff(session.role)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-  if (!staffHasCapability(session.role, "media_mutate")) {
-    return NextResponse.json({ error: "Không có quyền xóa media" }, { status: 403 });
-  }
+  await requireStaffSession({ capability: "media_mutate" });
 
   const { id } = await params;
   try {

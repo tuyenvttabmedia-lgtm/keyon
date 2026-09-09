@@ -1,9 +1,8 @@
+import { requireStaffSession } from "@/server/auth/require-staff";
 import { NextResponse } from "next/server";
-import { isStaff, readSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { audit } from "@/lib/audit";
 import { toErrorResponse, AppError } from "@/lib/errors";
-import { assertStaffCapability } from "@/lib/staff-access";
 import {
   brandCreateSchema,
   pickBrandContent,
@@ -12,15 +11,7 @@ import {
 
 export async function POST(req: Request) {
   try {
-    const session = await readSession();
-    if (!session || !isStaff(session.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    assertStaffCapability(
-      session.role,
-      "brands_mutate",
-      "Không có quyền tạo brand",
-    );
+    const session = await requireStaffSession({ capability: "brands_mutate" });
 
     const body = brandCreateSchema.parse(await req.json());
     const slug = (body.slug?.trim() || slugifyBrand(body.name)).slice(0, 80);

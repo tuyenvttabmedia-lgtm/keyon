@@ -1,10 +1,9 @@
+import { requireStaffSession } from "@/server/auth/require-staff";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { isStaff, readSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { childLogger } from "@/lib/logger";
 import { toErrorResponse } from "@/lib/errors";
-import { assertStaffCapability } from "@/lib/staff-access";
 import { QUOTE_REQUEST_STATUSES } from "@/lib/admin-quote-requests";
 import { sendQuoteStatusEmail } from "@/server/quote/quote-request-ops";
 
@@ -29,12 +28,7 @@ export async function PATCH(
   ctx: { params: Promise<{ id: string }> },
 ) {
   try {
-    const session = await readSession();
-    if (!session || !isStaff(session.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    assertStaffCapability(session.role, "quote_requests");
-
+    const session = await requireStaffSession({ capability: "quote_requests" });
     const { id } = await ctx.params;
     const body = schema.parse(await req.json());
 
