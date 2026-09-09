@@ -27,6 +27,8 @@ copy_ops "$SRC_DIR/backup-offsite-wasabi.sh" "$OPS_DIR/backup-offsite-wasabi.sh"
 copy_ops "$SRC_DIR/host-watchdog.sh" "$OPS_DIR/host-watchdog.sh"
 copy_ops "$SRC_DIR/install-security-hardening.sh" "$OPS_DIR/install-security-hardening.sh"
 copy_ops "$SRC_DIR/install-app-user.sh" "$OPS_DIR/install-app-user.sh"
+copy_ops "$SRC_DIR/lock-firewall-cloudflare.sh" "$OPS_DIR/lock-firewall-cloudflare.sh"
+copy_ops "$SRC_DIR/enable-redis-auth.sh" "$OPS_DIR/enable-redis-auth.sh"
 
 echo "== unattended-upgrades =="
 export DEBIAN_FRONTEND=noninteractive

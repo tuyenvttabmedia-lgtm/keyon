@@ -27,7 +27,8 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline'",
       "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
       "frame-src 'self' https://challenges.cloudflare.com",
-      "connect-src 'self' https://challenges.cloudflare.com https:",
+      // No blanket https: — browser XHR is same-origin; Turnstile + media hosts only.
+      "connect-src 'self' https://challenges.cloudflare.com https://*.wasabisys.com https://s3.ap-southeast-1.wasabisys.com https://qr.sepay.vn https://my.sepay.vn",
       "upgrade-insecure-requests",
     ].join("; "),
   },

@@ -29,13 +29,28 @@ services:
     image: redis:7-alpine
     container_name: keyon-prod-redis
     restart: always
-    command: ["redis-server", "--appendonly", "yes"]
+    # REDIS_PASSWORD from --env-file .env.production (ops/enable-redis-auth.sh)
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?set REDIS_PASSWORD in .env.production}
+    command:
+      [
+        "sh",
+        "-c",
+        'exec redis-server --appendonly yes --requirepass "$$REDIS_PASSWORD"',
+      ]
+    # Host PM2 / nginx same box — bind loopback only
+    ports:
+      - "127.0.0.1:6379:6379"
     volumes:
       - keyon_prod_redis:/data
     networks:
       - keyon_internal
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test:
+        [
+          "CMD-SHELL",
+          'redis-cli -a "$$REDIS_PASSWORD" ping | grep -q PONG',
+        ]
       interval: 10s
       timeout: 3s
       retries: 10
