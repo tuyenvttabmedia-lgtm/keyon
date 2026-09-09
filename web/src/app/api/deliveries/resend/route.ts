@@ -39,8 +39,11 @@ export async function POST(req: Request) {
       { id: session.id, email: session.email },
       order,
     );
-    if (!ownsOrder && !isStaff(session.role)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    if (!ownsOrder) {
+      if (!isStaff(session.role)) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      await requireStaffSession({ capability: "fulfillment" });
     }
 
     const result = await resendDelivery({

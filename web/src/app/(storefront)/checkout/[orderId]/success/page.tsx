@@ -19,6 +19,15 @@ import { mapProductsToShopCards } from "@/storefront/lib/related-products";
 
 export const dynamic = "force-dynamic";
 
+function maskEmail(email: string): string {
+  const at = email.indexOf("@");
+  if (at < 1) return "***";
+  const user = email.slice(0, at);
+  const domain = email.slice(at + 1);
+  const keep = user.slice(0, Math.min(2, user.length));
+  return `${keep}***@${domain}`;
+}
+
 export default async function CheckoutSuccessPage({
   params,
 }: {
@@ -60,6 +69,7 @@ export default async function CheckoutSuccessPage({
   const paid = payment?.status === "SUCCEEDED";
   let licensePlain: string | null = null;
   let licenseAccess: "ok" | "login" | "pending" = "pending";
+  let canSeePii = false;
   if (!session) {
     licenseAccess = "login";
   } else if (paid) {
@@ -67,6 +77,7 @@ export default async function CheckoutSuccessPage({
       { id: session.id, email: session.email },
       { id: order.id, userId: order.userId, email: order.email },
     );
+    canSeePii = allowed;
     if (allowed && deliveryRow) {
       try {
         licensePlain = decryptPayload(deliveryRow.payloadEnc);
@@ -80,7 +91,16 @@ export default async function CheckoutSuccessPage({
     } else {
       licenseAccess = "login";
     }
+  } else if (session) {
+    canSeePii = await customerCanAccessOrder(
+      { id: session.id, email: session.email },
+      { id: order.id, userId: order.userId, email: order.email },
+    );
   }
+
+  const displayEmail = canSeePii
+    ? order.email
+    : maskEmail(order.email);
 
   const paidAt =
     payment?.succeededAt ?? payment?.updatedAt ?? order.updatedAt;
@@ -123,7 +143,7 @@ export default async function CheckoutSuccessPage({
       order={{
         id: order.id,
         code: order.code,
-        email: order.email,
+        email: displayEmail,
         totalVnd: order.totalVnd,
         productHref: product ? `/products/${product.slug}` : "/products",
       }}

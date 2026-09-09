@@ -60,13 +60,13 @@ export async function readSession(): Promise<SessionUser | null> {
           ? String((payload as { jti: string }).jti)
           : undefined;
 
-    // Legacy JWTs without jti still work until re-login
-    if (jti) {
-      const active = await isAuthSessionActive(jti);
-      if (!active) return null;
-      // Fire-and-forget lastSeen (ignore errors)
-      void touchAuthSession(jti);
+    // Require jti so revoke-all / password reset can invalidate sessions
+    if (!jti) {
+      return null;
     }
+    const active = await isAuthSessionActive(jti);
+    if (!active) return null;
+    void touchAuthSession(jti);
 
     const account = await prisma.user.findUnique({
       where: { id: payload.sub },

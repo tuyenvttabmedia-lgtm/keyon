@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { isStaff, readSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { toErrorResponse } from "@/lib/errors";
+import { requireStaffSession } from "@/server/auth/require-staff";
 
 const schema = z.object({
   status: z.enum(["OPEN", "IN_PROGRESS", "RESOLVED", "CLOSED"]),
@@ -14,10 +14,7 @@ export async function PATCH(
   ctx: { params: Promise<{ id: string }> },
 ) {
   try {
-    const session = await readSession();
-    if (!session || !isStaff(session.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    await requireStaffSession({ capability: "tickets" });
     const { id } = await ctx.params;
     const body = schema.parse(await req.json());
     const ticket = await prisma.supportTicket.update({
@@ -27,7 +24,6 @@ export async function PATCH(
         adminNote: body.adminNote,
       },
     });
-    // Notify customer
     await prisma.userNotification.create({
       data: {
         userId: ticket.userId,

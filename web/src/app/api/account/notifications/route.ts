@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { readSession, isStaff } from "@/lib/auth";
+import { readSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { toErrorResponse } from "@/lib/errors";
+import { requireStaffSession } from "@/server/auth/require-staff";
 
 export async function GET() {
   try {
@@ -62,10 +63,7 @@ const adminCreateSchema = z.object({
 
 export async function POST(req: Request) {
   try {
-    const session = await readSession();
-    if (!session || !isStaff(session.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    await requireStaffSession({ capability: "notifications" });
     const body = adminCreateSchema.parse(await req.json());
     if (body.broadcast) {
       const users = await prisma.user.findMany({

@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { hashPassword } from "@/lib/password";
 import { rateLimit } from "@/lib/rate-limit";
 import { clientIp, revokeAllAuthSessions } from "@/server/auth/sessions";
+import { consumePasswordResetJti } from "@/server/auth/password-reset";
 
 const bodySchema = z.object({
   token: z.string().min(10),
@@ -33,11 +34,47 @@ export async function POST(req: Request) {
     if (payload.purpose !== "password_reset" || !payload.sub) {
       return NextResponse.json({ error: "Link đặt lại không hợp lệ" }, { status: 400 });
     }
-    await prisma.user.update({
+    const jti = typeof payload.jti === "string" ? payload.jti : null;
+    if (!jti) {
+      return NextResponse.json({ error: "Link đặt lại không hợp lệ" }, { status: 400 });
+    }
+
+    const user = await prisma.user.findUnique({
       where: { id: payload.sub },
-      data: { passwordHash: await hashPassword(body.password) },
+      select: { id: true, passwordChangedAt: true, disabledAt: true },
     });
-    await revokeAllAuthSessions(payload.sub);
+    if (!user || user.disabledAt) {
+      return NextResponse.json({ error: "Link đặt lại không hợp lệ" }, { status: 400 });
+    }
+
+    const iat = typeof payload.iat === "number" ? payload.iat : 0;
+    if (
+      user.passwordChangedAt &&
+      iat > 0 &&
+      iat * 1000 < user.passwordChangedAt.getTime()
+    ) {
+      return NextResponse.json(
+        { error: "Link đặt lại đã hết hiệu lực" },
+        { status: 400 },
+      );
+    }
+
+    const firstUse = await consumePasswordResetJti(jti);
+    if (!firstUse) {
+      return NextResponse.json(
+        { error: "Link đặt lại đã được sử dụng" },
+        { status: 400 },
+      );
+    }
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        passwordHash: await hashPassword(body.password),
+        passwordChangedAt: new Date(),
+      },
+    });
+    await revokeAllAuthSessions(user.id);
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json(

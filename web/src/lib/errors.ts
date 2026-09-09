@@ -33,6 +33,11 @@ export function toErrorResponse(error: unknown, context?: string) {
   }
   recordError(500, "INTERNAL");
   logger.error({ err: error, context }, "Unhandled error");
-  const message = error instanceof Error ? error.message : "Internal error";
+  const message =
+    process.env.NODE_ENV === "production"
+      ? "Internal error"
+      : error instanceof Error
+        ? error.message
+        : "Internal error";
   return NextResponse.json({ error: message, code: "INTERNAL" }, { status: 500 });
 }

@@ -50,8 +50,8 @@ export async function middleware(req: NextRequest) {
 
   const secret = process.env.SESSION_SECRET;
   if (!secret || secret.length < 16) {
-    // Layout + APIs still enforce; avoid locking all staff out if Edge env incomplete.
-    return NextResponse.next();
+    // Fail closed — never open /admin if Edge cannot verify JWT
+    return redirectPublic(req, "/login");
   }
 
   try {

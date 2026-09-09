@@ -9,8 +9,11 @@ import { readWorkerHeartbeat, getQueueDepths } from "@/server/monitoring";
 export const dynamic = "force-dynamic";
 
 function wantsFullDetail(req: Request): boolean {
-  const host = (req.headers.get("host") ?? "").split(",")[0]?.trim() ?? "";
-  return host.startsWith("127.0.0.1") || host.startsWith("localhost");
+  // Only trust loopback — do not use Host header (spoofable via proxy)
+  const xf = req.headers.get("x-forwarded-for");
+  const realIp = req.headers.get("x-real-ip");
+  if (xf || realIp) return false;
+  return true;
 }
 
 export async function GET(req: Request) {
@@ -18,8 +21,6 @@ export async function GET(req: Request) {
 
   const checks: Record<string, "ok" | "error" | string> = {
     app: "ok",
-    paymentProvider: await PaymentService.providerName(),
-    storage: await StorageService.driverName(),
   };
 
   try {
@@ -36,44 +37,37 @@ export async function GET(req: Request) {
     checks.redis = "error";
   }
 
-  let worker: Awaited<ReturnType<typeof readWorkerHeartbeat>> = {
-    ok: false,
-    last_ms: null,
-    age_ms: null,
-  };
+  let workerOk = false;
   try {
-    worker = await readWorkerHeartbeat();
+    const worker = await readWorkerHeartbeat();
+    workerOk = worker.ok;
     checks.worker = worker.ok ? "ok" : "stale_or_down";
   } catch {
     checks.worker = "error";
   }
 
-  const paymentProvider = String(checks.paymentProvider);
+  const paymentProvider = await PaymentService.providerName();
   const stubInProduction =
     paymentProvider === "stub" && process.env.NODE_ENV === "production";
 
   const healthy =
     checks.database === "ok" &&
     checks.redis === "ok" &&
-    checks.worker === "ok" &&
+    workerOk &&
     !stubInProduction;
 
-  const publicBody = {
-    status: healthy ? "healthy" : "degraded",
-    checks: {
-      app: checks.app,
-      database: checks.database,
-      redis: checks.redis,
-      worker: checks.worker,
-      paymentProvider: checks.paymentProvider,
-      storage: checks.storage,
-    },
-    timestamp: new Date().toISOString(),
-  };
-
   if (!full) {
-    return NextResponse.json(publicBody, { status: healthy ? 200 : 503 });
+    return NextResponse.json(
+      {
+        status: healthy ? "healthy" : "degraded",
+        timestamp: new Date().toISOString(),
+      },
+      { status: healthy ? 200 : 503 },
+    );
   }
+
+  checks.paymentProvider = paymentProvider;
+  checks.storage = await StorageService.driverName();
 
   let queues: Awaited<ReturnType<typeof getQueueDepths>> | null = null;
   try {
@@ -85,6 +79,11 @@ export async function GET(req: Request) {
 
   const inv = InventoryReadModel.health();
   checks.inventory = inv.inventory_healthy ? "ok" : "error";
+  const worker = await readWorkerHeartbeat().catch(() => ({
+    ok: false,
+    last_ms: null as number | null,
+    age_ms: null as number | null,
+  }));
 
   const warnings: string[] = [];
   if (stubInProduction) {
@@ -92,18 +91,19 @@ export async function GET(req: Request) {
       "PAYMENT_PROVIDER=stub in production — do not accept real payments",
     );
   }
-  if (checks.worker !== "ok") {
+  if (!workerOk) {
     warnings.push("Worker down — fulfillment/email queues will stall");
   }
 
   return NextResponse.json(
     {
-      ...publicBody,
+      status: healthy ? "healthy" : "degraded",
       checks,
       worker,
       queues,
       inventory: inv,
       warnings: warnings.length ? warnings : undefined,
+      timestamp: new Date().toISOString(),
     },
     { status: healthy ? 200 : 503 },
   );

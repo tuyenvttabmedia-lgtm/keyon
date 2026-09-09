@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { isStaff, readSession } from "@/lib/auth";
 import { InventoryReadModel } from "@/server/inventory-read-model";
 import { toErrorResponse } from "@/lib/errors";
+import { requireStaffSession } from "@/server/auth/require-staff";
 
 export const dynamic = "force-dynamic";
 
@@ -11,10 +11,7 @@ export async function GET(
   ctx: { params: Promise<{ sku: string }> },
 ) {
   try {
-    const session = await readSession();
-    if (!session || !isStaff(session.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    await requireStaffSession({ capability: "fulfillment" });
     const { sku } = await ctx.params;
     const detail = await InventoryReadModel.getBySku(decodeURIComponent(sku));
     return NextResponse.json({

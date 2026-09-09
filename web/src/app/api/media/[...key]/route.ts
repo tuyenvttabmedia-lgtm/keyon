@@ -33,11 +33,18 @@ export async function GET(
     }
 
     const buf = await StorageService.get(key);
+    const isSvg = key.toLowerCase().endsWith(".svg");
     return new NextResponse(new Uint8Array(buf), {
       status: 200,
       headers: {
         "Content-Type": contentTypeForKey(key),
         "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800",
+        ...(isSvg
+          ? {
+              "Content-Disposition": "attachment",
+              "X-Content-Type-Options": "nosniff",
+            }
+          : {}),
       },
     });
   } catch (e) {

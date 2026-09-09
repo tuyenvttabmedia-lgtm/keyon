@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { hashPassword, verifyPassword } from "@/lib/password";
 import { toErrorResponse } from "@/lib/errors";
 import { rateLimit } from "@/lib/rate-limit";
+import { revokeAllAuthSessions } from "@/server/auth/sessions";
 
 const schema = z.object({
   currentPassword: z.string().min(1),
@@ -37,6 +38,7 @@ export async function POST(req: Request) {
         passwordChangedAt: new Date(),
       },
     });
+    await revokeAllAuthSessions(user.id, session.jti);
     await prisma.auditLog.create({
       data: {
         actorId: session.id,

@@ -11,6 +11,10 @@ const schema = z.object({
 
 export async function POST(req: Request) {
   try {
+    // Hard kill on production — never allow free confirm even if provider mis-set to stub
+    if (process.env.NODE_ENV === "production") {
+      throw new AppError("Stub confirm bị tắt trên production", 403);
+    }
     const resolved = await resolvePayment();
     if (resolved.provider !== "stub") {
       throw new AppError("Stub confirm không khả dụng khi cổng thanh toán thật đang bật", 403);
