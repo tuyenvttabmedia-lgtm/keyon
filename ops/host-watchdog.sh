@@ -83,8 +83,13 @@ DISK_AVAIL="$(df -h / | awk 'NR==2 {print $4}')"
 
 PM2_WEB_STATUS="unknown"; PM2_WEB_RESTARTS=0
 PM2_WORKER_STATUS="unknown"; PM2_WORKER_RESTARTS=0
+# App PM2 runs as user `keyon` — root's pm2 jlist is empty and false-alarms "missing".
 if command -v pm2 >/dev/null 2>&1; then
-  pm2 jlist > "$TMPDIR_W/pm2.json" 2>/dev/null || echo '[]' > "$TMPDIR_W/pm2.json"
+  if id keyon >/dev/null 2>&1; then
+    sudo -u keyon -H bash -lc 'pm2 jlist' > "$TMPDIR_W/pm2.json" 2>/dev/null || echo '[]' > "$TMPDIR_W/pm2.json"
+  else
+    pm2 jlist > "$TMPDIR_W/pm2.json" 2>/dev/null || echo '[]' > "$TMPDIR_W/pm2.json"
+  fi
   eval "$(python3 - "$TMPDIR_W/pm2.json" <<'PY'
 import json,sys
 apps=json.load(open(sys.argv[1],encoding="utf-8"))
@@ -163,11 +168,17 @@ if [[ "${AK_COUNT:-0}" -gt 2 ]]; then
   append_alert warn ssh_keys_many "Unexpected number of SSH keys: $AK_COUNT"
 fi
 
+# Deleted exe after apt upgrade is common for long-lived daemons (fail2ban, etc.).
+# Only alert when the binary path is outside known system locations.
 while IFS= read -r line; do
   [[ -z "$line" ]] && continue
   append_finding high deleted_exe "$line"
   append_alert warn deleted_binary "Running deleted binary: $line"
-done < <(ls -l /proc/[0-9]*/exe 2>/dev/null | grep '(deleted)' | grep -vE 'next-server| /usr/bin/node|pm2|redis|postgres|nginx|docker|containerd|systemd|sshd' | head -15 || true)
+done < <(
+  ls -l /proc/[0-9]*/exe 2>/dev/null | grep '(deleted)' \
+    | grep -vE 'next-server| /usr/bin/node|pm2|redis|postgres|nginx|docker|containerd|systemd|sshd|tailscaled| /usr/bin/python3(\.[0-9]+)? \(deleted\)| /usr/bin/python \(deleted\)' \
+    | head -15 || true
+)
 
 if [[ "$SECURITY_FULL" == "1" ]]; then
   while IFS= read -r line; do
