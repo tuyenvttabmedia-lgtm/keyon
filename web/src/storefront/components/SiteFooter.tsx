@@ -161,7 +161,7 @@ function oneLine(value: string) {
   return value.replace(/\s+/g, " ").trim();
 }
 
-const labelClass = "text-slate-400";
+const labelClass = "font-medium text-slate-300";
 
 function CompanyInfoBlock({ info }: { info: CompanyInfo }) {
   const name = info.companyName.trim();
@@ -176,7 +176,7 @@ function CompanyInfoBlock({ info }: { info: CompanyInfo }) {
     metaBits.push(
       <span key="tax">
         <span className={labelClass}>MST</span>{" "}
-        <span className="font-mono text-slate-300">{tax}</span>
+        <span className="font-mono text-slate-400">{tax}</span>
       </span>,
     );
   }
@@ -193,8 +193,8 @@ function CompanyInfoBlock({ info }: { info: CompanyInfo }) {
   }
 
   return (
-    <div className="mt-4 max-w-md space-y-1.5 text-[12px] leading-snug text-slate-300">
-      {name ? <p className="font-medium text-slate-200">{name}</p> : null}
+    <div className="mt-4 max-w-md space-y-2.5 text-sm leading-relaxed text-slate-400">
+      {name ? <p className="font-medium text-slate-300">{name}</p> : null}
       {address ? (
         <p>
           <span className={labelClass}>Địa chỉ:</span> {address}
