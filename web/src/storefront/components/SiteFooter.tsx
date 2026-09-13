@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import type { FooterColumn, NavItem } from "@/storefront/content/types";
+import type { FooterColumn } from "@/storefront/content/types";
 import { resolveMediaUrl } from "@/lib/media-url";
 import {
   EASE_STANDARD,
@@ -12,13 +12,21 @@ import {
   TRANSITION_UI,
 } from "@/storefront/effects";
 
+type CompanyInfo = {
+  companyName: string;
+  address: string;
+  taxCode: string;
+  phone: string;
+  email: string;
+};
+
 type Props = {
   logoUrl?: string;
   brandName?: string;
   blurb: string;
+  companyInfo?: CompanyInfo;
   columns: FooterColumn[];
   copyright: string;
-  legalLinks: NavItem[];
   supportEmail?: string;
   bctVisible?: boolean;
   bctHref?: string;
@@ -27,6 +35,7 @@ type Props = {
 };
 
 const footerLink = `inline-block text-slate-400 ${TRANSITION_COLORS} ${MOTION_NORMAL} ${EASE_STANDARD} hover:text-white hover:underline hover:underline-offset-4`;
+const barLink = `text-slate-500 ${TRANSITION_COLORS} ${MOTION_NORMAL} hover:text-white hover:underline hover:underline-offset-4`;
 
 function isExternalHref(href: string) {
   return /^(mailto:|tel:|https?:\/\/)/i.test(href);
@@ -84,14 +93,74 @@ function SocialIcon({ name }: { name: "mail" | "help" }) {
   );
 }
 
+function CompanyInfoBlock({ info }: { info: CompanyInfo }) {
+  const name = info.companyName.trim();
+  const address = info.address.trim();
+  const tax = info.taxCode.trim();
+  const phone = info.phone.trim();
+  const email = info.email.trim();
+  if (!name && !address && !tax && !phone && !email) return null;
+
+  return (
+    <dl className="mt-5 max-w-xs space-y-2 text-[12px] leading-relaxed text-slate-400">
+      {name ? (
+        <div>
+          <dt className="sr-only">Tên công ty</dt>
+          <dd className="font-medium text-slate-300">{name}</dd>
+        </div>
+      ) : null}
+      {address ? (
+        <div>
+          <dt className="text-[11px] uppercase tracking-wide text-slate-500">
+            Địa chỉ
+          </dt>
+          <dd className="mt-0.5">{address}</dd>
+        </div>
+      ) : null}
+      {tax ? (
+        <div>
+          <dt className="text-[11px] uppercase tracking-wide text-slate-500">
+            MST
+          </dt>
+          <dd className="mt-0.5 font-mono text-[12px] text-slate-300">{tax}</dd>
+        </div>
+      ) : null}
+      {phone ? (
+        <div>
+          <dt className="text-[11px] uppercase tracking-wide text-slate-500">
+            Điện thoại
+          </dt>
+          <dd className="mt-0.5">
+            <a href={`tel:${phone.replace(/\s+/g, "")}`} className={footerLink}>
+              {phone}
+            </a>
+          </dd>
+        </div>
+      ) : null}
+      {email ? (
+        <div>
+          <dt className="text-[11px] uppercase tracking-wide text-slate-500">
+            Email
+          </dt>
+          <dd className="mt-0.5">
+            <a href={`mailto:${email}`} className={footerLink}>
+              {email}
+            </a>
+          </dd>
+        </div>
+      ) : null}
+    </dl>
+  );
+}
+
 /** Digital Home footer — navy · accordion on mobile · multi-col on desktop */
 export function SiteFooter({
   logoUrl: logoUrlProp,
   brandName: brandNameProp,
   blurb,
+  companyInfo,
   columns,
   copyright,
-  legalLinks,
   supportEmail = "support@keyon.vn",
   bctVisible = false,
   bctHref = "https://online.gov.vn/",
@@ -101,9 +170,10 @@ export function SiteFooter({
   const name = brandNameProp?.trim() || "KEYON";
   const logoUrl = resolveMediaUrl(logoUrlProp) || undefined;
   const mark = name.charAt(0).toUpperCase() || "K";
+  const mail = companyInfo?.email?.trim() || supportEmail;
   const social = [
-    { label: "Email", href: `mailto:${supportEmail}`, icon: "mail" as const },
-    { label: "Liên hệ", href: "/contact", icon: "help" as const },
+    { label: "Email", href: `mailto:${mail}`, icon: "mail" as const },
+    { label: "Hỗ trợ", href: "/support", icon: "help" as const },
   ];
   const visibleColumns = columns.filter((c) => c.links.length > 0);
   const bctSrc = resolveMediaUrl(bctImageUrl) || "/brand/bct-thong-bao.svg";
@@ -142,6 +212,7 @@ export function SiteFooter({
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-400">
               {blurb}
             </p>
+            {companyInfo ? <CompanyInfoBlock info={companyInfo} /> : null}
             {bctVisible ? (
               <a
                 href={bctLink}
@@ -198,38 +269,42 @@ export function SiteFooter({
       </div>
 
       <div className="border-t border-white/10">
-        <div className="home-container flex flex-col gap-4 py-3.5 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-6">
-          <span className="flex items-center text-xs leading-none text-slate-500">
-            {copyright}
-          </span>
-          <div className="flex items-center gap-2">
-            {social.map((s) => (
-              <a
-                key={s.label}
-                href={s.href}
-                className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/15 text-white ${TRANSITION_UI} hover:border-accent hover:bg-accent/15 hover:text-accent`}
-                aria-label={s.label}
-              >
-                <SocialIcon name={s.icon} />
+        <div className="home-container flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+          <span className="text-xs leading-none text-slate-500">{copyright}</span>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <nav
+              aria-label="Liên hệ nhanh"
+              className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs leading-5"
+            >
+              <a href={`mailto:${mail}`} className={barLink}>
+                {mail}
               </a>
-            ))}
+              <span className="text-slate-700" aria-hidden>
+                ·
+              </span>
+              <Link href="/support" className={barLink}>
+                Hỗ trợ
+              </Link>
+              <span className="text-slate-700" aria-hidden>
+                ·
+              </span>
+              <Link href="/contact" className={barLink}>
+                Liên hệ
+              </Link>
+            </nav>
+            <div className="flex items-center gap-2">
+              {social.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/15 text-white ${TRANSITION_UI} hover:border-accent hover:bg-accent/15 hover:text-accent`}
+                  aria-label={s.label}
+                >
+                  <SocialIcon name={s.icon} />
+                </a>
+              ))}
+            </div>
           </div>
-          <nav
-            aria-label="Chính sách"
-            className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs leading-5 lg:justify-end"
-          >
-            {legalLinks.map((link) => (
-              <FooterHref
-                key={link.href + link.label}
-                href={link.href}
-                className={`text-slate-500 ${TRANSITION_COLORS} ${MOTION_NORMAL} hover:text-white hover:underline hover:underline-offset-4 ${
-                  link.href === "/policy" ? "font-medium text-slate-300" : ""
-                }`}
-              >
-                {link.label}
-              </FooterHref>
-            ))}
-          </nav>
         </div>
       </div>
     </footer>

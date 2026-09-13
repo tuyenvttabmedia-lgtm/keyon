@@ -29,9 +29,9 @@ export default async function AuthLayout({
         logoUrl={home.footer.logoUrl}
         brandName={home.footer.brandName}
         blurb={home.footer.blurb}
+        companyInfo={home.footer.companyInfo}
         columns={home.footer.columns}
         copyright={home.footer.copyright}
-        legalLinks={home.footer.legalLinks}
         supportEmail={home.footer.supportEmail}
         bctVisible={home.footer.bctVisible}
         bctHref={home.footer.bctHref}

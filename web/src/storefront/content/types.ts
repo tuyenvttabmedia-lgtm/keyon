@@ -231,9 +231,17 @@ export type HomeContent = {
     logoUrl?: string;
     brandName: string;
     blurb: string;
+    companyInfo?: {
+      companyName: string;
+      address: string;
+      taxCode: string;
+      phone: string;
+      email: string;
+    };
     columns: FooterColumn[];
     copyright: string;
-    legalLinks: NavItem[];
+    /** @deprecated Bottom bar no longer shows policy links */
+    legalLinks?: NavItem[];
     contactLines?: string[];
     supportEmail?: string;
     bctVisible?: boolean;

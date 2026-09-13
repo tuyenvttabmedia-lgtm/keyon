@@ -406,17 +406,39 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
         nav.brandName?.trim() ||
         defaultCmsFooter.brandName,
       blurb: footer.blurb || homeFixture.footer.blurb,
+      companyInfo: {
+        companyName:
+          footer.companyInfo?.companyName?.trim() ||
+          defaultCmsFooter.companyInfo?.companyName ||
+          "",
+        address:
+          footer.companyInfo?.address?.trim() ||
+          defaultCmsFooter.companyInfo?.address ||
+          "",
+        taxCode:
+          footer.companyInfo?.taxCode?.trim() ||
+          defaultCmsFooter.companyInfo?.taxCode ||
+          "",
+        phone:
+          footer.companyInfo?.phone?.trim() ||
+          defaultCmsFooter.companyInfo?.phone ||
+          "",
+        email:
+          footer.companyInfo?.email?.trim() ||
+          defaultCmsFooter.companyInfo?.email ||
+          homeFixture.footer.supportEmail ||
+          "support@keyon.vn",
+      },
       columns: sanitizeFooterColumns(
         footer.columns.length ? footer.columns : homeFixture.footer.columns,
         shopCounts,
       ),
       copyright: footer.copyright || homeFixture.footer.copyright,
-      legalLinks: sanitizeLegalLinks(
-        footer.legalLinks.length
-          ? footer.legalLinks
-          : homeFixture.footer.legalLinks,
-      ),
-      supportEmail: "support@keyon.vn",
+      legalLinks: [],
+      supportEmail:
+        footer.companyInfo?.email?.trim() ||
+        homeFixture.footer.supportEmail ||
+        "support@keyon.vn",
       bctVisible: Boolean(footer.bctVisible),
       bctHref: footer.bctHref?.trim() || defaultCmsFooter.bctHref,
       bctImageUrl:
@@ -545,122 +567,6 @@ function sanitizeFooterColumns(
       };
     })
     .filter((col) => col.links.length > 0 || col.title.trim().length > 0);
-}
-
-function sanitizeLegalLinks(
-  links: { label: string; href: string }[],
-): { label: string; href: string }[] {
-  const FALLBACK = homeFixture.footer.legalLinks;
-  if (!links.length) return FALLBACK;
-
-  const seen = new Set<string>();
-  const out: { label: string; href: string }[] = [];
-
-  for (const raw of links) {
-    let href = (raw.href || "").trim();
-    let label = (raw.label || "").trim();
-    if (!label) continue;
-
-    const lower = label.toLowerCase();
-
-    // Hub “Tất cả chính sách” must stay on /policy
-    const isHub =
-      lower.includes("tất cả") ||
-      lower.includes("tat ca") ||
-      lower === "chính sách" ||
-      lower === "chinh sach";
-
-    // Legacy CMS often pointed every policy at /policy or /terms
-    if (
-      !isHub &&
-      (href === "/policy" || href === "/terms" || href === "/policy/")
-    ) {
-      if (lower.includes("bảo mật") || lower.includes("bao mat") || lower === "bảo mật")
-        href = "/policy/privacy";
-      else if (lower.includes("thanh toán") || lower.includes("thanh toan"))
-        href = "/policy/payment";
-      else if (lower.includes("giao hàng") || lower.includes("giao hang"))
-        href = "/policy/delivery";
-      else if (lower.includes("hoàn tiền") || lower.includes("hoan tien") || lower.includes("hoàn trả"))
-        href = "/policy/refund";
-      else if (lower.includes("khiếu nại") || lower.includes("khieu nai"))
-        href = "/policy/complaint";
-      else if (
-        lower.includes("bảo hành") ||
-        lower.includes("bao hanh") ||
-        lower.includes("sản phẩm số") ||
-        lower.includes("san pham so")
-      )
-        href = "/policy/warranty";
-      else if (lower.includes("điều khoản") || lower.includes("dieu khoan"))
-        href = "/policy/terms";
-      else if (lower.includes("hỗ trợ") || lower.includes("ho tro"))
-        href = "/policy/support";
-      else href = "/policy/terms";
-    }
-    if (href === "/terms") href = "/policy/terms";
-    if (isHub) href = "/policy";
-
-    // Short, scannable labels for the bottom bar
-    if (lower.includes("bảo mật") || lower.includes("bao mat")) label = "Bảo mật";
-    else if (lower.includes("thanh toán") || lower.includes("thanh toan"))
-      label = "Thanh toán";
-    else if (lower.includes("giao hàng") || lower.includes("giao hang"))
-      label = "Giao hàng";
-    else if (lower.includes("hoàn tiền") || lower.includes("hoan tien") || lower.includes("hoàn trả"))
-      label = "Hoàn tiền";
-    else if (lower.includes("khiếu nại") || lower.includes("khieu nai"))
-      label = "Khiếu nại";
-    else if (lower.includes("điều khoản") || lower.includes("dieu khoan"))
-      label = "Điều khoản";
-    else if (lower.includes("bảo hành") || lower.includes("bao hanh"))
-      label = "Bảo hành";
-    else if (isHub) label = "Tất cả chính sách";
-
-    const key = href.toLowerCase();
-    if (!key || seen.has(key)) continue;
-    seen.add(key);
-    out.push({ label, href });
-  }
-
-  // Ensure BCT-critical policies exist even if CMS list is incomplete
-  const REQUIRED = [
-    { label: "Điều khoản", href: "/policy/terms" },
-    { label: "Bảo mật", href: "/policy/privacy" },
-    { label: "Thanh toán", href: "/policy/payment" },
-    { label: "Giao hàng", href: "/policy/delivery" },
-    { label: "Hoàn tiền", href: "/policy/refund" },
-    { label: "Khiếu nại", href: "/policy/complaint" },
-  ] as const;
-  for (const req of REQUIRED) {
-    if (!seen.has(req.href)) {
-      out.push({ ...req });
-      seen.add(req.href);
-    }
-  }
-  if (!seen.has("/policy")) {
-    out.push({ label: "Tất cả chính sách", href: "/policy" });
-  }
-
-  // Prefer stable BCT order
-  const ORDER = [
-    "/policy/terms",
-    "/policy/privacy",
-    "/policy/payment",
-    "/policy/delivery",
-    "/policy/refund",
-    "/policy/complaint",
-    "/policy/warranty",
-    "/policy/support",
-    "/policy",
-  ];
-  out.sort((a, b) => {
-    const ia = ORDER.indexOf(a.href);
-    const ib = ORDER.indexOf(b.href);
-    return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
-  });
-
-  return out.length ? out : FALLBACK;
 }
 
 function toCategoryIcon(key?: CmsCategoryIconKey): CategoryIconKey {

@@ -239,14 +239,30 @@ export type CmsFaqItem = {
   showOnFaqPage: boolean;
 };
 
+export type CmsFooterCompanyInfo = {
+  /** Legal entity name — e.g. Công ty TNHH … */
+  companyName: string;
+  address: string;
+  /** Mã số thuế */
+  taxCode: string;
+  phone: string;
+  email: string;
+};
+
 export type CmsFooter = {
   /** Footer logo (Media). Empty → fall back to header/nav logo, then letter mark. */
   logoUrl?: string;
   brandName: string;
   blurb: string;
+  /** Business registration lines under brand blurb (column 1). */
+  companyInfo?: CmsFooterCompanyInfo;
   columns: { title: string; links: { label: string; href: string }[] }[];
   copyright: string;
-  legalLinks: { label: string; href: string }[];
+  /**
+   * @deprecated Policies belong in a footer column. Bottom bar no longer renders these.
+   * Kept optional for legacy footer.json.
+   */
+  legalLinks?: { label: string; href: string }[];
   /** Bộ Công Thương “Đã thông báo” badge under brand column. */
   bctVisible?: boolean;
   bctHref?: string;
@@ -409,10 +425,19 @@ export const defaultCmsFaq: CmsFaqItem[] = [
   },
 ];
 
+export const defaultCmsFooterCompanyInfo: CmsFooterCompanyInfo = {
+  companyName: "",
+  address: "",
+  taxCode: "",
+  phone: "",
+  email: "support@keyon.vn",
+};
+
 export const defaultCmsFooter: CmsFooter = {
   brandName: "KEYON",
   blurb:
     "Nền tảng phân phối và quản lý bản quyền phần mềm, cloud và dịch vụ số.",
+  companyInfo: { ...defaultCmsFooterCompanyInfo },
   columns: [
     {
       title: "Sản phẩm",
@@ -450,24 +475,18 @@ export const defaultCmsFooter: CmsFooter = {
       title: "Công ty",
       links: [
         { label: "Về KEYON", href: "/about" },
-        { label: "support@keyon.vn", href: "mailto:support@keyon.vn" },
-        {
-          label: "Hà Nội, Việt Nam",
-          href: "/contact",
-        },
+        { label: "Điều khoản", href: "/policy/terms" },
+        { label: "Bảo mật", href: "/policy/privacy" },
+        { label: "Thanh toán", href: "/policy/payment" },
+        { label: "Giao hàng", href: "/policy/delivery" },
+        { label: "Hoàn tiền", href: "/policy/refund" },
+        { label: "Khiếu nại", href: "/policy/complaint" },
+        { label: "Tất cả chính sách", href: "/policy" },
       ],
     },
   ],
   copyright: "© 2026 KEYON. All rights reserved.",
-  legalLinks: [
-    { label: "Điều khoản", href: "/policy/terms" },
-    { label: "Bảo mật", href: "/policy/privacy" },
-    { label: "Thanh toán", href: "/policy/payment" },
-    { label: "Giao hàng", href: "/policy/delivery" },
-    { label: "Hoàn tiền", href: "/policy/refund" },
-    { label: "Khiếu nại", href: "/policy/complaint" },
-    { label: "Tất cả chính sách", href: "/policy" },
-  ],
+  legalLinks: [],
   bctVisible: false,
   bctHref: "https://online.gov.vn/",
   bctImageUrl: "",

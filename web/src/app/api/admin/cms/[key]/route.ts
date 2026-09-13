@@ -308,16 +308,26 @@ export async function PUT(
           `${storage.wasabi.endpoint.replace(/\/$/, "")}/${storage.wasabi.bucket}`
         : "";
     const link = z.object({ label: z.string(), href: z.string() });
+    const companyInfo = z
+      .object({
+        companyName: z.string().max(200),
+        address: z.string().max(500),
+        taxCode: z.string().max(64),
+        phone: z.string().max(64),
+        email: z.string().max(120),
+      })
+      .optional();
     const data = z
       .object({
         logoUrl: z.string().optional(),
         brandName: z.string().min(1).max(48),
         blurb: z.string(),
+        companyInfo: companyInfo,
         columns: z.array(
           z.object({ title: z.string(), links: z.array(link) }),
         ),
         copyright: z.string(),
-        legalLinks: z.array(link),
+        legalLinks: z.array(link).optional().default([]),
         bctVisible: z.boolean().optional(),
         bctHref: z.string().optional(),
         bctImageUrl: z.string().optional(),
@@ -329,6 +339,30 @@ export async function PUT(
           typeof body?.brandName === "string" && body.brandName.trim()
             ? body.brandName.trim()
             : defaultCmsFooter.brandName,
+        companyInfo: {
+          companyName:
+            typeof body?.companyInfo?.companyName === "string"
+              ? body.companyInfo.companyName.trim()
+              : "",
+          address:
+            typeof body?.companyInfo?.address === "string"
+              ? body.companyInfo.address.trim()
+              : "",
+          taxCode:
+            typeof body?.companyInfo?.taxCode === "string"
+              ? body.companyInfo.taxCode.trim()
+              : "",
+          phone:
+            typeof body?.companyInfo?.phone === "string"
+              ? body.companyInfo.phone.trim()
+              : "",
+          email:
+            typeof body?.companyInfo?.email === "string" &&
+            body.companyInfo.email.trim()
+              ? body.companyInfo.email.trim()
+              : defaultCmsFooter.companyInfo?.email || "support@keyon.vn",
+        },
+        legalLinks: Array.isArray(body?.legalLinks) ? body.legalLinks : [],
         logoUrl:
           typeof body?.logoUrl === "string" && body.logoUrl.trim()
             ? resolveMediaUrl(body.logoUrl.trim(), mediaBase) ||

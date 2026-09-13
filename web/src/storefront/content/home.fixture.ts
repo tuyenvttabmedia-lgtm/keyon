@@ -308,6 +308,13 @@ export const homeFixture: HomeContent = {
     brandName: "KEYON",
     blurb:
       "Nền tảng phân phối và quản lý bản quyền phần mềm, cloud và dịch vụ số.",
+    companyInfo: {
+      companyName: "",
+      address: "",
+      taxCode: "",
+      phone: "",
+      email: "support@keyon.vn",
+    },
     supportEmail: "support@keyon.vn",
     columns: [
       {
@@ -346,21 +353,18 @@ export const homeFixture: HomeContent = {
         title: "Công ty",
         links: [
           { label: "Về KEYON", href: "/about" },
-          { label: "support@keyon.vn", href: "mailto:support@keyon.vn" },
-          { label: "Hà Nội, Việt Nam", href: "/contact" },
+          { label: "Điều khoản", href: "/policy/terms" },
+          { label: "Bảo mật", href: "/policy/privacy" },
+          { label: "Thanh toán", href: "/policy/payment" },
+          { label: "Giao hàng", href: "/policy/delivery" },
+          { label: "Hoàn tiền", href: "/policy/refund" },
+          { label: "Khiếu nại", href: "/policy/complaint" },
+          { label: "Tất cả chính sách", href: "/policy" },
         ],
       },
     ],
     copyright: "© 2026 KEYON. All rights reserved.",
-    legalLinks: [
-      { label: "Điều khoản", href: "/policy/terms" },
-      { label: "Bảo mật", href: "/policy/privacy" },
-      { label: "Thanh toán", href: "/policy/payment" },
-      { label: "Giao hàng", href: "/policy/delivery" },
-      { label: "Hoàn tiền", href: "/policy/refund" },
-      { label: "Khiếu nại", href: "/policy/complaint" },
-      { label: "Tất cả chính sách", href: "/policy" },
-    ],
+    legalLinks: [],
     contactLines: ["support@keyon.vn", "Hà Nội, Việt Nam"],
     bctVisible: false,
     bctHref: "https://online.gov.vn/",
