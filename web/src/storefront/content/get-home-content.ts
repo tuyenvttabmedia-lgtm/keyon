@@ -434,6 +434,11 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
         shopCounts,
       ),
       copyright: footer.copyright || homeFixture.footer.copyright,
+      socialLinks: sanitizeSocialLinks(
+        footer.socialLinks?.length
+          ? footer.socialLinks
+          : defaultCmsFooter.socialLinks || [],
+      ),
       legalLinks: [],
       supportEmail:
         footer.companyInfo?.email?.trim() ||
@@ -456,6 +461,37 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
     },
   };
 });
+
+const SOCIAL_NETWORKS = new Set([
+  "facebook",
+  "youtube",
+  "linkedin",
+  "zalo",
+  "tiktok",
+  "instagram",
+  "x",
+]);
+
+function sanitizeSocialLinks(
+  links: { network?: string; href?: string; label?: string }[],
+): { network: "facebook" | "youtube" | "linkedin" | "zalo" | "tiktok" | "instagram" | "x"; href: string; label?: string }[] {
+  const out: {
+    network: "facebook" | "youtube" | "linkedin" | "zalo" | "tiktok" | "instagram" | "x";
+    href: string;
+    label?: string;
+  }[] = [];
+  for (const raw of links) {
+    const network = (raw.network || "").trim().toLowerCase();
+    const href = (raw.href || "").trim();
+    if (!SOCIAL_NETWORKS.has(network) || !href) continue;
+    out.push({
+      network: network as (typeof out)[number]["network"],
+      href,
+      label: raw.label?.trim() || undefined,
+    });
+  }
+  return out;
+}
 
 /** Drop empty shop-category footer links; trim noisy business lists; keep company intact. */
 function sanitizeFooterColumns(

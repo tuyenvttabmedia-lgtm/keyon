@@ -20,6 +20,21 @@ type CompanyInfo = {
   email: string;
 };
 
+type SocialNetwork =
+  | "facebook"
+  | "youtube"
+  | "linkedin"
+  | "zalo"
+  | "tiktok"
+  | "instagram"
+  | "x";
+
+type SocialLink = {
+  network: SocialNetwork;
+  href: string;
+  label?: string;
+};
+
 type ComplianceBadge = {
   visible?: boolean;
   href?: string;
@@ -35,6 +50,7 @@ type Props = {
   companyInfo?: CompanyInfo;
   columns: FooterColumn[];
   copyright: string;
+  socialLinks?: SocialLink[];
   supportEmail?: string;
   bctVisible?: boolean;
   bctHref?: string;
@@ -48,6 +64,17 @@ type Props = {
 
 const footerLink = `inline-block text-slate-400 ${TRANSITION_COLORS} ${MOTION_NORMAL} ${EASE_STANDARD} hover:text-white hover:underline hover:underline-offset-4`;
 const barLink = `text-slate-500 ${TRANSITION_COLORS} ${MOTION_NORMAL} hover:text-white hover:underline hover:underline-offset-4`;
+const socialBtn = `inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/15 text-white ${TRANSITION_UI} hover:border-accent hover:bg-accent/15 hover:text-accent`;
+
+const SOCIAL_LABEL: Record<SocialNetwork, string> = {
+  facebook: "Facebook",
+  youtube: "YouTube",
+  linkedin: "LinkedIn",
+  zalo: "Zalo",
+  tiktok: "TikTok",
+  instagram: "Instagram",
+  x: "X",
+};
 
 function isExternalHref(href: string) {
   return /^(mailto:|tel:|https?:\/\/)/i.test(href);
@@ -76,33 +103,58 @@ function FooterHref({
   );
 }
 
-function SocialIcon({ name }: { name: "mail" | "help" }) {
+function SocialNetworkIcon({ network }: { network: SocialNetwork }) {
   const common = {
     width: 14,
     height: 14,
     viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 2,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-    "aria-hidden": true,
+    fill: "currentColor",
+    "aria-hidden": true as const,
   };
-  if (name === "mail") {
-    return (
-      <svg {...common}>
-        <rect x="3" y="5" width="18" height="14" rx="2" />
-        <path d="m3 7 9 6 9-6" />
-      </svg>
-    );
+  switch (network) {
+    case "facebook":
+      return (
+        <svg {...common}>
+          <path d="M14 8h3V5h-3c-2.2 0-4 1.8-4 4v2H7v3h3v7h3v-7h3l1-3h-4V9c0-.6.4-1 1-1z" />
+        </svg>
+      );
+    case "youtube":
+      return (
+        <svg {...common}>
+          <path d="M23.5 7.2a3 3 0 0 0-2.1-2.1C19.5 4.5 12 4.5 12 4.5s-7.5 0-9.4.6A3 3 0 0 0 .5 7.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-4.8zM9.8 15.5v-7l6.3 3.5-6.3 3.5z" />
+        </svg>
+      );
+    case "linkedin":
+      return (
+        <svg {...common}>
+          <path d="M6.9 8.9H3.7V20h3.2V8.9zM5.3 4C4.2 4 3.3 4.9 3.3 6S4.2 8 5.3 8 7.3 7.1 7.3 6 6.4 4 5.3 4zM20.3 20h-3.2v-5.4c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9V20H10V8.9h3.1v1.5h.1c.4-.8 1.5-1.8 3.1-1.8 3.3 0 3.9 2.2 3.9 5V20z" />
+        </svg>
+      );
+    case "zalo":
+      return (
+        <svg {...common}>
+          <path d="M12 2C6.5 2 2 6.1 2 11.2c0 2.9 1.5 5.5 3.8 7.2V22l3.5-1.9c.9.2 1.8.4 2.7.4 5.5 0 10-4.1 10-9.3S17.5 2 12 2zm4.4 11.8-1.4 1.4c-1.7 1.2-3.9-.3-5.3-1.7s-2.9-3.6-1.7-5.3l1.4-1.4c.3-.3.7-.3 1 0l1.5 1.5c.3.3.3.7 0 1l-.7.7c-.2.2-.2.4 0 .7.8 1.2 1.8 2.2 3 3 .2.2.5.2.7 0l.7-.7c.3-.3.7-.3 1 0l1.5 1.5c.2.3.2.7-.2 1z" />
+        </svg>
+      );
+    case "tiktok":
+      return (
+        <svg {...common}>
+          <path d="M19.6 8.2a6.3 6.3 0 0 1-3.6-1.1v6.5a5.6 5.6 0 1 1-4.8-5.5v2.9a2.8 2.8 0 1 0 2 2.7V2.5h2.8a6.3 6.3 0 0 0 3.6 3.4v2.3z" />
+        </svg>
+      );
+    case "instagram":
+      return (
+        <svg {...common}>
+          <path d="M12 7.2A4.8 4.8 0 1 0 12 16.8 4.8 4.8 0 0 0 12 7.2zm0 7.9a3.1 3.1 0 1 1 0-6.2 3.1 3.1 0 0 1 0 6.2zm6.1-8.2a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0zM12 2.5c-2.5 0-2.8 0-3.8.1-2.5.1-3.7 1.3-3.8 3.8-.1 1-.1 1.3-.1 3.8s0 2.8.1 3.8c.1 2.5 1.3 3.7 3.8 3.8 1 .1 1.3.1 3.8.1s2.8 0 3.8-.1c2.5-.1 3.7-1.3 3.8-3.8.1-1 .1-1.3.1-3.8s0-2.8-.1-3.8c-.1-2.5-1.3-3.7-3.8-3.8-1-.1-1.3-.1-3.8-.1zm0 1.8c2.4 0 2.7 0 3.7.1 1.8.1 2.6.9 2.7 2.7.1 1 .1 1.2.1 3.7s0 2.7-.1 3.7c-.1 1.8-.9 2.6-2.7 2.7-1 .1-1.2.1-3.7.1s-2.7 0-3.7-.1c-1.8-.1-2.6-.9-2.7-2.7-.1-1-.1-1.2-.1-3.7s0-2.7.1-3.7c.1-1.8.9-2.6 2.7-2.7 1-.1 1.3-.1 3.7-.1z" />
+        </svg>
+      );
+    case "x":
+      return (
+        <svg {...common}>
+          <path d="M18.2 2.5h3.2l-7 8 8.2 11H16l-4.7-6.2L6 21.5H2.8l7.5-8.6L2.2 2.5H8.6l4.3 5.7 5.3-5.7zm-1.1 17h1.8L7 4.4H5.1l12 15.1z" />
+        </svg>
+      );
   }
-  return (
-    <svg {...common}>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M9.5 9.5a2.5 2.5 0 0 1 5 1c0 1.5-2.5 2-2.5 3.5" />
-      <path d="M12 17.5h.01" />
-    </svg>
-  );
 }
 
 function oneLine(value: string) {
@@ -137,13 +189,6 @@ function CompanyInfoBlock({ info }: { info: CompanyInfo }) {
       </a>,
     );
   }
-  if (email) {
-    metaBits.push(
-      <a key="email" href={`mailto:${email}`} className={footerLink}>
-        {email}
-      </a>,
-    );
-  }
 
   return (
     <div className="mt-4 max-w-md space-y-1.5 text-[12px] leading-snug text-slate-400">
@@ -165,6 +210,13 @@ function CompanyInfoBlock({ info }: { info: CompanyInfo }) {
               {bit}
             </span>
           ))}
+        </p>
+      ) : null}
+      {email ? (
+        <p>
+          <a href={`mailto:${email}`} className={footerLink}>
+            {email}
+          </a>
         </p>
       ) : null}
     </div>
@@ -215,6 +267,7 @@ export function SiteFooter({
   companyInfo,
   columns,
   copyright,
+  socialLinks = [],
   supportEmail = "support@keyon.vn",
   bctVisible = false,
   bctHref = "https://online.gov.vn/",
@@ -229,12 +282,9 @@ export function SiteFooter({
   const logoUrl = resolveMediaUrl(logoUrlProp) || undefined;
   const mark = name.charAt(0).toUpperCase() || "K";
   const mail = companyInfo?.email?.trim() || supportEmail;
-  const social = [
-    { label: "Email", href: `mailto:${mail}`, icon: "mail" as const },
-    { label: "Hỗ trợ", href: "/support", icon: "help" as const },
-  ];
   const visibleColumns = columns.filter((c) => c.links.length > 0);
   const showBadges = Boolean(bctVisible || dmcaVisible);
+  const visibleSocial = socialLinks.filter((s) => s.href?.trim());
 
   return (
     <footer className="mt-auto bg-footer text-slate-400">
@@ -307,33 +357,14 @@ export function SiteFooter({
         </div>
       </div>
 
+      {/* Order: copyright → utility links → social → compliance (right) */}
       <div className="border-t border-white/10">
-        <div className="home-container flex flex-col gap-3 py-3.5 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
-          <span className="text-xs leading-none text-slate-500">{copyright}</span>
+        <div className="home-container flex flex-col gap-3 py-3.5 lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:gap-6">
+          <span className="shrink-0 text-xs leading-none text-slate-500">
+            {copyright}
+          </span>
 
-          {showBadges ? (
-            <div
-              className="flex flex-wrap items-center gap-3"
-              aria-label="Chứng nhận"
-            >
-              <ComplianceBadgeLink
-                visible={bctVisible}
-                href={bctHref}
-                imageUrl={bctImageUrl}
-                alt={bctAlt}
-                fallbackSrc="/brand/bct-thong-bao.svg"
-              />
-              <ComplianceBadgeLink
-                visible={dmcaVisible}
-                href={dmcaHref}
-                imageUrl={dmcaImageUrl}
-                alt={dmcaAlt}
-                fallbackSrc="/brand/dmca-protected.svg"
-              />
-            </div>
-          ) : null}
-
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 lg:justify-center">
             <nav
               aria-label="Liên hệ nhanh"
               className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs leading-5"
@@ -354,19 +385,53 @@ export function SiteFooter({
                 Liên hệ
               </Link>
             </nav>
-            <div className="flex items-center gap-2">
-              {social.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/15 text-white ${TRANSITION_UI} hover:border-accent hover:bg-accent/15 hover:text-accent`}
-                  aria-label={s.label}
-                >
-                  <SocialIcon name={s.icon} />
-                </a>
-              ))}
-            </div>
+            {visibleSocial.length ? (
+              <div
+                className="flex items-center gap-2"
+                aria-label="Mạng xã hội"
+              >
+                {visibleSocial.map((s) => {
+                  const label = s.label?.trim() || SOCIAL_LABEL[s.network];
+                  return (
+                    <a
+                      key={`${s.network}-${s.href}`}
+                      href={s.href.trim()}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={socialBtn}
+                      aria-label={label}
+                    >
+                      <SocialNetworkIcon network={s.network} />
+                    </a>
+                  );
+                })}
+              </div>
+            ) : null}
           </div>
+
+          {showBadges ? (
+            <div
+              className="flex flex-wrap items-center gap-3 lg:justify-end"
+              aria-label="Chứng nhận"
+            >
+              <ComplianceBadgeLink
+                visible={bctVisible}
+                href={bctHref}
+                imageUrl={bctImageUrl}
+                alt={bctAlt}
+                fallbackSrc="/brand/bct-thong-bao.svg"
+              />
+              <ComplianceBadgeLink
+                visible={dmcaVisible}
+                href={dmcaHref}
+                imageUrl={dmcaImageUrl}
+                alt={dmcaAlt}
+                fallbackSrc="/brand/dmca-protected.svg"
+              />
+            </div>
+          ) : (
+            <span className="hidden lg:block" aria-hidden />
+          )}
         </div>
       </div>
     </footer>

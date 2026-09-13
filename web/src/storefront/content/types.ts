@@ -240,6 +240,18 @@ export type HomeContent = {
     };
     columns: FooterColumn[];
     copyright: string;
+    socialLinks?: {
+      network:
+        | "facebook"
+        | "youtube"
+        | "linkedin"
+        | "zalo"
+        | "tiktok"
+        | "instagram"
+        | "x";
+      href: string;
+      label?: string;
+    }[];
     /** @deprecated Bottom bar no longer shows policy links */
     legalLinks?: NavItem[];
     contactLines?: string[];

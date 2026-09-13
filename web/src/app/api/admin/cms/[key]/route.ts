@@ -327,6 +327,24 @@ export async function PUT(
           z.object({ title: z.string(), links: z.array(link) }),
         ),
         copyright: z.string(),
+        socialLinks: z
+          .array(
+            z.object({
+              network: z.enum([
+                "facebook",
+                "youtube",
+                "linkedin",
+                "zalo",
+                "tiktok",
+                "instagram",
+                "x",
+              ]),
+              href: z.string().max(500),
+              label: z.string().max(64).optional(),
+            }),
+          )
+          .optional()
+          .default([]),
         legalLinks: z.array(link).optional().default([]),
         bctVisible: z.boolean().optional(),
         bctHref: z.string().optional(),
@@ -366,6 +384,21 @@ export async function PUT(
               ? body.companyInfo.email.trim()
               : defaultCmsFooter.companyInfo?.email || "support@keyon.vn",
         },
+        socialLinks: Array.isArray(body?.socialLinks)
+          ? body.socialLinks
+              .map((s: { network?: string; href?: string; label?: string }) => ({
+                network: s?.network,
+                href: typeof s?.href === "string" ? s.href.trim() : "",
+                label:
+                  typeof s?.label === "string" && s.label.trim()
+                    ? s.label.trim()
+                    : undefined,
+              }))
+              .filter(
+                (s: { network?: string; href: string }) =>
+                  s.network && typeof s.href === "string",
+              )
+          : defaultCmsFooter.socialLinks || [],
         legalLinks: Array.isArray(body?.legalLinks) ? body.legalLinks : [],
         logoUrl:
           typeof body?.logoUrl === "string" && body.logoUrl.trim()

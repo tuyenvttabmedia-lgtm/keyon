@@ -2,11 +2,29 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import type { CmsFooter, CmsFooterCompanyInfo } from "@/server/cms/types";
+import type {
+  CmsFooter,
+  CmsFooterCompanyInfo,
+  CmsFooterSocialLink,
+  CmsFooterSocialNetwork,
+} from "@/server/cms/types";
 import { defaultCmsFooterCompanyInfo } from "@/server/cms/types";
 import { resolveMediaUrl } from "@/lib/media-url";
 import { MediaPicker } from "@/app/admin/media/MediaPicker";
 import { CmsSaveForm } from "../CmsSaveForm";
+
+const SOCIAL_NETWORK_OPTIONS: {
+  value: CmsFooterSocialNetwork;
+  label: string;
+}[] = [
+  { value: "facebook", label: "Facebook" },
+  { value: "youtube", label: "YouTube" },
+  { value: "linkedin", label: "LinkedIn" },
+  { value: "zalo", label: "Zalo" },
+  { value: "tiktok", label: "TikTok" },
+  { value: "instagram", label: "Instagram" },
+  { value: "x", label: "X (Twitter)" },
+];
 
 function companyInfoOf(form: CmsFooter): CmsFooterCompanyInfo {
   return {
@@ -15,10 +33,22 @@ function companyInfoOf(form: CmsFooter): CmsFooterCompanyInfo {
   };
 }
 
+function socialLinksOf(form: CmsFooter): CmsFooterSocialLink[] {
+  return form.socialLinks?.length
+    ? form.socialLinks
+    : [
+        { network: "facebook", href: "" },
+        { network: "youtube", href: "" },
+        { network: "linkedin", href: "" },
+        { network: "zalo", href: "" },
+      ];
+}
+
 export function FooterForm({ initial }: { initial: CmsFooter }) {
   const initialForm: CmsFooter = {
     ...initial,
     companyInfo: companyInfoOf(initial),
+    socialLinks: socialLinksOf(initial),
     legalLinks: [],
   };
 
@@ -35,11 +65,12 @@ export function FooterForm({ initial }: { initial: CmsFooter }) {
         return (
           <div className="space-y-6">
             <p className="rounded-xl border border-sky-200 bg-sky-50 px-3 py-2 text-xs text-sky-950">
-              Thông tin CTy (tên, địa chỉ, MST…) nằm cột thương hiệu. Badge BCT /
-              DMCA hiện ở thanh dưới footer — cạnh copyright.
+              Thanh dưới: copyright → email/Hỗ trợ/Liên hệ → icon MXH → BCT/DMCA
+              (phải). Để trống URL MXH thì ẩn icon đó.
             </p>
 
             <BrandSection form={form} setForm={setForm} />
+            <SocialLinksSection form={form} setForm={setForm} />
             <ComplianceBadgesSection form={form} setForm={setForm} />
 
             <div className="space-y-4 rounded-2xl border border-border bg-card p-6">
@@ -344,6 +375,89 @@ function BrandSection({
           setPickerOpen(false);
         }}
       />
+    </div>
+  );
+}
+
+function SocialLinksSection({
+  form,
+  setForm,
+}: {
+  form: CmsFooter;
+  setForm: (v: CmsFooter) => void;
+}) {
+  const links = socialLinksOf(form);
+
+  return (
+    <div className="space-y-3 rounded-2xl border border-border bg-card p-6">
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <div>
+          <p className="text-sm font-medium text-navy">Mạng xã hội</p>
+          <p className="mt-0.5 text-xs text-muted">
+            Icon hiện ở thanh dưới footer (giữa liên hệ và badge BCT/DMCA). URL
+            trống = không hiện.
+          </p>
+        </div>
+        <button
+          type="button"
+          className="text-xs font-medium text-accent hover:underline"
+          onClick={() =>
+            setForm({
+              ...form,
+              socialLinks: [
+                ...links,
+                { network: "facebook", href: "" },
+              ],
+            })
+          }
+        >
+          + Thêm
+        </button>
+      </div>
+      {links.map((row, i) => (
+        <div key={i} className="flex flex-wrap gap-2">
+          <select
+            className="h-9 rounded-lg border border-border bg-white px-2 text-sm outline-none focus:border-accent"
+            value={row.network}
+            onChange={(e) => {
+              const socialLinks = [...links];
+              socialLinks[i] = {
+                ...row,
+                network: e.target.value as CmsFooterSocialNetwork,
+              };
+              setForm({ ...form, socialLinks });
+            }}
+          >
+            {SOCIAL_NETWORK_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+          <input
+            className="min-w-0 flex-1 rounded-lg border border-border px-3 py-1.5 font-mono text-xs outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
+            value={row.href}
+            onChange={(e) => {
+              const socialLinks = [...links];
+              socialLinks[i] = { ...row, href: e.target.value };
+              setForm({ ...form, socialLinks });
+            }}
+            placeholder="https://…"
+          />
+          <button
+            type="button"
+            className="px-2 text-xs text-danger hover:underline"
+            onClick={() =>
+              setForm({
+                ...form,
+                socialLinks: links.filter((_, j) => j !== i),
+              })
+            }
+          >
+            ×
+          </button>
+        </div>
+      ))}
     </div>
   );
 }

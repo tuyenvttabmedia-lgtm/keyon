@@ -364,6 +364,12 @@ export const homeFixture: HomeContent = {
       },
     ],
     copyright: "© 2026 KEYON. All rights reserved.",
+    socialLinks: [
+      { network: "facebook", href: "" },
+      { network: "youtube", href: "" },
+      { network: "linkedin", href: "" },
+      { network: "zalo", href: "" },
+    ],
     legalLinks: [],
     contactLines: ["support@keyon.vn", "Hà Nội, Việt Nam"],
     bctVisible: false,

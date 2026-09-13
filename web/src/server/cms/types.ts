@@ -249,6 +249,22 @@ export type CmsFooterCompanyInfo = {
   email: string;
 };
 
+export type CmsFooterSocialNetwork =
+  | "facebook"
+  | "youtube"
+  | "linkedin"
+  | "zalo"
+  | "tiktok"
+  | "instagram"
+  | "x";
+
+export type CmsFooterSocialLink = {
+  network: CmsFooterSocialNetwork;
+  /** Profile / page URL — empty rows are hidden on storefront */
+  href: string;
+  label?: string;
+};
+
 export type CmsFooter = {
   /** Footer logo (Media). Empty → fall back to header/nav logo, then letter mark. */
   logoUrl?: string;
@@ -258,6 +274,8 @@ export type CmsFooter = {
   companyInfo?: CmsFooterCompanyInfo;
   columns: { title: string; links: { label: string; href: string }[] }[];
   copyright: string;
+  /** Social profiles shown as icons on the bottom footer bar. */
+  socialLinks?: CmsFooterSocialLink[];
   /**
    * @deprecated Policies belong in a footer column. Bottom bar no longer renders these.
    * Kept optional for legacy footer.json.
@@ -490,6 +508,12 @@ export const defaultCmsFooter: CmsFooter = {
     },
   ],
   copyright: "© 2026 KEYON. All rights reserved.",
+  socialLinks: [
+    { network: "facebook", href: "" },
+    { network: "youtube", href: "" },
+    { network: "linkedin", href: "" },
+    { network: "zalo", href: "" },
+  ],
   legalLinks: [],
   bctVisible: false,
   bctHref: "https://online.gov.vn/",

@@ -30,6 +30,7 @@ export default async function StorefrontLayout({
         companyInfo={home.footer.companyInfo}
         columns={home.footer.columns}
         copyright={home.footer.copyright}
+        socialLinks={home.footer.socialLinks}
         supportEmail={home.footer.supportEmail}
         bctVisible={home.footer.bctVisible}
         bctHref={home.footer.bctHref}
