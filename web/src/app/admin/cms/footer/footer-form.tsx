@@ -35,13 +35,12 @@ export function FooterForm({ initial }: { initial: CmsFooter }) {
         return (
           <div className="space-y-6">
             <p className="rounded-xl border border-sky-200 bg-sky-50 px-3 py-2 text-xs text-sky-950">
-              Thông tin pháp lý (tên CTy, địa chỉ, MST) hiện dưới mô tả thương
-              hiệu ở cột 1. Chính sách đưa vào một cột menu (vd. cột Công ty) —
-              thanh dưới footer chỉ còn copyright + liên hệ nhanh.
+              Thông tin CTy (tên, địa chỉ, MST…) nằm cột thương hiệu. Badge BCT /
+              DMCA hiện ở thanh dưới footer — cạnh copyright.
             </p>
 
             <BrandSection form={form} setForm={setForm} />
-            <BctSection form={form} setForm={setForm} />
+            <ComplianceBadgesSection form={form} setForm={setForm} />
 
             <div className="space-y-4 rounded-2xl border border-border bg-card p-6">
               <label className="block text-sm">
@@ -349,98 +348,174 @@ function BrandSection({
   );
 }
 
-function BctSection({
+function ComplianceBadgesSection({
   form,
   setForm,
 }: {
   form: CmsFooter;
   setForm: (v: CmsFooter) => void;
 }) {
-  const [pickerOpen, setPickerOpen] = useState(false);
-  const preview =
+  const [bctPickerOpen, setBctPickerOpen] = useState(false);
+  const [dmcaPickerOpen, setDmcaPickerOpen] = useState(false);
+  const bctPreview =
     resolveMediaUrl(form.bctImageUrl) || "/brand/bct-thong-bao.svg";
+  const dmcaPreview =
+    resolveMediaUrl(form.dmcaImageUrl) || "/brand/dmca-protected.svg";
 
   return (
-    <div className="space-y-4 rounded-2xl border border-border bg-card p-6">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <p className="text-sm font-medium text-navy">
-            Logo thông báo Bộ Công Thương
-          </p>
-          <p className="mt-0.5 text-xs text-muted">
-            Hiện dưới cột thương hiệu footer. Tắt khi chưa có mã đăng ký; bật và
-            dán URL hồ sơ trên online.gov.vn khi đã thông báo.
-          </p>
-        </div>
-        <label className="flex items-center gap-2 text-sm font-medium text-navy">
-          <input
-            type="checkbox"
-            checked={Boolean(form.bctVisible)}
-            onChange={(e) =>
-              setForm({ ...form, bctVisible: e.target.checked })
-            }
-          />
-          Hiện trên footer
-        </label>
+    <div className="space-y-6 rounded-2xl border border-border bg-card p-6">
+      <div>
+        <p className="text-sm font-medium text-navy">
+          Badge thanh dưới footer
+        </p>
+        <p className="mt-0.5 text-xs text-muted">
+          BCT và DMCA nằm cùng hàng copyright / liên hệ nhanh — không còn dưới
+          cột thương hiệu.
+        </p>
       </div>
 
-      <div className="flex flex-wrap items-start gap-4">
-        <div className="flex h-[64px] w-[148px] shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border bg-white p-2">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={preview}
-            alt={form.bctAlt || "Đã thông báo Bộ Công Thương"}
-            className="h-full w-full object-contain object-left"
-          />
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <button
-            type="button"
-            className="h-9 rounded-lg border border-border bg-white px-3 text-sm font-medium hover:border-accent"
-            onClick={() => setPickerOpen(true)}
-          >
-            {form.bctImageUrl ? "Đổi ảnh BCT" : "Chọn ảnh từ Media"}
-          </button>
-          {form.bctImageUrl ? (
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="space-y-3 rounded-xl border border-border p-4">
+          <div className="flex items-start justify-between gap-2">
+            <p className="text-sm font-medium text-navy">Bộ Công Thương</p>
+            <label className="flex items-center gap-2 text-sm font-medium text-navy">
+              <input
+                type="checkbox"
+                checked={Boolean(form.bctVisible)}
+                onChange={(e) =>
+                  setForm({ ...form, bctVisible: e.target.checked })
+                }
+              />
+              Hiện
+            </label>
+          </div>
+          <div className="flex h-[56px] w-[140px] items-center justify-center overflow-hidden rounded-lg border border-border bg-white p-1.5">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={bctPreview}
+              alt={form.bctAlt || "BCT"}
+              className="h-full w-full object-contain object-left"
+            />
+          </div>
+          <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              className="h-9 rounded-lg px-3 text-sm text-danger hover:underline"
-              onClick={() => setForm({ ...form, bctImageUrl: "" })}
+              className="h-9 rounded-lg border border-border bg-white px-3 text-sm font-medium hover:border-accent"
+              onClick={() => setBctPickerOpen(true)}
             >
-              Dùng ảnh mặc định
+              {form.bctImageUrl ? "Đổi ảnh" : "Chọn từ Media"}
             </button>
-          ) : null}
+            {form.bctImageUrl ? (
+              <button
+                type="button"
+                className="h-9 rounded-lg px-3 text-sm text-danger hover:underline"
+                onClick={() => setForm({ ...form, bctImageUrl: "" })}
+              >
+                Ảnh mặc định
+              </button>
+            ) : null}
+          </div>
+          <label className="block text-sm">
+            <span className="font-medium text-navy">Link</span>
+            <input
+              className="mt-1 h-9 w-full rounded-lg border border-border px-3 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
+              value={form.bctHref ?? ""}
+              onChange={(e) => setForm({ ...form, bctHref: e.target.value })}
+              placeholder="https://online.gov.vn/…"
+            />
+          </label>
+          <label className="block text-sm">
+            <span className="font-medium text-navy">Alt</span>
+            <input
+              className="mt-1 h-9 w-full rounded-lg border border-border px-3 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
+              value={form.bctAlt ?? ""}
+              onChange={(e) => setForm({ ...form, bctAlt: e.target.value })}
+              placeholder="Đã thông báo Bộ Công Thương"
+            />
+          </label>
+        </div>
+
+        <div className="space-y-3 rounded-xl border border-border p-4">
+          <div className="flex items-start justify-between gap-2">
+            <p className="text-sm font-medium text-navy">DMCA</p>
+            <label className="flex items-center gap-2 text-sm font-medium text-navy">
+              <input
+                type="checkbox"
+                checked={Boolean(form.dmcaVisible)}
+                onChange={(e) =>
+                  setForm({ ...form, dmcaVisible: e.target.checked })
+                }
+              />
+              Hiện
+            </label>
+          </div>
+          <div className="flex h-[56px] w-[140px] items-center justify-center overflow-hidden rounded-lg border border-border bg-white p-1.5">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={dmcaPreview}
+              alt={form.dmcaAlt || "DMCA"}
+              className="h-full w-full object-contain object-left"
+            />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              className="h-9 rounded-lg border border-border bg-white px-3 text-sm font-medium hover:border-accent"
+              onClick={() => setDmcaPickerOpen(true)}
+            >
+              {form.dmcaImageUrl ? "Đổi ảnh" : "Chọn từ Media"}
+            </button>
+            {form.dmcaImageUrl ? (
+              <button
+                type="button"
+                className="h-9 rounded-lg px-3 text-sm text-danger hover:underline"
+                onClick={() => setForm({ ...form, dmcaImageUrl: "" })}
+              >
+                Ảnh mặc định
+              </button>
+            ) : null}
+          </div>
+          <label className="block text-sm">
+            <span className="font-medium text-navy">Link</span>
+            <input
+              className="mt-1 h-9 w-full rounded-lg border border-border px-3 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
+              value={form.dmcaHref ?? ""}
+              onChange={(e) => setForm({ ...form, dmcaHref: e.target.value })}
+              placeholder="https://www.dmca.com/…"
+            />
+          </label>
+          <label className="block text-sm">
+            <span className="font-medium text-navy">Alt</span>
+            <input
+              className="mt-1 h-9 w-full rounded-lg border border-border px-3 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
+              value={form.dmcaAlt ?? ""}
+              onChange={(e) => setForm({ ...form, dmcaAlt: e.target.value })}
+              placeholder="DMCA protected"
+            />
+          </label>
         </div>
       </div>
 
-      <label className="block text-sm">
-        <span className="font-medium text-navy">Link hồ sơ BCT</span>
-        <input
-          className="mt-1 h-9 w-full rounded-lg border border-border px-3 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
-          value={form.bctHref ?? ""}
-          onChange={(e) => setForm({ ...form, bctHref: e.target.value })}
-          placeholder="https://online.gov.vn/Home/WebDetails?id=…"
-        />
-      </label>
-      <label className="block text-sm">
-        <span className="font-medium text-navy">Alt text</span>
-        <input
-          className="mt-1 h-9 w-full max-w-md rounded-lg border border-border px-3 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
-          value={form.bctAlt ?? ""}
-          onChange={(e) => setForm({ ...form, bctAlt: e.target.value })}
-          placeholder="Đã thông báo Bộ Công Thương"
-        />
-      </label>
-
       <MediaPicker
-        open={pickerOpen}
-        onClose={() => setPickerOpen(false)}
+        open={bctPickerOpen}
+        onClose={() => setBctPickerOpen(false)}
         title="Chọn logo thông báo BCT"
         onSelect={(items) => {
           if (items[0]?.url) {
             setForm({ ...form, bctImageUrl: items[0].url });
           }
-          setPickerOpen(false);
+          setBctPickerOpen(false);
+        }}
+      />
+      <MediaPicker
+        open={dmcaPickerOpen}
+        onClose={() => setDmcaPickerOpen(false)}
+        title="Chọn badge DMCA"
+        onSelect={(items) => {
+          if (items[0]?.url) {
+            setForm({ ...form, dmcaImageUrl: items[0].url });
+          }
+          setDmcaPickerOpen(false);
         }}
       />
     </div>

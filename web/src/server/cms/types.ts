@@ -263,11 +263,15 @@ export type CmsFooter = {
    * Kept optional for legacy footer.json.
    */
   legalLinks?: { label: string; href: string }[];
-  /** Bộ Công Thương “Đã thông báo” badge under brand column. */
+  /** Compliance badges on the bottom footer bar (not brand column). */
   bctVisible?: boolean;
   bctHref?: string;
   bctImageUrl?: string;
   bctAlt?: string;
+  dmcaVisible?: boolean;
+  dmcaHref?: string;
+  dmcaImageUrl?: string;
+  dmcaAlt?: string;
 };
 
 export type CmsNav = {
@@ -491,6 +495,10 @@ export const defaultCmsFooter: CmsFooter = {
   bctHref: "https://online.gov.vn/",
   bctImageUrl: "",
   bctAlt: "Đã thông báo Bộ Công Thương",
+  dmcaVisible: false,
+  dmcaHref: "",
+  dmcaImageUrl: "",
+  dmcaAlt: "DMCA protected",
 };
 
 export const defaultCmsNav: CmsNav = {

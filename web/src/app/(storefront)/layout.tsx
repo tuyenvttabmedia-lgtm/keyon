@@ -35,6 +35,10 @@ export default async function StorefrontLayout({
         bctHref={home.footer.bctHref}
         bctImageUrl={home.footer.bctImageUrl}
         bctAlt={home.footer.bctAlt}
+        dmcaVisible={home.footer.dmcaVisible}
+        dmcaHref={home.footer.dmcaHref}
+        dmcaImageUrl={home.footer.dmcaImageUrl}
+        dmcaAlt={home.footer.dmcaAlt}
       />
     </>
   );

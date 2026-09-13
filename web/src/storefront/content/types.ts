@@ -248,5 +248,9 @@ export type HomeContent = {
     bctHref?: string;
     bctImageUrl?: string;
     bctAlt?: string;
+    dmcaVisible?: boolean;
+    dmcaHref?: string;
+    dmcaImageUrl?: string;
+    dmcaAlt?: string;
   };
 };

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import type { FooterColumn } from "@/storefront/content/types";
 import { resolveMediaUrl } from "@/lib/media-url";
 import {
@@ -20,6 +20,14 @@ type CompanyInfo = {
   email: string;
 };
 
+type ComplianceBadge = {
+  visible?: boolean;
+  href?: string;
+  imageUrl?: string;
+  alt?: string;
+  fallbackSrc: string;
+};
+
 type Props = {
   logoUrl?: string;
   brandName?: string;
@@ -32,6 +40,10 @@ type Props = {
   bctHref?: string;
   bctImageUrl?: string;
   bctAlt?: string;
+  dmcaVisible?: boolean;
+  dmcaHref?: string;
+  dmcaImageUrl?: string;
+  dmcaAlt?: string;
 };
 
 const footerLink = `inline-block text-slate-400 ${TRANSITION_COLORS} ${MOTION_NORMAL} ${EASE_STANDARD} hover:text-white hover:underline hover:underline-offset-4`;
@@ -93,63 +105,105 @@ function SocialIcon({ name }: { name: "mail" | "help" }) {
   );
 }
 
+function oneLine(value: string) {
+  return value.replace(/\s+/g, " ").trim();
+}
+
 function CompanyInfoBlock({ info }: { info: CompanyInfo }) {
   const name = info.companyName.trim();
-  const address = info.address.trim();
+  const address = oneLine(info.address);
   const tax = info.taxCode.trim();
   const phone = info.phone.trim();
   const email = info.email.trim();
   if (!name && !address && !tax && !phone && !email) return null;
 
+  const metaBits: ReactNode[] = [];
+  if (tax) {
+    metaBits.push(
+      <span key="tax">
+        <span className="text-slate-500">MST</span>{" "}
+        <span className="font-mono text-slate-300">{tax}</span>
+      </span>,
+    );
+  }
+  if (phone) {
+    metaBits.push(
+      <a
+        key="phone"
+        href={`tel:${phone.replace(/\s+/g, "")}`}
+        className={footerLink}
+      >
+        <span className="text-slate-500">ĐT</span> {phone}
+      </a>,
+    );
+  }
+  if (email) {
+    metaBits.push(
+      <a key="email" href={`mailto:${email}`} className={footerLink}>
+        {email}
+      </a>,
+    );
+  }
+
   return (
-    <dl className="mt-5 max-w-xs space-y-2 text-[12px] leading-relaxed text-slate-400">
-      {name ? (
-        <div>
-          <dt className="sr-only">Tên công ty</dt>
-          <dd className="font-medium text-slate-300">{name}</dd>
-        </div>
-      ) : null}
+    <div className="mt-4 max-w-md space-y-1.5 text-[12px] leading-snug text-slate-400">
+      {name ? <p className="font-medium text-slate-300">{name}</p> : null}
       {address ? (
-        <div>
-          <dt className="text-[11px] uppercase tracking-wide text-slate-500">
-            Địa chỉ
-          </dt>
-          <dd className="mt-0.5">{address}</dd>
-        </div>
+        <p>
+          <span className="text-slate-500">Địa chỉ:</span> {address}
+        </p>
       ) : null}
-      {tax ? (
-        <div>
-          <dt className="text-[11px] uppercase tracking-wide text-slate-500">
-            MST
-          </dt>
-          <dd className="mt-0.5 font-mono text-[12px] text-slate-300">{tax}</dd>
-        </div>
+      {metaBits.length ? (
+        <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
+          {metaBits.map((bit, i) => (
+            <span key={i} className="inline-flex items-center gap-x-2">
+              {i > 0 ? (
+                <span className="text-slate-600" aria-hidden>
+                  ·
+                </span>
+              ) : null}
+              {bit}
+            </span>
+          ))}
+        </p>
       ) : null}
-      {phone ? (
-        <div>
-          <dt className="text-[11px] uppercase tracking-wide text-slate-500">
-            Điện thoại
-          </dt>
-          <dd className="mt-0.5">
-            <a href={`tel:${phone.replace(/\s+/g, "")}`} className={footerLink}>
-              {phone}
-            </a>
-          </dd>
-        </div>
-      ) : null}
-      {email ? (
-        <div>
-          <dt className="text-[11px] uppercase tracking-wide text-slate-500">
-            Email
-          </dt>
-          <dd className="mt-0.5">
-            <a href={`mailto:${email}`} className={footerLink}>
-              {email}
-            </a>
-          </dd>
-        </div>
-      ) : null}
-    </dl>
+    </div>
+  );
+}
+
+function ComplianceBadgeLink({
+  visible,
+  href,
+  imageUrl,
+  alt,
+  fallbackSrc,
+}: ComplianceBadge) {
+  if (!visible) return null;
+  const src = resolveMediaUrl(imageUrl) || fallbackSrc;
+  const link = href?.trim() || undefined;
+  const img = (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt={alt || ""}
+      width={120}
+      height={40}
+      className="h-9 w-auto max-w-[140px] object-contain object-left"
+    />
+  );
+  if (!link) {
+    return <span className="inline-flex shrink-0 opacity-95">{img}</span>;
+  }
+  return (
+    <a
+      href={link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`inline-flex shrink-0 ${TRANSITION_UI} hover:opacity-90`}
+      aria-label={alt}
+    >
+      {img}
+    </a>
   );
 }
 
@@ -166,6 +220,10 @@ export function SiteFooter({
   bctHref = "https://online.gov.vn/",
   bctImageUrl = "/brand/bct-thong-bao.svg",
   bctAlt = "Đã thông báo Bộ Công Thương",
+  dmcaVisible = false,
+  dmcaHref = "",
+  dmcaImageUrl = "/brand/dmca-protected.svg",
+  dmcaAlt = "DMCA protected",
 }: Props) {
   const name = brandNameProp?.trim() || "KEYON";
   const logoUrl = resolveMediaUrl(logoUrlProp) || undefined;
@@ -176,13 +234,12 @@ export function SiteFooter({
     { label: "Hỗ trợ", href: "/support", icon: "help" as const },
   ];
   const visibleColumns = columns.filter((c) => c.links.length > 0);
-  const bctSrc = resolveMediaUrl(bctImageUrl) || "/brand/bct-thong-bao.svg";
-  const bctLink = bctHref?.trim() || "https://online.gov.vn/";
+  const showBadges = Boolean(bctVisible || dmcaVisible);
 
   return (
     <footer className="mt-auto bg-footer text-slate-400">
       <div className="home-container">
-        <div className="py-10 lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,3.2fr)] lg:gap-10 lg:py-12">
+        <div className="py-10 lg:grid lg:grid-cols-[minmax(0,1.35fr)_minmax(0,3fr)] lg:gap-10 lg:py-12">
           <div className="mb-8 lg:mb-0">
             <Link
               href="/"
@@ -209,28 +266,10 @@ export function SiteFooter({
                 </>
               )}
             </Link>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-400">
+            <p className="mt-4 max-w-md text-sm leading-relaxed text-slate-400">
               {blurb}
             </p>
             {companyInfo ? <CompanyInfoBlock info={companyInfo} /> : null}
-            {bctVisible ? (
-              <a
-                href={bctLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`mt-5 inline-block ${TRANSITION_UI} hover:opacity-90`}
-                aria-label={bctAlt}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={bctSrc}
-                  alt={bctAlt}
-                  width={148}
-                  height={56}
-                  className="h-auto w-[148px] object-contain object-left"
-                />
-              </a>
-            ) : null}
           </div>
 
           <div>
@@ -269,8 +308,31 @@ export function SiteFooter({
       </div>
 
       <div className="border-t border-white/10">
-        <div className="home-container flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+        <div className="home-container flex flex-col gap-3 py-3.5 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
           <span className="text-xs leading-none text-slate-500">{copyright}</span>
+
+          {showBadges ? (
+            <div
+              className="flex flex-wrap items-center gap-3"
+              aria-label="Chứng nhận"
+            >
+              <ComplianceBadgeLink
+                visible={bctVisible}
+                href={bctHref}
+                imageUrl={bctImageUrl}
+                alt={bctAlt}
+                fallbackSrc="/brand/bct-thong-bao.svg"
+              />
+              <ComplianceBadgeLink
+                visible={dmcaVisible}
+                href={dmcaHref}
+                imageUrl={dmcaImageUrl}
+                alt={dmcaAlt}
+                fallbackSrc="/brand/dmca-protected.svg"
+              />
+            </div>
+          ) : null}
+
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <nav
               aria-label="Liên hệ nhanh"

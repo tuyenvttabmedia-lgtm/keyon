@@ -446,6 +446,13 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
         footer.bctImageUrl?.trim() ||
         "/brand/bct-thong-bao.svg",
       bctAlt: footer.bctAlt?.trim() || defaultCmsFooter.bctAlt,
+      dmcaVisible: Boolean(footer.dmcaVisible),
+      dmcaHref: footer.dmcaHref?.trim() || defaultCmsFooter.dmcaHref || "",
+      dmcaImageUrl:
+        resolveMediaUrl(footer.dmcaImageUrl, mediaBase) ||
+        footer.dmcaImageUrl?.trim() ||
+        "/brand/dmca-protected.svg",
+      dmcaAlt: footer.dmcaAlt?.trim() || defaultCmsFooter.dmcaAlt,
     },
   };
 });

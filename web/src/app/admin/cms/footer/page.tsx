@@ -16,6 +16,10 @@ export default async function AdminCmsFooterPage() {
     bctHref: raw.bctHref ?? defaultCmsFooter.bctHref,
     bctImageUrl: raw.bctImageUrl ?? "",
     bctAlt: raw.bctAlt ?? defaultCmsFooter.bctAlt,
+    dmcaVisible: Boolean(raw.dmcaVisible),
+    dmcaHref: raw.dmcaHref ?? defaultCmsFooter.dmcaHref,
+    dmcaImageUrl: raw.dmcaImageUrl ?? "",
+    dmcaAlt: raw.dmcaAlt ?? defaultCmsFooter.dmcaAlt,
   };
   return (
     <div className="space-y-4">
@@ -24,7 +28,7 @@ export default async function AdminCmsFooterPage() {
           CMS · Footer
         </h1>
         <p className="text-sm text-muted">
-          Logo, BCT, cột link, legal — lưu file
+          Logo, thông tin CTy, badge BCT/DMCA, cột link
         </p>
       </div>
       <CmsSubnav active="/admin/cms/footer" />

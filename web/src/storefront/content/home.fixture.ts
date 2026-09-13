@@ -370,5 +370,9 @@ export const homeFixture: HomeContent = {
     bctHref: "https://online.gov.vn/",
     bctImageUrl: "",
     bctAlt: "Đã thông báo Bộ Công Thương",
+    dmcaVisible: false,
+    dmcaHref: "",
+    dmcaImageUrl: "",
+    dmcaAlt: "DMCA protected",
   },
 };
