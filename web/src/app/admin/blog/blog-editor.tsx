@@ -322,7 +322,7 @@ export function BlogEditor({
             </select>
           </label>
           <label className="block text-xs text-muted">
-            Tài nguyên (section)
+            Section kiến thức
             <select
               className="mt-1 w-full rounded-lg border border-border px-2 py-1.5 text-sm text-navy"
               value={form.section ?? ""}
@@ -334,7 +334,7 @@ export function BlogEditor({
               }
             >
               <option value="">Tự suy từ chuyên mục</option>
-              <option value="insights">Kiến thức</option>
+              <option value="insights">Chuyên sâu</option>
               <option value="guides">Hướng dẫn</option>
               <option value="news">Tin tức</option>
             </select>
@@ -524,7 +524,7 @@ export function BlogEditor({
                       className="mt-1 w-full rounded-lg border border-border px-2 py-1.5 text-sm"
                       value={form.canonicalUrl ?? ""}
                       onChange={(e) => patch({ canonicalUrl: e.target.value })}
-                      placeholder="https://keyon.vn/resources/..."
+                      placeholder="https://keyon.vn/knowledge/..."
                     />
                   </label>
                   <div className="flex gap-4 text-xs text-navy">

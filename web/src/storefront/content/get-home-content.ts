@@ -536,6 +536,13 @@ function sanitizeFooterColumns(
           let label = link.label?.trim() || "";
           if (href === "/products?q=adobe") href = "/products?cat=adobe";
           if (href === "/contact/sales") href = "/contact/quote";
+          if (href === "/resources" || href.startsWith("/resources/")) {
+            href = href.replace(/^\/resources/, "/knowledge");
+          }
+          if (label === "Tài nguyên") label = "Kiến thức";
+          if (label === "Hướng dẫn nhận hàng" || label === "Cách nhận hàng") {
+            label = "Cách KEYON hoạt động";
+          }
           // Shorten very long address labels in company column
           if (isCompany && href === "/contact" && label.length > 48) {
             label = "Hà Nội, Việt Nam";

@@ -4,7 +4,7 @@ import { resourcePostHref } from "@/storefront/lib/resources";
 
 export const dynamic = "force-dynamic";
 
-/** Legacy /blog/{slug} → /resources/{section}/{slug} */
+/** Legacy /blog/{slug} → /knowledge/{section}/{slug} */
 export default async function BlogSlugRedirect({
   params,
 }: {

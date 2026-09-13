@@ -6,10 +6,10 @@ import { buildMainPageMetadata } from "@/server/seo/metadata";
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
-  return buildMainPageMetadata("/resources");
+  return buildMainPageMetadata("/knowledge");
 }
 
-export default function ResourcesHubPage() {
+export default function KnowledgeHubPage() {
   const items = Object.values(RESOURCE_SECTIONS).map((s) => ({
     label: s.title,
     href: s.href,

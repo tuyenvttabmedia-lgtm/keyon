@@ -62,7 +62,7 @@ export function BlogIndexView({
   posts: BlogPost[];
   initialQuery?: string;
   initialCategory?: BlogCategoryFilter;
-  /** When set, breadcrumb links under /resources/{section} */
+  /** When set, breadcrumb links under /knowledge/{section} */
   section?: ResourceSectionId;
 }) {
   const [query, setQuery] = useState(initialQuery);
@@ -173,8 +173,8 @@ export function BlogIndexView({
             Trang chủ
           </Link>
           <span aria-hidden>/</span>
-          <Link href="/resources" className="transition-colors hover:text-accent">
-            Tài nguyên
+          <Link href="/knowledge" className="transition-colors hover:text-accent">
+            Kiến thức
           </Link>
           {section ? (
             <>

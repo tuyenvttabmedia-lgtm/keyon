@@ -26,7 +26,7 @@ export function HowItWorksLanding() {
             crumbs={[
               { label: "Trang chủ", href: "/" },
               { label: "Hỗ trợ", href: "/support" },
-              { label: "Cách nhận hàng" },
+              { label: "Cách KEYON hoạt động" },
             ]}
           />
           <p className={`mt-4 max-w-2xl ${PAGE_LEAD_CLASS}`}>

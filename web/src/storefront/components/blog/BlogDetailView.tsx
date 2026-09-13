@@ -202,8 +202,8 @@ export function BlogDetailView({
           Trang chủ
         </Link>
         <span aria-hidden>/</span>
-        <Link href="/resources" className={HOVER_LINK_ACCENT}>
-          Tài nguyên
+        <Link href="/knowledge" className={HOVER_LINK_ACCENT}>
+          Kiến thức
         </Link>
         <span aria-hidden>/</span>
         <Link href={indexHref} className={HOVER_LINK_ACCENT}>

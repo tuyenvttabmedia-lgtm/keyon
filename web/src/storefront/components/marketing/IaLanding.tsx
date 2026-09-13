@@ -105,8 +105,8 @@ export function ResourceStub({
       <section className="border-b border-[var(--border)] bg-gradient-to-b from-[var(--surface)] to-[var(--background)]">
         <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-20">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
-            <Link href="/resources" className="hover:text-[var(--foreground)]">
-              Tài nguyên
+            <Link href="/knowledge" className="hover:text-[var(--foreground)]">
+              Kiến thức
             </Link>
           </p>
           <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl">

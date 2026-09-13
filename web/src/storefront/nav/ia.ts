@@ -231,17 +231,17 @@ export const BUSINESS_SERVICE_LINKS: NavLink[] = [
 export const RESOURCE_LINKS: NavLink[] = [
   {
     label: "Hướng dẫn phần mềm",
-    href: "/resources/guides",
+    href: "/knowledge/guides",
     description: "Cài đặt, kích hoạt, sử dụng",
   },
   {
-    label: "Kiến thức bản quyền",
-    href: "/resources/insights",
+    label: "Chuyên sâu",
+    href: "/knowledge/insights",
     description: "License, subscription, renewal",
   },
   {
     label: "Tin tức & Cập nhật",
-    href: "/resources/news",
+    href: "/knowledge/news",
     description: "Sản phẩm, công nghệ, ưu đãi",
   },
   {
@@ -258,9 +258,9 @@ export const SUPPORT_LINKS: NavLink[] = [
     description: "Tìm câu trả lời nhanh",
   },
   {
-    label: "Hướng dẫn nhận hàng",
+    label: "Cách KEYON hoạt động",
     href: "/how-it-works",
-    description: "Key / tài khoản / kích hoạt",
+    description: "Chọn gói → thanh toán → nhận trong Tài khoản",
   },
   {
     label: "Gửi yêu cầu hỗ trợ",
@@ -312,12 +312,12 @@ export const IA_PRIMARY_NAV: PrimaryNavItem[] = [
     },
   },
   {
-    id: "resources",
-    label: "Tài nguyên",
-    href: "/resources",
+    id: "knowledge",
+    label: "Kiến thức",
+    href: "/knowledge",
     kind: "mega",
-    columns: [{ title: "Kiến thức", links: RESOURCE_LINKS }],
-    footerCta: { label: "Xem tất cả tài nguyên →", href: "/resources" },
+    columns: [{ title: "Chuyên mục", links: RESOURCE_LINKS }],
+    footerCta: { label: "Xem tất cả kiến thức →", href: "/knowledge" },
   },
   {
     id: "support",

@@ -211,8 +211,8 @@ export const BUSINESS_PAGES: Record<string, IaPage> = {
 };
 
 export const RESOURCE_HUB = {
-  title: "Tài nguyên",
-  subtitle: "Kiến thức, hướng dẫn và tin tức — knowledge hub của KEYON (một Article engine phía sau).",
+  title: "Kiến thức",
+  subtitle: "Hướng dẫn, chuyên sâu và tin tức — knowledge hub của KEYON (một Article engine phía sau).",
 };
 
 export const RESOURCE_SECTIONS: Record<
@@ -220,18 +220,18 @@ export const RESOURCE_SECTIONS: Record<
   { title: string; subtitle: string; href: string; aliasNote?: string }
 > = {
   insights: {
-    title: "Kiến thức",
+    title: "Chuyên sâu",
     subtitle: "Bài chuyên sâu / SEO: bản quyền, Microsoft, cloud, security, doanh nghiệp.",
-    href: "/resources/insights",
+    href: "/knowledge/insights",
   },
   guides: {
     title: "Hướng dẫn",
     subtitle: "How-to thực hành: kích hoạt, nhập key, kiểm tra license, dùng Tài khoản KEYON.",
-    href: "/resources/guides",
+    href: "/knowledge/guides",
   },
   news: {
     title: "Tin tức",
     subtitle: "Cập nhật vendor và KEYON. Canonical Article engine — /blog 301 → đây.",
-    href: "/resources/news",
+    href: "/knowledge/news",
   },
 };

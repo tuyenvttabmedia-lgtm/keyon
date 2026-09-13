@@ -31,13 +31,13 @@ const TOPICS: {
   {
     title: "Windows",
     hints: "Kích hoạt · Cài đặt · Thiết bị",
-    href: "/resources/guides?category=windows",
+    href: "/knowledge/guides?category=windows",
     Icon: Monitor,
   },
   {
     title: "Microsoft 365",
     hints: "Thiết lập · Subscription · Tài khoản",
-    href: "/resources/guides?category=m365",
+    href: "/knowledge/guides?category=m365",
     Icon: Cloud,
   },
   {
@@ -59,7 +59,7 @@ const TOPICS: {
     Icon: CreditCard,
   },
   {
-    title: "Cách nhận hàng",
+    title: "Cách KEYON hoạt động",
     hints: "Chọn gói · Thanh toán · Tài khoản",
     href: "/how-it-works",
     Icon: Package,

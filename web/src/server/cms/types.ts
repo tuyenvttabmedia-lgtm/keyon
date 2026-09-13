@@ -489,7 +489,7 @@ export const defaultCmsFooter: CmsFooter = {
       links: [
         { label: "Trung tâm hỗ trợ", href: "/support" },
         { label: "FAQ", href: "/faq" },
-        { label: "Tài nguyên", href: "/resources" },
+        { label: "Kiến thức", href: "/knowledge" },
         { label: "Liên hệ", href: "/contact" },
       ],
     },
@@ -532,7 +532,7 @@ export const defaultCmsNav: CmsNav = {
     { label: "Sản phẩm", href: "/products" },
     { label: "Giải pháp", href: "/solutions" },
     { label: "Doanh nghiệp", href: "/business" },
-    { label: "Tài nguyên", href: "/resources" },
+    { label: "Kiến thức", href: "/knowledge" },
     { label: "Hỗ trợ", href: "/support" },
   ],
 };
@@ -655,8 +655,16 @@ export const defaultSettings: SiteSettings = {
       title: "Sản phẩm — KEYON",
       description: "Danh mục phần mềm bản quyền chính hãng trên KEYON.",
     },
+    "/knowledge": {
+      title: "Kiến thức — KEYON",
+      description: "Hướng dẫn, chuyên sâu và tin tức bản quyền phần mềm trên KEYON.",
+    },
+    "/knowledge/news": {
+      title: "Tin tức — KEYON",
+      description: "Cập nhật vendor và KEYON về bản quyền, license và phần mềm.",
+    },
     "/blog": {
-      title: "Blog — KEYON",
+      title: "Tin tức — KEYON",
       description: "Kiến thức bản quyền, license và vận hành phần mềm cho doanh nghiệp.",
     },
     "/contact": {

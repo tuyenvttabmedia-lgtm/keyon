@@ -1,6 +1,6 @@
 import type { BlogCategoryId, BlogPost } from "@/server/cms/types";
 
-/** IA NAV-03 — one Article engine, three Resource sections */
+/** IA NAV-03 — one Article engine, three Knowledge sections (`/knowledge/*`) */
 export const RESOURCE_SECTION_IDS = ["insights", "guides", "news"] as const;
 export type ResourceSectionId = (typeof RESOURCE_SECTION_IDS)[number];
 
@@ -9,8 +9,8 @@ export const RESOURCE_SECTION_META: Record<
   { title: string; subtitle: string; label: string }
 > = {
   insights: {
-    label: "Kiến thức",
-    title: "Kiến thức",
+    label: "Chuyên sâu",
+    title: "Chuyên sâu",
     subtitle: "Bài chuyên sâu: bản quyền, Microsoft, cloud, security, doanh nghiệp.",
   },
   guides: {
@@ -56,11 +56,11 @@ export function isResourceSectionId(v: string): v is ResourceSectionId {
 }
 
 export function resourceIndexHref(section: ResourceSectionId): string {
-  return `/resources/${section}`;
+  return `/knowledge/${section}`;
 }
 
 export function resourcePostHref(post: Pick<BlogPost, "slug" | "section" | "category">): string {
-  return `/resources/${resolveResourceSection(post)}/${post.slug}`;
+  return `/knowledge/${resolveResourceSection(post)}/${post.slug}`;
 }
 
 export function filterPostsBySection(

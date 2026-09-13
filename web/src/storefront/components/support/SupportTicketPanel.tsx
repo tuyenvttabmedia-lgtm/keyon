@@ -37,7 +37,7 @@ const ROWS = [
   {
     title: "Hướng dẫn sử dụng",
     body: "How-to kích hoạt, license và tài khoản.",
-    href: "/resources/guides",
+    href: "/knowledge/guides",
     Icon: BookOpen,
     primary: false,
   },

@@ -34,10 +34,10 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { section: raw } = await params;
-  if (!isResourceSectionId(raw)) return buildMainPageMetadata("/resources");
+  if (!isResourceSectionId(raw)) return buildMainPageMetadata("/knowledge");
   const meta = RESOURCE_SECTION_META[raw];
   return {
-    ...(await buildMainPageMetadata(`/resources/${raw}`)),
+    ...(await buildMainPageMetadata(`/knowledge/${raw}`)),
     title: `${meta.title} | KEYON`,
     description: meta.subtitle,
   };

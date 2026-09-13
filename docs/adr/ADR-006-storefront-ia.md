@@ -2,6 +2,7 @@
 
 **Status:** Accepted (Phase 1 + Phase 2 implemented)  
 **Date:** 2026-08-04  
+**Amended:** 2026-09-13 — rename hub **Tài nguyên `/resources` → Kiến thức `/knowledge`** (site pre-index; no `/resources` 301).  
 **Decisions:** NAV-01 … NAV-05
 
 ---
@@ -37,14 +38,16 @@ KEYON sells software licenses (and later cloud/services). Early nav mixed Catego
 One canonical page: **`/solutions/license-management`**.  
 Business nav **cross-links** only; no duplicate `/business/license-management`.
 
-### NAV-03 — Resources (Phase 2)
+### NAV-03 — Knowledge hub (Phase 2; amended 2026-09-13)
 
 One Article engine (`blog.json` / `BlogPost`) with optional `section`: `insights` | `guides` | `news`.
 
 | Canonical | Legacy |
 |-----------|--------|
-| `/resources/{section}` | `/blog` → 301 `/resources/news` |
-| `/resources/{section}/{slug}` | `/blog/{slug}` → 301 resolved section |
+| `/knowledge/{section}` | `/blog` → 301 `/knowledge/news` |
+| `/knowledge/{section}/{slug}` | `/blog/{slug}` → 301 resolved section |
+
+Hub label: **Kiến thức** (URL `/knowledge`). Sections: Chuyên sâu (`insights`), Hướng dẫn (`guides`), Tin tức (`news`).
 
 Section inference when omitted: `huong-dan`→guides, `tin-keyon`→news, topical categories→insights, else news.
 
@@ -53,7 +56,7 @@ Section inference when omitted: `huong-dan`→guides, `tin-keyon`→news, topica
 | Phase | Ship | Skip |
 |-------|------|------|
 | 1 | Mega, landings, stubs | Taxonomy DB migrate |
-| 2 | Article routes under `/resources`, 301 `/blog`, `SHOP_COLLECTIONS` export, admin section picker | Prisma Category/Collection |
+| 2 | Article routes under `/knowledge`, 301 `/blog`, `SHOP_COLLECTIONS` export, admin section picker | Prisma Category/Collection |
 
 ### NAV-05 — Productivity naming
 
@@ -61,7 +64,7 @@ Solution label: **“Năng suất & Cộng tác”** → `/solutions/productivit
 
 ### Header shape
 
-`KEYON | Sản phẩm⌄ Giải pháp⌄ Doanh nghiệp⌄ Tài nguyên⌄ Hỗ trợ⌄ | 🔍 Tài khoản`  
+`KEYON | Sản phẩm⌄ Giải pháp⌄ Doanh nghiệp⌄ Kiến thức⌄ Hỗ trợ⌄ | 🔍 Tài khoản`  
 (Admin link staff-only.)
 
 ### Source of truth
@@ -71,10 +74,10 @@ CMS `nav.json` items are **legacy / secondary** (brand logo + tagline still from
 
 ## Consequences
 
-- New routes under `/solutions`, `/business`, `/resources`, `/support`, `/contact/sales`.
-- Footer defaults updated in `defaultCmsFooter` (prod CMS JSON may need one-time sync).
+- Routes under `/solutions`, `/business`, `/knowledge`, `/support`, `/contact/quote`.
+- Footer defaults updated in `defaultCmsFooter` (prod CMS JSON may need one-time sync; runtime remap `/resources` → `/knowledge`).
 - Cloud/Backup landings use “đang mở rộng” tone when catalog is thin — no fake SKU claims.
-- Sitemap emits `/resources/...` URLs.
+- Sitemap emits `/knowledge/...` URLs.
 
 ## Exit criteria
 
@@ -88,9 +91,9 @@ CMS `nav.json` items are **legacy / secondary** (brand logo + tagline still from
 
 ### Phase 2
 
-- [x] `/resources/{insights,guides,news}` list published articles
-- [x] `/resources/{section}/{slug}` detail reuses BlogDetailView
-- [x] `/blog` and `/blog/{slug}` 301 to Resources
-- [x] Sitemap + home news use resource URLs
+- [x] `/knowledge/{insights,guides,news}` list published articles
+- [x] `/knowledge/{section}/{slug}` detail reuses BlogDetailView
+- [x] `/blog` and `/blog/{slug}` 301 to Knowledge
+- [x] Sitemap + home news use knowledge URLs
 - [x] Admin can set `section` on posts
 - [x] Collections stay config (`SHOP_COLLECTIONS`), not DB
