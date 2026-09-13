@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { Z_MODAL } from "@/storefront/effects";
 
 export type MediaPickItem = {
   url: string;
@@ -60,9 +62,28 @@ export function MediaPicker({
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [q, setQ] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const loadSeq = useRef(0);
   const wasOpen = useRef(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open, onClose]);
 
   useEffect(() => {
     if (!open) {
@@ -107,7 +128,7 @@ export function MediaPicker({
     };
   }, [open, q]);
 
-  if (!open) return null;
+  if (!open || !mounted) return null;
 
   function toggle(url: string) {
     setSelected((prev) => {
@@ -173,13 +194,19 @@ export function MediaPicker({
     }
   }
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-navy/40 p-4 backdrop-blur-[2px]">
+  return createPortal(
+    <div
+      className={`fixed inset-0 ${Z_MODAL} flex items-center justify-center bg-navy/40 p-4 backdrop-blur-[2px]`}
+      role="presentation"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div
         role="dialog"
-        aria-modal
+        aria-modal="true"
         aria-label={title}
-        className="flex max-h-[85vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-xl"
+        className="flex max-h-[min(85vh,720px)] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-xl"
       >
         <div className="flex items-center justify-between border-b border-border px-4 py-3">
           <div>
@@ -287,6 +314,7 @@ export function MediaPicker({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

@@ -12,15 +12,15 @@
 @keyframes admin-fade-in {
   from {
     opacity: 0;
-    transform: translateY(6px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
 .admin-main-enter {
+  /* Opacity-only: avoid transform — it creates a containing block and breaks
+     position:fixed modals (MediaPicker) on long CMS pages. */
   animation: admin-fade-in var(--motion-slow) var(--motion-ease) both;
 }
 
