@@ -16,15 +16,14 @@ function companyInfoOf(form: CmsFooter): CmsFooterCompanyInfo {
 }
 
 export function FooterForm({ initial }: { initial: CmsFooter }) {
+  const initialForm: CmsFooter = {
+    ...initial,
+    companyInfo: companyInfoOf(initial),
+    legalLinks: [],
+  };
+
   return (
-    <CmsSaveForm
-      initial={{
-        ...initial,
-        companyInfo: companyInfoOf(initial),
-        legalLinks: [],
-      }}
-      apiKey="footer"
-    >
+    <CmsSaveForm initial={initialForm} apiKey="footer">
       {(form, setForm) => {
         const company = companyInfoOf(form);
         const setCompany = (patch: Partial<CmsFooterCompanyInfo>) =>
