@@ -161,6 +161,8 @@ function oneLine(value: string) {
   return value.replace(/\s+/g, " ").trim();
 }
 
+const labelClass = "text-slate-400";
+
 function CompanyInfoBlock({ info }: { info: CompanyInfo }) {
   const name = info.companyName.trim();
   const address = oneLine(info.address);
@@ -173,7 +175,7 @@ function CompanyInfoBlock({ info }: { info: CompanyInfo }) {
   if (tax) {
     metaBits.push(
       <span key="tax">
-        <span className="text-slate-500">MST</span>{" "}
+        <span className={labelClass}>MST</span>{" "}
         <span className="font-mono text-slate-300">{tax}</span>
       </span>,
     );
@@ -185,17 +187,17 @@ function CompanyInfoBlock({ info }: { info: CompanyInfo }) {
         href={`tel:${phone.replace(/\s+/g, "")}`}
         className={footerLink}
       >
-        <span className="text-slate-500">ĐT</span> {phone}
+        <span className={labelClass}>Điện thoại</span> {phone}
       </a>,
     );
   }
 
   return (
-    <div className="mt-4 max-w-md space-y-1.5 text-[12px] leading-snug text-slate-400">
-      {name ? <p className="font-medium text-slate-300">{name}</p> : null}
+    <div className="mt-4 max-w-md space-y-1.5 text-[12px] leading-snug text-slate-300">
+      {name ? <p className="font-medium text-slate-200">{name}</p> : null}
       {address ? (
         <p>
-          <span className="text-slate-500">Địa chỉ:</span> {address}
+          <span className={labelClass}>Địa chỉ:</span> {address}
         </p>
       ) : null}
       {metaBits.length ? (
@@ -203,7 +205,7 @@ function CompanyInfoBlock({ info }: { info: CompanyInfo }) {
           {metaBits.map((bit, i) => (
             <span key={i} className="inline-flex items-center gap-x-2">
               {i > 0 ? (
-                <span className="text-slate-600" aria-hidden>
+                <span className="text-slate-500" aria-hidden>
                   ·
                 </span>
               ) : null}
@@ -214,6 +216,7 @@ function CompanyInfoBlock({ info }: { info: CompanyInfo }) {
       ) : null}
       {email ? (
         <p>
+          <span className={labelClass}>Email:</span>{" "}
           <a href={`mailto:${email}`} className={footerLink}>
             {email}
           </a>
@@ -238,9 +241,9 @@ function ComplianceBadgeLink({
     <img
       src={src}
       alt={alt || ""}
-      width={120}
-      height={40}
-      className="h-9 w-auto max-w-[140px] object-contain object-left"
+      width={160}
+      height={52}
+      className="h-11 w-auto max-w-[168px] object-contain object-left sm:h-12 sm:max-w-[180px]"
     />
   );
   if (!link) {
