@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { AccountCopy } from "@/storefront/lib/account-cms";
 import { StoreButton } from "@/storefront/components/StoreButton";
 import { PortalMenu } from "@/components/PortalMenu";
@@ -74,16 +75,20 @@ type SpendPeriod = "12m" | "6m" | "all";
 export function OrdersView({
   cms,
   items,
+  initialQuery = "",
   companyName = null,
   hasOrgShare = false,
 }: {
   cms: AccountCopy;
   items: OrderListItem[];
+  /** Prefill from `/account/orders?q=` — server đã lọc khi có query. */
+  initialQuery?: string;
   companyName?: string | null;
   hasOrgShare?: boolean;
 }) {
+  const router = useRouter();
   const [tab, setTab] = useState<OrderListTab>("all");
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState<(typeof PAGE_SIZE_OPTIONS)[number]>(5);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
@@ -91,6 +96,29 @@ export function OrdersView({
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setQuery(initialQuery);
+  }, [initialQuery]);
+
+  useEffect(() => {
+    if (initialQuery) searchRef.current?.focus();
+  }, [initialQuery]);
+
+  function runLookup(raw: string = query) {
+    const q = raw.trim();
+    const next = q
+      ? `/account/orders?q=${encodeURIComponent(q)}`
+      : "/account/orders";
+    const current = initialQuery.trim()
+      ? `/account/orders?q=${encodeURIComponent(initialQuery.trim())}`
+      : "/account/orders";
+    if (next === current) {
+      searchRef.current?.focus();
+      return;
+    }
+    router.push(next);
+  }
 
   const counts = useMemo(() => {
     const c = { all: items.length, success: 0, processing: 0, cancelled: 0 };
@@ -246,31 +274,40 @@ export function OrdersView({
           })}
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <label className="relative w-full max-w-[11.5rem] sm:w-44">
-            <span className="sr-only">{cms.ordersSearchPlaceholder}</span>
-            <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-muted">
-              <SearchIcon />
-            </span>
-            <input
-              ref={searchRef}
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setPage(1);
-              }}
-              placeholder={cms.ordersSearchPlaceholder}
-              className={`h-9 w-full rounded-xl border border-border bg-white pl-8 pr-2.5 ${INPUT_TEXT_CLASS} outline-none ${TRANSITION_UI} focus:border-accent`}
-            />
-          </label>
-          <button
-            type="button"
-            className={`${BTN_OUTLINE} !h-9`}
-            title="Tìm theo mã đơn, sản phẩm hoặc mã thanh toán"
-            onClick={() => searchRef.current?.focus()}
+          <form
+            className="flex w-full max-w-md flex-wrap items-center gap-2 sm:flex-nowrap"
+            onSubmit={(e) => {
+              e.preventDefault();
+              runLookup();
+            }}
           >
-            <FilterIcon />
-            {cms.ordersFilterCta}
-          </button>
+            <label className="relative min-w-0 flex-1">
+              <span className="sr-only">{cms.ordersSearchPlaceholder}</span>
+              <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-muted">
+                <SearchIcon />
+              </span>
+              <input
+                ref={searchRef}
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setPage(1);
+                }}
+                placeholder={cms.ordersSearchPlaceholder}
+                autoComplete="off"
+                enterKeyHint="search"
+                className={`h-9 w-full rounded-xl border border-border bg-white pl-8 pr-2.5 ${INPUT_TEXT_CLASS} outline-none ${TRANSITION_UI} focus:border-accent`}
+              />
+            </label>
+            <button
+              type="submit"
+              className={`${BTN_OUTLINE} !h-9 shrink-0`}
+              title="Tra cứu theo mã đơn, sản phẩm hoặc mã thanh toán"
+            >
+              <SearchIcon />
+              {cms.ordersFilterCta}
+            </button>
+          </form>
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5 sm:justify-end">
             <div className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-border bg-white px-2">
               <CalendarIcon />
@@ -305,13 +342,34 @@ export function OrdersView({
 
       {items.length === 0 ? (
         <div className={`rounded-2xl border border-dashed border-border bg-white px-6 py-16 text-center ${ELEVATION_NONE}`}>
-          <p className={EMPTY_TITLE_CLASS}>{cms.ordersEmptyTitle}</p>
-          <p className={`mx-auto mt-2 max-w-md ${EMPTY_BODY_CLASS}`}>
-            {cms.ordersEmptyBody}
-          </p>
-          <div className="mt-6 flex justify-center">
-            <StoreButton href="/products">Khám phá sản phẩm</StoreButton>
-          </div>
+          {initialQuery ? (
+            <>
+              <p className={EMPTY_TITLE_CLASS}>Không tìm thấy đơn phù hợp</p>
+              <p className={`mx-auto mt-2 max-w-md ${EMPTY_BODY_CLASS}`}>
+                Không có đơn thuộc tài khoản này khớp “{initialQuery}”. Kiểm tra
+                mã trên email xác nhận hoặc thử mã thanh toán.
+              </p>
+              <div className="mt-6 flex justify-center">
+                <button
+                  type="button"
+                  className={BTN_OUTLINE}
+                  onClick={() => runLookup("")}
+                >
+                  Xóa tra cứu
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className={EMPTY_TITLE_CLASS}>{cms.ordersEmptyTitle}</p>
+              <p className={`mx-auto mt-2 max-w-md ${EMPTY_BODY_CLASS}`}>
+                {cms.ordersEmptyBody}
+              </p>
+              <div className="mt-6 flex justify-center">
+                <StoreButton href="/products">Khám phá sản phẩm</StoreButton>
+              </div>
+            </>
+          )}
         </div>
       ) : filtered.length === 0 ? (
         <div className={`${CARD} text-center`}>
@@ -769,19 +827,6 @@ function SearchIcon() {
       <circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.75" />
       <path
         d="m16 16 4 4"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function FilterIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M4 6h16M7 12h10M10 18h4"
         stroke="currentColor"
         strokeWidth="1.75"
         strokeLinecap="round"

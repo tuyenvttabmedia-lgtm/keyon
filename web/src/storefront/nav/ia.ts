@@ -263,6 +263,11 @@ export const SUPPORT_LINKS: NavLink[] = [
     description: "Chọn gói → thanh toán → nhận trong Tài khoản",
   },
   {
+    label: "Tra cứu đơn hàng",
+    href: "/account/orders",
+    description: "Cần đăng nhập — tìm theo mã đơn trong Tài khoản",
+  },
+  {
     label: "Gửi yêu cầu hỗ trợ",
     href: "/account/tickets",
     description: "Tạo ticket và theo dõi xử lý",

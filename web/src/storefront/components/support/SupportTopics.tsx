@@ -4,6 +4,7 @@ import {
   Cloud,
   CreditCard,
   Package,
+  Search,
   Shield,
   Monitor,
 } from "lucide-react";
@@ -57,6 +58,12 @@ const TOPICS: {
     hints: "Thanh toán · Hóa đơn · Giao dịch",
     href: "/faq",
     Icon: CreditCard,
+  },
+  {
+    title: "Tra cứu đơn hàng",
+    hints: "Mã đơn · Đăng nhập · Tài khoản",
+    href: "/account/orders",
+    Icon: Search,
   },
   {
     title: "Cách KEYON hoạt động",

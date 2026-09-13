@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import type { Prisma } from "@prisma/client";
 import { readSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { defaultCmsAccount, readJsonFile } from "@/server/cms/store";
@@ -17,6 +18,10 @@ import {
 
 export const dynamic = "force-dynamic";
 
+type Props = {
+  searchParams: Promise<{ q?: string }>;
+};
+
 function paymentMethodLabel(provider: string | undefined): string {
   switch (provider) {
     case "sepay":
@@ -29,19 +34,64 @@ function paymentMethodLabel(provider: string | undefined): string {
   }
 }
 
-export default async function OrdersPage() {
+function orderLookupWhere(q: string): Prisma.OrderWhereInput {
+  const term = q.trim();
+  return {
+    OR: [
+      { code: { contains: term, mode: "insensitive" } },
+      { items: { some: { title: { contains: term, mode: "insensitive" } } } },
+      {
+        payments: {
+          some: {
+            OR: [
+              { paymentReference: { contains: term, mode: "insensitive" } },
+              { providerTransactionId: { contains: term, mode: "insensitive" } },
+            ],
+          },
+        },
+      },
+    ],
+  };
+}
+
+export default async function OrdersPage({ searchParams }: Props) {
   const session = await readSession();
-  if (!session) redirect("/login");
+  if (!session) {
+    const sp = await searchParams;
+    const q = sp.q?.trim();
+    const next = q
+      ? `/account/orders?q=${encodeURIComponent(q)}`
+      : "/account/orders";
+    redirect(`/login?next=${encodeURIComponent(next)}`);
+  }
+
+  const sp = await searchParams;
+  const query = sp.q?.trim() ?? "";
 
   const actor = { id: session.id, email: session.email };
   const peers = await loadOrgPeerAccounts(session.id);
-  const where = orderWhereForActor(actor, peers);
+  const accessWhere = orderWhereForActor(actor, peers);
   const hasOrgShare = peers.userIds.some((id) => id !== session.id);
+
+  // Exact mã đơn → mở chi tiết luôn (tra cứu có login).
+  if (query) {
+    const exact = await prisma.order.findFirst({
+      where: {
+        AND: [accessWhere, { code: { equals: query, mode: "insensitive" } }],
+      },
+      select: { id: true },
+    });
+    if (exact) redirect(`/account/orders/${exact.id}`);
+  }
+
+  const listWhere: Prisma.OrderWhereInput = query
+    ? { AND: [accessWhere, orderLookupWhere(query)] }
+    : accessWhere;
 
   const [cmsRaw, orders, quote] = await Promise.all([
     readJsonFile("account.json", defaultCmsAccount),
     prisma.order.findMany({
-      where,
+      where: listWhere,
       orderBy: { createdAt: "desc" },
       include: {
         items: {
@@ -52,7 +102,7 @@ export default async function OrdersPage() {
         },
         payments: { orderBy: { createdAt: "desc" }, take: 1 },
       },
-      take: 100,
+      take: query ? 50 : 100,
     }),
     prisma.quoteRequest.findFirst({
       where: { email: session.email },
@@ -101,6 +151,7 @@ export default async function OrdersPage() {
     <OrdersView
       cms={cms}
       items={items}
+      initialQuery={query}
       companyName={quote?.companyName?.trim() || null}
       hasOrgShare={hasOrgShare}
     />
