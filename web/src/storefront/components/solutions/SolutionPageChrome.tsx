@@ -4,20 +4,21 @@ import { BREADCRUMB_CLASS, OVERLINE_CLASS } from "@/storefront/typography";
 type Crumb = { label: string; href?: string };
 
 type Props = {
-  kicker?: string;
+  /** Optional overline under breadcrumb — omit to avoid duplicating hub label. */
+  kicker?: string | null;
   crumbs?: Crumb[];
 };
 
 /** Light shared chrome for Solutions landings (breadcrumb + optional overline). */
 export function SolutionPageChrome({
-  kicker = "Giải pháp",
+  kicker = null,
   crumbs = [
     { label: "Trang chủ", href: "/" },
     { label: "Giải pháp", href: "/solutions" },
   ],
 }: Props) {
   return (
-    <div className="mb-4 space-y-2">
+    <div className={kicker ? "mb-3 space-y-1.5" : "mb-2.5"}>
       <nav aria-label="Breadcrumb" className={BREADCRUMB_CLASS}>
         {crumbs.map((c, i) => (
           <span key={`${c.label}-${i}`}>

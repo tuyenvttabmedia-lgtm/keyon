@@ -105,15 +105,17 @@ export function SolutionsHubLanding({ introEmbedUrl }: Props) {
         />
         <div className={`home-container relative ${LANDING_HERO_PAD}`}>
           <SolutionPageChrome
-            kicker="Giải pháp"
-            crumbs={[{ label: "Trang chủ", href: "/" }]}
+            crumbs={[
+              { label: "Trang chủ", href: "/" },
+              { label: "Giải pháp" },
+            ]}
           />
-          <div className={`${LANDING_HERO_GRID} mt-2`}>
+          <div className={LANDING_HERO_GRID}>
             <div className="min-w-0 max-w-[540px]">
               <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
                 Giải pháp toàn diện
               </p>
-              <h1 className={`mt-3 max-w-3xl ${HERO_TITLE_CLASS}`}>
+              <h1 className={`mt-2.5 max-w-3xl ${HERO_TITLE_CLASS}`}>
                 Giải pháp số cho doanh nghiệp hiện đại
               </h1>
               <p className={`mt-4 max-w-2xl ${PAGE_LEAD_CLASS}`}>
