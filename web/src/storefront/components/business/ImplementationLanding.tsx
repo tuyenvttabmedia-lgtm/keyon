@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   Users,
   X,
+  Check,
 } from "lucide-react";
 import {
   BADGE_CLASS,
@@ -32,6 +33,7 @@ import {
 import {
   ELEVATION_CARD_HOVER,
   ELEVATION_CTA_HOVER,
+  ELEVATION_FLOAT,
   ELEVATION_HAIRLINE,
   HOVER_LIFT_CARD,
   HOVER_LINK_ACCENT,
@@ -40,6 +42,10 @@ import {
 } from "@/storefront/effects";
 import { IMPLEMENTATION_QUOTE_HREF } from "@/storefront/lib/cta";
 import { SERVICE_HANDOVER_HREF } from "@/storefront/lib/service-sku";
+import {
+  LANDING_HERO_GRID,
+  LANDING_HERO_PAD,
+} from "@/storefront/components/marketing/hero-shell";
 
 const ICON_SM = { size: 16, strokeWidth: 1.85 } as const;
 const ICON_MD = { size: 20, strokeWidth: 1.75 } as const;
@@ -116,8 +122,8 @@ export function ImplementationLanding() {
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_88%_20%,rgba(14,165,164,0.08),transparent_42%),radial-gradient(ellipse_at_10%_90%,rgba(14,165,233,0.05),transparent_48%)]"
           aria-hidden
         />
-        <div className="home-container relative py-8 md:py-10 lg:py-11">
-          <nav className={`mb-6 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
+        <div className={`home-container relative ${LANDING_HERO_PAD}`}>
+          <nav className={`mb-5 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
             <Link href="/" className={HOVER_LINK_ACCENT}>
               Trang chủ
             </Link>
@@ -133,45 +139,51 @@ export function ImplementationLanding() {
             <span className={BREADCRUMB_CURRENT_CLASS}>Dịch vụ triển khai</span>
           </nav>
 
-          <div className="max-w-[640px]">
-            <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
-              Dịch vụ triển khai
-            </p>
-            <h1 className={`mt-3 max-w-[20ch] ${HERO_TITLE_CLASS}`}>
-              Bàn giao và kích hoạt bản quyền theo quy mô tổ chức
-            </h1>
-            <p className={`mt-4 max-w-[540px] ${PAGE_LEAD_CLASS}`}>
-              KEYON hỗ trợ onboarding sau khi mua — không bán catalog MSP kiểu Pax8
-              (Azure, Intune, Defender) nếu chưa giao dịch vụ đó.
-            </p>
+          <div className={LANDING_HERO_GRID}>
+            <div className="min-w-0 max-w-[540px]">
+              <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
+                Dịch vụ triển khai
+              </p>
+              <h1 className={`mt-3 max-w-[20ch] ${HERO_TITLE_CLASS}`}>
+                Bàn giao và kích hoạt bản quyền theo quy mô tổ chức
+              </h1>
+              <p className={`mt-4 max-w-[540px] ${PAGE_LEAD_CLASS}`}>
+                KEYON hỗ trợ onboarding sau khi mua — không bán catalog MSP kiểu Pax8
+                (Azure, Intune, Defender) nếu chưa giao dịch vụ đó.
+              </p>
 
-            <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-              {HERO_POINTS.map((p) => (
-                <li key={p.title} className="flex items-center gap-2.5">
-                  <span
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"
-                    aria-hidden
-                  >
-                    <p.Icon {...ICON_SM} />
-                  </span>
-                  <span className={`${BODY_CLASS} font-medium`}>{p.title}</span>
-                </li>
-              ))}
-            </ul>
+              <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+                {HERO_POINTS.map((p) => (
+                  <li key={p.title} className="flex items-center gap-2.5">
+                    <span
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"
+                      aria-hidden
+                    >
+                      <p.Icon {...ICON_SM} />
+                    </span>
+                    <span className={`${BODY_CLASS} font-medium`}>{p.title}</span>
+                  </li>
+                ))}
+              </ul>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Link
-                href={SERVICE_HANDOVER_HREF}
-                className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
-              >
-                Mua gói bàn giao →
-              </Link>
-              <Link
-                href={IMPLEMENTATION_QUOTE_HREF}
-                className={`inline-flex h-12 items-center justify-center rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
-              >
-                Gửi yêu cầu tùy chỉnh
-              </Link>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <Link
+                  href={SERVICE_HANDOVER_HREF}
+                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                >
+                  Mua gói bàn giao →
+                </Link>
+                <Link
+                  href={IMPLEMENTATION_QUOTE_HREF}
+                  className={`inline-flex h-12 items-center justify-center rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+                >
+                  Gửi yêu cầu tùy chỉnh
+                </Link>
+              </div>
+            </div>
+
+            <div className="relative min-w-0">
+              <ImplementationHeroArt />
             </div>
           </div>
         </div>
@@ -302,6 +314,68 @@ export function ImplementationLanding() {
           </div>
         </div>
       </section>
+    </div>
+  );
+}
+
+function ImplementationHeroArt() {
+  const steps = [
+    { label: "Tiếp nhận phạm vi", Icon: ClipboardList },
+    { label: "Rà soát license", Icon: KeyRound },
+    { label: "Checklist bàn giao", Icon: ListChecks },
+    { label: "Hỗ trợ kích hoạt", Icon: Rocket },
+  ] as const;
+
+  return (
+    <div className="relative mx-auto w-full max-w-[440px] lg:max-w-none">
+      <div
+        className={`relative rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
+        aria-hidden
+      >
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-navy text-accent">
+              <Handshake size={18} strokeWidth={1.8} />
+            </span>
+            <div>
+              <p className={CARD_TITLE_CLASS}>Onboarding sau mua</p>
+              <p className={CARD_META_CLASS}>Minh họa quy trình bàn giao</p>
+            </div>
+          </div>
+          <span className="rounded-md bg-accent-soft px-2 py-1 text-[11px] font-semibold text-accent">
+            KEYON
+          </span>
+        </div>
+
+        <ol className="mt-4 space-y-2">
+          {steps.map((s, i) => (
+            <li
+              key={s.label}
+              className="flex items-center gap-3 rounded-xl border border-border/80 bg-[#F7FAFC] px-3 py-2.5"
+            >
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent/15 text-[11px] font-bold text-accent">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-accent border border-border/70">
+                <s.Icon size={15} strokeWidth={1.85} />
+              </span>
+              <p className={`${CARD_TITLE_CLASS} min-w-0 truncate`}>{s.label}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <ul className="mt-3 flex flex-wrap justify-center gap-2">
+        {["Bàn giao key", "Checklist IT", "Không MSP giả"].map((t) => (
+          <li
+            key={t}
+            className={`inline-flex items-center gap-1.5 rounded-full border border-border bg-white px-3 py-1.5 ${CARD_META_CLASS} font-medium text-navy ${ELEVATION_HAIRLINE}`}
+          >
+            <Check size={12} className="text-accent" strokeWidth={2.5} aria-hidden />
+            {t}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

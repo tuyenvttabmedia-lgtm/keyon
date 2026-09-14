@@ -13,6 +13,10 @@ import {
   HOVER_LINK_ACCENT,
   TRANSITION_UI,
 } from "@/storefront/effects";
+import {
+  LANDING_HERO_GRID,
+  LANDING_HERO_PAD,
+} from "@/storefront/components/marketing/hero-shell";
 import { HOW_IT_WORKS_HREF, SUB_CONSULT_HREF } from "./shared";
 import { SubscriptionDesktopPreview } from "./SubscriptionDesktopPreview";
 import { SubscriptionMobilePreview } from "./SubscriptionMobilePreview";
@@ -42,7 +46,7 @@ export function SubscriptionHero() {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_90%_15%,rgba(14,165,164,0.07),transparent_45%),radial-gradient(ellipse_at_8%_85%,rgba(14,165,233,0.04),transparent_50%)]"
         aria-hidden
       />
-      <div className="home-container relative py-8 md:py-10 lg:py-11">
+      <div className={`home-container relative ${LANDING_HERO_PAD}`}>
         <nav className={`mb-5 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
           <Link href="/" className={HOVER_LINK_ACCENT}>
             Trang chủ
@@ -59,7 +63,7 @@ export function SubscriptionHero() {
           <span className={BREADCRUMB_CURRENT_CLASS}>Subscription &amp; Gia hạn</span>
         </nav>
 
-        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.46fr)_minmax(0,0.54fr)] lg:gap-10 xl:gap-12">
+        <div className={LANDING_HERO_GRID}>
           <div className="min-w-0 max-w-[540px]">
             <h1 className={`max-w-[20ch] ${HERO_TITLE_CLASS}`}>
               Theo dõi subscription và chủ động mỗi kỳ gia hạn
@@ -69,14 +73,16 @@ export function SubscriptionHero() {
               động kế hoạch gia hạn và hạn chế gián đoạn dịch vụ.
             </p>
 
-            <ul className="mt-6 grid gap-3 sm:grid-cols-3 sm:gap-4">
+            <ul className="mt-5 space-y-2.5">
               {BENEFITS.map(({ title, body, Icon }) => (
-                <li key={title} className="min-w-0">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-soft text-accent">
-                    <Icon size={17} strokeWidth={1.85} aria-hidden />
+                <li key={title} className="flex items-start gap-3">
+                  <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
+                    <Icon size={16} strokeWidth={1.85} aria-hidden />
                   </span>
-                  <p className="mt-2.5 text-[14px] font-bold text-navy">{title}</p>
-                  <p className={`mt-1 ${BODY_MUTED_CLASS}`}>{body}</p>
+                  <div className="min-w-0">
+                    <p className="text-[14px] font-bold text-navy">{title}</p>
+                    <p className={BODY_MUTED_CLASS}>{body}</p>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -97,7 +103,7 @@ export function SubscriptionHero() {
             </div>
           </div>
 
-          <div className="relative min-w-0 pb-6 md:pb-8">
+          <div className="relative min-w-0">
             <SubscriptionDesktopPreview />
             <SubscriptionMobilePreview />
           </div>

@@ -64,7 +64,7 @@ export function SolutionsHubLanding({ introEmbedUrl }: Props) {
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_88%_12%,rgba(14,165,164,0.12),transparent_42%),radial-gradient(ellipse_at_8%_88%,rgba(15,23,42,0.05),transparent_48%)]"
           aria-hidden
         />
-        <div className="home-container relative py-10 md:py-12 lg:py-14">
+        <div className="home-container relative py-7 md:py-9 lg:py-10">
           <SolutionPageChrome
             kicker="Giải pháp"
             crumbs={[

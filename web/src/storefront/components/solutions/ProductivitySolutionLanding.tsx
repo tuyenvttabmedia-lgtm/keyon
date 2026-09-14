@@ -44,6 +44,10 @@ import {
   TRANSITION_UI,
 } from "@/storefront/effects";
 import { SolutionFinalCta } from "./SolutionFinalCta";
+import {
+  LANDING_HERO_GRID,
+  LANDING_HERO_PAD,
+} from "@/storefront/components/marketing/hero-shell";
 
 export type ProductivityBrand =
   | "m365"
@@ -220,8 +224,8 @@ export function ProductivitySolutionLanding({
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_88%_12%,rgba(14,165,164,0.07),transparent_42%),radial-gradient(ellipse_at_8%_88%,rgba(14,165,233,0.05),transparent_45%)]"
           aria-hidden
         />
-        <div className="home-container relative py-7 md:py-9 lg:py-10">
-          <nav className={`mb-6 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
+        <div className={`home-container relative ${LANDING_HERO_PAD}`}>
+          <nav className={`mb-5 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
             <Link href="/" className={HOVER_LINK_ACCENT}>
               Trang chủ
             </Link>
@@ -237,7 +241,7 @@ export function ProductivitySolutionLanding({
             <span className={BREADCRUMB_CURRENT_CLASS}>Năng suất & Cộng tác</span>
           </nav>
 
-          <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] md:gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-12 xl:gap-14">
+          <div className={LANDING_HERO_GRID}>
             <div className="min-w-0">
               <h1 className={`max-w-[520px] ${HERO_TITLE_CLASS}`}>
                 Kết nối con người.
@@ -847,29 +851,87 @@ function EcoMark({
 }
 
 function ProductivityHeroArt({ imageUrl }: { imageUrl?: string }) {
+  if (imageUrl) {
+    return (
+      <div className="relative mx-auto flex w-full max-w-[440px] items-center justify-center lg:max-w-none">
+        <div className="relative max-h-[300px] w-full sm:max-h-[340px]">
+          <Image
+            src={imageUrl}
+            alt="Năng suất & Cộng tác"
+            width={900}
+            height={700}
+            className="mx-auto h-auto max-h-[300px] w-auto max-w-full object-contain object-center sm:max-h-[340px]"
+            unoptimized
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 48vw, 520px"
+            priority
+          />
+        </div>
+      </div>
+    );
+  }
+
+  const apps = [
+    { label: "Microsoft 365", Icon: Cloud, tone: "bg-sky-100 text-sky-800" },
+    { label: "Teams", Icon: Video, tone: "bg-violet-100 text-violet-800" },
+    { label: "Office", Icon: Zap, tone: "bg-amber-100 text-amber-800" },
+    { label: "OneDrive", Icon: ShieldCheck, tone: "bg-emerald-100 text-emerald-800" },
+  ] as const;
+
   return (
-    <div className="flex w-full items-center justify-center max-h-[300px] sm:max-h-[380px] lg:h-[440px] lg:max-h-[460px] xl:h-[450px]">
-      {imageUrl ? (
-        <Image
-          src={imageUrl}
-          alt="Năng suất & Cộng tác"
-          width={900}
-          height={700}
-          className="h-auto max-h-full w-auto max-w-full object-contain object-center"
-          unoptimized
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 48vw, 640px"
-          priority
-        />
-      ) : (
-        <div
-          className="flex h-full min-h-[200px] w-full items-center justify-center rounded-2xl bg-gradient-to-br from-slate-100 via-teal-50/70 to-slate-100 lg:min-h-0"
-          aria-hidden
-        >
-          <span className="font-display text-3xl font-bold tracking-wide text-accent/25 sm:text-4xl">
+    <div className="relative mx-auto w-full max-w-[440px] lg:max-w-none">
+      <div
+        className={`relative rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
+        aria-hidden
+      >
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-navy text-accent">
+              <Users size={18} strokeWidth={1.8} />
+            </span>
+            <div>
+              <p className={CARD_TITLE_CLASS}>Không gian làm việc</p>
+              <p className={CARD_META_CLASS}>Minh họa cộng tác</p>
+            </div>
+          </div>
+          <span className="rounded-md bg-accent-soft px-2 py-1 text-[11px] font-semibold text-accent">
             KEYON
           </span>
         </div>
-      )}
+
+        <ul className="mt-4 grid grid-cols-2 gap-2.5">
+          {apps.map((a) => (
+            <li
+              key={a.label}
+              className="rounded-xl border border-border/80 bg-[#F7FAFC] px-3 py-3"
+            >
+              <span
+                className={`inline-flex h-8 w-8 items-center justify-center rounded-lg ${a.tone}`}
+              >
+                <a.Icon size={15} strokeWidth={1.85} />
+              </span>
+              <p className={`mt-2 ${CARD_TITLE_CLASS}`}>{a.label}</p>
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-3 rounded-xl border border-dashed border-border bg-surface/60 px-3 py-2.5">
+          <p className={CARD_META_CLASS}>
+            Công cụ cộng tác chính hãng — kích hoạt nhanh, hỗ trợ tiếng Việt.
+          </p>
+        </div>
+      </div>
+
+      <ul className="mt-3 flex flex-wrap justify-center gap-2">
+        {["Làm việc từ xa", "Đồng bộ dữ liệu", "Hỗ trợ VN"].map((t) => (
+          <li
+            key={t}
+            className={`inline-flex items-center gap-1.5 rounded-full border border-border bg-white px-3 py-1.5 ${CARD_META_CLASS} font-medium text-navy ${ELEVATION_HAIRLINE}`}
+          >
+            <Check size={12} className="text-accent" strokeWidth={2.5} aria-hidden />
+            {t}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

@@ -179,7 +179,7 @@ export function BackupSolutionLanding({ featured }: Props) {
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_88%_18%,rgba(14,165,164,0.12),transparent_42%),radial-gradient(ellipse_at_10%_90%,rgba(14,165,233,0.05),transparent_48%)]"
           aria-hidden
         />
-        <div className="home-container relative py-8 md:py-10 lg:py-11">
+        <div className="home-container relative py-7 md:py-9 lg:py-10">
           <nav className={`mb-6 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
             <Link href="/" className={HOVER_LINK_ACCENT}>
               Trang chủ

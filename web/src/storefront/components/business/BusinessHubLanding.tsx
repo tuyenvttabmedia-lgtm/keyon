@@ -362,7 +362,7 @@ export function BusinessHubLanding() {
               "radial-gradient(ellipse 42% 70% at 92% 50%, rgba(14,165,164,0.28), transparent 55%), radial-gradient(ellipse 35% 45% at 8% 85%, rgba(14,165,233,0.08), transparent 50%)",
           }}
         />
-        <div className="home-container relative py-8 md:py-9 lg:py-10">
+        <div className="home-container relative py-7 md:py-9 lg:py-10">
           <h2 className={`${SECTION_TITLE_CLASS} !text-white`}>KEYON giúp doanh nghiệp</h2>
 
           <div className="mt-5 grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(180px,0.26fr)] lg:gap-10 xl:gap-12">

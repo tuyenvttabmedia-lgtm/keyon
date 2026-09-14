@@ -171,7 +171,7 @@ export function LicenseManagementSolutionLanding() {
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_90%_12%,rgba(14,165,164,0.12),transparent_42%),radial-gradient(ellipse_at_8%_88%,rgba(14,165,233,0.06),transparent_48%)]"
           aria-hidden
         />
-        <div className="home-container relative py-8 md:py-10 lg:py-11">
+        <div className="home-container relative py-7 md:py-9 lg:py-10">
           <nav className={`mb-6 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
             <Link href="/" className={HOVER_LINK_ACCENT}>
               Trang chủ
@@ -411,7 +411,7 @@ function LicenseMgmtHeroArt() {
   ];
 
   return (
-    <div className="hero-dashboard-scene pb-10 sm:pb-9 lg:pb-8">
+    <div className="hero-dashboard-scene pb-6 sm:pb-7 lg:pb-6">
       {/* Radial teal glow — background decoration behind panel */}
       <div
         className="pointer-events-none absolute left-1/2 top-1/2 h-[78%] w-[88%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(14,165,164,0.22)_0%,rgba(14,165,164,0.08)_42%,transparent_70%)] blur-2xl"
@@ -424,7 +424,7 @@ function LicenseMgmtHeroArt() {
           role="img"
           aria-label="Bảng điều khiển quản lý license KEYON: tổng quan, biểu đồ trạng thái và cảnh báo gia hạn"
         >
-          <div className="flex min-h-[300px] sm:min-h-[340px] lg:min-h-[360px]">
+          <div className="flex min-h-[260px] sm:min-h-[300px] lg:min-h-[320px]">
             {/* Sidebar */}
             <aside className="flex w-11 shrink-0 flex-col items-center gap-2 border-r border-slate-200/80 bg-white py-3 sm:w-12 sm:gap-2.5 sm:py-3.5">
               <span

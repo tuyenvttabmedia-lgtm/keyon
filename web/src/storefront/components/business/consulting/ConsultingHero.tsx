@@ -48,7 +48,7 @@ export function ConsultingHero() {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_88%_12%,rgba(14,165,164,0.07),transparent_45%),radial-gradient(ellipse_at_8%_85%,rgba(14,165,233,0.04),transparent_50%)]"
         aria-hidden
       />
-      <div className="home-container relative py-8 md:py-10 lg:py-11">
+      <div className="home-container relative py-7 md:py-9 lg:py-10">
         <nav className={`mb-5 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
           <Link href="/" className={HOVER_LINK_ACCENT}>
             Trang chủ

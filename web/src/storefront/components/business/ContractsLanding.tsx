@@ -9,6 +9,7 @@ import {
   Lock,
   RefreshCw,
   ShoppingBag,
+  Check,
 } from "lucide-react";
 import {
   BODY_CLASS,
@@ -27,12 +28,17 @@ import {
 import {
   ELEVATION_CARD_HOVER,
   ELEVATION_CTA_HOVER,
+  ELEVATION_FLOAT,
   ELEVATION_HAIRLINE,
   HOVER_LIFT_CARD,
   HOVER_LINK_ACCENT,
   TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
+import {
+  LANDING_HERO_GRID,
+  LANDING_HERO_PAD,
+} from "@/storefront/components/marketing/hero-shell";
 
 const ICON_MD = { size: 20, strokeWidth: 1.75 } as const;
 
@@ -68,8 +74,8 @@ export function ContractsLanding() {
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_88%_20%,rgba(14,165,164,0.08),transparent_42%),radial-gradient(ellipse_at_10%_90%,rgba(14,165,233,0.05),transparent_48%)]"
           aria-hidden
         />
-        <div className="home-container relative py-8 md:py-10 lg:py-11">
-          <nav className={`mb-6 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
+        <div className={`home-container relative ${LANDING_HERO_PAD}`}>
+          <nav className={`mb-5 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
             <Link href="/" className={HOVER_LINK_ACCENT}>
               Trang chủ
             </Link>
@@ -85,31 +91,37 @@ export function ContractsLanding() {
             <span className={BREADCRUMB_CURRENT_CLASS}>Hợp đồng & đơn hàng</span>
           </nav>
 
-          <div className="max-w-[640px]">
-            <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
-              Doanh nghiệp
-            </p>
-            <h1 className={`mt-3 max-w-[20ch] ${HERO_TITLE_CLASS}`}>
-              Theo dõi đơn hàng và giao dịch tổ chức trên KEYON
-            </h1>
-            <p className={`mt-4 max-w-[540px] ${PAGE_LEAD_CLASS}`}>
-              Đây chưa phải cổng hợp đồng pháp lý. Sau đăng nhập, tổ chức xem đơn và
-              license đã mua; PO / gia hạn tập trung qua đội kinh doanh.
-            </p>
+          <div className={LANDING_HERO_GRID}>
+            <div className="min-w-0 max-w-[540px]">
+              <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
+                Doanh nghiệp
+              </p>
+              <h1 className={`mt-3 max-w-[20ch] ${HERO_TITLE_CLASS}`}>
+                Theo dõi đơn hàng và giao dịch tổ chức trên KEYON
+              </h1>
+              <p className={`mt-4 max-w-[540px] ${PAGE_LEAD_CLASS}`}>
+                Đây chưa phải cổng hợp đồng pháp lý. Sau đăng nhập, tổ chức xem đơn và
+                license đã mua; PO / gia hạn tập trung qua đội kinh doanh.
+              </p>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Link
-                href="/account/orders"
-                className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
-              >
-                Đăng nhập xem đơn hàng →
-              </Link>
-              <Link
-                href="/contact/quote?intent=business"
-                className={`inline-flex h-12 items-center justify-center rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
-              >
-                Liên hệ kinh doanh
-              </Link>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <Link
+                  href="/account/orders"
+                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                >
+                  Đăng nhập xem đơn hàng →
+                </Link>
+                <Link
+                  href="/contact/quote?intent=business"
+                  className={`inline-flex h-12 items-center justify-center rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+                >
+                  Liên hệ kinh doanh
+                </Link>
+              </div>
+            </div>
+
+            <div className="relative min-w-0">
+              <ContractsHeroArt />
             </div>
           </div>
         </div>
@@ -196,6 +208,75 @@ export function ContractsLanding() {
           </aside>
         </div>
       </section>
+    </div>
+  );
+}
+
+function ContractsHeroArt() {
+  const rows = [
+    { label: "Đơn hàng tổ chức", hint: "Sau đăng nhập", Icon: ShoppingBag, tone: "bg-sky-100 text-sky-800" },
+    { label: "License đã bàn giao", hint: "Trong Tài khoản", Icon: KeyRound, tone: "bg-accent/15 text-accent" },
+    { label: "Gia hạn / PO", hint: "Qua đội kinh doanh", Icon: RefreshCw, tone: "bg-amber-100 text-amber-800" },
+  ] as const;
+
+  return (
+    <div className="relative mx-auto w-full max-w-[440px] lg:max-w-none">
+      <div
+        className={`relative rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
+        aria-hidden
+      >
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-navy text-accent">
+              <ClipboardList size={18} strokeWidth={1.8} />
+            </span>
+            <div>
+              <p className={CARD_TITLE_CLASS}>Portal đơn hàng</p>
+              <p className={CARD_META_CLASS}>Minh họa sau đăng nhập</p>
+            </div>
+          </div>
+          <span className="rounded-md bg-accent-soft px-2 py-1 text-[11px] font-semibold text-accent">
+            KEYON
+          </span>
+        </div>
+
+        <ul className="mt-4 space-y-2">
+          {rows.map((r) => (
+            <li
+              key={r.label}
+              className="flex items-center gap-3 rounded-xl border border-border/80 bg-[#F7FAFC] px-3 py-2.5"
+            >
+              <span
+                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${r.tone}`}
+              >
+                <r.Icon size={15} strokeWidth={1.85} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className={`${CARD_TITLE_CLASS} truncate`}>{r.label}</p>
+                <p className={CARD_META_CLASS}>{r.hint}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-3 rounded-xl border border-dashed border-border bg-surface/60 px-3 py-2.5">
+          <p className={CARD_META_CLASS}>
+            Chưa phải cổng hợp đồng pháp lý — xem đơn và license trong Tài khoản.
+          </p>
+        </div>
+      </div>
+
+      <ul className="mt-3 flex flex-wrap justify-center gap-2">
+        {["Cần đăng nhập", "Đơn & license", "PO qua sales"].map((t) => (
+          <li
+            key={t}
+            className={`inline-flex items-center gap-1.5 rounded-full border border-border bg-white px-3 py-1.5 ${CARD_META_CLASS} font-medium text-navy ${ELEVATION_HAIRLINE}`}
+          >
+            <Check size={12} className="text-accent" strokeWidth={2.5} aria-hidden />
+            {t}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
