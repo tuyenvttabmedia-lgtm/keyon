@@ -29,10 +29,9 @@ import {
   CARD_TITLE_CLASS,
   CTA_COMPACT_CLASS,
   CTA_LABEL_CLASS,
-  FONT_DISPLAY,
+  HERO_TITLE_CLASS,
   LINK_ACCENT_CLASS,
   PAGE_LEAD_CLASS,
-  SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
 } from "@/storefront/typography";
 import {
@@ -45,6 +44,10 @@ import {
   TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
+import {
+  LANDING_HERO_GRID,
+  LANDING_HERO_PAD,
+} from "@/storefront/components/marketing/hero-shell";
 import { SolutionFinalCta } from "./SolutionFinalCta";
 
 export type BackupBrand = "acronis" | "aomei" | "veeam" | "microsoft" | "generic";
@@ -179,8 +182,8 @@ export function BackupSolutionLanding({ featured }: Props) {
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_88%_18%,rgba(14,165,164,0.12),transparent_42%),radial-gradient(ellipse_at_10%_90%,rgba(14,165,233,0.05),transparent_48%)]"
           aria-hidden
         />
-        <div className="home-container relative py-7 md:py-9 lg:py-10">
-          <nav className={`mb-6 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
+        <div className={`home-container relative ${LANDING_HERO_PAD}`}>
+          <nav className={`mb-4 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
             <Link href="/" className={HOVER_LINK_ACCENT}>
               Trang chủ
             </Link>
@@ -196,51 +199,44 @@ export function BackupSolutionLanding({ featured }: Props) {
             <span className={BREADCRUMB_CURRENT_CLASS}>Backup & Khôi phục</span>
           </nav>
 
-          <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)] md:gap-10 lg:gap-12 xl:gap-[3.25rem]">
+          <div className={LANDING_HERO_GRID}>
             <div className="min-w-0 max-w-[520px]">
-              <h1
-                className={`max-w-[500px] ${FONT_DISPLAY} text-[1.75rem] font-bold leading-[1.1] tracking-tight text-navy sm:text-[2.5rem] sm:leading-[1.1] lg:text-[3rem] lg:leading-[1.1] xl:text-[3.05rem] xl:leading-[1.08]`}
-              >
-                Dữ liệu của bạn.
-                <br className="hidden sm:block" />
-                <span className="text-accent">
-                  Luôn có đường
-                  <br className="hidden sm:block" />
-                  quay trở lại.
-                </span>
+              <h1 className={`max-w-[18ch] ${HERO_TITLE_CLASS}`}>
+                Dữ liệu của bạn.{" "}
+                <span className="text-accent">Luôn có đường quay trở lại.</span>
               </h1>
-              <p className={`mt-4 max-w-[500px] ${PAGE_LEAD_CLASS}`}>
+              <p className={`mt-3 max-w-[42ch] ${PAGE_LEAD_CLASS}`}>
                 Giải pháp sao lưu tự động, an toàn — giúp cá nhân và doanh nghiệp
                 khôi phục nhanh khi sự cố, ransomware hoặc mất thiết bị.
               </p>
 
-              <ul className="mt-6 grid gap-4 sm:grid-cols-3 sm:gap-3">
+              <ul className="mt-5 grid gap-3 sm:grid-cols-3 sm:gap-2.5">
                 {HERO_POINTS.map((p) => (
-                  <li key={p.title} className="flex gap-2.5 sm:flex-col sm:items-start sm:gap-2.5">
+                  <li key={p.title} className="flex gap-2.5 sm:flex-col sm:items-start sm:gap-1.5">
                     <span
-                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent"
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent"
                       aria-hidden
                     >
                       <p.Icon {...ICON_SM} />
                     </span>
                     <div className="min-w-0">
                       <p className={CARD_TITLE_CLASS}>{p.title}</p>
-                      <p className={`mt-0.5 ${BODY_MUTED_CLASS}`}>{p.body}</p>
+                      <p className={`mt-0.5 ${CARD_META_CLASS}`}>{p.body}</p>
                     </div>
                   </li>
                 ))}
               </ul>
 
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/products?q=backup"
-                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                  className={`inline-flex h-11 items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
                   Khám phá giải pháp →
                 </Link>
                 <Link
                   href="/contact/quote"
-                  className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+                  className={`inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-white px-5 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
                   <Headphones {...ICON_SM} />
                   Tư vấn miễn phí
@@ -248,7 +244,7 @@ export function BackupSolutionLanding({ featured }: Props) {
               </div>
             </div>
 
-            <div className="relative w-full min-w-0">
+            <div className="relative w-full min-w-0 lg:justify-self-end">
               <BackupHeroArt />
             </div>
           </div>
