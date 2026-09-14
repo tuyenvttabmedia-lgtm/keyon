@@ -2,9 +2,12 @@ import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
   Cloud,
+  Database,
   HardDrive,
+  KeyRound,
   Layers,
-  Shield,
+  Settings2,
+  ShieldCheck,
   TrendingUp,
   Wallet,
 } from "lucide-react";
@@ -19,8 +22,8 @@ import {
   CARD_TITLE_CLASS,
   CTA_COMPACT_CLASS,
   CTA_LABEL_CLASS,
+  FONT_DISPLAY,
   HERO_TITLE_CLASS,
-  BREADCRUMB_CURRENT_CLASS,
   OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
   SECTION_LEAD_CLASS,
@@ -30,6 +33,7 @@ import {
   ELEVATION_CARD_HOVER,
   ELEVATION_CTA_HOVER,
   ELEVATION_FLOAT,
+  ELEVATION_FLOAT_HOVER,
   ELEVATION_HAIRLINE,
   HOVER_LIFT_CARD,
   TRANSITION_PANEL,
@@ -43,11 +47,41 @@ import {
 const ICON: Record<SolutionTopicArt, LucideIcon> = {
   bars: Layers,
   trend: TrendingUp,
-  shield: Shield,
+  shield: ShieldCheck,
   stack: Wallet,
   cloud: Cloud,
   backup: HardDrive,
 };
+
+const ICON_SM = { size: 15, strokeWidth: 1.9 } as const;
+
+const HERO_CHIP_ICON: Record<string, LucideIcon> = {
+  security: ShieldCheck,
+  productivity: TrendingUp,
+  cloud: Cloud,
+  "license-management": KeyRound,
+  backup: Database,
+  "by-need": Settings2,
+};
+
+const HERO_CHIP_LABEL: Record<string, string> = {
+  security: "Bảo mật & An toàn",
+  productivity: "Năng suất & Cộng tác",
+  cloud: "Cloud & Hạ tầng",
+  "license-management": "Quản lý bản quyền",
+  backup: "Sao lưu & Khôi phục",
+  "by-need": "Theo nhu cầu",
+};
+
+/** Mockup orbit seats around the K cube. */
+const HERO_ORBIT: { id: string; seat: string }[] = [
+  { id: "security", seat: "tl" },
+  { id: "productivity", seat: "tr" },
+  { id: "cloud", seat: "ml" },
+  { id: "license-management", seat: "mr" },
+  { id: "backup", seat: "bl" },
+  { id: "by-need", seat: "br" },
+];
 
 const TRUST: { title: string; body: string }[] = [
   { title: "Chính hãng", body: "License đúng nguồn, ghi rõ loại nhận trên gói." },
@@ -180,91 +214,116 @@ export function SolutionsHubLanding({ introEmbedUrl }: Props) {
   );
 }
 
-const HERO_CHIP_LABEL: Record<string, string> = {
-  security: "Bảo mật & An toàn",
-  productivity: "Năng suất & Cộng tác",
-  cloud: "Cloud & Hạ tầng",
-  "license-management": "Quản lý bản quyền",
-  backup: "Sao lưu & Khôi phục",
-  "by-need": "Theo nhu cầu",
-};
-
-/** Hero right — stable 3-row orbit (no fragile absolute seats). */
+/** Hero right — mockup: K cube on cyan platform + 6 floating pills. */
 function SolutionsHeroArt() {
   const byId = Object.fromEntries(SOLUTION_TOPICS.map((t) => [t.id, t]));
-  const rowTop = [byId.security!, byId.productivity!] as const;
-  const rowMid = [byId.cloud!, byId["license-management"]!] as const;
-  const rowBot = [byId.backup!, byId["by-need"]!] as const;
+  const floats = HERO_ORBIT.map((seat) => {
+    const topic = byId[seat.id]!;
+    return {
+      ...seat,
+      href: topic.href,
+      label: HERO_CHIP_LABEL[seat.id] ?? topic.label,
+      Icon: HERO_CHIP_ICON[seat.id] ?? ICON[topic.art],
+    };
+  });
 
   return (
     <div
-      className="relative mx-auto w-full max-w-[420px] lg:max-w-none lg:justify-self-end"
+      className="solutions-hero-visual group/sol"
+      role="img"
       aria-label="Sáu hướng giải pháp KEYON"
     >
-      {/* Ambient rings + glow (behind composition) */}
-      <div className="pointer-events-none absolute inset-0" aria-hidden>
-        <div className="absolute left-1/2 top-[46%] h-[78%] w-[78%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/15 blur-3xl" />
-        <div className="absolute left-1/2 top-[46%] h-[68%] w-[68%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-accent/25" />
-        <div className="absolute left-1/2 top-[46%] h-[48%] w-[48%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-accent/30" />
-        <div className="absolute left-1/2 top-[46%] h-[28%] w-[28%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-accent/20" />
+      <div className="solutions-hero-aura" aria-hidden>
+        <span className="solutions-hero-blob solutions-hero-blob--a" />
+        <span className="solutions-hero-blob solutions-hero-blob--b" />
+        <span className="solutions-hero-blob solutions-hero-blob--c" />
       </div>
 
-      <div className="relative flex flex-col gap-3 sm:gap-3.5">
-        <div className="flex items-stretch justify-between gap-2 sm:gap-3">
-          {rowTop.map((t) => (
-            <OrbitChip key={t.id} topic={t} />
-          ))}
-        </div>
+      <svg
+        className="solutions-hero-rays"
+        viewBox="0 0 560 420"
+        fill="none"
+        aria-hidden
+      >
+        <ellipse
+          cx="280"
+          cy="210"
+          rx="168"
+          ry="148"
+          stroke="#14BBA6"
+          strokeOpacity="0.22"
+          strokeWidth="1.2"
+          strokeDasharray="5 9"
+        />
+        <ellipse
+          cx="280"
+          cy="210"
+          rx="118"
+          ry="98"
+          stroke="#38BDF8"
+          strokeOpacity="0.18"
+          strokeWidth="1"
+          strokeDasharray="3 8"
+        />
+        <path
+          d="M280 78 C320 120 340 160 280 210 C220 160 240 120 280 78"
+          stroke="#14BBA6"
+          strokeOpacity="0.16"
+          strokeWidth="1.2"
+        />
+        <path
+          d="M96 210 C150 180 210 170 280 210 C350 250 410 250 464 210"
+          stroke="#38BDF8"
+          strokeOpacity="0.14"
+          strokeWidth="1.1"
+        />
+        <path
+          d="M120 120 C180 150 230 180 280 210 M440 120 C380 150 330 180 280 210 M130 300 C190 270 240 240 280 210 M430 300 C370 270 320 240 280 210"
+          stroke="#14BBA6"
+          strokeOpacity="0.12"
+          strokeWidth="1"
+          strokeDasharray="4 7"
+        />
+      </svg>
 
-        <div className="flex items-center justify-between gap-2 sm:gap-3">
-          <OrbitChip topic={rowMid[0]} />
-          <div className="relative z-10 shrink-0 px-1">
-            <div
-              className="pointer-events-none absolute left-1/2 top-[88%] h-8 w-24 -translate-x-1/2 rounded-[100%] bg-accent/35 blur-md"
-              aria-hidden
-            />
-            <div
-              className={`relative flex h-[4.75rem] w-[4.75rem] items-center justify-center rounded-[1.25rem] bg-navy sm:h-[5.5rem] sm:w-[5.5rem] sm:rounded-[1.4rem] ${ELEVATION_FLOAT}`}
-              aria-hidden
+      <div className="solutions-hero-core">
+        <div className="solutions-hero-platform" aria-hidden />
+        <div className={`solutions-hero-k ${ELEVATION_FLOAT}`} aria-hidden>
+          <span className={`solutions-hero-k-letter ${FONT_DISPLAY}`}>K</span>
+          <span className="solutions-hero-k-sheen" />
+        </div>
+      </div>
+
+      <div className="solutions-hero-cards-desktop">
+        {floats.map((f) => (
+          <Link
+            key={f.id}
+            href={f.href}
+            className={`solutions-hero-card solutions-hero-card--${f.seat} ${ELEVATION_FLOAT} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_FLOAT_HOVER}`}
+          >
+            <span className="solutions-hero-card-icon" aria-hidden>
+              <f.Icon {...ICON_SM} />
+            </span>
+            <span className="solutions-hero-card-label">{f.label}</span>
+          </Link>
+        ))}
+      </div>
+
+      <ul className="solutions-hero-cards-mobile">
+        {floats.map((f) => (
+          <li key={f.id}>
+            <Link
+              href={f.href}
+              className={`solutions-hero-card ${ELEVATION_FLOAT} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_FLOAT_HOVER}`}
             >
-              <span className="text-[2.1rem] font-extrabold leading-none tracking-tight text-accent sm:text-[2.45rem]">
-                K
+              <span className="solutions-hero-card-icon" aria-hidden>
+                <f.Icon {...ICON_SM} />
               </span>
-              <span className="pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-inset ring-accent/45" />
-              <span className="pointer-events-none absolute inset-[3px] rounded-[calc(1.25rem-3px)] sm:rounded-[calc(1.4rem-3px)] bg-gradient-to-br from-white/10 to-transparent" />
-            </div>
-          </div>
-          <OrbitChip topic={rowMid[1]} />
-        </div>
-
-        <div className="flex items-stretch justify-between gap-2 sm:gap-3">
-          {rowBot.map((t) => (
-            <OrbitChip key={t.id} topic={t} />
-          ))}
-        </div>
-      </div>
+              <span className="solutions-hero-card-label">{f.label}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
-  );
-}
-
-function OrbitChip({
-  topic,
-}: {
-  topic: (typeof SOLUTION_TOPICS)[number];
-}) {
-  const Icon = ICON[topic.art];
-  const label = HERO_CHIP_LABEL[topic.id] ?? topic.label;
-  return (
-    <Link
-      href={topic.href}
-      className={`group z-20 flex min-w-0 max-w-[48%] flex-1 items-center gap-2 rounded-xl border border-border bg-white/95 px-2.5 py-2 backdrop-blur-sm ${ELEVATION_HAIRLINE} ${TRANSITION_UI} hover:border-accent/45 hover:bg-white`}
-    >
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
-        <Icon size={15} strokeWidth={1.85} aria-hidden />
-      </span>
-      <span className={`min-w-0 text-left leading-snug ${BREADCRUMB_CURRENT_CLASS}`}>
-        {label}
-      </span>
-    </Link>
   );
 }

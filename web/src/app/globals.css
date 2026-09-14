@@ -935,6 +935,336 @@ html {
   }
 }
 
+/* Solutions hub hero — light orbit: cyan aura + K cube + 6 pills */
+.solutions-hero-visual {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  height: 400px;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.solutions-hero-aura {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.solutions-hero-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(36px);
+}
+
+.solutions-hero-blob--a {
+  left: 28%;
+  top: 18%;
+  width: 55%;
+  height: 55%;
+  background: rgba(14, 165, 164, 0.28);
+}
+
+.solutions-hero-blob--b {
+  right: 6%;
+  top: 8%;
+  width: 42%;
+  height: 42%;
+  background: rgba(56, 189, 248, 0.22);
+}
+
+.solutions-hero-blob--c {
+  left: 8%;
+  bottom: 10%;
+  width: 38%;
+  height: 38%;
+  background: rgba(14, 165, 164, 0.16);
+}
+
+.solutions-hero-rays {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse 72% 68% at 50% 48%, #000 35%, transparent 88%);
+  -webkit-mask-image: radial-gradient(
+    ellipse 72% 68% at 50% 48%,
+    #000 35%,
+    transparent 88%
+  );
+}
+
+.solutions-hero-core {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  z-index: 20;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.solutions-hero-platform {
+  position: absolute;
+  left: 50%;
+  top: 78%;
+  width: 9.5rem;
+  height: 2.4rem;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  background: radial-gradient(
+    ellipse at 50% 40%,
+    rgba(45, 212, 191, 0.55) 0%,
+    rgba(14, 165, 164, 0.28) 45%,
+    transparent 75%
+  );
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+.solutions-hero-k {
+  position: relative;
+  display: flex;
+  width: 6.25rem;
+  height: 6.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.35rem;
+  background: linear-gradient(160deg, #132a42 0%, #0b1f33 55%, #071525 100%);
+  border: 1px solid rgba(20, 187, 166, 0.4);
+  transition:
+    transform 0.2s cubic-bezier(0.2, 0, 0, 1),
+    box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @media (min-width: 768px) {
+    .group\/sol:hover .solutions-hero-k {
+      transform: scale(1.03);
+      box-shadow: 0 18px 40px rgba(14, 165, 164, 0.3);
+    }
+  }
+}
+
+.solutions-hero-k-letter {
+  position: relative;
+  z-index: 1;
+  font-size: 2.65rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #14bba6;
+  text-shadow: 0 0 26px rgba(20, 187, 166, 0.55);
+}
+
+.solutions-hero-k-sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.14) 0%,
+    transparent 42%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.solutions-hero-card {
+  display: flex;
+  width: max-content;
+  max-width: 11.5rem;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  background: rgba(255, 255, 255, 0.96);
+  padding: 0.4rem 0.85rem 0.4rem 0.4rem;
+  text-decoration: none;
+}
+
+.solutions-hero-card:hover {
+  z-index: 30;
+  border-color: rgba(14, 165, 164, 0.45);
+}
+
+.solutions-hero-card-icon {
+  display: flex;
+  height: 1.875rem;
+  width: 1.875rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: #e6f7f6;
+  color: #0ea5a4;
+}
+
+.solutions-hero-card-label {
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #0b1f33;
+  white-space: nowrap;
+}
+
+.solutions-hero-cards-desktop {
+  display: none;
+}
+
+.solutions-hero-cards-mobile {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.625rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.solutions-hero-cards-mobile .solutions-hero-card {
+  width: 100%;
+  max-width: none;
+  border-radius: 0.85rem;
+  white-space: normal;
+}
+
+.solutions-hero-cards-mobile .solutions-hero-card-label {
+  white-space: normal;
+}
+
+@media (max-width: 767.98px) {
+  .solutions-hero-visual {
+    height: auto;
+    max-width: 100%;
+    margin-inline: auto;
+  }
+
+  .solutions-hero-rays {
+    display: none;
+  }
+
+  .solutions-hero-aura {
+    inset: 0 8% 62%;
+  }
+
+  .solutions-hero-core {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    margin: 0.25rem auto 1.15rem;
+  }
+
+  .solutions-hero-platform {
+    top: 86%;
+  }
+}
+
+@media (min-width: 768px) {
+  .solutions-hero-cards-mobile {
+    display: none;
+  }
+
+  .solutions-hero-cards-desktop {
+    display: block;
+  }
+
+  .solutions-hero-card {
+    position: absolute;
+    z-index: 10;
+  }
+
+  .solutions-hero-card--tl {
+    left: 0%;
+    top: 8%;
+  }
+
+  .solutions-hero-card--tr {
+    right: 0%;
+    top: 6%;
+  }
+
+  .solutions-hero-card--ml {
+    left: -2%;
+    top: 42%;
+  }
+
+  .solutions-hero-card--mr {
+    right: -2%;
+    top: 40%;
+  }
+
+  .solutions-hero-card--bl {
+    left: 4%;
+    bottom: 6%;
+  }
+
+  .solutions-hero-card--br {
+    right: 2%;
+    bottom: 8%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .solutions-hero-visual {
+    max-width: 540px;
+    height: 420px;
+  }
+
+  .solutions-hero-k {
+    width: 6.75rem;
+    height: 6.75rem;
+    border-radius: 1.45rem;
+  }
+
+  .solutions-hero-k-letter {
+    font-size: 2.9rem;
+  }
+
+  .solutions-hero-card-label {
+    font-size: 11.5px;
+  }
+
+  .solutions-hero-card--tl {
+    left: -2%;
+    top: 6%;
+  }
+
+  .solutions-hero-card--tr {
+    right: -2%;
+    top: 4%;
+  }
+
+  .solutions-hero-card--ml {
+    left: -4%;
+    top: 44%;
+  }
+
+  .solutions-hero-card--mr {
+    right: -4%;
+    top: 42%;
+  }
+
+  .solutions-hero-card--bl {
+    left: 2%;
+    bottom: 5%;
+  }
+
+  .solutions-hero-card--br {
+    right: 0%;
+    bottom: 7%;
+  }
+}
+
 /* License-management hero — product UI floating in 3D space */
 .hero-dashboard-scene {
   position: relative;
