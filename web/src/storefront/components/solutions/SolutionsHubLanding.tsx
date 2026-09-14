@@ -241,48 +241,59 @@ function SolutionsHeroArt() {
 
       <svg
         className="solutions-hero-rays"
-        viewBox="0 0 560 420"
+        viewBox="0 0 460 360"
         fill="none"
         aria-hidden
       >
+        {/* Soft ambient rings — mockup glow, not hub spokes */}
         <ellipse
-          cx="280"
-          cy="210"
-          rx="168"
-          ry="148"
-          stroke="#14BBA6"
-          strokeOpacity="0.22"
-          strokeWidth="1.2"
-          strokeDasharray="5 9"
-        />
-        <ellipse
-          cx="280"
-          cy="210"
+          cx="230"
+          cy="180"
           rx="118"
-          ry="98"
-          stroke="#38BDF8"
-          strokeOpacity="0.18"
-          strokeWidth="1"
-          strokeDasharray="3 8"
-        />
-        <path
-          d="M280 78 C320 120 340 160 280 210 C220 160 240 120 280 78"
+          ry="102"
           stroke="#14BBA6"
+          strokeOpacity="0.2"
+          strokeWidth="1.15"
+        />
+        <ellipse
+          cx="230"
+          cy="180"
+          rx="86"
+          ry="72"
+          stroke="#38BDF8"
           strokeOpacity="0.16"
-          strokeWidth="1.2"
+          strokeWidth="1"
+          strokeDasharray="4 8"
         />
         <path
-          d="M96 210 C150 180 210 170 280 210 C350 250 410 250 464 210"
+          d="M78 120 C140 90 190 100 230 180"
           stroke="#38BDF8"
           strokeOpacity="0.14"
           strokeWidth="1.1"
         />
         <path
-          d="M120 120 C180 150 230 180 280 210 M440 120 C380 150 330 180 280 210 M130 300 C190 270 240 240 280 210 M430 300 C370 270 320 240 280 210"
+          d="M382 110 C320 85 270 105 230 180"
+          stroke="#14BBA6"
+          strokeOpacity="0.14"
+          strokeWidth="1.1"
+        />
+        <path
+          d="M90 250 C145 230 185 210 230 180"
           stroke="#14BBA6"
           strokeOpacity="0.12"
           strokeWidth="1"
-          strokeDasharray="4 7"
+        />
+        <path
+          d="M370 255 C315 235 275 210 230 180"
+          stroke="#38BDF8"
+          strokeOpacity="0.12"
+          strokeWidth="1"
+        />
+        <path
+          d="M150 70 C190 110 210 145 230 180 C250 145 270 110 310 70"
+          stroke="#14BBA6"
+          strokeOpacity="0.1"
+          strokeWidth="1.2"
         />
       </svg>
 
