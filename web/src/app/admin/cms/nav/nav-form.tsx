@@ -86,8 +86,9 @@ function BrandSection({
       <div>
         <p className="text-sm font-medium text-navy">Logo & thương hiệu header</p>
         <p className="mt-0.5 text-xs text-muted">
-          Upload logo wordmark (ảnh ngang có chữ). Header chỉ hiện logo — không
-          ghép thêm tên/tagline. Không upload → chữ cái + tên + tagline.
+          Upload logo wordmark PNG trong suốt (ảnh ngang có chữ). Header nền
+          trắng — tránh file có nền đen/xám. Header chỉ hiện logo — không ghép
+          thêm tên/tagline. Không upload → chữ cái + tên + tagline.
         </p>
       </div>
 

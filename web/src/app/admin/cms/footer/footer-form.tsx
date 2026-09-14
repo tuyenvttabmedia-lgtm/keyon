@@ -303,7 +303,8 @@ function BrandSection({
       <div>
         <p className="text-sm font-medium text-navy">Logo footer</p>
         <p className="mt-0.5 text-xs text-muted">
-          Wordmark ngang (nên bản sáng/trắng trên nền navy). Trống → dùng logo
+          Wordmark ngang PNG trong suốt — bản sáng/trắng trên nền navy (vd.
+          /brand/keyon-logo-light.png). Tránh file nền đen. Trống → dùng logo
           header; không có cả hai → chữ cái + tên.
         </p>
       </div>

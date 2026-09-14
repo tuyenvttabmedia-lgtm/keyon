@@ -397,10 +397,21 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
       })),
     },
     footer: {
-      logoUrl:
-        resolveMediaUrl(footer.logoUrl, mediaBase) ||
-        resolveMediaUrl(nav.logoUrl, mediaBase) ||
-        undefined,
+      logoUrl: (() => {
+        const footerLogo =
+          resolveMediaUrl(footer.logoUrl, mediaBase) || undefined;
+        const navLogo = resolveMediaUrl(nav.logoUrl, mediaBase) || undefined;
+        const picked = footerLogo || navLogo;
+        // Dark wordmark on navy footer reads as a black slab — use light asset.
+        if (
+          picked &&
+          /\/brand\/keyon-logo\.png(?:\?|$)/i.test(picked) &&
+          !/keyon-logo-light/i.test(picked)
+        ) {
+          return "/brand/keyon-logo-light.png";
+        }
+        return picked;
+      })(),
       brandName:
         footer.brandName?.trim() ||
         nav.brandName?.trim() ||
