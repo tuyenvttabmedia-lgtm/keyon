@@ -107,12 +107,10 @@ function SimpleStaticPageView({
 
       <div className="home-container py-6 md:py-8">
         <article
-          className={`rounded-2xl border border-border bg-white p-6 sm:p-8 ${ELEVATION_HAIRLINE}`}
+          className={`rounded-2xl border border-border bg-white p-5 sm:p-8 md:p-10 ${ELEVATION_HAIRLINE}`}
         >
-          <StaticPageHtml
-            body={page.body}
-            className="prose prose-slate max-w-none prose-headings:text-navy prose-p:text-muted prose-li:text-muted prose-a:text-accent prose-strong:text-navy"
-          />
+          {/* blog-prose = storefront rich-text styles (lists/headings). Do not use Tailwind `prose` — typography plugin not installed. */}
+          <StaticPageHtml body={page.body} className="blog-prose" />
           <p className={`mt-8 border-t border-border pt-4 ${CARD_TITLE_CLASS}`}>
             <Link href="/" className="text-accent hover:underline">
               ← Về trang chủ
