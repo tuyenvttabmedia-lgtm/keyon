@@ -106,10 +106,7 @@ export function SolutionsHubLanding({ introEmbedUrl }: Props) {
         <div className={`home-container relative ${LANDING_HERO_PAD}`}>
           <SolutionPageChrome
             kicker="Giải pháp"
-            crumbs={[
-              { label: "Trang chủ", href: "/" },
-              { label: "Giải pháp" },
-            ]}
+            crumbs={[{ label: "Trang chủ", href: "/" }]}
           />
           <div className={`${LANDING_HERO_GRID} mt-2`}>
             <div className="min-w-0 max-w-[540px]">
