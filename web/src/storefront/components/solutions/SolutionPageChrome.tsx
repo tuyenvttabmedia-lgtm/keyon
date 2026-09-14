@@ -18,7 +18,7 @@ export function SolutionPageChrome({
   ],
 }: Props) {
   return (
-    <div className={kicker ? "mb-3 space-y-1.5" : "mb-2.5"}>
+    <div className={kicker ? "mb-2.5 space-y-1" : "mb-1.5"}>
       <nav aria-label="Breadcrumb" className={BREADCRUMB_CLASS}>
         {crumbs.map((c, i) => (
           <span key={`${c.label}-${i}`}>

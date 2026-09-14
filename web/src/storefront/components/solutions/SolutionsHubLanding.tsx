@@ -40,7 +40,6 @@ import {
   TRANSITION_UI,
 } from "@/storefront/effects";
 import {
-  LANDING_HERO_GRID,
   LANDING_HERO_PAD,
 } from "@/storefront/components/marketing/hero-shell";
 
@@ -104,14 +103,14 @@ export function SolutionsHubLanding({ introEmbedUrl }: Props) {
           aria-hidden
         />
         <div className={`home-container relative ${LANDING_HERO_PAD}`}>
-          <SolutionPageChrome
-            crumbs={[
-              { label: "Trang chủ", href: "/" },
-              { label: "Giải pháp" },
-            ]}
-          />
-          <div className={LANDING_HERO_GRID}>
+          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10 xl:gap-12">
             <div className="min-w-0 max-w-[540px]">
+              <SolutionPageChrome
+                crumbs={[
+                  { label: "Trang chủ", href: "/" },
+                  { label: "Giải pháp" },
+                ]}
+              />
               <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
                 Giải pháp toàn diện
               </p>
