@@ -182,11 +182,11 @@ export const BUSINESS_PAGES: Record<string, IaPage> = {
     kicker: "Doanh nghiệp",
     title: "Dịch vụ triển khai",
     subtitle:
-      "Bàn giao và kích hoạt bản quyền theo quy mô — không phải catalog MSP Azure/Intune.",
+      "Bàn giao và kích hoạt bản quyền theo quy mô — checklist cho đội IT sau khi mua.",
     bullets: [
       "Onboarding sau mua: key, tài khoản, checklist cho IT",
       "Khác tư vấn bản quyền — triển khai sau khi đã (sắp) có license",
-      "Yêu cầu đi form báo giá loại triển khai — không tự tạo đơn trên giỏ hàng",
+      "Gửi yêu cầu qua form báo giá loại triển khai",
     ],
     primaryCta: {
       label: "Gửi yêu cầu triển khai",

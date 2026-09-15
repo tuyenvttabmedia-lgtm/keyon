@@ -54,62 +54,62 @@ const HERO_POINTS: { title: string; Icon: LucideIcon }[] = [
   { title: "Bàn giao sau mua", Icon: KeyRound },
   { title: "Kích hoạt theo quy mô", Icon: Users },
   { title: "Checklist cho IT", Icon: ListChecks },
-  { title: "Không giả MSP cloud", Icon: ShieldCheck },
+  { title: "Hỗ trợ tiếng Việt", Icon: ShieldCheck },
 ];
 
 const IN_SCOPE: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Bàn giao license",
-    body: "Key, tài khoản vendor hoặc gói đã mua — rõ loại nhận trước khi kích hoạt.",
+    body: "Key, tài khoản hoặc gói đã mua — ghi rõ loại nhận trước khi kích hoạt.",
     Icon: KeyRound,
   },
   {
     title: "Onboarding đội IT",
-    body: "Hướng dẫn kích hoạt, gán seat và checklist rollout cho số lượng lớn.",
+    body: "Hướng dẫn kích hoạt, gán seat và checklist rollout theo số lượng người dùng.",
     Icon: Users,
   },
   {
     title: "Gắn quản lý trên KEYON",
-    body: "Đưa license vào Tài khoản để theo dõi hạn và gia hạn sau khi bàn giao.",
+    body: "Đưa license vào Tài khoản để theo dõi hạn dùng và gia hạn sau khi bàn giao.",
     Icon: ListChecks,
   },
   {
     title: "Phối hợp khi kẹt vendor",
-    body: "Hỗ trợ kênh với nhà cung cấp khi kích hoạt hoặc gán bản quyền bị chặn.",
+    body: "Hỗ trợ làm việc với nhà cung cấp khi kích hoạt hoặc gán bản quyền bị chặn.",
     Icon: Handshake,
   },
 ];
 
 const OUT_OF_SCOPE = [
-  "Thiết kế Azure landing zone, Intune, Purview hay SOC Defender",
-  "Thay thế đối tác MSP / triển khai hạ tầng cloud",
-  "Cài đặt on-prem tùy chỉnh ngoài phạm vi kích hoạt bản quyền",
+  "Thiết kế và vận hành hạ tầng cloud / bảo mật endpoint cho tổ chức",
+  "Thay thế đối tác triển khai hệ thống hoặc dịch vụ quản trị IT thuê ngoài",
+  "Cài đặt phần mềm on-prem ngoài phạm vi kích hoạt và bàn giao bản quyền",
 ];
 
 const PROCESS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Tiếp nhận phạm vi",
-    body: "Sản phẩm đã mua hoặc sẽ mua, số máy / người dùng, đội IT phụ trách.",
+    body: "Sản phẩm đã mua hoặc sẽ mua, số máy / người dùng và đầu mối IT phụ trách.",
     Icon: ClipboardList,
   },
   {
     title: "Rà soát license",
-    body: "Khớp loại nhận (key / tài khoản / gói) với quy mô thực tế.",
+    body: "Khớp loại nhận (key / tài khoản / gói) với quy mô sử dụng thực tế.",
     Icon: MessageCircle,
   },
   {
     title: "Kế hoạch bàn giao",
-    body: "Thứ tự kích hoạt, người nhận, và kênh hỗ trợ trong quá trình rollout.",
+    body: "Thứ tự kích hoạt, người nhận và kênh hỗ trợ trong quá trình rollout.",
     Icon: ListChecks,
   },
   {
     title: "Hỗ trợ kích hoạt",
-    body: "Đồng hành IT khi gán seat và xử lý lỗi kích hoạt thường gặp.",
+    body: "Đồng hành đội IT khi gán seat và xử lý lỗi kích hoạt thường gặp.",
     Icon: Rocket,
   },
   {
     title: "Checklist bàn giao",
-    body: "Xác nhận đã nhận đủ, đã vào Tài khoản KEYON khi khách muốn quản lý tập trung.",
+    body: "Xác nhận đã nhận đủ và đã vào Tài khoản KEYON khi cần quản lý tập trung.",
     Icon: Headphones,
   },
 ];
@@ -148,8 +148,8 @@ export function ImplementationLanding() {
                 Bàn giao và kích hoạt bản quyền theo quy mô tổ chức
               </h1>
               <p className={`mt-4 max-w-[540px] ${PAGE_LEAD_CLASS}`}>
-                KEYON hỗ trợ onboarding sau khi mua — không bán catalog MSP kiểu Pax8
-                (Azure, Intune, Defender) nếu chưa giao dịch vụ đó.
+                KEYON hỗ trợ bàn giao và kích hoạt bản quyền sau khi mua — đúng loại nhận,
+                đúng quy mô tổ chức, có checklist cho đội IT.
               </p>
 
               <ul className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -194,8 +194,8 @@ export function ImplementationLanding() {
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Phạm vi KEYON làm</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Triển khai = bàn giao và kích hoạt bản quyền. Tư vấn bản quyền = chọn gói
-              trước khi mua.
+              Dịch vụ này tập trung bàn giao và kích hoạt bản quyền đã (hoặc sắp) mua —
+              khác bước tư vấn chọn gói trước khi mua.
             </p>
           </header>
           <ul className="mt-9 grid gap-4 sm:grid-cols-2">
@@ -226,8 +226,8 @@ export function ImplementationLanding() {
           <div>
             <h2 className={SECTION_TITLE_CLASS}>Không nằm trong phạm vi này</h2>
             <p className={`mt-2.5 max-w-xl ${SECTION_LEAD_CLASS}`}>
-              Tránh nhầm với professional services hạ tầng. Nếu cần MSP cloud, KEYON
-              giới thiệu hướng — không ghi catalog giả.
+              KEYON không thay thế dịch vụ triển khai hạ tầng hay quản trị hệ thống thuê
+              ngoài. Cần hướng đó — đội ngũ sẽ tư vấn và giới thiệu đối tác phù hợp.
             </p>
             <ul className="mt-6 space-y-3">
               {OUT_OF_SCOPE.map((line) => (
@@ -251,8 +251,8 @@ export function ImplementationLanding() {
               Tư vấn chọn gói trước khi mua. Triển khai sau khi đã có (hoặc sắp có) license.
             </p>
             <p className={`mt-2 ${CARD_META_CLASS}`}>
-              Yêu cầu đi form báo giá loại triển khai — KEYON tiếp nhận qua email/ticket,
-              không tự tạo đơn trên giỏ hàng.
+              Gửi yêu cầu qua form báo giá loại triển khai — KEYON tiếp nhận và phản hồi
+              qua email / ticket.
             </p>
             <Link
               href="/business/licensing-consulting"
@@ -301,8 +301,8 @@ export function ImplementationLanding() {
                 Cần hỗ trợ bàn giao hoặc kích hoạt?
               </h2>
               <p className={`mt-2 ${SECTION_LEAD_CLASS} !text-slate-300`}>
-                Mô tả sản phẩm, số người dùng và stack hiện tại — KEYON tiếp nhận như yêu
-                cầu báo giá, gắn loại triển khai.
+                Cho biết sản phẩm, số người dùng và đầu mối IT — KEYON tiếp nhận yêu cầu
+                và phản hồi lịch bàn giao / kích hoạt.
               </p>
             </div>
             <Link
@@ -339,7 +339,7 @@ function ImplementationHeroArt() {
             </span>
             <div>
               <p className={CARD_TITLE_CLASS}>Onboarding sau mua</p>
-              <p className={CARD_META_CLASS}>Minh họa quy trình bàn giao</p>
+              <p className={CARD_META_CLASS}>Quy trình bàn giao sau mua</p>
             </div>
           </div>
           <span className="rounded-md bg-accent-soft px-2 py-1 text-[11px] font-semibold text-accent">
@@ -366,7 +366,7 @@ function ImplementationHeroArt() {
       </div>
 
       <ul className="mt-3 flex flex-wrap justify-center gap-2">
-        {["Bàn giao key", "Checklist IT", "Không MSP giả"].map((t) => (
+        {["Bàn giao key", "Checklist IT", "Hỗ trợ kích hoạt"].map((t) => (
           <li
             key={t}
             className={`inline-flex items-center gap-1.5 rounded-full border border-border bg-white px-3 py-1.5 ${CARD_META_CLASS} font-medium text-navy ${ELEVATION_HAIRLINE}`}
