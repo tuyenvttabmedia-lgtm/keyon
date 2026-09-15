@@ -337,7 +337,7 @@ export function VolumeLicensingLanding() {
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Vì sao doanh nghiệp chọn KEYON?</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Tập trung vào tư vấn, triển khai và quản lý — phù hợp nhu cầu thực tế của tổ chức.
+              Tư vấn chọn gói, bàn giao license và quản lý trong Tài khoản — phù hợp nhu cầu tổ chức.
             </p>
           </header>
 

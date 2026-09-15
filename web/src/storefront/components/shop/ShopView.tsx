@@ -12,7 +12,7 @@ import {
 } from "@/storefront/typography";
 
 const TRUST = [
-  { title: "Giao license", desc: "Theo SLA từng gói", icon: "bolt" as const },
+  { title: "Giao license", desc: "Theo ghi chú từng gói", icon: "bolt" as const },
   { title: "Chính hãng", desc: "Nguồn cung rõ", icon: "check" as const },
   { title: "Thanh toán an toàn", desc: "QR / chuyển khoản", icon: "lock" as const },
   { title: "Hỗ trợ kích hoạt", desc: "Ticket trong Tài khoản", icon: "support" as const },
@@ -46,7 +46,7 @@ export function ShopView(props: ShopCatalogProps) {
             <div>
               <h1 className={PAGE_TITLE_CLASS}>Cửa hàng</h1>
               <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>
-                Bản quyền chính hãng — Giao license tức thì — Giá tốt nhất
+                Bản quyền chính hãng — Giao theo ghi chú gói — Giá niêm yết rõ trên từng SKU
               </p>
             </div>
             {/* Mockup shop-desktop: khung xám · grid-cols-2 · gạch dọc/ngang giữa các ô */}

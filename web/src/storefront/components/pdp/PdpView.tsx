@@ -705,7 +705,7 @@ function PurchaseColumn({
       <ul className="mt-4 grid grid-cols-3 gap-2 border-t border-border pt-4">
         {[
           { t: "Thanh toán an toàn", s: "QR / chuyển khoản rõ" },
-          { t: "Hoàn tiền 100%", s: "Khi giao sai loại" },
+          { t: "Hoàn khi giao sai loại", s: "Theo điều kiện gói" },
           { t: "Hỗ trợ kích hoạt", s: "Ticket & gửi lại khi cần" },
         ].map((x) => (
           <li key={x.t} className="text-center sm:text-left">

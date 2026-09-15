@@ -19,21 +19,21 @@ export const homeFixture: HomeContent = {
   hero: {
     visible: true,
     badge: "DIGITAL LICENSE PLATFORM",
-    title: "Nền tảng phân phối bản quyền số",
+    title: "Mua & quản lý bản quyền số trên KEYON",
     subtitle:
-      "Mua, triển khai và quản lý bản quyền phần mềm, cloud và dịch vụ số trên một nền tảng duy nhất. Dành cho cá nhân, đội nhóm và doanh nghiệp.",
+      "Mua license chính hãng, nhận đúng loại (key / tài khoản / kích hoạt) và theo dõi trong Tài khoản. Hỗ trợ tiếng Việt — báo giá khi cần quy mô lớn.",
     ctaLabel: "Khám phá sản phẩm →",
     ctaHref: "/products",
     secondaryCtaLabel: "Dành cho doanh nghiệp",
     secondaryCtaHref: "/business",
     trustItems: [
       {
-        title: "100% Chính hãng",
+        title: "Bản quyền chính hãng",
         description: "Nguồn cung rõ ràng, hóa đơn đầy đủ.",
       },
       {
-        title: "Giao hàng tức thì",
-        description: "Key / tài khoản / kích hoạt sau thanh toán.",
+        title: "Giao theo từng gói",
+        description: "Key / tài khoản / kích hoạt sau khi nhận tiền — xem ghi chú SKU.",
       },
       {
         title: "Hỗ trợ kích hoạt",
@@ -218,28 +218,28 @@ export const homeFixture: HomeContent = {
       {
         id: "cloud",
         title: "Cloud",
-        description: "Hạ tầng và dịch vụ cloud.",
+        description: "Gói cloud / hạ tầng trên catalog KEYON.",
         href: "/solutions/cloud",
         art: "cloud",
       },
       {
         id: "security",
         title: "Bảo mật",
-        description: "Endpoint, antivirus, bảo vệ dữ liệu.",
+        description: "Gói endpoint / antivirus chính hãng.",
         href: "/solutions/security",
         art: "shield",
       },
       {
         id: "backup",
         title: "Backup & Khôi phục",
-        description: "Sao lưu endpoint, cloud và máy chủ.",
+        description: "License backup trên catalog — kích hoạt trên hạ tầng của bạn.",
         href: "/solutions/backup",
         art: "backup",
       },
       {
         id: "license-management",
         title: "Quản lý bản quyền",
-        description: "Theo dõi license, gia hạn, tài khoản KEYON.",
+        description: "Theo dõi license đã mua và gia hạn trên Tài khoản.",
         href: "/solutions/license-management",
         art: "stack",
       },
@@ -300,14 +300,14 @@ export const homeFixture: HomeContent = {
     visible: true,
     title: "Cần giải pháp license cho doanh nghiệp?",
     subtitle:
-      "KEYON hỗ trợ mua, triển khai và quản lý phần mềm / cloud theo nhu cầu tổ chức — vẫn giữ trải nghiệm mua lẻ rõ ràng cho cá nhân.",
-    ctaLabel: "Liên hệ tư vấn →",
+      "KEYON hỗ trợ mua license, bàn giao / kích hoạt theo phạm vi gói, và báo giá khi tổ chức cần quy mô lớn — trải nghiệm mua lẻ vẫn rõ ràng.",
+    ctaLabel: "Gửi yêu cầu tư vấn →",
     ctaHref: "/contact/quote",
   },
   footer: {
     brandName: "KEYON",
     blurb:
-      "Nền tảng phân phối và quản lý bản quyền phần mềm, cloud và dịch vụ số.",
+      "KEYON bán và bàn giao bản quyền phần mềm / cloud — quản lý license trong Tài khoản.",
     companyInfo: {
       companyName: "",
       address: "",

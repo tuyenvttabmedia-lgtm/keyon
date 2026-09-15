@@ -458,7 +458,7 @@ export const defaultCmsFooterCompanyInfo: CmsFooterCompanyInfo = {
 export const defaultCmsFooter: CmsFooter = {
   brandName: "KEYON",
   blurb:
-    "Nền tảng phân phối và quản lý bản quyền phần mềm, cloud và dịch vụ số.",
+    "KEYON bán và bàn giao bản quyền phần mềm / cloud — quản lý license trong Tài khoản.",
   companyInfo: { ...defaultCmsFooterCompanyInfo },
   columns: [
     {
@@ -966,7 +966,7 @@ export type CmsCheckout = {
 };
 
 export const defaultCmsCheckout: CmsCheckout = {
-  securityLine: "Thông tin được mã hóa & bảo mật tuyệt đối",
+  securityLine: "Thông tin giao dịch được bảo vệ theo chính sách KEYON",
   warrantyBadge: "Bảo hành 12 tháng",
   emailHelp: "Tự động gửi sau khi thanh toán",
   paidNote:
@@ -1000,7 +1000,7 @@ export const defaultCmsCheckout: CmsCheckout = {
       id: "s3",
       title: "Hoàn tất & nhận license",
       description:
-        "Thanh toán thành công, hệ thống sẽ tự động kích hoạt license cho bạn.",
+        "Sau khi nhận tiền, KEYON giao theo chiến lược gói (Instant hoặc xử lý thủ công) — theo dõi trong Đơn hàng.",
     },
   ],
   qrCardTitle: "QR Code thanh toán",
@@ -1022,8 +1022,8 @@ export const defaultCmsCheckout: CmsCheckout = {
     },
     {
       id: "w2",
-      title: "Giao siêu nhanh",
-      description: "Instant thường 1–5 phút sau khi nhận tiền",
+      title: "Giao theo gói",
+      description: "Instant: thường vài phút sau khi nhận tiền — xem ghi chú sản phẩm",
     },
     {
       id: "w3",
@@ -1032,8 +1032,8 @@ export const defaultCmsCheckout: CmsCheckout = {
     },
     {
       id: "w4",
-      title: "Hoàn tiền 100%",
-      description: "Khi giao sai loại theo mô tả gói",
+      title: "Hoàn khi giao sai loại",
+      description: "Theo điều kiện mô tả gói / chính sách",
     },
   ],
   supportTitle: "Cần hỗ trợ?",
@@ -1141,10 +1141,10 @@ export const defaultCmsCheckout: CmsCheckout = {
 };
 
 export const defaultCmsHome: CmsHome = {
-  heroTitle: "Nền tảng phân phối bản quyền số",
+  heroTitle: "Mua & quản lý bản quyền số trên KEYON",
   heroTitleAccent: "",
   heroSubtitle:
-    "Mua, triển khai và quản lý bản quyền phần mềm, cloud và dịch vụ số trên một nền tảng duy nhất. Dành cho cá nhân, đội nhóm và doanh nghiệp.",
+    "Mua license chính hãng, nhận đúng loại (key / tài khoản / kích hoạt) và theo dõi trong Tài khoản. Hỗ trợ tiếng Việt — báo giá khi cần quy mô lớn.",
   heroCta: "Khám phá sản phẩm →",
   heroCtaHref: "/products",
   whyTitle: "",
@@ -1174,7 +1174,7 @@ export const defaultCmsBlog: CmsBlog = {
   topicsTitle: "Chủ đề phổ biến",
   exploreTitle: "Cần license chính hãng?",
   exploreBody:
-    "Windows, Office, Adobe và hơn thế nữa — giao nhanh, lưu trong tài khoản KEYON.",
+    "Windows, Office, Adobe và hơn thế nữa — giao theo ghi chú gói, lưu trong Tài khoản KEYON.",
   exploreCta: "Xem sản phẩm",
   exploreHref: "/products",
   newsletterTitle: "Đăng ký nhận bản tin Keyon",
@@ -2006,28 +2006,28 @@ export const defaultCmsAccount: CmsAccount = {
   supportCardCta: "Tạo yêu cầu hỗ trợ",
   promoTitle: "Khám phá thêm sản phẩm",
   promoBody:
-    "Phần mềm bản quyền chính hãng — giao nhanh, lưu trong License của tôi.",
+    "Phần mềm bản quyền chính hãng — giao theo ghi chú gói, lưu trong Tài khoản KEYON.",
   promoCta: "Xem sản phẩm",
   promoHref: "/products",
   activationGuideCta: "Hướng dẫn kích hoạt",
   activationGuideHref: "/faq",
   licenseSecurityNote:
-    "KEYON cam kết bảo mật tuyệt đối thông tin license của bạn.",
+    "KEYON bảo vệ thông tin license theo chính sách bảo mật.",
   feeValue: "Miễn phí",
   overviewWelcomeHi: "Chào mừng trở lại",
   overviewWelcomeBody:
     "Cảm ơn bạn đã đồng hành cùng KEYON. Chúc bạn một ngày làm việc hiệu quả!",
   licensesBannerTitle: "KEYON cam kết bản quyền chính hãng",
   licensesBannerBody:
-    "100% license chính hãng · Kích hoạt nhanh chóng · Hỗ trợ tận tâm",
-  licensesTrust1Title: "100% Chính hãng",
-  licensesTrust1Body: "License chính hãng từ nhà cung cấp uy tín",
-  licensesTrust2Title: "Kích hoạt nhanh",
-  licensesTrust2Body: "Quy trình rõ ràng, kích hoạt chỉ trong vài phút",
-  licensesTrust3Title: "Hỗ trợ tận tâm",
-  licensesTrust3Body: "Đội ngũ kỹ thuật sẵn sàng hỗ trợ trong giờ làm việc",
+    "License chính hãng · Kích hoạt theo gói · Hỗ trợ tiếng Việt",
+  licensesTrust1Title: "Chính hãng",
+  licensesTrust1Body: "License chính hãng — loại nhận ghi rõ trước khi mua",
+  licensesTrust2Title: "Kích hoạt theo gói",
+  licensesTrust2Body: "Theo ghi chú / chiến lược giao của từng SKU",
+  licensesTrust3Title: "Hỗ trợ tiếng Việt",
+  licensesTrust3Body: "Đội ngũ hỗ trợ trong giờ làm việc qua ticket",
   licensesTrust4Title: "Quản lý dễ dàng",
-  licensesTrust4Body: "Theo dõi và quản lý tất cả license trên một nền tảng",
+  licensesTrust4Body: "Theo dõi license đã mua trên Tài khoản KEYON",
   securityLead: "Quản lý mật khẩu, xác thực email, phiên đăng nhập và 2FA.",
   notificationsLead: "Cập nhật đơn hàng, giao license và hỗ trợ.",
   ticketsLead: "Gửi yêu cầu và theo dõi phản hồi từ KEYON.",

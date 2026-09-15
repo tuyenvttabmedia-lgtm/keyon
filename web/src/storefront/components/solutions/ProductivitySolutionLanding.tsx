@@ -165,7 +165,7 @@ const WORK_MODES: {
     id: "remote",
     label: "Làm việc từ xa",
     Icon: Video,
-    title: "Làm việc mọi nơi, kết nối tức thì",
+    title: "Làm việc mọi nơi với Teams & OneDrive",
     checks: [
       "Họp HD trên Teams mọi lúc",
       "Đồng bộ OneDrive đa thiết bị",
