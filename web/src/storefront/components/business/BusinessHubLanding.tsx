@@ -101,7 +101,7 @@ const BIZ_CARDS: BizCard[] = [
   {
     id: "implementation",
     title: "Dịch vụ triển khai",
-    body: "Bàn giao và kích hoạt bản quyền theo quy mô — không giả catalog MSP cloud.",
+    body: "Bàn giao và kích hoạt bản quyền theo quy mô — checklist cho đội IT.",
     href: "/business/implementation",
     cta: "Tìm hiểu thêm",
     features: ["Onboarding sau mua", "Checklist cho IT", "Form loại triển khai"],
