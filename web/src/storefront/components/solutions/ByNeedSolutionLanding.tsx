@@ -80,7 +80,7 @@ const MIX_ROWS: { label: string; hint: string; Icon: LucideIcon; tone: string }[
   },
   {
     label: "Sao lưu & Khôi phục",
-    hint: "Backup / DR",
+    hint: "Backup (nếu có trên catalog)",
     Icon: HardDrive,
     tone: "bg-amber-100 text-amber-800",
   },

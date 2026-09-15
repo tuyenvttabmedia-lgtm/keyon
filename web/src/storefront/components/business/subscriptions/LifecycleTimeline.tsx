@@ -22,7 +22,7 @@ import { SECTION_PAD } from "./shared";
 
 const STEPS: { title: string; body: string; Icon: LucideIcon }[] = [
   { title: "Kích hoạt", body: "Ghi nhận subscription mới vào hệ thống.", Icon: Rocket },
-  { title: "Đang sử dụng", body: "Theo dõi trạng thái vận hành hàng ngày.", Icon: CirclePlay },
+  { title: "Đang sử dụng", body: "Theo dõi trạng thái và hạn dùng trên Tài khoản.", Icon: CirclePlay },
   { title: "Theo dõi", body: "Nắm chu kỳ và thông tin liên quan.", Icon: Eye },
   { title: "Sắp gia hạn", body: "Nhận tín hiệu trước mốc cần xử lý.", Icon: Timer },
   { title: "Gia hạn", body: "Tiếp tục, điều chỉnh hoặc tư vấn.", Icon: RefreshCcw },

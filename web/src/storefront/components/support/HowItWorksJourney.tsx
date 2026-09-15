@@ -63,7 +63,7 @@ export function HowItWorksJourney({
   heading = "h1",
   kicker = "Hành trình mua hàng",
   title = "Cách KEYON hoạt động",
-  lead = "Chỉ với 3 bước đơn giản để sở hữu license chính hãng và kích hoạt nhanh chóng.",
+  lead = "Ba bước: chọn gói → thanh toán → nhận deliverable trong Tài khoản.",
   ctaHref = "/how-it-works",
   ctaLabel = "Quản lý license & hỗ trợ →",
 }: Props) {
@@ -119,7 +119,7 @@ export function HowItWorksJourney({
           <div>
             <p className={CARD_TITLE_CLASS}>Cam kết của KEYON</p>
             <p className={`mt-1 ${CARD_META_CLASS}`}>
-              Minh bạch giá – Không ẩn phí – Bảo mật tuyệt đối – Hỗ trợ tận tâm
+              Giá và loại nhận rõ trên PDP — thanh toán tách khỏi giao nhận — hỗ trợ ticket tiếng Việt
             </p>
           </div>
         </div>

@@ -3,20 +3,16 @@ import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   Activity,
-  BadgePercent,
   Building2,
   Cloud,
   CloudUpload,
   CreditCard,
   Database,
-  Eye,
-  Globe2,
   HardDrive,
   Headphones,
   Maximize2,
   Monitor,
   Network,
-  Rocket,
   Server,
   ShieldCheck,
   ShoppingCart,
@@ -80,35 +76,35 @@ const SERVICES: {
 }[] = [
   {
     title: "Cloud Infrastructure",
-    description: "Máy chủ ảo linh hoạt — CPU, RAM, SSD theo nhu cầu vận hành.",
+    description: "Gói hạ tầng / máy chủ trên catalog — xem loại nhận trước khi mua.",
     href: "/products?cat=cloud",
     Icon: Cloud,
     tone: "bg-sky-100 text-sky-700",
   },
   {
     title: "Cloud Storage",
-    description: "Lưu trữ đối tượng / file, mở rộng dung lượng khi cần.",
+    description: "Gói lưu trữ liên quan trên cửa hàng — tư vấn khi cần chọn dung lượng.",
     href: "/products?q=storage",
     Icon: HardDrive,
     tone: "bg-indigo-100 text-indigo-700",
   },
   {
     title: "Cloud Database",
-    description: "Cơ sở dữ liệu managed — triển khai nhanh, vận hành ổn định.",
+    description: "Gói / SKU liên quan (nếu có) — báo giá theo nhu cầu, không vận hành DB thuê ngoài.",
     href: "/contact/quote",
     Icon: Database,
     tone: "bg-teal-100 text-teal-800",
   },
   {
     title: "Cloud Backup",
-    description: "Sao lưu endpoint, cloud và máy chủ — khôi phục khi sự cố.",
+    description: "License phần mềm backup trên KEYON — kích hoạt trên hạ tầng của bạn.",
     href: "/solutions/backup",
     Icon: CloudUpload,
     tone: "bg-cyan-100 text-cyan-800",
   },
   {
     title: "Cloud Network",
-    description: "Kết nối, bảo vệ cạnh biên và tối ưu băng thông dịch vụ.",
+    description: "Gói liên quan mạng / bảo vệ (nếu có trên catalog) — tư vấn chọn SKU.",
     href: "/contact/quote",
     Icon: Network,
     tone: "bg-violet-100 text-violet-700",
@@ -126,29 +122,29 @@ const PLATFORMS: { name: string; tint: string; Logo: () => ReactNode }[] = [
 
 const TRUST: { title: string; body: string; Icon: LucideIcon }[] = [
   {
-    title: "Hạ tầng toàn cầu",
-    body: "Datacenter tại nhiều quốc gia qua hệ sinh thái đối tác.",
-    Icon: Globe2,
+    title: "Gói trên catalog",
+    body: "Chỉ bán gói / license đang có — xem mô tả và loại nhận trên từng SKU.",
+    Icon: ShoppingCart,
   },
   {
-    title: "Hiệu năng vượt trội",
-    body: "SSD NVMe · băng thông cao khi chọn đúng cấu hình.",
-    Icon: Zap,
+    title: "Loại nhận rõ",
+    body: "Key, tài khoản hoặc hướng dẫn bàn giao — ghi trước khi thanh toán.",
+    Icon: Monitor,
   },
   {
-    title: "Bảo mật đa lớp",
-    body: "Firewall, DDoS, mã hóa dữ liệu theo từng gói.",
+    title: "Theo điều kiện vendor",
+    body: "Uptime, SLA hay bảo mật hạ tầng (nếu có) thuộc nhà cung cấp / gói.",
     Icon: ShieldCheck,
   },
   {
-    title: "Theo dõi vận hành",
-    body: "Đội ngũ kỹ thuật hỗ trợ tiếng Việt sau triển khai.",
-    Icon: Eye,
+    title: "Hỗ trợ tiếng Việt",
+    body: "Tư vấn chọn gói, bàn giao và kích hoạt — không giám sát hạ tầng 24/7.",
+    Icon: Headphones,
   },
   {
-    title: "SLA 99.9%",
-    body: "Cam kết uptime theo điều kiện nhà cung cấp & gói.",
-    Icon: BadgePercent,
+    title: "Không thay MSP",
+    body: "KEYON không vận hành tenant Azure/AWS của bạn — cần MSP thì báo qua form.",
+    Icon: Building2,
   },
 ];
 
@@ -163,57 +159,57 @@ const SEGMENTS: {
 }[] = [
   {
     title: "Doanh nghiệp vừa & nhỏ",
-    description: "Khởi đầu gọn, chi phí kiểm soát, triển khai nhanh.",
+    description: "Chọn gói catalog theo ngân sách — mua ngay hoặc gửi báo giá.",
     items: [
-      "Máy chủ ảo cơ bản",
-      "Lưu trữ an toàn",
-      "Hỗ trợ kỹ thuật chuyên nghiệp",
+      "Gói cloud / storage đang bán",
+      "Loại nhận rõ trước mua",
+      "Hỗ trợ kích hoạt tiếng Việt",
     ],
     href: "/products?cat=cloud",
-    cta: "Khám phá giải pháp →",
+    cta: "Xem sản phẩm cloud →",
     highlight: false,
     Icon: Store,
   },
   {
     title: "Doanh nghiệp phát triển",
-    description: "Mở rộng tài nguyên theo từng giai đoạn tăng trưởng.",
+    description: "Tăng số lượng seat / gói theo giai đoạn — báo giá theo quy mô.",
     items: [
-      "Mở rộng linh hoạt theo nhu cầu",
-      "Cơ sở dữ liệu hiệu năng cao",
-      "Mạng lưới tối ưu",
+      "Báo giá theo số người dùng",
+      "Gói liên quan trên catalog",
+      "Theo dõi license trong Tài khoản",
     ],
     href: "/business",
-    cta: "Khám phá giải pháp →",
+    cta: "Xem dành cho DN →",
     highlight: true,
     Icon: TrendingUp,
   },
   {
     title: "Doanh nghiệp lớn",
-    description: "Kiến trúc đa vùng, bảo mật nghiêm ngặt, đồng hành dài hạn.",
+    description: "Volume / báo giá dự án — bàn giao checklist; không vận hành tenant thuê ngoài.",
     items: [
-      "Kiến trúc đa vùng",
-      "Tiêu chuẩn bảo mật nghiêm ngặt",
-      "Hỗ trợ tiếng Việt theo thỏa thuận",
-      "Tư vấn & báo giá dự án",
+      "Báo giá theo dự án / số lượng",
+      "Bàn giao & checklist kích hoạt",
+      "Hỗ trợ tiếng Việt qua ticket / kinh doanh",
+      "Phối hợp khi cần MSP hạ tầng",
     ],
     href: "/contact/quote",
-    cta: "Liên hệ tư vấn →",
+    cta: "Gửi yêu cầu báo giá →",
     highlight: false,
     Icon: Building2,
   },
 ];
 
 const STEPS: { title: string; body: string; Icon: LucideIcon }[] = [
-  { title: "Chọn dịch vụ", body: "Chọn gói cloud phù hợp nhu cầu.", Icon: ShoppingCart },
-  { title: "Thanh toán", body: "VietQR / chuyển khoản — rõ ràng.", Icon: CreditCard },
-  { title: "Triển khai", body: "Nhận deliverable hoặc bàn giao hỗ trợ.", Icon: CloudUpload },
-  { title: "Sử dụng", body: "Theo dõi trong Tài khoản KEYON.", Icon: Monitor },
+  { title: "Chọn gói", body: "Chọn SKU cloud / hạ tầng trên catalog hoặc gửi báo giá.", Icon: ShoppingCart },
+  { title: "Thanh toán", body: "VietQR / chuyển khoản — rõ ràng trên KEYON.", Icon: CreditCard },
+  { title: "Nhận bàn giao", body: "Nhận deliverable hoặc hỗ trợ kích hoạt theo gói.", Icon: CloudUpload },
+  { title: "Theo dõi", body: "License đã mua nằm trong Tài khoản KEYON.", Icon: Monitor },
 ];
 
 const HERO_VALUES: { title: string; body: string; Icon: LucideIcon }[] = [
-  { title: "Triển khai nhanh chóng", body: "Sẵn sàng trong vài phút", Icon: Rocket },
-  { title: "Bảo mật & tin cậy", body: "Tiêu chuẩn bảo mật quốc tế", Icon: ShieldCheck },
-  { title: "Linh hoạt & mở rộng", body: "Mở rộng theo nhu cầu", Icon: Maximize2 },
+  { title: "Gói trên catalog", body: "Mua SKU đang bán hoặc báo giá", Icon: ShoppingCart },
+  { title: "Loại nhận rõ", body: "Key / tài khoản / hướng dẫn", Icon: ShieldCheck },
+  { title: "Không vận hành MSP", body: "KEYON bán & bàn giao — không chạy tenant", Icon: Maximize2 },
 ];
 
 const PRODUCT_ICONS: Record<NonNullable<CloudFeaturedProduct["icon"]>, LucideIcon> = {
@@ -255,12 +251,12 @@ export function CloudSolutionLanding({ featured }: Props) {
           <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-10 xl:gap-12">
             <div className="min-w-0">
               <h1 className={`max-w-xl ${HERO_TITLE_CLASS}`}>
-                Cloud linh hoạt
-                <span className="mt-1 block">Cho doanh nghiệp hiện đại</span>
+                Gói cloud & hạ tầng
+                <span className="mt-1 block">Trên catalog KEYON</span>
               </h1>
               <p className={`mt-4 max-w-lg ${PAGE_LEAD_CLASS}`}>
-                Khai thác sức mạnh của cloud để triển khai nhanh hơn, vận hành ổn định
-                và mở rộng linh hoạt — tối ưu chi phí và bảo mật cho doanh nghiệp.
+                Mua license / gói cloud–hạ tầng đang có, nhận deliverable rõ ràng và hỗ trợ
+                kích hoạt tiếng Việt. KEYON không thay MSP vận hành Azure hay AWS của bạn.
               </p>
 
               <ul className="mt-6 grid gap-4 sm:grid-cols-3 sm:gap-3">
@@ -285,14 +281,14 @@ export function CloudSolutionLanding({ featured }: Props) {
                   href="/products?cat=cloud"
                   className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
-                  Khám phá dịch vụ cloud →
+                  Xem sản phẩm cloud →
                 </Link>
                 <Link
                   href="/contact/quote"
                   className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
                   <Headphones {...ICON_SM} />
-                  Tư vấn giải pháp
+                  Gửi yêu cầu tư vấn
                 </Link>
               </div>
             </div>
@@ -308,9 +304,9 @@ export function CloudSolutionLanding({ featured }: Props) {
       <section className="py-9 md:py-11 lg:py-12">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
-            <h2 className={SECTION_TITLE_CLASS}>Dịch vụ cloud toàn diện</h2>
+            <h2 className={SECTION_TITLE_CLASS}>Hướng gói cloud trên KEYON</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Đáp ứng mọi nhu cầu từ hạ tầng đến ứng dụng cho doanh nghiệp.
+              Các nhóm sản phẩm thường gặp trên catalog — không phải dịch vụ vận hành thuê ngoài.
             </p>
           </header>
           <ul className="mt-7 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-4">
@@ -345,9 +341,10 @@ export function CloudSolutionLanding({ featured }: Props) {
       <section className="border-y border-border bg-surface py-9 md:py-10">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
-            <h2 className={SECTION_TITLE_CLASS}>Nền tảng & công nghệ</h2>
+            <h2 className={SECTION_TITLE_CLASS}>Thương hiệu thường gặp</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Hệ sinh thái đối tác và công nghệ phổ biến cho giải pháp cloud.
+              Một số thương hiệu / nền tảng có thể liên quan tới gói trên catalog — KEYON bán
+              license hoặc gói, không vận hành tài khoản cloud của bạn.
             </p>
           </header>
 
@@ -546,12 +543,12 @@ export function CloudSolutionLanding({ featured }: Props) {
       </section>
 
       <SolutionFinalCta
-        title="Sẵn sàng đưa doanh nghiệp lên cloud?"
-        subtitle="Nhận tư vấn cấu hình, báo giá và hỗ trợ triển khai từ đội ngũ KEYON."
+        title="Cần tư vấn chọn gói cloud / hạ tầng?"
+        subtitle="Gửi yêu cầu báo giá — phạm vi mua và bàn giao license, không vận hành tenant thuê ngoài."
         primaryHref="/contact/quote"
-        primaryLabel="Liên hệ tư vấn →"
+        primaryLabel="Gửi yêu cầu tư vấn →"
         secondaryHref="/products?cat=cloud"
-        secondaryLabel="Khám phá dịch vụ cloud"
+        secondaryLabel="Xem sản phẩm cloud"
       />
     </div>
   );

@@ -83,30 +83,30 @@ const ICON_SM = { size: 18, strokeWidth: 1.85, "aria-hidden": true as const };
 const ICON_MD = { size: 20, strokeWidth: 1.75, "aria-hidden": true as const };
 
 const HERO_CHECKS = [
-  "Làm việc linh hoạt ở mọi nơi",
-  "Cộng tác thời gian thực, liền mạch",
-  "Dữ liệu an toàn, luôn được đồng bộ",
+  "License Microsoft 365 / Office chính hãng",
+  "Loại nhận rõ — kích hoạt theo hướng dẫn",
+  "Theo dõi hạn dùng trong Tài khoản KEYON",
 ] as const;
 
 const VALUE_PILLARS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
-    title: "Kết nối liền mạch",
-    body: "Giao tiếp, họp và chia sẻ trên một nền tảng thống nhất.",
+    title: "License chính hãng",
+    body: "Microsoft 365, Office, Teams — đúng gói trên catalog KEYON.",
     Icon: Users,
   },
   {
-    title: "Năng suất vượt trội",
-    body: "Tối ưu quy trình, tiết kiệm thời gian với bộ công cụ hiện đại.",
+    title: "Đúng quy mô",
+    body: "Personal, Business hoặc volume — chọn trước khi mua hoặc báo giá.",
     Icon: Zap,
   },
   {
-    title: "An toàn & Đáng tin cậy",
-    body: "Bảo vệ dữ liệu theo chuẩn bảo mật — license chính hãng.",
+    title: "Bàn giao rõ ràng",
+    body: "Nhận key / tài khoản / hướng dẫn sau thanh toán — hỗ trợ tiếng Việt.",
     Icon: ShieldCheck,
   },
   {
-    title: "Linh hoạt & Mở rộng",
-    body: "Dễ dàng mở rộng theo nhu cầu cá nhân đến doanh nghiệp.",
+    title: "Gia hạn chủ động",
+    body: "Theo dõi hạn trên Tài khoản và renew khi đến kỳ.",
     Icon: Cloud,
   },
 ];
@@ -186,9 +186,9 @@ const WORK_MODES: {
     Icon: Building2,
     title: "Quản trị tập trung, mở rộng theo quy mô",
     checks: [
-      "Gói doanh nghiệp / volume",
-      "Quản trị identity & bảo mật",
-      "Tư vấn triển khai với KEYON",
+      "Gói doanh nghiệp / volume trên KEYON",
+      "Tư vấn chọn SKU trước khi mua",
+      "Bàn giao & checklist kích hoạt khi cần",
     ],
     href: "/contact/quote",
     tools: [
@@ -202,9 +202,9 @@ const WORK_MODES: {
 ];
 
 const ECOSYSTEM_CHECKS = [
-  "Tương thích Windows, macOS, iOS và Android",
-  "Tích hợp hàng trăm ứng dụng phổ biến",
-  "Kết nối liền mạch với hệ sinh thái Microsoft",
+  "Ứng dụng trong hệ Microsoft 365 — xem mô tả từng gói",
+  "Tương thích theo điều kiện license vendor",
+  "Mua trên KEYON — kích hoạt theo hướng dẫn gói",
 ] as const;
 
 export function ProductivitySolutionLanding({
@@ -244,12 +244,12 @@ export function ProductivitySolutionLanding({
           <div className={LANDING_HERO_GRID}>
             <div className="min-w-0">
               <h1 className={`max-w-[520px] ${HERO_TITLE_CLASS}`}>
-                Kết nối con người.
-                <span className="mt-1 block">Tăng tốc công việc.</span>
+                License năng suất
+                <span className="mt-1 block">Microsoft trên KEYON</span>
               </h1>
               <p className={`mt-4 max-w-[510px] ${PAGE_LEAD_CLASS}`}>
-                Bộ công cụ và dịch vụ thông minh giúp cá nhân, đội nhóm làm việc linh hoạt hơn —
-                cộng tác liền mạch, dữ liệu luôn đồng bộ.
+                Microsoft 365, Office và Teams chính hãng — mua, nhận deliverable, kích hoạt và
+                theo dõi hạn trong Tài khoản. KEYON không vận hành Microsoft 365 tenant của bạn.
               </p>
 
               <ul className="mt-6 space-y-3">
@@ -278,7 +278,7 @@ export function ProductivitySolutionLanding({
                   className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
                   <Headphones {...ICON_SM} />
-                  Tư vấn miễn phí
+                  Gửi yêu cầu tư vấn
                 </Link>
               </div>
             </div>
@@ -454,7 +454,7 @@ export function ProductivitySolutionLanding({
 
       <SolutionFinalCta
         title="Sẵn sàng nâng tầm hiệu suất làm việc?"
-        subtitle="Bắt đầu hành trình làm việc thông minh hơn cùng KEYON ngay hôm nay."
+        subtitle="Cần chọn gói Microsoft 365 / Office? Xem sản phẩm hoặc gửi yêu cầu báo giá."
         primaryHref="/contact/quote"
         primaryLabel="Liên hệ tư vấn →"
         secondaryHref="/products?cat=office"

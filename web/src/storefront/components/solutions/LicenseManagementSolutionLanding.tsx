@@ -47,22 +47,22 @@ const ICON_SM = { size: 18, strokeWidth: 1.85, "aria-hidden": true as const };
 const HERO_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Tập trung",
-    body: "Quản lý mọi license trên một nơi.",
+    body: "License đã mua trên KEYON nằm trong Tài khoản.",
     Icon: LayoutGrid,
   },
   {
     title: "Minh bạch",
-    body: "Theo dõi sử dụng & chi phí rõ ràng.",
+    body: "Xem hạn dùng và trạng thái từng bản quyền.",
     Icon: BarChart3,
   },
   {
     title: "Chủ động",
-    body: "Cảnh báo & gia hạn tự động.",
+    body: "Nhắc trước kỳ gia hạn — renew qua tư vấn / báo giá.",
     Icon: Bell,
   },
   {
-    title: "Tiết kiệm",
-    body: "Tối ưu chi phí bản quyền.",
+    title: "Đúng quy mô",
+    body: "Chọn tiếp tục, điều chỉnh seat hoặc báo giá lại.",
     Icon: Wallet,
   },
 ];
@@ -70,27 +70,27 @@ const HERO_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
 const FEATURES: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Quản lý tập trung",
-    body: "Lưu trữ và theo dõi toàn bộ license trên một nền tảng duy nhất.",
+    body: "Theo dõi license đã mua trên Tài khoản KEYON — một nơi sau đăng nhập.",
     Icon: LayoutGrid,
   },
   {
-    title: "Cảnh báo thông minh",
-    body: "Nhắc trước khi hết hạn — giảm gián đoạn và mất bản quyền.",
+    title: "Nhắc trước hạn",
+    body: "Thông tin trước kỳ gia hạn để bạn chủ động renew hoặc báo giá.",
     Icon: Bell,
   },
   {
-    title: "Theo dõi sử dụng",
-    body: "Xem phân bổ theo phòng ban / người dùng để kiểm soát rõ ràng.",
+    title: "Theo dõi hạn dùng",
+    body: "Xem chu kỳ và trạng thái license đã mua — không phải SAM phòng ban đầy đủ.",
     Icon: BarChart3,
   },
   {
-    title: "Tối ưu chi phí",
-    body: "Gợi ý số lượng seat phù hợp — tránh thừa hoặc thiếu license.",
+    title: "Gia hạn có kiểm soát",
+    body: "Tiếp tục, điều chỉnh số lượng hoặc gửi yêu cầu báo giá trước khi renew.",
     Icon: Wallet,
   },
   {
-    title: "Báo cáo linh hoạt",
-    body: "Báo cáo realtime và xuất dữ liệu khi cần kiểm toán.",
+    title: "Xuất / xem danh sách",
+    body: "Xem danh sách license trong Tài khoản khi cần đối chiếu nội bộ.",
     Icon: Download,
   },
 ];
@@ -98,26 +98,26 @@ const FEATURES: { title: string; body: string; Icon: LucideIcon }[] = [
 const STEPS: { n: string; title: string; body: string; Icon: LucideIcon }[] = [
   {
     n: "01",
-    title: "Thêm license",
-    body: "Đồng bộ hoặc nhập license chỉ trong vài phút.",
+    title: "Nhận license sau mua",
+    body: "License mua trên KEYON vào Tài khoản sau thanh toán / bàn giao.",
     Icon: CloudUpload,
   },
   {
     n: "02",
-    title: "Phân bổ & theo dõi",
-    body: "Gán cho user / team và theo dõi trạng thái sử dụng.",
+    title: "Theo dõi trong Tài khoản",
+    body: "Xem sản phẩm, hạn dùng và trạng thái đã nhận.",
     Icon: PieChart,
   },
   {
     n: "03",
-    title: "Cảnh báo & gia hạn",
-    body: "Hệ thống nhắc trước kỳ renew để bạn chủ động xử lý.",
+    title: "Nhắc trước kỳ renew",
+    body: "KEYON nhắc trước hạn để bạn quyết định gia hạn hoặc báo giá.",
     Icon: Bell,
   },
   {
     n: "04",
-    title: "Gia hạn & tối ưu",
-    body: "Gia hạn nhanh và tối ưu chi phí theo nhu cầu thực tế.",
+    title: "Gia hạn & điều chỉnh",
+    body: "Renew hoặc chỉnh số lượng qua Mua ngay / form báo giá.",
     Icon: ShieldCheck,
   },
 ];
@@ -191,12 +191,11 @@ export function LicenseManagementSolutionLanding() {
           <div className="grid items-center gap-9 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-8 xl:gap-10">
             <div className="min-w-0">
               <h1 className={`max-w-[18ch] ${HERO_TITLE_CLASS}`}>
-                Kiểm soát toàn bộ license. Đơn giản, chủ động, hiệu quả.
+                Theo dõi license đã mua. Chủ động trước kỳ gia hạn.
               </h1>
               <p className={`mt-4 max-w-xl ${PAGE_LEAD_CLASS}`}>
-                KEYON giúp doanh nghiệp tập trung quản lý bản quyền phần mềm và
-                subscription trên một nền tảng — minh bạch, chủ động gia hạn và sẵn
-                sàng khi kiểm toán.
+                KEYON giúp tổ chức xem license đã mua trên Tài khoản — hạn dùng, trạng thái
+                và nhắc trước renew. Không phải bộ SAM phòng ban hay gia hạn tự động trừ tiền.
               </p>
 
               <ul className="mt-6 grid gap-3.5 sm:grid-cols-2">
@@ -228,7 +227,7 @@ export function LicenseManagementSolutionLanding() {
                   className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-accent/40 bg-white px-6 ${CTA_LABEL_CLASS} text-accent ${TRANSITION_UI} hover:border-accent hover:bg-accent-soft`}
                 >
                   <Headphones {...ICON_SM} />
-                  Tư vấn miễn phí
+                  Gửi yêu cầu tư vấn
                 </Link>
               </div>
             </div>
@@ -378,7 +377,7 @@ export function LicenseManagementSolutionLanding() {
       {/* ── CTA ──────────────────────────────────────────────── */}
       <SolutionFinalCta
         title="Sẵn sàng kiểm soát bản quyền hiệu quả hơn?"
-        subtitle="Tối ưu chi phí, giảm rủi ro hết hạn và nắm rõ toàn bộ license trên một nền tảng KEYON."
+        subtitle="Theo dõi hạn dùng trên Tài khoản KEYON — nhắc trước renew và gửi báo giá khi cần."
         primaryHref="/contact/quote"
         primaryLabel="Liên hệ tư vấn →"
         secondaryHref="/register"
@@ -390,16 +389,16 @@ export function LicenseManagementSolutionLanding() {
 
 function LicenseMgmtHeroArt() {
   const stats = [
-    { label: "Tổng license", value: "523", tone: "text-navy" },
-    { label: "Đang dùng", value: "398", tone: "text-accent" },
-    { label: "Sắp hết hạn", value: "27", tone: "text-amber-600" },
-    { label: "Hết hạn", value: "4", tone: "text-rose-600" },
+    { label: "Tổng license", value: "—", tone: "text-navy" },
+    { label: "Đang dùng", value: "—", tone: "text-accent" },
+    { label: "Sắp hết hạn", value: "—", tone: "text-amber-600" },
+    { label: "Hết hạn", value: "—", tone: "text-rose-600" },
   ];
 
   const alerts = [
-    { name: "Microsoft 365", meta: "Hết hạn sau 12 ngày", tone: "warn" as const },
-    { name: "Adobe Acrobat", meta: "Hết hạn sau 5 ngày", tone: "danger" as const },
-    { name: "Acronis Cyber", meta: "Hết hạn sau 21 ngày", tone: "warn" as const },
+    { name: "Microsoft 365", meta: "Sắp đến hạn — minh họa", tone: "warn" as const },
+    { name: "Adobe Acrobat", meta: "Cần xem xét renew — minh họa", tone: "danger" as const },
+    { name: "Acronis Cyber", meta: "Còn hạn — minh họa", tone: "warn" as const },
   ];
 
   const nav = [
@@ -422,7 +421,7 @@ function LicenseMgmtHeroArt() {
         <div
           className="hero-dashboard-surface relative overflow-hidden rounded-[1.35rem] border border-slate-200/90 bg-[#f1f5f9]"
           role="img"
-          aria-label="Bảng điều khiển quản lý license KEYON: tổng quan, biểu đồ trạng thái và cảnh báo gia hạn"
+          aria-label="Minh họa giao diện quản lý license KEYON — không phải số liệu thật"
         >
           <div className="flex min-h-[260px] sm:min-h-[300px] lg:min-h-[320px]">
             {/* Sidebar */}
@@ -453,9 +452,8 @@ function LicenseMgmtHeroArt() {
                   <p className={`${BADGE_CLASS} text-slate-400`}>License Hub</p>
                   <p className={`${CARD_TITLE_CLASS} text-[13px] sm:text-sm`}>Tổng quan</p>
                 </div>
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-semibold text-emerald-700">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden />
-                  Live
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2 py-1 text-[10px] font-semibold text-slate-600">
+                  Minh họa
                 </span>
               </div>
 
@@ -539,7 +537,7 @@ function LicenseMgmtHeroArt() {
                         fontWeight="800"
                         fontFamily="var(--font-display), system-ui, sans-serif"
                       >
-                        76%
+                        —
                       </text>
                       <text
                         x="60"
@@ -549,7 +547,7 @@ function LicenseMgmtHeroArt() {
                         fontSize="8"
                         fontWeight="600"
                       >
-                        Đang dùng
+                        Minh họa
                       </text>
                     </svg>
                     <ul className="min-w-0 space-y-1.5">
@@ -573,8 +571,8 @@ function LicenseMgmtHeroArt() {
                 <div className="rounded-xl border border-slate-200/80 bg-white p-2.5 sm:p-3">
                   <div className="mb-2 flex items-center justify-between gap-2">
                     <p className={`${BADGE_CLASS} font-semibold text-slate-500`}>Cảnh báo</p>
-                    <span className="rounded-full bg-amber-50 px-1.5 py-0.5 text-[9px] font-bold text-amber-700">
-                      3 mới
+                    <span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-[9px] font-bold text-slate-600">
+                      Minh họa
                     </span>
                   </div>
                   <ul className="space-y-1.5">
@@ -619,8 +617,8 @@ function LicenseMgmtHeroArt() {
             <Bell size={15} strokeWidth={1.9} />
           </span>
           <div className="min-w-0">
-            <p className={`${BADGE_CLASS} font-semibold text-navy`}>27 sắp hết hạn</p>
-            <p className="text-[10px] text-muted">Nhắc trước 30 ngày</p>
+            <p className={`${BADGE_CLASS} font-semibold text-navy`}>Nhắc sắp hết hạn</p>
+            <p className="text-[10px] text-muted">Minh họa — không phải số liệu thật</p>
           </div>
         </div>
 
@@ -634,9 +632,9 @@ function LicenseMgmtHeroArt() {
             <Lock size={16} strokeWidth={1.9} />
           </span>
           <div className="min-w-0">
-            <p className={`${BADGE_CLASS} font-semibold text-navy`}>An toàn & bảo mật</p>
+            <p className={`${BADGE_CLASS} font-semibold text-navy`}>Bảo vệ tài khoản</p>
             <p className="mt-0.5 text-[11px] leading-snug text-muted">
-              Dữ liệu license được mã hoá và bảo vệ tuyệt đối.
+              Dữ liệu license được bảo vệ theo chính sách bảo mật KEYON.
             </p>
           </div>
         </div>

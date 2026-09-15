@@ -7,16 +7,16 @@ import { SECTION_PAD } from "./shared";
 
 const BENEFITS = [
   {
-    title: "Hạn chế gián đoạn",
-    body: "Biết trước những subscription cần được xem xét.",
+    title: "Biết trước mốc cần xem xét",
+    body: "Thấy subscription sắp đến hạn trước khi phải xử lý gấp.",
   },
   {
     title: "Dễ kiểm soát",
-    body: "Thông tin được tổ chức tập trung và rõ ràng.",
+    body: "Thông tin được tổ chức tập trung và rõ ràng trên KEYON.",
   },
   {
     title: "Ra quyết định đúng lúc",
-    body: "Có thời gian đánh giá nhu cầu trước khi tiếp tục.",
+    body: "Có thời gian đánh giá nhu cầu trước khi tiếp tục hoặc báo giá.",
   },
   {
     title: "Giảm công việc thủ công",
@@ -35,8 +35,8 @@ export function SubscriptionBenefits() {
               Chủ động hơn trước mỗi kỳ gia hạn
             </h2>
             <p className={`mt-3 max-w-md ${SECTION_LEAD_CLASS}`}>
-              Subscription operations giúp doanh nghiệp chuẩn bị trước — thay vì xử lý khi đã sát
-              hạn.
+              Theo dõi subscription trên KEYON giúp doanh nghiệp chuẩn bị trước — thay vì xử lý
+              khi đã sát hạn.
             </p>
           </div>
           <ul className="space-y-5 lg:col-span-7">

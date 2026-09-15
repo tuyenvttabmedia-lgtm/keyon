@@ -7,7 +7,7 @@ export function HowItWorksSection({ data }: { data: HomeContent["howItWorks"] })
 
   const subtitle =
     data.subtitle ??
-    "Chỉ với 3 bước đơn giản để sở hữu license chính hãng và kích hoạt nhanh chóng.";
+    "Ba bước: chọn gói → thanh toán → nhận deliverable trong Tài khoản.";
 
   return (
     <section id="how-it-works" className="scroll-mt-20 bg-white py-8 md:py-10 lg:py-12">

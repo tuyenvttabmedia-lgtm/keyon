@@ -75,18 +75,18 @@ const ICON_SM = { size: 18, strokeWidth: 1.85, "aria-hidden": true as const };
 
 const HERO_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
-    title: "Bảo vệ nhiều lớp",
-    body: "Endpoint, email, dữ liệu và danh tính trên một hướng giải pháp.",
+    title: "Gói bảo mật trên catalog",
+    body: "Endpoint, internet security và các lớp bảo vệ theo từng SKU vendor.",
     Icon: ShieldCheck,
   },
   {
-    title: "Cập nhật liên tục",
-    body: "Định nghĩa mối đe dọa và bản vá theo chu kỳ vendor.",
+    title: "Cập nhật theo vendor",
+    body: "Định nghĩa mối đe dọa và bản vá theo chu kỳ nhà cung cấp phần mềm.",
     Icon: Zap,
   },
   {
-    title: "Dễ triển khai",
-    body: "Mua trên KEYON — nhận license rõ ràng, hỗ trợ tiếng Việt.",
+    title: "Mua & kích hoạt trên KEYON",
+    body: "Nhận license rõ ràng sau thanh toán — hỗ trợ tiếng Việt.",
     Icon: Rocket,
   },
 ];
@@ -98,12 +98,12 @@ const TRUST_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
     Icon: BadgeCheck,
   },
   {
-    title: "Bảo vệ theo lớp",
-    body: "Endpoint, email, dữ liệu và danh tính theo từng gói.",
+    title: "Tính năng theo gói",
+    body: "Endpoint, email, dữ liệu… thuộc sản phẩm vendor — xem trang SKU.",
     Icon: Shield,
   },
   {
-    title: "Triển khai trên KEYON",
+    title: "Bàn giao trên KEYON",
     body: "Nhận deliverable sau thanh toán — hỗ trợ tiếng Việt.",
     Icon: Monitor,
   },
@@ -117,27 +117,27 @@ const TRUST_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
 const PILLARS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Bảo vệ thiết bị",
-    body: "Antivirus / endpoint cho PC và máy trạm — chống malware, ransomware.",
+    body: "Gói antivirus / endpoint — tính năng chống malware theo sản phẩm vendor.",
     Icon: Monitor,
   },
   {
     title: "Bảo vệ email",
-    body: "Ngăn phishing, spam và đính kèm độc hại trước khi đến hộp thư.",
+    body: "Tùy gói: ngăn phishing, spam và đính kèm độc hại (xem mô tả SKU).",
     Icon: Mail,
   },
   {
     title: "Bảo vệ dữ liệu",
-    body: "Mã hóa, kiểm soát truy cập và giảm rủi ro rò rỉ thông tin.",
+    body: "Tùy gói: mã hóa, kiểm soát truy cập theo điều kiện phần mềm.",
     Icon: Cloud,
   },
   {
     title: "Bảo vệ danh tính",
-    body: "Xác thực, kiểm soát tài khoản và giảm chiếm quyền đăng nhập.",
+    body: "Tùy gói: xác thực và kiểm soát tài khoản — KEYON không vận hành IdP thuê ngoài.",
     Icon: Fingerprint,
   },
   {
     title: "Bảo vệ mạng",
-    body: "Tường lửa, lọc web và giám sát lưu lượng theo từng gói.",
+    body: "Tùy gói: tường lửa / lọc web theo sản phẩm — không phải SOC KEYON.",
     Icon: Network,
   },
 ];
@@ -227,8 +227,9 @@ export function SecuritySolutionLanding({ featured }: Props) {
                 Bảo vệ những gì quan trọng nhất
               </h1>
               <p className={`mt-4 max-w-xl ${PAGE_LEAD_CLASS}`}>
-                Giải pháp bảo mật toàn diện giúp cá nhân và doanh nghiệp chống lại
-                mối đe dọa số — endpoint, email, dữ liệu và danh tính.
+                Gói bảo mật endpoint / internet security chính hãng trên KEYON — mua, nhận
+                license và kích hoạt theo hướng dẫn. KEYON không vận hành SOC hay giám sát
+                bảo mật thuê ngoài.
               </p>
 
               <ul className="mt-6 space-y-3.5">
@@ -260,7 +261,7 @@ export function SecuritySolutionLanding({ featured }: Props) {
                   className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
                   <Headphones {...ICON_SM} />
-                  Tư vấn miễn phí
+                  Gửi yêu cầu tư vấn
                 </Link>
               </div>
             </div>
@@ -299,7 +300,7 @@ export function SecuritySolutionLanding({ featured }: Props) {
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>
-              Bảo vệ toàn diện trước mọi mối đe dọa
+              Các lớp bảo vệ theo gói vendor trên KEYON
             </h2>
             <div className="mx-auto mt-2.5 h-1 w-14 rounded-full bg-accent" aria-hidden />
           </header>
@@ -445,7 +446,7 @@ export function SecuritySolutionLanding({ featured }: Props) {
       <section className="pb-8 md:pb-9">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
-            <h2 className={SECTION_TITLE_CLASS}>4 bước đơn giản để được bảo vệ</h2>
+            <h2 className={SECTION_TITLE_CLASS}>4 bước mua và kích hoạt gói bảo mật</h2>
             <div className="mx-auto mt-2.5 h-1 w-14 rounded-full bg-accent" aria-hidden />
           </header>
           <ol className="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-3">
@@ -482,7 +483,7 @@ export function SecuritySolutionLanding({ featured }: Props) {
         title="Chưa biết giải pháp nào phù hợp?"
         subtitle="Đội ngũ KEYON hỗ trợ chọn gói bảo mật theo thiết bị và ngân sách."
         primaryHref="/contact/quote"
-        primaryLabel="Liên hệ tư vấn miễn phí →"
+        primaryLabel="Gửi yêu cầu tư vấn →"
         secondaryHref="/products?cat=security"
         secondaryLabel="Xem sản phẩm bảo mật"
       />

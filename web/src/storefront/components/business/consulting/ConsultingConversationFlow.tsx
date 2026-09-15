@@ -31,8 +31,8 @@ const STEPS = [
   },
   {
     who: "KEYON",
-    title: "Hỗ trợ mua & triển khai",
-    body: "Khi đã chọn sản phẩm: Mua ngay → Checkout — không dùng giỏ hàng.",
+    title: "Hỗ trợ mua khi đã chọn",
+    body: "Khi đã chọn sản phẩm: Mua ngay → Checkout — không dùng giỏ hàng. Cần bàn giao sau mua → /business/implementation.",
   },
 ] as const;
 

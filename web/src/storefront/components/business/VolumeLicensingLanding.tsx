@@ -83,7 +83,7 @@ const VOLUMES: {
     id: "100",
     name: "Doanh nghiệp lớn",
     usersLabel: "100 người dùng",
-    body: "Quản lý tập trung, triển khai nhanh",
+    body: "Quản lý trên Tài khoản KEYON sau khi mua",
     people: 5,
     cta: "quote",
   },
@@ -155,13 +155,13 @@ const PROCESS: { title: string; body: string; Icon: LucideIcon }[] = [
     Icon: FileText,
   },
   {
-    title: "Thanh toán & triển khai",
+    title: "Thanh toán & bàn giao",
     body: "Thanh toán theo thỏa thuận, cấp license và hỗ trợ kích hoạt.",
     Icon: Rocket,
   },
   {
     title: "Hỗ trợ sau mua",
-    body: "Đồng hành gia hạn, mở rộng quy mô và hỗ trợ vận hành.",
+    body: "Đồng hành gia hạn, mở rộng seat và hỗ trợ kích hoạt khi cần.",
     Icon: Headphones,
   },
 ];
@@ -208,7 +208,7 @@ export function VolumeLicensingLanding() {
                 Bản quyền số lượng lớn
               </p>
               <h1 className={`mt-3 max-w-[18ch] ${HERO_TITLE_CLASS}`}>
-                Bản quyền phù hợp cho mọi quy mô doanh nghiệp
+                Báo giá bản quyền theo quy mô người dùng của tổ chức
               </h1>
               <p className={`mt-4 max-w-[520px] ${PAGE_LEAD_CLASS}`}>
                 Phù hợp 5 / 10 / 50 / 100+ người dùng — nhận tư vấn và báo giá theo nhu cầu.
@@ -429,7 +429,7 @@ export function VolumeLicensingLanding() {
                 href={quoteHref(volume)}
                 className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
               >
-                Tư vấn miễn phí →
+                Gửi yêu cầu tư vấn →
               </Link>
               <Link
                 href="/contact/quote"

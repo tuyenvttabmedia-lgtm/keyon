@@ -61,7 +61,7 @@ export const SHOP_COLLECTIONS: NavLink[] = [
   {
     label: "Cloud & Hạ tầng",
     href: "/products?cat=cloud",
-    description: "Server, cloud, Azure",
+    description: "Gói cloud / server trên catalog",
   },
   {
     label: "Bảo mật",
@@ -125,28 +125,28 @@ export const SOLUTION_TOPICS: {
     id: "cloud",
     label: "Cloud & Hạ tầng",
     href: "/solutions/cloud",
-    description: "Xây dựng và vận hành cloud, server và workload",
+    description: "Gói cloud / hạ tầng trên catalog — tư vấn chọn SKU",
     art: "cloud",
   },
   {
     id: "security",
     label: "Bảo mật & Bảo vệ dữ liệu",
     href: "/solutions/security",
-    description: "Bảo vệ endpoint, email và dữ liệu doanh nghiệp",
+    description: "Gói bảo mật endpoint chính hãng trên KEYON",
     art: "shield",
   },
   {
     id: "backup",
     label: "Sao lưu & Khôi phục",
     href: "/solutions/backup",
-    description: "Backup, disaster recovery",
+    description: "License backup trên catalog — không dịch vụ DR thuê ngoài",
     art: "backup",
   },
   {
     id: "license-management",
     label: "Quản lý phần mềm & bản quyền",
     href: "/solutions/license-management",
-    description: "Theo dõi tập trung license, gia hạn và tài sản số",
+    description: "Theo dõi license đã mua, hạn dùng và gia hạn",
     art: "stack",
   },
   {

@@ -108,7 +108,7 @@ const SUPPORT_STEPS = [
   "Tiếp nhận và phân tích nhu cầu",
   "Đề xuất phương án cấp phép phù hợp",
   "Gửi báo giá chi tiết",
-  "Hỗ trợ triển khai sau khi chốt",
+  "Hỗ trợ kích hoạt / bàn giao khi bạn yêu cầu",
 ] as const;
 
 const IMPLEMENTATION_STEPS = [
@@ -156,7 +156,7 @@ const PROCESS = [
   { title: "Tiếp nhận & phân tích", body: "KEYON rà soát quy mô và sản phẩm quan tâm." },
   { title: "Tư vấn giải pháp", body: "Đề xuất hình thức cấp phép phù hợp." },
   { title: "Gửi báo giá", body: "Báo giá rõ ràng trước khi quyết định." },
-  { title: "Hỗ trợ triển khai", body: "Đồng hành khi kích hoạt và vận hành." },
+  { title: "Hỗ trợ kích hoạt", body: "Đồng hành kích hoạt và mở license trong Tài khoản." },
 ] as const;
 
 function mapEstimatedUsers(raw?: string): {
@@ -974,7 +974,7 @@ export function QuoteRequestLanding({
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Quy trình nhận báo giá tại KEYON</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Từ gửi yêu cầu đến hỗ trợ triển khai — rõ ràng từng bước.
+              Từ gửi yêu cầu đến hỗ trợ kích hoạt — rõ ràng từng bước.
             </p>
           </header>
           <div className="relative mt-10">

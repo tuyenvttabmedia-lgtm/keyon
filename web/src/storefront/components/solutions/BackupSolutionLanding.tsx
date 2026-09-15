@@ -76,18 +76,18 @@ const ICON_SM = { size: 18, strokeWidth: 1.85, "aria-hidden": true as const };
 
 const HERO_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
-    title: "Sao lưu tự động",
-    body: "Không bỏ sót dữ liệu quan trọng.",
+    title: "License phần mềm backup",
+    body: "Mua gói chính hãng trên KEYON — kích hoạt trên máy / hạ tầng của bạn.",
     Icon: CloudUpload,
   },
   {
-    title: "An toàn & Mã hóa",
-    body: "Bảo mật nhiều lớp, mã hóa đầu cuối.",
+    title: "Theo điều kiện vendor",
+    body: "Mã hóa, lịch sao lưu và khôi phục thuộc sản phẩm bạn cài.",
     Icon: Lock,
   },
   {
-    title: "Khôi phục nhanh chóng",
-    body: "Phục hồi dữ liệu chỉ trong vài phút.",
+    title: "Hỗ trợ chọn gói",
+    body: "Tư vấn tiếng Việt khi cần chọn endpoint, server hoặc SaaS backup.",
     Icon: RefreshCw,
   },
 ];
@@ -95,27 +95,27 @@ const HERO_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
 const DATA_PILLARS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Thiết bị",
-    body: "PC, laptop và máy trạm — sao lưu file hoặc image hệ thống.",
+    body: "Gói endpoint cho PC / laptop — sao lưu file hoặc image theo phần mềm vendor.",
     Icon: Laptop,
   },
   {
     title: "Hệ thống",
-    body: "OS, ứng dụng và cấu hình — sẵn sàng khôi phục khi sự cố.",
+    body: "Gói server / máy trạm — khôi phục theo khả năng của sản phẩm đã mua.",
     Icon: Server,
   },
   {
     title: "Dữ liệu quan trọng",
-    body: "Tài liệu, ảnh, database và file nghiệp vụ cần bảo vệ.",
+    body: "Bảo vệ tài liệu, ảnh, database trên hạ tầng do bạn hoặc IT quản lý.",
     Icon: FolderOpen,
   },
   {
     title: "Ứng dụng & SaaS",
-    body: "Microsoft 365, Google Workspace và dịch vụ cloud phổ biến.",
+    body: "Gói backup Microsoft 365 / Workspace (nếu có trên catalog).",
     Icon: AppWindow,
   },
   {
     title: "Dữ liệu đám mây",
-    body: "Sao lưu dữ liệu trên cloud — giảm rủi ro mất mát từ nhà cung cấp.",
+    body: "License backup dữ liệu cloud — KEYON không lưu bản sao dữ liệu của bạn.",
     Icon: Cloud,
   },
 ];
@@ -125,14 +125,14 @@ const TABS: { id: BackupTabId; label: string }[] = [
   { id: "server", label: "Server Backup" },
   { id: "cloud", label: "Cloud Backup" },
   { id: "saas", label: "SaaS Backup" },
-  { id: "dr", label: "Disaster Recovery" },
+  { id: "dr", label: "Gói liên quan DR" },
 ];
 
 const TRUST_STRIP: { title: string; Icon: LucideIcon }[] = [
-  { title: "Kích hoạt nhanh", Icon: Zap },
+  { title: "Kích hoạt theo gói", Icon: Zap },
   { title: "Thanh toán an toàn", Icon: Lock },
   { title: "Hỗ trợ tiếng Việt", Icon: Headphones },
-  { title: "Bảo hành & cập nhật", Icon: ShieldCheck },
+  { title: "Điều khoản theo vendor", Icon: ShieldCheck },
 ];
 
 const FLOW: { title: string; body: string; Icon: LucideIcon; highlight?: boolean }[] = [
@@ -142,24 +142,24 @@ const FLOW: { title: string; body: string; Icon: LucideIcon; highlight?: boolean
     Icon: AlertTriangle,
   },
   {
-    title: "Dữ liệu đã được sao lưu",
-    body: "Bản sao lưu an toàn sẵn sàng trên KEYON.",
+    title: "Bạn đã có bản sao",
+    body: "Bản sao nằm trên hạ tầng / cloud do phần mềm vendor quản lý — không trên KEYON.",
     Icon: CloudUpload,
   },
   {
-    title: "Khôi phục nhanh chóng",
-    body: "Chọn điểm khôi phục và phục hồi chỉ trong vài phút.",
+    title: "Khôi phục trong phần mềm",
+    body: "Chọn điểm khôi phục trong sản phẩm đã kích hoạt — thời gian phụ thuộc dung lượng và hạ tầng.",
     Icon: History,
     highlight: true,
   },
   {
     title: "Dữ liệu trở lại bình thường",
-    body: "File và hệ thống sẵn sàng sử dụng lại.",
+    body: "File và hệ thống sẵn sàng sử dụng lại sau khi restore xong.",
     Icon: Check,
   },
   {
-    title: "An tâm tiếp tục",
-    body: "Dữ liệu luôn được bảo vệ liên tục.",
+    title: "Tiếp tục lịch sao lưu",
+    body: "Lịch và chính sách do bạn / IT cấu hình trên sản phẩm.",
     Icon: ShieldCheck,
   },
 ];
@@ -206,8 +206,8 @@ export function BackupSolutionLanding({ featured }: Props) {
                 <span className="text-accent">Luôn có đường quay trở lại.</span>
               </h1>
               <p className={`mt-3 max-w-[42ch] ${PAGE_LEAD_CLASS}`}>
-                Giải pháp sao lưu tự động, an toàn — giúp cá nhân và doanh nghiệp
-                khôi phục nhanh khi sự cố, ransomware hoặc mất thiết bị.
+                License / gói backup (Acronis, …) trên KEYON — mua, nhận deliverable và kích
+                hoạt phần mềm. KEYON không lưu bản sao dữ liệu hay vận hành DR thuê ngoài.
               </p>
 
               <ul className="mt-5 grid gap-3 sm:grid-cols-3 sm:gap-2.5">
@@ -232,14 +232,14 @@ export function BackupSolutionLanding({ featured }: Props) {
                   href="/products?q=backup"
                   className={`inline-flex h-11 items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
-                  Khám phá giải pháp →
+                  Xem sản phẩm backup →
                 </Link>
                 <Link
                   href="/contact/quote"
                   className={`inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-white px-5 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
                   <Headphones {...ICON_SM} />
-                  Tư vấn miễn phí
+                  Gửi yêu cầu tư vấn
                 </Link>
               </div>
             </div>
@@ -447,7 +447,7 @@ export function BackupSolutionLanding({ featured }: Props) {
 
       <SolutionFinalCta
         title="Đừng để mất dữ liệu mới bắt đầu sao lưu."
-        subtitle="Chọn gói backup phù hợp hôm nay — kích hoạt nhanh, khôi phục khi cần."
+        subtitle="Chọn gói backup trên catalog — kích hoạt phần mềm trên hạ tầng của bạn."
         primaryHref="/contact/quote"
         primaryLabel="Liên hệ tư vấn →"
         secondaryHref="/products?q=backup"

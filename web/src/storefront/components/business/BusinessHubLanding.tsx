@@ -61,7 +61,7 @@ const BIZ_CARDS: BizCard[] = [
   {
     id: "volume",
     title: "Mua bản quyền số lượng lớn",
-    body: "Phù hợp đội nhóm và doanh nghiệp — báo giá theo quy mô, triển khai tập trung.",
+    body: "Phù hợp đội nhóm và doanh nghiệp — báo giá theo quy mô, bàn giao tập trung.",
     href: "/business/volume-licensing",
     cta: "Tìm hiểu thêm",
     features: ["Volume / multi-seat", "Báo giá theo nhu cầu", "Gắn quản lý trên KEYON"],
@@ -71,10 +71,10 @@ const BIZ_CARDS: BizCard[] = [
   {
     id: "subscriptions",
     title: "Subscription & Gia hạn",
-    body: "Theo dõi chu kỳ subscription DN, nhắc gia hạn và hỗ trợ renew theo hợp đồng.",
+    body: "Theo dõi chu kỳ subscription, nhắc gia hạn; renew qua đội kinh doanh / báo giá.",
     href: "/business/subscriptions",
     cta: "Tìm hiểu thêm",
-    features: ["Theo dõi chu kỳ", "Nhắc gia hạn", "Hỗ trợ renew managed"],
+    features: ["Theo dõi chu kỳ", "Nhắc gia hạn", "Hỗ trợ renew"],
     Icon: RefreshCw,
     tone: "bg-violet-600 text-white",
   },
@@ -111,10 +111,10 @@ const BIZ_CARDS: BizCard[] = [
   {
     id: "sales",
     title: "Liên hệ kinh doanh",
-    body: "Đội ngũ B2B sẵn sàng tư vấn, báo giá và đồng hành triển khai dài hạn.",
+    body: "Đội kinh doanh tiếp nhận báo giá và phối hợp bàn giao khi cần.",
     href: "/contact/quote",
     cta: "Liên hệ ngay",
-    features: ["Tư vấn B2B", "Báo giá nhanh", "Đồng hành dài hạn"],
+    features: ["Tư vấn B2B", "Báo giá theo nhu cầu", "Hỗ trợ sau mua"],
     Icon: Headphones,
     tone: "bg-emerald-600 text-white",
   },
@@ -122,23 +122,23 @@ const BIZ_CARDS: BizCard[] = [
 
 const HERO_TRUST = [
   {
-    title: "Đối tác chính hãng",
-    body: "100% bản quyền hợp pháp",
+    title: "Bản quyền hợp pháp",
+    body: "Theo gói trên catalog — loại nhận rõ",
     Icon: BadgeCheck,
   },
   {
-    title: "Triển khai nhanh",
-    body: "Kích hoạt & giao nhận rõ ràng",
+    title: "Bàn giao rõ ràng",
+    body: "Kích hoạt & giao nhận theo từng đơn",
     Icon: Rocket,
   },
   {
-    title: "Tối ưu chi phí",
-    body: "Đúng gói, đúng quy mô",
+    title: "Đúng quy mô",
+    body: "Chọn gói theo số người dùng thực tế",
     Icon: Wallet,
   },
   {
-    title: "Hỗ trợ chuyên sâu",
-    body: "Đội ngũ tiếng Việt",
+    title: "Hỗ trợ tiếng Việt",
+    body: "Kinh doanh & ticket sau mua",
     Icon: Headphones,
   },
 ] as const;
@@ -146,7 +146,7 @@ const HERO_TRUST = [
 const BENEFITS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Tuân thủ bản quyền",
-    body: "Đảm bảo 100% bản quyền hợp pháp, an tâm sử dụng lâu dài.",
+    body: "Cung cấp bản quyền hợp pháp theo sản phẩm đã chốt trên KEYON.",
     Icon: ShoppingCart,
   },
   {
@@ -156,7 +156,7 @@ const BENEFITS: { title: string; body: string; Icon: LucideIcon }[] = [
   },
   {
     title: "Quản lý dễ dàng",
-    body: "Tập trung, minh bạch và kiểm soát mọi license.",
+    body: "Theo dõi license đã mua trên Tài khoản KEYON.",
     Icon: LayoutGrid,
   },
   {
@@ -179,17 +179,17 @@ const PROCESS: { title: string; body: string; Icon: LucideIcon }[] = [
   },
   {
     title: "Báo giá & chốt",
-    body: "Báo giá minh bạch, điều khoản rõ ràng trước khi triển khai.",
+    body: "Báo giá minh bạch, điều khoản rõ ràng trước khi mua / bàn giao.",
     Icon: FileText,
   },
   {
-    title: "Triển khai",
-    body: "Cấp license, kích hoạt và hướng dẫn vận hành cho đội IT.",
+    title: "Bàn giao",
+    body: "Cấp license, kích hoạt và checklist cho đội IT khi cần.",
     Icon: Rocket,
   },
   {
-    title: "Đồng hành",
-    body: "Gia hạn, hỗ trợ và tối ưu chi phí theo chu kỳ sử dụng.",
+    title: "Gia hạn & hỗ trợ",
+    body: "Nhắc hạn, renew và hỗ trợ sau mua theo chu kỳ sử dụng.",
     Icon: Headphones,
   },
 ];
@@ -250,22 +250,22 @@ export function BusinessHubLanding() {
               <h1
                 className={`mt-3 max-w-[18ch] ${HERO_TITLE_CLASS} !text-white`}
               >
-                Nền tảng bản quyền dành cho{" "}
+                Mua, bàn giao và quản lý bản quyền số cho{" "}
                 <span className="bg-gradient-to-r from-accent to-teal-100 bg-clip-text text-transparent">
-                  doanh nghiệp
+                  tổ chức
                 </span>{" "}
-                hiện đại
+                trên KEYON
               </h1>
               <p className={`mt-4 max-w-[520px] ${PAGE_LEAD_CLASS} !text-slate-300`}>
-                Licensing linh hoạt, subscription và tối ưu chi phí — KEYON đồng hành
-                tổ chức mua, triển khai và quản lý bản quyền trên một nền tảng.
+                KEYON giúp tổ chức mua theo quy mô, nhận bàn giao, theo dõi hạn và gửi yêu cầu
+                gia hạn / báo giá — không phải MSP vận hành hạ tầng thuê ngoài.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <Link
                   href="/contact/quote"
                   className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
-                  Tư vấn giải pháp →
+                  Gửi yêu cầu tư vấn →
                 </Link>
                 <Link
                   href="/contact/quote"
@@ -434,7 +434,7 @@ export function BusinessHubLanding() {
             <div className="min-w-0 max-w-xl">
               <h2 className={SECTION_TITLE_CLASS}>Sẵn sàng bắt đầu?</h2>
               <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>
-                Nhận tư vấn miễn phí về bản quyền, subscription và quản lý license cho doanh
+                Gửi yêu cầu tư vấn về bản quyền, subscription và quản lý license cho doanh
                 nghiệp của bạn.
               </p>
             </div>
@@ -443,7 +443,7 @@ export function BusinessHubLanding() {
                 href="/contact/quote"
                 className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
               >
-                Tư vấn miễn phí →
+                Gửi yêu cầu tư vấn →
               </Link>
               <Link
                 href="/contact"

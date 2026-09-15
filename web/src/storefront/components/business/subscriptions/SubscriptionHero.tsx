@@ -70,7 +70,7 @@ export function SubscriptionHero() {
             </h1>
             <p className={`mt-3.5 ${PAGE_LEAD_CLASS}`}>
               Theo dõi subscription, thời hạn và chu kỳ sử dụng tập trung — giúp doanh nghiệp chủ
-              động kế hoạch gia hạn và hạn chế gián đoạn dịch vụ.
+              động kế hoạch gia hạn trước khi đến hạn.
             </p>
 
             <ul className="mt-5 space-y-2.5">
@@ -92,7 +92,7 @@ export function SubscriptionHero() {
                 href={SUB_CONSULT_HREF}
                 className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
               >
-                Tư vấn giải pháp →
+                Tư vấn subscription →
               </Link>
               <Link
                 href={HOW_IT_WORKS_HREF}

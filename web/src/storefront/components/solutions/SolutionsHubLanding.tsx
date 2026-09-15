@@ -112,10 +112,10 @@ export function SolutionsHubLanding({ introEmbedUrl }: Props) {
                 ]}
               />
               <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
-                Giải pháp toàn diện
+                Hướng chọn gói
               </p>
               <h1 className={`mt-2.5 max-w-3xl ${HERO_TITLE_CLASS}`}>
-                Giải pháp số cho doanh nghiệp hiện đại
+                Chọn hướng giải pháp — rồi mua license trên KEYON
               </h1>
               <p className={`mt-4 max-w-2xl ${PAGE_LEAD_CLASS}`}>
                 Chọn hướng theo việc cần giải quyết — năng suất, hạ tầng, bảo mật,
@@ -201,8 +201,8 @@ export function SolutionsHubLanding({ introEmbedUrl }: Props) {
       </section>
 
       <SolutionFinalCta
-        title="Chọn KEYON làm đối tác công nghệ"
-        subtitle="Tư vấn chọn gói, triển khai bàn giao và hỗ trợ tiếng Việt — không thay thế Order bằng hợp đồng trên landing."
+        title="Cần tư vấn chọn gói hoặc báo giá DN?"
+        subtitle="Tư vấn chọn gói, bàn giao sau mua và hỗ trợ tiếng Việt — không thay Order bằng hợp đồng trên landing."
         primaryHref={QUOTE_HREF}
         primaryLabel={`${QUOTE_LABEL} →`}
         secondaryHref="/business"
