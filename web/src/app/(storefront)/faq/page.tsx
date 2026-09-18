@@ -10,18 +10,26 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 type Props = {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; cat?: string; page?: string }>;
 };
 
 export default async function FaqPage({ searchParams }: Props) {
   const sp = await searchParams;
   const faq = await getFaqForPage();
-  const items = faq.map((f) => ({
-    id: f.id,
-    question: f.question,
-    answer: f.answer,
-    category: f.category,
-  }));
+  const pageNum = Math.max(1, Number.parseInt(sp.page ?? "1", 10) || 1);
 
-  return <FaqSupportView items={items} initialQuery={sp.q?.trim() || ""} />;
+  return (
+    <FaqSupportView
+      categories={faq.categories}
+      items={faq.items.map((f) => ({
+        id: f.id,
+        question: f.question,
+        answer: f.answer,
+        category: f.category,
+      }))}
+      initialQuery={sp.q?.trim() || ""}
+      initialCategory={sp.cat?.trim() || null}
+      initialPage={pageNum}
+    />
+  );
 }

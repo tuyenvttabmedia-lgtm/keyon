@@ -40,7 +40,7 @@ export default async function SupportHubPage() {
   const guides = filterPostsBySection(published, "guides");
 
   const docs: SupportSearchDoc[] = [
-    ...faq.map((f) => ({
+    ...faq.items.map((f) => ({
       id: `faq-${f.id}`,
       kind: "faq" as const,
       title: f.question,
@@ -58,7 +58,7 @@ export default async function SupportHubPage() {
 
   const suggestions = buildSuggestedSearches(docs);
   const channels = resolveSupportChannels(cms);
-  const faqItems = faq.map((f) => ({
+  const faqItems = faq.items.map((f) => ({
     id: f.id,
     question: f.question,
     answer: f.answer,

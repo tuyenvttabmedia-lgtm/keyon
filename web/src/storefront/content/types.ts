@@ -3,8 +3,6 @@
  * Replace fixture with CMS/API later — keep this contract.
  */
 
-import type { FaqCategoryId } from "./faq-categories";
-
 export type NavItem = {
   label: string;
   href: string;
@@ -119,7 +117,7 @@ export type FaqItem = {
   id: string;
   question: string;
   answer: string;
-  category?: FaqCategoryId;
+  category?: string;
 };
 
 export type FooterColumn = {

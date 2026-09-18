@@ -15,11 +15,11 @@ import {
   type CmsBanner,
   type CmsCategories,
   type CmsCategoryIconKey,
-  type CmsFaqItem,
   type CmsFooter,
   type CmsNav,
   type CmsPartners,
 } from "@/server/cms/store";
+import { normalizeFaqDocument } from "@/server/cms/faq";
 import { ProductRatingsService, getProductRatingMap } from "@/server/product-ratings";
 import type { CategoryIconKey, CategoryItem } from "./types";
 import { prisma } from "@/lib/db";
@@ -103,13 +103,16 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
       orderBy: { updatedAt: "desc" },
       take: 40,
     }),
-    readJsonFile<CmsFaqItem[]>("faq.json", defaultCmsFaq),
+    readJsonFile("faq.json", defaultCmsFaq),
     prisma.brand.findMany({
       where: { active: true },
       select: { id: true, name: true, slug: true, logoUrl: true, featured: true, sortOrder: true },
       orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
     }),
   ]);
+
+  const faqDoc = normalizeFaqDocument(faqRaw);
+  const faqItems = faqDoc.items;
 
   const published = posts.filter((p) => p.status === "published").slice(0, 4);
 
@@ -289,7 +292,7 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
     ratingMap,
   );
 
-  const faqHome: FaqItem[] = faqRaw
+  const faqHome: FaqItem[] = faqItems
     .filter((f) => f.showOnHome)
     .slice(0, 6)
     .map((f) => ({
@@ -651,11 +654,19 @@ function toCategoryIcon(key?: CmsCategoryIconKey): CategoryIconKey {
 }
 
 export async function getFaqForPage() {
-  const faq = await readJsonFile<CmsFaqItem[]>("faq.json", defaultCmsFaq);
-  return faq
-    .filter((f) => f.showOnFaqPage)
-    .map((f) => ({
-      ...f,
-      category: f.category ?? ("general" as const),
-    }));
+  const raw = await readJsonFile("faq.json", defaultCmsFaq);
+  const doc = normalizeFaqDocument(raw);
+  return {
+    categories: doc.categories.map((c) => ({
+      id: c.id,
+      label: c.label,
+      description: c.description ?? "",
+    })),
+    items: doc.items
+      .filter((f) => f.showOnFaqPage)
+      .map((f) => ({
+        ...f,
+        category: f.category ?? "general",
+      })),
+  };
 }

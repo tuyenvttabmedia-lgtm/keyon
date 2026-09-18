@@ -231,16 +231,29 @@ export type CmsSolutions = {
   introVideoUrl: string;
 };
 
-export type CmsFaqCategory = "payment" | "delivery" | "account" | "general";
+export type CmsFaqCategoryDef = {
+  /** URL/filter slug — e.g. payment, activation */
+  id: string;
+  label: string;
+  description?: string;
+};
+
+/** @deprecated Use string category slug; kept for gradual typing. */
+export type CmsFaqCategory = string;
 
 export type CmsFaqItem = {
   id: string;
   question: string;
   answer: string;
-  /** Group for FAQ page sidebar — scales when hundreds of questions exist */
-  category: CmsFaqCategory;
+  /** Category slug — must match a CmsFaqCategoryDef.id */
+  category: string;
   showOnHome: boolean;
   showOnFaqPage: boolean;
+};
+
+export type CmsFaqDocument = {
+  categories: CmsFaqCategoryDef[];
+  items: CmsFaqItem[];
 };
 
 export type CmsFooterCompanyInfo = {
@@ -376,7 +389,30 @@ export const defaultCmsSolutions: CmsSolutions = {
   introVideoUrl: "",
 };
 
-export const defaultCmsFaq: CmsFaqItem[] = [
+export const defaultCmsFaqCategories: CmsFaqCategoryDef[] = [
+  {
+    id: "payment",
+    label: "Thanh toán",
+    description: "Chuyển khoản, xác nhận tiền",
+  },
+  {
+    id: "delivery",
+    label: "Nhận hàng",
+    description: "Giao key / tài khoản / kích hoạt",
+  },
+  {
+    id: "account",
+    label: "Tài khoản",
+    description: "Đăng nhập, đơn hàng, tài sản",
+  },
+  {
+    id: "general",
+    label: "Chung",
+    description: "KEYON bán gì, chính sách",
+  },
+];
+
+export const defaultCmsFaqItems: CmsFaqItem[] = [
   {
     id: "q1",
     question: "KEYON bán gì?",
@@ -450,6 +486,12 @@ export const defaultCmsFaq: CmsFaqItem[] = [
     showOnFaqPage: true,
   },
 ];
+
+/** Default FAQ document (categories + items). */
+export const defaultCmsFaq: CmsFaqDocument = {
+  categories: defaultCmsFaqCategories,
+  items: defaultCmsFaqItems,
+};
 
 export const defaultCmsFooterCompanyInfo: CmsFooterCompanyInfo = {
   companyName: "",

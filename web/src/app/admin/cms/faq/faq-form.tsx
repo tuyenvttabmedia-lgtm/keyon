@@ -1,37 +1,52 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { CmsFaqCategory, CmsFaqItem } from "@/server/cms/types";
-import { FAQ_CATEGORIES } from "@/storefront/content/faq-categories";
+import type {
+  CmsFaqCategoryDef,
+  CmsFaqDocument,
+  CmsFaqItem,
+} from "@/server/cms/types";
 
 const PAGE_SIZE = 20;
 
 type VisibilityFilter = "all" | "home" | "faq" | "hidden";
 
-function categoryLabel(id: CmsFaqCategory) {
-  return FAQ_CATEGORIES.find((c) => c.id === id)?.label ?? id;
+function slugify(raw: string): string {
+  const s = raw
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .replace(/đ/g, "d")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 48);
+  return s || "general";
 }
 
-function emptyItem(): CmsFaqItem {
+function emptyItem(defaultCategory: string): CmsFaqItem {
   return {
     id: `q_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
     question: "",
     answer: "",
-    category: "general",
+    category: defaultCategory,
     showOnHome: false,
     showOnFaqPage: true,
   };
 }
 
-export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
+export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
+  const [categories, setCategories] = useState<CmsFaqCategoryDef[]>(
+    () => initial.categories,
+  );
   const [items, setItems] = useState<CmsFaqItem[]>(() =>
-    initial.map((item) => ({
+    initial.items.map((item) => ({
       ...item,
-      category: item.category ?? ("general" as CmsFaqCategory),
+      category: item.category || "general",
     })),
   );
   const [q, setQ] = useState("");
-  const [category, setCategory] = useState<"" | CmsFaqCategory>("");
+  const [category, setCategory] = useState("");
   const [visibility, setVisibility] = useState<VisibilityFilter>("all");
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -39,6 +54,10 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [dirty, setDirty] = useState(false);
+
+  const [newCatLabel, setNewCatLabel] = useState("");
+  const [newCatDesc, setNewCatDesc] = useState("");
+  const [newCatSlug, setNewCatSlug] = useState("");
 
   useEffect(() => {
     if (!editingId) return;
@@ -49,11 +68,23 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [editingId]);
 
-  function commit(next: CmsFaqItem[]) {
-    setItems(next);
+  function markDirty() {
     setDirty(true);
     setMsg(null);
   }
+
+  function commitItems(next: CmsFaqItem[]) {
+    setItems(next);
+    markDirty();
+  }
+
+  function commitCategories(next: CmsFaqCategoryDef[]) {
+    setCategories(next);
+    markDirty();
+  }
+
+  const categoryLabel = (id: string) =>
+    categories.find((c) => c.id === id)?.label ?? id;
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -85,7 +116,7 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
   );
 
   const editing = editingId
-    ? items.find((i) => i.id === editingId) ?? null
+    ? (items.find((i) => i.id === editingId) ?? null)
     : null;
   const editingIndex = editing
     ? items.findIndex((i) => i.id === editing.id)
@@ -97,12 +128,13 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
       home: items.filter((i) => i.showOnHome).length,
       faq: items.filter((i) => i.showOnFaqPage).length,
       hidden: items.filter((i) => !i.showOnHome && !i.showOnFaqPage).length,
+      cats: categories.length,
     }),
-    [items],
+    [items, categories],
   );
 
   function patchItem(id: string, patch: Partial<CmsFaqItem>) {
-    commit(items.map((i) => (i.id === id ? { ...i, ...patch } : i)));
+    commitItems(items.map((i) => (i.id === id ? { ...i, ...patch } : i)));
   }
 
   function moveItem(id: string, dir: -1 | 1) {
@@ -112,12 +144,22 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
     const next = [...items];
     const [row] = next.splice(idx, 1);
     next.splice(target, 0, row!);
-    commit(next);
+    commitItems(next);
+  }
+
+  function moveCategory(id: string, dir: -1 | 1) {
+    const idx = categories.findIndex((c) => c.id === id);
+    const target = idx + dir;
+    if (idx < 0 || target < 0 || target >= categories.length) return;
+    const next = [...categories];
+    const [row] = next.splice(idx, 1);
+    next.splice(target, 0, row!);
+    commitCategories(next);
   }
 
   function removeItem(id: string) {
     if (!confirm("Xóa câu hỏi này?")) return;
-    commit(items.filter((i) => i.id !== id));
+    commitItems(items.filter((i) => i.id !== id));
     setSelected((prev) => {
       const n = new Set(prev);
       n.delete(id);
@@ -127,15 +169,14 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
   }
 
   function addNew() {
-    const item = emptyItem();
+    const item = emptyItem(categories[0]?.id ?? "general");
     item.question = "Câu hỏi mới";
-    commit([item, ...items]);
+    commitItems([item, ...items]);
     setQ("");
     setCategory("");
     setVisibility("all");
     setPage(1);
     setEditingId(item.id);
-    setDirty(true);
   }
 
   function duplicateItem(id: string) {
@@ -150,7 +191,7 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
     const idx = items.findIndex((i) => i.id === id);
     const next = [...items];
     next.splice(idx + 1, 0, copy);
-    commit(next);
+    commitItems(next);
     setEditingId(copy.id);
   }
 
@@ -158,15 +199,13 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
     patch: Partial<Pick<CmsFaqItem, "showOnHome" | "showOnFaqPage" | "category">>,
   ) {
     if (selected.size === 0) return;
-    commit(
-      items.map((i) => (selected.has(i.id) ? { ...i, ...patch } : i)),
-    );
+    commitItems(items.map((i) => (selected.has(i.id) ? { ...i, ...patch } : i)));
   }
 
   function bulkDelete() {
     if (selected.size === 0) return;
     if (!confirm(`Xóa ${selected.size} câu hỏi đã chọn?`)) return;
-    commit(items.filter((i) => !selected.has(i.id)));
+    commitItems(items.filter((i) => !selected.has(i.id)));
     setSelected(new Set());
     if (editingId && selected.has(editingId)) setEditingId(null);
   }
@@ -182,21 +221,91 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
     });
   }
 
+  function addCategory() {
+    const label = newCatLabel.trim();
+    if (!label) {
+      setMsg("Nhập tên danh mục");
+      return;
+    }
+    const id = slugify(newCatSlug.trim() || label);
+    if (categories.some((c) => c.id === id)) {
+      setMsg(`Slug "${id}" đã tồn tại`);
+      return;
+    }
+    commitCategories([
+      ...categories,
+      {
+        id,
+        label,
+        description: newCatDesc.trim() || undefined,
+      },
+    ]);
+    setNewCatLabel("");
+    setNewCatDesc("");
+    setNewCatSlug("");
+    setMsg(`Đã thêm danh mục "${label}" — nhớ Lưu và xuất bản`);
+  }
+
+  function patchCategory(id: string, patch: Partial<CmsFaqCategoryDef>) {
+    commitCategories(
+      categories.map((c) => (c.id === id ? { ...c, ...patch } : c)),
+    );
+  }
+
+  function removeCategory(id: string) {
+    if (id === "general") {
+      setMsg("Không xóa được danh mục Chung (general)");
+      return;
+    }
+    const used = items.filter((i) => i.category === id).length;
+    if (used > 0) {
+      if (
+        !confirm(
+          `Danh mục đang có ${used} câu hỏi. Chuyển chúng sang "Chung" rồi xóa danh mục?`,
+        )
+      ) {
+        return;
+      }
+      commitItems(
+        items.map((i) =>
+          i.category === id ? { ...i, category: "general" } : i,
+        ),
+      );
+    } else if (!confirm("Xóa danh mục này?")) {
+      return;
+    }
+    commitCategories(categories.filter((c) => c.id !== id));
+    if (category === id) setCategory("");
+  }
+
   async function save() {
     setSaving(true);
     setMsg(null);
     try {
-      const payload = items.map((i) => ({
-        ...i,
-        question: i.question.trim(),
-        answer: i.answer.trim(),
-        category: i.category ?? "general",
-      }));
-      const blank = payload.find((i) => !i.question);
+      if (categories.length === 0) {
+        throw new Error("Cần ít nhất một danh mục");
+      }
+      const payload: CmsFaqDocument = {
+        categories: categories.map((c) => ({
+          id: slugify(c.id),
+          label: c.label.trim(),
+          description: c.description?.trim() || undefined,
+        })),
+        items: items.map((i) => ({
+          ...i,
+          question: i.question.trim(),
+          answer: i.answer.trim(),
+          category: slugify(i.category || "general"),
+        })),
+      };
+      const blank = payload.items.find((i) => !i.question);
       if (blank) {
         setEditingId(blank.id);
         throw new Error("Có câu hỏi trống — hãy nhập nội dung hoặc xóa");
       }
+      const blankCat = payload.categories.find((c) => !c.label);
+      if (blankCat) throw new Error("Có danh mục thiếu tên");
+
       const res = await fetch("/api/admin/cms/faq", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -204,9 +313,17 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Lưu thất bại");
-      setItems(payload);
+      if (data.data) {
+        setCategories(data.data.categories);
+        setItems(data.data.items);
+      } else {
+        setCategories(payload.categories);
+        setItems(payload.items);
+      }
       setDirty(false);
-      setMsg(`Đã lưu ${payload.length} câu hỏi`);
+      setMsg(
+        `Đã lưu ${payload.categories.length} danh mục · ${payload.items.length} câu hỏi`,
+      );
     } catch (e) {
       setMsg(e instanceof Error ? e.message : "Lỗi");
     } finally {
@@ -219,6 +336,128 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
 
   return (
     <div className="space-y-4">
+      {/* Categories manager */}
+      <section className="overflow-hidden rounded-2xl border border-border bg-card">
+        <div className="border-b border-border bg-surface/60 px-4 py-3 sm:px-5">
+          <h2 className="text-sm font-semibold text-navy">
+            Danh mục câu hỏi ({stats.cats})
+          </h2>
+          <p className="mt-0.5 text-xs text-muted">
+            Tạo danh mục cho trung tâm trợ giúp — slug dùng trên /faq?cat=…
+          </p>
+        </div>
+        <div className="space-y-3 p-4 sm:p-5">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[560px] text-left text-sm">
+              <thead className="text-xs uppercase tracking-wide text-muted">
+                <tr>
+                  <th className="pb-2 pr-2">Slug</th>
+                  <th className="pb-2 pr-2">Tên</th>
+                  <th className="pb-2 pr-2">Mô tả</th>
+                  <th className="pb-2 pr-2 text-center">Câu hỏi</th>
+                  <th className="pb-2 text-right">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                {categories.map((c, idx) => {
+                  const count = items.filter((i) => i.category === c.id).length;
+                  return (
+                    <tr key={c.id} className="border-t border-border/70">
+                      <td className="py-2 pr-2 align-middle font-mono text-xs text-muted">
+                        {c.id}
+                      </td>
+                      <td className="py-2 pr-2 align-middle">
+                        <input
+                          className="w-full rounded-lg border border-border px-2 py-1.5 text-sm"
+                          value={c.label}
+                          onChange={(e) =>
+                            patchCategory(c.id, { label: e.target.value })
+                          }
+                        />
+                      </td>
+                      <td className="py-2 pr-2 align-middle">
+                        <input
+                          className="w-full rounded-lg border border-border px-2 py-1.5 text-sm"
+                          value={c.description ?? ""}
+                          placeholder="Mô tả ngắn"
+                          onChange={(e) =>
+                            patchCategory(c.id, {
+                              description: e.target.value,
+                            })
+                          }
+                        />
+                      </td>
+                      <td className="py-2 pr-2 text-center align-middle tabular-nums text-xs text-muted">
+                        {count}
+                      </td>
+                      <td className="py-2 text-right align-middle">
+                        <div className="inline-flex gap-1">
+                          <button
+                            type="button"
+                            className="rounded px-1.5 py-1 text-xs text-muted hover:bg-surface disabled:opacity-30"
+                            disabled={idx <= 0}
+                            onClick={() => moveCategory(c.id, -1)}
+                          >
+                            ↑
+                          </button>
+                          <button
+                            type="button"
+                            className="rounded px-1.5 py-1 text-xs text-muted hover:bg-surface disabled:opacity-30"
+                            disabled={idx >= categories.length - 1}
+                            onClick={() => moveCategory(c.id, 1)}
+                          >
+                            ↓
+                          </button>
+                          <button
+                            type="button"
+                            className="rounded px-2 py-1 text-xs text-danger hover:bg-rose-50 disabled:opacity-30"
+                            disabled={c.id === "general"}
+                            onClick={() => removeCategory(c.id)}
+                          >
+                            Xóa
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="grid gap-2 rounded-xl border border-dashed border-border bg-surface/40 p-3 sm:grid-cols-[1fr_1fr_1fr_auto]">
+            <input
+              className="h-10 rounded-lg border border-border px-3 text-sm"
+              placeholder="Tên danh mục (vd. Kích hoạt)"
+              value={newCatLabel}
+              onChange={(e) => {
+                setNewCatLabel(e.target.value);
+                if (!newCatSlug) setNewCatSlug(slugify(e.target.value));
+              }}
+            />
+            <input
+              className="h-10 rounded-lg border border-border px-3 font-mono text-sm"
+              placeholder="Slug (vd. activation)"
+              value={newCatSlug}
+              onChange={(e) => setNewCatSlug(slugify(e.target.value))}
+            />
+            <input
+              className="h-10 rounded-lg border border-border px-3 text-sm"
+              placeholder="Mô tả (tuỳ chọn)"
+              value={newCatDesc}
+              onChange={(e) => setNewCatDesc(e.target.value)}
+            />
+            <button
+              type="button"
+              onClick={addCategory}
+              className="h-10 rounded-lg border border-border bg-white px-4 text-sm font-medium hover:border-accent"
+            >
+              + Thêm danh mục
+            </button>
+          </div>
+        </div>
+      </section>
+
       {/* Sticky toolbar */}
       <div className="sticky top-0 z-20 -mx-1 space-y-3 rounded-2xl border border-border bg-white/95 p-3 shadow-sm backdrop-blur sm:p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -227,16 +466,14 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
               {stats.total} câu
             </span>
             <span className="rounded-full bg-surface px-2.5 py-1">
+              {stats.cats} danh mục
+            </span>
+            <span className="rounded-full bg-surface px-2.5 py-1">
               Home {stats.home}
             </span>
             <span className="rounded-full bg-surface px-2.5 py-1">
               FAQ {stats.faq}
             </span>
-            {stats.hidden > 0 ? (
-              <span className="rounded-full bg-amber-50 px-2.5 py-1 text-amber-800">
-                Ẩn {stats.hidden}
-              </span>
-            ) : null}
             {dirty ? (
               <span className="rounded-full bg-amber-100 px-2.5 py-1 font-medium text-amber-900">
                 Chưa lưu
@@ -276,12 +513,12 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
             className="h-10 w-full rounded-lg border border-border px-3 text-sm"
             value={category}
             onChange={(e) => {
-              setCategory(e.target.value as "" | CmsFaqCategory);
+              setCategory(e.target.value);
               setPage(1);
             }}
           >
             <option value="">Tất cả danh mục</option>
-            {FAQ_CATEGORIES.map((c) => (
+            {categories.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.label}
               </option>
@@ -302,15 +539,12 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
           </select>
           <p className="flex h-10 items-center text-xs text-muted">
             Hiển thị {filtered.length} / {items.length}
-            {filtered.length !== items.length ? " (đã lọc)" : ""}
           </p>
         </div>
 
         {selected.size > 0 ? (
           <div className="flex flex-wrap items-center gap-2 rounded-xl border border-accent/20 bg-accent-soft/60 px-3 py-2 text-sm">
-            <span className="font-medium text-navy">
-              Đã chọn {selected.size}
-            </span>
+            <span className="font-medium text-navy">Đã chọn {selected.size}</span>
             <button
               type="button"
               className="rounded-md border border-border bg-white px-2 py-1 text-xs"
@@ -343,14 +577,14 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
               className="rounded-md border border-border bg-white px-2 py-1 text-xs"
               defaultValue=""
               onChange={(e) => {
-                const v = e.target.value as CmsFaqCategory | "";
+                const v = e.target.value;
                 if (!v) return;
                 bulkSet({ category: v });
                 e.target.value = "";
               }}
             >
               <option value="">Đổi danh mục…</option>
-              {FAQ_CATEGORIES.map((c) => (
+              {categories.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.label}
                 </option>
@@ -376,7 +610,9 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
         {msg ? (
           <p
             className={`text-sm ${
-              msg.startsWith("Đã lưu") ? "text-emerald-700" : "text-danger"
+              msg.startsWith("Đã lưu") || msg.startsWith("Đã thêm")
+                ? "text-emerald-700"
+                : "text-danger"
             }`}
           >
             {msg}
@@ -384,7 +620,6 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
         ) : null}
       </div>
 
-      {/* Compact list */}
       <div className="overflow-hidden rounded-2xl border border-border bg-card">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[720px] text-left text-sm">
@@ -409,10 +644,7 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
             <tbody>
               {pageItems.length === 0 ? (
                 <tr>
-                  <td
-                    colSpan={7}
-                    className="px-4 py-12 text-center text-muted"
-                  >
+                  <td colSpan={7} className="px-4 py-12 text-center text-muted">
                     {items.length === 0
                       ? "Chưa có FAQ — bấm “+ Thêm câu hỏi”."
                       : "Không có kết quả khớp bộ lọc."}
@@ -450,9 +682,7 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
                         <button
                           type="button"
                           className="max-w-[42rem] text-left font-medium text-navy hover:text-accent"
-                          onClick={() =>
-                            setEditingId(active ? null : row.id)
-                          }
+                          onClick={() => setEditingId(active ? null : row.id)}
                         >
                           <span className="line-clamp-2">
                             {row.question || (
@@ -480,11 +710,8 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
                           type="checkbox"
                           checked={row.showOnHome}
                           onChange={(e) =>
-                            patchItem(row.id, {
-                              showOnHome: e.target.checked,
-                            })
+                            patchItem(row.id, { showOnHome: e.target.checked })
                           }
-                          title="Hiện trên Home"
                         />
                       </td>
                       <td className="px-2 py-2.5 text-center align-middle">
@@ -496,15 +723,13 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
                               showOnFaqPage: e.target.checked,
                             })
                           }
-                          title="Hiện trang FAQ"
                         />
                       </td>
                       <td className="px-3 py-2.5 text-right align-middle">
                         <div className="inline-flex items-center gap-1">
                           <button
                             type="button"
-                            className="rounded px-1.5 py-1 text-xs text-muted hover:bg-surface hover:text-navy"
-                            title="Lên"
+                            className="rounded px-1.5 py-1 text-xs text-muted hover:bg-surface"
                             disabled={globalIdx <= 0}
                             onClick={() => moveItem(row.id, -1)}
                           >
@@ -512,8 +737,7 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
                           </button>
                           <button
                             type="button"
-                            className="rounded px-1.5 py-1 text-xs text-muted hover:bg-surface hover:text-navy"
-                            title="Xuống"
+                            className="rounded px-1.5 py-1 text-xs text-muted hover:bg-surface"
                             disabled={globalIdx >= items.length - 1}
                             onClick={() => moveItem(row.id, 1)}
                           >
@@ -563,7 +787,6 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
         ) : null}
       </div>
 
-      {/* Edit drawer */}
       {editing ? (
         <div className="fixed inset-0 z-40 flex justify-end bg-navy/40">
           <button
@@ -597,7 +820,6 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
                   onChange={(e) =>
                     patchItem(editing.id, { question: e.target.value })
                   }
-                  placeholder="Nhập câu hỏi…"
                   autoFocus
                 />
               </label>
@@ -610,7 +832,6 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
                   onChange={(e) =>
                     patchItem(editing.id, { answer: e.target.value })
                   }
-                  placeholder="Nhập câu trả lời…"
                 />
               </label>
               <label className="block text-xs font-medium text-muted">
@@ -619,12 +840,10 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
                   className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm"
                   value={editing.category ?? "general"}
                   onChange={(e) =>
-                    patchItem(editing.id, {
-                      category: e.target.value as CmsFaqCategory,
-                    })
+                    patchItem(editing.id, { category: e.target.value })
                   }
                 >
-                  {FAQ_CATEGORIES.map((c) => (
+                  {categories.map((c) => (
                     <option key={c.id} value={c.id}>
                       {c.label}
                     </option>
@@ -637,9 +856,7 @@ export function FaqForm({ initial }: { initial: CmsFaqItem[] }) {
                     type="checkbox"
                     checked={editing.showOnHome}
                     onChange={(e) =>
-                      patchItem(editing.id, {
-                        showOnHome: e.target.checked,
-                      })
+                      patchItem(editing.id, { showOnHome: e.target.checked })
                     }
                   />
                   Hiện trên Home

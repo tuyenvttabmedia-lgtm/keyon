@@ -38,7 +38,7 @@ import {
   type CmsPolicy,
   type CmsStaticPage,
   type CmsCategories,
-  type CmsFaqItem,
+  type CmsFaqDocument,
   type CmsFooter,
   type CmsHome,
   type CmsNav,
@@ -46,6 +46,11 @@ import {
   type CmsProductRatings,
   type SiteSettings,
 } from "@/server/cms/store";
+import {
+  isFaqCategorySlug,
+  normalizeFaqDocument,
+  slugifyFaqCategory,
+} from "@/server/cms/faq";
 
 const safeInternalHref = z
   .string()
@@ -168,6 +173,10 @@ export async function GET(
     if (key === "settings") {
       const raw = await readJsonFile("settings.json", defaultSettings);
       return NextResponse.json(normalizeSiteSettings(raw));
+    }
+    if (key === "faq") {
+      const raw = await readJsonFile(entry.file, entry.fallback);
+      return NextResponse.json(normalizeFaqDocument(raw));
     }
     return NextResponse.json(await readJsonFile(entry.file, entry.fallback));
   } catch (e) {
@@ -314,20 +323,68 @@ export async function PUT(
     return NextResponse.json({ ok: true, data });
   }
   if (key === "faq") {
-    const data = z
-      .array(
-        z.object({
-          id: z.string(),
-          question: z.string(),
-          answer: z.string(),
-          category: z
-            .enum(["payment", "delivery", "account", "general"])
-            .default("general"),
-          showOnHome: z.boolean(),
-          showOnFaqPage: z.boolean(),
-        }),
-      )
-      .parse(body) as CmsFaqItem[];
+    const categorySchema = z.object({
+      id: z
+        .string()
+        .min(1)
+        .max(48)
+        .refine(isFaqCategorySlug, "Slug danh mục không hợp lệ"),
+      label: z.string().min(1).max(80),
+      description: z.string().max(200).optional(),
+    });
+    const itemSchema = z.object({
+      id: z.string().min(1),
+      question: z.string(),
+      answer: z.string(),
+      category: z.string().min(1).max(48),
+      showOnHome: z.boolean(),
+      showOnFaqPage: z.boolean(),
+    });
+
+    // Accept legacy array or document
+    const parsed = Array.isArray(body)
+      ? normalizeFaqDocument(body)
+      : normalizeFaqDocument(
+          z
+            .object({
+              categories: z.array(categorySchema).min(1),
+              items: z.array(itemSchema),
+            })
+            .parse({
+              ...body,
+              categories: (body?.categories ?? []).map(
+                (c: { id?: string; label?: string; description?: string }) => ({
+                  ...c,
+                  id: slugifyFaqCategory(String(c?.id ?? "")),
+                }),
+              ),
+              items: (body?.items ?? []).map(
+                (i: { category?: string }) => ({
+                  ...i,
+                  category: slugifyFaqCategory(String(i?.category ?? "general")),
+                }),
+              ),
+            }),
+        );
+
+    const catIds = new Set(parsed.categories.map((c) => c.id));
+    for (const item of parsed.items) {
+      if (!catIds.has(item.category)) {
+        throw new AppError(
+          `Câu hỏi "${item.question.slice(0, 40)}" gắn danh mục không tồn tại: ${item.category}`,
+          400,
+        );
+      }
+    }
+    if (!catIds.has("general")) {
+      parsed.categories.push({
+        id: "general",
+        label: "Chung",
+        description: "KEYON bán gì, chính sách",
+      });
+    }
+
+    const data = parsed satisfies CmsFaqDocument;
     await writeJsonFile("faq.json", data);
     return NextResponse.json({ ok: true, data });
   }
