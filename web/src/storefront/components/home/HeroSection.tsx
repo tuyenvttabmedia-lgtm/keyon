@@ -34,10 +34,6 @@ type Props = {
 export function HeroSection({ hero, stats }: Props) {
   if (!hero.visible) return null;
 
-  const titleMain = hero.titleAccent
-    ? hero.title.replace(new RegExp(`\\s*${hero.titleAccent}\\s*$`), "").trim()
-    : hero.title;
-
   const statCards = [stats.cards.total, stats.cards.activated, stats.cards.pending];
 
   return (
@@ -50,7 +46,7 @@ export function HeroSection({ hero, stats }: Props) {
             </span>
           ) : null}
           <h1 className={`mt-4 max-w-[34rem] sm:mt-5 lg:max-w-none ${HERO_TITLE_CLASS}`}>
-            {titleMain}
+            {hero.title}
             {hero.titleAccent ? (
               <>
                 {" "}

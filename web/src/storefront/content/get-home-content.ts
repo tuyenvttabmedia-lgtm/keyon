@@ -42,25 +42,13 @@ import type {
 } from "./types";
 
 /** Legacy CMS strings from pre–go-live marketing — treat as empty so fixture wins. */
-const LEGACY_HOME_HERO_TITLES = new Set(["Nền tảng phân phối bản quyền số"]);
-const LEGACY_HOME_HERO_SUBTITLES = new Set([
-  "Mua, triển khai và quản lý bản quyền phần mềm, cloud và dịch vụ số trên một nền tảng duy nhất. Dành cho cá nhân, đội nhóm và doanh nghiệp.",
-]);
-const LEGACY_HOME_CTA_SUBTITLES = new Set([
-  "KEYON hỗ trợ mua, triển khai và quản lý phần mềm / cloud theo nhu cầu tổ chức — vẫn giữ trải nghiệm mua lẻ rõ ràng cho cá nhân.",
-]);
-const LEGACY_FOOTER_BLURBS = new Set([
-  "Nền tảng phân phối và quản lý bản quyền phần mềm, cloud và dịch vụ số.",
-]);
-
+/** Prefer CMS text; empty → fixture. Do not silently rewrite saved CMS copy. */
 function cmsTextOrFallback(
   value: string | undefined,
-  legacy: Set<string>,
   fallback: string,
 ): string {
   const v = value?.trim() ?? "";
-  if (!v || legacy.has(v)) return fallback;
-  return v;
+  return v || fallback;
 }
 
 /**
@@ -354,7 +342,6 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
     title: cmsHome.ctaTitle || homeFixture.ctaBanner.title,
     subtitle: cmsTextOrFallback(
       cmsHome.ctaSubtitle,
-      LEGACY_HOME_CTA_SUBTITLES,
       homeFixture.ctaBanner.subtitle,
     ),
     ctaLabel: cmsHome.ctaLabel || homeFixture.ctaBanner.ctaLabel,
@@ -374,15 +361,10 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
     },
     hero: {
       ...homeFixture.hero,
-      title: cmsTextOrFallback(
-        cmsHome.heroTitle,
-        LEGACY_HOME_HERO_TITLES,
-        homeFixture.hero.title,
-      ),
+      title: cmsTextOrFallback(cmsHome.heroTitle, homeFixture.hero.title),
       titleAccent: cmsHome.heroTitleAccent?.trim() || undefined,
       subtitle: cmsTextOrFallback(
         cmsHome.heroSubtitle,
-        LEGACY_HOME_HERO_SUBTITLES,
         homeFixture.hero.subtitle,
       ),
       ctaLabel: cmsHome.heroCta || homeFixture.hero.ctaLabel,
@@ -450,11 +432,7 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
         footer.brandName?.trim() ||
         nav.brandName?.trim() ||
         defaultCmsFooter.brandName,
-      blurb: cmsTextOrFallback(
-        footer.blurb,
-        LEGACY_FOOTER_BLURBS,
-        homeFixture.footer.blurb,
-      ),
+      blurb: cmsTextOrFallback(footer.blurb, homeFixture.footer.blurb),
       companyInfo: {
         companyName:
           footer.companyInfo?.companyName?.trim() ||
