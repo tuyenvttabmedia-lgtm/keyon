@@ -25,6 +25,7 @@ export function LoginForm() {
   const [password, setPassword] = useState("");
   const [totpCode, setTotpCode] = useState("");
   const [needsTotp, setNeedsTotp] = useState(false);
+  const [loginChallenge, setLoginChallenge] = useState<string | null>(null);
   const [showPw, setShowPw] = useState(false);
   const [remember, setRemember] = useState(true);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
@@ -44,7 +45,8 @@ export function LoginForm() {
     setLoading(true);
     setError(null);
     try {
-      if (turnstileSiteKey && !turnstileToken) {
+      // First step needs Turnstile; 2FA step uses loginChallenge from password pass.
+      if (turnstileSiteKey && !loginChallenge && !turnstileToken) {
         throw new Error("Vui lòng xác nhận bạn không phải robot");
       }
       const res = await fetch("/api/auth/login", {
@@ -55,6 +57,7 @@ export function LoginForm() {
           password,
           remember,
           turnstileToken: turnstileToken ?? undefined,
+          loginChallenge: loginChallenge ?? undefined,
           ...(needsTotp || totpCode ? { totpCode } : {}),
         }),
       });
@@ -62,6 +65,9 @@ export function LoginForm() {
       if (!res.ok) {
         if (data.requiresTotp) {
           setNeedsTotp(true);
+          if (typeof data.loginChallenge === "string" && data.loginChallenge) {
+            setLoginChallenge(data.loginChallenge);
+          }
           setError(data.error ?? "Nhập mã xác thực 2FA");
           return;
         }
@@ -89,7 +95,12 @@ export function LoginForm() {
         label="Email"
         type="email"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={(e) => {
+          setEmail(e.target.value);
+          setNeedsTotp(false);
+          setLoginChallenge(null);
+          setTotpCode("");
+        }}
         placeholder="Nhập email của bạn"
         required
         autoComplete="email"
@@ -103,7 +114,12 @@ export function LoginForm() {
         label="Mật khẩu"
         type={showPw ? "text" : "password"}
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e) => {
+          setPassword(e.target.value);
+          setNeedsTotp(false);
+          setLoginChallenge(null);
+          setTotpCode("");
+        }}
         placeholder="Nhập mật khẩu của bạn"
         required
         autoComplete="current-password"
@@ -136,11 +152,16 @@ export function LoginForm() {
           describedBy={error ? "login-form-error" : undefined}
         />
       ) : null}
-      {turnstileSiteKey ? (
+      {turnstileSiteKey && !loginChallenge ? (
         <TurnstileField
           siteKey={turnstileSiteKey}
           onToken={setTurnstileToken}
         />
+      ) : null}
+      {needsTotp && loginChallenge ? (
+        <p className={BODY_MUTED_CLASS}>
+          Đã xác minh Turnstile — chỉ cần nhập mã 2FA rồi Đăng nhập lại.
+        </p>
       ) : null}
       <div
         className={`flex items-center justify-between gap-3 pt-0.5 ${BODY_MUTED_CLASS}`}

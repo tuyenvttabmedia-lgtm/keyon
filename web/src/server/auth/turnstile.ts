@@ -40,7 +40,14 @@ export async function assertTurnstileToken(
     );
     const data = (await res.json()) as SiteverifyResponse;
     if (!res.ok || data.success !== true) {
-      await recordTurnstileHealth(false, (data["error-codes"] ?? []).join(",") || "verify_failed");
+      const codes = data["error-codes"] ?? [];
+      await recordTurnstileHealth(false, codes.join(",") || "verify_failed");
+      if (codes.includes("timeout-or-duplicate")) {
+        throw new AppError(
+          "Turnstile đã hết hạn hoặc đã dùng — làm mới ô xác minh rồi thử lại",
+          400,
+        );
+      }
       throw new AppError("Xác minh Turnstile thất bại — thử lại", 400);
     }
     await recordTurnstileHealth(true);
