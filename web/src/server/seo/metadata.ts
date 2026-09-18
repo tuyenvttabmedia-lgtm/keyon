@@ -69,10 +69,11 @@ export function toNextMetadata(seo: ResolvedSeo, opts?: {
       : allowSearchIndexing();
   const follow = opts?.robotsFollow !== false;
   const images = seo.ogImageUrl ? [{ url: seo.ogImageUrl }] : undefined;
-  const favicon =
+  const favicon: string =
     absoluteAssetUrl(opts?.faviconUrl?.trim() || null, getSiteOrigin()) ||
-    absoluteAssetUrl("/brand/keyon-k.png", getSiteOrigin());
-  const apple =
+    absoluteAssetUrl("/brand/keyon-k.png", getSiteOrigin()) ||
+    "/brand/keyon-k.png";
+  const apple: string =
     absoluteAssetUrl(opts?.appleTouchIconUrl?.trim() || null, getSiteOrigin()) ||
     favicon;
 
