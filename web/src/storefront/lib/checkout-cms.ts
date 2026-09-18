@@ -3,44 +3,9 @@ import {
   type CmsCheckout,
 } from "@/server/cms/types";
 
-const LEGACY_CHECKOUT = {
-  securityLine: "Thông tin được mã hóa & bảo mật tuyệt đối",
-  whyW2Title: "Giao siêu nhanh",
-  whyW4Title: "Hoàn tiền 100%",
-  nextStepS3:
-    "Thanh toán thành công, hệ thống sẽ tự động kích hoạt license cho bạn.",
-} as const;
-
-function refreshCheckoutLegacy(merged: CmsCheckout): CmsCheckout {
-  const whyItems = merged.whyItems.map((item) => {
-    if (item.id === "w2" && item.title === LEGACY_CHECKOUT.whyW2Title) {
-      return defaultCmsCheckout.whyItems.find((w) => w.id === "w2") ?? item;
-    }
-    if (item.id === "w4" && item.title === LEGACY_CHECKOUT.whyW4Title) {
-      return defaultCmsCheckout.whyItems.find((w) => w.id === "w4") ?? item;
-    }
-    return item;
-  });
-  const nextSteps = merged.nextSteps.map((step) => {
-    if (step.id === "s3" && step.description === LEGACY_CHECKOUT.nextStepS3) {
-      return defaultCmsCheckout.nextSteps.find((s) => s.id === "s3") ?? step;
-    }
-    return step;
-  });
-  return {
-    ...merged,
-    securityLine:
-      merged.securityLine === LEGACY_CHECKOUT.securityLine
-        ? defaultCmsCheckout.securityLine
-        : merged.securityLine,
-    whyItems,
-    nextSteps,
-  };
-}
-
-/** Merge stored checkout CMS with defaults (new keys after deploy). */
+/** Merge stored checkout CMS with defaults (new keys after deploy). Do not rewrite saved copy. */
 export function mergeCheckoutCms(raw: Partial<CmsCheckout> | null | undefined): CmsCheckout {
-  return refreshCheckoutLegacy({
+  return {
     ...defaultCmsCheckout,
     ...raw,
     whyItems: raw?.whyItems?.length ? raw.whyItems : defaultCmsCheckout.whyItems,
@@ -120,5 +85,5 @@ export function mergeCheckoutCms(raw: Partial<CmsCheckout> | null | undefined): 
     recommendedTitle: raw?.recommendedTitle ?? defaultCmsCheckout.recommendedTitle,
     recommendedViewAllLabel:
       raw?.recommendedViewAllLabel ?? defaultCmsCheckout.recommendedViewAllLabel,
-  });
+  };
 }

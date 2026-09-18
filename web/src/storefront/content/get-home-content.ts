@@ -41,7 +41,6 @@ import type {
   PartnerItem,
 } from "./types";
 
-/** Legacy CMS strings from pre–go-live marketing — treat as empty so fixture wins. */
 /** Prefer CMS text; empty → fixture. Do not silently rewrite saved CMS copy. */
 function cmsTextOrFallback(
   value: string | undefined,
