@@ -161,6 +161,10 @@ export type SiteSettings = {
   seoTitle: string;
   seoDescription: string;
   ogImageUrl?: string;
+  /** Browser tab icon (PNG/SVG/ICO from Media). */
+  faviconUrl?: string;
+  /** Optional Apple touch icon (180×180 PNG recommended). */
+  appleTouchIconUrl?: string;
   /** Keyed by path, e.g. "/", "/products", "/blog". */
   pageSeo?: Record<string, PageSeoOverride>;
 };

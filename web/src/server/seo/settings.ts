@@ -42,6 +42,8 @@ export function normalizeSiteSettings(raw: Partial<SiteSettings> | null | undefi
     seoTitle: (base.seoTitle || defaultSettings.seoTitle).trim(),
     seoDescription: (base.seoDescription || defaultSettings.seoDescription).trim(),
     ogImageUrl: base.ogImageUrl?.trim() || undefined,
+    faviconUrl: base.faviconUrl?.trim() || undefined,
+    appleTouchIconUrl: base.appleTouchIconUrl?.trim() || undefined,
     pageSeo: mergedPageSeo,
   };
 }

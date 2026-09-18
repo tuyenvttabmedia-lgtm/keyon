@@ -60,6 +60,8 @@ export function toNextMetadata(seo: ResolvedSeo, opts?: {
   robotsIndex?: boolean;
   robotsFollow?: boolean;
   type?: "website" | "article";
+  faviconUrl?: string | null;
+  appleTouchIconUrl?: string | null;
 }): Metadata {
   const index =
     opts?.robotsIndex !== undefined
@@ -67,6 +69,12 @@ export function toNextMetadata(seo: ResolvedSeo, opts?: {
       : allowSearchIndexing();
   const follow = opts?.robotsFollow !== false;
   const images = seo.ogImageUrl ? [{ url: seo.ogImageUrl }] : undefined;
+  const favicon =
+    absoluteAssetUrl(opts?.faviconUrl?.trim() || null, getSiteOrigin()) ||
+    absoluteAssetUrl("/brand/keyon-k.png", getSiteOrigin());
+  const apple =
+    absoluteAssetUrl(opts?.appleTouchIconUrl?.trim() || null, getSiteOrigin()) ||
+    favicon;
 
   return {
     metadataBase: new URL(getSiteOrigin()),
@@ -74,6 +82,11 @@ export function toNextMetadata(seo: ResolvedSeo, opts?: {
     description: seo.description,
     alternates: { canonical: seo.canonical },
     robots: { index, follow },
+    icons: {
+      icon: [{ url: favicon }],
+      shortcut: [{ url: favicon }],
+      apple: [{ url: apple }],
+    },
     openGraph: {
       title: seo.title,
       description: seo.description,
@@ -94,7 +107,10 @@ export function toNextMetadata(seo: ResolvedSeo, opts?: {
 export async function buildRootMetadata(): Promise<Metadata> {
   const settings = await loadSiteSettings();
   const seo = resolveWithGlobalFallback(settings, { path: "/" });
-  return toNextMetadata(seo);
+  return toNextMetadata(seo, {
+    faviconUrl: settings.faviconUrl,
+    appleTouchIconUrl: settings.appleTouchIconUrl,
+  });
 }
 
 export async function buildMainPageMetadata(path: string): Promise<Metadata> {
@@ -106,7 +122,10 @@ export async function buildMainPageMetadata(path: string): Promise<Metadata> {
     description: page?.description,
     ogImageUrl: page?.ogImageUrl,
   });
-  return toNextMetadata(seo);
+  return toNextMetadata(seo, {
+    faviconUrl: settings.faviconUrl,
+    appleTouchIconUrl: settings.appleTouchIconUrl,
+  });
 }
 
 export async function loadGlobalSeoFallback(): Promise<SiteSettings> {

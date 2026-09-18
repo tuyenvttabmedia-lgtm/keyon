@@ -94,6 +94,28 @@ const settingsSchema = z.object({
         /^https?:\/\//i.test(v),
       "Ảnh chia sẻ phải là path hoặc URL hợp lệ",
     ),
+  faviconUrl: z
+    .string()
+    .max(2000)
+    .optional()
+    .refine(
+      (v) =>
+        !v ||
+        v.startsWith("/") ||
+        /^https?:\/\//i.test(v),
+      "Favicon phải là path hoặc URL hợp lệ",
+    ),
+  appleTouchIconUrl: z
+    .string()
+    .max(2000)
+    .optional()
+    .refine(
+      (v) =>
+        !v ||
+        v.startsWith("/") ||
+        /^https?:\/\//i.test(v),
+      "Apple touch icon phải là path hoặc URL hợp lệ",
+    ),
   pageSeo: z
     .record(z.string(), pageSeoOverrideSchema)
     .optional()
@@ -173,6 +195,15 @@ export async function PUT(
         typeof body?.ogImageUrl === "string" && !body.ogImageUrl.trim()
           ? undefined
           : body?.ogImageUrl,
+      faviconUrl:
+        typeof body?.faviconUrl === "string" && !body.faviconUrl.trim()
+          ? undefined
+          : body?.faviconUrl,
+      appleTouchIconUrl:
+        typeof body?.appleTouchIconUrl === "string" &&
+        !body.appleTouchIconUrl.trim()
+          ? undefined
+          : body?.appleTouchIconUrl,
     };
     const parsed = settingsSchema.parse(cleanedBody);
     const data = normalizeSiteSettings(parsed) satisfies SiteSettings;

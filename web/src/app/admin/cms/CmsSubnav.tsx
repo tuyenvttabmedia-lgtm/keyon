@@ -9,6 +9,7 @@ const CMS_NAV = [
   { href: "/admin/blog", label: "Bài viết" },
   { href: "/admin/cms/footer", label: "Footer" },
   { href: "/admin/cms/nav", label: "Điều hướng" },
+  { href: "/admin/cms/brand", label: "Favicon" },
   { href: "/admin/cms/policy", label: "Hub Chính sách" },
   { href: "/admin/cms/pages", label: "Trang tĩnh" },
   { href: "/admin/cms/ratings", label: "Ratings" },

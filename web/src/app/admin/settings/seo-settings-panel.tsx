@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { PageSeoOverride, SiteSettings } from "@/server/cms/types";
 import {
@@ -97,7 +98,14 @@ export function SeoSettingsPanel({
         <h2 className="text-base font-semibold text-navy">SEO</h2>
         <p className="mt-1 text-sm text-muted">
           Cấu hình thông tin hiển thị trên công cụ tìm kiếm và khi chia sẻ
-          website.
+          website. Favicon / Apple touch icon:{" "}
+          <Link
+            href="/admin/cms/brand"
+            className="font-medium text-accent underline-offset-2 hover:underline"
+          >
+            CMS → Favicon
+          </Link>
+          .
         </p>
       </div>
 
