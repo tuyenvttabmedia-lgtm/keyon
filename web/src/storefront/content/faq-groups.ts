@@ -213,3 +213,42 @@ export function findGroupIdForCategory(categoryId: string): FaqGroupId | null {
   }
   return null;
 }
+
+/**
+ * Six homepage FAQs — buyer questions, not definitions or “how to contact”.
+ * Order is the display order on Home.
+ */
+export const HOME_FAQ_QUESTIONS = [
+  "KEYON là gì?",
+  "KEYON hỗ trợ những phương thức thanh toán nào?",
+  "Sau khi thanh toán tôi nhận license ở đâu?",
+  "Tôi có cần tạo tài khoản để mua hàng không?",
+  "KEYON có hoàn tiền không?",
+  "Tôi đã thanh toán nhưng đơn hàng vẫn chưa được cập nhật?",
+] as const;
+
+export function pickHomeFaqs<T extends { question: string; showOnHome?: boolean }>(
+  items: T[],
+  limit = 6,
+): T[] {
+  const marked = items.filter((i) => i.showOnHome);
+  const pool = marked.length > 0 ? marked : items;
+  const byQuestion = new Map(pool.map((i) => [i.question, i]));
+  const picked: T[] = [];
+  const seen = new Set<T>();
+  for (const q of HOME_FAQ_QUESTIONS) {
+    const hit = byQuestion.get(q);
+    if (hit && !seen.has(hit)) {
+      picked.push(hit);
+      seen.add(hit);
+    }
+    if (picked.length >= limit) return picked;
+  }
+  for (const item of pool) {
+    if (picked.length >= limit) break;
+    if (seen.has(item)) continue;
+    seen.add(item);
+    picked.push(item);
+  }
+  return picked;
+}

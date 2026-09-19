@@ -20,6 +20,7 @@ import {
   type CmsPartners,
 } from "@/server/cms/store";
 import { normalizeFaqDocument } from "@/server/cms/faq";
+import { pickHomeFaqs } from "@/storefront/content/faq-groups";
 import { ProductRatingsService, getProductRatingMap } from "@/server/product-ratings";
 import type { CategoryIconKey, CategoryItem } from "./types";
 import { prisma } from "@/lib/db";
@@ -292,15 +293,12 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
     ratingMap,
   );
 
-  const faqHome: FaqItem[] = faqItems
-    .filter((f) => f.showOnHome)
-    .slice(0, 6)
-    .map((f) => ({
-      id: f.id,
-      question: f.question,
-      answer: f.answer,
-      category: f.category ?? "general",
-    }));
+  const faqHome: FaqItem[] = pickHomeFaqs(faqItems, 6).map((f) => ({
+    id: f.id,
+    question: f.question,
+    answer: f.answer,
+    category: f.category ?? "general",
+  }));
 
   // Home cards = `/solutions` hub. Ignore stale CMS titles from the merge.
   const cmsSolutionsTitle = cmsHome.solutionsTitle?.trim();
