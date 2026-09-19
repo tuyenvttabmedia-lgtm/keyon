@@ -21,12 +21,7 @@ export default async function FaqPage({ searchParams }: Props) {
   return (
     <FaqSupportView
       categories={faq.categories}
-      items={faq.items.map((f) => ({
-        id: f.id,
-        question: f.question,
-        answer: f.answer,
-        category: f.category,
-      }))}
+      items={faq.items}
       initialQuery={sp.q?.trim() || ""}
       initialCategory={sp.cat?.trim() || null}
       initialPage={pageNum}

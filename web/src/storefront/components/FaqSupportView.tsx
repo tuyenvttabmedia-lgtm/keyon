@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import type { FaqCategoryMeta } from "@/storefront/content/faq-categories";
 import type { FaqItem } from "@/storefront/content/types";
@@ -12,10 +12,11 @@ import {
   IconHeadset,
   IconPackage,
   IconSearch,
-  IconTile,
   IconUser,
 } from "@/storefront/components/icons/StoreIcons";
 import {
+  CARD_META_CLASS,
+  OVERLINE_CLASS,
   PAGE_TITLE_CLASS,
   SECTION_LEAD_CLASS,
   SUBSECTION_TITLE_CLASS,
@@ -23,6 +24,7 @@ import {
 import { ELEVATION_HAIRLINE, TRANSITION_UI } from "@/storefront/effects";
 
 const PAGE_SIZE = 12;
+const POPULAR_LIMIT = 8;
 
 const CATEGORY_ICONS: Record<
   string,
@@ -58,6 +60,7 @@ export function FaqSupportView({
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
+  const listRef = useRef<HTMLElement | null>(null);
 
   const [query, setQuery] = useState(initialQuery);
   const deferredQuery = useDeferredValue(query.trim());
@@ -84,6 +87,11 @@ export function FaqSupportView({
         "general";
 
   const searching = deferredQuery.length >= 2;
+
+  const popular = useMemo(
+    () => items.filter((i) => i.popular).slice(0, POPULAR_LIMIT),
+    [items],
+  );
 
   const filtered = useMemo(() => {
     if (searching) {
@@ -138,13 +146,28 @@ export function FaqSupportView({
     setPage(1);
     setOpenId(null);
     syncUrl({ cat: id, q: "", page: 1 });
+    requestAnimationFrame(() => {
+      listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   }
 
   function onSearchChange(value: string) {
     setQuery(value);
     setPage(1);
     setOpenId(null);
-    syncUrl({ q: value, page: 1 });
+    syncUrl({ q: value, page: 1, cat: category });
+  }
+
+  function openPopular(item: FaqItem) {
+    const cat = item.category ?? "general";
+    setCategory(cat);
+    setQuery("");
+    setPage(1);
+    setOpenId(item.id);
+    syncUrl({ cat, q: "", page: 1 });
+    requestAnimationFrame(() => {
+      listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   }
 
   function goToPage(p: number) {
@@ -152,13 +175,13 @@ export function FaqSupportView({
     setPage(next);
     setOpenId(null);
     syncUrl({ page: next });
-    if (typeof window !== "undefined") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   useEffect(() => {
-    setPage((p) => Math.min(p, Math.max(1, Math.ceil(filtered.length / PAGE_SIZE) || 1)));
+    setPage((p) =>
+      Math.min(p, Math.max(1, Math.ceil(filtered.length / PAGE_SIZE) || 1)),
+    );
   }, [filtered.length]);
 
   const pageButtons = useMemo(() => {
@@ -171,10 +194,161 @@ export function FaqSupportView({
     return pages;
   }, [safePage, totalPages]);
 
+  function categoryLabel(id: string) {
+    return categories.find((c) => c.id === id)?.label ?? id;
+  }
+
+  function renderAccordion(list: FaqItem[], showCatBadge: boolean) {
+    if (list.length === 0) {
+      return (
+        <p className="rounded-xl border border-border bg-card px-4 py-8 text-center text-sm text-muted">
+          {searching
+            ? "Không có câu hỏi phù hợp. Thử từ khóa khác hoặc chọn danh mục bên trái."
+            : "Danh mục này chưa có câu hỏi. Trong CMS → FAQ, gắn câu hỏi rồi Lưu và xuất bản."}
+        </p>
+      );
+    }
+    return (
+      <div className="space-y-2">
+        {list.map((item) => {
+          const open = openId === item.id;
+          return (
+            <div
+              key={item.id}
+              className={`overflow-hidden rounded-xl border bg-white ${
+                open ? `border-accent ${ELEVATION_HAIRLINE}` : "border-border"
+              }`}
+            >
+              <button
+                type="button"
+                className="flex w-full items-start gap-3 px-4 py-3.5 text-left md:px-5"
+                onClick={() => setOpenId(open ? null : item.id)}
+                aria-expanded={open}
+              >
+                <span
+                  className={`mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
+                    open ? "bg-accent text-white" : "bg-navy-soft text-navy"
+                  }`}
+                  aria-hidden
+                >
+                  {open ? "−" : "+"}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-semibold text-navy md:text-[15px]">
+                    {item.question}
+                  </span>
+                  {showCatBadge ? (
+                    <span className="mt-1 inline-block rounded-full bg-navy-soft px-2 py-0.5 text-[11px] font-medium text-muted">
+                      {categoryLabel(item.category ?? "general")}
+                    </span>
+                  ) : null}
+                </span>
+              </button>
+              {open ? (
+                <div className="mx-4 mb-4 rounded-xl bg-accent-soft/70 px-4 py-3 text-navy md:mx-5">
+                  <FaqAnswer text={item.answer} />
+                </div>
+              ) : null}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  function renderPagination() {
+    if (totalPages <= 1) return null;
+    return (
+      <nav
+        className="mt-6 flex flex-wrap items-center justify-center gap-1.5"
+        aria-label="Phân trang FAQ"
+      >
+        <button
+          type="button"
+          disabled={safePage <= 1}
+          onClick={() => goToPage(safePage - 1)}
+          className="inline-flex h-9 items-center rounded-lg border border-border bg-white px-3 text-sm font-medium text-navy disabled:opacity-40"
+        >
+          Trước
+        </button>
+        {pageButtons[0]! > 1 ? (
+          <>
+            <button
+              type="button"
+              onClick={() => goToPage(1)}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-white text-sm font-medium text-navy"
+            >
+              1
+            </button>
+            {pageButtons[0]! > 2 ? (
+              <span className="px-1 text-muted">…</span>
+            ) : null}
+          </>
+        ) : null}
+        {pageButtons.map((p) => (
+          <button
+            key={p}
+            type="button"
+            onClick={() => goToPage(p)}
+            className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border text-sm font-medium ${
+              p === safePage
+                ? "border-accent bg-accent text-white"
+                : "border-border bg-white text-navy hover:border-accent/40"
+            }`}
+            aria-current={p === safePage ? "page" : undefined}
+          >
+            {p}
+          </button>
+        ))}
+        {pageButtons[pageButtons.length - 1]! < totalPages ? (
+          <>
+            {pageButtons[pageButtons.length - 1]! < totalPages - 1 ? (
+              <span className="px-1 text-muted">…</span>
+            ) : null}
+            <button
+              type="button"
+              onClick={() => goToPage(totalPages)}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-white text-sm font-medium text-navy"
+            >
+              {totalPages}
+            </button>
+          </>
+        ) : null}
+        <button
+          type="button"
+          disabled={safePage >= totalPages}
+          onClick={() => goToPage(safePage + 1)}
+          className="inline-flex h-9 items-center rounded-lg border border-border bg-white px-3 text-sm font-medium text-navy disabled:opacity-40"
+        >
+          Sau
+        </button>
+      </nav>
+    );
+  }
+
+  const helpCard = (
+    <div className="rounded-xl border border-border bg-card p-4">
+      <div className="flex items-start gap-3">
+        <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
+          <IconHeadset size={18} />
+        </span>
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-navy">Vẫn cần trợ giúp?</p>
+          <Link
+            href="/contact"
+            className="mt-1 inline-flex text-sm font-semibold text-accent hover:underline"
+          >
+            Liên hệ với chúng tôi →
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="bg-white">
-      <div className="home-container py-10 md:py-12">
-        <nav className="text-sm text-muted" aria-label="Breadcrumb">
+    <div className="bg-[#F7FAFC]">
+      <div className="home-container py-8 md:py-10">
+        <nav className={`text-muted ${CARD_META_CLASS}`} aria-label="Breadcrumb">
           <Link href="/" className="hover:text-accent">
             Trang chủ
           </Link>
@@ -182,33 +356,32 @@ export function FaqSupportView({
           <span className="text-navy">Câu hỏi thường gặp</span>
         </nav>
 
-        <div className="mt-6 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-xl">
-            <h1 className={PAGE_TITLE_CLASS}>Câu hỏi thường gặp</h1>
-            <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>
-              Tìm theo từ khóa hoặc chọn danh mục — dễ tra cứu ngay cả khi có rất
-              nhiều câu hỏi.
-            </p>
-          </div>
-          <label className="relative block w-full lg:max-w-md">
+        {/* Search-first hero */}
+        <header className="mx-auto mt-6 max-w-2xl text-center">
+          <h1 className={PAGE_TITLE_CLASS}>Câu hỏi thường gặp</h1>
+          <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>
+            Gõ từ khóa để tìm nhanh — hoặc chọn danh mục bên dưới.
+          </p>
+          <label className="relative mt-5 block w-full text-left">
             <span className="sr-only">Tìm kiếm câu hỏi</span>
             <span
-              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"
+              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted"
               aria-hidden
             >
-              <IconSearch size={18} />
+              <IconSearch size={20} />
             </span>
             <input
               type="search"
               value={query}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="Tìm kiếm câu hỏi…"
-              className="h-12 w-full rounded-xl border border-border bg-card pl-11 pr-10 text-sm text-navy outline-none transition placeholder:text-muted focus:border-accent"
+              placeholder="Ví dụ: thanh toán, kích hoạt, hoàn tiền…"
+              className={`h-12 w-full rounded-xl border border-border bg-white pl-12 pr-11 text-sm text-navy outline-none transition placeholder:text-muted focus:border-accent focus:ring-2 focus:ring-accent/15 md:h-14 md:text-[15px] ${ELEVATION_HAIRLINE}`}
+              autoComplete="off"
             />
             {query ? (
               <button
                 type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-navy"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted hover:text-navy"
                 onClick={() => onSearchChange("")}
                 aria-label="Xóa tìm kiếm"
               >
@@ -216,252 +389,127 @@ export function FaqSupportView({
               </button>
             ) : null}
           </label>
-        </div>
+          {searching ? (
+            <p className={`mt-2 ${CARD_META_CLASS}`}>
+              {filtered.length} kết quả cho “{deferredQuery}”
+            </p>
+          ) : null}
+        </header>
 
+        {/* Popular — only when not searching */}
+        {!searching && popular.length > 0 ? (
+          <section className="mx-auto mt-8 max-w-3xl" aria-labelledby="faq-popular">
+            <p id="faq-popular" className={`${OVERLINE_CLASS} text-center text-muted`}>
+              Câu hỏi hay gặp
+            </p>
+            <ul className="mt-3 flex flex-wrap justify-center gap-2">
+              {popular.map((item) => (
+                <li key={item.id}>
+                  <button
+                    type="button"
+                    onClick={() => openPopular(item)}
+                    className={`rounded-full border border-border bg-white px-3.5 py-2 text-left text-[13px] font-medium text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+                  >
+                    {item.question}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
+        {/* Mobile category chips */}
         <div className="mt-8 flex gap-2 overflow-x-auto pb-1 lg:hidden">
           {categories.map((c) => {
             const active = !searching && activeCategory === c.id;
+            const n = counts[c.id] ?? 0;
             return (
               <button
                 key={c.id}
                 type="button"
                 onClick={() => selectCategory(c.id)}
-                className={`shrink-0 rounded-full border px-3.5 py-2 text-sm font-medium transition ${
+                className={`shrink-0 rounded-full border px-3 py-1.5 text-sm font-medium transition ${
                   active
                     ? "border-accent bg-accent-soft text-navy"
-                    : "border-border bg-card text-muted hover:border-accent/40"
+                    : "border-border bg-white text-muted hover:border-accent/40"
                 }`}
               >
                 {c.label}
-                <span className="ml-1.5 tabular-nums text-xs opacity-70">
-                  {counts[c.id] ?? 0}
-                </span>
+                <span className="ml-1.5 tabular-nums text-xs opacity-70">{n}</span>
               </button>
             );
           })}
         </div>
 
-        <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(240px,0.85fr)_1.4fr] lg:gap-10">
-          <aside className="hidden space-y-4 lg:block">
-            <p className="text-sm font-semibold text-navy">Danh mục câu hỏi</p>
-            <ul className="space-y-2">
-              {categories.map((c) => {
-                const active = !searching && activeCategory === c.id;
-                const CatIcon = CATEGORY_ICONS[c.id] ?? IconFolder;
-                return (
-                  <li key={c.id}>
-                    <button
-                      type="button"
-                      onClick={() => selectCategory(c.id)}
-                      className={`flex w-full items-center gap-3 rounded-xl border px-4 py-3.5 text-left ${TRANSITION_UI} ${
-                        active
-                          ? `border-accent bg-accent-soft ${ELEVATION_HAIRLINE}`
-                          : "border-border bg-white/90 hover:border-accent/40"
-                      }`}
-                    >
-                      <span
-                        className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
-                          active
-                            ? "bg-accent text-white"
-                            : "bg-navy-soft text-navy"
-                        }`}
-                        aria-hidden
-                      >
-                        <CatIcon size={18} />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block text-sm font-semibold text-navy">
-                          {c.label}
-                        </span>
-                        <span className="block truncate text-xs text-muted">
-                          {counts[c.id] ?? 0} câu hỏi
-                          {c.description ? ` · ${c.description}` : ""}
-                        </span>
-                      </span>
-                      <span className="text-muted" aria-hidden>
-                        ›
-                      </span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-
-            <div className="rounded-xl border border-border bg-card p-5">
-              <div className="flex items-start gap-3">
-                <IconTile>
-                  <IconHeadset size={18} />
-                </IconTile>
-                <div>
-                  <p className="text-sm font-semibold text-navy">
-                    Vẫn cần trợ giúp?
-                  </p>
-                  <Link
-                    href="/contact"
-                    className="mt-2 inline-flex text-sm font-semibold text-accent hover:underline"
-                  >
-                    Liên hệ với chúng tôi →
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </aside>
-
-          <section>
-            <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
-              <div>
-                <h2 className={SUBSECTION_TITLE_CLASS}>
-                  {searching ? "Kết quả tìm kiếm" : activeMeta.label}
-                </h2>
-                <p className="mt-1 text-sm text-muted">
-                  {filtered.length} câu hỏi
-                  {!searching && activeMeta.description
-                    ? ` · ${activeMeta.description}`
-                    : null}
-                  {totalPages > 1
-                    ? ` · Trang ${safePage}/${totalPages}`
-                    : null}
-                </p>
-              </div>
-            </div>
-
-            {visible.length === 0 ? (
-              <p className="rounded-xl border border-border bg-card px-4 py-8 text-center text-sm text-muted">
-                {searching
-                  ? "Không có câu hỏi phù hợp."
-                  : "Danh mục này chưa có câu hỏi trên web. Trong Admin CMS → FAQ, gắn câu hỏi vào danh mục rồi bấm “Lưu và xuất bản”."}
-              </p>
-            ) : (
-              <div className="space-y-2">
-                {visible.map((item) => {
-                  const open = openId === item.id;
-                  const cat =
-                    categories.find(
-                      (c) => c.id === (item.category ?? "general"),
-                    ) ?? activeMeta;
+        <div className="mt-8 grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[240px_minmax(0,1fr)]">
+          {/* Slim sticky sidebar */}
+          <aside className="hidden lg:block">
+            <div className="sticky top-24 max-h-[calc(100vh-7rem)] space-y-3 overflow-y-auto pb-2 pr-1">
+              <p className={`${OVERLINE_CLASS} text-muted`}>Danh mục</p>
+              <ul className="space-y-0.5">
+                {categories.map((c) => {
+                  const active = !searching && activeCategory === c.id;
+                  const CatIcon = CATEGORY_ICONS[c.id] ?? IconFolder;
+                  const n = counts[c.id] ?? 0;
                   return (
-                    <div
-                      key={item.id}
-                      className={`overflow-hidden rounded-xl border bg-white ${
-                        open
-                          ? `border-accent ${ELEVATION_HAIRLINE}`
-                          : "border-border"
-                      }`}
-                    >
+                    <li key={c.id}>
                       <button
                         type="button"
-                        className="flex w-full items-start gap-3 px-4 py-4 text-left md:px-5"
-                        onClick={() => setOpenId(open ? null : item.id)}
-                        aria-expanded={open}
+                        onClick={() => selectCategory(c.id)}
+                        title={c.description || c.label}
+                        className={`flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left ${TRANSITION_UI} ${
+                          active
+                            ? "bg-accent-soft font-semibold text-navy"
+                            : "text-muted hover:bg-white hover:text-navy"
+                        }`}
                       >
                         <span
-                          className={`mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
-                            open
+                          className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md ${
+                            active
                               ? "bg-accent text-white"
-                              : "bg-navy-soft text-navy"
+                              : "bg-white text-navy ring-1 ring-border"
                           }`}
                           aria-hidden
                         >
-                          {open ? "−" : "+"}
+                          <CatIcon size={14} />
                         </span>
-                        <span className="min-w-0 flex-1">
-                          <span className="block text-sm font-semibold text-navy md:text-[15px]">
-                            {item.question}
-                          </span>
-                          {searching ? (
-                            <span className="mt-1 inline-block rounded-full bg-navy-soft px-2 py-0.5 text-[11px] font-medium text-muted">
-                              {cat.label}
-                            </span>
-                          ) : null}
+                        <span className="min-w-0 flex-1 truncate text-[13px]">
+                          {c.label}
+                        </span>
+                        <span
+                          className={`tabular-nums text-[11px] ${
+                            active ? "text-accent" : "text-muted-soft"
+                          }`}
+                        >
+                          {n}
                         </span>
                       </button>
-                      {open ? (
-                        <div className="mx-4 mb-4 rounded-xl bg-accent-soft/70 px-4 py-3 text-navy md:mx-5">
-                          <FaqAnswer text={item.answer} />
-                        </div>
-                      ) : null}
-                    </div>
+                    </li>
                   );
                 })}
-              </div>
-            )}
-
-            {totalPages > 1 ? (
-              <nav
-                className="mt-6 flex flex-wrap items-center justify-center gap-1.5"
-                aria-label="Phân trang FAQ"
-              >
-                <button
-                  type="button"
-                  disabled={safePage <= 1}
-                  onClick={() => goToPage(safePage - 1)}
-                  className="inline-flex h-9 items-center rounded-lg border border-border bg-white px-3 text-sm font-medium text-navy disabled:opacity-40"
-                >
-                  Trước
-                </button>
-                {pageButtons[0] > 1 ? (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => goToPage(1)}
-                      className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-white text-sm font-medium text-navy"
-                    >
-                      1
-                    </button>
-                    {pageButtons[0] > 2 ? (
-                      <span className="px-1 text-muted">…</span>
-                    ) : null}
-                  </>
-                ) : null}
-                {pageButtons.map((p) => (
-                  <button
-                    key={p}
-                    type="button"
-                    onClick={() => goToPage(p)}
-                    className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border text-sm font-medium ${
-                      p === safePage
-                        ? "border-accent bg-accent text-white"
-                        : "border-border bg-white text-navy hover:border-accent/40"
-                    }`}
-                    aria-current={p === safePage ? "page" : undefined}
-                  >
-                    {p}
-                  </button>
-                ))}
-                {pageButtons[pageButtons.length - 1]! < totalPages ? (
-                  <>
-                    {pageButtons[pageButtons.length - 1]! < totalPages - 1 ? (
-                      <span className="px-1 text-muted">…</span>
-                    ) : null}
-                    <button
-                      type="button"
-                      onClick={() => goToPage(totalPages)}
-                      className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-white text-sm font-medium text-navy"
-                    >
-                      {totalPages}
-                    </button>
-                  </>
-                ) : null}
-                <button
-                  type="button"
-                  disabled={safePage >= totalPages}
-                  onClick={() => goToPage(safePage + 1)}
-                  className="inline-flex h-9 items-center rounded-lg border border-border bg-white px-3 text-sm font-medium text-navy disabled:opacity-40"
-                >
-                  Sau
-                </button>
-              </nav>
-            ) : null}
-
-            <div className="mt-6 rounded-xl border border-border bg-card p-5 lg:hidden">
-              <p className="text-sm font-semibold text-navy">Vẫn cần trợ giúp?</p>
-              <Link
-                href="/contact"
-                className="mt-3 inline-flex h-10 items-center justify-center rounded-lg bg-accent px-4 text-sm font-semibold text-white hover:bg-accent-hover"
-              >
-                Liên hệ với chúng tôi →
-              </Link>
+              </ul>
+              {helpCard}
             </div>
+          </aside>
+
+          <section ref={listRef} className="min-w-0 scroll-mt-24">
+            <div className="mb-4">
+              <h2 className={SUBSECTION_TITLE_CLASS}>
+                {searching ? "Kết quả tìm kiếm" : activeMeta.label}
+              </h2>
+              <p className={`mt-1 ${CARD_META_CLASS}`}>
+                {filtered.length} câu hỏi
+                {!searching && activeMeta.description
+                  ? ` · ${activeMeta.description}`
+                  : null}
+                {totalPages > 1 ? ` · Trang ${safePage}/${totalPages}` : null}
+              </p>
+            </div>
+
+            {renderAccordion(visible, searching)}
+            {renderPagination()}
+
+            <div className="mt-6 lg:hidden">{helpCard}</div>
           </section>
         </div>
       </div>

@@ -665,8 +665,11 @@ export async function getFaqForPage() {
     items: doc.items
       .filter((f) => f.showOnFaqPage)
       .map((f) => ({
-        ...f,
+        id: f.id,
+        question: f.question,
+        answer: f.answer,
         category: f.category ?? "general",
+        popular: Boolean(f.showOnHome),
       })),
   };
 }

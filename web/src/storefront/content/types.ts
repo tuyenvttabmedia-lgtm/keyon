@@ -118,6 +118,8 @@ export type FaqItem = {
   question: string;
   answer: string;
   category?: string;
+  /** From CMS showOnHome — used as “Câu hỏi hay gặp” on /faq */
+  popular?: boolean;
 };
 
 export type FooterColumn = {
