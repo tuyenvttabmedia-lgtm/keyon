@@ -156,4 +156,48 @@ export const FAQ_CATEGORIES: FaqCategoryMeta[] = [
     description:
       "Kiến thức chung khi tích hợp API nhà cung cấp. Partner API KEYON hiện chưa mở công khai.",
   },
+  {
+    id: "doanh-nghiep-b2b",
+    label: "Doanh nghiệp & B2B",
+    description:
+      "Giải pháp doanh nghiệp trên KEYON: tư vấn, volume, triển khai qua /business và báo giá.",
+  },
+  {
+    id: "mua-so-luong-lon",
+    label: "Mua số lượng lớn",
+    description: "Đơn volume, tồn kho, giao theo đợt và đầu mối hỗ trợ — qua báo giá B2B.",
+  },
+  {
+    id: "reseller-dai-ly",
+    label: "Reseller & Đại lý",
+    description:
+      "Hợp tác phân phối. Partner API / portal đại lý: liên hệ — chưa self-serve công khai.",
+  },
+  {
+    id: "partner-hop-tac",
+    label: "Partner & Hợp tác",
+    description: "Nhà cung cấp, SI, tích hợp catalog — đề xuất qua kênh hợp tác KEYON.",
+  },
+  {
+    id: "bao-gia-quotation",
+    label: "Báo giá & Quotation",
+    description: "Yêu cầu báo giá doanh nghiệp tại /contact/quote và các bước sau khi đồng ý.",
+  },
+  {
+    id: "procurement-doanh-nghiep",
+    label: "Procurement & Doanh nghiệp",
+    description: "PO, hợp đồng, NDA, vendor onboarding — trao đổi theo quy trình B2B.",
+  },
+  {
+    id: "api-doanh-nghiep",
+    label: "API dành cho doanh nghiệp",
+    description:
+      "Partner API KEYON hiện chưa mở công khai. Nội dung mang tính định hướng khi có chương trình.",
+  },
+  {
+    id: "enterprise-quan-tri",
+    label: "Enterprise Account & Quản trị",
+    description:
+      "Quản trị org/license: phần trên KEYON còn giới hạn; quản lý seat tập trung thường thuộc vendor.",
+  },
 ];
