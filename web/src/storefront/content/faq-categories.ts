@@ -74,4 +74,34 @@ export const FAQ_CATEGORIES: FaqCategoryMeta[] = [
     label: "Hỗ trợ khách hàng",
     description: "Kênh liên hệ, thông tin cần cung cấp và xử lý khiếu nại.",
   },
+  {
+    id: "cloud-server",
+    label: "Cloud & Server",
+    description: "Cloud Server, hosting, cấu hình, backup máy chủ và nâng cấp.",
+  },
+  {
+    id: "security",
+    label: "Security",
+    description: "Phần mềm bảo mật, license, thiết bị và xử lý nghi ngờ malware.",
+  },
+  {
+    id: "backup",
+    label: "Backup",
+    description: "Sao lưu dữ liệu, lịch backup, retention và khôi phục.",
+  },
+  {
+    id: "email-server",
+    label: "Email Server",
+    description: "Email theo tên miền, tài khoản, Outlook/mobile và chống spam.",
+  },
+  {
+    id: "saas",
+    label: "SaaS",
+    description: "Phần mềm dạng dịch vụ, người dùng, gói và tích hợp.",
+  },
+  {
+    id: "software-license",
+    label: "Software License",
+    description: "Subscription, perpetual, OEM, Retail, Volume và checklist mua license.",
+  },
 ];
