@@ -35,7 +35,7 @@ export function FaqHomeSection({ data }: { data: FaqHome }) {
                 >
                   {item.question}
                 </p>
-                <p className={`mt-2 line-clamp-3 ${CARD_META_CLASS} ${BODY_CLASS}`}>
+                <p className={`mt-2 line-clamp-3 whitespace-pre-line ${CARD_META_CLASS} ${BODY_CLASS}`}>
                   {item.answer}
                 </p>
               </Link>

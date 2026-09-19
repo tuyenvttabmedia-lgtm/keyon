@@ -24,7 +24,7 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
               </span>
             </button>
             {open ? (
-              <div className="px-4 pb-4 text-sm leading-relaxed text-muted md:px-5">
+              <div className="px-4 pb-4 text-sm leading-relaxed text-muted whitespace-pre-line md:px-5">
                 {item.answer}
               </div>
             ) : null}

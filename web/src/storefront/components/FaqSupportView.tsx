@@ -375,7 +375,7 @@ export function FaqSupportView({
                         </span>
                       </button>
                       {open ? (
-                        <div className="mx-4 mb-4 rounded-xl bg-accent-soft/70 px-4 py-3 text-sm leading-relaxed text-navy md:mx-5">
+                        <div className="mx-4 mb-4 rounded-xl bg-accent-soft/70 px-4 py-3 text-sm leading-relaxed text-navy whitespace-pre-line md:mx-5">
                           {item.answer}
                         </div>
                       ) : null}
