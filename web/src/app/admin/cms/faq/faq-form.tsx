@@ -12,6 +12,7 @@ import { ELEVATION_MODAL, ELEVATION_NONE, Z_MODAL, Z_STICKY } from "@/storefront
 const PAGE_SIZE = 20;
 
 type VisibilityFilter = "all" | "home" | "faq" | "hidden";
+type FaqWorkspace = "questions" | "categories";
 
 function slugify(raw: string): string {
   const s = raw
@@ -72,23 +73,17 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
   const [newCatLabel, setNewCatLabel] = useState("");
   const [newCatDesc, setNewCatDesc] = useState("");
   const [newCatSlug, setNewCatSlug] = useState("");
-  const [catsOpen, setCatsOpen] = useState(false);
+  const [workspace, setWorkspace] = useState<FaqWorkspace>("questions");
   const [catQuery, setCatQuery] = useState("");
   const [expandedCatId, setExpandedCatId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!editingId && !catsOpen) return;
+    if (!editingId) return;
     function onKey(e: KeyboardEvent) {
-      if (e.key !== "Escape") return;
-      if (editingId) setEditingId(null);
-      else setCatsOpen(false);
+      if (e.key === "Escape") setEditingId(null);
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [editingId, catsOpen]);
-
-  useEffect(() => {
-    if (editingId) setCatsOpen(false);
   }, [editingId]);
 
   useEffect(() => {
@@ -210,7 +205,7 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
     commitItems([item, ...items]);
     setQ("");
     setPage(1);
-    setCatsOpen(false);
+    setWorkspace("questions");
     setEditingId(item.id);
   }
 
@@ -400,41 +395,52 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
       {/* Sticky toolbar */}
       <div className={`sticky top-0 ${Z_STICKY} -mx-1 space-y-3 rounded-2xl border border-border bg-white/95 p-3 backdrop-blur sm:p-4 ${ELEVATION_NONE}`}>
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap gap-2 text-xs text-muted">
-            <span className="rounded-full bg-surface px-2.5 py-1 font-medium text-navy">
-              {stats.total} câu
-            </span>
-            <span className="rounded-full bg-surface px-2.5 py-1">
-              Home {stats.home}
-            </span>
-            <span className="rounded-full bg-surface px-2.5 py-1">
-              FAQ {stats.faq}
-            </span>
-            {dirty ? (
-              <span className="rounded-full bg-amber-100 px-2.5 py-1 font-medium text-amber-900">
-                Chưa lưu — /faq chưa thấy câu hỏi mới
-              </span>
-            ) : null}
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div
+            className="inline-flex rounded-lg border border-border bg-surface p-0.5"
+            role="tablist"
+            aria-label="Không gian FAQ"
+          >
             <button
               type="button"
+              role="tab"
+              aria-selected={workspace === "questions"}
+              onClick={() => setWorkspace("questions")}
+              className={`rounded-md px-3 py-1.5 text-sm font-medium ${
+                workspace === "questions"
+                  ? "bg-white text-navy"
+                  : "text-muted hover:text-navy"
+              }`}
+            >
+              Câu hỏi ({stats.total})
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={workspace === "categories"}
               onClick={() => {
                 setEditingId(null);
-                setCatsOpen(true);
+                setWorkspace("categories");
               }}
-              className="rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-surface"
+              className={`rounded-md px-3 py-1.5 text-sm font-medium ${
+                workspace === "categories"
+                  ? "bg-white text-navy"
+                  : "text-muted hover:text-navy"
+              }`}
             >
               Danh mục ({stats.cats})
             </button>
-            <button
-              type="button"
-              onClick={addNew}
-              disabled={saving}
-              className="rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-surface disabled:opacity-50"
-            >
-              + Thêm câu hỏi
-            </button>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {workspace === "questions" ? (
+              <button
+                type="button"
+                onClick={addNew}
+                disabled={saving}
+                className="rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-surface disabled:opacity-50"
+              >
+                + Thêm câu hỏi
+              </button>
+            ) : null}
             <button
               type="button"
               disabled={saving || !dirty}
@@ -446,7 +452,9 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
           </div>
         </div>
 
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+        {workspace === "questions" ? (
+          <>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
           <input
             className="h-10 w-full rounded-lg border border-border px-3 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
             placeholder="Tìm câu hỏi hoặc câu trả lời…"
@@ -545,6 +553,22 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
             </button>
           </div>
         ) : null}
+          </>
+        ) : null}
+
+        <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
+          <span className="rounded-full bg-surface px-2.5 py-1">
+            Home {stats.home}
+          </span>
+          <span className="rounded-full bg-surface px-2.5 py-1">
+            FAQ {stats.faq}
+          </span>
+          {dirty ? (
+            <span className="rounded-full bg-amber-100 px-2.5 py-1 font-medium text-amber-900">
+              Chưa lưu — /faq chưa thấy thay đổi
+            </span>
+          ) : null}
+        </div>
 
         {msg ? (
           <p
@@ -559,6 +583,7 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
         ) : null}
       </div>
 
+      {workspace === "questions" ? (
       <div className="overflow-hidden rounded-2xl border border-border bg-card">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[720px] text-left text-sm">
@@ -725,9 +750,8 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
           </div>
         ) : null}
       </div>
-
-      {catsOpen ? (
-        <CategoryDrawer
+      ) : (
+        <CategoryPanel
           categories={categories}
           items={items}
           query={catQuery}
@@ -754,11 +778,10 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
             setCategory(id);
             setPage(1);
             setQ("");
-            setCatsOpen(false);
+            setWorkspace("questions");
           }}
-          onClose={() => setCatsOpen(false)}
         />
-      ) : null}
+      )}
 
       {editing ? (
         <div className={`fixed inset-0 ${Z_MODAL} flex justify-end bg-navy/40`}>
@@ -879,7 +902,7 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
   );
 }
 
-function CategoryDrawer({
+function CategoryPanel({
   categories,
   items,
   query,
@@ -898,7 +921,6 @@ function CategoryDrawer({
   onRemove,
   notice,
   onView,
-  onClose,
 }: {
   categories: CmsFaqCategoryDef[];
   items: CmsFaqItem[];
@@ -918,7 +940,6 @@ function CategoryDrawer({
   onRemove: (id: string) => void;
   notice: string | null;
   onView: (id: string) => void;
-  onClose: () => void;
 }) {
   const counts = useMemo(() => {
     const map = new Map<string, number>();
@@ -950,87 +971,68 @@ function CategoryDrawer({
     "mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20";
 
   return (
-    <div className={`fixed inset-0 ${Z_MODAL} flex justify-end bg-navy/40`}>
-      <button
-        type="button"
-        className="absolute inset-0 cursor-default"
-        aria-label="Đóng danh mục"
-        onClick={onClose}
+    <section className="space-y-4 rounded-2xl border border-border bg-card p-4 sm:p-5">
+      <div>
+        <h2 className="text-sm font-semibold text-navy">
+          Danh mục ({categories.length})
+        </h2>
+        <p className="mt-0.5 text-xs text-muted">
+          Cùng 5 cụm với trang FAQ. Bấm một dòng để sửa, rồi quay lại tab Câu hỏi.
+        </p>
+      </div>
+
+      <div className="grid gap-2 lg:grid-cols-[1fr_12rem_1.4fr_auto]">
+        <input
+          className="h-10 w-full rounded-lg border border-border bg-white px-3 text-sm"
+          placeholder="Tên danh mục"
+          value={newLabel}
+          onChange={(e) => onNewLabel(e.target.value)}
+        />
+        <input
+          className="h-10 w-full rounded-lg border border-border bg-white px-3 font-mono text-sm"
+          placeholder="Slug"
+          value={newSlug}
+          onChange={(e) => onNewSlug(e.target.value)}
+        />
+        <input
+          className="h-10 w-full rounded-lg border border-border bg-white px-3 text-sm"
+          placeholder="Mô tả (tuỳ chọn)"
+          value={newDesc}
+          onChange={(e) => onNewDesc(e.target.value)}
+        />
+        <button
+          type="button"
+          onClick={onAdd}
+          className="h-10 rounded-lg border border-border bg-white px-4 text-sm font-medium hover:border-accent"
+        >
+          + Thêm danh mục
+        </button>
+      </div>
+      {notice ? (
+        <p
+          className={`text-sm ${
+            notice.startsWith("Đã lưu") || notice.startsWith("Đã thêm")
+              ? "text-emerald-700"
+              : "text-danger"
+          }`}
+        >
+          {notice}
+        </p>
+      ) : null}
+
+      <input
+        className="h-10 w-full max-w-md rounded-lg border border-border px-3 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
+        placeholder="Tìm danh mục…"
+        value={query}
+        onChange={(e) => onQuery(e.target.value)}
       />
-      <aside
-        className={`relative flex h-full w-full max-w-lg flex-col border-l border-border bg-white ${ELEVATION_MODAL}`}
-      >
-        <div className="flex items-center justify-between border-b border-border px-4 py-3">
-          <div>
-            <p className="text-sm font-semibold text-navy">
-              Danh mục ({categories.length})
-            </p>
-            <p className="text-xs text-muted">
-              Cùng 5 cụm với trang FAQ. Bấm một dòng để sửa.
-            </p>
-          </div>
-          <button
-            type="button"
-            className="rounded-lg border border-border px-3 py-1.5 text-sm"
-            onClick={onClose}
-          >
-            Đóng
-          </button>
-        </div>
 
-        <div className="flex-1 space-y-4 overflow-y-auto p-4">
-          <div className="space-y-2 rounded-xl border border-dashed border-border bg-surface/40 p-3">
-            <p className="text-xs font-medium text-muted">Thêm danh mục</p>
-            <input
-              className="h-10 w-full rounded-lg border border-border bg-white px-3 text-sm"
-              placeholder="Tên danh mục"
-              value={newLabel}
-              onChange={(e) => onNewLabel(e.target.value)}
-            />
-            <input
-              className="h-10 w-full rounded-lg border border-border bg-white px-3 font-mono text-sm"
-              placeholder="Slug"
-              value={newSlug}
-              onChange={(e) => onNewSlug(e.target.value)}
-            />
-            <input
-              className="h-10 w-full rounded-lg border border-border bg-white px-3 text-sm"
-              placeholder="Mô tả (tuỳ chọn)"
-              value={newDesc}
-              onChange={(e) => onNewDesc(e.target.value)}
-            />
-            <button
-              type="button"
-              onClick={onAdd}
-              className="h-10 rounded-lg border border-border bg-white px-4 text-sm font-medium hover:border-accent"
-            >
-              + Thêm danh mục
-            </button>
-            {notice ? (
-              <p
-                className={`text-sm ${
-                  notice.startsWith("Đã lưu") || notice.startsWith("Đã thêm")
-                    ? "text-emerald-700"
-                    : "text-danger"
-                }`}
-              >
-                {notice}
-              </p>
-            ) : null}
-          </div>
-
-          <input
-            className="h-10 w-full rounded-lg border border-border px-3 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
-            placeholder="Tìm danh mục…"
-            value={query}
-            onChange={(e) => onQuery(e.target.value)}
-          />
-
-          {groups.length === 0 ? (
-            <p className="text-sm text-muted">Không có danh mục khớp.</p>
-          ) : (
-            groups.map(({ group, categories: cats }) => (
-              <section key={`${group.id}-${group.label}`} className="space-y-1">
+      {groups.length === 0 ? (
+        <p className="text-sm text-muted">Không có danh mục khớp.</p>
+      ) : (
+        <div className="grid gap-4 lg:grid-cols-2">
+          {groups.map(({ group, categories: cats }) => (
+              <section key={`${group.id}-${group.label}`} className="space-y-1 rounded-xl border border-border p-3">
                 <h3 className="px-1 text-xs font-semibold uppercase tracking-wide text-muted">
                   {group.label}
                 </h3>
@@ -1126,10 +1128,9 @@ function CategoryDrawer({
                   })}
                 </ul>
               </section>
-            ))
-          )}
+            ))}
         </div>
-      </aside>
-    </div>
+      )}
+    </section>
   );
 }
