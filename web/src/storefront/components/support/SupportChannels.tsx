@@ -24,7 +24,7 @@ export function SupportChannels({ channels }: { channels: SupportChannel[] }) {
         <header className="max-w-2xl">
           <h2 className={SECTION_TITLE_CLASS}>Các kênh hỗ trợ</h2>
           <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-            Chỉ hiển thị kênh đã được cấu hình trên hệ thống KEYON.
+            Email và giờ làm việc để liên hệ khi ticket chưa đủ.
           </p>
         </header>
 

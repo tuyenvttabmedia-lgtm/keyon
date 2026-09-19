@@ -9,7 +9,7 @@ import {
   ELEVATION_HAIRLINE,
   TRANSITION_UI,
 } from "@/storefront/effects";
-import { CONTACT_HREF, SECTION_PAD, SURFACE, TICKETS_HREF } from "./shared";
+import { SECTION_PAD, SURFACE, TICKETS_HREF } from "./shared";
 
 /** Light resolution panel — not a sales CTA banner. */
 export function SupportResolutionPanel() {
@@ -22,7 +22,7 @@ export function SupportResolutionPanel() {
           <div className="min-w-0 max-w-xl">
             <h2 className={SECTION_TITLE_CLASS}>Vẫn cần hỗ trợ?</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Gửi ticket để KEYON có thể theo dõi và hỗ trợ vấn đề của bạn.
+              Gửi ticket để KEYON theo dõi và trả lời. Cần đăng nhập tài khoản.
             </p>
           </div>
           <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
@@ -33,10 +33,10 @@ export function SupportResolutionPanel() {
               Tạo ticket
             </Link>
             <Link
-              href={CONTACT_HREF}
+              href={TICKETS_HREF}
               className={`inline-flex h-12 items-center justify-center rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
             >
-              Liên hệ
+              Kiểm tra ticket
             </Link>
           </div>
         </div>

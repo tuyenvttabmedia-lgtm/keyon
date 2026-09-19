@@ -30,7 +30,7 @@ export function SupportFAQ({ items }: { items: SupportFaqItem[] }) {
       {links.length === 0 ? (
         <p className={`mt-6 ${BODY_MUTED_CLASS}`}>Chưa có câu hỏi để gợi ý.</p>
       ) : (
-        <ul className="mt-5 grid gap-2 sm:grid-cols-2">
+        <ul className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {links.map((item) => (
             <li key={item.id}>
               <Link
