@@ -278,7 +278,9 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
       }
       commitItems(
         items.map((i) =>
-          i.category === id ? { ...i, category: "general" } : i,
+          i.category === id
+            ? { ...i, category: categories.find((c) => c.id !== id)?.id ?? "mua-hang" }
+            : i,
         ),
       );
     } else if (!confirm("Xóa danh mục này?")) {

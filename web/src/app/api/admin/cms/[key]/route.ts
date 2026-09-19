@@ -373,19 +373,20 @@ export async function PUT(
       ...item,
       category: resolveCategoryId(item.category, parsed.categories),
     }));
+    const fallbackCat =
+      (catIds.has("mua-hang") && "mua-hang") ||
+      (catIds.has("general") && "general") ||
+      parsed.categories[0]?.id;
     for (const item of parsed.items) {
       if (!catIds.has(item.category)) {
-        // Last resort: keep item under general rather than failing the whole save
-        item.category = catIds.has("general")
-          ? "general"
-          : parsed.categories[0]!.id;
+        item.category = fallbackCat ?? "mua-hang";
       }
     }
-    if (!catIds.has("general")) {
+    if (parsed.categories.length === 0) {
       parsed.categories.push({
-        id: "general",
-        label: "Chung",
-        description: "KEYON bán gì, chính sách",
+        id: "mua-hang",
+        label: "Mua hàng",
+        description: "Quy trình đặt mua trên KEYON",
       });
     }
 

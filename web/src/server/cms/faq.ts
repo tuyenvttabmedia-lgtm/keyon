@@ -59,10 +59,21 @@ export function resolveCategoryId(
   categories: CmsFaqCategoryDef[],
 ): string {
   const value = (raw ?? "").trim();
-  if (!value) return "general";
-  const byId = categories.find((c) => c.id === value);
+  if (!value) {
+    return categories.some((c) => c.id === "mua-hang")
+      ? "mua-hang"
+      : categories[0]?.id ?? "general";
+  }
+  const legacy: Record<string, string> = {
+    general: "mua-hang",
+    delivery: "gia-han-thay-doi",
+  };
+  const mapped = legacy[value] ?? value;
+  const byId = categories.find((c) => c.id === mapped);
   if (byId) return byId.id;
-  const slug = slugifyFaqCategory(value);
+  const byLegacy = categories.find((c) => c.id === value);
+  if (byLegacy) return byLegacy.id;
+  const slug = slugifyFaqCategory(mapped);
   const bySlug = categories.find((c) => c.id === slug);
   if (bySlug) return bySlug.id;
   const byLabel = categories.find(
@@ -73,7 +84,7 @@ export function resolveCategoryId(
     (c) => slugifyFaqCategory(c.label) === slug,
   );
   if (byLabelSlug) return byLabelSlug.id;
-  return slug || "general";
+  return slug || categories[0]?.id || "general";
 }
 
 function normalizeCategories(raw: unknown): CmsFaqCategoryDef[] {
@@ -105,33 +116,38 @@ function normalizeItems(raw: unknown): CmsFaqItem[] {
       id: String(r.id ?? `q_${i + 1}`).trim() || `q_${i + 1}`,
       question: String(r.question ?? "").trim(),
       answer: String(r.answer ?? "").trim(),
-      category: slugifyFaqCategory(String(r.category ?? "general")),
+      category: slugifyFaqCategory(String(r.category ?? "mua-hang")),
       showOnHome: Boolean(r.showOnHome),
       showOnFaqPage: r.showOnFaqPage !== false,
     }));
 }
 
-/** Ensure every item.category has a category row (orphan → "Chung" label). */
+/** Ensure every item.category has a category row. */
 function mergeCategoriesFromItems(
   categories: CmsFaqCategoryDef[],
   items: CmsFaqItem[],
 ): CmsFaqCategoryDef[] {
   const map = new Map(categories.map((c) => [c.id, c]));
   for (const item of items) {
-    const id = item.category || "general";
+    const id = item.category || "mua-hang";
     if (!map.has(id)) {
       map.set(id, {
         id,
-        label: id === "general" ? "Chung" : id,
+        label:
+          id === "mua-hang"
+            ? "Mua hàng"
+            : id === "general"
+              ? "Chung"
+              : id,
         description: undefined,
       });
     }
   }
-  if (!map.has("general")) {
-    map.set("general", {
-      id: "general",
-      label: "Chung",
-      description: "KEYON bán gì, chính sách",
+  if (map.size === 0) {
+    map.set("mua-hang", {
+      id: "mua-hang",
+      label: "Mua hàng",
+      description: "Quy trình đặt mua trên KEYON",
     });
   }
   // Keep declared order, then any orphaned at end

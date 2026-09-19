@@ -31,10 +31,27 @@ const CATEGORY_ICONS: Record<
   typeof IconCard | typeof IconPackage | typeof IconUser | typeof IconFolder
 > = {
   payment: IconCard,
-  delivery: IconPackage,
+  "gia-han-thay-doi": IconPackage,
+  delivery: IconPackage, // legacy slug
   account: IconUser,
-  general: IconFolder,
+  "mua-hang": IconFolder,
+  general: IconFolder, // legacy slug
 };
+
+/** Old CMS slugs → current category ids (bookmarks / ?cat=). */
+const LEGACY_CATEGORY: Record<string, string> = {
+  general: "mua-hang",
+  delivery: "gia-han-thay-doi",
+};
+
+function resolveFaqCategoryId(
+  raw: string | null | undefined,
+  categories: FaqCategoryMeta[],
+): string | null {
+  if (!raw) return null;
+  const mapped = LEGACY_CATEGORY[raw] ?? raw;
+  return categories.some((c) => c.id === mapped) ? mapped : null;
+}
 
 type Props = {
   categories: FaqCategoryMeta[];
@@ -64,7 +81,9 @@ export function FaqSupportView({
 
   const [query, setQuery] = useState(initialQuery);
   const deferredQuery = useDeferredValue(query.trim());
-  const [category, setCategory] = useState<string | null>(initialCategory);
+  const [category, setCategory] = useState<string | null>(() =>
+    resolveFaqCategoryId(initialCategory, categories),
+  );
   const [openId, setOpenId] = useState<string | null>(null);
   const [page, setPage] = useState(Math.max(1, initialPage));
 
@@ -73,7 +92,8 @@ export function FaqSupportView({
       categories.map((c) => [c.id, 0]),
     );
     for (const item of items) {
-      const cat = item.category ?? "general";
+      const raw = item.category ?? "mua-hang";
+      const cat = LEGACY_CATEGORY[raw] ?? raw;
       map[cat] = (map[cat] ?? 0) + 1;
     }
     return map;
@@ -84,7 +104,7 @@ export function FaqSupportView({
       ? category
       : categories.find((c) => (counts[c.id] ?? 0) > 0)?.id ??
         categories[0]?.id ??
-        "general";
+        "mua-hang";
 
   const searching = deferredQuery.length >= 2;
 
@@ -102,9 +122,10 @@ export function FaqSupportView({
           normalize(item.answer).includes(q),
       );
     }
-    return items.filter(
-      (item) => (item.category ?? "general") === activeCategory,
-    );
+    return items.filter((item) => {
+      const raw = item.category ?? "mua-hang";
+      return (LEGACY_CATEGORY[raw] ?? raw) === activeCategory;
+    });
   }, [items, searching, deferredQuery, activeCategory]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -117,8 +138,8 @@ export function FaqSupportView({
   const activeMeta =
     categories.find((c) => c.id === activeCategory) ??
     categories[0] ?? {
-      id: "general",
-      label: "Chung",
+      id: "mua-hang",
+      label: "Mua hàng",
       description: "",
     };
 
@@ -159,7 +180,8 @@ export function FaqSupportView({
   }
 
   function openPopular(item: FaqItem) {
-    const cat = item.category ?? "general";
+    const raw = item.category ?? "mua-hang";
+    const cat = LEGACY_CATEGORY[raw] ?? raw;
     setCategory(cat);
     setQuery("");
     setPage(1);
@@ -195,7 +217,8 @@ export function FaqSupportView({
   }, [safePage, totalPages]);
 
   function categoryLabel(id: string) {
-    return categories.find((c) => c.id === id)?.label ?? id;
+    const mapped = LEGACY_CATEGORY[id] ?? id;
+    return categories.find((c) => c.id === mapped)?.label ?? id;
   }
 
   function renderAccordion(list: FaqItem[], showCatBadge: boolean) {
@@ -239,7 +262,7 @@ export function FaqSupportView({
                   </span>
                   {showCatBadge ? (
                     <span className="mt-1 inline-block rounded-full bg-navy-soft px-2 py-0.5 text-[11px] font-medium text-muted">
-                      {categoryLabel(item.category ?? "general")}
+                      {categoryLabel(item.category ?? "mua-hang")}
                     </span>
                   ) : null}
                 </span>
