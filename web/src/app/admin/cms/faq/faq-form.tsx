@@ -6,6 +6,8 @@ import type {
   CmsFaqDocument,
   CmsFaqItem,
 } from "@/server/cms/types";
+import { groupCategoriesForSidebar } from "@/storefront/content/faq-groups";
+import { ELEVATION_MODAL, ELEVATION_NONE, Z_MODAL, Z_STICKY } from "@/storefront/effects";
 
 const PAGE_SIZE = 20;
 
@@ -35,6 +37,18 @@ function emptyItem(defaultCategory: string): CmsFaqItem {
   };
 }
 
+function categoryOptionGroups(categories: CmsFaqCategoryDef[]) {
+  return groupCategoriesForSidebar(categories).map(({ group, categories: cats }) => (
+    <optgroup key={`${group.id}-${group.label}`} label={group.label}>
+      {cats.map((cat) => (
+        <option key={cat.id} value={cat.id}>
+          {cat.label}
+        </option>
+      ))}
+    </optgroup>
+  ));
+}
+
 export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
   const [categories, setCategories] = useState<CmsFaqCategoryDef[]>(
     () => initial.categories,
@@ -58,14 +72,23 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
   const [newCatLabel, setNewCatLabel] = useState("");
   const [newCatDesc, setNewCatDesc] = useState("");
   const [newCatSlug, setNewCatSlug] = useState("");
+  const [catsOpen, setCatsOpen] = useState(false);
+  const [catQuery, setCatQuery] = useState("");
+  const [expandedCatId, setExpandedCatId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!editingId) return;
+    if (!editingId && !catsOpen) return;
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setEditingId(null);
+      if (e.key !== "Escape") return;
+      if (editingId) setEditingId(null);
+      else setCatsOpen(false);
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
+  }, [editingId, catsOpen]);
+
+  useEffect(() => {
+    if (editingId) setCatsOpen(false);
   }, [editingId]);
 
   useEffect(() => {
@@ -179,13 +202,15 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
   }
 
   function addNew() {
-    const item = emptyItem(categories[0]?.id ?? "general");
+    const defaultCat = category || categories[0]?.id || "mua-hang";
+    const item = emptyItem(defaultCat);
     item.question = "Câu hỏi mới";
+    if (visibility === "home") item.showOnHome = true;
+    if (visibility === "hidden") item.showOnFaqPage = false;
     commitItems([item, ...items]);
     setQ("");
-    setCategory("");
-    setVisibility("all");
     setPage(1);
+    setCatsOpen(false);
     setEditingId(item.id);
   }
 
@@ -253,7 +278,12 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
     setNewCatLabel("");
     setNewCatDesc("");
     setNewCatSlug("");
+    setExpandedCatId(id);
+    setCatQuery("");
     setMsg(`Đã thêm danh mục "${label}" — nhớ Lưu và xuất bản`);
+    requestAnimationFrame(() => {
+      document.getElementById(`faq-cat-${id}`)?.scrollIntoView({ block: "nearest" });
+    });
   }
 
   function patchCategory(id: string, patch: Partial<CmsFaqCategoryDef>) {
@@ -268,19 +298,20 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
       return;
     }
     const used = items.filter((i) => i.category === id).length;
+    const fallbackId = categories.find((c) => c.id !== id)?.id ?? "mua-hang";
+    const fallbackLabel =
+      categories.find((c) => c.id === fallbackId)?.label ?? fallbackId;
     if (used > 0) {
       if (
         !confirm(
-          `Danh mục đang có ${used} câu hỏi. Chuyển chúng sang "Chung" rồi xóa danh mục?`,
+          `Danh mục đang có ${used} câu hỏi. Chuyển chúng sang "${fallbackLabel}" rồi xóa danh mục?`,
         )
       ) {
         return;
       }
       commitItems(
         items.map((i) =>
-          i.category === id
-            ? { ...i, category: categories.find((c) => c.id !== id)?.id ?? "mua-hang" }
-            : i,
+          i.category === id ? { ...i, category: fallbackId } : i,
         ),
       );
     } else if (!confirm("Xóa danh mục này?")) {
@@ -288,6 +319,7 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
     }
     commitCategories(categories.filter((c) => c.id !== id));
     if (category === id) setCategory("");
+    if (expandedCatId === id) setExpandedCatId(null);
   }
 
   async function save() {
@@ -365,137 +397,12 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
 
   return (
     <div className="space-y-4">
-      {/* Categories manager */}
-      <section className="overflow-hidden rounded-2xl border border-border bg-card">
-        <div className="border-b border-border bg-surface/60 px-4 py-3 sm:px-5">
-          <h2 className="text-sm font-semibold text-navy">
-            Danh mục câu hỏi ({stats.cats})
-          </h2>
-          <p className="mt-0.5 text-xs text-muted">
-            Tạo danh mục cho trung tâm trợ giúp — slug dùng trên /faq?cat=…
-          </p>
-        </div>
-        <div className="space-y-3 p-4 sm:p-5">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[560px] text-left text-sm">
-              <thead className="text-xs uppercase tracking-wide text-muted">
-                <tr>
-                  <th className="pb-2 pr-2">Slug</th>
-                  <th className="pb-2 pr-2">Tên</th>
-                  <th className="pb-2 pr-2">Mô tả</th>
-                  <th className="pb-2 pr-2 text-center">Câu hỏi</th>
-                  <th className="pb-2 text-right">Thao tác</th>
-                </tr>
-              </thead>
-              <tbody>
-                {categories.map((c, idx) => {
-                  const count = items.filter((i) => i.category === c.id).length;
-                  return (
-                    <tr key={c.id} className="border-t border-border/70">
-                      <td className="py-2 pr-2 align-middle font-mono text-xs text-muted">
-                        {c.id}
-                      </td>
-                      <td className="py-2 pr-2 align-middle">
-                        <input
-                          className="w-full rounded-lg border border-border px-2 py-1.5 text-sm"
-                          value={c.label}
-                          onChange={(e) =>
-                            patchCategory(c.id, { label: e.target.value })
-                          }
-                        />
-                      </td>
-                      <td className="py-2 pr-2 align-middle">
-                        <input
-                          className="w-full rounded-lg border border-border px-2 py-1.5 text-sm"
-                          value={c.description ?? ""}
-                          placeholder="Mô tả ngắn"
-                          onChange={(e) =>
-                            patchCategory(c.id, {
-                              description: e.target.value,
-                            })
-                          }
-                        />
-                      </td>
-                      <td className="py-2 pr-2 text-center align-middle tabular-nums text-xs text-muted">
-                        {count}
-                      </td>
-                      <td className="py-2 text-right align-middle">
-                        <div className="inline-flex gap-1">
-                          <button
-                            type="button"
-                            className="rounded px-1.5 py-1 text-xs text-muted hover:bg-surface disabled:opacity-30"
-                            disabled={idx <= 0}
-                            onClick={() => moveCategory(c.id, -1)}
-                          >
-                            ↑
-                          </button>
-                          <button
-                            type="button"
-                            className="rounded px-1.5 py-1 text-xs text-muted hover:bg-surface disabled:opacity-30"
-                            disabled={idx >= categories.length - 1}
-                            onClick={() => moveCategory(c.id, 1)}
-                          >
-                            ↓
-                          </button>
-                          <button
-                            type="button"
-                            className="rounded px-2 py-1 text-xs text-danger hover:bg-rose-50 disabled:opacity-30"
-                            disabled={c.id === "general"}
-                            onClick={() => removeCategory(c.id)}
-                          >
-                            Xóa
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="grid gap-2 rounded-xl border border-dashed border-border bg-surface/40 p-3 sm:grid-cols-[1fr_1fr_1fr_auto]">
-            <input
-              className="h-10 rounded-lg border border-border px-3 text-sm"
-              placeholder="Tên danh mục (vd. Kích hoạt)"
-              value={newCatLabel}
-              onChange={(e) => {
-                setNewCatLabel(e.target.value);
-                if (!newCatSlug) setNewCatSlug(slugify(e.target.value));
-              }}
-            />
-            <input
-              className="h-10 rounded-lg border border-border px-3 font-mono text-sm"
-              placeholder="Slug (vd. activation)"
-              value={newCatSlug}
-              onChange={(e) => setNewCatSlug(slugify(e.target.value))}
-            />
-            <input
-              className="h-10 rounded-lg border border-border px-3 text-sm"
-              placeholder="Mô tả (tuỳ chọn)"
-              value={newCatDesc}
-              onChange={(e) => setNewCatDesc(e.target.value)}
-            />
-            <button
-              type="button"
-              onClick={addCategory}
-              className="h-10 rounded-lg border border-border bg-white px-4 text-sm font-medium hover:border-accent"
-            >
-              + Thêm danh mục
-            </button>
-          </div>
-        </div>
-      </section>
-
       {/* Sticky toolbar */}
-      <div className="sticky top-0 z-20 -mx-1 space-y-3 rounded-2xl border border-border bg-white/95 p-3 shadow-sm backdrop-blur sm:p-4">
+      <div className={`sticky top-0 ${Z_STICKY} -mx-1 space-y-3 rounded-2xl border border-border bg-white/95 p-3 backdrop-blur sm:p-4 ${ELEVATION_NONE}`}>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap gap-2 text-xs text-muted">
             <span className="rounded-full bg-surface px-2.5 py-1 font-medium text-navy">
               {stats.total} câu
-            </span>
-            <span className="rounded-full bg-surface px-2.5 py-1">
-              {stats.cats} danh mục
             </span>
             <span className="rounded-full bg-surface px-2.5 py-1">
               Home {stats.home}
@@ -510,6 +417,16 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
             ) : null}
           </div>
           <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setEditingId(null);
+                setCatsOpen(true);
+              }}
+              className="rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-surface"
+            >
+              Danh mục ({stats.cats})
+            </button>
             <button
               type="button"
               onClick={addNew}
@@ -548,11 +465,7 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
             }}
           >
             <option value="">Tất cả danh mục</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.label}
-              </option>
-            ))}
+            {categoryOptionGroups(categories)}
           </select>
           <select
             className="h-10 w-full rounded-lg border border-border px-3 text-sm"
@@ -614,11 +527,7 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
               }}
             >
               <option value="">Đổi danh mục…</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.label}
-                </option>
-              ))}
+              {categoryOptionGroups(categories)}
             </select>
             <button
               type="button"
@@ -817,15 +726,49 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
         ) : null}
       </div>
 
+      {catsOpen ? (
+        <CategoryDrawer
+          categories={categories}
+          items={items}
+          query={catQuery}
+          onQuery={setCatQuery}
+          expandedId={expandedCatId}
+          onToggle={(id) =>
+            setExpandedCatId((cur) => (cur === id ? null : id))
+          }
+          newLabel={newCatLabel}
+          newSlug={newCatSlug}
+          newDesc={newCatDesc}
+          onNewLabel={(value) => {
+            setNewCatLabel(value);
+            if (!newCatSlug) setNewCatSlug(slugify(value));
+          }}
+          onNewSlug={(value) => setNewCatSlug(slugify(value))}
+          onNewDesc={setNewCatDesc}
+          onAdd={addCategory}
+          onPatch={patchCategory}
+          onMove={moveCategory}
+          onRemove={removeCategory}
+          notice={msg}
+          onView={(id) => {
+            setCategory(id);
+            setPage(1);
+            setQ("");
+            setCatsOpen(false);
+          }}
+          onClose={() => setCatsOpen(false)}
+        />
+      ) : null}
+
       {editing ? (
-        <div className="fixed inset-0 z-40 flex justify-end bg-navy/40">
+        <div className={`fixed inset-0 ${Z_MODAL} flex justify-end bg-navy/40`}>
           <button
             type="button"
             className="absolute inset-0 cursor-default"
             aria-label="Đóng"
             onClick={() => setEditingId(null)}
           />
-          <aside className="relative flex h-full w-full max-w-lg flex-col border-l border-border bg-white shadow-2xl">
+          <aside className={`relative flex h-full w-full max-w-lg flex-col border-l border-border bg-white ${ELEVATION_MODAL}`}>
             <div className="flex items-center justify-between border-b border-border px-4 py-3">
               <div>
                 <p className="text-sm font-semibold text-navy">Sửa FAQ</p>
@@ -878,11 +821,7 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
                     patchItem(editing.id, { category: e.target.value })
                   }
                 >
-                  {categories.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.label}
-                    </option>
-                  ))}
+                  {categoryOptionGroups(categories)}
                 </select>
               </label>
               <div className="flex flex-wrap gap-4 text-sm">
@@ -936,6 +875,261 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
           </aside>
         </div>
       ) : null}
+    </div>
+  );
+}
+
+function CategoryDrawer({
+  categories,
+  items,
+  query,
+  onQuery,
+  expandedId,
+  onToggle,
+  newLabel,
+  newSlug,
+  newDesc,
+  onNewLabel,
+  onNewSlug,
+  onNewDesc,
+  onAdd,
+  onPatch,
+  onMove,
+  onRemove,
+  notice,
+  onView,
+  onClose,
+}: {
+  categories: CmsFaqCategoryDef[];
+  items: CmsFaqItem[];
+  query: string;
+  onQuery: (value: string) => void;
+  expandedId: string | null;
+  onToggle: (id: string) => void;
+  newLabel: string;
+  newSlug: string;
+  newDesc: string;
+  onNewLabel: (value: string) => void;
+  onNewSlug: (value: string) => void;
+  onNewDesc: (value: string) => void;
+  onAdd: () => void;
+  onPatch: (id: string, patch: Partial<CmsFaqCategoryDef>) => void;
+  onMove: (id: string, dir: -1 | 1) => void;
+  onRemove: (id: string) => void;
+  notice: string | null;
+  onView: (id: string) => void;
+  onClose: () => void;
+}) {
+  const counts = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const item of items) {
+      const id = item.category || "general";
+      map.set(id, (map.get(id) ?? 0) + 1);
+    }
+    return map;
+  }, [items]);
+
+  const groups = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    return groupCategoriesForSidebar(categories)
+      .map(({ group, categories: cats }) => ({
+        group,
+        categories: cats.filter((cat) => {
+          if (!needle) return true;
+          return (
+            cat.label.toLowerCase().includes(needle) ||
+            cat.id.toLowerCase().includes(needle) ||
+            (cat.description ?? "").toLowerCase().includes(needle)
+          );
+        }),
+      }))
+      .filter((group) => group.categories.length > 0);
+  }, [categories, query]);
+
+  const field =
+    "mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20";
+
+  return (
+    <div className={`fixed inset-0 ${Z_MODAL} flex justify-end bg-navy/40`}>
+      <button
+        type="button"
+        className="absolute inset-0 cursor-default"
+        aria-label="Đóng danh mục"
+        onClick={onClose}
+      />
+      <aside
+        className={`relative flex h-full w-full max-w-lg flex-col border-l border-border bg-white ${ELEVATION_MODAL}`}
+      >
+        <div className="flex items-center justify-between border-b border-border px-4 py-3">
+          <div>
+            <p className="text-sm font-semibold text-navy">
+              Danh mục ({categories.length})
+            </p>
+            <p className="text-xs text-muted">
+              Cùng 5 cụm với trang FAQ. Bấm một dòng để sửa.
+            </p>
+          </div>
+          <button
+            type="button"
+            className="rounded-lg border border-border px-3 py-1.5 text-sm"
+            onClick={onClose}
+          >
+            Đóng
+          </button>
+        </div>
+
+        <div className="flex-1 space-y-4 overflow-y-auto p-4">
+          <div className="space-y-2 rounded-xl border border-dashed border-border bg-surface/40 p-3">
+            <p className="text-xs font-medium text-muted">Thêm danh mục</p>
+            <input
+              className="h-10 w-full rounded-lg border border-border bg-white px-3 text-sm"
+              placeholder="Tên danh mục"
+              value={newLabel}
+              onChange={(e) => onNewLabel(e.target.value)}
+            />
+            <input
+              className="h-10 w-full rounded-lg border border-border bg-white px-3 font-mono text-sm"
+              placeholder="Slug"
+              value={newSlug}
+              onChange={(e) => onNewSlug(e.target.value)}
+            />
+            <input
+              className="h-10 w-full rounded-lg border border-border bg-white px-3 text-sm"
+              placeholder="Mô tả (tuỳ chọn)"
+              value={newDesc}
+              onChange={(e) => onNewDesc(e.target.value)}
+            />
+            <button
+              type="button"
+              onClick={onAdd}
+              className="h-10 rounded-lg border border-border bg-white px-4 text-sm font-medium hover:border-accent"
+            >
+              + Thêm danh mục
+            </button>
+            {notice ? (
+              <p
+                className={`text-sm ${
+                  notice.startsWith("Đã lưu") || notice.startsWith("Đã thêm")
+                    ? "text-emerald-700"
+                    : "text-danger"
+                }`}
+              >
+                {notice}
+              </p>
+            ) : null}
+          </div>
+
+          <input
+            className="h-10 w-full rounded-lg border border-border px-3 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
+            placeholder="Tìm danh mục…"
+            value={query}
+            onChange={(e) => onQuery(e.target.value)}
+          />
+
+          {groups.length === 0 ? (
+            <p className="text-sm text-muted">Không có danh mục khớp.</p>
+          ) : (
+            groups.map(({ group, categories: cats }) => (
+              <section key={`${group.id}-${group.label}`} className="space-y-1">
+                <h3 className="px-1 text-xs font-semibold uppercase tracking-wide text-muted">
+                  {group.label}
+                </h3>
+                <ul className="space-y-1">
+                  {cats.map((cat) => {
+                    const open = expandedId === cat.id;
+                    const index = categories.findIndex((row) => row.id === cat.id);
+                    const count = counts.get(cat.id) ?? 0;
+                    return (
+                      <li key={cat.id} id={`faq-cat-${cat.id}`}>
+                        <button
+                          type="button"
+                          className={`flex w-full items-center justify-between gap-3 rounded-lg px-2 py-2 text-left hover:bg-surface ${
+                            open ? "bg-accent-soft/50" : ""
+                          }`}
+                          onClick={() => onToggle(cat.id)}
+                          aria-expanded={open}
+                        >
+                          <span className="min-w-0">
+                            <span className="block truncate text-sm font-medium text-navy">
+                              {cat.label || "(Chưa đặt tên)"}
+                            </span>
+                            <span className="block truncate font-mono text-xs text-muted">
+                              {cat.id}
+                            </span>
+                          </span>
+                          <span className="shrink-0 text-xs tabular-nums text-muted">
+                            {count} câu
+                          </span>
+                        </button>
+                        {open ? (
+                          <div className="mb-2 space-y-2 rounded-xl border border-border p-3">
+                            <label className="block text-xs font-medium text-muted">
+                              Tên
+                              <input
+                                className={field}
+                                value={cat.label}
+                                onChange={(e) =>
+                                  onPatch(cat.id, { label: e.target.value })
+                                }
+                              />
+                            </label>
+                            <label className="block text-xs font-medium text-muted">
+                              Mô tả
+                              <input
+                                className={field}
+                                value={cat.description ?? ""}
+                                placeholder="Mô tả ngắn"
+                                onChange={(e) =>
+                                  onPatch(cat.id, {
+                                    description: e.target.value,
+                                  })
+                                }
+                              />
+                            </label>
+                            <div className="flex flex-wrap gap-2">
+                              <button
+                                type="button"
+                                className="rounded-lg border border-border px-3 py-1.5 text-xs disabled:opacity-30"
+                                disabled={index <= 0}
+                                onClick={() => onMove(cat.id, -1)}
+                              >
+                                Lên
+                              </button>
+                              <button
+                                type="button"
+                                className="rounded-lg border border-border px-3 py-1.5 text-xs disabled:opacity-30"
+                                disabled={index < 0 || index >= categories.length - 1}
+                                onClick={() => onMove(cat.id, 1)}
+                              >
+                                Xuống
+                              </button>
+                              <button
+                                type="button"
+                                className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-accent"
+                                onClick={() => onView(cat.id)}
+                              >
+                                Xem câu hỏi
+                              </button>
+                              <button
+                                type="button"
+                                className="rounded-lg border border-danger/30 px-3 py-1.5 text-xs text-danger disabled:opacity-30"
+                                disabled={cat.id === "general"}
+                                onClick={() => onRemove(cat.id)}
+                              >
+                                Xóa
+                              </button>
+                            </div>
+                          </div>
+                        ) : null}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            ))
+          )}
+        </div>
+      </aside>
     </div>
   );
 }
