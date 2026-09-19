@@ -108,4 +108,52 @@ export const FAQ_CATEGORIES: FaqCategoryMeta[] = [
     label: "Software License",
     description: "Các loại license số và checklist trước khi mua trên KEYON.",
   },
+  {
+    id: "thanh-toan-giao-dich",
+    label: "Thanh toán & Giao dịch",
+    description:
+      "Sự cố VietQR/CK SePay, trừ tiền, nội dung CK và trạng thái thanh toán trên KEYON.",
+  },
+  {
+    id: "don-hang-fulfillment",
+    label: "Đơn hàng & Fulfillment",
+    description:
+      "Trạng thái đơn, cấp license sau thanh toán và theo dõi tại Tài khoản.",
+  },
+  {
+    id: "license-kich-hoat-su-co",
+    label: "License & Kích hoạt (sự cố)",
+    description:
+      "Lỗi kích hoạt phía phần mềm/vendor — KEYON hỗ trợ đối chiếu đơn và license đã cấp.",
+  },
+  {
+    id: "cai-dat-phan-mem",
+    label: "Cài đặt phần mềm",
+    description:
+      "Cài đặt, phiên bản, yêu cầu hệ thống — thuộc phần mềm/vendor sau khi nhận license.",
+  },
+  {
+    id: "cloud-server-su-co",
+    label: "Cloud Server (sự cố)",
+    description:
+      "Troubleshooting máy chủ cloud của nhà cung cấp — không phải console IaaS trong KEYON.",
+  },
+  {
+    id: "email-server-su-co",
+    label: "Email Server (sự cố)",
+    description:
+      "Sự cố gửi/nhận email trên hệ thống email doanh nghiệp — KEYON chưa vận hành mailbox sẵn.",
+  },
+  {
+    id: "backup-restore-su-co",
+    label: "Backup & Restore (sự cố)",
+    description:
+      "Job backup/restore trên phần mềm hoặc hạ tầng của bạn — KEYON không lưu bản sao dữ liệu.",
+  },
+  {
+    id: "api-tich-hop",
+    label: "API & Tích hợp",
+    description:
+      "Kiến thức chung khi tích hợp API nhà cung cấp. Partner API KEYON hiện chưa mở công khai.",
+  },
 ];
