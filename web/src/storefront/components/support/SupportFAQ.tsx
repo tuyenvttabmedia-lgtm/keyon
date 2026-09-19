@@ -9,6 +9,7 @@ import {
   SECTION_TITLE_CLASS,
 } from "@/storefront/typography";
 import { TRANSITION_UI } from "@/storefront/effects";
+import { FaqAnswer } from "@/storefront/components/FaqAnswer";
 import { FAQ_HREF } from "./shared";
 
 export type SupportFaqItem = {
@@ -58,9 +59,7 @@ export function SupportFAQ({ items }: { items: SupportFaqItem[] }) {
                 </h3>
                 {open ? (
                   <div className={`border-t border-border bg-[#F7FAFC] px-4 py-4 sm:px-5 ${BODY_MUTED_CLASS}`}>
-                    <div className="prose prose-sm max-w-none text-muted whitespace-pre-wrap">
-                      {item.answer}
-                    </div>
+                    <FaqAnswer text={item.answer} className="text-muted" />
                   </div>
                 ) : null}
               </li>

@@ -5,6 +5,7 @@ import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import type { FaqCategoryMeta } from "@/storefront/content/faq-categories";
 import type { FaqItem } from "@/storefront/content/types";
+import { FaqAnswer } from "@/storefront/components/FaqAnswer";
 import {
   IconCard,
   IconFolder,
@@ -375,8 +376,8 @@ export function FaqSupportView({
                         </span>
                       </button>
                       {open ? (
-                        <div className="mx-4 mb-4 rounded-xl bg-accent-soft/70 px-4 py-3 text-sm leading-relaxed text-navy whitespace-pre-line md:mx-5">
-                          {item.answer}
+                        <div className="mx-4 mb-4 rounded-xl bg-accent-soft/70 px-4 py-3 text-navy md:mx-5">
+                          <FaqAnswer text={item.answer} />
                         </div>
                       ) : null}
                     </div>

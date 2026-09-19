@@ -861,6 +861,11 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
                     patchItem(editing.id, { answer: e.target.value })
                   }
                 />
+                <span className="mt-1.5 block text-[11px] font-normal leading-relaxed text-muted">
+                  Danh sách: mỗi ý một dòng sau câu kết thúc bằng &quot;:&quot; —
+                  hoặc gõ <code className="rounded bg-surface px-1">- ý</code> /{" "}
+                  <code className="rounded bg-surface px-1">1. ý</code>
+                </span>
               </label>
               <label className="block text-xs font-medium text-muted">
                 Danh mục

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { FaqItem } from "@/storefront/content/types";
+import { FaqAnswer } from "@/storefront/components/FaqAnswer";
 
 export function FaqAccordion({ items }: { items: FaqItem[] }) {
   const [openId, setOpenId] = useState<string | null>(items[0]?.id ?? null);
@@ -24,8 +25,8 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
               </span>
             </button>
             {open ? (
-              <div className="px-4 pb-4 text-sm leading-relaxed text-muted whitespace-pre-line md:px-5">
-                {item.answer}
+              <div className="px-4 pb-4 text-muted md:px-5">
+                <FaqAnswer text={item.answer} />
               </div>
             ) : null}
           </div>
