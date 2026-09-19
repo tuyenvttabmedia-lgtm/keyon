@@ -77,31 +77,35 @@ export const FAQ_CATEGORIES: FaqCategoryMeta[] = [
   {
     id: "cloud-server",
     label: "Cloud & Server",
-    description: "Cloud Server, hosting, cấu hình, backup máy chủ và nâng cấp.",
+    description:
+      "Khái niệm cloud/server và gói license trên catalog KEYON — không phải IaaS tự quản trên website.",
   },
   {
     id: "security",
     label: "Security",
-    description: "Phần mềm bảo mật, license, thiết bị và xử lý nghi ngờ malware.",
+    description: "License phần mềm bảo mật trên KEYON: loại gói, thiết bị, hết hạn và kích hoạt.",
   },
   {
     id: "backup",
     label: "Backup",
-    description: "Sao lưu dữ liệu, lịch backup, retention và khôi phục.",
+    description:
+      "Khái niệm backup và license phần mềm backup — KEYON không lưu bản sao dữ liệu của bạn.",
   },
   {
     id: "email-server",
     label: "Email Server",
-    description: "Email theo tên miền, tài khoản, Outlook/mobile và chống spam.",
+    description:
+      "Khái niệm email doanh nghiệp. KEYON chưa có shop Email Server riêng; chỉ áp dụng nếu có SKU trên catalog.",
   },
   {
     id: "saas",
     label: "SaaS",
-    description: "Phần mềm dạng dịch vụ, người dùng, gói và tích hợp.",
+    description:
+      "Mua license/gói SaaS trên catalog — không phải cổng quản trị tenant hay seat self-serve.",
   },
   {
     id: "software-license",
     label: "Software License",
-    description: "Subscription, perpetual, OEM, Retail, Volume và checklist mua license.",
+    description: "Các loại license số và checklist trước khi mua trên KEYON.",
   },
 ];
