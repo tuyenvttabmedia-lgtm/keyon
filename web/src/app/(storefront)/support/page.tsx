@@ -6,6 +6,7 @@ import {
   type BlogPost,
 } from "@/server/cms/store";
 import { getFaqForPage } from "@/storefront/content/get-home-content";
+import { pickHomeFaqs } from "@/storefront/content/faq-groups";
 import { filterPostsBySection, resourcePostHref } from "@/storefront/lib/resources";
 import { SupportCenterLanding } from "@/storefront/components/support/SupportCenterLanding";
 import {
@@ -58,7 +59,10 @@ export default async function SupportHubPage() {
 
   const suggestions = buildSuggestedSearches(docs);
   const channels = resolveSupportChannels(cms);
-  const faqItems = faq.items.map((f) => ({
+  const faqItems = pickHomeFaqs(
+    faq.items.map((f) => ({ ...f, showOnHome: Boolean(f.popular) })),
+    6,
+  ).map((f) => ({
     id: f.id,
     question: f.question,
     answer: f.answer,

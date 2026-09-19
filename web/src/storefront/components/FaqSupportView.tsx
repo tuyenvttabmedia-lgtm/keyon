@@ -66,6 +66,7 @@ type Props = {
   initialQuery?: string;
   initialCategory?: string | null;
   initialPage?: number;
+  initialOpenId?: string | null;
 };
 
 function normalize(s: string) {
@@ -81,6 +82,7 @@ export function FaqSupportView({
   initialQuery = "",
   initialCategory = null,
   initialPage = 1,
+  initialOpenId = null,
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
@@ -91,7 +93,8 @@ export function FaqSupportView({
   const [category, setCategory] = useState<string | null>(() =>
     resolveFaqCategoryId(initialCategory, categories),
   );
-  const [openId, setOpenId] = useState<string | null>(null);
+  const [openId, setOpenId] = useState<string | null>(initialOpenId);
+  const scrolledOpen = useRef(false);
   const [page, setPage] = useState(Math.max(1, initialPage));
 
   const counts = useMemo(() => {
@@ -253,10 +256,12 @@ export function FaqSupportView({
   }
 
   useEffect(() => {
-    setPage((p) =>
-      Math.min(p, Math.max(1, Math.ceil(filtered.length / PAGE_SIZE) || 1)),
-    );
-  }, [filtered.length]);
+    if (!initialOpenId || scrolledOpen.current) return;
+    scrolledOpen.current = true;
+    const el = document.getElementById(`faq-item-${initialOpenId}`);
+    if (!el) return;
+    el.scrollIntoView({ block: "center", behavior: "auto" });
+  }, [initialOpenId]);
 
   const pageButtons = useMemo(() => {
     const pages: number[] = [];
@@ -294,7 +299,8 @@ export function FaqSupportView({
           return (
             <div
               key={item.id}
-              className={`overflow-hidden rounded-xl border bg-white ${
+              id={`faq-item-${item.id}`}
+              className={`scroll-mt-28 overflow-hidden rounded-xl border bg-white ${
                 open ? `border-accent ${ELEVATION_HAIRLINE}` : "border-border"
               }`}
             >

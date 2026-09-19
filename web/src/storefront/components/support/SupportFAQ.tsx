@@ -20,7 +20,7 @@ export type SupportFaqItem = {
 
 export function SupportFAQ({ items }: { items: SupportFaqItem[] }) {
   const teaser = items.slice(0, 8);
-  const [openId, setOpenId] = useState<string | null>(teaser[0]?.id ?? null);
+  const [openId, setOpenId] = useState<string | null>(null);
 
   return (
     <div>

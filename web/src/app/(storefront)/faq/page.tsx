@@ -10,12 +10,14 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 type Props = {
-  searchParams: Promise<{ q?: string; cat?: string; page?: string }>;
+  searchParams: Promise<{ q?: string; cat?: string; page?: string; open?: string }>;
 };
 
 export default async function FaqPage({ searchParams }: Props) {
   const sp = await searchParams;
   const faq = await getFaqForPage();
+  const openId = sp.open?.trim() || null;
+  const opened = openId ? faq.items.find((i) => i.id === openId) : undefined;
   const pageNum = Math.max(1, Number.parseInt(sp.page ?? "1", 10) || 1);
 
   return (
@@ -23,8 +25,9 @@ export default async function FaqPage({ searchParams }: Props) {
       categories={faq.categories}
       items={faq.items}
       initialQuery={sp.q?.trim() || ""}
-      initialCategory={sp.cat?.trim() || null}
+      initialCategory={sp.cat?.trim() || opened?.category || null}
       initialPage={pageNum}
+      initialOpenId={opened?.id ?? null}
     />
   );
 }
