@@ -160,7 +160,7 @@ export const FAQ_CATEGORIES: FaqCategoryMeta[] = [
     id: "doanh-nghiep-b2b",
     label: "Doanh nghiệp & B2B",
     description:
-      "Giải pháp doanh nghiệp trên KEYON: tư vấn, volume, triển khai qua /business và báo giá.",
+      "Giải pháp doanh nghiệp: tư vấn, volume, triển khai qua trang Doanh nghiệp và báo giá.",
   },
   {
     id: "mua-so-luong-lon",
@@ -171,7 +171,7 @@ export const FAQ_CATEGORIES: FaqCategoryMeta[] = [
     id: "reseller-dai-ly",
     label: "Reseller & Đại lý",
     description:
-      "Hợp tác phân phối. Partner API / portal đại lý: liên hệ — chưa self-serve công khai.",
+      "Hợp tác phân phối. API / portal đại lý: liên hệ — chưa tự đăng ký công khai.",
   },
   {
     id: "partner-hop-tac",
@@ -181,7 +181,7 @@ export const FAQ_CATEGORIES: FaqCategoryMeta[] = [
   {
     id: "bao-gia-quotation",
     label: "Báo giá & Quotation",
-    description: "Yêu cầu báo giá doanh nghiệp tại /contact/quote và các bước sau khi đồng ý.",
+    description: "Yêu cầu báo giá doanh nghiệp tại trang Báo giá và các bước sau khi đồng ý.",
   },
   {
     id: "procurement-doanh-nghiep",
@@ -192,12 +192,12 @@ export const FAQ_CATEGORIES: FaqCategoryMeta[] = [
     id: "api-doanh-nghiep",
     label: "API dành cho doanh nghiệp",
     description:
-      "Partner API KEYON hiện chưa mở công khai. Nội dung mang tính định hướng khi có chương trình.",
+      "Partner API KEYON chưa mở công khai. Nội dung định hướng khi có chương trình.",
   },
   {
     id: "enterprise-quan-tri",
     label: "Enterprise Account & Quản trị",
     description:
-      "Quản trị org/license: phần trên KEYON còn giới hạn; quản lý seat tập trung thường thuộc vendor.",
+      "Quản trị tổ chức/license: phần trên KEYON còn giới hạn; seat tập trung thường thuộc nhà cung cấp.",
   },
 ];

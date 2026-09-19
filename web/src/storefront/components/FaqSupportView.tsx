@@ -5,6 +5,13 @@ import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import type { FaqCategoryMeta } from "@/storefront/content/faq-categories";
 import type { FaqItem } from "@/storefront/content/types";
+import {
+  findGroupIdForCategory,
+  groupCategoriesForSidebar,
+  pickPopularFaqItems,
+  sanitizeFaqDescription,
+  type FaqGroupId,
+} from "@/storefront/content/faq-groups";
 import { FaqAnswer } from "@/storefront/components/FaqAnswer";
 import {
   IconCard,
@@ -31,14 +38,14 @@ const CATEGORY_ICONS: Record<
   typeof IconCard | typeof IconPackage | typeof IconUser | typeof IconFolder
 > = {
   payment: IconCard,
+  "thanh-toan-giao-dich": IconCard,
   "gia-han-thay-doi": IconPackage,
-  delivery: IconPackage, // legacy slug
+  delivery: IconPackage,
   account: IconUser,
   "mua-hang": IconFolder,
-  general: IconFolder, // legacy slug
+  general: IconFolder,
 };
 
-/** Old CMS slugs → current category ids (bookmarks / ?cat=). */
 const LEGACY_CATEGORY: Record<string, string> = {
   general: "mua-hang",
   delivery: "gia-han-thay-doi",
@@ -99,6 +106,11 @@ export function FaqSupportView({
     return map;
   }, [items, categories]);
 
+  const grouped = useMemo(
+    () => groupCategoriesForSidebar(categories),
+    [categories],
+  );
+
   const activeCategory =
     category && categories.some((c) => c.id === category)
       ? category
@@ -106,10 +118,34 @@ export function FaqSupportView({
         categories[0]?.id ??
         "mua-hang";
 
+  const activeGroupId =
+    findGroupIdForCategory(activeCategory) ??
+    grouped[0]?.group.id ??
+    "mua-tren-keyon";
+
+  const [openGroups, setOpenGroups] = useState<Set<FaqGroupId>>(
+    () => new Set([activeGroupId as FaqGroupId]),
+  );
+  const [mobileGroup, setMobileGroup] = useState<FaqGroupId>(
+    activeGroupId as FaqGroupId,
+  );
+
+  useEffect(() => {
+    const gid = findGroupIdForCategory(activeCategory);
+    if (!gid) return;
+    setOpenGroups((prev) => {
+      if (prev.has(gid)) return prev;
+      const next = new Set(prev);
+      next.add(gid);
+      return next;
+    });
+    setMobileGroup(gid);
+  }, [activeCategory]);
+
   const searching = deferredQuery.length >= 2;
 
   const popular = useMemo(
-    () => items.filter((i) => i.popular).slice(0, POPULAR_LIMIT),
+    () => pickPopularFaqItems(items, POPULAR_LIMIT),
     [items],
   );
 
@@ -143,6 +179,13 @@ export function FaqSupportView({
       description: "",
     };
 
+  const activeDescription = sanitizeFaqDescription(activeMeta.description);
+
+  const mobileGroupCats = useMemo(() => {
+    const row = grouped.find((g) => g.group.id === mobileGroup);
+    return row?.categories ?? [];
+  }, [grouped, mobileGroup]);
+
   function syncUrl(next: {
     cat?: string | null;
     q?: string;
@@ -169,6 +212,15 @@ export function FaqSupportView({
     syncUrl({ cat: id, q: "", page: 1 });
     requestAnimationFrame(() => {
       listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
+  function toggleGroup(id: FaqGroupId) {
+    setOpenGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
     });
   }
 
@@ -219,6 +271,10 @@ export function FaqSupportView({
   function categoryLabel(id: string) {
     const mapped = LEGACY_CATEGORY[id] ?? id;
     return categories.find((c) => c.id === mapped)?.label ?? id;
+  }
+
+  function groupCount(cats: FaqCategoryMeta[]) {
+    return cats.reduce((sum, c) => sum + (counts[c.id] ?? 0), 0);
   }
 
   function renderAccordion(list: FaqItem[], showCatBadge: boolean) {
@@ -368,6 +424,59 @@ export function FaqSupportView({
     </div>
   );
 
+  function renderCategoryButton(c: FaqCategoryMeta, compact = false) {
+    const active = !searching && activeCategory === c.id;
+    const CatIcon = CATEGORY_ICONS[c.id] ?? IconFolder;
+    const n = counts[c.id] ?? 0;
+    return (
+      <button
+        type="button"
+        onClick={() => selectCategory(c.id)}
+        title={sanitizeFaqDescription(c.description) || c.label}
+        className={`flex w-full items-center gap-2 text-left ${TRANSITION_UI} ${
+          compact
+            ? `shrink-0 rounded-full border px-3 py-1.5 text-sm font-medium ${
+                active
+                  ? "border-accent bg-accent-soft text-navy"
+                  : "border-border bg-white text-muted hover:border-accent/40"
+              }`
+            : `rounded-lg px-2.5 py-2 ${
+                active
+                  ? "bg-accent-soft font-semibold text-navy"
+                  : "text-muted hover:bg-white hover:text-navy"
+              }`
+        }`}
+      >
+        {!compact ? (
+          <span
+            className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md ${
+              active
+                ? "bg-accent text-white"
+                : "bg-white text-navy ring-1 ring-border"
+            }`}
+            aria-hidden
+          >
+            <CatIcon size={14} />
+          </span>
+        ) : null}
+        <span
+          className={`min-w-0 flex-1 ${compact ? "" : "truncate text-[13px]"}`}
+        >
+          {c.label}
+        </span>
+        <span
+          className={`tabular-nums ${
+            compact
+              ? "ml-1.5 text-xs opacity-70"
+              : `text-[11px] ${active ? "text-accent" : "text-muted-soft"}`
+          }`}
+        >
+          {n}
+        </span>
+      </button>
+    );
+  }
+
   return (
     <div className="bg-[#F7FAFC]">
       <div className="home-container py-8 md:py-10">
@@ -379,11 +488,10 @@ export function FaqSupportView({
           <span className="text-navy">Câu hỏi thường gặp</span>
         </nav>
 
-        {/* Search-first hero */}
         <header className="mx-auto mt-6 max-w-2xl text-center">
           <h1 className={PAGE_TITLE_CLASS}>Câu hỏi thường gặp</h1>
           <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>
-            Gõ từ khóa để tìm nhanh — hoặc chọn danh mục bên dưới.
+            Gõ từ khóa để tìm nhanh — hoặc chọn nhóm và danh mục bên dưới.
           </p>
           <label className="relative mt-5 block w-full text-left">
             <span className="sr-only">Tìm kiếm câu hỏi</span>
@@ -397,7 +505,7 @@ export function FaqSupportView({
               type="search"
               value={query}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="Ví dụ: thanh toán, kích hoạt, hoàn tiền…"
+              placeholder="Ví dụ: thanh toán, kích hoạt, hoàn tiền, báo giá…"
               className={`h-12 w-full rounded-xl border border-border bg-white pl-12 pr-11 text-sm text-navy outline-none transition placeholder:text-muted focus:border-accent focus:ring-2 focus:ring-accent/15 md:h-14 md:text-[15px] ${ELEVATION_HAIRLINE}`}
               autoComplete="off"
             />
@@ -419,11 +527,16 @@ export function FaqSupportView({
           ) : null}
         </header>
 
-        {/* Popular — only when not searching */}
         {!searching && popular.length > 0 ? (
-          <section className="mx-auto mt-8 max-w-3xl" aria-labelledby="faq-popular">
-            <p id="faq-popular" className={`${OVERLINE_CLASS} text-center text-muted`}>
-              Câu hỏi hay gặp
+          <section
+            className="mx-auto mt-8 max-w-3xl"
+            aria-labelledby="faq-popular"
+          >
+            <p
+              id="faq-popular"
+              className={`${OVERLINE_CLASS} text-center text-muted`}
+            >
+              Việc hay gặp
             </p>
             <ul className="mt-3 flex flex-wrap justify-center gap-2">
               {popular.map((item) => (
@@ -441,76 +554,98 @@ export function FaqSupportView({
           </section>
         ) : null}
 
-        {/* Mobile category chips */}
-        <div className="mt-8 flex gap-2 overflow-x-auto pb-1 lg:hidden">
-          {categories.map((c) => {
-            const active = !searching && activeCategory === c.id;
-            const n = counts[c.id] ?? 0;
-            return (
-              <button
-                key={c.id}
-                type="button"
-                onClick={() => selectCategory(c.id)}
-                className={`shrink-0 rounded-full border px-3 py-1.5 text-sm font-medium transition ${
-                  active
-                    ? "border-accent bg-accent-soft text-navy"
-                    : "border-border bg-white text-muted hover:border-accent/40"
-                }`}
-              >
-                {c.label}
-                <span className="ml-1.5 tabular-nums text-xs opacity-70">{n}</span>
-              </button>
-            );
-          })}
+        {/* Mobile: group chips → category chips */}
+        <div className="mt-8 space-y-2 lg:hidden">
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {grouped.map(({ group, categories: cats }) => {
+              const active = mobileGroup === group.id;
+              const n = groupCount(cats);
+              return (
+                <button
+                  key={group.id}
+                  type="button"
+                  onClick={() => {
+                    setMobileGroup(group.id);
+                    setOpenGroups((prev) => new Set(prev).add(group.id));
+                    const first =
+                      cats.find((c) => (counts[c.id] ?? 0) > 0) ?? cats[0];
+                    if (first && !searching) selectCategory(first.id);
+                  }}
+                  className={`shrink-0 rounded-full border px-3 py-1.5 text-sm font-semibold transition ${
+                    active
+                      ? "border-accent bg-accent text-white"
+                      : "border-border bg-white text-navy hover:border-accent/40"
+                  }`}
+                >
+                  {group.label}
+                  <span className="ml-1.5 tabular-nums text-xs opacity-80">
+                    {n}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {mobileGroupCats.map((c) => (
+              <div key={c.id}>{renderCategoryButton(c, true)}</div>
+            ))}
+          </div>
         </div>
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[240px_minmax(0,1fr)]">
-          {/* Slim sticky sidebar */}
+        <div className="mt-8 grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[280px_minmax(0,1fr)]">
           <aside className="hidden lg:block">
             <div className="sticky top-24 max-h-[calc(100vh-7rem)] space-y-3 overflow-y-auto pb-2 pr-1">
-              <p className={`${OVERLINE_CLASS} text-muted`}>Danh mục</p>
-              <ul className="space-y-0.5">
-                {categories.map((c) => {
-                  const active = !searching && activeCategory === c.id;
-                  const CatIcon = CATEGORY_ICONS[c.id] ?? IconFolder;
-                  const n = counts[c.id] ?? 0;
+              <p className={`${OVERLINE_CLASS} text-muted`}>Nhóm danh mục</p>
+              <div className="space-y-2">
+                {grouped.map(({ group, categories: cats }) => {
+                  const open = openGroups.has(group.id);
+                  const n = groupCount(cats);
+                  const containsActive =
+                    !searching &&
+                    cats.some((c) => c.id === activeCategory);
                   return (
-                    <li key={c.id}>
+                    <div
+                      key={group.id}
+                      className={`overflow-hidden rounded-xl border bg-white ${
+                        containsActive
+                          ? "border-accent/40"
+                          : "border-border"
+                      }`}
+                    >
                       <button
                         type="button"
-                        onClick={() => selectCategory(c.id)}
-                        title={c.description || c.label}
-                        className={`flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left ${TRANSITION_UI} ${
-                          active
-                            ? "bg-accent-soft font-semibold text-navy"
-                            : "text-muted hover:bg-white hover:text-navy"
-                        }`}
+                        onClick={() => toggleGroup(group.id)}
+                        className="flex w-full items-center gap-2 px-3 py-2.5 text-left"
+                        aria-expanded={open}
                       >
                         <span
-                          className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md ${
-                            active
+                          className={`inline-flex h-5 w-5 shrink-0 items-center justify-center rounded text-xs font-bold ${
+                            containsActive
                               ? "bg-accent text-white"
-                              : "bg-white text-navy ring-1 ring-border"
+                              : "bg-navy-soft text-navy"
                           }`}
                           aria-hidden
                         >
-                          <CatIcon size={14} />
+                          {open ? "−" : "+"}
                         </span>
-                        <span className="min-w-0 flex-1 truncate text-[13px]">
-                          {c.label}
+                        <span className="min-w-0 flex-1 text-[13px] font-semibold text-navy">
+                          {group.label}
                         </span>
-                        <span
-                          className={`tabular-nums text-[11px] ${
-                            active ? "text-accent" : "text-muted-soft"
-                          }`}
-                        >
+                        <span className="tabular-nums text-[11px] text-muted">
                           {n}
                         </span>
                       </button>
-                    </li>
+                      {open ? (
+                        <ul className="space-y-0.5 border-t border-border/70 px-1.5 py-1.5">
+                          {cats.map((c) => (
+                            <li key={c.id}>{renderCategoryButton(c)}</li>
+                          ))}
+                        </ul>
+                      ) : null}
+                    </div>
                   );
                 })}
-              </ul>
+              </div>
               {helpCard}
             </div>
           </aside>
@@ -522,8 +657,8 @@ export function FaqSupportView({
               </h2>
               <p className={`mt-1 ${CARD_META_CLASS}`}>
                 {filtered.length} câu hỏi
-                {!searching && activeMeta.description
-                  ? ` · ${activeMeta.description}`
+                {!searching && activeDescription
+                  ? ` · ${activeDescription}`
                   : null}
                 {totalPages > 1 ? ` · Trang ${safePage}/${totalPages}` : null}
               </p>
