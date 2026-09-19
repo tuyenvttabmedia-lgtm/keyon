@@ -56,7 +56,7 @@ const TOPICS: {
   {
     title: "Thanh toán & Hóa đơn",
     hints: "Thanh toán · Hóa đơn · Giao dịch",
-    href: "/faq",
+    href: "/faq?cat=payment",
     Icon: CreditCard,
   },
   {

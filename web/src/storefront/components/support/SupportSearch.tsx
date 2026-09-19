@@ -113,7 +113,7 @@ export function SupportSearch({ docs, suggestions, size = "hero" }: Props) {
               {results.map((r) => (
                 <li key={r.id} role="option" aria-selected={false}>
                   <Link
-                    href={r.kind === "faq" ? `${FAQ_HREF}?q=${encodeURIComponent(r.title)}` : r.href}
+                    href={r.href}
                     className="flex items-start justify-between gap-3 px-4 py-3 hover:bg-accent-soft/50"
                     onClick={() => setOpen(false)}
                   >

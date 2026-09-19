@@ -46,7 +46,7 @@ export default async function SupportHubPage() {
       kind: "faq" as const,
       title: f.question,
       excerpt: f.answer.slice(0, 160),
-      href: `/faq`,
+      href: `/faq?open=${encodeURIComponent(f.id)}`,
     })),
     ...guides.map((g) => ({
       id: `guide-${g.id}`,
@@ -65,7 +65,6 @@ export default async function SupportHubPage() {
   ).map((f) => ({
     id: f.id,
     question: f.question,
-    answer: f.answer,
   }));
 
   return (
