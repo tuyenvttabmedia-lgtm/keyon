@@ -49,6 +49,7 @@ import {
 import {
   isFaqCategorySlug,
   normalizeFaqDocument,
+  resolveCategoryId,
   slugifyFaqCategory,
 } from "@/server/cms/faq";
 
@@ -368,12 +369,16 @@ export async function PUT(
         );
 
     const catIds = new Set(parsed.categories.map((c) => c.id));
+    parsed.items = parsed.items.map((item) => ({
+      ...item,
+      category: resolveCategoryId(item.category, parsed.categories),
+    }));
     for (const item of parsed.items) {
       if (!catIds.has(item.category)) {
-        throw new AppError(
-          `Câu hỏi "${item.question.slice(0, 40)}" gắn danh mục không tồn tại: ${item.category}`,
-          400,
-        );
+        // Last resort: keep item under general rather than failing the whole save
+        item.category = catIds.has("general")
+          ? "general"
+          : parsed.categories[0]!.id;
       }
     }
     if (!catIds.has("general")) {

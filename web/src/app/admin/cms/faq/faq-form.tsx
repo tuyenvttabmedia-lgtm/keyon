@@ -68,6 +68,16 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [editingId]);
 
+  useEffect(() => {
+    if (!dirty) return;
+    function onBeforeUnload(e: BeforeUnloadEvent) {
+      e.preventDefault();
+      e.returnValue = "";
+    }
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [dirty]);
+
   function markDirty() {
     setDirty(true);
     setMsg(null);
@@ -279,19 +289,23 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
   }
 
   async function save() {
+    if (saving) return;
     setSaving(true);
     setMsg(null);
+    // Snapshot state at click — avoid races if edits happen mid-request
+    const catsSnap = categories;
+    const itemsSnap = items;
     try {
-      if (categories.length === 0) {
+      if (catsSnap.length === 0) {
         throw new Error("Cần ít nhất một danh mục");
       }
       const payload: CmsFaqDocument = {
-        categories: categories.map((c) => ({
+        categories: catsSnap.map((c) => ({
           id: slugify(c.id),
           label: c.label.trim(),
           description: c.description?.trim() || undefined,
         })),
-        items: items.map((i) => ({
+        items: itemsSnap.map((i) => ({
           ...i,
           question: i.question.trim(),
           answer: i.answer.trim(),
@@ -306,23 +320,36 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
       const blankCat = payload.categories.find((c) => !c.label);
       if (blankCat) throw new Error("Có danh mục thiếu tên");
 
+      const catIds = new Set(payload.categories.map((c) => c.id));
+      for (const item of payload.items) {
+        if (!catIds.has(item.category)) {
+          throw new Error(
+            `Câu hỏi "${item.question.slice(0, 40)}" gắn danh mục không tồn tại (${item.category}). Chọn lại danh mục rồi lưu.`,
+          );
+        }
+      }
+
       const res = await fetch("/api/admin/cms/faq", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Lưu thất bại");
-      if (data.data) {
-        setCategories(data.data.categories);
-        setItems(data.data.items);
-      } else {
-        setCategories(payload.categories);
-        setItems(payload.items);
+      let data: { error?: string; data?: CmsFaqDocument } = {};
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error(
+          res.ok ? "Phản hồi lưu không hợp lệ" : `Lưu thất bại (HTTP ${res.status})`,
+        );
       }
+      if (!res.ok) throw new Error(data.error ?? "Lưu thất bại");
+
+      const saved = data.data ?? payload;
+      setCategories(saved.categories);
+      setItems(saved.items);
       setDirty(false);
       setMsg(
-        `Đã lưu ${payload.categories.length} danh mục · ${payload.items.length} câu hỏi`,
+        `Đã lưu & xuất bản: ${saved.categories.length} danh mục · ${saved.items.length} câu hỏi — đã hiện trên /faq`,
       );
     } catch (e) {
       setMsg(e instanceof Error ? e.message : "Lỗi");
@@ -476,7 +503,7 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
             </span>
             {dirty ? (
               <span className="rounded-full bg-amber-100 px-2.5 py-1 font-medium text-amber-900">
-                Chưa lưu
+                Chưa lưu — /faq chưa thấy câu hỏi mới
               </span>
             ) : null}
           </div>
@@ -484,17 +511,18 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
             <button
               type="button"
               onClick={addNew}
-              className="rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-surface"
+              disabled={saving}
+              className="rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-surface disabled:opacity-50"
             >
               + Thêm câu hỏi
             </button>
             <button
               type="button"
-              disabled={saving}
+              disabled={saving || !dirty}
               onClick={() => void save()}
               className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
             >
-              {saving ? "Đang lưu…" : "Lưu và xuất bản"}
+              {saving ? "Đang lưu…" : dirty ? "Lưu và xuất bản" : "Đã lưu"}
             </button>
           </div>
         </div>

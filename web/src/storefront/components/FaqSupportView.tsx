@@ -326,7 +326,9 @@ export function FaqSupportView({
 
             {visible.length === 0 ? (
               <p className="rounded-xl border border-border bg-card px-4 py-8 text-center text-sm text-muted">
-                Không có câu hỏi phù hợp.
+                {searching
+                  ? "Không có câu hỏi phù hợp."
+                  : "Danh mục này chưa có câu hỏi trên web. Trong Admin CMS → FAQ, gắn câu hỏi vào danh mục rồi bấm “Lưu và xuất bản”."}
               </p>
             ) : (
               <div className="space-y-2">

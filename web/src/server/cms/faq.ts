@@ -40,15 +40,40 @@ export function normalizeFaqDocument(raw: unknown): CmsFaqDocument {
     return structuredClone(defaultCmsFaq);
   }
   const doc = raw as Partial<CmsFaqDocument>;
-  const items = normalizeItems(doc.items ?? []);
   const categories = normalizeCategories(doc.categories);
+  const baseCats =
+    categories.length > 0 ? categories : defaultCmsFaqCategories;
+  const items = normalizeItems(doc.items ?? []).map((item) => ({
+    ...item,
+    category: resolveCategoryId(item.category, baseCats),
+  }));
   return {
-    categories: mergeCategoriesFromItems(
-      categories.length ? categories : defaultCmsFaqCategories,
-      items,
-    ),
+    categories: mergeCategoriesFromItems(baseCats, items),
     items,
   };
+}
+
+/** Map slug or label → known category id. */
+export function resolveCategoryId(
+  raw: string | undefined,
+  categories: CmsFaqCategoryDef[],
+): string {
+  const value = (raw ?? "").trim();
+  if (!value) return "general";
+  const byId = categories.find((c) => c.id === value);
+  if (byId) return byId.id;
+  const slug = slugifyFaqCategory(value);
+  const bySlug = categories.find((c) => c.id === slug);
+  if (bySlug) return bySlug.id;
+  const byLabel = categories.find(
+    (c) => c.label.trim().toLowerCase() === value.toLowerCase(),
+  );
+  if (byLabel) return byLabel.id;
+  const byLabelSlug = categories.find(
+    (c) => slugifyFaqCategory(c.label) === slug,
+  );
+  if (byLabelSlug) return byLabelSlug.id;
+  return slug || "general";
 }
 
 function normalizeCategories(raw: unknown): CmsFaqCategoryDef[] {
