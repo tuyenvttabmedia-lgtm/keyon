@@ -522,7 +522,7 @@ function VolumeHeroArt() {
 
         <div className="mt-4 rounded-xl border border-dashed border-border bg-surface/60 px-3 py-3">
           <p className={`${CARD_META_CLASS}`}>
-            Minh họa giao diện quản lý — không phải số liệu vận hành thực tế của KEYON.
+            Sau mua volume, theo dõi trạng thái và hạn dùng trong Tài khoản KEYON.
           </p>
         </div>
       </div>

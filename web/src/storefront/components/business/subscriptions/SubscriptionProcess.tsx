@@ -47,7 +47,7 @@ const STEPS: {
     body: "Nắm thời hạn và trạng thái trong quá trình sử dụng.",
     previewTitle: "Theo dõi",
     previewBody:
-      "Subscription Hub hiển thị trạng thái đang hoạt động, sắp gia hạn hoặc cần xem xét — bằng nhãn, không phải số liệu giả.",
+      "Subscription Hub hiển thị trạng thái đang hoạt động, sắp gia hạn hoặc cần xem xét để bạn xử lý đúng lúc.",
     Icon: Eye,
     visual: [
       { label: "Đang hoạt động", tone: "bg-accent/20 text-accent" },

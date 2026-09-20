@@ -633,7 +633,7 @@ function CloudHeroArt() {
           viewBox="0 0 460 368"
           className="h-full w-full"
           role="img"
-          aria-label="Minh họa giải pháp cloud KEYON"
+          aria-label="Giải pháp cloud trên KEYON"
         >
           <defs>
             <linearGradient id="ckCloud" x1="0" y1="0" x2="1" y2="1">

@@ -13,7 +13,7 @@ export function SubscriptionMobilePreview() {
       >
         <div className="border-b border-border px-4 py-3">
           <p className={CARD_TITLE_CLASS}>Subscription Hub</p>
-          <p className={CARD_META_CLASS}>Minh họa giao diện</p>
+          <p className={CARD_META_CLASS}>Theo dõi trạng thái gói</p>
         </div>
 
         <div className="space-y-3 p-4">

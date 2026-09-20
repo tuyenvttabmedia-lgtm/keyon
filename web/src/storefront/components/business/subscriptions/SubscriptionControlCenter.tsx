@@ -86,7 +86,7 @@ export function SubscriptionControlCenter() {
               <div className="border-b border-border px-4 py-3 sm:px-5">
                 <p className={CARD_TITLE_CLASS}>Trạng thái theo dõi</p>
                 <p className={CARD_META_CLASS}>
-                  Cách KEYON phân loại subscription — không phải danh sách tài khoản thật
+                  Các trạng thái KEYON dùng khi theo dõi subscription
                 </p>
               </div>
               <ul className="divide-y divide-border">

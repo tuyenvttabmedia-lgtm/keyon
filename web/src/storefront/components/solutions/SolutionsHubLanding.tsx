@@ -158,7 +158,7 @@ export function SolutionsHubLanding({ introEmbedUrl }: Props) {
           <header className="mb-6 max-w-2xl md:mb-8">
             <h2 className={SECTION_TITLE_CLASS}>Danh mục giải pháp</h2>
             <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>
-              Sáu hướng đã khóa trên mega Giải pháp — không phải danh mục SKU.
+              Sáu hướng giải pháp trên KEYON — chọn theo nhu cầu trước khi mua trên catalog.
             </p>
           </header>
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">

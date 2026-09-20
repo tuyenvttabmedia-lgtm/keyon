@@ -53,8 +53,8 @@ export function RenewalInbox() {
           <header className="max-w-2xl">
             <h2 className={SECTION_TITLE_CLASS}>Biết việc gì cần xử lý trước kỳ gia hạn</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              KEYON giúp phân loại việc cần xem xét trước kỳ gia hạn (sắp hạn, cần xác nhận, đang
-              chờ báo giá) — minh họa luồng, không phải số liệu subscription cá nhân.
+              KEYON giúp phân loại việc cần xem xét trước kỳ gia hạn: sắp hạn, cần xác nhận, hoặc
+              đang chờ báo giá — để chủ động kế hoạch renew.
             </p>
           </header>
           <Link

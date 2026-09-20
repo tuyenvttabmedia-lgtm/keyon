@@ -462,7 +462,7 @@ function BackupHeroArt() {
     <div
       className="backup-hero-visual hero-visual"
       role="img"
-      aria-label="Minh họa backup KEYON: đám mây bảo vệ, laptop Backup Complete và điểm khôi phục"
+      aria-label="Backup KEYON: bảo vệ dữ liệu, hoàn tất sao lưu và điểm khôi phục"
     >
       <div className="backup-hero-glow" aria-hidden />
       <div className="backup-hero-dots" aria-hidden />

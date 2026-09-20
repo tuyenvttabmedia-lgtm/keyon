@@ -890,7 +890,7 @@ function ProductivityHeroArt({ imageUrl }: { imageUrl?: string }) {
             </span>
             <div>
               <p className={CARD_TITLE_CLASS}>Không gian làm việc</p>
-              <p className={CARD_META_CLASS}>Minh họa cộng tác</p>
+              <p className={CARD_META_CLASS}>License năng suất trên KEYON</p>
             </div>
           </div>
           <span className="rounded-md bg-accent-soft px-2 py-1 text-[11px] font-semibold text-accent">

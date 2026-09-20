@@ -232,7 +232,7 @@ function ContractsHeroArt() {
             </span>
             <div>
               <p className={CARD_TITLE_CLASS}>Portal đơn hàng</p>
-              <p className={CARD_META_CLASS}>Minh họa sau đăng nhập</p>
+              <p className={CARD_META_CLASS}>Sau đăng nhập tài khoản</p>
             </div>
           </div>
           <span className="rounded-md bg-accent-soft px-2 py-1 text-[11px] font-semibold text-accent">
