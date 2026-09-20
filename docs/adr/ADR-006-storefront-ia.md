@@ -3,6 +3,7 @@
 **Status:** Accepted (Phase 1 + Phase 2 implemented)  
 **Date:** 2026-08-04  
 **Amended:** 2026-09-13 — rename hub **Tài nguyên `/resources` → Kiến thức `/knowledge`** (site pre-index; no `/resources` 301).  
+**Amended:** 2026-09-20 — Category canonical URL **`/categories/{slug}`** (replaces `/products?cat=`); legacy `?cat=` 301.  
 **Decisions:** NAV-01 … NAV-05
 
 ---
@@ -18,7 +19,7 @@ KEYON sells software licenses (and later cloud/services). Early nav mixed Catego
 | Layer | Role | Example |
 |-------|------|---------|
 | Brand | Vendor identity | `/brands/microsoft` |
-| Category | Catalog taxonomy (DB / `cat=`) | `?cat=office` |
+| Category | Catalog taxonomy | `/categories/office` |
 | Collection | Merchandising group in Shop mega | “Windows”, “Backup” (`SHOP_COLLECTIONS`) |
 | Solution | Problem-oriented landing | `/solutions/productivity` |
 | Navigation | IA presentation layer | Header mega / footer |
@@ -30,8 +31,10 @@ KEYON sells software licenses (and later cloud/services). Early nav mixed Catego
 **Brand + Shop Collections** (not Category DB tree).
 
 - Brands → `/brands/{slug}` (or product search when brand SKU missing)
-- Collections → existing `/products?cat=` / `?q=` filters (`SHOP_COLLECTIONS` in `ia.ts`)
+- Collections → `/categories/{slug}` (`SHOP_COLLECTIONS` in `ia.ts`)
+- Legacy `/products?cat=` → **301** `/categories/{slug}`
 - **No Prisma Collection table** (Phase 2 confirmed)
+- **Do not** use `/products/{slug}` for categories (reserved for PDP)
 
 ### NAV-02 — License management URL
 
@@ -77,7 +80,8 @@ CMS `nav.json` items are **legacy / secondary** (brand logo + tagline still from
 - Routes under `/solutions`, `/business`, `/knowledge`, `/support`, `/contact/quote`.
 - Footer defaults updated in `defaultCmsFooter` (prod CMS JSON may need one-time sync; runtime remap `/resources` → `/knowledge`).
 - Cloud/Backup landings use “đang mở rộng” tone when catalog is thin — no fake SKU claims.
-- Sitemap emits `/knowledge/...` URLs.
+- Sitemap emits `/knowledge/...` and `/categories/{slug}` URLs.
+- Category path avoids collision with PDP `/products/{slug}`.
 
 ## Exit criteria
 

@@ -229,7 +229,7 @@ export function BackupSolutionLanding({ featured }: Props) {
 
               <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
                 <Link
-                  href="/products?cat=backup"
+                  href="/categories/backup"
                   className={`inline-flex h-11 items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
                   Xem sản phẩm backup →
@@ -287,7 +287,7 @@ export function BackupSolutionLanding({ featured }: Props) {
             <div>
               <h2 className={SECTION_TITLE_CLASS}>Giải pháp Backup phù hợp với bạn</h2>
             </div>
-            <Link href="/products?cat=backup" className={LINK_ACCENT_CLASS}>
+            <Link href="/categories/backup" className={LINK_ACCENT_CLASS}>
               Xem tất cả sản phẩm →
             </Link>
           </header>
@@ -450,7 +450,7 @@ export function BackupSolutionLanding({ featured }: Props) {
         subtitle="Chọn gói backup trên catalog — kích hoạt phần mềm trên hạ tầng của bạn."
         primaryHref="/contact/quote"
         primaryLabel="Liên hệ tư vấn →"
-        secondaryHref="/products?cat=backup"
+        secondaryHref="/categories/backup"
         secondaryLabel="Khám phá giải pháp →"
       />
     </div>

@@ -44,7 +44,7 @@ const TOPICS: {
   {
     title: "Office",
     hints: "Cài đặt · Kích hoạt · Sử dụng",
-    href: "/products?cat=office",
+    href: "/categories/office",
     Icon: AppWindow,
   },
   {

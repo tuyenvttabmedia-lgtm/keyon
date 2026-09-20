@@ -119,31 +119,31 @@ const BRANDS: {
     id: "m365",
     name: "Microsoft 365",
     body: "Mua gói trên catalog — theo dõi hạn trong Tài sản.",
-    href: "/products?cat=office",
+    href: "/categories/office",
   },
   {
     id: "windows",
     name: "Windows",
     body: "License OS theo biến thể — nhận sau thanh toán.",
-    href: "/products?cat=windows",
+    href: "/categories/windows",
   },
   {
     id: "adobe",
     name: "Adobe",
     body: "Creative Cloud và ứng dụng — gia hạn bằng mua lại / báo giá.",
-    href: "/products?cat=adobe",
+    href: "/categories/adobe",
   },
   {
     id: "acronis",
     name: "Acronis",
     body: "License backup / protect — kích hoạt trên hạ tầng của bạn.",
-    href: "/products?cat=backup",
+    href: "/categories/backup",
   },
   {
     id: "autodesk",
     name: "Autodesk",
     body: "Subscription thiết kế — theo dõi hạn trên Tài khoản.",
-    href: "/products?cat=autodesk",
+    href: "/categories/autodesk",
   },
 ];
 

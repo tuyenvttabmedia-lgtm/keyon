@@ -251,7 +251,7 @@ export function SecuritySolutionLanding({ featured }: Props) {
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
-                  href="/products?cat=security"
+                  href="/categories/security"
                   className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
                   Khám phá giải pháp →
@@ -334,7 +334,7 @@ export function SecuritySolutionLanding({ featured }: Props) {
             <div>
               <h2 className={SECTION_TITLE_CLASS}>Giải pháp bảo mật phù hợp với bạn</h2>
             </div>
-            <Link href="/products?cat=security" className={LINK_ACCENT_CLASS}>
+            <Link href="/categories/security" className={LINK_ACCENT_CLASS}>
               Xem tất cả sản phẩm →
             </Link>
           </div>
@@ -392,7 +392,7 @@ export function SecuritySolutionLanding({ featured }: Props) {
               ))}
             </ul>
             <Link
-              href="/products?cat=security"
+              href="/categories/security"
               className={`absolute -right-0.5 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-white text-navy lg:flex ${ELEVATION_HAIRLINE} ${TRANSITION_UI} hover:border-accent hover:text-accent`}
               aria-label="Xem thêm sản phẩm"
             >
@@ -484,7 +484,7 @@ export function SecuritySolutionLanding({ featured }: Props) {
         subtitle="Đội ngũ KEYON hỗ trợ chọn gói bảo mật theo thiết bị và ngân sách."
         primaryHref="/contact/quote"
         primaryLabel="Gửi yêu cầu tư vấn →"
-        secondaryHref="/products?cat=security"
+        secondaryHref="/categories/security"
         secondaryLabel="Xem sản phẩm bảo mật"
       />
     </div>

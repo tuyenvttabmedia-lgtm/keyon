@@ -133,7 +133,7 @@ const WORK_MODES: {
       "Lưu trữ & chia sẻ tài liệu",
       "Ghi chú & ý tưởng nhanh",
     ],
-    href: "/products?cat=office",
+    href: "/categories/office",
     tools: [
       { name: "Microsoft 365 Personal", brand: "m365" },
       { name: "OneNote", brand: "onenote" },
@@ -171,7 +171,7 @@ const WORK_MODES: {
       "Đồng bộ OneDrive đa thiết bị",
       "Bảo mật đăng nhập & thiết bị",
     ],
-    href: "/products?cat=office",
+    href: "/categories/office",
     tools: [
       { name: "Microsoft Teams", brand: "teams" },
       { name: "OneDrive", brand: "onedrive" },
@@ -268,7 +268,7 @@ export function ProductivitySolutionLanding({
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
-                  href="/products?cat=office"
+                  href="/categories/office"
                   className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
                   Khám phá giải pháp →
@@ -338,7 +338,7 @@ export function ProductivitySolutionLanding({
                   License chính hãng trên KEYON.
                 </p>
                 <Link
-                  href="/products?cat=office"
+                  href="/categories/office"
                   className={`mt-4 inline-flex h-10 items-center justify-center rounded-xl border border-white/35 bg-transparent px-3.5 ${CTA_COMPACT_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
                   Xem tất cả →
@@ -371,7 +371,7 @@ export function ProductivitySolutionLanding({
                   ))}
                 </ul>
                 <Link
-                  href="/products?cat=office"
+                  href="/categories/office"
                   className={`absolute -right-0.5 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-accent text-white lg:flex ${ELEVATION_FLOAT} ${TRANSITION_UI} hover:bg-accent-hover`}
                   aria-label="Xem thêm sản phẩm"
                 >
@@ -457,7 +457,7 @@ export function ProductivitySolutionLanding({
         subtitle="Cần chọn gói Microsoft 365 / Office? Xem sản phẩm hoặc gửi yêu cầu báo giá."
         primaryHref="/contact/quote"
         primaryLabel="Liên hệ tư vấn →"
-        secondaryHref="/products?cat=office"
+        secondaryHref="/categories/office"
         secondaryLabel="Khám phá giải pháp →"
       />
     </div>

@@ -19,7 +19,8 @@ export type MainSeoPageKey =
   | "/knowledge/guides"
   | "/knowledge/news"
   | "/policy"
-  | "/brands";
+  | "/brands"
+  | "/categories";
 
 export const MAIN_SEO_PAGES: {
   path: MainSeoPageKey;
@@ -27,6 +28,7 @@ export const MAIN_SEO_PAGES: {
 }[] = [
   { path: "/", label: "Trang chủ" },
   { path: "/products", label: "Trang sản phẩm" },
+  { path: "/categories", label: "Danh mục sản phẩm" },
   { path: "/business", label: "Doanh nghiệp" },
   { path: "/solutions", label: "Giải pháp" },
   { path: "/knowledge", label: "Kiến thức" },

@@ -29,13 +29,13 @@ const AREAS = [
   {
     title: "Microsoft Office",
     body: "So sánh phiên bản và hình thức cấp phép.",
-    href: "/products?cat=office",
+    href: "/categories/office",
     Icon: AppWindow,
   },
   {
     title: "Windows",
     body: "Xác định phiên bản phù hợp với thiết bị và mục đích sử dụng.",
-    href: "/products?cat=windows",
+    href: "/categories/windows",
     Icon: Monitor,
   },
   {

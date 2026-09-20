@@ -19,16 +19,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: path === "/" ? 1 : 0.7,
   }));
 
-  // Category filters (ADR-006 `?cat=`) — indexable catalog facets
+  // Category pages (ADR-006) — `/categories/{slug}`
   for (const cat of PRODUCT_CATEGORY_KEYS) {
     if (cat === "other") continue;
     entries.push({
-      url: absoluteUrl(`/products?cat=${cat}`),
+      url: absoluteUrl(`/categories/${cat}`),
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.7,
     });
   }
+
+  entries.push({
+    url: absoluteUrl("/categories"),
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: 0.65,
+  });
 
   for (const slug of ACTIVE_SOLUTION_SLUGS) {
     entries.push({

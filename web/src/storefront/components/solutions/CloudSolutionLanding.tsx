@@ -77,7 +77,7 @@ const SERVICES: {
   {
     title: "Cloud Infrastructure",
     description: "Gói hạ tầng / máy chủ trên catalog — xem loại nhận trước khi mua.",
-    href: "/products?cat=cloud",
+    href: "/categories/cloud",
     Icon: Cloud,
     tone: "bg-sky-100 text-sky-700",
   },
@@ -165,7 +165,7 @@ const SEGMENTS: {
       "Loại nhận rõ trước mua",
       "Hỗ trợ kích hoạt tiếng Việt",
     ],
-    href: "/products?cat=cloud",
+    href: "/categories/cloud",
     cta: "Xem sản phẩm cloud →",
     highlight: false,
     Icon: Store,
@@ -278,7 +278,7 @@ export function CloudSolutionLanding({ featured }: Props) {
 
               <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
-                  href="/products?cat=cloud"
+                  href="/categories/cloud"
                   className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
                   Xem sản phẩm cloud →
@@ -459,7 +459,7 @@ export function CloudSolutionLanding({ featured }: Props) {
                 Gói đang có trên catalog KEYON — xem chi tiết trước khi mua.
               </p>
             </div>
-            <Link href="/products?cat=cloud" className={`shrink-0 ${LINK_ACCENT_CLASS}`}>
+            <Link href="/categories/cloud" className={`shrink-0 ${LINK_ACCENT_CLASS}`}>
               Xem tất cả dịch vụ →
             </Link>
           </div>
@@ -547,7 +547,7 @@ export function CloudSolutionLanding({ featured }: Props) {
         subtitle="Gửi yêu cầu báo giá — phạm vi mua và bàn giao license, không vận hành tenant thuê ngoài."
         primaryHref="/contact/quote"
         primaryLabel="Gửi yêu cầu tư vấn →"
-        secondaryHref="/products?cat=cloud"
+        secondaryHref="/categories/cloud"
         secondaryLabel="Xem sản phẩm cloud"
       />
     </div>

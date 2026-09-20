@@ -57,7 +57,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
       "Teams, Outlook, OneDrive",
       "Gói cá nhân, đội nhóm và doanh nghiệp",
     ],
-    primaryCta: { label: "Khám phá sản phẩm", href: "/products?cat=office" },
+    primaryCta: { label: "Khám phá sản phẩm", href: "/categories/office" },
     secondaryCta: { label: "Tư vấn giải pháp", href: "/contact/quote" },
     related: [
       { label: "Microsoft", href: "/brands/microsoft" },
@@ -75,7 +75,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
       "Tư vấn chọn gói theo số người dùng / ngân sách",
       "Bàn giao license — không thay MSP vận hành tenant",
     ],
-    primaryCta: { label: "Xem sản phẩm cloud", href: "/products?cat=cloud" },
+    primaryCta: { label: "Xem sản phẩm cloud", href: "/categories/cloud" },
     secondaryCta: { label: "Gửi yêu cầu tư vấn", href: "/contact/quote" },
   },
   security: {
@@ -84,7 +84,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
     title: "Bảo mật & Bảo vệ dữ liệu",
     subtitle: "Gói bảo mật endpoint / internet security chính hãng trên KEYON.",
     bullets: ["Endpoint / Antivirus / Internet Security", "Xem rõ loại nhận trước khi mua"],
-    primaryCta: { label: "Xem sản phẩm bảo mật", href: "/products?cat=security" },
+    primaryCta: { label: "Xem sản phẩm bảo mật", href: "/categories/security" },
     secondaryCta: { label: "Gửi yêu cầu tư vấn", href: "/contact/quote" },
   },
   backup: {
@@ -94,7 +94,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
     subtitle:
       "License / gói backup trên catalog — kích hoạt phần mềm trên hạ tầng của bạn (KEYON không lưu bản sao dữ liệu).",
     bullets: ["Tìm gói backup trên cửa hàng", "Tư vấn chọn gói khi cần"],
-    primaryCta: { label: "Tìm sản phẩm backup", href: "/products?cat=backup" },
+    primaryCta: { label: "Tìm sản phẩm backup", href: "/categories/backup" },
     secondaryCta: { label: "Gửi yêu cầu tư vấn", href: "/contact/quote" },
     draftCapable: true,
   },

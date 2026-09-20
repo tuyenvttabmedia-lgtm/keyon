@@ -299,7 +299,7 @@ function Breadcrumb({
       </Link>
       <Sep />
       <Link
-        href={`/products?cat=${data.categoryId}`}
+        href={`/categories/${data.categoryId}`}
         className="transition hover:text-accent"
       >
         {data.categoryLabel}

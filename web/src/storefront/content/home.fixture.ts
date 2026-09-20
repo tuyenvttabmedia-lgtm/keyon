@@ -320,10 +320,10 @@ export const homeFixture: HomeContent = {
       {
         title: "Sản phẩm",
         links: [
-          { label: "Windows", href: "/products?cat=windows" },
-          { label: "Microsoft Office", href: "/products?cat=office" },
-          { label: "Adobe", href: "/products?cat=adobe" },
-          { label: "Cloud & Server", href: "/products?cat=cloud" },
+          { label: "Windows", href: "/categories/windows" },
+          { label: "Microsoft Office", href: "/categories/office" },
+          { label: "Adobe", href: "/categories/adobe" },
+          { label: "Cloud & Server", href: "/categories/cloud" },
           { label: "Tất cả sản phẩm", href: "/products" },
         ],
       },

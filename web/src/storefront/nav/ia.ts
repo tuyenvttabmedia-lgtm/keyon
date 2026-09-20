@@ -50,37 +50,37 @@ export type PrimaryNavItem = MegaNavItem | DropdownNavItem;
 export const SHOP_COLLECTIONS: NavLink[] = [
   {
     label: "Hệ điều hành",
-    href: "/products?cat=windows",
+    href: "/categories/windows",
     description: "Windows, Windows Server",
   },
   {
     label: "Office & Năng suất",
-    href: "/products?cat=office",
+    href: "/categories/office",
     description: "Office, Microsoft 365",
   },
   {
     label: "Cloud & Hạ tầng",
-    href: "/products?cat=cloud",
+    href: "/categories/cloud",
     description: "Gói cloud / server trên catalog",
   },
   {
     label: "Bảo mật",
-    href: "/products?cat=security",
+    href: "/categories/security",
     description: "Antivirus & endpoint",
   },
   {
     label: "Backup & Khôi phục",
-    href: "/products?cat=backup",
+    href: "/categories/backup",
     description: "Bảo vệ và phục hồi dữ liệu",
   },
   {
     label: "Adobe Creative",
-    href: "/products?cat=adobe",
+    href: "/categories/adobe",
     description: "Creative Cloud, Acrobat",
   },
   {
     label: "Autodesk",
-    href: "/products?cat=autodesk",
+    href: "/categories/autodesk",
     description: "AutoCAD, kỹ thuật",
   },
 ];

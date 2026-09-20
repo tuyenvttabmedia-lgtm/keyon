@@ -241,7 +241,7 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
           : c.countLabel;
       const href =
         shopCat && shopCat !== "all"
-          ? `/products?cat=${shopCat}`
+          ? `/categories/${shopCat}`
           : c.href || "/products";
       return {
         id: c.id,
@@ -560,8 +560,16 @@ function sanitizeFooterColumns(
           if (href === "/products?q=adobe") href = "/brands/adobe";
           if (href === "/products?q=microsoft") href = "/brands/microsoft";
           if (href === "/products?q=autodesk") href = "/brands/autodesk";
-          if (href === "/products?q=backup") href = "/products?cat=backup";
-          if (href === "/products?cat=design") href = "/products?cat=adobe";
+          if (href === "/products?q=backup") href = "/categories/backup";
+          // Legacy shop category query → path (ADR-006 amend)
+          {
+            const m = href.match(/^\/products\?cat=([a-z0-9-]+)/i);
+            if (m?.[1]) {
+              const key = m[1].toLowerCase() === "design" ? "adobe" : m[1].toLowerCase();
+              href = `/categories/${key}`;
+            }
+          }
+          if (href === "/categories/design") href = "/categories/adobe";
           if (href === "/contact/sales") href = "/contact/quote";
           if (href === "/resources" || href.startsWith("/resources/")) {
             href = href.replace(/^\/resources/, "/knowledge");

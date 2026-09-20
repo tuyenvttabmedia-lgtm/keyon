@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 import { ShopSidebar } from "./ShopSidebar";
 import { ShopProductCard, ShopProductListItem } from "./ShopProductCard";
@@ -34,7 +34,6 @@ export function ShopCatalog({
   initialQuery = "",
 }: ShopCatalogProps) {
   const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const prices = products.map((p) => p.priceVnd).filter((n) => n > 0);
@@ -61,12 +60,16 @@ export function ShopCatalog({
   const syncCategoryUrl = useCallback(
     (next: ShopCategoryId | "all") => {
       const params = new URLSearchParams(searchParams.toString());
-      if (next === "all") params.delete("cat");
-      else params.set("cat", next);
+      params.delete("cat");
       const qs = params.toString();
-      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+      const suffix = qs ? `?${qs}` : "";
+      if (next === "all") {
+        router.replace(`/products${suffix}`, { scroll: false });
+      } else {
+        router.replace(`/categories/${next}${suffix}`, { scroll: false });
+      }
     },
-    [pathname, router, searchParams],
+    [router, searchParams],
   );
 
   const selectCategory = useCallback(
