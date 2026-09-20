@@ -60,7 +60,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
     primaryCta: { label: "Khám phá sản phẩm", href: "/products?cat=office" },
     secondaryCta: { label: "Tư vấn giải pháp", href: "/contact/quote" },
     related: [
-      { label: "Microsoft", href: "/products?q=microsoft" },
+      { label: "Microsoft", href: "/brands/microsoft" },
       { label: "Tất cả giải pháp", href: "/solutions" },
     ],
   },
@@ -94,7 +94,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
     subtitle:
       "License / gói backup trên catalog — kích hoạt phần mềm trên hạ tầng của bạn (KEYON không lưu bản sao dữ liệu).",
     bullets: ["Tìm gói backup trên cửa hàng", "Tư vấn chọn gói khi cần"],
-    primaryCta: { label: "Tìm sản phẩm backup", href: "/products?q=backup" },
+    primaryCta: { label: "Tìm sản phẩm backup", href: "/products?cat=backup" },
     secondaryCta: { label: "Gửi yêu cầu tư vấn", href: "/contact/quote" },
     draftCapable: true,
   },

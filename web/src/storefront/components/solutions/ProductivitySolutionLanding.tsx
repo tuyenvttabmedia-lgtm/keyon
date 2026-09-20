@@ -171,7 +171,7 @@ const WORK_MODES: {
       "Đồng bộ OneDrive đa thiết bị",
       "Bảo mật đăng nhập & thiết bị",
     ],
-    href: "/products?q=microsoft+365",
+    href: "/products?cat=office",
     tools: [
       { name: "Microsoft Teams", brand: "teams" },
       { name: "OneDrive", brand: "onedrive" },

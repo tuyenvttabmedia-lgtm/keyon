@@ -21,7 +21,7 @@ export const dynamic = "force-dynamic";
 
 type Props = {
   params: Promise<{ section: string }>;
-  searchParams: Promise<{ q?: string; category?: string }>;
+  searchParams: Promise<{ q?: string; category?: string; tag?: string }>;
 };
 
 export async function generateStaticParams() {
@@ -84,6 +84,7 @@ export default async function ResourceSectionIndexPage({
       posts={posts}
       initialQuery={sp.q?.trim() ?? ""}
       initialCategory={initialCategory}
+      initialTag={sp.tag?.trim() ?? ""}
       section={section}
     />
   );

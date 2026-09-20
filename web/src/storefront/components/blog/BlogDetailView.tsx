@@ -19,6 +19,7 @@ import {
   parseBlogBody,
   pickFeatured,
   readMinutesOf,
+  slugifyTag,
   tocFromBlocks,
   type BlogCategoryFilter,
 } from "@/storefront/lib/blog";
@@ -580,7 +581,7 @@ export function BlogDetailView({
                 {tags.map((tag) => (
                   <Link
                     key={tag}
-                    href={`${indexHref}?q=${encodeURIComponent(tag)}`}
+                    href={`${indexHref}?tag=${encodeURIComponent(slugifyTag(tag))}`}
                     className={`rounded-full border border-border bg-surface px-3 py-1.5 ${CTA_COMPACT_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:bg-accent-soft hover:text-accent`}
                   >
                     {tag}

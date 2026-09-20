@@ -155,6 +155,27 @@ export function collectPopularTags(posts: BlogPost[], limit = 12) {
     .map(([tag]) => tag);
 }
 
+/** SEO-friendly kebab slug for knowledge tags (label → URL). */
+export function slugifyTag(input: string): string {
+  return input
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "d")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .replace(/-{2,}/g, "-")
+    .slice(0, 80);
+}
+
+/** Match post tag labels against a URL `?tag=` slug. */
+export function tagMatchesSlug(tagLabel: string, slug: string): boolean {
+  const want = slugifyTag(slug);
+  if (!want) return false;
+  return slugifyTag(tagLabel) === want;
+}
+
 export function adjacentPosts(posts: BlogPost[], currentId: string) {
   const ordered = [...posts].sort(
     (a, b) =>

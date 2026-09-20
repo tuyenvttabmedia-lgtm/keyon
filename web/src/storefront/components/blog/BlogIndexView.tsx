@@ -14,6 +14,8 @@ import {
   pickFeatured,
   postDateIso,
   readMinutesOf,
+  slugifyTag,
+  tagMatchesSlug,
   type BlogCategoryFilter,
 } from "@/storefront/lib/blog";
 import { resourcePostHref, RESOURCE_SECTION_META } from "@/storefront/lib/resources";
@@ -56,12 +58,15 @@ export function BlogIndexView({
   posts,
   initialQuery = "",
   initialCategory = "all",
+  initialTag = "",
   section,
 }: {
   cms: CmsBlog;
   posts: BlogPost[];
   initialQuery?: string;
   initialCategory?: BlogCategoryFilter;
+  /** URL `?tag=` slug — filters posts that have a matching tag label. */
+  initialTag?: string;
   /** When set, breadcrumb links under /knowledge/{section} */
   section?: ResourceSectionId;
 }) {
@@ -69,6 +74,7 @@ export function BlogIndexView({
   const [sort, setSort] = useState<SortId>("newest");
   const [category, setCategory] =
     useState<BlogCategoryFilter>(initialCategory);
+  const [tagSlug] = useState(slugifyTag(initialTag));
   const [visible, setVisible] = useState(PAGE_SIZE);
   const [saved, setSaved] = useState<Record<string, boolean>>({});
   const [bookmarksReady, setBookmarksReady] = useState(false);
@@ -118,6 +124,10 @@ export function BlogIndexView({
     const q = query.trim().toLowerCase();
     const list = posts.filter((p) => {
       if (category !== "all" && p.category !== category) return false;
+      if (tagSlug) {
+        const hasTag = (p.tags ?? []).some((t) => tagMatchesSlug(t, tagSlug));
+        if (!hasTag) return false;
+      }
       if (!q) return true;
       const inTags = (p.tags ?? []).some((t) => t.toLowerCase().includes(q));
       return (
@@ -133,16 +143,19 @@ export function BlogIndexView({
       return sort === "newest" ? db - da : da - db;
     });
     return list;
-  }, [posts, query, sort, category]);
+  }, [posts, query, sort, category, tagSlug]);
 
   const latestPool = useMemo(() => {
     const heroId = featured[0]?.id;
     // Avoid duplicating the large featured hero; keep enough posts for the list.
     return filtered.filter(
       (p) =>
-        p.id !== heroId || category !== "all" || Boolean(query.trim()),
+        p.id !== heroId ||
+        category !== "all" ||
+        Boolean(query.trim()) ||
+        Boolean(tagSlug),
     );
-  }, [filtered, featured, category, query]);
+  }, [filtered, featured, category, query, tagSlug]);
 
   const latest = latestPool.slice(0, visible);
   const canLoadMore = visible < latestPool.length;

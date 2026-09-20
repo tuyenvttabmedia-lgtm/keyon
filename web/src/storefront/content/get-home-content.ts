@@ -147,7 +147,7 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
           id: p.id,
           name: brand.name,
           logoUrl: resolvePartnerLogo(brand.logoUrl),
-          href: p.href?.trim() || `/products?q=${encodeURIComponent(brand.slug)}`,
+          href: p.href?.trim() || `/brands/${brand.slug}`,
           visible: true,
         };
       }
@@ -190,7 +190,7 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
         id: `brand_${b.id}`,
         name: b.name,
         logoUrl: resolvePartnerLogo(b.logoUrl),
-        href: `/products?q=${encodeURIComponent(b.slug)}`,
+        href: `/brands/${b.slug}`,
         visible: true,
       }));
   }
@@ -557,7 +557,11 @@ function sanitizeFooterColumns(
         .map((link) => {
           let href = link.href?.trim() || "";
           let label = link.label?.trim() || "";
-          if (href === "/products?q=adobe") href = "/products?cat=adobe";
+          if (href === "/products?q=adobe") href = "/brands/adobe";
+          if (href === "/products?q=microsoft") href = "/brands/microsoft";
+          if (href === "/products?q=autodesk") href = "/brands/autodesk";
+          if (href === "/products?q=backup") href = "/products?cat=backup";
+          if (href === "/products?cat=design") href = "/products?cat=adobe";
           if (href === "/contact/sales") href = "/contact/quote";
           if (href === "/resources" || href.startsWith("/resources/")) {
             href = href.replace(/^\/resources/, "/knowledge");

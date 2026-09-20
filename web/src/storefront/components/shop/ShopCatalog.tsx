@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useMemo, useState } from "react";
 import { ShopSidebar } from "./ShopSidebar";
 import { ShopProductCard, ShopProductListItem } from "./ShopProductCard";
 import {
@@ -32,6 +33,10 @@ export function ShopCatalog({
   initialCategory = "all",
   initialQuery = "",
 }: ShopCatalogProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const prices = products.map((p) => p.priceVnd).filter((n) => n > 0);
   const boundMin = prices.length ? Math.min(...prices) : 0;
   const boundMax = Math.max(
@@ -52,6 +57,27 @@ export function ShopCatalog({
   const [view, setView] = useState<ShopViewMode>("grid");
   const [page, setPage] = useState(1);
   const [filtersOpen, setFiltersOpen] = useState(false);
+
+  const syncCategoryUrl = useCallback(
+    (next: ShopCategoryId | "all") => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (next === "all") params.delete("cat");
+      else params.set("cat", next);
+      const qs = params.toString();
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    },
+    [pathname, router, searchParams],
+  );
+
+  const selectCategory = useCallback(
+    (id: ShopCategoryId | "all") => {
+      setCategory(id);
+      setPage(1);
+      setFiltersOpen(false);
+      syncCategoryUrl(id);
+    },
+    [syncCategoryUrl],
+  );
 
   const licenseCounts = useMemo(() => {
     const base = filterProducts(products, {
@@ -125,17 +151,14 @@ export function ShopCatalog({
     setPriceMin(boundMin);
     setPriceMax(boundMax);
     setPage(1);
+    syncCategoryUrl("all");
   };
 
   const sidebar = (
     <ShopSidebar
       categories={categories}
       activeCategory={category}
-      onCategory={(id) => {
-        setCategory(id);
-        setPage(1);
-        setFiltersOpen(false);
-      }}
+      onCategory={selectCategory}
       licenses={licenses}
       onToggleLicense={(id) => {
         setLicenses((prev) =>

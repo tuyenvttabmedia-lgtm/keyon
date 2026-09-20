@@ -70,8 +70,18 @@ export const SHOP_COLLECTIONS: NavLink[] = [
   },
   {
     label: "Backup & Khôi phục",
-    href: "/products?q=backup",
+    href: "/products?cat=backup",
     description: "Bảo vệ và phục hồi dữ liệu",
+  },
+  {
+    label: "Adobe Creative",
+    href: "/products?cat=adobe",
+    description: "Creative Cloud, Acrobat",
+  },
+  {
+    label: "Autodesk",
+    href: "/products?cat=autodesk",
+    description: "AutoCAD, kỹ thuật",
   },
 ];
 
@@ -79,17 +89,17 @@ export const SHOP_COLLECTIONS: NavLink[] = [
 export const FEATURED_BRANDS: NavLink[] = [
   {
     label: "Microsoft",
-    href: "/products?q=microsoft",
+    href: "/brands/microsoft",
     description: "Windows, Office, Microsoft 365",
   },
   {
     label: "Adobe",
-    href: "/products?q=adobe",
+    href: "/brands/adobe",
     description: "Creative Cloud, Acrobat",
   },
   {
     label: "Autodesk",
-    href: "/products?q=autodesk",
+    href: "/brands/autodesk",
     description: "AutoCAD, kỹ thuật",
   },
   {
