@@ -159,7 +159,7 @@ export const homeFixture: HomeContent = {
     items: [
       {
         id: "w1",
-        title: "Nguồn cung minh bạch",
+        title: "Nguồn gốc & thông tin license minh bạch",
         description:
           "Thông tin loại license và hình thức nhận được hiển thị rõ trước khi mua.",
         icon: "shield",
