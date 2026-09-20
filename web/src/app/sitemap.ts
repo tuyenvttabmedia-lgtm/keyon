@@ -7,6 +7,7 @@ import { ACTIVE_SOLUTION_SLUGS, BUSINESS_PAGES } from "@/storefront/nav/ia-pages
 import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
 import { resourcePostHref } from "@/storefront/lib/resources";
 import { absoluteUrl } from "@/server/seo/site-url";
+import { isBlogPostLive } from "@/server/cms/blog-utils";
 
 export const dynamic = "force-dynamic";
 
@@ -89,7 +90,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   const posts = (Array.isArray(postsRaw) ? postsRaw : defaultBlog).filter(
-    (p) => p.status === "published" && p.robotsIndex !== false,
+    (p) => isBlogPostLive(p) && p.robotsIndex !== false,
   );
   for (const post of posts) {
     entries.push({

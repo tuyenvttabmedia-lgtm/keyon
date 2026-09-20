@@ -180,6 +180,22 @@ export function RichTextEditor({
 
   editorRef.current = editor;
 
+  const [, setSelTick] = useState(0);
+  useEffect(() => {
+    if (!editor) return;
+    const bump = () => setSelTick((n) => n + 1);
+    editor.on("selectionUpdate", bump);
+    editor.on("transaction", bump);
+    return () => {
+      editor.off("selectionUpdate", bump);
+      editor.off("transaction", bump);
+    };
+  }, [editor]);
+
+  const imageSelected = Boolean(editor?.isActive("image"));
+  const imageAlt =
+    (editor?.getAttributes("image").alt as string | undefined) ?? "";
+
   useEffect(() => {
     if (!editor || htmlMode) return;
     const current = editor.getHTML();
@@ -433,6 +449,30 @@ export function RichTextEditor({
         </p>
       ) : null}
 
+      {!htmlMode && imageSelected && editor ? (
+        <div className="flex flex-wrap items-center gap-2 border-b border-border bg-amber-50/80 px-3 py-2">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-amber-900">
+            Alt ảnh (SEO)
+          </span>
+          <input
+            type="text"
+            value={imageAlt}
+            onChange={(e) => {
+              editor
+                .chain()
+                .focus()
+                .updateAttributes("image", { alt: e.target.value })
+                .run();
+            }}
+            placeholder="Mô tả ảnh cho SEO / accessibility…"
+            className="min-w-[14rem] flex-1 rounded-md border border-amber-200 bg-white px-2.5 py-1.5 text-sm text-navy outline-none focus:border-accent"
+          />
+          <span className="text-[11px] text-amber-800/80">
+            Chọn ảnh trong bài → nhập alt tại đây
+          </span>
+        </div>
+      ) : null}
+
       {htmlMode ? (
         <div className="grid gap-3 p-3 lg:grid-cols-2">
           <textarea
@@ -472,6 +512,11 @@ export function RichTextEditor({
             .focus()
             .setImage({ src: item.url, alt })
             .run();
+          showPasteHint(
+            alt
+              ? "Đã chèn ảnh. Có thể chỉnh Alt (SEO) khi chọn lại ảnh."
+              : "Đã chèn ảnh — chọn ảnh trong bài và nhập Alt (SEO) ở thanh phía trên.",
+          );
         }}
       />
     </div>

@@ -37,6 +37,21 @@ export function uniqueBlogSlug(
   return slug;
 }
 
+/** Storefront / sitemap: published, or scheduled time has passed. */
+export function isBlogPostLive(p: BlogPost, now = Date.now()): boolean {
+  if (p.status === "published") return true;
+  if (p.status === "scheduled" && p.scheduledAt) {
+    const t = Date.parse(p.scheduledAt);
+    return Number.isFinite(t) && t <= now;
+  }
+  return false;
+}
+
+/** Display / sort date for public posts. */
+export function blogPublicAt(p: BlogPost): string {
+  return p.publishedAt ?? p.scheduledAt ?? p.updatedAt;
+}
+
 /** Strip tags for word counting / plain text. */
 export function stripHtml(html: string): string {
   return html

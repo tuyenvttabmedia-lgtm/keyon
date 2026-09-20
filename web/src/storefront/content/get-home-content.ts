@@ -28,6 +28,7 @@ import { resolveMediaUrl } from "@/lib/media-url";
 import { resolveStorage } from "@/server/storage/config";
 import { resourcePostHref } from "@/storefront/lib/resources";
 import { solutionTopicCards } from "@/storefront/nav/ia";
+import { isBlogPostLive } from "@/server/cms/blog-utils";
 import {
   inferCategory,
   shopCatFromCmsIcon,
@@ -115,7 +116,7 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
   const faqDoc = normalizeFaqDocument(faqRaw);
   const faqItems = faqDoc.items;
 
-  const published = posts.filter((p) => p.status === "published").slice(0, 4);
+  const published = posts.filter((p) => isBlogPostLive(p)).slice(0, 4);
 
   const storage = await resolveStorage();
   const mediaBase =

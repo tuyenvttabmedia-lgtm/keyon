@@ -15,6 +15,7 @@ import {
   type SupportSearchDoc,
 } from "@/storefront/components/support/shared";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
+import { isBlogPostLive } from "@/server/cms/blog-utils";
 
 export const dynamic = "force-dynamic";
 
@@ -36,7 +37,7 @@ export default async function SupportHubPage() {
   const cms = { ...defaultCmsContact, ...cmsRaw };
 
   const published = (Array.isArray(postsRaw) ? postsRaw : defaultBlog).filter(
-    (p) => p.status === "published",
+    (p) => isBlogPostLive(p),
   );
   const guides = filterPostsBySection(published, "guides");
 

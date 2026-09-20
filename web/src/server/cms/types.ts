@@ -22,7 +22,7 @@ export type BlogPost = {
   excerpt: string;
   /** HTML (TipTap) or legacy markdown-ish text */
   body: string;
-  status: "draft" | "published";
+  status: "draft" | "published" | "scheduled";
   metaTitle: string;
   metaDescription: string;
   coverUrl?: string;
@@ -52,6 +52,8 @@ export type BlogPost = {
   ogImageUrl?: string;
   updatedAt: string;
   publishedAt?: string;
+  /** When status=scheduled — go live at this ISO time (local→UTC on save). */
+  scheduledAt?: string;
 };
 
 /** Blog index page chrome (listing, not post body). */

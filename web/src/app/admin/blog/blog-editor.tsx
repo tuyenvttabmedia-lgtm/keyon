@@ -30,6 +30,20 @@ function snapshot(p: BlogPost) {
   return JSON.stringify(p);
 }
 
+function toDatetimeLocalValue(iso?: string): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function statusLabel(status: BlogPost["status"]): string {
+  if (status === "published") return "Đã xuất bản";
+  if (status === "scheduled") return "Đã lên lịch";
+  return "Bản nháp";
+}
+
 export function BlogEditor({
   initial,
   allPosts,
@@ -56,6 +70,9 @@ export function BlogEditor({
   const [socialOpen, setSocialOpen] = useState(false);
   const [coverPicker, setCoverPicker] = useState(false);
   const [ogPicker, setOgPicker] = useState(false);
+  const [scheduleLocal, setScheduleLocal] = useState(() =>
+    toDatetimeLocalValue(seeded.scheduledAt),
+  );
   const savedSnap = useRef(snapshot(seeded));
   const dirty = snapshot(form) !== savedSnap.current;
 
@@ -89,7 +106,10 @@ export function BlogEditor({
     });
   }
 
-  async function save(status: "draft" | "published", opts?: { preview?: boolean }) {
+  async function save(
+    status: "draft" | "published" | "scheduled",
+    opts?: { preview?: boolean },
+  ) {
     setSaving(true);
     setMsg(null);
     try {
@@ -101,6 +121,37 @@ export function BlogEditor({
       }
       slug = uniqueBlogSlug(slug, allPosts, form.id);
       const body = sanitizeBlogHtml(form.body);
+
+      let scheduledAt = form.scheduledAt;
+      let publishedAt = form.publishedAt;
+
+      if (status === "scheduled") {
+        if (!scheduleLocal.trim()) {
+          setMsg("Chọn ngày giờ xuất bản");
+          setSaving(false);
+          return;
+        }
+        const when = new Date(scheduleLocal);
+        if (Number.isNaN(when.getTime())) {
+          setMsg("Ngày giờ không hợp lệ");
+          setSaving(false);
+          return;
+        }
+        if (when.getTime() <= Date.now() + 30_000) {
+          setMsg("Lịch xuất bản phải sau thời điểm hiện tại");
+          setSaving(false);
+          return;
+        }
+        scheduledAt = when.toISOString();
+        publishedAt = scheduledAt;
+      } else if (status === "published") {
+        publishedAt = form.publishedAt ?? new Date().toISOString();
+        scheduledAt = undefined;
+      } else {
+        // draft — keep scheduledAt only if still planning; clear on explicit draft
+        scheduledAt = undefined;
+      }
+
       const next: BlogPost = {
         ...form,
         slug,
@@ -111,10 +162,8 @@ export function BlogEditor({
         robotsIndex: form.robotsIndex !== false,
         robotsFollow: form.robotsFollow !== false,
         updatedAt: new Date().toISOString(),
-        publishedAt:
-          status === "published"
-            ? form.publishedAt ?? new Date().toISOString()
-            : form.publishedAt,
+        publishedAt,
+        scheduledAt,
         metaTitle: form.metaTitle.trim() || form.title.trim(),
         metaDescription: form.metaDescription.trim() || form.excerpt.trim(),
       };
@@ -129,14 +178,17 @@ export function BlogEditor({
       if (!res.ok) throw new Error(data.error ?? "Lỗi");
 
       setForm(next);
+      setScheduleLocal(toDatetimeLocalValue(next.scheduledAt));
       savedSnap.current = snapshot(next);
       setSlugTouched(true);
       setMsg(
         status === "published"
           ? "Đã xuất bản"
-          : opts?.preview
-            ? "Đã lưu — đang mở xem trước"
-            : "Đã lưu nháp",
+          : status === "scheduled"
+            ? `Đã lên lịch ${new Date(next.scheduledAt!).toLocaleString("vi-VN")}`
+            : opts?.preview
+              ? "Đã lưu — đang mở xem trước"
+              : "Đã lưu nháp",
       );
       router.refresh();
       if (opts?.preview) {
@@ -237,9 +289,7 @@ export function BlogEditor({
           </p>
           <p className="text-sm text-navy">
             Trạng thái:{" "}
-            <strong>
-              {form.status === "published" ? "Đã xuất bản" : "Bản nháp"}
-            </strong>
+            <strong>{statusLabel(form.status)}</strong>
           </p>
           <div className="flex flex-wrap gap-2">
             <button
@@ -274,8 +324,52 @@ export function BlogEditor({
                 onClick={() => void save("published")}
                 className="rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-white"
               >
-                Xuất bản
+                Xuất bản ngay
               </button>
+            )}
+          </div>
+          <div className="space-y-2 rounded-xl border border-border bg-surface/60 p-3">
+            <p className="text-xs font-semibold text-navy">Đặt lịch xuất bản</p>
+            <label className="block text-xs text-muted">
+              Ngày &amp; giờ
+              <input
+                type="datetime-local"
+                className="mt-1 w-full rounded-lg border border-border bg-white px-2 py-1.5 text-sm text-navy"
+                value={scheduleLocal}
+                onChange={(e) => setScheduleLocal(e.target.value)}
+              />
+            </label>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                disabled={saving || !scheduleLocal}
+                onClick={() => void save("scheduled")}
+                className="rounded-lg border border-accent bg-white px-3 py-1.5 text-sm font-semibold text-accent disabled:opacity-40"
+              >
+                Lưu &amp; lên lịch
+              </button>
+              {form.status === "scheduled" ? (
+                <button
+                  type="button"
+                  disabled={saving}
+                  onClick={() => {
+                    setScheduleLocal("");
+                    void save("draft");
+                  }}
+                  className="rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted"
+                >
+                  Hủy lịch
+                </button>
+              ) : null}
+            </div>
+            {form.status === "scheduled" && form.scheduledAt ? (
+              <p className="text-[11px] text-accent">
+                Sẽ đăng lúc {new Date(form.scheduledAt).toLocaleString("vi-VN")}
+              </p>
+            ) : (
+              <p className="text-[11px] text-muted">
+                Bài vẫn là nháp cho đến thời điểm đã chọn — tự hiện trên storefront khi đến giờ.
+              </p>
             )}
           </div>
           <div className="space-y-1 text-xs text-muted">

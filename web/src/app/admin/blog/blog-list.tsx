@@ -19,7 +19,7 @@ import {
   useClientPagination,
 } from "@/app/admin/ui/client-pagination";
 
-type StatusFilter = "all" | "draft" | "published";
+type StatusFilter = "all" | "draft" | "published" | "scheduled";
 type DateFilter = "all" | "today" | "7d" | "30d" | "custom";
 
 const CATEGORIES = Object.entries(CATEGORY_LABEL) as [BlogCategoryId, string][];
@@ -124,6 +124,7 @@ export function BlogList({ posts: initial }: { posts: BlogPost[] }) {
       title: `${p.title} (bản sao)`,
       status: "draft",
       publishedAt: undefined,
+      scheduledAt: undefined,
       updatedAt: new Date().toISOString(),
       featured: false,
     };
@@ -135,7 +136,12 @@ export function BlogList({ posts: initial }: { posts: BlogPost[] }) {
     if (!confirm(`Chuyển "${p.title}" về bản nháp?`)) return;
     const next = posts.map((x) =>
       x.id === p.id
-        ? { ...x, status: "draft" as const, updatedAt: new Date().toISOString() }
+        ? {
+            ...x,
+            status: "draft" as const,
+            scheduledAt: undefined,
+            updatedAt: new Date().toISOString(),
+          }
         : x,
     );
     await persist(next);
@@ -169,6 +175,7 @@ export function BlogList({ posts: initial }: { posts: BlogPost[] }) {
           >
             <option value="all">Tất cả</option>
             <option value="draft">Bản nháp</option>
+            <option value="scheduled">Đã lên lịch</option>
             <option value="published">Đã xuất bản</option>
           </select>
         </label>
@@ -300,12 +307,21 @@ export function BlogList({ posts: initial }: { posts: BlogPost[] }) {
                           className={
                             p.status === "published"
                               ? "rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs text-emerald-700"
-                              : "rounded-full bg-amber-50 px-2.5 py-0.5 text-xs text-amber-800"
+                              : p.status === "scheduled"
+                                ? "rounded-full bg-sky-50 px-2.5 py-0.5 text-xs text-sky-800"
+                                : "rounded-full bg-amber-50 px-2.5 py-0.5 text-xs text-amber-800"
+                          }
+                          title={
+                            p.status === "scheduled" && p.scheduledAt
+                              ? new Date(p.scheduledAt).toLocaleString("vi-VN")
+                              : undefined
                           }
                         >
                           {p.status === "published"
                             ? "Đã xuất bản"
-                            : "Bản nháp"}
+                            : p.status === "scheduled"
+                              ? "Đã lên lịch"
+                              : "Bản nháp"}
                         </span>
                       </td>
                       <td className="px-4 py-3 text-muted">
@@ -438,7 +454,7 @@ function BlogRowActions({
         >
           Nhân bản
         </button>
-        {post.status === "published" ? (
+        {post.status === "published" || post.status === "scheduled" ? (
           <button
             type="button"
             className={item}

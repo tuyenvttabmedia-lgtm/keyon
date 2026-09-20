@@ -9,6 +9,7 @@ import {
 import type { BlogCategoryId, CmsBlog } from "@/server/cms/types";
 import { BlogIndexView } from "@/storefront/components/blog/BlogIndexView";
 import { BLOG_CATEGORIES } from "@/storefront/lib/blog";
+import { isBlogPostLive } from "@/server/cms/blog-utils";
 import {
   filterPostsBySection,
   isResourceSectionId,
@@ -66,7 +67,7 @@ export default async function ResourceSectionIndexPage({
   };
 
   const published = (Array.isArray(postsRaw) ? postsRaw : defaultBlog).filter(
-    (p: BlogPost) => p.status === "published",
+    (p: BlogPost) => isBlogPostLive(p),
   );
   const posts = filterPostsBySection(published, section);
 

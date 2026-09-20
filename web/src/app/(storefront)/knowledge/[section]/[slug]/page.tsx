@@ -13,6 +13,7 @@ import {
   resolveSeoTitle,
   robotsFollowOf,
   robotsIndexOf,
+  isBlogPostLive,
 } from "@/server/cms/blog-utils";
 import { BlogDetailView } from "@/storefront/components/blog/BlogDetailView";
 import {
@@ -36,7 +37,7 @@ type Props = {
 async function loadPublished() {
   const postsRaw = await readJsonFile<BlogPost[]>("blog.json", defaultBlog);
   const posts = (Array.isArray(postsRaw) ? postsRaw : defaultBlog).filter(
-    (p) => p.status === "published",
+    (p) => isBlogPostLive(p),
   );
   return posts;
 }

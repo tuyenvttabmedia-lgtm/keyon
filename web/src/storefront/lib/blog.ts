@@ -42,7 +42,7 @@ export function categoryLabel(post: BlogPost) {
 }
 
 export function postDateIso(post: BlogPost) {
-  return post.publishedAt ?? post.updatedAt;
+  return post.publishedAt ?? post.scheduledAt ?? post.updatedAt;
 }
 
 export function formatPostDate(post: BlogPost) {
