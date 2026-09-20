@@ -356,7 +356,7 @@ const STATUS_UI = {
   expired: { label: "Hết hạn", tone: "bg-rose-100 text-rose-700" },
 } as const;
 
-/** Guest = fictional mock. Signed-in = only that session's deliveries. */
+/** Guest = CTA panel. Signed-in = that session's deliveries only. */
 function AssetsHeroArt({
   loggedIn,
   assets,
@@ -374,21 +374,27 @@ function AssetsHeroArt({
             <p
               className={`${BADGE_CLASS} inline-flex rounded-md bg-accent-soft px-2 py-1 font-semibold text-accent`}
             >
-              Tài khoản của bạn
+              Tài sản
             </p>
-            <h3 className={`mt-3 ${CARD_TITLE_CLASS}`}>Chưa có license trong Tài sản</h3>
+            <h3 className={`mt-3 ${CARD_TITLE_CLASS}`}>
+              Chưa có license trong tài khoản
+            </h3>
             <p className={`mt-2 ${BODY_MUTED_CLASS}`}>
-              Cột này chỉ hiện license gắn với tài khoản bạn đang đăng nhập — không
-              lấy kho admin hay tài khoản khác.
+              Sau thanh toán, bản quyền đã giao sẽ hiện tại đây — kèm trạng thái và
+              hạn dùng.
             </p>
             <Link
               href="/products"
               className={`mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
             >
-              Xem catalog →
+              Duyệt sản phẩm →
             </Link>
             <p className={`mt-3 ${CARD_META_CLASS}`}>
-              Sau khi mua và giao hàng, danh sách sẽ hiện tại đây và trong Tài sản.
+              Hoặc mở{" "}
+              <Link href="/account/assets" className={HOVER_LINK_ACCENT}>
+                Tài sản
+              </Link>{" "}
+              để xem toàn bộ sau khi mua.
             </p>
           </div>
         </div>
@@ -402,15 +408,13 @@ function AssetsHeroArt({
         >
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className={CARD_TITLE_CLASS}>Tài sản của bạn</p>
-              <p className={CARD_META_CLASS}>
-                Chỉ license của tài khoản đang đăng nhập
-              </p>
+              <p className={CARD_TITLE_CLASS}>Tài sản</p>
+              <p className={CARD_META_CLASS}>License đã giao trên tài khoản này</p>
             </div>
             <span
               className={`${BADGE_CLASS} rounded-md bg-accent-soft px-2 py-1 font-semibold text-accent`}
             >
-              Tài khoản của bạn
+              Đã đăng nhập
             </span>
           </div>
 
@@ -442,94 +446,60 @@ function AssetsHeroArt({
             href="/account/assets"
             className={`mt-4 inline-flex w-full items-center justify-center ${LINK_ACCENT_CLASS}`}
           >
-            Xem đầy đủ trong Tài sản →
+            Xem tất cả trong Tài sản →
           </Link>
         </div>
       </div>
     );
   }
 
-  const rows = [
-    {
-      name: "Sản phẩm mẫu A",
-      meta: "Ví dụ trạng thái · không phải đơn thật",
-      status: "active" as const,
-    },
-    {
-      name: "Sản phẩm mẫu B",
-      meta: "Ví dụ trạng thái · không phải đơn thật",
-      status: "active" as const,
-    },
-    {
-      name: "Sản phẩm mẫu C",
-      meta: "Ví dụ trạng thái · không phải đơn thật",
-      status: "expiring" as const,
-    },
-    {
-      name: "Sản phẩm mẫu D",
-      meta: "Ví dụ trạng thái · không phải đơn thật",
-      status: "expired" as const,
-    },
-  ];
-
   return (
     <div className="relative mx-auto w-full max-w-[480px] lg:max-w-none">
       <div
-        className={`relative rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_HAIRLINE}`}
-        role="img"
-        aria-label="Minh họa giao diện Tài sản KEYON — dữ liệu giả, không gắn tài khoản"
+        className={`relative rounded-2xl border border-border bg-white p-5 sm:p-6 ${ELEVATION_HAIRLINE}`}
       >
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <p className={CARD_TITLE_CLASS}>Tài sản</p>
-            <p className={CARD_META_CLASS}>
-              Giao diện mẫu — không phải số liệu tài khoản
-            </p>
-          </div>
-          <span
-            className={`${BADGE_CLASS} rounded-md bg-amber-100 px-2 py-1 font-semibold text-amber-800`}
-          >
-            Minh họa
-          </span>
-        </div>
+        <p
+          className={`${BADGE_CLASS} inline-flex rounded-md bg-accent-soft px-2 py-1 font-semibold text-accent`}
+        >
+          Tài sản KEYON
+        </p>
+        <h3 className={`mt-3 ${CARD_TITLE_CLASS}`}>
+          Theo dõi license sau khi mua
+        </h3>
+        <p className={`mt-2 ${BODY_MUTED_CLASS}`}>
+          Đăng nhập để xem bản quyền đã giao: trạng thái, hạn dùng và key (sau xác
+          minh email).
+        </p>
 
-        <ul className="mt-4 space-y-2">
-          {rows.map((r) => {
-            const ui = STATUS_UI[r.status];
-            return (
-              <li
-                key={r.name}
-                className="flex items-center justify-between gap-3 rounded-xl border border-border bg-[#F7FAFC] px-3 py-2.5"
-              >
-                <span className="min-w-0">
-                  <span className={`block truncate ${CARD_TITLE_CLASS}`}>
-                    {r.name}
-                  </span>
-                  <span className={`block ${CARD_META_CLASS}`}>{r.meta}</span>
-                </span>
-                <span
-                  className={`shrink-0 rounded-full px-2 py-0.5 ${BADGE_CLASS} font-semibold ${ui.tone}`}
-                >
-                  {ui.label}
-                </span>
-              </li>
-            );
-          })}
+        <ul className="mt-4 space-y-2.5">
+          {[
+            "Danh sách license gắn với tài khoản của bạn",
+            "Trạng thái đang dùng / sắp hết hạn / hết hạn",
+            "Mở key an toàn sau khi xác minh email",
+          ].map((line) => (
+            <li key={line} className={`flex items-start gap-2 ${BODY_MUTED_CLASS}`}>
+              <Check
+                size={14}
+                className="mt-0.5 shrink-0 text-accent"
+                strokeWidth={2.4}
+                aria-hidden
+              />
+              {line}
+            </li>
+          ))}
         </ul>
 
-        <p className={`mt-4 flex items-start gap-2 ${BODY_MUTED_CLASS}`}>
-          <Check
-            size={14}
-            className="mt-0.5 shrink-0 text-accent"
-            strokeWidth={2.4}
-            aria-hidden
-          />
-          Ví dụ cố định khi chưa đăng nhập. Sau đăng nhập, cột này chỉ hiện license
-          của đúng tài khoản đó — mở{" "}
-          <Link href="/account/assets" className={HOVER_LINK_ACCENT}>
-            Tài sản
+        <Link
+          href="/login"
+          className={`mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+        >
+          Đăng nhập để xem Tài sản →
+        </Link>
+        <p className={`mt-3 text-center ${CARD_META_CLASS}`}>
+          Chưa có tài khoản?{" "}
+          <Link href="/register" className={HOVER_LINK_ACCENT}>
+            Đăng ký
           </Link>
-          .
         </p>
       </div>
     </div>

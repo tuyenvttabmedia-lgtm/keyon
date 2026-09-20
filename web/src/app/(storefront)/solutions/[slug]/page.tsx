@@ -496,7 +496,7 @@ export default async function SolutionPage({ params }: Props) {
           name: d.orderItem.title,
           meta: expiresAt
             ? `Hết hạn ${expiresAt.toLocaleDateString("vi-VN")}`
-            : "Theo dõi trong Tài sản",
+            : "Đã giao",
           status: heroAssetStatus(d.deliverableType, expiresAt, meta?.disabledAt),
         };
       });
