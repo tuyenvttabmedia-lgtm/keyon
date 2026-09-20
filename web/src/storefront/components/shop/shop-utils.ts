@@ -9,11 +9,13 @@ import type {
 export const SHOP_PAGE_SIZE = 12;
 
 export const CATEGORY_LABELS: Record<ShopCategoryId, string> = {
-  windows: "Windows",
-  office: "Microsoft Office",
+  windows: "Windows & OS",
+  office: "Microsoft 365 & Office",
   adobe: "Adobe",
-  cloud: "Cloud & Server",
+  cloud: "Cloud & hạ tầng",
   security: "Bảo mật",
+  backup: "Backup & Storage",
+  autodesk: "Autodesk",
   other: "Khác",
 };
 
@@ -33,18 +35,20 @@ export const PLATFORM_LABELS: Record<ShopPlatform, string> = {
 
 export function inferCategory(brand: string, name: string): ShopCategoryId {
   const hay = `${brand} ${name}`.toLowerCase();
-  if (/adobe|creative|photoshop|illustrator|premiere|acrobat/.test(hay))
+  if (/autodesk|autocad|revit|3ds\s?max|maya|inventor|civil\s?3d/.test(hay))
+    return "autodesk";
+  if (/adobe|creative|photoshop|illustrator|premiere|acrobat|lightroom|after\s?effects/.test(hay))
     return "adobe";
-  if (/kaspersky|eset|norton|mcafee|defender|security|antivirus|nod32/.test(hay))
+  if (/kaspersky|eset|norton|mcafee|defender|security|antivirus|nod32|bitdefender|avast|avg/.test(hay))
     return "security";
-  if (/server|vmware|azure|aws|cloud|acronis|backup/.test(hay)) return "cloud";
-  if (/office|365|word|excel|powerpoint|outlook/.test(hay)) return "office";
+  if (/acronis|backup|veeam|storage|s3|object\s?storage/.test(hay)) return "backup";
+  if (/server|vmware|azure|aws|cloud|vps|hosting/.test(hay)) return "cloud";
+  if (/office|365|word|excel|powerpoint|outlook|teams/.test(hay)) return "office";
   if (/windows|win\s?1[01]/.test(hay)) return "windows";
-  // Autodesk / CAD stay in "other" until shop gains a dedicated filter
   return "other";
 }
 
-/** Map home CMS iconKey → shop category query (or brand filter hint). */
+/** Map home CMS iconKey → shop category query. */
 export function shopCatFromCmsIcon(
   iconKey: string | undefined,
 ): ShopCategoryId | "all" | null {
@@ -56,11 +60,14 @@ export function shopCatFromCmsIcon(
     case "adobe":
       return "adobe";
     case "cloud":
-    case "backup":
       return "cloud";
+    case "backup":
+      return "backup";
     case "security":
       return "security";
     case "autodesk":
+      return "autodesk";
+    case "other":
       return "other";
     default:
       return null;
@@ -74,6 +81,7 @@ export function inferMark(
   if (category === "adobe") return "adobe";
   if (category === "security") return "security";
   if (category === "cloud" && /server/i.test(name)) return "server";
+  if (category === "backup") return "server";
   if (category === "office") return "office";
   if (category === "windows") return "windows";
   return "generic";
@@ -164,6 +172,8 @@ export function countByCategory(items: ShopProduct[]): Record<ShopCategoryId, nu
     adobe: 0,
     cloud: 0,
     security: 0,
+    backup: 0,
+    autodesk: 0,
     other: 0,
   };
   for (const p of items) counts[p.categoryId] += 1;

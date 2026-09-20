@@ -314,7 +314,17 @@ export function ShopCatalog({
 }
 
 function isCategory(v: string): v is ShopCategoryId | "all" {
-  return ["all", "windows", "office", "adobe", "cloud", "security", "other"].includes(v);
+  return [
+    "all",
+    "windows",
+    "office",
+    "adobe",
+    "cloud",
+    "security",
+    "backup",
+    "autodesk",
+    "other",
+  ].includes(v);
 }
 
 function ViewBtn({

@@ -1,0 +1,87 @@
+{
+  "title": "Danh mục sản phẩm",
+  "viewAllHref": "/products",
+  "viewAllLabel": "Xem tất cả",
+  "items": [
+    {
+      "id": "c1",
+      "title": "Windows & OS",
+      "countLabel": "0 sản phẩm",
+      "href": "/products?cat=windows",
+      "iconKey": "windows",
+      "accentColor": "#2563EB",
+      "visible": true,
+      "sortOrder": 0
+    },
+    {
+      "id": "c2",
+      "title": "Microsoft 365 & Office",
+      "countLabel": "0 sản phẩm",
+      "href": "/products?cat=office",
+      "iconKey": "office",
+      "accentColor": "#EA580C",
+      "visible": true,
+      "sortOrder": 1
+    },
+    {
+      "id": "c3",
+      "title": "Adobe",
+      "countLabel": "0 sản phẩm",
+      "href": "/products?cat=adobe",
+      "iconKey": "adobe",
+      "accentColor": "#E11D48",
+      "visible": true,
+      "sortOrder": 2
+    },
+    {
+      "id": "c4",
+      "title": "Bảo mật",
+      "countLabel": "0 sản phẩm",
+      "href": "/products?cat=security",
+      "iconKey": "security",
+      "accentColor": "#0EA5A4",
+      "visible": true,
+      "sortOrder": 3
+    },
+    {
+      "id": "c5",
+      "title": "Backup & Storage",
+      "countLabel": "0 sản phẩm",
+      "href": "/products?cat=backup",
+      "iconKey": "backup",
+      "accentColor": "#1A73E8",
+      "visible": true,
+      "sortOrder": 4
+    },
+    {
+      "id": "c6",
+      "title": "Cloud & hạ tầng",
+      "countLabel": "0 sản phẩm",
+      "href": "/products?cat=cloud",
+      "iconKey": "cloud",
+      "accentColor": "#0284C7",
+      "visible": true,
+      "sortOrder": 5
+    },
+    {
+      "id": "c7",
+      "title": "Autodesk",
+      "countLabel": "0 sản phẩm",
+      "href": "/products?cat=autodesk",
+      "iconKey": "autodesk",
+      "accentColor": "#0696D7",
+      "visible": true,
+      "sortOrder": 6
+    },
+    {
+      "id": "c8",
+      "title": "Khác",
+      "countLabel": "0 sản phẩm",
+      "href": "/products?cat=other",
+      "iconKey": "other",
+      "accentColor": "#64748B",
+      "visible": true,
+      "sortOrder": 7
+    }
+  ]
+}

@@ -6,6 +6,8 @@ export type ShopCategoryId =
   | "adobe"
   | "cloud"
   | "security"
+  | "backup"
+  | "autodesk"
   | "other";
 
 export type ShopLicenseType = "retail" | "oem" | "volume" | "subscription";

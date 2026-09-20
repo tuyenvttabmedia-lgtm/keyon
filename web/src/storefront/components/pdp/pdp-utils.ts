@@ -4,8 +4,10 @@ export const PDP_CATEGORY_BADGE: Record<ShopCategoryId, string> = {
   windows: "HỆ ĐIỀU HÀNH",
   office: "VĂN PHÒNG",
   adobe: "THIẾT KẾ",
-  cloud: "CLOUD & SERVER",
+  cloud: "CLOUD & HẠ TẦNG",
   security: "BẢO MẬT",
+  backup: "BACKUP & STORAGE",
+  autodesk: "AUTODESK",
   other: "SẢN PHẨM",
 };
 
@@ -38,6 +40,22 @@ export function defaultFeatures(categoryId: ShopCategoryId, productName: string)
       "Bảo vệ máy tính / thiết bị thời gian thực",
       "Cập nhật định nghĩa virus thường xuyên",
       "Hỗ trợ kích hoạt qua Tài khoản KEYON",
+      ...base.slice(2),
+    ];
+  }
+  if (categoryId === "backup") {
+    return [
+      "Sao lưu / bảo vệ dữ liệu theo gói đã chọn",
+      "Theo dõi hạn dùng trong Tài sản KEYON",
+      "Hỗ trợ kích hoạt và hướng dẫn sau mua",
+      ...base.slice(2),
+    ];
+  }
+  if (categoryId === "autodesk") {
+    return [
+      "License thiết kế chính hãng theo gói",
+      "Phù hợp cá nhân / studio / doanh nghiệp",
+      "Theo dõi hạn và giao nhận trong Tài khoản",
       ...base.slice(2),
     ];
   }

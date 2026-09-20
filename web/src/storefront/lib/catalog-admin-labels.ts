@@ -9,11 +9,13 @@ import type {
 import type { ProductCategoryKey } from "@/storefront/lib/product-cms";
 
 export const CATEGORY_ADMIN_LABELS: Record<ProductCategoryKey, string> = {
-  windows: "Windows / Hệ điều hành",
-  office: "Office / Năng suất",
-  adobe: "Adobe / Sáng tạo",
-  cloud: "Cloud / SaaS",
+  windows: "Windows & OS",
+  office: "Microsoft 365 & Office",
+  adobe: "Adobe",
   security: "Bảo mật",
+  backup: "Backup & Storage",
+  cloud: "Cloud & hạ tầng",
+  autodesk: "Autodesk",
   other: "Khác",
 };
 

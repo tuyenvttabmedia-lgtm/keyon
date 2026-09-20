@@ -23,8 +23,10 @@ const CATEGORY_ORDER: ShopCategoryId[] = [
   "windows",
   "office",
   "adobe",
-  "cloud",
   "security",
+  "backup",
+  "cloud",
+  "autodesk",
   "other",
 ];
 
@@ -316,6 +318,21 @@ function CatIcon({ id }: { id: ShopCategoryId | "all" }) {
     return (
       <svg {...props}>
         <path d="M12 3 5 6v5c0 4 2.8 7 7 8 4.2-1 7-4 7-8V6l-7-3Z" />
+      </svg>
+    );
+  }
+  if (id === "backup") {
+    return (
+      <svg {...props}>
+        <path d="M12 3v10m0 0 3.5-3.5M12 13 8.5 9.5" />
+        <path d="M5 16.5A6 6 0 0 0 12 21a6 6 0 0 0 7-4.5" />
+      </svg>
+    );
+  }
+  if (id === "autodesk") {
+    return (
+      <svg {...props}>
+        <path d="M4 19 10 5h4l6 14h-3.5l-1-2.5h-7L7.5 19H4Zm5.8-5h4.4L12 8.8 9.8 14Z" />
       </svg>
     );
   }

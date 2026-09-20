@@ -92,6 +92,8 @@ export const PRODUCT_CATEGORY_KEYS = [
   "adobe",
   "cloud",
   "security",
+  "backup",
+  "autodesk",
   "other",
 ] as const;
 

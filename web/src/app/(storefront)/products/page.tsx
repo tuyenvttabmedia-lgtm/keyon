@@ -36,6 +36,8 @@ const LEGACY_CAT: Record<string, ShopCategoryId | "all"> = {
   design: "adobe",
   cloud: "cloud",
   security: "security",
+  backup: "backup",
+  autodesk: "autodesk",
   other: "other",
 };
 

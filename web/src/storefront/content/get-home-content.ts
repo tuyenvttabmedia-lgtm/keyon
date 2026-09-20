@@ -210,6 +210,8 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
     adobe: 0,
     cloud: 0,
     security: 0,
+    backup: 0,
+    autodesk: 0,
     other: 0,
   };
   for (const p of catalogRows) {
@@ -224,14 +226,13 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
 
   const categorySource =
     categories.items?.length > 0 ? categories.items : defaultCmsCategories.items;
-  // Wave 5: hide empty shop tiles; do not alias Backup→Cloud (misleading counts).
+  // Hide empty shop tiles; map CMS iconKey → live shop category counts.
   const categoryItems: CategoryItem[] = categorySource
     .filter((c) => c.visible !== false)
     .slice()
     .sort((a, b) => a.sortOrder - b.sortOrder)
     .map((c) => {
-      const shopCat =
-        c.iconKey === "backup" ? null : shopCatFromCmsIcon(c.iconKey);
+      const shopCat = shopCatFromCmsIcon(c.iconKey);
       const liveCount =
         shopCat && shopCat !== "all" ? shopCounts[shopCat] : undefined;
       const countLabel =
@@ -253,12 +254,7 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
         liveCount,
       };
     })
-    .filter((c) => {
-      if (c.icon === "backup" || c.icon === "security") {
-        return (c.liveCount ?? 0) > 0;
-      }
-      return c.liveCount === undefined || c.liveCount > 0;
-    })
+    .filter((c) => c.liveCount === undefined || c.liveCount > 0)
     .slice(0, 8)
     .map(({ liveCount, ...rest }) => {
       void liveCount;
