@@ -19,7 +19,10 @@ import {
   BackupSolutionLanding,
   type BackupFeaturedProduct,
 } from "@/storefront/components/solutions/BackupSolutionLanding";
-import { LicenseManagementSolutionLanding } from "@/storefront/components/solutions/LicenseManagementSolutionLanding";
+import {
+  LicenseManagementSolutionLanding,
+  type HeroAssetPreview,
+} from "@/storefront/components/solutions/LicenseManagementSolutionLanding";
 import { ByNeedSolutionLanding } from "@/storefront/components/solutions/ByNeedSolutionLanding";
 import { SOLUTION_PAGES } from "@/storefront/nav/ia-pages";
 import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
@@ -28,6 +31,8 @@ import { buildMainPageMetadata } from "@/server/seo/metadata";
 import { defaultCmsProductivity, readJsonFile } from "@/server/cms/store";
 import { resolveMediaUrl } from "@/lib/media-url";
 import { resolveStorage } from "@/server/storage/config";
+import { customerOrderWhere } from "@/server/org/customer-order-access";
+import type { DeliverableType } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
 
@@ -416,6 +421,23 @@ async function loadBackupFeatured(): Promise<{
   return { featured: [], usingFallback: false };
 }
 
+const EXPIRING_SOON_MS = 30 * 24 * 60 * 60 * 1000;
+
+function heroAssetStatus(
+  type: DeliverableType,
+  expiresAt: Date | null,
+  disabledAt: Date | null | undefined,
+): HeroAssetPreview["status"] {
+  if (disabledAt) return "expired";
+  if (expiresAt) {
+    const t = expiresAt.getTime();
+    if (t < Date.now()) return "expired";
+    if (t - Date.now() <= EXPIRING_SOON_MS) return "expiring";
+  }
+  if (type === "EXTERNAL_PORTAL" || type === "SUBSCRIPTION") return "pending";
+  return "active";
+}
+
 export default async function SolutionPage({ params }: Props) {
   const { slug } = await params;
   const page = SOLUTION_PAGES[slug];
@@ -442,8 +464,48 @@ export default async function SolutionPage({ params }: Props) {
 
   if (slug === "license-management") {
     const session = await readSession();
+    let assets: HeroAssetPreview[] = [];
+    if (session) {
+      const orderWhere = await customerOrderWhere({
+        id: session.id,
+        email: session.email,
+      });
+      const deliveries = await prisma.delivery.findMany({
+        where: {
+          orderItem: { order: orderWhere },
+        },
+        orderBy: { createdAt: "desc" },
+        take: 4,
+        include: {
+          orderItem: {
+            include: {
+              consumedLicenses: {
+                orderBy: { consumedAt: "desc" },
+                take: 1,
+                select: { expiresAt: true, disabledAt: true },
+              },
+            },
+          },
+        },
+      });
+      assets = deliveries.map((d) => {
+        const meta = d.orderItem.consumedLicenses[0];
+        const expiresAt = meta?.expiresAt ?? null;
+        return {
+          id: d.id,
+          name: d.orderItem.title,
+          meta: expiresAt
+            ? `Hết hạn ${expiresAt.toLocaleDateString("vi-VN")}`
+            : "Theo dõi trong Tài sản",
+          status: heroAssetStatus(d.deliverableType, expiresAt, meta?.disabledAt),
+        };
+      });
+    }
     return (
-      <LicenseManagementSolutionLanding loggedIn={Boolean(session)} />
+      <LicenseManagementSolutionLanding
+        loggedIn={Boolean(session)}
+        assets={assets}
+      />
     );
   }
 

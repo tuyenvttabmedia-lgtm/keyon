@@ -147,10 +147,20 @@ const BRANDS: {
   },
 ];
 
+export type HeroAssetPreview = {
+  id: string;
+  name: string;
+  meta: string;
+  status: "active" | "pending" | "expiring" | "expired";
+};
+
 export function LicenseManagementSolutionLanding({
   loggedIn = false,
+  assets = [],
 }: {
   loggedIn?: boolean;
+  /** Session-scoped deliveries only — never admin stock / other accounts. */
+  assets?: HeroAssetPreview[];
 }) {
   return (
     <div className="bg-white">
@@ -222,7 +232,7 @@ export function LicenseManagementSolutionLanding({
               </div>
             </div>
 
-            <AssetsHeroArt loggedIn={loggedIn} />
+            <AssetsHeroArt loggedIn={loggedIn} assets={assets} />
           </div>
         </div>
       </section>
@@ -339,36 +349,101 @@ export function LicenseManagementSolutionLanding({
   );
 }
 
-/** Marketing mock only — never loads account data (admin or customer). */
-function AssetsHeroArt({ loggedIn }: { loggedIn: boolean }) {
+const STATUS_UI = {
+  active: { label: "Đang dùng", tone: "bg-accent-soft text-accent" },
+  pending: { label: "Chờ xử lý", tone: "bg-slate-100 text-slate-700" },
+  expiring: { label: "Sắp hết hạn", tone: "bg-amber-100 text-amber-800" },
+  expired: { label: "Hết hạn", tone: "bg-rose-100 text-rose-700" },
+} as const;
+
+/** Guest = fictional mock. Signed-in = only that session's deliveries. */
+function AssetsHeroArt({
+  loggedIn,
+  assets,
+}: {
+  loggedIn: boolean;
+  assets: HeroAssetPreview[];
+}) {
   if (loggedIn) {
+    if (assets.length === 0) {
+      return (
+        <div className="relative mx-auto w-full max-w-[480px] lg:max-w-none">
+          <div
+            className={`relative rounded-2xl border border-border bg-white p-5 sm:p-6 ${ELEVATION_HAIRLINE}`}
+          >
+            <p
+              className={`${BADGE_CLASS} inline-flex rounded-md bg-accent-soft px-2 py-1 font-semibold text-accent`}
+            >
+              Tài khoản của bạn
+            </p>
+            <h3 className={`mt-3 ${CARD_TITLE_CLASS}`}>Chưa có license trong Tài sản</h3>
+            <p className={`mt-2 ${BODY_MUTED_CLASS}`}>
+              Cột này chỉ hiện license gắn với tài khoản bạn đang đăng nhập — không
+              lấy kho admin hay tài khoản khác.
+            </p>
+            <Link
+              href="/products"
+              className={`mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+            >
+              Xem catalog →
+            </Link>
+            <p className={`mt-3 ${CARD_META_CLASS}`}>
+              Sau khi mua và giao hàng, danh sách sẽ hiện tại đây và trong Tài sản.
+            </p>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="relative mx-auto w-full max-w-[480px] lg:max-w-none">
         <div
-          className={`relative rounded-2xl border border-border bg-white p-5 sm:p-6 ${ELEVATION_HAIRLINE}`}
+          className={`relative rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_HAIRLINE}`}
         >
-          <p
-            className={`${BADGE_CLASS} inline-flex rounded-md bg-accent-soft px-2 py-1 font-semibold text-accent`}
-          >
-            Tài khoản của bạn
-          </p>
-          <h3 className={`mt-3 ${CARD_TITLE_CLASS}`}>
-            License thật nằm trong Tài sản
-          </h3>
-          <p className={`mt-2 ${BODY_MUTED_CLASS}`}>
-            Cột này trên trang giải pháp chỉ là minh họa marketing — không lấy danh
-            sách từ tài khoản admin hay bất kỳ tài khoản nào. Mở Tài sản để xem
-            đúng license bạn đã mua.
-          </p>
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className={CARD_TITLE_CLASS}>Tài sản của bạn</p>
+              <p className={CARD_META_CLASS}>
+                Chỉ license của tài khoản đang đăng nhập
+              </p>
+            </div>
+            <span
+              className={`${BADGE_CLASS} rounded-md bg-accent-soft px-2 py-1 font-semibold text-accent`}
+            >
+              Tài khoản của bạn
+            </span>
+          </div>
+
+          <ul className="mt-4 space-y-2">
+            {assets.map((r) => {
+              const ui = STATUS_UI[r.status];
+              return (
+                <li
+                  key={r.id}
+                  className="flex items-center justify-between gap-3 rounded-xl border border-border bg-[#F7FAFC] px-3 py-2.5"
+                >
+                  <span className="min-w-0">
+                    <span className={`block truncate ${CARD_TITLE_CLASS}`}>
+                      {r.name}
+                    </span>
+                    <span className={`block ${CARD_META_CLASS}`}>{r.meta}</span>
+                  </span>
+                  <span
+                    className={`shrink-0 rounded-full px-2 py-0.5 ${BADGE_CLASS} font-semibold ${ui.tone}`}
+                  >
+                    {ui.label}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+
           <Link
             href="/account/assets"
-            className={`mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+            className={`mt-4 inline-flex w-full items-center justify-center ${LINK_ACCENT_CLASS}`}
           >
-            Xem Tài sản của tôi →
+            Xem đầy đủ trong Tài sản →
           </Link>
-          <p className={`mt-3 ${CARD_META_CLASS}`}>
-            Trang /account/assets chỉ hiện đơn của bạn (sau đăng nhập).
-          </p>
         </div>
       </div>
     );
@@ -378,28 +453,24 @@ function AssetsHeroArt({ loggedIn }: { loggedIn: boolean }) {
     {
       name: "Sản phẩm mẫu A",
       meta: "Ví dụ trạng thái · không phải đơn thật",
-      status: "Đang dùng",
-      tone: "bg-accent-soft text-accent",
+      status: "active" as const,
     },
     {
       name: "Sản phẩm mẫu B",
       meta: "Ví dụ trạng thái · không phải đơn thật",
-      status: "Đang dùng",
-      tone: "bg-accent-soft text-accent",
+      status: "active" as const,
     },
     {
       name: "Sản phẩm mẫu C",
       meta: "Ví dụ trạng thái · không phải đơn thật",
-      status: "Sắp hết hạn",
-      tone: "bg-amber-100 text-amber-800",
+      status: "expiring" as const,
     },
     {
       name: "Sản phẩm mẫu D",
       meta: "Ví dụ trạng thái · không phải đơn thật",
-      status: "Hết hạn",
-      tone: "bg-rose-100 text-rose-700",
+      status: "expired" as const,
     },
-  ] as const;
+  ];
 
   return (
     <div className="relative mx-auto w-full max-w-[480px] lg:max-w-none">
@@ -411,7 +482,9 @@ function AssetsHeroArt({ loggedIn }: { loggedIn: boolean }) {
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className={CARD_TITLE_CLASS}>Tài sản</p>
-            <p className={CARD_META_CLASS}>Giao diện mẫu — không phải số liệu tài khoản</p>
+            <p className={CARD_META_CLASS}>
+              Giao diện mẫu — không phải số liệu tài khoản
+            </p>
           </div>
           <span
             className={`${BADGE_CLASS} rounded-md bg-amber-100 px-2 py-1 font-semibold text-amber-800`}
@@ -421,22 +494,27 @@ function AssetsHeroArt({ loggedIn }: { loggedIn: boolean }) {
         </div>
 
         <ul className="mt-4 space-y-2">
-          {rows.map((r) => (
-            <li
-              key={r.name}
-              className="flex items-center justify-between gap-3 rounded-xl border border-border bg-[#F7FAFC] px-3 py-2.5"
-            >
-              <span className="min-w-0">
-                <span className={`block truncate ${CARD_TITLE_CLASS}`}>{r.name}</span>
-                <span className={`block ${CARD_META_CLASS}`}>{r.meta}</span>
-              </span>
-              <span
-                className={`shrink-0 rounded-full px-2 py-0.5 ${BADGE_CLASS} font-semibold ${r.tone}`}
+          {rows.map((r) => {
+            const ui = STATUS_UI[r.status];
+            return (
+              <li
+                key={r.name}
+                className="flex items-center justify-between gap-3 rounded-xl border border-border bg-[#F7FAFC] px-3 py-2.5"
               >
-                {r.status}
-              </span>
-            </li>
-          ))}
+                <span className="min-w-0">
+                  <span className={`block truncate ${CARD_TITLE_CLASS}`}>
+                    {r.name}
+                  </span>
+                  <span className={`block ${CARD_META_CLASS}`}>{r.meta}</span>
+                </span>
+                <span
+                  className={`shrink-0 rounded-full px-2 py-0.5 ${BADGE_CLASS} font-semibold ${ui.tone}`}
+                >
+                  {ui.label}
+                </span>
+              </li>
+            );
+          })}
         </ul>
 
         <p className={`mt-4 flex items-start gap-2 ${BODY_MUTED_CLASS}`}>
@@ -446,11 +524,12 @@ function AssetsHeroArt({ loggedIn }: { loggedIn: boolean }) {
             strokeWidth={2.4}
             aria-hidden
           />
-          Luôn là ví dụ cố định trên trang này. License thật chỉ ở{" "}
+          Ví dụ cố định khi chưa đăng nhập. Sau đăng nhập, cột này chỉ hiện license
+          của đúng tài khoản đó — mở{" "}
           <Link href="/account/assets" className={HOVER_LINK_ACCENT}>
             Tài sản
-          </Link>{" "}
-          sau khi đăng nhập.
+          </Link>
+          .
         </p>
       </div>
     </div>
