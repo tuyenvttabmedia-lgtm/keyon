@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { HomeContent, NewsItem } from "@/storefront/content/types";
 import { HomeSectionHeading } from "../HomeSectionHeading";
@@ -53,7 +54,7 @@ export function NewsSection({ data }: { data: News }) {
         {/* Mobile: compact list rows */}
         <div className="flex flex-col gap-2.5 md:hidden">
           {mobileItems.map((item, i) => (
-            <NewsListRow key={item.id} item={item} thumb={thumbClass[i % thumbClass.length]} />
+            <NewsListRow key={item.id} item={item} thumb={thumbClass[i % thumbClass.length]!} />
           ))}
         </div>
 
@@ -63,7 +64,7 @@ export function NewsSection({ data }: { data: News }) {
             <NewsCard
               key={item.id}
               item={item}
-              thumb={thumbClass[i % thumbClass.length]}
+              thumb={thumbClass[i % thumbClass.length]!}
               compact
             />
           ))}
@@ -72,7 +73,7 @@ export function NewsSection({ data }: { data: News }) {
         {/* Desktop: 4 cards */}
         <div className="hidden gap-3.5 lg:grid lg:grid-cols-4">
           {desktopItems.map((item, i) => (
-            <NewsCard key={item.id} item={item} thumb={thumbClass[i % thumbClass.length]} />
+            <NewsCard key={item.id} item={item} thumb={thumbClass[i % thumbClass.length]!} />
           ))}
         </div>
       </div>
@@ -80,20 +81,48 @@ export function NewsSection({ data }: { data: News }) {
   );
 }
 
+function NewsThumb({
+  item,
+  thumb,
+  className,
+}: {
+  item: NewsItem;
+  thumb: string;
+  className: string;
+}) {
+  return (
+    <div className={`relative overflow-hidden ${className} ${item.imageUrl ? "bg-surface" : thumb}`}>
+      {item.imageUrl ? (
+        <Image
+          src={item.imageUrl}
+          alt={item.imageAlt || item.title}
+          fill
+          className={`object-cover ${MOTION_NORMAL}`}
+          sizes="(max-width: 768px) 72px, (max-width: 1024px) 33vw, 25vw"
+          unoptimized
+        />
+      ) : null}
+      {item.tag ? (
+        <span
+          className={`absolute left-1 top-1 z-[1] rounded px-1 py-0.5 sm:left-3 sm:top-3 sm:rounded-md sm:px-2 sm:py-0.5 ${BADGE_CLASS} ${
+            item.tagTone ? tagClass[item.tagTone] : "bg-white/90 text-navy"
+          }`}
+        >
+          {item.tag}
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
 function NewsListRow({ item, thumb }: { item: NewsItem; thumb: string }) {
   return (
     <article className={`flex gap-2.5 overflow-hidden rounded-xl border border-border/80 bg-white p-2 ${ELEVATION_HAIRLINE} ${TRANSITION_UI} active:bg-surface`}>
-      <div className={`relative h-14 w-[72px] shrink-0 overflow-hidden rounded-lg ${thumb}`}>
-        {item.tag ? (
-          <span
-            className={`absolute left-1 top-1 rounded px-1 py-0.5 ${BADGE_CLASS} ${
-              item.tagTone ? tagClass[item.tagTone] : "bg-white/90 text-navy"
-            }`}
-          >
-            {item.tag}
-          </span>
-        ) : null}
-      </div>
+      <NewsThumb
+        item={item}
+        thumb={thumb}
+        className="h-14 w-[72px] shrink-0 rounded-lg"
+      />
       <div className="min-w-0 flex-1 self-center">
         <div className={CARD_META_CLASS}>{item.dateLabel}</div>
         <h3 className={`mt-0.5 line-clamp-1 ${CARD_TITLE_CLASS}`}>
@@ -122,17 +151,11 @@ function NewsCard({
 }) {
   return (
     <article className={`overflow-hidden rounded-[18px] border border-border/80 bg-white ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-border ${ELEVATION_CARD_HOVER}`}>
-      <div className={`relative ${compact ? "aspect-[16/9]" : "aspect-[16/10]"} ${thumb}`}>
-        {item.tag ? (
-          <span
-            className={`absolute left-3 top-3 rounded-md px-2 py-0.5 ${BADGE_CLASS} ${
-              item.tagTone ? tagClass[item.tagTone] : "bg-white/90 text-navy"
-            }`}
-          >
-            {item.tag}
-          </span>
-        ) : null}
-      </div>
+      <NewsThumb
+        item={item}
+        thumb={thumb}
+        className={compact ? "aspect-[16/9]" : "aspect-[16/10]"}
+      />
       <div className={compact ? "p-3" : "p-3.5"}>
         <div className={`text-date ${CARD_META_CLASS}`}>{item.dateLabel}</div>
         <h3 className={`mt-1.5 line-clamp-2 ${CARD_TITLE_CLASS}`}>

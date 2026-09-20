@@ -105,6 +105,7 @@ export function BlogDetailView({
 }) {
   const router = useRouter();
   const [expanded, setExpanded] = useState(false);
+  const [tocOpen, setTocOpen] = useState(false);
   const [helpful, setHelpful] = useState<"yes" | "no" | null>(null);
   const [yesCount, setYesCount] = useState(24);
   const [noCount, setNoCount] = useState(3);
@@ -227,7 +228,7 @@ export function BlogDetailView({
         </span>
       </nav>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1.7fr)_minmax(16rem,0.85fr)] lg:items-start lg:gap-8">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(14rem,17rem)] lg:items-start lg:gap-8">
         {/* Main article */}
         <article
           className={`rounded-2xl border border-border bg-white p-5 sm:p-7 ${ELEVATION_HAIRLINE}`}
@@ -268,7 +269,9 @@ export function BlogDetailView({
           </div>
 
           <div
-            className={`relative mt-6 aspect-[16/9] overflow-hidden rounded-2xl bg-gradient-to-br ${tone}`}
+            className={`relative mt-6 aspect-[16/9] overflow-hidden rounded-2xl ${
+              post.coverUrl ? "bg-surface" : `bg-gradient-to-br ${tone}`
+            }`}
           >
             {post.coverUrl ? (
               <Image
@@ -278,6 +281,7 @@ export function BlogDetailView({
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 70vw"
                 priority
+                unoptimized
               />
             ) : (
               <div className="absolute inset-0 flex items-end p-6">
@@ -289,21 +293,33 @@ export function BlogDetailView({
           </div>
 
           {toc.length > 0 ? (
-            <div className="mt-6 rounded-2xl bg-surface px-4 py-4 sm:px-5">
-              <p className={CARD_TITLE_CLASS}>{cms.detailTocTitle}</p>
-              <ol className="mt-3 grid gap-2 sm:grid-cols-2">
-                {toc.map((item, i) => (
-                  <li key={item.id}>
-                    <a
-                      href={`#${item.id}`}
-                      className={`inline-flex gap-2 ${CTA_COMPACT_CLASS} text-navy ${TRANSITION_UI} hover:text-accent`}
-                    >
-                      <span className="text-accent">{i + 1}.</span>
-                      <span className="line-clamp-2">{item.text}</span>
-                    </a>
-                  </li>
-                ))}
-              </ol>
+            <div className="mt-6 rounded-2xl bg-surface px-4 py-3 sm:px-5">
+              <button
+                type="button"
+                onClick={() => setTocOpen((v) => !v)}
+                className={`flex w-full items-center justify-between gap-3 text-left ${TRANSITION_UI}`}
+                aria-expanded={tocOpen}
+              >
+                <span className={CARD_TITLE_CLASS}>{cms.detailTocTitle}</span>
+                <span className="text-muted" aria-hidden>
+                  {tocOpen ? "▴" : "▾"}
+                </span>
+              </button>
+              {tocOpen ? (
+                <ol className="mt-3 grid gap-2 border-t border-border/70 pt-3 sm:grid-cols-2">
+                  {toc.map((item, i) => (
+                    <li key={item.id}>
+                      <a
+                        href={`#${item.id}`}
+                        className={`inline-flex gap-2 ${CTA_COMPACT_CLASS} text-navy ${TRANSITION_UI} hover:text-accent`}
+                      >
+                        <span className="text-accent">{i + 1}.</span>
+                        <span className="line-clamp-2">{item.text}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              ) : null}
             </div>
           ) : null}
 
@@ -355,18 +371,6 @@ export function BlogDetailView({
             )}
           </div>
 
-          {/* Decorative gallery placeholders when expanded or always after first sections */}
-          {expanded || !canExpand ? (
-            <div className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">
-              {[0, 1, 2].map((i) => (
-                <div
-                  key={i}
-                  className={`aspect-[4/3] rounded-xl bg-gradient-to-br ${tone} opacity-90`}
-                />
-              ))}
-            </div>
-          ) : null}
-
           {canExpand ? (
             <div className="mt-8 flex justify-center">
               <button
@@ -388,8 +392,23 @@ export function BlogDetailView({
                 className={`group flex gap-3 rounded-xl border border-border p-3 ${ELEVATION_NONE} ${TRANSITION_UI} ${HOVER_ROW}`}
               >
                 <span
-                  className={`relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-gradient-to-br ${COVER_TONE_CLASS[coverToneOf(prev)]}`}
-                />
+                  className={`relative h-14 w-14 shrink-0 overflow-hidden rounded-lg ${
+                    prev.coverUrl
+                      ? "bg-surface"
+                      : `bg-gradient-to-br ${COVER_TONE_CLASS[coverToneOf(prev)]}`
+                  }`}
+                >
+                  {prev.coverUrl ? (
+                    <Image
+                      src={prev.coverUrl}
+                      alt=""
+                      fill
+                      className="object-cover"
+                      sizes="56px"
+                      unoptimized
+                    />
+                  ) : null}
+                </span>
                 <span className="min-w-0 flex-1">
                   <span className={CARD_META_CLASS}>{cms.detailPrevLabel}</span>
                   <span
@@ -411,8 +430,23 @@ export function BlogDetailView({
                 className={`group flex gap-3 rounded-xl border border-border p-3 sm:flex-row-reverse sm:text-right ${ELEVATION_NONE} ${TRANSITION_UI} ${HOVER_ROW}`}
               >
                 <span
-                  className={`relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-gradient-to-br ${COVER_TONE_CLASS[coverToneOf(next)]}`}
-                />
+                  className={`relative h-14 w-14 shrink-0 overflow-hidden rounded-lg ${
+                    next.coverUrl
+                      ? "bg-surface"
+                      : `bg-gradient-to-br ${COVER_TONE_CLASS[coverToneOf(next)]}`
+                  }`}
+                >
+                  {next.coverUrl ? (
+                    <Image
+                      src={next.coverUrl}
+                      alt=""
+                      fill
+                      className="object-cover"
+                      sizes="56px"
+                      unoptimized
+                    />
+                  ) : null}
+                </span>
                 <span className="min-w-0 flex-1">
                   <span className={CARD_META_CLASS}>{cms.detailNextLabel}</span>
                   <span
@@ -542,6 +576,7 @@ export function BlogDetailView({
                           fill
                           className="object-cover"
                           sizes="56px"
+                          unoptimized
                         />
                       ) : null}
                     </span>

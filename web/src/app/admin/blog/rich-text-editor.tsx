@@ -221,8 +221,8 @@ export function RichTextEditor({
   }
 
   return (
-    <div className="keyon-editor-shell w-full min-w-0 max-w-none overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-      <div className="sticky top-0 z-10 flex w-full flex-wrap items-center gap-0.5 border-b border-border bg-[#f8fafc] px-2 py-1.5">
+    <div className="keyon-editor-shell w-full min-w-0 max-w-none rounded-xl border border-border bg-card shadow-sm">
+      <div className="sticky top-0 z-20 flex w-full flex-wrap items-center gap-0.5 border-b border-border bg-[#f8fafc]/90 px-2 py-1.5 backdrop-blur supports-[backdrop-filter]:bg-[#f8fafc]/80">
         {!htmlMode && editor ? (
           <>
             <ToolbarBtn
@@ -466,12 +466,11 @@ export function RichTextEditor({
         onSelect={(items) => {
           const item = items[0];
           if (!item?.url || !editor) return;
-          const preset = item.altText?.trim() || "";
-          const alt = window.prompt("Alt text (tuỳ chọn)", preset) ?? preset;
+          const alt = item.altText?.trim() || undefined;
           editor
             .chain()
             .focus()
-            .setImage({ src: item.url, alt: alt.trim() || undefined })
+            .setImage({ src: item.url, alt })
             .run();
         }}
       />

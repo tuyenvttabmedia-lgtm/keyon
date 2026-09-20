@@ -109,6 +109,8 @@ export type NewsItem = {
   excerpt: string;
   dateLabel: string;
   href: string;
+  imageUrl?: string;
+  imageAlt?: string;
   tag?: string;
   tagTone?: "win" | "ms" | "sec" | "adobe";
 };

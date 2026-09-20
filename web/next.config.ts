@@ -35,6 +35,13 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "media.keyon.vn", pathname: "/**" },
+      { protocol: "https", hostname: "**.wasabisys.com", pathname: "/**" },
+      { protocol: "https", hostname: "s3.ap-southeast-1.wasabisys.com", pathname: "/**" },
+    ],
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

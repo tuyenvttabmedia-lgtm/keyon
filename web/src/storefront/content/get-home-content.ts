@@ -404,6 +404,10 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
           "vi-VN",
         ),
         href: resourcePostHref(p),
+        imageUrl: p.coverUrl
+          ? resolveMediaUrl(p.coverUrl, mediaBase) || p.coverUrl
+          : undefined,
+        imageAlt: p.coverAlt?.trim() || p.title,
         tag: homeFixture.news.items[i]?.tag,
         tagTone: homeFixture.news.items[i]?.tagTone,
       })),
