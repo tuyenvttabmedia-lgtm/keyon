@@ -1277,6 +1277,13 @@ html {
   max-width: 100%;
 }
 
+.keyon-editor-prose img.ProseMirror-selectednode,
+.keyon-editor-prose .ProseMirror-selectednode img,
+.keyon-editor-prose img.keyon-editor-img.ProseMirror-selectednode {
+  outline: 2px solid #0ea5a4;
+  outline-offset: 2px;
+}
+
 .keyon-editor-prose hr,
 .blog-prose hr,
 .policy-prose hr {
