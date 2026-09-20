@@ -1,21 +1,14 @@
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
-  AlertTriangle,
   BarChart3,
   Bell,
   Check,
-  CloudUpload,
-  CreditCard,
-  Download,
-  FileSpreadsheet,
   Headphones,
-  LayoutDashboard,
+  KeyRound,
   LayoutGrid,
-  Lock,
-  PieChart,
+  Package,
   ShieldCheck,
-  Wallet,
 } from "lucide-react";
 import {
   BADGE_CLASS,
@@ -28,13 +21,14 @@ import {
   HERO_TITLE_CLASS,
   LINK_ACCENT_CLASS,
   PAGE_LEAD_CLASS,
+  SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
 } from "@/storefront/typography";
 import {
   ELEVATION_CARD_HOVER,
   ELEVATION_CTA_HOVER,
-  ELEVATION_FLOAT,
   ELEVATION_HAIRLINE,
+  ELEVATION_NONE,
   HOVER_LIFT_CARD,
   HOVER_LINK_ACCENT,
   TRANSITION_PANEL,
@@ -46,79 +40,70 @@ const ICON_SM = { size: 18, strokeWidth: 1.85, "aria-hidden": true as const };
 
 const HERO_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
-    title: "Tập trung",
-    body: "License đã mua trên KEYON nằm trong Tài khoản.",
+    title: "Một nơi sau mua",
+    body: "License đã thanh toán nằm trong Tài khoản → Tài sản.",
     Icon: LayoutGrid,
   },
   {
-    title: "Minh bạch",
-    body: "Xem hạn dùng và trạng thái từng bản quyền.",
+    title: "Hạn dùng rõ",
+    body: "Xem trạng thái và ngày hết hạn từng bản quyền đã nhận.",
     Icon: BarChart3,
   },
   {
-    title: "Chủ động",
-    body: "Nhắc trước kỳ gia hạn — renew qua tư vấn / báo giá.",
+    title: "Chủ động gia hạn",
+    body: "Mua lại trên catalog hoặc gửi báo giá khi cần số lượng lớn.",
     Icon: Bell,
   },
   {
-    title: "Đúng quy mô",
-    body: "Chọn tiếp tục, điều chỉnh seat hoặc báo giá lại.",
-    Icon: Wallet,
+    title: "Key có kiểm soát",
+    body: "Xem key sau khi xác minh email — không lộ trên email thông báo.",
+    Icon: KeyRound,
   },
 ];
 
 const FEATURES: { title: string; body: string; Icon: LucideIcon }[] = [
   {
-    title: "Quản lý tập trung",
-    body: "Theo dõi license đã mua trên Tài khoản KEYON — một nơi sau đăng nhập.",
+    title: "Danh sách trong Tài sản",
+    body: "Lọc đang dùng / chờ / hết hạn — đối chiếu nhanh sau đăng nhập.",
     Icon: LayoutGrid,
   },
   {
-    title: "Nhắc trước hạn",
-    body: "Thông tin trước kỳ gia hạn để bạn chủ động renew hoặc báo giá.",
-    Icon: Bell,
-  },
-  {
-    title: "Theo dõi hạn dùng",
-    body: "Xem chu kỳ và trạng thái license đã mua — không phải SAM phòng ban đầy đủ.",
+    title: "Trạng thái & hạn dùng",
+    body: "Mỗi license gắn ngày hết hạn khi có — không phải SAM phòng ban đầy đủ.",
     Icon: BarChart3,
   },
   {
-    title: "Gia hạn có kiểm soát",
-    body: "Tiếp tục, điều chỉnh số lượng hoặc gửi yêu cầu báo giá trước khi renew.",
-    Icon: Wallet,
+    title: "Gia hạn qua mua lại / báo giá",
+    body: "Không tự trừ tiền renew. Tiếp tục trên shop hoặc form báo giá doanh nghiệp.",
+    Icon: Package,
   },
   {
-    title: "Xuất / xem danh sách",
-    body: "Xem danh sách license trong Tài khoản khi cần đối chiếu nội bộ.",
-    Icon: Download,
+    title: "Bảo vệ khi xem key",
+    body: "Cần xác minh email trước khi hiện payload — giảm rủi ro lộ license.",
+    Icon: ShieldCheck,
   },
 ];
 
-const STEPS: { n: string; title: string; body: string; Icon: LucideIcon }[] = [
+const STEPS: { n: string; title: string; body: string }[] = [
   {
     n: "01",
-    title: "Nhận license sau mua",
-    body: "License mua trên KEYON vào Tài khoản sau thanh toán / bàn giao.",
-    Icon: CloudUpload,
+    title: "Mua & nhận license",
+    body: "Sau thanh toán, deliverable vào Tài khoản (Đơn hàng / Tài sản).",
   },
   {
     n: "02",
-    title: "Theo dõi trong Tài khoản",
-    body: "Xem sản phẩm, hạn dùng và trạng thái đã nhận.",
-    Icon: PieChart,
+    title: "Theo dõi trong Tài sản",
+    body: "Xem sản phẩm, trạng thái và hạn dùng đã ghi nhận.",
   },
   {
     n: "03",
-    title: "Nhắc trước kỳ renew",
-    body: "KEYON nhắc trước hạn để bạn quyết định gia hạn hoặc báo giá.",
-    Icon: Bell,
+    title: "Chủ động trước hạn",
+    body: "Dựa vào hạn dùng trên Tài khoản để quyết định gia hạn kịp thời.",
   },
   {
     n: "04",
-    title: "Gia hạn & điều chỉnh",
-    body: "Renew hoặc chỉnh số lượng qua Mua ngay / form báo giá.",
-    Icon: ShieldCheck,
+    title: "Gia hạn hoặc báo giá",
+    body: "Mua lại đúng SKU trên catalog, hoặc gửi yêu cầu khi cần số lượng lớn.",
   },
 ];
 
@@ -133,31 +118,31 @@ const BRANDS: {
   {
     id: "m365",
     name: "Microsoft 365",
-    body: "Theo dõi seat, gia hạn và phân bổ cho đội nhóm.",
+    body: "Mua gói trên catalog — theo dõi hạn trong Tài sản.",
     href: "/products?q=microsoft+365",
   },
   {
     id: "windows",
     name: "Windows",
-    body: "Quản lý bản quyền OS theo thiết bị và chu kỳ.",
+    body: "License OS theo biến thể — nhận sau thanh toán.",
     href: "/products?q=windows",
   },
   {
     id: "adobe",
     name: "Adobe",
-    body: "Creative Cloud và ứng dụng — renewal rõ ràng.",
+    body: "Creative Cloud và ứng dụng — gia hạn bằng mua lại / báo giá.",
     href: "/products?q=adobe",
   },
   {
     id: "acronis",
     name: "Acronis",
-    body: "Backup & cyber protect license tập trung.",
+    body: "License backup / protect — kích hoạt trên hạ tầng của bạn.",
     href: "/products?q=acronis",
   },
   {
     id: "autodesk",
     name: "Autodesk",
-    body: "Theo dõi subscription thiết kế / kỹ thuật.",
+    body: "Subscription thiết kế — theo dõi hạn trên Tài khoản.",
     href: "/products?q=autodesk",
   },
 ];
@@ -165,14 +150,15 @@ const BRANDS: {
 export function LicenseManagementSolutionLanding() {
   return (
     <div className="bg-white">
-      {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="relative overflow-x-clip border-b border-border">
+      <section className="relative overflow-x-clip border-b border-border bg-[#F7FAFC]">
         <div
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_90%_12%,rgba(14,165,164,0.12),transparent_42%),radial-gradient(ellipse_at_8%_88%,rgba(14,165,233,0.06),transparent_48%)]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(14,165,164,0.07),transparent_55%)]"
           aria-hidden
         />
-        <div className="home-container relative py-7 md:py-9 lg:py-10">
-          <nav className={`mb-6 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
+        <div className="home-container relative py-8 md:py-10 lg:py-11">
+          <nav
+            className={`mb-6 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}
+          >
             <Link href="/" className={HOVER_LINK_ACCENT}>
               Trang chủ
             </Link>
@@ -188,21 +174,21 @@ export function LicenseManagementSolutionLanding() {
             <span className={BREADCRUMB_CURRENT_CLASS}>Quản lý bản quyền</span>
           </nav>
 
-          <div className="grid items-center gap-9 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-8 xl:gap-10">
+          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-10">
             <div className="min-w-0">
-              <h1 className={`max-w-[18ch] ${HERO_TITLE_CLASS}`}>
-                Theo dõi license đã mua. Chủ động trước kỳ gia hạn.
+              <h1 className={`max-w-[20ch] ${HERO_TITLE_CLASS}`}>
+                License đã mua — xem rõ trong Tài khoản KEYON
               </h1>
               <p className={`mt-4 max-w-xl ${PAGE_LEAD_CLASS}`}>
-                KEYON giúp tổ chức xem license đã mua trên Tài khoản — hạn dùng, trạng thái
-                và nhắc trước renew. Không phải bộ SAM phòng ban hay gia hạn tự động trừ tiền.
+                Sau thanh toán, bản quyền nằm ở Tài sản: trạng thái, hạn dùng và key
+                (sau xác minh email). Không phải SAM phòng ban hay gia hạn tự động trừ tiền.
               </p>
 
               <ul className="mt-6 grid gap-3.5 sm:grid-cols-2">
                 {HERO_POINTS.map((p) => (
                   <li key={p.title} className="flex gap-3">
                     <span
-                      className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent"
+                      className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent"
                       aria-hidden
                     >
                       <p.Icon {...ICON_SM} />
@@ -217,10 +203,10 @@ export function LicenseManagementSolutionLanding() {
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
-                  href="/register"
-                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                  href="/account/assets"
+                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
-                  Mở Tài khoản KEYON →
+                  Mở Tài sản KEYON →
                 </Link>
                 <Link
                   href="/contact/quote"
@@ -232,26 +218,25 @@ export function LicenseManagementSolutionLanding() {
               </div>
             </div>
 
-            <div className="relative mx-auto w-full max-w-[560px] overflow-visible lg:max-w-none">
-              <LicenseMgmtHeroArt />
-            </div>
+            <AssetsHeroArt />
           </div>
         </div>
       </section>
 
-      {/* ── Smart features ───────────────────────────────────── */}
       <section className="py-9 md:py-11">
         <div className="home-container">
-          <header className="mx-auto max-w-2xl text-center">
-            <h2 className={SECTION_TITLE_CLASS}>Quản lý bản quyền thông minh</h2>
-            <div className="mx-auto mt-2.5 h-1 w-14 rounded-full bg-accent" aria-hidden />
+          <header className="max-w-2xl">
+            <h2 className={SECTION_TITLE_CLASS}>Bạn quản lý được gì trên KEYON</h2>
+            <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
+              Đúng phạm vi Tài khoản — không hứa công cụ quản trị license nội bộ đầy đủ.
+            </p>
           </header>
 
-          <ul className="mt-7 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3.5">
+          <ul className="mt-7 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
             {FEATURES.map((f) => (
               <li key={f.title}>
                 <article
-                  className={`flex h-full flex-col items-center rounded-2xl border border-border bg-white p-4 text-center sm:p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                  className={`flex h-full flex-col rounded-2xl border border-border bg-white p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                 >
                   <span
                     className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent"
@@ -268,75 +253,37 @@ export function LicenseManagementSolutionLanding() {
         </div>
       </section>
 
-      {/* ── 4 steps ──────────────────────────────────────────── */}
-      <section className="pb-9 md:pb-11">
+      <section className="border-y border-border bg-[#F7FAFC] py-9 md:py-11">
         <div className="home-container">
-          <div className="relative overflow-hidden rounded-2xl bg-navy px-5 py-9 sm:px-8 sm:py-10 lg:px-10">
-            <div
-              className="pointer-events-none absolute inset-0 opacity-40"
-              style={{
-                backgroundImage:
-                  "radial-gradient(ellipse at 20% 30%, rgba(14,165,164,0.28), transparent 45%), radial-gradient(ellipse at 85% 70%, rgba(56,189,248,0.12), transparent 40%)",
-              }}
-              aria-hidden
-            />
-            <svg
-              className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.12]"
-              preserveAspectRatio="none"
-              aria-hidden
-            >
-              <path
-                d="M0 120 Q180 40 360 130 T720 100 T1080 140 T1440 90"
-                fill="none"
-                stroke="#5eead4"
-                strokeWidth="1.5"
-              />
-              <path
-                d="M0 200 Q220 280 440 190 T880 220 T1320 180 T1600 240"
-                fill="none"
-                stroke="#94a3b8"
-                strokeWidth="1.2"
-              />
-            </svg>
+          <header className="max-w-2xl">
+            <h2 className={SECTION_TITLE_CLASS}>Quy trình trong 4 bước</h2>
+            <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
+              Từ mua hàng đến theo dõi và gia hạn — khớp checkout và Tài khoản đang chạy.
+            </p>
+          </header>
 
-            <header className="relative mx-auto max-w-2xl text-center">
-              <h2 className={`${SECTION_TITLE_CLASS} text-white`}>
-                Quy trình quản lý bản quyền chỉ trong 4 bước
-              </h2>
-            </header>
-
-            <ol className="relative mt-9 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
-              <span
-                className="pointer-events-none absolute left-[8%] right-[8%] top-7 hidden border-t border-dashed border-white/25 lg:block"
-                aria-hidden
-              />
-              {STEPS.map((s) => (
-                <li key={s.n} className="relative z-[1] flex flex-col items-center text-center">
-                  <span
-                    className={`flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white ${ELEVATION_FLOAT}`}
-                    aria-hidden
-                  >
-                    <s.Icon size={22} strokeWidth={1.8} />
-                  </span>
-                  <p className={`mt-3.5 ${CARD_TITLE_CLASS} text-white`}>
-                    <span className="text-accent">{s.n}.</span> {s.title}
-                  </p>
-                  <p className="mt-1.5 max-w-[22ch] text-sm leading-relaxed text-slate-300">
-                    {s.body}
-                  </p>
-                </li>
-              ))}
-            </ol>
-          </div>
+          <ol className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {STEPS.map((s) => (
+              <li
+                key={s.n}
+                className={`rounded-2xl border border-border bg-white p-5 ${ELEVATION_NONE}`}
+              >
+                <p className={`${BADGE_CLASS} text-accent`}>{s.n}</p>
+                <h3 className={`mt-2 ${CARD_TITLE_CLASS}`}>{s.title}</h3>
+                <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{s.body}</p>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
-      {/* ── Popular brands ───────────────────────────────────── */}
-      <section className="pb-9 md:pb-11">
+      <section className="py-9 md:py-11">
         <div className="home-container">
-          <header className="mx-auto max-w-2xl text-center">
-            <h2 className={SECTION_TITLE_CLASS}>Quản lý mọi loại bản quyền phổ biến</h2>
-            <div className="mx-auto mt-2.5 h-1 w-14 rounded-full bg-accent" aria-hidden />
+          <header className="max-w-2xl">
+            <h2 className={SECTION_TITLE_CLASS}>Bản quyền phổ biến trên catalog</h2>
+            <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
+              Mua trên KEYON rồi theo dõi trong Tài sản — không phải phân bổ seat nội bộ.
+            </p>
           </header>
 
           <ul className="mt-7 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
@@ -344,7 +291,7 @@ export function LicenseManagementSolutionLanding() {
               <li key={b.id}>
                 <Link
                   href={b.href}
-                  className={`flex h-full flex-col rounded-2xl border border-border bg-white p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} ${HOVER_LINK_ACCENT}`}
+                  className={`flex h-full flex-col rounded-2xl border border-border bg-white p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                 >
                   <BrandMark brand={b.id} size={40} />
                   <h3 className={`mt-3 ${CARD_TITLE_CLASS}`}>{b.name}</h3>
@@ -365,7 +312,9 @@ export function LicenseManagementSolutionLanding() {
                 </span>
                 <div className="mt-3">
                   <p className={`${CARD_TITLE_CLASS} text-accent`}>Xem tất cả</p>
-                  <p className={`mt-1 ${CARD_META_CLASS}`}>Toàn bộ catalog bản quyền</p>
+                  <p className={`mt-1 ${CARD_META_CLASS}`}>
+                    Toàn bộ catalog bản quyền
+                  </p>
                 </div>
                 <span className={`mt-3 ${LINK_ACCENT_CLASS}`}>Duyệt sản phẩm →</span>
               </Link>
@@ -374,270 +323,69 @@ export function LicenseManagementSolutionLanding() {
         </div>
       </section>
 
-      {/* ── CTA ──────────────────────────────────────────────── */}
       <SolutionFinalCta
-        title="Sẵn sàng kiểm soát bản quyền hiệu quả hơn?"
-        subtitle="Theo dõi hạn dùng trên Tài khoản KEYON — nhắc trước renew và gửi báo giá khi cần."
-        primaryHref="/contact/quote"
-        primaryLabel="Liên hệ tư vấn →"
-        secondaryHref="/register"
-        secondaryLabel="Mở Tài khoản KEYON →"
+        title="Sẵn sàng theo dõi license đã mua?"
+        subtitle="Mở Tài sản trong Tài khoản KEYON, hoặc gửi báo giá khi cần mua số lượng lớn."
+        primaryHref="/account/assets"
+        primaryLabel="Mở Tài sản KEYON →"
+        secondaryHref="/contact/quote"
+        secondaryLabel="Gửi yêu cầu tư vấn →"
       />
     </div>
   );
 }
 
-function LicenseMgmtHeroArt() {
-  const stats = [
-    { label: "Tổng license", value: "—", tone: "text-navy" },
-    { label: "Đang dùng", value: "—", tone: "text-accent" },
-    { label: "Sắp hết hạn", value: "—", tone: "text-amber-600" },
-    { label: "Hết hạn", value: "—", tone: "text-rose-600" },
-  ];
-
-  const alerts = [
-    { name: "Microsoft 365", meta: "Sắp đến hạn — minh họa", tone: "warn" as const },
-    { name: "Adobe Acrobat", meta: "Cần xem xét renew — minh họa", tone: "danger" as const },
-    { name: "Acronis Cyber", meta: "Còn hạn — minh họa", tone: "warn" as const },
-  ];
-
-  const nav = [
-    { Icon: LayoutDashboard, active: true },
-    { Icon: FileSpreadsheet, active: false },
-    { Icon: CreditCard, active: false },
-    { Icon: Bell, active: false },
-    { Icon: ShieldCheck, active: false },
-  ];
+/** Neutral assets list mock — labels only, no fake metrics or charts. */
+function AssetsHeroArt() {
+  const rows = [
+    { name: "Microsoft 365", status: "Đang dùng", tone: "bg-accent-soft text-accent" },
+    { name: "Windows Pro", status: "Đang dùng", tone: "bg-accent-soft text-accent" },
+    { name: "Adobe Acrobat", status: "Sắp hết hạn", tone: "bg-amber-100 text-amber-800" },
+    { name: "Acronis", status: "Hết hạn", tone: "bg-rose-100 text-rose-700" },
+  ] as const;
 
   return (
-    <div className="hero-dashboard-scene pb-6 sm:pb-7 lg:pb-6">
-      {/* Radial teal glow — background decoration behind panel */}
+    <div className="relative mx-auto w-full max-w-[480px] lg:max-w-none">
       <div
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[78%] w-[88%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(14,165,164,0.22)_0%,rgba(14,165,164,0.08)_42%,transparent_70%)] blur-2xl"
-        aria-hidden
-      />
+        className={`relative rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_HAIRLINE}`}
+        role="img"
+        aria-label="Minh họa danh sách license trong Tài sản KEYON — không phải số liệu thật"
+      >
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className={CARD_TITLE_CLASS}>Tài sản</p>
+            <p className={CARD_META_CLASS}>License đã nhận trên KEYON</p>
+          </div>
+          <span
+            className={`${BADGE_CLASS} rounded-md bg-accent-soft px-2 py-1 font-semibold text-accent`}
+          >
+            Minh họa
+          </span>
+        </div>
 
-      <div className="hero-dashboard-panel">
-        <div
-          className="hero-dashboard-surface relative overflow-hidden rounded-[1.35rem] border border-slate-200/90 bg-[#f1f5f9]"
-          role="img"
-          aria-label="Minh họa giao diện quản lý license KEYON — không phải số liệu thật"
-        >
-          <div className="flex min-h-[260px] sm:min-h-[300px] lg:min-h-[320px]">
-            {/* Sidebar */}
-            <aside className="flex w-11 shrink-0 flex-col items-center gap-2 border-r border-slate-200/80 bg-white py-3 sm:w-12 sm:gap-2.5 sm:py-3.5">
-              <span
-                className="mb-1 flex h-7 w-7 items-center justify-center rounded-lg bg-navy font-display text-[11px] font-extrabold text-accent sm:h-8 sm:w-8"
-                aria-hidden
-              >
-                K
+        <ul className="mt-4 space-y-2">
+          {rows.map((r) => (
+            <li
+              key={r.name}
+              className="flex items-center justify-between gap-3 rounded-xl border border-border bg-[#F7FAFC] px-3 py-2.5"
+            >
+              <span className="min-w-0">
+                <span className={`block truncate ${CARD_TITLE_CLASS}`}>{r.name}</span>
+                <span className={`block ${CARD_META_CLASS}`}>Hạn dùng · xem trong tài khoản</span>
               </span>
-              {nav.map(({ Icon, active }, i) => (
-                <span
-                  key={i}
-                  className={`flex h-8 w-8 items-center justify-center rounded-lg ${
-                    active ? "bg-accent-soft text-accent" : "text-slate-400"
-                  }`}
-                  aria-hidden
-                >
-                  <Icon size={15} strokeWidth={1.85} />
-                </span>
-              ))}
-            </aside>
+              <span
+                className={`shrink-0 rounded-full px-2 py-0.5 ${BADGE_CLASS} font-semibold ${r.tone}`}
+              >
+                {r.status}
+              </span>
+            </li>
+          ))}
+        </ul>
 
-            {/* Main */}
-            <div className="min-w-0 flex-1 p-2.5 sm:p-3.5">
-              <div className="mb-2.5 flex items-center justify-between gap-2">
-                <div>
-                  <p className={`${BADGE_CLASS} text-slate-400`}>License Hub</p>
-                  <p className={`${CARD_TITLE_CLASS} text-[13px] sm:text-sm`}>Tổng quan</p>
-                </div>
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2 py-1 text-[10px] font-semibold text-slate-600">
-                  Minh họa
-                </span>
-              </div>
-
-              <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
-                {stats.map((s) => (
-                  <div
-                    key={s.label}
-                    className="rounded-xl border border-slate-200/80 bg-white px-1.5 py-2 text-center sm:px-2 sm:py-2.5"
-                  >
-                    <p
-                      className={`font-display text-sm font-bold tabular-nums leading-none sm:text-base ${s.tone}`}
-                    >
-                      {s.value}
-                    </p>
-                    <p className="mt-1 text-[8px] font-semibold leading-tight text-slate-500 sm:text-[9px]">
-                      {s.label}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-2.5 grid gap-2.5 sm:mt-3 sm:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
-                <div className="rounded-xl border border-slate-200/80 bg-white p-2.5 sm:p-3">
-                  <p className={`${BADGE_CLASS} mb-2 font-semibold text-slate-500`}>
-                    Phân bố trạng thái
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <svg
-                      viewBox="0 0 120 120"
-                      className="h-[88px] w-[88px] shrink-0 sm:h-[100px] sm:w-[100px]"
-                      aria-hidden
-                    >
-                      <circle cx="60" cy="60" r="38" fill="#f8fafc" />
-                      <circle
-                        cx="60"
-                        cy="60"
-                        r="34"
-                        fill="none"
-                        stroke="#e2e8f0"
-                        strokeWidth="12"
-                      />
-                      <circle
-                        cx="60"
-                        cy="60"
-                        r="34"
-                        fill="none"
-                        stroke="#0ea5a4"
-                        strokeWidth="12"
-                        strokeDasharray={`${2 * Math.PI * 34 * 0.76} ${2 * Math.PI * 34}`}
-                        strokeLinecap="round"
-                        transform="rotate(-90 60 60)"
-                      />
-                      <circle
-                        cx="60"
-                        cy="60"
-                        r="34"
-                        fill="none"
-                        stroke="#f59e0b"
-                        strokeWidth="12"
-                        strokeDasharray={`${2 * Math.PI * 34 * 0.08} ${2 * Math.PI * 34}`}
-                        strokeDashoffset={-2 * Math.PI * 34 * 0.76}
-                        transform="rotate(-90 60 60)"
-                      />
-                      <circle
-                        cx="60"
-                        cy="60"
-                        r="34"
-                        fill="none"
-                        stroke="#f43f5e"
-                        strokeWidth="12"
-                        strokeDasharray={`${2 * Math.PI * 34 * 0.03} ${2 * Math.PI * 34}`}
-                        strokeDashoffset={-2 * Math.PI * 34 * 0.84}
-                        transform="rotate(-90 60 60)"
-                      />
-                      <text
-                        x="60"
-                        y="58"
-                        textAnchor="middle"
-                        fill="#0b1f33"
-                        fontSize="16"
-                        fontWeight="800"
-                        fontFamily="var(--font-display), system-ui, sans-serif"
-                      >
-                        —
-                      </text>
-                      <text
-                        x="60"
-                        y="72"
-                        textAnchor="middle"
-                        fill="#94a3b8"
-                        fontSize="8"
-                        fontWeight="600"
-                      >
-                        Minh họa
-                      </text>
-                    </svg>
-                    <ul className="min-w-0 space-y-1.5">
-                      {[
-                        { label: "Đang dùng", color: "bg-accent" },
-                        { label: "Sắp hết hạn", color: "bg-amber-500" },
-                        { label: "Hết hạn", color: "bg-rose-500" },
-                        { label: "Chưa gán", color: "bg-slate-300" },
-                      ].map((l) => (
-                        <li key={l.label} className="flex items-center gap-1.5">
-                          <span className={`h-2 w-2 shrink-0 rounded-full ${l.color}`} />
-                          <span className="truncate text-[10px] font-medium text-slate-600">
-                            {l.label}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="rounded-xl border border-slate-200/80 bg-white p-2.5 sm:p-3">
-                  <div className="mb-2 flex items-center justify-between gap-2">
-                    <p className={`${BADGE_CLASS} font-semibold text-slate-500`}>Cảnh báo</p>
-                    <span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-[9px] font-bold text-slate-600">
-                      Minh họa
-                    </span>
-                  </div>
-                  <ul className="space-y-1.5">
-                    {alerts.map((a) => (
-                      <li
-                        key={a.name}
-                        className="flex items-start gap-2 rounded-lg bg-slate-50 px-2 py-1.5"
-                      >
-                        <span
-                          className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md ${
-                            a.tone === "danger"
-                              ? "bg-rose-100 text-rose-600"
-                              : "bg-amber-100 text-amber-700"
-                          }`}
-                          aria-hidden
-                        >
-                          <AlertTriangle size={11} strokeWidth={2.2} />
-                        </span>
-                        <span className="min-w-0">
-                          <span className="block truncate text-[11px] font-bold text-navy">
-                            {a.name}
-                          </span>
-                          <span className="block text-[9px] text-slate-500">{a.meta}</span>
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Floating cards — same 3D space, translateZ ahead of panel */}
-        <div
-          className={`hero-dashboard-float absolute -left-3 top-[40%] z-20 hidden items-center gap-2 rounded-xl border border-border bg-white px-2.5 py-2 sm:flex md:-left-5`}
-        >
-          <span
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-700"
-            aria-hidden
-          >
-            <Bell size={15} strokeWidth={1.9} />
-          </span>
-          <div className="min-w-0">
-            <p className={`${BADGE_CLASS} font-semibold text-navy`}>Nhắc sắp hết hạn</p>
-            <p className="text-[10px] text-muted">Minh họa — không phải số liệu thật</p>
-          </div>
-        </div>
-
-        <div
-          className={`hero-dashboard-float absolute -bottom-3 -right-2 z-20 flex max-w-[210px] items-start gap-2.5 rounded-2xl border border-border bg-white p-3 sm:-bottom-4 sm:-right-3 sm:max-w-[230px]`}
-        >
-          <span
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent"
-            aria-hidden
-          >
-            <Lock size={16} strokeWidth={1.9} />
-          </span>
-          <div className="min-w-0">
-            <p className={`${BADGE_CLASS} font-semibold text-navy`}>Bảo vệ tài khoản</p>
-            <p className="mt-0.5 text-[11px] leading-snug text-muted">
-              Dữ liệu license được bảo vệ theo chính sách bảo mật KEYON.
-            </p>
-          </div>
-        </div>
+        <p className={`mt-4 flex items-start gap-2 ${BODY_MUTED_CLASS}`}>
+          <Check size={14} className="mt-0.5 shrink-0 text-accent" strokeWidth={2.4} aria-hidden />
+          Minh họa giao diện — số liệu thật chỉ hiện sau khi bạn đăng nhập Tài khoản.
+        </p>
       </div>
     </div>
   );
@@ -659,7 +407,10 @@ function BrandMark({ brand, size = 40 }: { brand: BrandId; size?: number }) {
       <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden>
         <path fill="#D83B01" d="M3 4.5 14 2v20L3 19.5V4.5Z" />
         <path fill="#A4262C" d="M14 2h7v20h-7V2Z" opacity="0.85" />
-        <path fill="#fff" d="M6.2 8.2h5.2v1.4H8.1v1.6h3v1.3H8.1v1.8h3.4v1.4H6.2V8.2Z" />
+        <path
+          fill="#fff"
+          d="M6.2 8.2h5.2v1.4H8.1v1.6h3v1.3H8.1v1.8h3.4v1.4H6.2V8.2Z"
+        />
       </svg>
     );
   }
