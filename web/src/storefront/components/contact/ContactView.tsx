@@ -10,16 +10,19 @@ import {
   BREADCRUMB_CURRENT_CLASS,
   CARD_META_CLASS,
   CARD_TITLE_CLASS,
+  CTA_COMPACT_CLASS,
   CTA_LABEL_CLASS,
   FORM_ERROR_CLASS,
   FORM_LABEL_CLASS,
   FORM_SUCCESS_CLASS,
   INPUT_TEXT_CLASS,
+  PAGE_LEAD_CLASS,
+  PAGE_TITLE_CLASS,
   SECTION_LEAD_CLASS,
   SUBSECTION_TITLE_CLASS,
 } from "@/storefront/typography";
 import {
-  ELEVATION_HAIRLINE,
+  ELEVATION_NONE,
   HOVER_LINK_ACCENT,
   HOVER_OUTLINE_FILL,
   OPACITY_DISABLED_BUSY,
@@ -29,10 +32,10 @@ import { TurnstileField } from "@/storefront/components/auth/TurnstileField";
 import { useTurnstileSiteKey } from "@/storefront/components/auth/use-turnstile-site-key";
 import { isPlaceholderHotline } from "@/storefront/components/support/shared";
 
-const INPUT =
-  `h-11 w-full rounded-xl border border-border bg-surface pl-10 pr-3 ${INPUT_TEXT_CLASS} outline-none ${TRANSITION_UI} focus:border-accent focus:bg-white`;
+const INPUT_ICON =
+  `h-11 w-full rounded-xl border border-border bg-white pl-10 pr-3 ${INPUT_TEXT_CLASS} outline-none ${TRANSITION_UI} focus:border-accent focus:ring-2 focus:ring-accent/20`;
 const TEXTAREA =
-  `w-full rounded-xl border border-border bg-surface px-3 py-2.5 pl-10 ${INPUT_TEXT_CLASS} outline-none ${TRANSITION_UI} focus:border-accent focus:bg-white`;
+  `w-full rounded-xl border border-border bg-white px-3 py-2.5 pl-10 ${INPUT_TEXT_CLASS} outline-none ${TRANSITION_UI} focus:border-accent focus:ring-2 focus:ring-accent/20`;
 
 export function ContactView({ cms }: { cms: CmsContact }) {
   const turnstileSiteKey = useTurnstileSiteKey();
@@ -94,107 +97,41 @@ export function ContactView({ cms }: { cms: CmsContact }) {
 
   const chatHref = cms.chatHref?.trim() || cms.instantCtaHref;
   const instantExternal = isExternalHref(cms.instantCtaHref);
+  const showHotline =
+    Boolean(cms.hotlineValue.trim()) &&
+    !isPlaceholderHotline(cms.hotlineValue);
 
   return (
     <div className="bg-white">
-      {/* Hero — thu vào container ~1200px (không full-bleed) */}
-      <div className="home-container pt-5 md:pt-6">
-        <section className="relative overflow-hidden rounded-2xl bg-navy text-white">
-          <div
-            className="pointer-events-none absolute inset-0 opacity-40"
-            aria-hidden
-            style={{
-              background:
-                "radial-gradient(ellipse 55% 80% at 90% 40%, rgba(14,165,164,0.22), transparent 55%)",
-            }}
-          />
-          <div className="relative px-5 py-5 sm:px-6 md:px-8 md:py-6">
-            <nav
-              className={`flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS} !text-white/65`}
-            >
-              <Link href="/" className={`${TRANSITION_UI} hover:text-accent`}>
-                Trang chủ
-              </Link>
-              <span aria-hidden>›</span>
-              <span className={`${BREADCRUMB_CURRENT_CLASS} !text-white/90`}>
-                Liên hệ
-              </span>
-            </nav>
-            <h1 className={`mt-3 ${SUBSECTION_TITLE_CLASS} !text-white md:text-2xl`}>
-              {cms.heroTitle}{" "}
-              <span className="text-accent">{cms.heroTitleAccent}</span>
-            </h1>
-            <p className={`mt-2 max-w-2xl ${SECTION_LEAD_CLASS} !text-white/75`}>
-              {cms.heroLead}
-            </p>
-          </div>
-        </section>
-      </div>
+      <section className="relative overflow-x-clip border-b border-border bg-[#F7FAFC]">
+        <div
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(14,165,164,0.07),transparent_55%)]"
+          aria-hidden
+        />
+        <div className="home-container relative py-8 md:py-10">
+          <nav
+            className={`mb-5 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}
+          >
+            <Link href="/" className={HOVER_LINK_ACCENT}>
+              Trang chủ
+            </Link>
+            <span aria-hidden className="text-muted-soft">
+              ›
+            </span>
+            <span className={BREADCRUMB_CURRENT_CLASS}>Liên hệ</span>
+          </nav>
+          <h1 className={PAGE_TITLE_CLASS}>
+            {cms.heroTitle}{" "}
+            <span className="text-accent">{cms.heroTitleAccent}</span>
+          </h1>
+          <p className={`mt-3 max-w-2xl ${PAGE_LEAD_CLASS}`}>{cms.heroLead}</p>
+        </div>
+      </section>
 
-      <div className="bg-[#F4F8FB]">
-        <div className="home-container space-y-5 py-6 md:space-y-6 md:py-8">
-          {/* Info + Form + Instant */}
-          <section className="grid gap-5 lg:grid-cols-[minmax(15rem,0.9fr)_minmax(0,1.4fr)_minmax(14rem,0.85fr)] lg:items-stretch lg:gap-5">
-            <aside className="relative overflow-hidden rounded-2xl bg-navy p-6 text-white sm:p-7 lg:p-8">
-              <h2 className={`${SUBSECTION_TITLE_CLASS} !text-white`}>
-                {cms.infoTitle}
-              </h2>
-              <p className={`mt-2 ${SECTION_LEAD_CLASS} !text-white/65`}>
-                {cms.infoLead}
-              </p>
-              <ul className="mt-7 space-y-5">
-                {cms.hotlineValue.trim() && !isPlaceholderHotline(cms.hotlineValue) ? (
-                  <InfoRow
-                    icon={<PhoneIcon />}
-                    label={cms.hotlineLabel}
-                    value={
-                      <a
-                        href={`tel:${cms.hotlineValue.replace(/\s/g, "")}`}
-                        className={`${TRANSITION_UI} hover:text-accent`}
-                      >
-                        {cms.hotlineValue}
-                      </a>
-                    }
-                    hint={cms.hotlineHint}
-                  />
-                ) : null}
-                <InfoRow
-                  icon={<MailIcon />}
-                  label={cms.emailLabel}
-                  value={
-                    <a
-                      href={`mailto:${cms.emailValue}`}
-                      className={`break-all ${TRANSITION_UI} hover:text-accent`}
-                    >
-                      {cms.emailValue}
-                    </a>
-                  }
-                  hint={cms.emailHint}
-                />
-                <InfoRow
-                  icon={<ChatIcon />}
-                  label={cms.chatLabel}
-                  value={
-                    <a
-                      href={chatHref}
-                      className={`${TRANSITION_UI} hover:text-accent`}
-                    >
-                      {cms.chatValue}
-                    </a>
-                  }
-                  hint={cms.chatHint}
-                />
-                <InfoRow
-                  icon={<ClockIcon />}
-                  label={cms.hoursLabel}
-                  value={cms.hoursValue}
-                  hint={cms.hoursHint}
-                />
-              </ul>
-            </aside>
-
+      <div className="home-container space-y-8 py-8 md:space-y-10 md:py-10">
+        <section className="grid gap-6 lg:grid-cols-[minmax(0,1.55fr)_minmax(16rem,0.9fr)] lg:items-start lg:gap-8">
           <div
-            className={`rounded-2xl border border-border bg-white p-6 sm:p-7 lg:p-8 ${ELEVATION_HAIRLINE}`}
+            className={`rounded-2xl border border-border bg-white p-5 sm:p-6 lg:p-7 ${ELEVATION_NONE}`}
           >
             <h2 className={SUBSECTION_TITLE_CLASS}>{cms.formTitle}</h2>
             <p className={`mt-1.5 ${SECTION_LEAD_CLASS}`}>{cms.formLead}</p>
@@ -204,7 +141,7 @@ export function ContactView({ cms }: { cms: CmsContact }) {
                 <Field label={cms.formNameLabel} icon={<UserIcon />}>
                   <input
                     required
-                    className={INPUT}
+                    className={INPUT_ICON}
                     placeholder={cms.formNamePlaceholder}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -217,7 +154,7 @@ export function ContactView({ cms }: { cms: CmsContact }) {
                   <input
                     type="email"
                     required
-                    className={INPUT}
+                    className={INPUT_ICON}
                     placeholder={cms.formEmailPlaceholder}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -229,7 +166,7 @@ export function ContactView({ cms }: { cms: CmsContact }) {
                 <Field label={cms.formPhoneLabel} icon={<PhoneIcon />}>
                   <input
                     type="tel"
-                    className={INPUT}
+                    className={INPUT_ICON}
                     placeholder={cms.formPhonePlaceholder}
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
@@ -240,7 +177,7 @@ export function ContactView({ cms }: { cms: CmsContact }) {
                   <div className="relative">
                     <select
                       required
-                      className={`${INPUT} appearance-none pr-9`}
+                      className={`${INPUT_ICON} appearance-none pr-9`}
                       value={topic}
                       onChange={(e) => setTopic(e.target.value)}
                     >
@@ -296,12 +233,20 @@ export function ContactView({ cms }: { cms: CmsContact }) {
               ) : null}
 
               {err ? (
-                <p id="contact-form-error" role="alert" className={FORM_ERROR_CLASS}>
+                <p
+                  id="contact-form-error"
+                  role="alert"
+                  className={FORM_ERROR_CLASS}
+                >
                   {err}
                 </p>
               ) : null}
               {ok ? (
-                <p id="contact-form-success" role="status" className={FORM_SUCCESS_CLASS}>
+                <p
+                  id="contact-form-success"
+                  role="status"
+                  className={FORM_SUCCESS_CLASS}
+                >
                   {ok}
                 </p>
               ) : null}
@@ -317,57 +262,112 @@ export function ContactView({ cms }: { cms: CmsContact }) {
             </form>
           </div>
 
-          <aside
-            className={`flex flex-col rounded-2xl border border-border bg-white p-6 sm:p-7 lg:p-8 ${ELEVATION_HAIRLINE}`}
-          >
-            <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-accent-soft text-accent">
-              <HeadsetIcon />
-            </span>
-            <h2 className={`mt-4 ${SUBSECTION_TITLE_CLASS}`}>
-              {cms.instantTitle}
-            </h2>
-            <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>{cms.instantBody}</p>
-            {instantExternal ? (
-              <a
-                href={cms.instantCtaHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`mt-5 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-accent bg-white px-4 ${CTA_LABEL_CLASS} text-accent ${TRANSITION_UI} ${HOVER_OUTLINE_FILL}`}
-              >
-                {cms.instantCta}
-                <span aria-hidden>→</span>
-              </a>
-            ) : (
-              <Link
-                href={cms.instantCtaHref}
-                className={`mt-5 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-accent bg-white px-4 ${CTA_LABEL_CLASS} text-accent ${TRANSITION_UI} ${HOVER_OUTLINE_FILL}`}
-              >
-                {cms.instantCta}
-                <span aria-hidden>→</span>
-              </Link>
-            )}
-            <ul className="mt-auto space-y-3 pt-6">
-              {cms.instantPerks.map((perk) => (
-                <li key={perk} className="flex items-start gap-2.5">
-                  <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent/15 text-[11px] font-bold text-accent">
-                    ✓
-                  </span>
-                  <span className={BODY_CLASS}>{perk}</span>
-                </li>
-              ))}
-            </ul>
+          <aside className="space-y-4 lg:sticky lg:top-24">
+            <div
+              className={`rounded-2xl border border-border bg-[#F7FAFC] p-5 sm:p-6 ${ELEVATION_NONE}`}
+            >
+              <h2 className={SUBSECTION_TITLE_CLASS}>{cms.infoTitle}</h2>
+              <p className={`mt-1.5 ${SECTION_LEAD_CLASS}`}>{cms.infoLead}</p>
+              <ul className="mt-5 space-y-4">
+                {showHotline ? (
+                  <InfoRow
+                    icon={<PhoneIcon />}
+                    label={cms.hotlineLabel}
+                    value={
+                      <a
+                        href={`tel:${cms.hotlineValue.replace(/\s/g, "")}`}
+                        className={HOVER_LINK_ACCENT}
+                      >
+                        {cms.hotlineValue}
+                      </a>
+                    }
+                    hint={cms.hotlineHint}
+                  />
+                ) : null}
+                <InfoRow
+                  icon={<MailIcon />}
+                  label={cms.emailLabel}
+                  value={
+                    <a
+                      href={`mailto:${cms.emailValue}`}
+                      className={`break-all ${HOVER_LINK_ACCENT}`}
+                    >
+                      {cms.emailValue}
+                    </a>
+                  }
+                  hint={cms.emailHint}
+                />
+                <InfoRow
+                  icon={<TicketIcon />}
+                  label={cms.chatLabel}
+                  value={
+                    <Link href={chatHref} className={HOVER_LINK_ACCENT}>
+                      {cms.chatValue}
+                    </Link>
+                  }
+                  hint={cms.chatHint}
+                />
+                <InfoRow
+                  icon={<ClockIcon />}
+                  label={cms.hoursLabel}
+                  value={cms.hoursValue}
+                  hint={cms.hoursHint}
+                />
+              </ul>
+            </div>
+
+            <div
+              className={`rounded-2xl border border-border bg-white p-5 sm:p-6 ${ELEVATION_NONE}`}
+            >
+              <h2 className={SUBSECTION_TITLE_CLASS}>{cms.instantTitle}</h2>
+              <p className={`mt-1.5 ${SECTION_LEAD_CLASS}`}>{cms.instantBody}</p>
+              {instantExternal ? (
+                <a
+                  href={cms.instantCtaHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`mt-4 inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-accent bg-white px-4 ${CTA_COMPACT_CLASS} text-accent ${TRANSITION_UI} ${HOVER_OUTLINE_FILL}`}
+                >
+                  {cms.instantCta}
+                  <span aria-hidden>→</span>
+                </a>
+              ) : (
+                <Link
+                  href={cms.instantCtaHref}
+                  className={`mt-4 inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-accent bg-white px-4 ${CTA_COMPACT_CLASS} text-accent ${TRANSITION_UI} ${HOVER_OUTLINE_FILL}`}
+                >
+                  {cms.instantCta}
+                  <span aria-hidden>→</span>
+                </Link>
+              )}
+              <ul className="mt-4 space-y-2 border-t border-border pt-4">
+                <QuickLink href="/support" label="Trung tâm hỗ trợ" />
+                <QuickLink href="/faq" label="Câu hỏi thường gặp" />
+                <QuickLink href="/contact/quote" label="Báo giá doanh nghiệp" />
+              </ul>
+              {cms.instantPerks.length > 0 ? (
+                <ul className="mt-4 space-y-2">
+                  {cms.instantPerks.map((perk) => (
+                    <li key={perk} className="flex items-start gap-2">
+                      <span className="mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
+                        <CheckIcon />
+                      </span>
+                      <span className={BODY_MUTED_CLASS}>{perk}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
           </aside>
         </section>
 
-          {/* Bản đồ — cuối trang */}
-          <ContactMap
-            embedUrl={cms.mapEmbedUrl}
-            company={cms.mapCompany}
-            address={cms.mapAddress}
-            mapsUrl={cms.mapMapsUrl}
-            mapsCta={cms.mapMapsCta}
-          />
-        </div>
+        <ContactMap
+          embedUrl={cms.mapEmbedUrl}
+          company={cms.mapCompany}
+          address={cms.mapAddress}
+          mapsUrl={cms.mapMapsUrl}
+          mapsCta={cms.mapMapsCta}
+        />
       </div>
     </div>
   );
@@ -377,7 +377,23 @@ function isExternalHref(href: string) {
   return /^(https?:|mailto:|tel:)/i.test(href.trim());
 }
 
-/** Bản đồ tách hero — click-to-interact để không chiếm scroll trang. */
+function QuickLink({ href, label }: { href: string; label: string }) {
+  return (
+    <li>
+      <Link
+        href={href}
+        className={`inline-flex items-center gap-1.5 ${BODY_CLASS} font-medium text-navy ${TRANSITION_UI} hover:text-accent`}
+      >
+        <span aria-hidden className="text-accent">
+          →
+        </span>
+        {label}
+      </Link>
+    </li>
+  );
+}
+
+/** Click-to-interact map so page scroll is not captured by the iframe. */
 function ContactMap({
   embedUrl,
   company,
@@ -395,10 +411,10 @@ function ContactMap({
 
   return (
     <section
-      className={`relative overflow-hidden rounded-2xl border border-border bg-white ${ELEVATION_HAIRLINE}`}
+      className={`relative overflow-hidden rounded-2xl border border-border bg-white ${ELEVATION_NONE}`}
       onMouseLeave={() => setActive(false)}
     >
-      <div className="relative aspect-[2.35/1] min-h-[200px] max-h-[300px] w-full bg-surface sm:min-h-[220px]">
+      <div className="relative aspect-[2.35/1] min-h-[200px] max-h-[300px] w-full bg-[#F7FAFC] sm:min-h-[220px]">
         {embedUrl ? (
           <iframe
             title="Bản đồ KEYON"
@@ -411,18 +427,18 @@ function ContactMap({
             tabIndex={active ? 0 : -1}
           />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-100 via-sky-50 to-teal-50" />
+          <div className="absolute inset-0 bg-[#F7FAFC]" />
         )}
 
         {!active && embedUrl ? (
           <button
             type="button"
             onClick={() => setActive(true)}
-            className={`absolute inset-0 z-[1] flex items-center justify-center bg-navy/[0.04] ${TRANSITION_UI} hover:bg-navy/[0.07]`}
+            className={`absolute inset-0 z-[1] flex items-center justify-center bg-navy/[0.03] ${TRANSITION_UI} hover:bg-navy/[0.06]`}
             aria-label="Nhấn để tương tác bản đồ"
           >
             <span
-              className={`inline-flex items-center gap-2 rounded-full border border-border bg-white/95 px-4 py-2 text-[13px] font-semibold text-navy ${ELEVATION_HAIRLINE}`}
+              className={`inline-flex items-center gap-2 rounded-full border border-border bg-white px-4 py-2 ${CTA_COMPACT_CLASS} text-navy`}
             >
               <PinIcon />
               Nhấn để xem bản đồ
@@ -432,7 +448,7 @@ function ContactMap({
       </div>
 
       <div
-        className={`absolute left-4 top-4 z-[2] max-w-[min(100%-2rem,20rem)] rounded-2xl border border-border bg-white/95 p-4 backdrop-blur-[2px] sm:left-5 sm:top-5 sm:p-5 ${ELEVATION_HAIRLINE}`}
+        className={`absolute left-4 top-4 z-[2] max-w-[min(100%-2rem,20rem)] rounded-2xl border border-border bg-white/95 p-4 backdrop-blur-[2px] sm:left-5 sm:top-5 sm:p-5 ${ELEVATION_NONE}`}
       >
         <div className="flex items-start gap-2.5">
           <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
@@ -445,7 +461,7 @@ function ContactMap({
               href={mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className={`mt-3 inline-flex items-center gap-1.5 text-[13px] font-semibold text-accent ${TRANSITION_UI} hover:underline`}
+              className={`mt-3 inline-flex items-center gap-1.5 ${CTA_COMPACT_CLASS} text-accent ${TRANSITION_UI} hover:underline`}
             >
               {mapsCta}
               <ExternalIcon />
@@ -490,15 +506,15 @@ function InfoRow({
 }) {
   return (
     <li className="flex gap-3">
-      <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-accent">
+      <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-accent">
         {icon}
       </span>
       <div className="min-w-0">
-        <p className={`text-xs font-medium uppercase tracking-wide text-white/50`}>
-          {label}
-        </p>
-        <p className={`mt-0.5 ${CARD_TITLE_CLASS} !text-white`}>{value}</p>
-        <p className={`mt-0.5 ${CARD_META_CLASS} !text-white/55`}>{hint}</p>
+        <p className={CARD_META_CLASS}>{label}</p>
+        <p className={`mt-0.5 ${CARD_TITLE_CLASS}`}>{value}</p>
+        {hint ? (
+          <p className={`mt-0.5 ${BODY_MUTED_CLASS}`}>{hint}</p>
+        ) : null}
       </div>
     </li>
   );
@@ -559,10 +575,11 @@ function MailIcon() {
   );
 }
 
-function ChatIcon() {
+function TicketIcon() {
   return (
     <svg {...iconProps()}>
-      <path d="M5 6.5h14v9H9l-4 3v-12Z" />
+      <path d="M4 8.5A1.5 1.5 0 0 1 5.5 7h13A1.5 1.5 0 0 1 20 8.5V11a1.5 1.5 0 0 0 0 3v2.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 16.5V14a1.5 1.5 0 0 0 0-3V8.5Z" />
+      <path d="M12 7v11" strokeDasharray="2 2" />
     </svg>
   );
 }
@@ -611,12 +628,10 @@ function SendIcon() {
   );
 }
 
-function HeadsetIcon() {
+function CheckIcon() {
   return (
-    <svg {...iconProps(22)}>
-      <path d="M4.5 13.5v-2a7.5 7.5 0 0 1 15 0v2" />
-      <path d="M4.5 13.5a2 2 0 0 0 2 2H8v-5H6.5a2 2 0 0 0-2 2v1Z" />
-      <path d="M19.5 13.5a2 2 0 0 1-2 2H16v-5h1.5a2 2 0 0 1 2 2v1Z" />
+    <svg {...iconProps(10)}>
+      <path d="m5 8.5 2 2 4.5-5" />
     </svg>
   );
 }
