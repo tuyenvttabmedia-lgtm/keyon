@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { readSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { IaLandingPage } from "@/storefront/components/marketing/IaLanding";
 import {
@@ -440,7 +441,10 @@ export default async function SolutionPage({ params }: Props) {
   }
 
   if (slug === "license-management") {
-    return <LicenseManagementSolutionLanding />;
+    const session = await readSession();
+    return (
+      <LicenseManagementSolutionLanding loggedIn={Boolean(session)} />
+    );
   }
 
   if (slug === "productivity") {
