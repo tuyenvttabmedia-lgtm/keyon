@@ -240,7 +240,7 @@ export function BlogEditor({
   const ogImg = form.ogImageUrl?.trim() || form.coverUrl;
 
   return (
-    <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_240px] xl:items-start">
+    <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(18.5rem,21rem)] lg:items-start">
       <div className="min-w-0 space-y-4">
         {dirty ? (
           <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
@@ -295,7 +295,7 @@ export function BlogEditor({
         </div>
       </div>
 
-      <aside className="space-y-4 xl:sticky xl:top-4 xl:self-start">
+      <aside className="min-w-0 space-y-4 lg:sticky lg:top-4 lg:self-start">
         {/* Publish */}
         <div className="rounded-2xl border border-border bg-card p-4 space-y-3">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted">
@@ -305,7 +305,7 @@ export function BlogEditor({
             Trạng thái:{" "}
             <strong>{statusLabel(form.status)}</strong>
           </p>
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               disabled={saving}
@@ -327,7 +327,7 @@ export function BlogEditor({
                 type="button"
                 disabled={saving}
                 onClick={() => void save("published")}
-                className="rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-white"
+                className="col-span-2 rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-white"
               >
                 Lưu thay đổi
               </button>
@@ -336,7 +336,7 @@ export function BlogEditor({
                 type="button"
                 disabled={saving}
                 onClick={() => void save("published")}
-                className="rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-white"
+                className="col-span-2 rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-white"
               >
                 Xuất bản ngay
               </button>
@@ -358,7 +358,7 @@ export function BlogEditor({
                 type="button"
                 disabled={saving || !scheduleLocal}
                 onClick={() => void save("scheduled")}
-                className="rounded-lg border border-accent bg-white px-3 py-1.5 text-sm font-semibold text-accent disabled:opacity-40"
+                className="flex-1 rounded-lg border border-accent bg-white px-3 py-1.5 text-sm font-semibold text-accent disabled:opacity-40"
               >
                 Lưu &amp; lên lịch
               </button>
