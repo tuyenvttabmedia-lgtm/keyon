@@ -7,6 +7,7 @@ import {
   type CmsFaqDocument,
   type CmsFaqItem,
 } from "@/server/cms/types";
+import { normalizeFaqAnswerText } from "@/lib/normalize-faq-answer";
 
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -115,7 +116,7 @@ function normalizeItems(raw: unknown): CmsFaqItem[] {
     .map((r, i) => ({
       id: String(r.id ?? `q_${i + 1}`).trim() || `q_${i + 1}`,
       question: String(r.question ?? "").trim(),
-      answer: String(r.answer ?? "").trim(),
+      answer: normalizeFaqAnswerText(String(r.answer ?? "")),
       category: slugifyFaqCategory(String(r.category ?? "mua-hang")),
       showOnHome: Boolean(r.showOnHome),
       showOnFaqPage: r.showOnFaqPage !== false,

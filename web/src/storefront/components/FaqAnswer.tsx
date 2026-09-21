@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { normalizeFaqAnswerText } from "@/lib/normalize-faq-answer";
 
 type Block =
   | { type: "p"; text: string }
@@ -14,7 +15,7 @@ const NUMBER_RE = /^\s*\d+[.)]\s+(.*)$/;
  * - Implicit: line ending with `:` (+ optional blank) then consecutive lines → bullets
  */
 export function parseFaqAnswerBlocks(raw: string): Block[] {
-  const text = raw.replace(/\r\n/g, "\n").trim();
+  const text = normalizeFaqAnswerText(raw);
   if (!text) return [];
 
   const lines = text.split("\n");
@@ -27,7 +28,12 @@ export function parseFaqAnswerBlocks(raw: string): Block[] {
 
   function flushPara() {
     if (!para.length) return;
-    const joined = para.join("\n").trim();
+    // Join soft line-breaks into one flowing paragraph (no blank-line gaps).
+    const joined = para
+      .map((l) => l.trim())
+      .filter(Boolean)
+      .join(" ")
+      .trim();
     if (joined) blocks.push({ type: "p", text: joined });
     para = [];
   }
@@ -122,11 +128,11 @@ export function FaqAnswer({
   if (!blocks.length) return null;
 
   return (
-    <div className={`space-y-2.5 text-sm leading-relaxed ${className}`}>
+    <div className={`space-y-2 text-sm leading-relaxed ${className}`}>
       {blocks.map((b, i) => {
         if (b.type === "p") {
           return (
-            <p key={i} className="whitespace-pre-line">
+            <p key={i} className="text-pretty">
               {b.text}
             </p>
           );

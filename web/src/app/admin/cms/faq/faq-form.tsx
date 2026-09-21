@@ -8,6 +8,7 @@ import type {
 } from "@/server/cms/types";
 import { groupCategoriesForSidebar } from "@/storefront/content/faq-groups";
 import { ELEVATION_MODAL, ELEVATION_NONE, Z_MODAL, Z_STICKY } from "@/storefront/effects";
+import { normalizeFaqAnswerText } from "@/lib/normalize-faq-answer";
 
 const PAGE_SIZE = 20;
 
@@ -337,7 +338,7 @@ export function FaqForm({ initial }: { initial: CmsFaqDocument }) {
         items: itemsSnap.map((i) => ({
           ...i,
           question: i.question.trim(),
-          answer: i.answer.trim(),
+          answer: normalizeFaqAnswerText(i.answer),
           category: slugify(i.category || "general"),
         })),
       };
