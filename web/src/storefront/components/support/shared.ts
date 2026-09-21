@@ -8,7 +8,7 @@ export const SURFACE_MUTED =
 
 export const TICKETS_HREF = "/account/tickets";
 export const FAQ_HREF = "/faq";
-export const GUIDES_HREF = "/knowledge/huong-dan";
+export const GUIDES_HREF = "/kien-thuc/huong-dan";
 export const CONTACT_HREF = "/contact";
 
 export type SupportSearchDoc = {

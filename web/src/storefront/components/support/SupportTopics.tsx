@@ -32,13 +32,13 @@ const TOPICS: {
   {
     title: "Windows",
     hints: "Kích hoạt · Cài đặt · Thiết bị",
-    href: "/knowledge/huong-dan?category=windows",
+    href: "/kien-thuc/huong-dan?chu-de=windows",
     Icon: Monitor,
   },
   {
     title: "Microsoft 365",
     hints: "Thiết lập · Subscription · Tài khoản",
-    href: "/knowledge/huong-dan?category=m365",
+    href: "/kien-thuc/huong-dan?chu-de=m365",
     Icon: Cloud,
   },
   {

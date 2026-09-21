@@ -26,8 +26,10 @@ import {
 import {
   RESOURCE_SECTION_META,
   resolveResourceSection,
+  resourceHubHref,
   resourceIndexHref,
   resourcePostHref,
+  resourceTopicHref,
 } from "@/storefront/lib/resources";
 
 function tocFromHtml(html: string) {
@@ -204,7 +206,7 @@ export function BlogDetailView({
           Trang chủ
         </Link>
         <span aria-hidden>/</span>
-        <Link href="/knowledge" className={HOVER_LINK_ACCENT}>
+        <Link href={resourceHubHref()} className={HOVER_LINK_ACCENT}>
           Kiến thức
         </Link>
         <span aria-hidden>/</span>
@@ -215,7 +217,7 @@ export function BlogDetailView({
           <>
             <span aria-hidden>/</span>
             <Link
-              href={`${indexHref}?category=${post.category}`}
+              href={resourceTopicHref(post.category)}
               className={HOVER_LINK_ACCENT}
             >
               {categoryLabel(post)}
@@ -534,7 +536,7 @@ export function BlogDetailView({
               {topicCounts.map((t) => (
                 <li key={t.id}>
                   <Link
-                    href={`${indexHref}?category=${t.id}`}
+                    href={resourceTopicHref(t.id)}
                     className={`flex items-center gap-2.5 rounded-xl px-2 py-2.5 ${TRANSITION_UI} ${HOVER_ROW}`}
                   >
                     <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-surface text-navy">

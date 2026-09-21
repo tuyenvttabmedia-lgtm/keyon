@@ -5,7 +5,11 @@ import { loadPublishedStaticPages } from "@/server/cms/static-pages";
 import { MAIN_SEO_PATHS } from "@/lib/seo-main-pages";
 import { ACTIVE_SOLUTION_SLUGS, BUSINESS_PAGES } from "@/storefront/nav/ia-pages";
 import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
-import { resourcePostHref } from "@/storefront/lib/resources";
+import {
+  resourcePostHref,
+  resourceTopicHref,
+} from "@/storefront/lib/resources";
+import { BLOG_TOPIC_IDS } from "@/storefront/lib/blog";
 import { absoluteUrl } from "@/server/seo/site-url";
 import { isBlogPostLive } from "@/server/cms/blog-utils";
 
@@ -98,6 +102,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: post.updatedAt ? new Date(post.updatedAt) : now,
       changeFrequency: "weekly",
       priority: 0.6,
+    });
+  }
+
+  for (const topic of BLOG_TOPIC_IDS) {
+    entries.push({
+      url: absoluteUrl(resourceTopicHref(topic)),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.55,
     });
   }
 

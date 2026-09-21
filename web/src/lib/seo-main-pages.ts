@@ -14,10 +14,10 @@ export type MainSeoPageKey =
   | "/how-it-works"
   | "/business"
   | "/solutions"
-  | "/knowledge"
-  | "/knowledge/chuyen-sau"
-  | "/knowledge/huong-dan"
-  | "/knowledge/tin-tuc"
+  | "/kien-thuc"
+  | "/kien-thuc/chuyen-sau"
+  | "/kien-thuc/huong-dan"
+  | "/kien-thuc/tin-tuc"
   | "/policy"
   | "/brands"
   | "/categories";
@@ -31,10 +31,10 @@ export const MAIN_SEO_PAGES: {
   { path: "/categories", label: "Danh mục sản phẩm" },
   { path: "/business", label: "Doanh nghiệp" },
   { path: "/solutions", label: "Giải pháp" },
-  { path: "/knowledge", label: "Kiến thức" },
-  { path: "/knowledge/chuyen-sau", label: "Chuyên sâu" },
-  { path: "/knowledge/huong-dan", label: "Hướng dẫn" },
-  { path: "/knowledge/tin-tuc", label: "Tin tức" },
+  { path: "/kien-thuc", label: "Kiến thức" },
+  { path: "/kien-thuc/chuyen-sau", label: "Chuyên sâu" },
+  { path: "/kien-thuc/huong-dan", label: "Hướng dẫn" },
+  { path: "/kien-thuc/tin-tuc", label: "Tin tức" },
   { path: "/faq", label: "FAQ" },
   { path: "/support", label: "Trung tâm hỗ trợ" },
   { path: "/how-it-works", label: "Cách KEYON hoạt động" },

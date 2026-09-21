@@ -12,6 +12,7 @@ import { BLOG_CATEGORIES } from "@/storefront/lib/blog";
 import { isBlogPostLive } from "@/server/cms/blog-utils";
 import {
   filterPostsBySection,
+  KNOWLEDGE_HUB_PATH,
   parseResourceSectionParam,
   RESOURCE_SECTION_IDS,
   RESOURCE_SECTION_META,
@@ -25,7 +26,14 @@ export const dynamic = "force-dynamic";
 
 type Props = {
   params: Promise<{ section: string }>;
-  searchParams: Promise<{ q?: string; category?: string; tag?: string }>;
+  searchParams: Promise<{
+    q?: string;
+    /** Preferred SEO query */
+    "chu-de"?: string;
+    /** Legacy */
+    category?: string;
+    tag?: string;
+  }>;
 };
 
 export async function generateStaticParams() {
@@ -37,7 +45,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { section: raw } = await params;
   const section = parseResourceSectionParam(raw);
-  if (!section) return buildMainPageMetadata("/knowledge");
+  if (!section) return buildMainPageMetadata(KNOWLEDGE_HUB_PATH as MainSeoPageKey);
   const meta = RESOURCE_SECTION_META[section];
   const path = resourceIndexHref(section) as MainSeoPageKey;
   return {
@@ -77,9 +85,10 @@ export default async function ResourceSectionIndexPage({
   const categoryIds = new Set(
     BLOG_CATEGORIES.filter((c) => c.id !== "all").map((c) => c.id),
   );
+  const topicRaw = sp["chu-de"] ?? sp.category;
   const initialCategory =
-    sp.category && categoryIds.has(sp.category as BlogCategoryId)
-      ? (sp.category as BlogCategoryId)
+    topicRaw && categoryIds.has(topicRaw as BlogCategoryId)
+      ? (topicRaw as BlogCategoryId)
       : "all";
 
   return (

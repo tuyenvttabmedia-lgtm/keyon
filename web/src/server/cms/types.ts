@@ -537,7 +537,7 @@ export const defaultCmsFooter: CmsFooter = {
       links: [
         { label: "Trung tâm hỗ trợ", href: "/support" },
         { label: "FAQ", href: "/faq" },
-        { label: "Kiến thức", href: "/knowledge" },
+        { label: "Kiến thức", href: "/kien-thuc" },
         { label: "Liên hệ", href: "/contact" },
       ],
     },
@@ -580,7 +580,7 @@ export const defaultCmsNav: CmsNav = {
     { label: "Sản phẩm", href: "/products" },
     { label: "Giải pháp", href: "/solutions" },
     { label: "Doanh nghiệp", href: "/business" },
-    { label: "Kiến thức", href: "/knowledge" },
+    { label: "Kiến thức", href: "/kien-thuc" },
     { label: "Hỗ trợ", href: "/support" },
   ],
 };
@@ -713,20 +713,20 @@ export const defaultSettings: SiteSettings = {
       title: "Sản phẩm — KEYON",
       description: "Danh mục phần mềm bản quyền chính hãng trên KEYON.",
     },
-    "/knowledge": {
+    "/kien-thuc": {
       title: "Kiến thức — KEYON",
       description: "Hướng dẫn, chuyên sâu và tin tức bản quyền phần mềm trên KEYON.",
     },
-    "/knowledge/tin-tuc": {
+    "/kien-thuc/tin-tuc": {
       title: "Tin tức — KEYON",
       description: "Cập nhật vendor và KEYON về bản quyền, license và phần mềm.",
     },
-    "/knowledge/chuyen-sau": {
+    "/kien-thuc/chuyen-sau": {
       title: "Chuyên sâu — KEYON",
       description:
         "Phân tích bản quyền, Microsoft 365, bảo mật và vận hành phần mềm.",
     },
-    "/knowledge/huong-dan": {
+    "/kien-thuc/huong-dan": {
       title: "Hướng dẫn — KEYON",
       description:
         "How-to kích hoạt, nhận license và dùng Tài khoản KEYON.",

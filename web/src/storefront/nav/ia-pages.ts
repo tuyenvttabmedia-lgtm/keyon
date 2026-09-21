@@ -214,7 +214,7 @@ export const BUSINESS_PAGES: Record<string, IaPage> = {
 export const RESOURCE_HUB = {
   title: "Kiến thức",
   subtitle:
-    "Hướng dẫn, chuyên sâu và tin tức — một hub kiến thức KEYON (cùng engine bài viết).",
+    "Hướng dẫn, chuyên sâu và tin tức — hub nội dung KEYON (một engine bài viết).",
 };
 
 export const RESOURCE_SECTIONS: Record<
@@ -225,17 +225,17 @@ export const RESOURCE_SECTIONS: Record<
     title: "Chuyên sâu",
     subtitle:
       "Phân tích bản quyền, Microsoft 365, bảo mật và vận hành phần mềm cho doanh nghiệp.",
-    href: "/knowledge/chuyen-sau",
+    href: "/kien-thuc/chuyen-sau",
   },
   guides: {
     title: "Hướng dẫn",
     subtitle:
       "How-to: kích hoạt, nhận license, kiểm tra bản quyền và dùng Tài khoản KEYON.",
-    href: "/knowledge/huong-dan",
+    href: "/kien-thuc/huong-dan",
   },
   news: {
     title: "Tin tức",
     subtitle: "Cập nhật sản phẩm, vendor và KEYON.",
-    href: "/knowledge/tin-tuc",
+    href: "/kien-thuc/tin-tuc",
   },
 };

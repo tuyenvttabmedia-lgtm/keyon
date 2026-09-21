@@ -5,7 +5,7 @@ import { isBlogPostLive } from "@/server/cms/blog-utils";
 
 export const dynamic = "force-dynamic";
 
-/** Legacy /blog/{slug} → /knowledge/{section}/{slug} */
+/** Legacy /blog/{slug} → /kien-thuc/{chuyen-muc}/{slug} */
 export default async function BlogSlugRedirect({
   params,
 }: {

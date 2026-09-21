@@ -88,7 +88,6 @@ export default async function ResourceArticlePage({ params }: Props) {
   if (!post) notFound();
 
   const canonicalSection = resolveResourceSection(post);
-  // Wrong chuyên mục in URL, or legacy EN slug still hitting this route
   if (
     canonicalSection !== section ||
     raw !== resourceSectionPath(canonicalSection)

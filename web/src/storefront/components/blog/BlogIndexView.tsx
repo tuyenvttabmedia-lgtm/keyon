@@ -8,6 +8,7 @@ import {
   authorOf,
   BLOG_CATEGORIES,
   BLOG_TOPIC_IDS,
+  CATEGORY_LABEL,
   categoryLabel,
   coverToneOf,
   COVER_TONE_CLASS,
@@ -19,8 +20,13 @@ import {
   tagMatchesSlug,
   type BlogCategoryFilter,
 } from "@/storefront/lib/blog";
-import { resourcePostHref, RESOURCE_SECTION_META } from "@/storefront/lib/resources";
+import {
+  resourceHubHref,
+  resourcePostHref,
+  RESOURCE_SECTION_META,
+} from "@/storefront/lib/resources";
 import type { ResourceSectionId } from "@/storefront/lib/resources";
+import type { BlogCategoryId } from "@/server/cms/types";
 import {
   BADGE_CLASS,
   BODY_MUTED_CLASS,
@@ -61,6 +67,8 @@ export function BlogIndexView({
   initialCategory = "all",
   initialTag = "",
   section,
+  topicArchive,
+  hubHref = resourceHubHref(),
 }: {
   cms: CmsBlog;
   posts: BlogPost[];
@@ -68,8 +76,11 @@ export function BlogIndexView({
   initialCategory?: BlogCategoryFilter;
   /** URL `?tag=` slug — filters posts that have a matching tag label. */
   initialTag?: string;
-  /** When set, breadcrumb links under /knowledge/{section} */
+  /** When set, breadcrumb under /kien-thuc/{chuyen-muc} */
   section?: ResourceSectionId;
+  /** Topic archive page `/kien-thuc/chu-de/{topic}` */
+  topicArchive?: BlogCategoryId;
+  hubHref?: string;
 }) {
   const [query, setQuery] = useState(initialQuery);
   const [sort, setSort] = useState<SortId>("newest");
@@ -187,10 +198,17 @@ export function BlogIndexView({
             Trang chủ
           </Link>
           <span aria-hidden>/</span>
-          <Link href="/knowledge" className="transition-colors hover:text-accent">
+          <Link href={hubHref} className="transition-colors hover:text-accent">
             Kiến thức
           </Link>
-          {section ? (
+          {topicArchive ? (
+            <>
+              <span aria-hidden>/</span>
+              <span className={BREADCRUMB_CURRENT_CLASS}>
+                {CATEGORY_LABEL[topicArchive]}
+              </span>
+            </>
+          ) : section ? (
             <>
               <span aria-hidden>/</span>
               <span className={BREADCRUMB_CURRENT_CLASS}>

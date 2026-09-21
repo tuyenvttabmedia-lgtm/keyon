@@ -241,17 +241,17 @@ export const BUSINESS_SERVICE_LINKS: NavLink[] = [
 export const RESOURCE_LINKS: NavLink[] = [
   {
     label: "Hướng dẫn",
-    href: "/knowledge/huong-dan",
+    href: "/kien-thuc/huong-dan",
     description: "Cài đặt, kích hoạt, sử dụng",
   },
   {
     label: "Chuyên sâu",
-    href: "/knowledge/chuyen-sau",
+    href: "/kien-thuc/chuyen-sau",
     description: "Bản quyền, Microsoft 365, bảo mật",
   },
   {
     label: "Tin tức",
-    href: "/knowledge/tin-tuc",
+    href: "/kien-thuc/tin-tuc",
     description: "Cập nhật sản phẩm, vendor và KEYON",
   },
   {
@@ -329,10 +329,10 @@ export const IA_PRIMARY_NAV: PrimaryNavItem[] = [
   {
     id: "knowledge",
     label: "Kiến thức",
-    href: "/knowledge",
+    href: "/kien-thuc",
     kind: "mega",
     columns: [{ title: "Chuyên mục", links: RESOURCE_LINKS }],
-    footerCta: { label: "Xem tất cả kiến thức →", href: "/knowledge" },
+    footerCta: { label: "Xem tất cả kiến thức →", href: "/kien-thuc" },
   },
   {
     id: "support",

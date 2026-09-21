@@ -400,7 +400,7 @@ export function BlogEditor({
             Phân loại Kiến thức
           </p>
           <p className="text-[11px] leading-relaxed text-muted">
-            Chuyên mục gắn URL (/knowledge/…). Chủ đề lọc trong chuyên mục.
+            Chuyên mục gắn URL (/kien-thuc/…). Chủ đề có trang riêng (/kien-thuc/chu-de/…).
             Cùng một engine bài viết với blog.
           </p>
           <label className="block text-xs text-muted">
@@ -635,7 +635,7 @@ export function BlogEditor({
                       className="mt-1 w-full rounded-lg border border-border px-2 py-1.5 text-sm"
                       value={form.canonicalUrl ?? ""}
                       onChange={(e) => patch({ canonicalUrl: e.target.value })}
-                      placeholder="https://keyon.vn/knowledge/..."
+                      placeholder="https://keyon.vn/kien-thuc/..."
                     />
                   </label>
                   <div className="flex gap-4 text-xs text-navy">

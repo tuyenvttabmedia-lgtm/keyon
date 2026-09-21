@@ -591,7 +591,7 @@ function sanitizeFooterColumns(
           if (href === "/categories/design") href = "/categories/adobe";
           if (href === "/contact/sales") href = "/contact/quote";
           if (href === "/resources" || href.startsWith("/resources/")) {
-            href = href.replace(/^\/resources/, "/knowledge");
+            href = href.replace(/^\/resources/, "/kien-thuc").replace(/^\/knowledge/, "/kien-thuc");
           }
           if (label === "Tài nguyên") label = "Kiến thức";
           if (label === "Hướng dẫn nhận hàng" || label === "Cách nhận hàng") {

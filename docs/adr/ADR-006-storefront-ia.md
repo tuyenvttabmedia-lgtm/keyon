@@ -5,6 +5,7 @@
 **Amended:** 2026-09-13 — rename hub **Tài nguyên `/resources` → Kiến thức `/knowledge`** (site pre-index; no `/resources` 301).  
 **Amended:** 2026-09-20 — Category canonical URL **`/categories/{slug}`** (replaces `/products?cat=`); legacy `?cat=` 301.  
 **Amended:** 2026-09-21 — Knowledge section public slugs Vietnamese (`chuyen-sau` / `huong-dan` / `tin-tuc`); Admin Chuyên mục vs Chủ đề.  
+**Amended:** 2026-09-21 — Hub path **`/kien-thuc`** (replace English `/knowledge`); topic archives `/kien-thuc/chu-de/{topic}`; Tin tức stays a chuyên mục under Kiến thức (not the hub).  
 **Decisions:** NAV-01 … NAV-05
 
 ---
@@ -42,38 +43,43 @@ KEYON sells software licenses (and later cloud/services). Early nav mixed Catego
 One canonical page: **`/solutions/license-management`**.  
 Business nav **cross-links** only; no duplicate `/business/license-management`.
 
-### NAV-03 — Knowledge hub (Phase 2; amended 2026-09-13; SEO slugs 2026-09-21)
+### NAV-03 — Knowledge hub (Phase 2; amended 2026-09-13; SEO 2026-09-21)
 
 One Article engine (`blog.json` / `BlogPost`) with `section`: `insights` | `guides` | `news` (internal ids).
 
-**Public URL slugs (Vietnamese, SEO):**
+**Decision — hub is Kiến thức, not Tin tức:**  
+Guides and expert analysis are not “news”. Putting Tin tức at the URL root mismatches search intent. Tin tức is one **chuyên mục** under the hub.
 
-| Internal | Path |
-|----------|------|
-| `insights` | `/knowledge/chuyen-sau` |
-| `guides` | `/knowledge/huong-dan` |
-| `news` | `/knowledge/tin-tuc` |
+**Public URL tree (Vietnamese, SEO):**
 
-| Canonical | Legacy |
-|-----------|--------|
-| `/knowledge/{vi-slug}` | `/blog` → 301 `/knowledge/tin-tuc` |
-| `/knowledge/{vi-slug}/{slug}` | `/blog/{slug}` → 301 resolved section |
-| | EN paths `/knowledge/{insights\|guides\|news}` → 301 VI slug |
+| Role | Path |
+|------|------|
+| Hub | `/kien-thuc` |
+| Chuyên mục Chuyên sâu | `/kien-thuc/chuyen-sau` |
+| Chuyên mục Hướng dẫn | `/kien-thuc/huong-dan` |
+| Chuyên mục Tin tức | `/kien-thuc/tin-tuc` |
+| Bài viết | `/kien-thuc/{chuyen-muc}/{slug}` |
+| Chủ đề (archive) | `/kien-thuc/chu-de/{topic}` |
 
-Hub label: **Kiến thức** (URL `/knowledge`). Chuyên mục: Chuyên sâu, Hướng dẫn, Tin tức.
+| Canonical | Legacy (301) |
+|-----------|--------------|
+| `/kien-thuc/...` | `/knowledge/...`, EN section ids, `/blog` → `/kien-thuc/tin-tuc` |
+| | `/blog/{slug}` → resolved bài viết |
 
-**Chủ đề** (`category`): Bản quyền, Windows, Microsoft 365, Doanh nghiệp, Bảo mật — filters within a chuyên mục. Not the same as chuyên mục (nav).
+Nav label: **Kiến thức**. Chuyên mục (nav): Chuyên sâu, Hướng dẫn, Tin tức.
+
+**Chủ đề** (`category`): Bản quyền, Windows, Microsoft 365, Doanh nghiệp, Bảo mật — secondary taxonomy; own archive URLs + optional `?chu-de=` filter inside a chuyên mục.
+
+Admin: **Chuyên mục** = `section` (URL); **Chủ đề** = `category` (filter / archive).
 
 Section inference when omitted: `huong-dan` topic→guides, `tin-keyon`→news, topical→insights, else news.
-
-Admin: **Chuyên mục** = `section` (required for URL); **Chủ đề** = `category` (optional filter).
 
 ### NAV-04 — Phase scope
 
 | Phase | Ship | Skip |
 |-------|------|------|
 | 1 | Mega, landings, stubs | Taxonomy DB migrate |
-| 2 | Article routes under `/knowledge`, 301 `/blog`, `SHOP_COLLECTIONS` export, admin section picker | Prisma Category/Collection |
+| 2 | Article routes under `/kien-thuc`, 301 `/blog` + `/knowledge`, `SHOP_COLLECTIONS` export, admin section picker | Prisma Category/Collection |
 
 ### NAV-05 — Productivity naming
 
@@ -91,10 +97,10 @@ CMS `nav.json` items are **legacy / secondary** (brand logo + tagline still from
 
 ## Consequences
 
-- Routes under `/solutions`, `/business`, `/knowledge`, `/support`, `/contact/quote`.
-- Footer defaults updated in `defaultCmsFooter` (prod CMS JSON may need one-time sync; runtime remap `/resources` → `/knowledge`).
+- Routes under `/solutions`, `/business`, `/kien-thuc`, `/support`, `/contact/quote`.
+- Footer defaults updated in `defaultCmsFooter` (prod CMS JSON may need one-time sync; runtime remap `/resources` and `/knowledge` → `/kien-thuc`).
 - Cloud/Backup landings use “đang mở rộng” tone when catalog is thin — no fake SKU claims.
-- Sitemap emits `/knowledge/...` and `/categories/{slug}` URLs.
+- Sitemap emits `/kien-thuc/...` and `/categories/{slug}` URLs.
 - Category path avoids collision with PDP `/products/{slug}`.
 
 ## Exit criteria
@@ -109,9 +115,10 @@ CMS `nav.json` items are **legacy / secondary** (brand logo + tagline still from
 
 ### Phase 2
 
-- [x] `/knowledge/{chuyen-sau,huong-dan,tin-tuc}` list published articles (EN slugs 301)
-- [x] `/knowledge/{section}/{slug}` detail reuses BlogDetailView
-- [x] `/blog` and `/blog/{slug}` 301 to Knowledge
-- [x] Sitemap + home news use knowledge URLs
+- [x] `/kien-thuc/{chuyen-sau,huong-dan,tin-tuc}` list published articles (`/knowledge` 301)
+- [x] `/kien-thuc/{chuyen-muc}/{slug}` detail reuses BlogDetailView
+- [x] `/kien-thuc/chu-de/{topic}` topic archives
+- [x] `/blog` and `/blog/{slug}` 301 to Kiến thức
+- [x] Sitemap + home news use `/kien-thuc` URLs
 - [x] Admin: Chuyên mục (`section`) + Chủ đề (`category`) on posts
 - [x] Collections stay config (`SHOP_COLLECTIONS`), not DB

@@ -9,7 +9,7 @@ export const homeFixture: HomeContent = {
     { label: "Sản phẩm", href: "/products" },
     { label: "Giải pháp", href: "/solutions" },
     { label: "Doanh nghiệp", href: "/business" },
-    { label: "Kiến thức", href: "/knowledge" },
+    { label: "Kiến thức", href: "/kien-thuc" },
     { label: "Hỗ trợ", href: "/support" },
   ],
   brand: {
@@ -255,7 +255,7 @@ export const homeFixture: HomeContent = {
   news: {
     visible: true,
     title: "Tin tức & cập nhật",
-    viewAllHref: "/knowledge/tin-tuc",
+    viewAllHref: "/kien-thuc/tin-tuc",
     viewAllLabel: "Xem tất cả bài viết",
     items: [
       {
@@ -345,7 +345,7 @@ export const homeFixture: HomeContent = {
         links: [
           { label: "Trung tâm hỗ trợ", href: "/support" },
           { label: "FAQ", href: "/faq" },
-          { label: "Kiến thức", href: "/knowledge" },
+          { label: "Kiến thức", href: "/kien-thuc" },
           { label: "Liên hệ", href: "/contact" },
         ],
       },
