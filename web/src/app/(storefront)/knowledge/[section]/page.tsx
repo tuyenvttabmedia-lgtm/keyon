@@ -12,11 +12,14 @@ import { BLOG_CATEGORIES } from "@/storefront/lib/blog";
 import { isBlogPostLive } from "@/server/cms/blog-utils";
 import {
   filterPostsBySection,
-  isResourceSectionId,
+  parseResourceSectionParam,
+  RESOURCE_SECTION_IDS,
   RESOURCE_SECTION_META,
-  type ResourceSectionId,
+  resourceIndexHref,
+  resourceSectionPath,
 } from "@/storefront/lib/resources";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
+import type { MainSeoPageKey } from "@/lib/seo-main-pages";
 
 export const dynamic = "force-dynamic";
 
@@ -26,19 +29,19 @@ type Props = {
 };
 
 export async function generateStaticParams() {
-  return [
-    { section: "insights" },
-    { section: "guides" },
-    { section: "news" },
-  ];
+  return RESOURCE_SECTION_IDS.map((id) => ({
+    section: resourceSectionPath(id),
+  }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { section: raw } = await params;
-  if (!isResourceSectionId(raw)) return buildMainPageMetadata("/knowledge");
-  const meta = RESOURCE_SECTION_META[raw];
+  const section = parseResourceSectionParam(raw);
+  if (!section) return buildMainPageMetadata("/knowledge");
+  const meta = RESOURCE_SECTION_META[section];
+  const path = resourceIndexHref(section) as MainSeoPageKey;
   return {
-    ...(await buildMainPageMetadata(`/knowledge/${raw}`)),
+    ...(await buildMainPageMetadata(path)),
     title: `${meta.title} | KEYON`,
     description: meta.subtitle,
   };
@@ -49,8 +52,8 @@ export default async function ResourceSectionIndexPage({
   searchParams,
 }: Props) {
   const { section: raw } = await params;
-  if (!isResourceSectionId(raw)) notFound();
-  const section = raw as ResourceSectionId;
+  const section = parseResourceSectionParam(raw);
+  if (!section) notFound();
 
   const sp = await searchParams;
   const [cmsRaw, postsRaw] = await Promise.all([

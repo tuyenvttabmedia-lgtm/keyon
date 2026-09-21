@@ -6,8 +6,11 @@ import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { BlogPost } from "@/server/cms/types";
 import type { BlogCategoryId } from "@/server/cms/types";
-import { CATEGORY_LABEL } from "@/storefront/lib/blog";
-import { resourcePostHref } from "@/storefront/lib/resources";
+import { CATEGORY_LABEL, SECTION_LABEL } from "@/storefront/lib/blog";
+import {
+  resourcePostHref,
+  resolveResourceSection,
+} from "@/storefront/lib/resources";
 import { uniqueBlogSlug } from "@/server/cms/blog-utils";
 import {
   PortalMenu,
@@ -259,6 +262,7 @@ export function BlogList({ posts: initial }: { posts: BlogPost[] }) {
                   <tr>
                     <th className="px-4 py-3">Bài viết</th>
                     <th className="px-4 py-3">Chuyên mục</th>
+                    <th className="px-4 py-3">Chủ đề</th>
                     <th className="px-4 py-3">Tác giả</th>
                     <th className="px-4 py-3">Trạng thái</th>
                     <th className="px-4 py-3">Cập nhật</th>
@@ -295,6 +299,9 @@ export function BlogList({ posts: initial }: { posts: BlogPost[] }) {
                             <p className="text-xs text-muted">/{p.slug}</p>
                           </div>
                         </div>
+                      </td>
+                      <td className="px-4 py-3 text-muted">
+                        {SECTION_LABEL[resolveResourceSection(p)]}
                       </td>
                       <td className="px-4 py-3 text-muted">
                         {p.category ? CATEGORY_LABEL[p.category] : "—"}

@@ -4,6 +4,7 @@
 **Date:** 2026-08-04  
 **Amended:** 2026-09-13 — rename hub **Tài nguyên `/resources` → Kiến thức `/knowledge`** (site pre-index; no `/resources` 301).  
 **Amended:** 2026-09-20 — Category canonical URL **`/categories/{slug}`** (replaces `/products?cat=`); legacy `?cat=` 301.  
+**Amended:** 2026-09-21 — Knowledge section public slugs Vietnamese (`chuyen-sau` / `huong-dan` / `tin-tuc`); Admin Chuyên mục vs Chủ đề.  
 **Decisions:** NAV-01 … NAV-05
 
 ---
@@ -41,18 +42,31 @@ KEYON sells software licenses (and later cloud/services). Early nav mixed Catego
 One canonical page: **`/solutions/license-management`**.  
 Business nav **cross-links** only; no duplicate `/business/license-management`.
 
-### NAV-03 — Knowledge hub (Phase 2; amended 2026-09-13)
+### NAV-03 — Knowledge hub (Phase 2; amended 2026-09-13; SEO slugs 2026-09-21)
 
-One Article engine (`blog.json` / `BlogPost`) with optional `section`: `insights` | `guides` | `news`.
+One Article engine (`blog.json` / `BlogPost`) with `section`: `insights` | `guides` | `news` (internal ids).
+
+**Public URL slugs (Vietnamese, SEO):**
+
+| Internal | Path |
+|----------|------|
+| `insights` | `/knowledge/chuyen-sau` |
+| `guides` | `/knowledge/huong-dan` |
+| `news` | `/knowledge/tin-tuc` |
 
 | Canonical | Legacy |
 |-----------|--------|
-| `/knowledge/{section}` | `/blog` → 301 `/knowledge/news` |
-| `/knowledge/{section}/{slug}` | `/blog/{slug}` → 301 resolved section |
+| `/knowledge/{vi-slug}` | `/blog` → 301 `/knowledge/tin-tuc` |
+| `/knowledge/{vi-slug}/{slug}` | `/blog/{slug}` → 301 resolved section |
+| | EN paths `/knowledge/{insights\|guides\|news}` → 301 VI slug |
 
-Hub label: **Kiến thức** (URL `/knowledge`). Sections: Chuyên sâu (`insights`), Hướng dẫn (`guides`), Tin tức (`news`).
+Hub label: **Kiến thức** (URL `/knowledge`). Chuyên mục: Chuyên sâu, Hướng dẫn, Tin tức.
 
-Section inference when omitted: `huong-dan`→guides, `tin-keyon`→news, topical categories→insights, else news.
+**Chủ đề** (`category`): Bản quyền, Windows, Microsoft 365, Doanh nghiệp, Bảo mật — filters within a chuyên mục. Not the same as chuyên mục (nav).
+
+Section inference when omitted: `huong-dan` topic→guides, `tin-keyon`→news, topical→insights, else news.
+
+Admin: **Chuyên mục** = `section` (required for URL); **Chủ đề** = `category` (optional filter).
 
 ### NAV-04 — Phase scope
 
@@ -95,9 +109,9 @@ CMS `nav.json` items are **legacy / secondary** (brand logo + tagline still from
 
 ### Phase 2
 
-- [x] `/knowledge/{insights,guides,news}` list published articles
+- [x] `/knowledge/{chuyen-sau,huong-dan,tin-tuc}` list published articles (EN slugs 301)
 - [x] `/knowledge/{section}/{slug}` detail reuses BlogDetailView
 - [x] `/blog` and `/blog/{slug}` 301 to Knowledge
 - [x] Sitemap + home news use knowledge URLs
-- [x] Admin can set `section` on posts
+- [x] Admin: Chuyên mục (`section`) + Chủ đề (`category`) on posts
 - [x] Collections stay config (`SHOP_COLLECTIONS`), not DB

@@ -17,9 +17,10 @@ import {
 } from "@/server/cms/blog-utils";
 import { BlogDetailView } from "@/storefront/components/blog/BlogDetailView";
 import {
-  isResourceSectionId,
+  parseResourceSectionParam,
   resolveResourceSection,
   resourcePostHref,
+  resourceSectionPath,
 } from "@/storefront/lib/resources";
 import {
   resolveWithGlobalFallback,
@@ -43,10 +44,14 @@ async function loadPublished() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { section, slug } = await params;
-  if (!isResourceSectionId(section)) return { title: "Bài viết" };
+  const { section: raw, slug } = await params;
+  const section = parseResourceSectionParam(raw);
+  if (!section) return { title: "Bài viết" };
 
-  const [posts, settings] = await Promise.all([loadPublished(), loadSiteSettings()]);
+  const [posts, settings] = await Promise.all([
+    loadPublished(),
+    loadSiteSettings(),
+  ]);
   const post = posts.find((p) => p.slug === slug);
   if (!post) return { title: "Bài viết" };
 
@@ -70,8 +75,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ResourceArticlePage({ params }: Props) {
-  const { section, slug } = await params;
-  if (!isResourceSectionId(section)) notFound();
+  const { section: raw, slug } = await params;
+  const section = parseResourceSectionParam(raw);
+  if (!section) notFound();
 
   const [cmsRaw, posts] = await Promise.all([
     readJsonFile<CmsBlog>("blog-page.json", defaultCmsBlog),
@@ -82,7 +88,11 @@ export default async function ResourceArticlePage({ params }: Props) {
   if (!post) notFound();
 
   const canonicalSection = resolveResourceSection(post);
-  if (canonicalSection !== section) {
+  // Wrong chuyên mục in URL, or legacy EN slug still hitting this route
+  if (
+    canonicalSection !== section ||
+    raw !== resourceSectionPath(canonicalSection)
+  ) {
     permanentRedirect(resourcePostHref(post));
   }
 

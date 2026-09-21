@@ -240,19 +240,19 @@ export const BUSINESS_SERVICE_LINKS: NavLink[] = [
 
 export const RESOURCE_LINKS: NavLink[] = [
   {
-    label: "Hướng dẫn phần mềm",
-    href: "/knowledge/guides",
+    label: "Hướng dẫn",
+    href: "/knowledge/huong-dan",
     description: "Cài đặt, kích hoạt, sử dụng",
   },
   {
     label: "Chuyên sâu",
-    href: "/knowledge/insights",
-    description: "License, subscription, renewal",
+    href: "/knowledge/chuyen-sau",
+    description: "Bản quyền, Microsoft 365, bảo mật",
   },
   {
-    label: "Tin tức & Cập nhật",
-    href: "/knowledge/news",
-    description: "Sản phẩm, công nghệ, ưu đãi",
+    label: "Tin tức",
+    href: "/knowledge/tin-tuc",
+    description: "Cập nhật sản phẩm, vendor và KEYON",
   },
   {
     label: "FAQ",

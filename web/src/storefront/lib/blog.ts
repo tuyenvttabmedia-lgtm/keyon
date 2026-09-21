@@ -2,6 +2,21 @@ import type { BlogCategoryId, BlogCoverTone, BlogPost } from "@/server/cms/types
 
 export type BlogCategoryFilter = "all" | BlogCategoryId;
 
+/** Primary topics (chủ đề) shown in Admin + storefront filters. */
+export const BLOG_TOPIC_IDS = [
+  "ban-quyen",
+  "windows",
+  "m365",
+  "doanh-nghiep",
+  "bao-mat",
+] as const satisfies readonly BlogCategoryId[];
+
+/** Legacy topic ids kept for existing posts (overlap with chuyên mục names). */
+export const BLOG_LEGACY_TOPIC_IDS = [
+  "huong-dan",
+  "tin-keyon",
+] as const satisfies readonly BlogCategoryId[];
+
 export const BLOG_CATEGORIES: {
   id: BlogCategoryFilter;
   label: string;
@@ -12,9 +27,10 @@ export const BLOG_CATEGORIES: {
   { id: "windows", label: "Windows", icon: "windows" },
   { id: "m365", label: "Microsoft 365", icon: "office" },
   { id: "doanh-nghiep", label: "Doanh nghiệp", icon: "building" },
-  { id: "huong-dan", label: "Hướng dẫn", icon: "guide" },
   { id: "bao-mat", label: "Bảo mật", icon: "shield" },
-  { id: "tin-keyon", label: "Tin Keyon", icon: "news" },
+  // Legacy — still filterable if posts carry these topics
+  { id: "huong-dan", label: "How-to", icon: "guide" },
+  { id: "tin-keyon", label: "Tin KEYON", icon: "news" },
 ];
 
 export const CATEGORY_LABEL: Record<BlogCategoryId, string> = {
@@ -22,9 +38,19 @@ export const CATEGORY_LABEL: Record<BlogCategoryId, string> = {
   windows: "Windows",
   m365: "Microsoft 365",
   "doanh-nghiep": "Doanh nghiệp",
-  "huong-dan": "Hướng dẫn",
   "bao-mat": "Bảo mật",
-  "tin-keyon": "Tin Keyon",
+  "huong-dan": "How-to",
+  "tin-keyon": "Tin KEYON",
+};
+
+/** Topics offered when creating/editing a post (no chuyên mục name clash). */
+export const ADMIN_BLOG_TOPICS: { id: BlogCategoryId; label: string }[] =
+  BLOG_TOPIC_IDS.map((id) => ({ id, label: CATEGORY_LABEL[id] }));
+
+export const SECTION_LABEL: Record<"insights" | "guides" | "news", string> = {
+  insights: "Chuyên sâu",
+  guides: "Hướng dẫn",
+  news: "Tin tức",
 };
 
 export const COVER_TONE_CLASS: Record<BlogCoverTone, string> = {

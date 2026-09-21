@@ -15,9 +15,9 @@ export type MainSeoPageKey =
   | "/business"
   | "/solutions"
   | "/knowledge"
-  | "/knowledge/insights"
-  | "/knowledge/guides"
-  | "/knowledge/news"
+  | "/knowledge/chuyen-sau"
+  | "/knowledge/huong-dan"
+  | "/knowledge/tin-tuc"
   | "/policy"
   | "/brands"
   | "/categories";
@@ -32,9 +32,9 @@ export const MAIN_SEO_PAGES: {
   { path: "/business", label: "Doanh nghiệp" },
   { path: "/solutions", label: "Giải pháp" },
   { path: "/knowledge", label: "Kiến thức" },
-  { path: "/knowledge/insights", label: "Chuyên sâu" },
-  { path: "/knowledge/guides", label: "Hướng dẫn" },
-  { path: "/knowledge/news", label: "Tin tức" },
+  { path: "/knowledge/chuyen-sau", label: "Chuyên sâu" },
+  { path: "/knowledge/huong-dan", label: "Hướng dẫn" },
+  { path: "/knowledge/tin-tuc", label: "Tin tức" },
   { path: "/faq", label: "FAQ" },
   { path: "/support", label: "Trung tâm hỗ trợ" },
   { path: "/how-it-works", label: "Cách KEYON hoạt động" },

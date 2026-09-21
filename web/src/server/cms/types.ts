@@ -31,8 +31,8 @@ export type BlogPost = {
   /** Optional category for index filters */
   category?: BlogCategoryId;
   /**
-   * IA Resource section (NAV-03). When omitted, inferred from category
-   * (huong-dan→guides, tin-keyon→news, topical→insights, else news).
+   * Knowledge chuyên mục (NAV-03). When omitted, inferred from topic (category).
+   * Public URL uses Vietnamese SEO slug (chuyen-sau | huong-dan | tin-tuc).
    */
   section?: "insights" | "guides" | "news";
   author?: string;
@@ -717,9 +717,19 @@ export const defaultSettings: SiteSettings = {
       title: "Kiến thức — KEYON",
       description: "Hướng dẫn, chuyên sâu và tin tức bản quyền phần mềm trên KEYON.",
     },
-    "/knowledge/news": {
+    "/knowledge/tin-tuc": {
       title: "Tin tức — KEYON",
       description: "Cập nhật vendor và KEYON về bản quyền, license và phần mềm.",
+    },
+    "/knowledge/chuyen-sau": {
+      title: "Chuyên sâu — KEYON",
+      description:
+        "Phân tích bản quyền, Microsoft 365, bảo mật và vận hành phần mềm.",
+    },
+    "/knowledge/huong-dan": {
+      title: "Hướng dẫn — KEYON",
+      description:
+        "How-to kích hoạt, nhận license và dùng Tài khoản KEYON.",
     },
     "/blog": {
       title: "Tin tức — KEYON",
@@ -1254,7 +1264,7 @@ export const defaultCmsBlog: CmsBlog = {
   detailHelpfulNo: "Không hữu ích",
   detailShareTitle: "Chia sẻ bài viết",
   detailSearchTitle: "Tìm kiếm bài viết",
-  detailCategoriesTitle: "Danh mục",
+  detailCategoriesTitle: "Chủ đề",
   detailFeaturedTitle: "Bài viết nổi bật",
   detailTagsTitle: "Thẻ phổ biến",
   detailVerifiedLabel: "Đã xác thực",

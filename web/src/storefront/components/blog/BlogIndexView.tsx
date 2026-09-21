@@ -7,6 +7,7 @@ import type { BlogPost, CmsBlog } from "@/server/cms/types";
 import {
   authorOf,
   BLOG_CATEGORIES,
+  BLOG_TOPIC_IDS,
   categoryLabel,
   coverToneOf,
   COVER_TONE_CLASS,
@@ -259,9 +260,14 @@ export function BlogIndexView({
           </div>
         ) : null}
 
-        {/* Category chips */}
+        {/* Topic chips (chủ đề — lọc trong chuyên mục) */}
         <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
-          {BLOG_CATEGORIES.map((c) => {
+          {BLOG_CATEGORIES.filter((c) => {
+            if (c.id === "all") return true;
+            if ((BLOG_TOPIC_IDS as readonly string[]).includes(c.id)) return true;
+            // Legacy topics only when posts in this section use them
+            return posts.some((p) => p.category === c.id);
+          }).map((c) => {
             const active = category === c.id;
             return (
               <button

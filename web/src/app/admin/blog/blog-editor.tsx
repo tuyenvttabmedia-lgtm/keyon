@@ -10,7 +10,12 @@ import {
   slugifyTitle,
   uniqueBlogSlug,
 } from "@/server/cms/blog-utils";
-import { resourcePostHref, resolveResourceSection } from "@/storefront/lib/resources";
+import {
+  resourcePostHref,
+  resolveResourceSection,
+  suggestedSectionForTopic,
+} from "@/storefront/lib/resources";
+import { ADMIN_BLOG_TOPICS, CATEGORY_LABEL, SECTION_LABEL } from "@/storefront/lib/blog";
 import { sanitizeBlogHtml } from "@/lib/sanitize-blog-html";
 import { MediaPicker } from "@/app/admin/media/MediaPicker";
 import { RichTextEditor } from "./rich-text-editor";
@@ -58,7 +63,7 @@ export function BlogEditor({
     if (isNew && (!slug || slug.startsWith("bai-viet-"))) {
       slug = "";
     }
-    return { ...initial, author, body: bodyHtml, slug };
+    return { ...initial, author, body: bodyHtml, slug, section: initial.section ?? "news" };
   }, [initial, defaultAuthor, isNew]);
 
   const [form, setForm] = useState<BlogPost>(seeded);
@@ -157,6 +162,7 @@ export function BlogEditor({
         slug,
         body,
         status,
+        section: form.section ?? resolveResourceSection(form),
         author: form.author?.trim() || defaultAuthor,
         readMinutes: estimateReadingMinutes(body),
         robotsIndex: form.robotsIndex !== false,
@@ -388,49 +394,60 @@ export function BlogEditor({
           {msg ? <p className="text-xs text-accent">{msg}</p> : null}
         </div>
 
-        {/* Classification */}
+        {/* Classification — Kiến thức = blog: chuyên mục (URL) + chủ đề (filter) */}
         <div className="rounded-2xl border border-border bg-card p-4 space-y-3">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted">
-            Phân loại
+            Phân loại Kiến thức
+          </p>
+          <p className="text-[11px] leading-relaxed text-muted">
+            Chuyên mục gắn URL (/knowledge/…). Chủ đề lọc trong chuyên mục.
+            Cùng một engine bài viết với blog.
           </p>
           <label className="block text-xs text-muted">
-            Chuyên mục
+            Chuyên mục <span className="text-accent">*</span>
             <select
               className="mt-1 w-full rounded-lg border border-border px-2 py-1.5 text-sm text-navy"
-              value={form.category ?? ""}
+              value={form.section ?? resolveResourceSection(form)}
               onChange={(e) =>
                 patch({
-                  category: (e.target.value ||
-                    undefined) as BlogPost["category"],
+                  section: e.target.value as BlogPost["section"],
                 })
               }
             >
-              <option value="">—</option>
-              <option value="ban-quyen">Bản quyền</option>
-              <option value="windows">Windows</option>
-              <option value="m365">Microsoft 365</option>
-              <option value="doanh-nghiep">Doanh nghiệp</option>
-              <option value="huong-dan">Hướng dẫn</option>
-              <option value="bao-mat">Bảo mật</option>
-              <option value="tin-keyon">Tin Keyon</option>
+              <option value="insights">{SECTION_LABEL.insights}</option>
+              <option value="guides">{SECTION_LABEL.guides}</option>
+              <option value="news">{SECTION_LABEL.news}</option>
             </select>
           </label>
           <label className="block text-xs text-muted">
-            Section kiến thức
+            Chủ đề
             <select
               className="mt-1 w-full rounded-lg border border-border px-2 py-1.5 text-sm text-navy"
-              value={form.section ?? ""}
-              onChange={(e) =>
+              value={form.category ?? ""}
+              onChange={(e) => {
+                const topic = (e.target.value ||
+                  undefined) as BlogPost["category"];
+                const suggested = suggestedSectionForTopic(topic);
                 patch({
-                  section: (e.target.value ||
-                    undefined) as BlogPost["section"],
-                })
-              }
+                  category: topic,
+                  ...(suggested && !form.section && isNew
+                    ? { section: suggested }
+                    : {}),
+                });
+              }}
             >
-              <option value="">Tự suy từ chuyên mục</option>
-              <option value="insights">Chuyên sâu</option>
-              <option value="guides">Hướng dẫn</option>
-              <option value="news">Tin tức</option>
+              <option value="">— Không chọn —</option>
+              {ADMIN_BLOG_TOPICS.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.label}
+                </option>
+              ))}
+              {form.category &&
+              !ADMIN_BLOG_TOPICS.some((t) => t.id === form.category) ? (
+                <option value={form.category}>
+                  {CATEGORY_LABEL[form.category]} (cũ)
+                </option>
+              ) : null}
             </select>
           </label>
           <label className="block text-xs text-muted">
