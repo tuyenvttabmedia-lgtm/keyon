@@ -249,81 +249,6 @@ export function BlogEditor({
         ) : null}
 
         <div className="min-w-0 space-y-4 rounded-2xl border border-border bg-card p-4 sm:p-5">
-          {/* Cover + Alt — ngay trên tiêu đề để luôn thấy khi gán ảnh */}
-          <div className="space-y-2">
-            {form.coverUrl ? (
-              <div className="relative aspect-[16/9] overflow-hidden rounded-xl bg-surface">
-                <Image
-                  src={form.coverUrl}
-                  alt={form.coverAlt || ""}
-                  fill
-                  className="object-cover"
-                  unoptimized
-                />
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setCoverPicker(true)}
-                className="flex aspect-[16/9] w-full items-center justify-center rounded-xl border border-dashed border-border bg-surface text-xs text-muted hover:border-accent hover:text-accent"
-              >
-                Chọn ảnh đại diện
-              </button>
-            )}
-            <div className="flex flex-wrap items-end gap-2">
-              <label className="min-w-[12rem] flex-1 block text-xs font-medium text-navy">
-                Alt text ảnh đại diện <span className="text-accent">*</span>
-                <input
-                  className={`mt-1 w-full rounded-lg border px-3 py-2 text-sm outline-none focus:border-accent ${
-                    form.coverUrl && !(form.coverAlt ?? "").trim()
-                      ? "border-amber-400 bg-amber-50"
-                      : "border-border bg-white"
-                  }`}
-                  value={form.coverAlt ?? ""}
-                  onChange={(e) => patch({ coverAlt: e.target.value })}
-                  placeholder="Mô tả ảnh cho SEO / accessibility…"
-                />
-              </label>
-              <div className="flex flex-wrap gap-2 pb-0.5">
-                <button
-                  type="button"
-                  onClick={() => setCoverPicker(true)}
-                  className="rounded-lg border border-border px-3 py-2 text-xs font-medium"
-                >
-                  {form.coverUrl ? "Đổi ảnh" : "Chọn ảnh"}
-                </button>
-                {form.coverUrl ? (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      patch({
-                        coverUrl: undefined,
-                        coverAlt: undefined,
-                        coverCaption: undefined,
-                      })
-                    }
-                    className="rounded-lg border border-border px-3 py-2 text-xs"
-                  >
-                    Gỡ
-                  </button>
-                ) : null}
-              </div>
-            </div>
-            {form.coverUrl && !(form.coverAlt ?? "").trim() ? (
-              <p className="text-[11px] text-amber-800">
-                Nên nhập Alt text trước khi xuất bản — Google dùng mô tả này cho ảnh.
-              </p>
-            ) : null}
-            <label className="block text-xs text-muted">
-              Caption (tuỳ chọn — hiện dưới ảnh trên storefront)
-              <input
-                className="mt-1 w-full rounded-lg border border-border px-3 py-1.5 text-sm"
-                value={form.coverCaption ?? ""}
-                onChange={(e) => patch({ coverCaption: e.target.value })}
-              />
-            </label>
-          </div>
-
           <input
             className={`w-full border-0 border-b border-border bg-transparent pb-2 outline-none ${ADMIN_PAGE_TITLE_CLASS}`}
             value={form.title}
@@ -356,7 +281,12 @@ export function BlogEditor({
           </label>
 
           <div className="min-w-0">
-            <p className="mb-2 text-xs font-medium text-muted">Nội dung</p>
+            <p className="mb-2 text-xs font-medium text-muted">
+              Nội dung{" "}
+              <span className="font-normal text-muted/80">
+                — chèn/click ảnh trong bài để nhập Alt riêng (thanh vàng)
+              </span>
+            </p>
             <RichTextEditor
               value={form.body}
               onChange={(html) => patch({ body: html })}
@@ -543,6 +473,68 @@ export function BlogEditor({
               onChange={(e) => patch({ featured: e.target.checked })}
             />
             Bài nổi bật
+          </label>
+        </div>
+
+        {/* Featured image — sidebar (cover only; body images use TipTap alt bar) */}
+        <div className="rounded-2xl border border-border bg-card p-4 space-y-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+            Ảnh đại diện
+          </p>
+          {form.coverUrl ? (
+            <div className="relative aspect-[16/9] overflow-hidden rounded-xl bg-surface">
+              <Image
+                src={form.coverUrl}
+                alt={form.coverAlt || ""}
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            </div>
+          ) : (
+            <div className="flex aspect-[16/9] items-center justify-center rounded-xl border border-dashed border-border bg-surface text-xs text-muted">
+              Chưa chọn ảnh
+            </div>
+          )}
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setCoverPicker(true)}
+              className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium"
+            >
+              Chọn từ Media
+            </button>
+            {form.coverUrl ? (
+              <button
+                type="button"
+                onClick={() =>
+                  patch({
+                    coverUrl: undefined,
+                    coverAlt: undefined,
+                    coverCaption: undefined,
+                  })
+                }
+                className="rounded-lg border border-border px-3 py-1.5 text-xs"
+              >
+                Gỡ ảnh
+              </button>
+            ) : null}
+          </div>
+          <label className="block text-xs text-muted">
+            Alt text
+            <input
+              className="mt-1 w-full rounded-lg border border-border px-2 py-1.5 text-sm"
+              value={form.coverAlt ?? ""}
+              onChange={(e) => patch({ coverAlt: e.target.value })}
+            />
+          </label>
+          <label className="block text-xs text-muted">
+            Caption (optional)
+            <input
+              className="mt-1 w-full rounded-lg border border-border px-2 py-1.5 text-sm"
+              value={form.coverCaption ?? ""}
+              onChange={(e) => patch({ coverCaption: e.target.value })}
+            />
           </label>
         </div>
 

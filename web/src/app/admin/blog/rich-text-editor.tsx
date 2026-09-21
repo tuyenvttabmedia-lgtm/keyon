@@ -615,11 +615,22 @@ export function RichTextEditor({
         </p>
       ) : null}
 
-      {showAltBar ? (
+      {showAltBar && imageTarget ? (
         <div className="sticky top-[42px] z-10 flex flex-wrap items-center gap-2 border-b border-amber-200 bg-amber-50 px-3 py-2.5 shadow-sm">
-          <span className="text-[11px] font-semibold uppercase tracking-wide text-amber-900">
-            Alt ảnh (SEO)
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={imageTarget.src}
+            alt=""
+            className="h-9 w-12 shrink-0 rounded object-cover ring-1 ring-amber-200"
+          />
+          <div className="min-w-0 shrink-0">
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-900">
+              Alt ảnh trong bài
+            </p>
+            <p className="text-[10px] text-amber-800/80">
+              Chỉ gắn cho ảnh đang chọn — mỗi ảnh một alt riêng
+            </p>
+          </div>
           <input
             ref={altInputRef}
             type="text"
@@ -642,7 +653,7 @@ export function RichTextEditor({
                 editor?.commands.focus("end");
               }
             }}
-            placeholder="Mô tả ảnh cho SEO / accessibility…"
+            placeholder="Mô tả ảnh này cho SEO / accessibility…"
             className="min-w-[16rem] flex-1 rounded-md border border-amber-300 bg-white px-2.5 py-1.5 text-sm text-navy outline-none focus:border-accent"
             autoComplete="off"
           />
@@ -696,7 +707,7 @@ export function RichTextEditor({
           if (!item?.url) return;
           insertImage(item.url, item.altText?.trim());
           showPasteHint(
-            "Đã chèn ảnh — nhập Alt (SEO) ở thanh màu vàng ngay bên dưới toolbar.",
+            "Đã chèn ảnh — nhập Alt riêng trên thanh vàng (chỉ cho ảnh này).",
           );
         }}
       />
