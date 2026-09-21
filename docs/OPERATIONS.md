@@ -148,6 +148,21 @@ Quy trình chung:
 
 Bucket media nên cho phép public-read trên prefix (vd. `media/`) hoặc dùng CDN URL làm Public base URL.
 
+### Media CDN DNS (VPS)
+
+`media.keyon.vn` phải resolve tới **Cloudflare** (không phải IP parking VNNIC `117.122.125.107`).
+
+Một số resolver (Vultr recursive / `.vn` hold path) trả sai A record → Node trên VPS `UNABLE_TO_VERIFY_LEAF_SIGNATURE` khi fetch ảnh.
+
+**Fix trên VPS (đã áp dụng):**
+
+- `tailscale set --accept-dns=false`
+- `/etc/systemd/resolved.conf.d/99-keyon-public-dns.conf` → `DNS=1.1.1.1 1.0.0.1 8.8.8.8`
+- `systemctl restart systemd-resolved`
+- Next `images.unoptimized: true` (tránh image optimizer fetch CDN từ origin)
+
+Kiểm tra: `resolvectl query media.keyon.vn` phải ra `104.21.*` / `172.67.*`, không ra `117.122.125.107`.
+
 ---
 
 ## 7. Đổi / bật SePay

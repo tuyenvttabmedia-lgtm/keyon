@@ -215,6 +215,7 @@ export function OverviewView({
                         fill
                         className="object-cover"
                         sizes="36px"
+                        unoptimized
                       />
                     ) : (
                       <span className="m-auto text-muted">

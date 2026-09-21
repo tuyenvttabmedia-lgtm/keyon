@@ -35,7 +35,10 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // media.keyon.vn is Cloudflare-fronted; some VPS resolvers hit VNNIC hold IPs
+  // and break Node TLS for the image optimizer. Serve remote images directly.
   images: {
+    unoptimized: true,
     remotePatterns: [
       { protocol: "https", hostname: "media.keyon.vn", pathname: "/**" },
       { protocol: "https", hostname: "**.wasabisys.com", pathname: "/**" },
