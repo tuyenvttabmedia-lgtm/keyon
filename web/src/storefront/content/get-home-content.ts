@@ -116,7 +116,15 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
   const faqDoc = normalizeFaqDocument(faqRaw);
   const faqItems = faqDoc.items;
 
-  const published = posts.filter((p) => isBlogPostLive(p)).slice(0, 4);
+  const published = posts
+    .filter((p) => isBlogPostLive(p))
+    .slice()
+    .sort((a, b) => {
+      const ta = new Date(a.publishedAt ?? a.scheduledAt ?? a.updatedAt).getTime();
+      const tb = new Date(b.publishedAt ?? b.scheduledAt ?? b.updatedAt).getTime();
+      return tb - ta;
+    })
+    .slice(0, 4);
 
   const storage = await resolveStorage();
   const mediaBase =
@@ -405,9 +413,15 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
           "vi-VN",
         ),
         href: resourcePostHref(p),
-        imageUrl: p.coverUrl
-          ? resolveMediaUrl(p.coverUrl, mediaBase) || p.coverUrl
-          : undefined,
+        imageUrl: (() => {
+          const raw = p.coverUrl?.trim();
+          if (!raw) return undefined;
+          // Prefer CDN host as stored (Wasabi behind media.keyon.vn).
+          // Do not rewrite to S3 endpoint — Next/optimizer & private S3 break thumbs.
+          if (/^https?:\/\/media\.keyon\.vn\//i.test(raw)) return raw;
+          if (/wasabisys\.com/i.test(raw)) return raw;
+          return resolveMediaUrl(raw, mediaBase) || raw;
+        })(),
         imageAlt: p.coverAlt?.trim() || p.title,
         tag: homeFixture.news.items[i]?.tag,
         tagTone: homeFixture.news.items[i]?.tagTone,

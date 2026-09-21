@@ -34,22 +34,32 @@ const thumbClass = [
   "bg-gradient-to-br from-rose-400 to-pink-700",
 ];
 
+const NEWS_SLOT = 4;
+
 export function NewsSection({ data }: { data: News }) {
   if (!data.visible) return null;
 
-  const mobileItems = data.items.slice(0, 4);
-  const tabletItems = data.items.slice(0, 3);
-  const desktopItems = data.items.slice(0, 4);
+  const items = data.items.slice(0, NEWS_SLOT);
+  const n = items.length;
 
-  // Avoid 4-col slots when only 1–2 posts — tiny thumbs make cover text look soft.
+  // Prefer a full 4-up on desktop; adapt when fewer posts.
   const desktopGrid =
-    desktopItems.length <= 1
+    n <= 1
       ? "lg:grid-cols-1 lg:max-w-xl"
-      : desktopItems.length === 2
+      : n === 2
         ? "lg:grid-cols-2"
-        : desktopItems.length === 3
+        : n === 3
           ? "lg:grid-cols-3"
           : "lg:grid-cols-4";
+
+  const tabletGrid =
+    n >= 4
+      ? "md:grid-cols-2"
+      : n === 3
+        ? "md:grid-cols-3"
+        : n === 1
+          ? "md:grid-cols-1 md:max-w-md"
+          : "md:grid-cols-2";
 
   return (
     <section className="py-5 md:py-4 lg:py-6">
@@ -61,9 +71,8 @@ export function NewsSection({ data }: { data: News }) {
           align="end"
         />
 
-        {/* Mobile: compact list rows */}
         <div className="flex flex-col gap-2.5 md:hidden">
-          {mobileItems.map((item, i) => (
+          {items.map((item, i) => (
             <NewsListRow
               key={item.id}
               item={item}
@@ -72,17 +81,8 @@ export function NewsSection({ data }: { data: News }) {
           ))}
         </div>
 
-        {/* Tablet: up to 3 cards */}
-        <div
-          className={`hidden gap-3 md:grid lg:hidden ${
-            tabletItems.length >= 3
-              ? "md:grid-cols-3"
-              : tabletItems.length === 1
-                ? "md:grid-cols-1 md:max-w-md"
-                : "md:grid-cols-2"
-          }`}
-        >
-          {tabletItems.map((item, i) => (
+        <div className={`hidden gap-3 md:grid lg:hidden ${tabletGrid}`}>
+          {items.map((item, i) => (
             <NewsCard
               key={item.id}
               item={item}
@@ -92,9 +92,8 @@ export function NewsSection({ data }: { data: News }) {
           ))}
         </div>
 
-        {/* Desktop */}
         <div className={`hidden gap-4 lg:grid ${desktopGrid}`}>
-          {desktopItems.map((item, i) => (
+          {items.map((item, i) => (
             <NewsCard
               key={item.id}
               item={item}
@@ -131,8 +130,9 @@ function NewsThumb({
           fill
           className="object-cover object-center"
           sizes={sizes}
-          quality={90}
-          // Prefer optimizer + retina srcset over raw unoptimized downscale.
+          // Wasabi / media.keyon.vn: Next image optimizer on VPS returns 500
+          // (cannot fetch CDN). Serve the public CDN URL directly.
+          unoptimized
         />
       ) : null}
       {item.tag ? (
@@ -157,7 +157,7 @@ function NewsListRow({ item, thumb }: { item: NewsItem; thumb: string }) {
         item={item}
         thumb={thumb}
         className="h-16 w-[88px] shrink-0 rounded-lg"
-        sizes="88px"
+        sizes="176px"
       />
       <div className="min-w-0 flex-1 self-center">
         <div className={CARD_META_CLASS}>{item.dateLabel}</div>
@@ -189,7 +189,6 @@ function NewsCard({
     <article
       className={`overflow-hidden rounded-[18px] border border-border/80 bg-white ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-border ${ELEVATION_CARD_HOVER}`}
     >
-      {/* Image sits in its own layer so hover translate on the card doesn't soft-blur pixels */}
       <div className="transform-gpu backface-hidden">
         <NewsThumb
           item={item}
