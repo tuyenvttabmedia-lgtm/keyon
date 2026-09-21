@@ -11,6 +11,7 @@ import {
 import { mergeBlogTaxonomy } from "@/storefront/lib/blog-taxonomy";
 import { BlogEditor } from "../blog-editor";
 import { ADMIN_PAGE_TITLE_CLASS } from "@/storefront/typography";
+import { HOVER_LINK_ACCENT, TRANSITION_UI } from "@/storefront/effects";
 
 export const dynamic = "force-dynamic";
 
@@ -65,12 +66,15 @@ export default async function AdminBlogEditPage({
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-3 text-sm">
-        <Link href="/admin/blog" className="text-accent hover:underline">
+        <Link
+          href="/admin/blog"
+          className={`font-medium text-accent ${HOVER_LINK_ACCENT} hover:underline`}
+        >
           ← Bài viết
         </Link>
         <Link
           href="/admin/cms/blog-taxonomy"
-          className="text-muted hover:text-accent hover:underline"
+          className={`text-muted ${TRANSITION_UI} hover:text-accent hover:underline`}
         >
           Quản trị danh mục
         </Link>

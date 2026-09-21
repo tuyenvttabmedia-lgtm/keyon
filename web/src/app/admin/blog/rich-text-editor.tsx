@@ -23,7 +23,12 @@ import { TableHeader } from "@tiptap/extension-table-header";
 import { NodeSelection } from "@tiptap/pm/state";
 import { MediaPicker } from "@/app/admin/media/MediaPicker";
 import { cleanPastedHtml } from "@/lib/clean-pasted-html";
-import { Z_STICKY } from "@/storefront/effects";
+import {
+  ELEVATION_CTA_HOVER,
+  OPACITY_DISABLED,
+  TRANSITION_UI,
+  Z_STICKY,
+} from "@/storefront/effects";
 
 type Props = {
   value: string;
@@ -52,10 +57,10 @@ function ToolbarBtn({
       title={title}
       disabled={disabled}
       onClick={onClick}
-      className={`rounded-md px-2 py-1.5 text-xs font-semibold transition disabled:opacity-40 ${
+      className={`rounded-md px-2 py-1.5 text-xs font-semibold ${TRANSITION_UI} disabled:pointer-events-none ${OPACITY_DISABLED} ${
         active
-          ? "bg-accent text-white shadow-sm"
-          : "text-navy hover:bg-white"
+          ? `bg-accent text-white shadow-sm ${ELEVATION_CTA_HOVER}`
+          : "text-navy hover:bg-white hover:text-accent hover:shadow-sm active:bg-accent-soft"
       }`}
     >
       {children}

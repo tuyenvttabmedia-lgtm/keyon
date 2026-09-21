@@ -23,6 +23,29 @@ import {
   ADMIN_PAGE_TITLE_CLASS,
   INPUT_TEXT_CLASS,
 } from "@/storefront/typography";
+import {
+  ELEVATION_CTA_HOVER,
+  HOVER_SOFT,
+  OPACITY_DISABLED,
+  TRANSITION_UI,
+} from "@/storefront/effects";
+
+/** Sidebar / media outline control */
+const BTN_SECONDARY = `rounded-lg border border-border bg-white px-3 py-2 text-sm font-medium text-navy ${TRANSITION_UI} hover:border-accent/40 hover:bg-navy-soft hover:text-navy active:bg-accent-soft/60 disabled:pointer-events-none ${OPACITY_DISABLED}`;
+
+const BTN_SECONDARY_SM = `rounded-lg border border-border bg-white px-3 py-1.5 text-xs font-medium text-navy ${TRANSITION_UI} hover:border-accent/40 hover:bg-navy-soft hover:text-navy active:bg-accent-soft/60 disabled:pointer-events-none ${OPACITY_DISABLED}`;
+
+/** Primary publish / save */
+const BTN_PRIMARY = `rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-white ${TRANSITION_UI} ${ELEVATION_CTA_HOVER} hover:bg-[#0d9488] active:brightness-95 disabled:pointer-events-none ${OPACITY_DISABLED}`;
+
+/** Accent outline (schedule) */
+const BTN_ACCENT_OUTLINE = `rounded-lg border border-accent bg-white px-3 py-1.5 text-sm font-semibold text-accent ${TRANSITION_UI} hover:bg-accent hover:text-white ${ELEVATION_CTA_HOVER} active:brightness-95 disabled:pointer-events-none ${OPACITY_DISABLED}`;
+
+const BTN_MUTED = `rounded-lg border border-border bg-white px-3 py-1.5 text-sm font-medium text-muted ${TRANSITION_UI} hover:border-border hover:bg-navy-soft hover:text-navy active:bg-accent-soft/50 disabled:pointer-events-none ${OPACITY_DISABLED}`;
+
+const BTN_MUTED_SM = `rounded-lg border border-border bg-white px-3 py-1.5 text-xs font-medium text-muted ${TRANSITION_UI} hover:bg-navy-soft hover:text-navy active:bg-accent-soft/50 disabled:pointer-events-none ${OPACITY_DISABLED}`;
+
+const BTN_SEO_TOGGLE = `flex w-full items-center justify-between rounded-lg px-1 py-1 text-left ${TRANSITION_UI} ${HOVER_SOFT}`;
 
 type Props = {
   initial: BlogPost;
@@ -310,7 +333,7 @@ export function BlogEditor({
               type="button"
               disabled={saving}
               onClick={() => void save("draft")}
-              className="rounded-lg border border-border px-3 py-2 text-sm font-medium"
+              className={BTN_SECONDARY}
             >
               Lưu nháp
             </button>
@@ -318,7 +341,7 @@ export function BlogEditor({
               type="button"
               disabled={saving}
               onClick={() => void preview()}
-              className="rounded-lg border border-border px-3 py-2 text-sm font-medium"
+              className={BTN_SECONDARY}
             >
               Xem trước
             </button>
@@ -327,7 +350,7 @@ export function BlogEditor({
                 type="button"
                 disabled={saving}
                 onClick={() => void save("published")}
-                className="col-span-2 rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-white"
+                className={`col-span-2 ${BTN_PRIMARY}`}
               >
                 Lưu thay đổi
               </button>
@@ -336,7 +359,7 @@ export function BlogEditor({
                 type="button"
                 disabled={saving}
                 onClick={() => void save("published")}
-                className="col-span-2 rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-white"
+                className={`col-span-2 ${BTN_PRIMARY}`}
               >
                 Xuất bản ngay
               </button>
@@ -348,7 +371,7 @@ export function BlogEditor({
               Ngày &amp; giờ
               <input
                 type="datetime-local"
-                className="mt-1 w-full rounded-lg border border-border bg-white px-2 py-1.5 text-sm text-navy"
+                className={`mt-1 w-full rounded-lg border border-border bg-white px-2 py-1.5 text-sm text-navy outline-none ${TRANSITION_UI} focus:border-accent`}
                 value={scheduleLocal}
                 onChange={(e) => setScheduleLocal(e.target.value)}
               />
@@ -358,7 +381,7 @@ export function BlogEditor({
                 type="button"
                 disabled={saving || !scheduleLocal}
                 onClick={() => void save("scheduled")}
-                className="flex-1 rounded-lg border border-accent bg-white px-3 py-1.5 text-sm font-semibold text-accent disabled:opacity-40"
+                className={`flex-1 ${BTN_ACCENT_OUTLINE}`}
               >
                 Lưu &amp; lên lịch
               </button>
@@ -370,7 +393,7 @@ export function BlogEditor({
                     setScheduleLocal("");
                     void save("draft");
                   }}
-                  className="rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted"
+                  className={BTN_MUTED}
                 >
                   Hủy lịch
                 </button>
@@ -466,7 +489,7 @@ export function BlogEditor({
               onChange={(e) => patch({ author: e.target.value })}
             />
           </label>
-          <label className="flex items-center gap-2 text-xs text-navy">
+          <label className={`flex cursor-pointer items-center gap-2 rounded-lg px-1 py-1 text-xs text-navy ${TRANSITION_UI} hover:bg-navy-soft/60`}>
             <input
               type="checkbox"
               checked={!!form.featured}
@@ -492,15 +515,19 @@ export function BlogEditor({
               />
             </div>
           ) : (
-            <div className="flex aspect-[16/9] items-center justify-center rounded-xl border border-dashed border-border bg-surface text-xs text-muted">
-              Chưa chọn ảnh
-            </div>
+            <button
+              type="button"
+              onClick={() => setCoverPicker(true)}
+              className={`flex aspect-[16/9] w-full items-center justify-center rounded-xl border border-dashed border-border bg-surface text-xs text-muted ${TRANSITION_UI} hover:border-accent/50 hover:bg-accent-soft/30 hover:text-accent`}
+            >
+              Chưa chọn ảnh — click để chọn
+            </button>
           )}
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
               onClick={() => setCoverPicker(true)}
-              className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium"
+              className={BTN_SECONDARY_SM}
             >
               Chọn từ Media
             </button>
@@ -514,7 +541,7 @@ export function BlogEditor({
                     coverCaption: undefined,
                   })
                 }
-                className="rounded-lg border border-border px-3 py-1.5 text-xs"
+                className={BTN_MUTED_SM}
               >
                 Gỡ ảnh
               </button>
@@ -542,7 +569,7 @@ export function BlogEditor({
         <div className="rounded-2xl border border-border bg-card p-4 space-y-3">
           <button
             type="button"
-            className="flex w-full items-center justify-between text-left"
+            className={BTN_SEO_TOGGLE}
             onClick={() => setSeoOpen((v) => !v)}
           >
             <span className="text-xs font-semibold uppercase tracking-wide text-muted">
@@ -725,7 +752,7 @@ export function BlogEditor({
                 <button
                   type="button"
                   onClick={() => setOgPicker(true)}
-                  className="mt-2 rounded-lg border border-border px-3 py-1.5 text-xs font-medium"
+                  className={`mt-2 ${BTN_SECONDARY_SM}`}
                 >
                   Chọn ảnh
                 </button>
