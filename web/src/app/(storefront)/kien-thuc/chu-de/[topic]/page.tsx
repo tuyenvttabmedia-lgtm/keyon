@@ -3,10 +3,12 @@ import { notFound } from "next/navigation";
 import {
   defaultBlog,
   defaultCmsBlog,
+  defaultCmsBlogTaxonomy,
   readJsonFile,
   type BlogPost,
+  type CmsBlogTaxonomy,
 } from "@/server/cms/store";
-import type { BlogCategoryId, CmsBlog } from "@/server/cms/types";
+import type { CmsBlog } from "@/server/cms/types";
 import { BlogIndexView } from "@/storefront/components/blog/BlogIndexView";
 import { CATEGORY_LABEL } from "@/storefront/lib/blog";
 import { isBlogPostLive } from "@/server/cms/blog-utils";
@@ -15,35 +17,38 @@ import {
   KNOWLEDGE_HUB_PATH,
   resourceTopicHref,
 } from "@/storefront/lib/resources";
+import { mergeBlogTaxonomy, topicLabelMap } from "@/storefront/lib/blog-taxonomy";
 import { absoluteUrl } from "@/server/seo/site-url";
 
 export const dynamic = "force-dynamic";
-
-const TOPIC_IDS = new Set<string>([
-  "ban-quyen",
-  "windows",
-  "m365",
-  "doanh-nghiep",
-  "bao-mat",
-  "huong-dan",
-  "tin-keyon",
-]);
 
 type Props = {
   params: Promise<{ topic: string }>;
   searchParams: Promise<{ q?: string; tag?: string }>;
 };
 
+async function loadTaxonomy() {
+  const raw = await readJsonFile<CmsBlogTaxonomy>(
+    "blog-taxonomy.json",
+    defaultCmsBlogTaxonomy,
+  );
+  return mergeBlogTaxonomy(raw);
+}
+
 export async function generateStaticParams() {
-  return [...TOPIC_IDS].map((topic) => ({ topic }));
+  const taxonomy = await loadTaxonomy();
+  return taxonomy.topics.filter((t) => t.visible).map((t) => ({ topic: t.id }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { topic: raw } = await params;
-  if (!TOPIC_IDS.has(raw)) return { title: "Chủ đề | KEYON" };
-  const topic = raw as BlogCategoryId;
-  const label = CATEGORY_LABEL[topic];
-  const path = resourceTopicHref(topic);
+  const taxonomy = await loadTaxonomy();
+  const labels = topicLabelMap(taxonomy);
+  const label = labels[raw] ?? CATEGORY_LABEL[raw] ?? raw;
+  const known =
+    taxonomy.topics.some((t) => t.id === raw) || Boolean(CATEGORY_LABEL[raw]);
+  if (!known) return { title: "Chủ đề | KEYON" };
+  const path = resourceTopicHref(raw);
   return {
     title: `${label} — Kiến thức | KEYON`,
     description: `Bài viết về ${label} trên KEYON — hướng dẫn, chuyên sâu và tin tức bản quyền phần mềm.`,
@@ -56,8 +61,11 @@ export default async function TopicArchivePage({
   searchParams,
 }: Props) {
   const { topic: raw } = await params;
-  if (!TOPIC_IDS.has(raw)) notFound();
-  const topic = raw as BlogCategoryId;
+  const taxonomy = await loadTaxonomy();
+  const labels = { ...CATEGORY_LABEL, ...topicLabelMap(taxonomy) };
+  const known =
+    taxonomy.topics.some((t) => t.id === raw) || Boolean(CATEGORY_LABEL[raw]);
+  if (!known) notFound();
 
   const sp = await searchParams;
   const [cmsRaw, postsRaw] = await Promise.all([
@@ -65,7 +73,7 @@ export default async function TopicArchivePage({
     readJsonFile("blog.json", defaultBlog),
   ]);
 
-  const label = CATEGORY_LABEL[topic];
+  const label = labels[raw] ?? raw;
   const cms: CmsBlog = {
     ...defaultCmsBlog,
     ...cmsRaw,
@@ -76,16 +84,16 @@ export default async function TopicArchivePage({
   const published = (Array.isArray(postsRaw) ? postsRaw : defaultBlog).filter(
     (p: BlogPost) => isBlogPostLive(p),
   );
-  const posts = filterPostsByTopic(published, topic);
+  const posts = filterPostsByTopic(published, raw);
 
   return (
     <BlogIndexView
       cms={cms}
       posts={posts}
       initialQuery={sp.q?.trim() ?? ""}
-      initialCategory={topic}
+      initialCategory={raw}
       initialTag={sp.tag?.trim() ?? ""}
-      topicArchive={topic}
+      topicArchive={raw}
       hubHref={KNOWLEDGE_HUB_PATH}
     />
   );

@@ -2,20 +2,17 @@ import type { BlogCategoryId, BlogCoverTone, BlogPost } from "@/server/cms/types
 
 export type BlogCategoryFilter = "all" | BlogCategoryId;
 
-/** Primary topics (chủ đề) shown in Admin + storefront filters. */
+/** Primary topics shown when CMS taxonomy is unavailable. */
 export const BLOG_TOPIC_IDS = [
   "ban-quyen",
   "windows",
   "m365",
   "doanh-nghiep",
   "bao-mat",
-] as const satisfies readonly BlogCategoryId[];
+] as const;
 
-/** Legacy topic ids kept for existing posts (overlap with chuyên mục names). */
-export const BLOG_LEGACY_TOPIC_IDS = [
-  "huong-dan",
-  "tin-keyon",
-] as const satisfies readonly BlogCategoryId[];
+/** Legacy topic ids kept for existing posts. */
+export const BLOG_LEGACY_TOPIC_IDS = ["huong-dan", "tin-keyon"] as const;
 
 export const BLOG_CATEGORIES: {
   id: BlogCategoryFilter;
@@ -28,12 +25,11 @@ export const BLOG_CATEGORIES: {
   { id: "m365", label: "Microsoft 365", icon: "office" },
   { id: "doanh-nghiep", label: "Doanh nghiệp", icon: "building" },
   { id: "bao-mat", label: "Bảo mật", icon: "shield" },
-  // Legacy — still filterable if posts carry these topics
   { id: "huong-dan", label: "How-to", icon: "guide" },
   { id: "tin-keyon", label: "Tin KEYON", icon: "news" },
 ];
 
-export const CATEGORY_LABEL: Record<BlogCategoryId, string> = {
+export const CATEGORY_LABEL: Record<string, string> = {
   "ban-quyen": "Bản quyền",
   windows: "Windows",
   m365: "Microsoft 365",
@@ -43,9 +39,9 @@ export const CATEGORY_LABEL: Record<BlogCategoryId, string> = {
   "tin-keyon": "Tin KEYON",
 };
 
-/** Topics offered when creating/editing a post (no chuyên mục name clash). */
+/** Topics for admin when taxonomy CMS not loaded. */
 export const ADMIN_BLOG_TOPICS: { id: BlogCategoryId; label: string }[] =
-  BLOG_TOPIC_IDS.map((id) => ({ id, label: CATEGORY_LABEL[id] }));
+  BLOG_TOPIC_IDS.map((id) => ({ id, label: CATEGORY_LABEL[id] ?? id }));
 
 export const SECTION_LABEL: Record<"insights" | "guides" | "news", string> = {
   insights: "Chuyên sâu",
@@ -64,7 +60,7 @@ export const COVER_TONE_CLASS: Record<BlogCoverTone, string> = {
 
 export function categoryLabel(post: BlogPost) {
   if (!post.category) return "Tin tức";
-  return CATEGORY_LABEL[post.category];
+  return CATEGORY_LABEL[post.category] ?? post.category;
 }
 
 export function postDateIso(post: BlogPost) {

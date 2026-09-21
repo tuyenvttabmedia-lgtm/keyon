@@ -1,8 +1,17 @@
 import type { Metadata } from "next";
-import { IaHubPage } from "@/storefront/components/marketing/IaLanding";
-import { RESOURCE_HUB, RESOURCE_SECTIONS } from "@/storefront/nav/ia-pages";
-import { buildMainPageMetadata } from "@/server/seo/metadata";
+import {
+  defaultBlog,
+  defaultCmsBlogTaxonomy,
+  readJsonFile,
+  type BlogPost,
+  type CmsBlogTaxonomy,
+} from "@/server/cms/store";
+import { isBlogPostLive } from "@/server/cms/blog-utils";
+import { KnowledgeHubView } from "@/storefront/components/blog/KnowledgeHubView";
+import { mergeBlogTaxonomy } from "@/storefront/lib/blog-taxonomy";
+import { postDateIso } from "@/storefront/lib/blog";
 import { KNOWLEDGE_HUB_PATH } from "@/storefront/lib/resources";
+import { buildMainPageMetadata } from "@/server/seo/metadata";
 import type { MainSeoPageKey } from "@/lib/seo-main-pages";
 
 export const dynamic = "force-dynamic";
@@ -11,22 +20,22 @@ export async function generateMetadata(): Promise<Metadata> {
   return buildMainPageMetadata(KNOWLEDGE_HUB_PATH as MainSeoPageKey);
 }
 
-export default function KnowledgeHubPage() {
-  const items = Object.values(RESOURCE_SECTIONS).map((s) => ({
-    label: s.title,
-    href: s.href,
-    description: s.subtitle,
-  }));
-  items.push({
-    label: "FAQ",
-    href: "/faq",
-    description: "Câu hỏi thường gặp về mua, giao và kích hoạt bản quyền.",
-  });
-  return (
-    <IaHubPage
-      title={RESOURCE_HUB.title}
-      subtitle={RESOURCE_HUB.subtitle}
-      items={items}
-    />
-  );
+export default async function KnowledgeHubPage() {
+  const [taxRaw, postsRaw] = await Promise.all([
+    readJsonFile<CmsBlogTaxonomy>(
+      "blog-taxonomy.json",
+      defaultCmsBlogTaxonomy,
+    ),
+    readJsonFile<BlogPost[]>("blog.json", defaultBlog),
+  ]);
+
+  const taxonomy = mergeBlogTaxonomy(taxRaw);
+  const posts = (Array.isArray(postsRaw) ? postsRaw : defaultBlog)
+    .filter((p) => isBlogPostLive(p))
+    .sort(
+      (a, b) =>
+        new Date(postDateIso(b)).getTime() - new Date(postDateIso(a)).getTime(),
+    );
+
+  return <KnowledgeHubView taxonomy={taxonomy} posts={posts} />;
 }

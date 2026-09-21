@@ -47,49 +47,6 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      // Blog legacy → Kiến thức / Tin tức
-      { source: "/blog", destination: "/kien-thuc/tin-tuc", permanent: true },
-
-      // English /knowledge section ids → Vietnamese under /kien-thuc
-      {
-        source: "/knowledge/insights",
-        destination: "/kien-thuc/chuyen-sau",
-        permanent: true,
-      },
-      {
-        source: "/knowledge/guides",
-        destination: "/kien-thuc/huong-dan",
-        permanent: true,
-      },
-      {
-        source: "/knowledge/news",
-        destination: "/kien-thuc/tin-tuc",
-        permanent: true,
-      },
-      {
-        source: "/knowledge/insights/:slug",
-        destination: "/kien-thuc/chuyen-sau/:slug",
-        permanent: true,
-      },
-      {
-        source: "/knowledge/guides/:slug",
-        destination: "/kien-thuc/huong-dan/:slug",
-        permanent: true,
-      },
-      {
-        source: "/knowledge/news/:slug",
-        destination: "/kien-thuc/tin-tuc/:slug",
-        permanent: true,
-      },
-
-      // Entire /knowledge tree → /kien-thuc (hub + VI sections already mapped above)
-      { source: "/knowledge", destination: "/kien-thuc", permanent: true },
-      {
-        source: "/knowledge/:path*",
-        destination: "/kien-thuc/:path*",
-        permanent: true,
-      },
-
       {
         source: "/solutions/software-licensing",
         destination: "/solutions/by-need",

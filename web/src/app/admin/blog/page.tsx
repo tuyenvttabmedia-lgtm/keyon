@@ -18,12 +18,20 @@ export default async function AdminBlogListPage() {
             Quản lý nội dung blog và SEO
           </p>
         </div>
-        <Link
-          href="/admin/blog/new"
-          className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white"
-        >
-          + Viết bài mới
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href="/admin/blog/new"
+            className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white"
+          >
+            + Viết bài mới
+          </Link>
+          <Link
+            href="/admin/cms/blog-taxonomy"
+            className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-navy hover:border-accent"
+          >
+            Danh mục bài viết
+          </Link>
+        </div>
       </div>
       <BlogList posts={posts} />
     </div>

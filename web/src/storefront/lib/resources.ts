@@ -73,7 +73,7 @@ export const RESOURCE_SECTION_META: Record<
 
 /** Topic → default chuyên mục (when author does not set section explicitly). */
 export const TOPIC_DEFAULT_SECTION: Partial<
-  Record<BlogCategoryId, ResourceSectionId>
+  Record<string, ResourceSectionId>
 > = {
   "ban-quyen": "insights",
   windows: "insights",

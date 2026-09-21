@@ -1,11 +1,4 @@
-export type BlogCategoryId =
-  | "ban-quyen"
-  | "windows"
-  | "m365"
-  | "doanh-nghiep"
-  | "huong-dan"
-  | "bao-mat"
-  | "tin-keyon";
+export type BlogCategoryId = string;
 
 export type BlogCoverTone =
   | "navy"
@@ -28,7 +21,7 @@ export type BlogPost = {
   coverUrl?: string;
   coverAlt?: string;
   coverCaption?: string;
-  /** Optional category for index filters */
+  /** Optional category for index filters (topic slug). */
   category?: BlogCategoryId;
   /**
    * Knowledge chuyên mục (NAV-03). When omitted, inferred from topic (category).
@@ -95,6 +88,32 @@ export type CmsBlog = {
   detailFeaturedTitle: string;
   detailTagsTitle: string;
   detailVerifiedLabel: string;
+};
+
+/** Knowledge / blog taxonomy — chuyên mục (fixed ids) + chủ đề (editable). */
+export type CmsBlogSectionId = "insights" | "guides" | "news";
+
+export type CmsBlogTaxonomySection = {
+  id: CmsBlogSectionId;
+  label: string;
+  title: string;
+  subtitle: string;
+  visible: boolean;
+};
+
+export type CmsBlogTaxonomyTopic = {
+  id: string;
+  label: string;
+  defaultSection: CmsBlogSectionId;
+  visible: boolean;
+  sortOrder: number;
+};
+
+export type CmsBlogTaxonomy = {
+  hubTitle: string;
+  hubLead: string;
+  sections: CmsBlogTaxonomySection[];
+  topics: CmsBlogTaxonomyTopic[];
 };
 
 /** Contact page (`/contact`). */
@@ -1268,6 +1287,74 @@ export const defaultCmsBlog: CmsBlog = {
   detailFeaturedTitle: "Bài viết nổi bật",
   detailTagsTitle: "Thẻ phổ biến",
   detailVerifiedLabel: "Đã xác thực",
+};
+
+export const defaultCmsBlogTaxonomy: CmsBlogTaxonomy = {
+  hubTitle: "Kiến thức",
+  hubLead:
+    "Hướng dẫn kích hoạt, phân tích bản quyền và tin cập nhật sản phẩm — nội dung thực tế để mua và dùng phần mềm đúng cách.",
+  sections: [
+    {
+      id: "insights",
+      label: "Chuyên sâu",
+      title: "Chuyên sâu",
+      subtitle:
+        "Phân tích bản quyền, Microsoft 365, bảo mật và vận hành phần mềm cho doanh nghiệp.",
+      visible: true,
+    },
+    {
+      id: "guides",
+      label: "Hướng dẫn",
+      title: "Hướng dẫn",
+      subtitle:
+        "How-to: kích hoạt, nhận license, kiểm tra bản quyền và dùng Tài khoản KEYON.",
+      visible: true,
+    },
+    {
+      id: "news",
+      label: "Tin tức",
+      title: "Tin tức",
+      subtitle: "Cập nhật sản phẩm, vendor và KEYON.",
+      visible: true,
+    },
+  ],
+  topics: [
+    {
+      id: "ban-quyen",
+      label: "Bản quyền",
+      defaultSection: "insights",
+      visible: true,
+      sortOrder: 0,
+    },
+    {
+      id: "windows",
+      label: "Windows",
+      defaultSection: "insights",
+      visible: true,
+      sortOrder: 1,
+    },
+    {
+      id: "m365",
+      label: "Microsoft 365",
+      defaultSection: "insights",
+      visible: true,
+      sortOrder: 2,
+    },
+    {
+      id: "doanh-nghiep",
+      label: "Doanh nghiệp",
+      defaultSection: "insights",
+      visible: true,
+      sortOrder: 3,
+    },
+    {
+      id: "bao-mat",
+      label: "Bảo mật",
+      defaultSection: "insights",
+      visible: true,
+      sortOrder: 4,
+    },
+  ],
 };
 
 export const defaultCmsContact: CmsContact = {

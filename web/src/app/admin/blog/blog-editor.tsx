@@ -29,6 +29,8 @@ type Props = {
   allPosts: BlogPost[];
   isNew: boolean;
   defaultAuthor: string;
+  /** Visible topics from CMS taxonomy */
+  topics?: { id: string; label: string }[];
 };
 
 function snapshot(p: BlogPost) {
@@ -54,6 +56,7 @@ export function BlogEditor({
   allPosts,
   isNew,
   defaultAuthor,
+  topics = ADMIN_BLOG_TOPICS,
 }: Props) {
   const router = useRouter();
   const seeded = useMemo(() => {
@@ -437,15 +440,15 @@ export function BlogEditor({
               }}
             >
               <option value="">— Không chọn —</option>
-              {ADMIN_BLOG_TOPICS.map((t) => (
+              {topics.map((t) => (
                 <option key={t.id} value={t.id}>
                   {t.label}
                 </option>
               ))}
               {form.category &&
-              !ADMIN_BLOG_TOPICS.some((t) => t.id === form.category) ? (
+              !topics.some((t) => t.id === form.category) ? (
                 <option value={form.category}>
-                  {CATEGORY_LABEL[form.category]} (cũ)
+                  {CATEGORY_LABEL[form.category] ?? form.category} (cũ)
                 </option>
               ) : null}
             </select>

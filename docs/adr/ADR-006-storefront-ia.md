@@ -5,7 +5,7 @@
 **Amended:** 2026-09-13 — rename hub **Tài nguyên `/resources` → Kiến thức `/knowledge`** (site pre-index; no `/resources` 301).  
 **Amended:** 2026-09-20 — Category canonical URL **`/categories/{slug}`** (replaces `/products?cat=`); legacy `?cat=` 301.  
 **Amended:** 2026-09-21 — Knowledge section public slugs Vietnamese (`chuyen-sau` / `huong-dan` / `tin-tuc`); Admin Chuyên mục vs Chủ đề.  
-**Amended:** 2026-09-21 — Hub path **`/kien-thuc`** (replace English `/knowledge`); topic archives `/kien-thuc/chu-de/{topic}`; Tin tức stays a chuyên mục under Kiến thức (not the hub).  
+**Amended:** 2026-09-21 — Hub path **`/kien-thuc`**; topic archives; Tin tức is chuyên mục under Kiến thức. Pre-index: no permanent redirects from `/knowledge` required.  
 **Decisions:** NAV-01 … NAV-05
 
 ---

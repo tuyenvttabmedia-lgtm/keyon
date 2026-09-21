@@ -23,6 +23,7 @@ import {
   defaultCmsAccount,
   defaultCmsContact,
   defaultCmsPolicy,
+  defaultCmsBlogTaxonomy,
   defaultStaticPages,
   defaultSettings,
   defaultCmsProductRatings,
@@ -38,6 +39,7 @@ import {
   type CmsPolicy,
   type CmsStaticPage,
   type CmsCategories,
+  type CmsBlogTaxonomy,
   type CmsFaqDocument,
   type CmsFooter,
   type CmsHome,
@@ -46,6 +48,7 @@ import {
   type CmsProductRatings,
   type SiteSettings,
 } from "@/server/cms/store";
+import { mergeBlogTaxonomy, slugifyTopicId } from "@/storefront/lib/blog-taxonomy";
 import {
   isFaqCategorySlug,
   normalizeFaqDocument,
@@ -147,6 +150,10 @@ const FILES: Record<string, { file: string; fallback: unknown }> = {
   nav: { file: "nav.json", fallback: defaultCmsNav },
   partners: { file: "partners.json", fallback: defaultCmsPartners },
   categories: { file: "categories.json", fallback: defaultCmsCategories },
+  "blog-taxonomy": {
+    file: "blog-taxonomy.json",
+    fallback: defaultCmsBlogTaxonomy,
+  },
   checkout: { file: "checkout.json", fallback: defaultCmsCheckout },
   account: { file: "account.json", fallback: defaultCmsAccount },
   contact: { file: "contact-page.json", fallback: defaultCmsContact },
@@ -178,6 +185,10 @@ export async function GET(
     if (key === "faq") {
       const raw = await readJsonFile(entry.file, entry.fallback);
       return NextResponse.json(normalizeFaqDocument(raw));
+    }
+    if (key === "blog-taxonomy") {
+      const raw = await readJsonFile(entry.file, entry.fallback);
+      return NextResponse.json(mergeBlogTaxonomy(raw as CmsBlogTaxonomy));
     }
     return NextResponse.json(await readJsonFile(entry.file, entry.fallback));
   } catch (e) {
@@ -619,6 +630,58 @@ export async function PUT(
       })
       .parse(body) satisfies CmsCategories;
     await writeJsonFile("categories.json", data);
+    return NextResponse.json({ ok: true, data });
+  }
+  if (key === "blog-taxonomy") {
+    const sectionId = z.enum(["insights", "guides", "news"]);
+    const parsed = z
+      .object({
+        hubTitle: z.string().min(1).max(80),
+        hubLead: z.string().min(1).max(400),
+        sections: z
+          .array(
+            z.object({
+              id: sectionId,
+              label: z.string().min(1).max(40),
+              title: z.string().min(1).max(80),
+              subtitle: z.string().max(300),
+              visible: z.boolean(),
+            }),
+          )
+          .min(3)
+          .max(3),
+        topics: z
+          .array(
+            z.object({
+              id: z.string().max(48),
+              label: z.string().min(1).max(60),
+              defaultSection: sectionId,
+              visible: z.boolean(),
+              sortOrder: z.number().int(),
+            }),
+          )
+          .max(40),
+      })
+      .parse({
+        ...body,
+        topics: (Array.isArray(body?.topics) ? body.topics : []).map(
+          (t: {
+            id?: string;
+            label?: string;
+            defaultSection?: string;
+            visible?: boolean;
+            sortOrder?: number;
+          }) => ({
+            ...t,
+            id: slugifyTopicId(String(t?.id || t?.label || "")),
+          }),
+        ),
+      });
+    const data = mergeBlogTaxonomy(parsed) satisfies CmsBlogTaxonomy;
+    if (data.topics.some((t) => !t.id)) {
+      throw new AppError("Chủ đề cần slug hợp lệ", 400);
+    }
+    await writeJsonFile("blog-taxonomy.json", data);
     return NextResponse.json({ ok: true, data });
   }
   if (key === "checkout") {

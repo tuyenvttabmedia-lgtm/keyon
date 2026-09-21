@@ -214,7 +214,7 @@ export const BUSINESS_PAGES: Record<string, IaPage> = {
 export const RESOURCE_HUB = {
   title: "Kiến thức",
   subtitle:
-    "Hướng dẫn, chuyên sâu và tin tức — hub nội dung KEYON (một engine bài viết).",
+    "Hướng dẫn kích hoạt, phân tích bản quyền và tin cập nhật sản phẩm — nội dung thực tế để mua và dùng phần mềm đúng cách.",
 };
 
 export const RESOURCE_SECTIONS: Record<
