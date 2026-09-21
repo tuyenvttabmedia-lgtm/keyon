@@ -1,10 +1,11 @@
-/** Collapse blank lines in FAQ answers (admin textarea → storefront). */
+/**
+ * FAQ answers: keep intentional line breaks, drop empty blank lines only.
+ * `\n\n` (dòng trống) → `\n` (vẫn xuống dòng, không cách 1 hàng trống).
+ */
 export function normalizeFaqAnswerText(raw: string): string {
   return String(raw ?? "")
     .replace(/\r\n/g, "\n")
     .replace(/[ \t]+\n/g, "\n")
-    .replace(/\n{3,}/g, "\n\n")
-    // Remove empty lines between blocks — keep a single newline for list structure.
     .replace(/\n{2,}/g, "\n")
     .trim();
 }

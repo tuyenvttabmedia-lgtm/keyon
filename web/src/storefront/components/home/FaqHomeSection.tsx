@@ -13,10 +13,6 @@ import { normalizeFaqAnswerText } from "@/lib/normalize-faq-answer";
 
 type FaqHome = NonNullable<HomeContent["faqHome"]>;
 
-function homeFaqPreview(answer: string): string {
-  return normalizeFaqAnswerText(answer).replace(/\s*\n+\s*/g, " ").trim();
-}
-
 export function FaqHomeSection({ data }: { data: FaqHome }) {
   if (!data.visible || !data.items.length) return null;
 
@@ -40,8 +36,10 @@ export function FaqHomeSection({ data }: { data: FaqHome }) {
                 >
                   {item.question}
                 </p>
-                <p className={`mt-2 line-clamp-3 ${CARD_META_CLASS} ${BODY_CLASS}`}>
-                  {homeFaqPreview(item.answer)}
+                <p
+                  className={`mt-2 line-clamp-3 whitespace-pre-line ${CARD_META_CLASS} ${BODY_CLASS}`}
+                >
+                  {normalizeFaqAnswerText(item.answer)}
                 </p>
               </Link>
             </li>

@@ -28,11 +28,10 @@ export function parseFaqAnswerBlocks(raw: string): Block[] {
 
   function flushPara() {
     if (!para.length) return;
-    // Join soft line-breaks into one flowing paragraph (no blank-line gaps).
+    // Keep intentional single newlines; blank lines are already collapsed by normalize.
     const joined = para
-      .map((l) => l.trim())
-      .filter(Boolean)
-      .join(" ")
+      .map((l) => l.replace(/\s+$/g, ""))
+      .join("\n")
       .trim();
     if (joined) blocks.push({ type: "p", text: joined });
     para = [];
@@ -132,7 +131,7 @@ export function FaqAnswer({
       {blocks.map((b, i) => {
         if (b.type === "p") {
           return (
-            <p key={i} className="text-pretty">
+            <p key={i} className="whitespace-pre-line text-pretty">
               {b.text}
             </p>
           );
