@@ -1277,6 +1277,26 @@ html {
   max-width: 100%;
 }
 
+.keyon-editor-prose .keyon-editor-image-block {
+  display: block;
+  margin: 1em 0;
+  max-width: 100%;
+}
+
+.keyon-editor-prose .keyon-editor-image-block img {
+  margin: 0;
+}
+
+.keyon-editor-prose .keyon-editor-image-block.is-selected {
+  outline: 2px solid #0ea5a4;
+  outline-offset: 4px;
+  border-radius: 0.85rem;
+}
+
+.keyon-editor-prose .keyon-editor-image-alt {
+  margin-top: 0.5rem;
+}
+
 .keyon-editor-prose img.ProseMirror-selectednode,
 .keyon-editor-prose .ProseMirror-selectednode img,
 .keyon-editor-prose img.keyon-editor-img.ProseMirror-selectednode {

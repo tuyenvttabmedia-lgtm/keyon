@@ -284,7 +284,7 @@ export function BlogEditor({
             <p className="mb-2 text-xs font-medium text-muted">
               Nội dung{" "}
               <span className="font-normal text-muted/80">
-                — chèn/click ảnh trong bài để nhập Alt riêng (thanh vàng)
+                — Alt từng ảnh nằm ngay dưới ảnh trong bài
               </span>
             </p>
             <RichTextEditor

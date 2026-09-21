@@ -1,7 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { EditorContent, useEditor, type Editor } from "@tiptap/react";
+import {
+  EditorContent,
+  NodeViewWrapper,
+  ReactNodeViewRenderer,
+  useEditor,
+  type Editor,
+  type NodeViewProps,
+} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
@@ -23,12 +30,6 @@ type Props = {
   /** Media library purpose tag */
   mediaPurpose?: "blog" | "cms" | "product" | "brand" | "general";
   placeholder?: string;
-};
-
-type ImageTarget = {
-  pos: number;
-  src: string;
-  alt: string;
 };
 
 function ToolbarBtn({
@@ -82,54 +83,96 @@ async function uploadMediaFile(
   }
 }
 
-function imageAttrs(node: { attrs: Record<string, unknown> }, pos: number): ImageTarget {
-  return {
-    pos,
-    src: String(node.attrs.src ?? ""),
-    alt: String(node.attrs.alt ?? ""),
-  };
+/** Alt input sits under each body image — one alt per image node. */
+function EditorImageView({ node, updateAttributes, selected }: NodeViewProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const src = String(node.attrs.src ?? "");
+  const alt = String(node.attrs.alt ?? "");
+  const empty = !alt.trim();
+
+  useEffect(() => {
+    if (!selected || !empty) return;
+    const t = window.setTimeout(() => inputRef.current?.focus(), 0);
+    return () => window.clearTimeout(t);
+  }, [selected, empty]);
+
+  return (
+    <NodeViewWrapper
+      as="figure"
+      className={`keyon-editor-image-block${selected ? " is-selected" : ""}`}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt={alt}
+        className="keyon-editor-img"
+        draggable={false}
+      />
+      <div
+        className="keyon-editor-image-alt"
+        contentEditable={false}
+        suppressContentEditableWarning
+      >
+        <label className="flex w-full flex-col gap-1">
+          <span className="text-[11px] font-semibold text-amber-950">
+            Alt text (SEO) — ảnh này
+          </span>
+          <input
+            ref={inputRef}
+            type="text"
+            value={alt}
+            placeholder="Mô tả ngắn cho ảnh này…"
+            autoComplete="off"
+            className={`w-full rounded-md border bg-white px-2.5 py-1.5 text-sm text-navy outline-none focus:border-accent ${
+              empty
+                ? "border-amber-400 bg-amber-50/80"
+                : "border-amber-200"
+            }`}
+            onMouseDown={(e) => {
+              // Keep focus in the input without collapsing the node selection awkwardly.
+              e.stopPropagation();
+            }}
+            onChange={(e) => updateAttributes({ alt: e.target.value })}
+          />
+        </label>
+      </div>
+    </NodeViewWrapper>
+  );
 }
 
-/** Resolve NodeSelection on an image, match by src, or last image in doc. */
-function resolveImageTarget(
-  editor: Editor,
-  preferSrc?: string | null,
-): ImageTarget | null {
-  const { selection, doc } = editor.state;
-  if (selection instanceof NodeSelection && selection.node.type.name === "image") {
-    return imageAttrs(selection.node, selection.from);
-  }
-  let bySrc: ImageTarget | null = null;
-  let last: ImageTarget | null = null;
-  doc.descendants((node, pos) => {
-    if (node.type.name !== "image") return;
-    const target = imageAttrs(node, pos);
-    last = target;
-    if (preferSrc && target.src === preferSrc) bySrc = target;
+const ImageWithAlt = Image.extend({
+  addNodeView() {
+    return ReactNodeViewRenderer(EditorImageView);
+  },
+}).configure({
+  inline: false,
+  allowBase64: false,
+  HTMLAttributes: {
+    class: "keyon-editor-img",
+  },
+});
+
+function selectImageBySrc(editor: Editor, src: string) {
+  let foundPos: number | null = null;
+  editor.state.doc.descendants((node, pos) => {
+    if (node.type.name === "image" && node.attrs.src === src) {
+      foundPos = pos;
+      return false;
+    }
   });
-  return bySrc ?? (preferSrc ? last : null);
-}
-
-function selectImageAt(editor: Editor, pos: number) {
+  if (foundPos == null) {
+    // Fallback: last image (just inserted).
+    editor.state.doc.descendants((node, pos) => {
+      if (node.type.name === "image") foundPos = pos;
+    });
+  }
+  if (foundPos == null) return;
   try {
-    const sel = NodeSelection.create(editor.state.doc, pos);
+    const sel = NodeSelection.create(editor.state.doc, foundPos);
     editor.view.dispatch(editor.state.tr.setSelection(sel));
   } catch {
-    // pos may be stale after concurrent updates
+    // stale pos
   }
-}
-
-function applyImageAlt(editor: Editor, pos: number, alt: string) {
-  const node = editor.state.doc.nodeAt(pos);
-  if (!node || node.type.name !== "image") return false;
-  const tr = editor.state.tr.setNodeMarkup(pos, undefined, {
-    ...node.attrs,
-    alt,
-  });
-  editor.view.dispatch(tr);
-  // Keep NodeSelection on the image so the alt panel stays open.
-  selectImageAt(editor, pos);
-  return true;
 }
 
 export function RichTextEditor({
@@ -141,17 +184,11 @@ export function RichTextEditor({
   const [mediaOpen, setMediaOpen] = useState(false);
   const [htmlMode, setHtmlMode] = useState(false);
   const [pasteHint, setPasteHint] = useState<string | null>(null);
-  const [imageTarget, setImageTarget] = useState<ImageTarget | null>(null);
-  const [altDraft, setAltDraft] = useState("");
-  /** Keep alt bar open after insert even if NodeSelection drops. */
-  const pinnedSrcRef = useRef<string | null>(null);
-  const altEditingRef = useRef(false);
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
   const purposeRef = useRef(mediaPurpose);
   purposeRef.current = mediaPurpose;
   const editorRef = useRef<ReturnType<typeof useEditor>>(null);
-  const altInputRef = useRef<HTMLInputElement>(null);
 
   const showPasteHint = useCallback((msg: string) => {
     queueMicrotask(() => {
@@ -160,59 +197,19 @@ export function RichTextEditor({
     });
   }, []);
 
-  const openAltForTarget = useCallback((target: ImageTarget, focusInput = false) => {
-    pinnedSrcRef.current = target.src;
-    altEditingRef.current = true;
-    setImageTarget(target);
-    setAltDraft(target.alt);
-    if (focusInput) {
-      queueMicrotask(() => altInputRef.current?.focus());
-    }
+  const insertImage = useCallback((url: string, alt?: string) => {
+    const ed = editorRef.current;
+    if (!ed) return;
+    const altText = alt?.trim() || "";
+    ed.chain()
+      .focus()
+      .setImage({ src: url, alt: altText })
+      .run();
+    // Select so the under-image Alt input autofocuses.
+    requestAnimationFrame(() => {
+      selectImageBySrc(ed, url);
+    });
   }, []);
-
-  const syncImageTarget = useCallback((editor: Editor) => {
-    if (altEditingRef.current) {
-      const pinned = resolveImageTarget(editor, pinnedSrcRef.current);
-      if (pinned) setImageTarget(pinned);
-      return;
-    }
-    const target = resolveImageTarget(editor, pinnedSrcRef.current);
-    setImageTarget(target);
-    if (target) {
-      pinnedSrcRef.current = target.src;
-      setAltDraft(target.alt);
-    } else {
-      pinnedSrcRef.current = null;
-    }
-  }, []);
-
-  const insertImage = useCallback(
-    (url: string, alt?: string) => {
-      const ed = editorRef.current;
-      if (!ed) return;
-      const altText = alt?.trim() || "";
-      ed.chain()
-        .focus()
-        .setImage({ src: url, alt: altText })
-        .run();
-
-      const pinAltBar = () => {
-        const target = resolveImageTarget(ed, url);
-        if (!target) return false;
-        selectImageAt(ed, target.pos);
-        openAltForTarget(target, true);
-        return true;
-      };
-
-      // setImage leaves cursor after the node — select + pin alt bar.
-      requestAnimationFrame(() => {
-        if (!pinAltBar()) {
-          window.setTimeout(pinAltBar, 40);
-        }
-      });
-    },
-    [openAltForTarget],
-  );
 
   const editor = useEditor({
     extensions: [
@@ -225,13 +222,7 @@ export function RichTextEditor({
         autolink: true,
         HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" },
       }),
-      Image.configure({
-        inline: false,
-        allowBase64: false,
-        HTMLAttributes: {
-          class: "keyon-editor-img",
-        },
-      }),
+      ImageWithAlt,
       TextAlign.configure({
         types: ["heading", "paragraph"],
         alignments: ["left", "center", "right", "justify"],
@@ -257,48 +248,6 @@ export function RichTextEditor({
         showPasteHint("Đã làm sạch định dạng từ clipboard (Word / Docs).");
         return cleanPastedHtml(html);
       },
-      handleClick: (view, pos, event) => {
-        const el = event.target as HTMLElement | null;
-        if (!el || el.tagName !== "IMG") return false;
-
-        let imgPos: number | null = null;
-        const nodeAt = view.state.doc.nodeAt(pos);
-        if (nodeAt?.type.name === "image") {
-          imgPos = pos;
-        } else {
-          const beforePos = Math.max(0, pos - 1);
-          const before = view.state.doc.nodeAt(beforePos);
-          if (before?.type.name === "image") imgPos = beforePos;
-        }
-        if (imgPos == null) {
-          const src = (el as HTMLImageElement).getAttribute("src") ?? "";
-          view.state.doc.descendants((node, p) => {
-            if (node.type.name === "image" && node.attrs.src === src) {
-              imgPos = p;
-              return false;
-            }
-          });
-        }
-        if (imgPos == null) return false;
-        const node = view.state.doc.nodeAt(imgPos);
-        if (!node || node.type.name !== "image") return false;
-        try {
-          view.dispatch(
-            view.state.tr.setSelection(
-              NodeSelection.create(view.state.doc, imgPos),
-            ),
-          );
-        } catch {
-          return false;
-        }
-        const target = imageAttrs(node, imgPos);
-        pinnedSrcRef.current = target.src;
-        altEditingRef.current = true;
-        setImageTarget(target);
-        setAltDraft(target.alt);
-        queueMicrotask(() => altInputRef.current?.focus());
-        return true;
-      },
       handleDrop: (_view, event) => {
         const files = event.dataTransfer?.files;
         if (!files?.length) return false;
@@ -322,7 +271,7 @@ export function RichTextEditor({
             void uploadMediaFile(file, purposeRef.current).then((picked) => {
               if (!picked) return;
               insertImage(picked.url, picked.alt);
-              showPasteHint("Đã upload ảnh từ clipboard — nhập Alt (SEO) trên thanh vàng.");
+              showPasteHint("Đã upload ảnh — nhập Alt ngay dưới ảnh.");
             });
             return true;
           }
@@ -333,16 +282,14 @@ export function RichTextEditor({
     onUpdate: ({ editor: ed }) => {
       onChangeRef.current(ed.getHTML());
     },
-    onSelectionUpdate: ({ editor: ed }) => {
-      syncImageTarget(ed);
-    },
   });
 
   editorRef.current = editor;
 
   useEffect(() => {
     if (!editor || htmlMode) return;
-    if (altEditingRef.current) return;
+    // Alt input is outside ProseMirror focus — don't reset content while typing alt.
+    if (document.activeElement?.closest(".keyon-editor-image-alt")) return;
     const current = editor.getHTML();
     if (value !== current && !editor.isFocused) {
       editor.commands.setContent(value || "<p></p>", { emitUpdate: false });
@@ -373,25 +320,6 @@ export function RichTextEditor({
     editor.commands.setYoutubeVideo({ src: url.trim() });
   }
 
-  function onAltChange(next: string) {
-    setAltDraft(next);
-    if (!editor || !imageTarget) return;
-    // Re-resolve pos in case doc shifted
-    const live = resolveImageTarget(editor, imageTarget.src) ?? imageTarget;
-    applyImageAlt(editor, live.pos, next);
-    setImageTarget({ ...live, alt: next });
-    onChangeRef.current(editor.getHTML());
-  }
-
-  function finishAltEditing() {
-    altEditingRef.current = false;
-    pinnedSrcRef.current = null;
-    if (editor) {
-      onChangeRef.current(editor.getHTML());
-      syncImageTarget(editor);
-    }
-  }
-
   if (!editor && !htmlMode) {
     return (
       <div className="min-h-[420px] rounded-xl border border-border bg-card px-4 py-3 text-sm text-muted">
@@ -399,8 +327,6 @@ export function RichTextEditor({
       </div>
     );
   }
-
-  const showAltBar = !htmlMode && Boolean(editor && imageTarget);
 
   return (
     <div className="keyon-editor-shell w-full min-w-0 max-w-none rounded-xl border border-border bg-card shadow-sm">
@@ -615,63 +541,6 @@ export function RichTextEditor({
         </p>
       ) : null}
 
-      {showAltBar && imageTarget ? (
-        <div className="sticky top-[42px] z-10 flex flex-wrap items-center gap-2 border-b border-amber-200 bg-amber-50 px-3 py-2.5 shadow-sm">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={imageTarget.src}
-            alt=""
-            className="h-9 w-12 shrink-0 rounded object-cover ring-1 ring-amber-200"
-          />
-          <div className="min-w-0 shrink-0">
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-900">
-              Alt ảnh trong bài
-            </p>
-            <p className="text-[10px] text-amber-800/80">
-              Chỉ gắn cho ảnh đang chọn — mỗi ảnh một alt riêng
-            </p>
-          </div>
-          <input
-            ref={altInputRef}
-            type="text"
-            value={altDraft}
-            onMouseDown={(e) => {
-              // Keep NodeSelection on the image when focusing the input.
-              e.preventDefault();
-              altEditingRef.current = true;
-              (e.currentTarget as HTMLInputElement).focus();
-            }}
-            onFocus={() => {
-              altEditingRef.current = true;
-            }}
-            onChange={(e) => onAltChange(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                finishAltEditing();
-                setImageTarget(null);
-                editor?.commands.focus("end");
-              }
-            }}
-            placeholder="Mô tả ảnh này cho SEO / accessibility…"
-            className="min-w-[16rem] flex-1 rounded-md border border-amber-300 bg-white px-2.5 py-1.5 text-sm text-navy outline-none focus:border-accent"
-            autoComplete="off"
-          />
-          <button
-            type="button"
-            className="rounded-md border border-amber-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-amber-900 hover:bg-amber-100"
-            onMouseDown={(e) => e.preventDefault()}
-            onClick={() => {
-              finishAltEditing();
-              setImageTarget(null);
-              editor?.commands.focus("end");
-            }}
-          >
-            Xong
-          </button>
-        </div>
-      ) : null}
-
       {htmlMode ? (
         <div className="grid gap-3 p-3 lg:grid-cols-2">
           <textarea
@@ -706,9 +575,7 @@ export function RichTextEditor({
           const item = items[0];
           if (!item?.url) return;
           insertImage(item.url, item.altText?.trim());
-          showPasteHint(
-            "Đã chèn ảnh — nhập Alt riêng trên thanh vàng (chỉ cho ảnh này).",
-          );
+          showPasteHint("Đã chèn ảnh — nhập Alt ngay dưới ảnh (mỗi ảnh một ô).");
         }}
       />
     </div>
