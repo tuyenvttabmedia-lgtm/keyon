@@ -82,34 +82,41 @@ async function uploadMediaFile(
   }
 }
 
-/** Resolve NodeSelection on an image, or last image matching src. */
-function resolveImageTarget(editor: Editor, preferSrc?: string): ImageTarget | null {
+function imageAttrs(node: { attrs: Record<string, unknown> }, pos: number): ImageTarget {
+  return {
+    pos,
+    src: String(node.attrs.src ?? ""),
+    alt: String(node.attrs.alt ?? ""),
+  };
+}
+
+/** Resolve NodeSelection on an image, match by src, or last image in doc. */
+function resolveImageTarget(
+  editor: Editor,
+  preferSrc?: string | null,
+): ImageTarget | null {
   const { selection, doc } = editor.state;
   if (selection instanceof NodeSelection && selection.node.type.name === "image") {
-    return {
-      pos: selection.from,
-      src: String(selection.node.attrs.src ?? ""),
-      alt: String(selection.node.attrs.alt ?? ""),
-    };
+    return imageAttrs(selection.node, selection.from);
   }
-  if (preferSrc) {
-    let found: ImageTarget | null = null;
-    doc.descendants((node, pos) => {
-      if (node.type.name === "image" && node.attrs.src === preferSrc) {
-        found = {
-          pos,
-          src: String(node.attrs.src ?? ""),
-          alt: String(node.attrs.alt ?? ""),
-        };
-      }
-    });
-    return found;
-  }
-  return null;
+  let bySrc: ImageTarget | null = null;
+  let last: ImageTarget | null = null;
+  doc.descendants((node, pos) => {
+    if (node.type.name !== "image") return;
+    const target = imageAttrs(node, pos);
+    last = target;
+    if (preferSrc && target.src === preferSrc) bySrc = target;
+  });
+  return bySrc ?? (preferSrc ? last : null);
 }
 
 function selectImageAt(editor: Editor, pos: number) {
-  editor.chain().setNodeSelection(pos).run();
+  try {
+    const sel = NodeSelection.create(editor.state.doc, pos);
+    editor.view.dispatch(editor.state.tr.setSelection(sel));
+  } catch {
+    // pos may be stale after concurrent updates
+  }
 }
 
 function applyImageAlt(editor: Editor, pos: number, alt: string) {
@@ -136,12 +143,15 @@ export function RichTextEditor({
   const [pasteHint, setPasteHint] = useState<string | null>(null);
   const [imageTarget, setImageTarget] = useState<ImageTarget | null>(null);
   const [altDraft, setAltDraft] = useState("");
+  /** Keep alt bar open after insert even if NodeSelection drops. */
+  const pinnedSrcRef = useRef<string | null>(null);
   const altEditingRef = useRef(false);
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
   const purposeRef = useRef(mediaPurpose);
   purposeRef.current = mediaPurpose;
   const editorRef = useRef<ReturnType<typeof useEditor>>(null);
+  const altInputRef = useRef<HTMLInputElement>(null);
 
   const showPasteHint = useCallback((msg: string) => {
     queueMicrotask(() => {
@@ -150,11 +160,29 @@ export function RichTextEditor({
     });
   }, []);
 
-  const syncImageTarget = useCallback((editor: Editor, preferSrc?: string) => {
-    const target = resolveImageTarget(editor, preferSrc);
+  const openAltForTarget = useCallback((target: ImageTarget, focusInput = false) => {
+    pinnedSrcRef.current = target.src;
+    altEditingRef.current = true;
     setImageTarget(target);
-    if (target && !altEditingRef.current) {
+    setAltDraft(target.alt);
+    if (focusInput) {
+      queueMicrotask(() => altInputRef.current?.focus());
+    }
+  }, []);
+
+  const syncImageTarget = useCallback((editor: Editor) => {
+    if (altEditingRef.current) {
+      const pinned = resolveImageTarget(editor, pinnedSrcRef.current);
+      if (pinned) setImageTarget(pinned);
+      return;
+    }
+    const target = resolveImageTarget(editor, pinnedSrcRef.current);
+    setImageTarget(target);
+    if (target) {
+      pinnedSrcRef.current = target.src;
       setAltDraft(target.alt);
+    } else {
+      pinnedSrcRef.current = null;
     }
   }, []);
 
@@ -162,22 +190,28 @@ export function RichTextEditor({
     (url: string, alt?: string) => {
       const ed = editorRef.current;
       if (!ed) return;
+      const altText = alt?.trim() || "";
       ed.chain()
         .focus()
-        .setImage({ src: url, alt: alt || "" })
+        .setImage({ src: url, alt: altText })
         .run();
-      // setImage leaves cursor after the node — select it so alt panel opens.
-      requestAnimationFrame(() => {
+
+      const pinAltBar = () => {
         const target = resolveImageTarget(ed, url);
-        if (target) {
-          selectImageAt(ed, target.pos);
-          setImageTarget(target);
-          setAltDraft(target.alt);
-          altEditingRef.current = true;
+        if (!target) return false;
+        selectImageAt(ed, target.pos);
+        openAltForTarget(target, true);
+        return true;
+      };
+
+      // setImage leaves cursor after the node — select + pin alt bar.
+      requestAnimationFrame(() => {
+        if (!pinAltBar()) {
+          window.setTimeout(pinAltBar, 40);
         }
       });
     },
-    [],
+    [openAltForTarget],
   );
 
   const editor = useEditor({
@@ -223,6 +257,48 @@ export function RichTextEditor({
         showPasteHint("Đã làm sạch định dạng từ clipboard (Word / Docs).");
         return cleanPastedHtml(html);
       },
+      handleClick: (view, pos, event) => {
+        const el = event.target as HTMLElement | null;
+        if (!el || el.tagName !== "IMG") return false;
+
+        let imgPos: number | null = null;
+        const nodeAt = view.state.doc.nodeAt(pos);
+        if (nodeAt?.type.name === "image") {
+          imgPos = pos;
+        } else {
+          const beforePos = Math.max(0, pos - 1);
+          const before = view.state.doc.nodeAt(beforePos);
+          if (before?.type.name === "image") imgPos = beforePos;
+        }
+        if (imgPos == null) {
+          const src = (el as HTMLImageElement).getAttribute("src") ?? "";
+          view.state.doc.descendants((node, p) => {
+            if (node.type.name === "image" && node.attrs.src === src) {
+              imgPos = p;
+              return false;
+            }
+          });
+        }
+        if (imgPos == null) return false;
+        const node = view.state.doc.nodeAt(imgPos);
+        if (!node || node.type.name !== "image") return false;
+        try {
+          view.dispatch(
+            view.state.tr.setSelection(
+              NodeSelection.create(view.state.doc, imgPos),
+            ),
+          );
+        } catch {
+          return false;
+        }
+        const target = imageAttrs(node, imgPos);
+        pinnedSrcRef.current = target.src;
+        altEditingRef.current = true;
+        setImageTarget(target);
+        setAltDraft(target.alt);
+        queueMicrotask(() => altInputRef.current?.focus());
+        return true;
+      },
       handleDrop: (_view, event) => {
         const files = event.dataTransfer?.files;
         if (!files?.length) return false;
@@ -246,7 +322,7 @@ export function RichTextEditor({
             void uploadMediaFile(file, purposeRef.current).then((picked) => {
               if (!picked) return;
               insertImage(picked.url, picked.alt);
-              showPasteHint("Đã upload ảnh từ clipboard — nhập Alt (SEO) bên dưới.");
+              showPasteHint("Đã upload ảnh từ clipboard — nhập Alt (SEO) trên thanh vàng.");
             });
             return true;
           }
@@ -258,7 +334,6 @@ export function RichTextEditor({
       onChangeRef.current(ed.getHTML());
     },
     onSelectionUpdate: ({ editor: ed }) => {
-      if (altEditingRef.current) return;
       syncImageTarget(ed);
     },
   });
@@ -310,6 +385,7 @@ export function RichTextEditor({
 
   function finishAltEditing() {
     altEditingRef.current = false;
+    pinnedSrcRef.current = null;
     if (editor) {
       onChangeRef.current(editor.getHTML());
       syncImageTarget(editor);
@@ -540,11 +616,12 @@ export function RichTextEditor({
       ) : null}
 
       {showAltBar ? (
-        <div className="flex flex-wrap items-center gap-2 border-b border-border bg-amber-50 px-3 py-2.5">
+        <div className="sticky top-[42px] z-10 flex flex-wrap items-center gap-2 border-b border-amber-200 bg-amber-50 px-3 py-2.5 shadow-sm">
           <span className="text-[11px] font-semibold uppercase tracking-wide text-amber-900">
             Alt ảnh (SEO)
           </span>
           <input
+            ref={altInputRef}
             type="text"
             value={altDraft}
             onMouseDown={(e) => {
@@ -557,22 +634,21 @@ export function RichTextEditor({
               altEditingRef.current = true;
             }}
             onChange={(e) => onAltChange(e.target.value)}
-            onBlur={() => {
-              finishAltEditing();
-            }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
-                (e.currentTarget as HTMLInputElement).blur();
+                finishAltEditing();
+                setImageTarget(null);
+                editor?.commands.focus("end");
               }
             }}
             placeholder="Mô tả ảnh cho SEO / accessibility…"
-            className="min-w-[16rem] flex-1 rounded-md border border-amber-200 bg-white px-2.5 py-1.5 text-sm text-navy outline-none focus:border-accent"
+            className="min-w-[16rem] flex-1 rounded-md border border-amber-300 bg-white px-2.5 py-1.5 text-sm text-navy outline-none focus:border-accent"
             autoComplete="off"
           />
           <button
             type="button"
-            className="rounded-md border border-amber-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-amber-900 hover:bg-amber-100"
+            className="rounded-md border border-amber-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-amber-900 hover:bg-amber-100"
             onMouseDown={(e) => e.preventDefault()}
             onClick={() => {
               finishAltEditing();
