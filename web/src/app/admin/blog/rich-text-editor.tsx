@@ -23,6 +23,7 @@ import { TableHeader } from "@tiptap/extension-table-header";
 import { NodeSelection } from "@tiptap/pm/state";
 import { MediaPicker } from "@/app/admin/media/MediaPicker";
 import { cleanPastedHtml } from "@/lib/clean-pasted-html";
+import { Z_STICKY } from "@/storefront/effects";
 
 type Props = {
   value: string;
@@ -329,8 +330,10 @@ export function RichTextEditor({
   }
 
   return (
-    <div className="keyon-editor-shell w-full min-w-0 max-w-none rounded-xl border border-border bg-card shadow-sm">
-      <div className="sticky top-0 z-20 flex w-full flex-wrap items-center gap-0.5 border-b border-border bg-[#f8fafc]/90 px-2 py-1.5 backdrop-blur supports-[backdrop-filter]:bg-[#f8fafc]/80">
+    <div className="keyon-editor-shell w-full min-w-0 max-w-none overflow-visible rounded-xl border border-border bg-card shadow-sm">
+      <div
+        className={`keyon-editor-toolbar sticky top-[var(--admin-topbar-h,3.5rem)] ${Z_STICKY} flex w-full flex-wrap items-center gap-0.5 border-b border-border bg-[#f8fafc] px-2 py-1.5 shadow-sm`}
+      >
         {!htmlMode && editor ? (
           <>
             <ToolbarBtn

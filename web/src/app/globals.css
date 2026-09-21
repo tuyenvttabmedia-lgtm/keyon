@@ -1162,6 +1162,8 @@ html {
   min-height: 520px;
   outline: none;
   padding: 1rem 1.15rem 1.75rem;
+  /* Leave room under sticky AdminTopbar + editor toolbar when scrolling caret. */
+  scroll-margin-top: calc(var(--admin-topbar-h, 3.5rem) + 4.25rem);
   width: 100%;
 }
 
@@ -1177,6 +1179,16 @@ html {
 .keyon-editor-shell {
   width: 100%;
   max-width: none;
+  /* Keep sticky toolbar working — do not clip to border-radius. */
+  overflow: visible;
+}
+
+.keyon-editor-toolbar {
+  /* Sit below AdminTopbar (sticky h-14); stays in normal flow when not stuck. */
+  position: sticky;
+  top: var(--admin-topbar-h, 3.5rem);
+  /* Opaque so content scrolling underneath does not show through. */
+  background: #f8fafc;
 }
 
 .keyon-editor-prose p.is-editor-empty:first-child::before,

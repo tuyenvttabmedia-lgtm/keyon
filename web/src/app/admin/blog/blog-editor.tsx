@@ -248,7 +248,7 @@ export function BlogEditor({
           </p>
         ) : null}
 
-        <div className="min-w-0 space-y-4 rounded-2xl border border-border bg-card p-4 sm:p-5">
+        <div className="min-w-0 space-y-4 overflow-visible rounded-2xl border border-border bg-card p-4 sm:p-5">
           <input
             className={`w-full border-0 border-b border-border bg-transparent pb-2 outline-none ${ADMIN_PAGE_TITLE_CLASS}`}
             value={form.title}
