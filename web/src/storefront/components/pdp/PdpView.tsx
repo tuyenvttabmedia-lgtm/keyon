@@ -21,7 +21,6 @@ import {
   COMPARE_PRICE_CLASS,
   CTA_COMPACT_CLASS,
   CTA_LABEL_CLASS,
-  FIELD_CAPTION_CLASS,
   FIELD_VALUE_NUM_CLASS,
   FORM_ERROR_CLASS,
   INLINE_PRICE_CLASS,
@@ -76,52 +75,6 @@ const TABS: { id: PdpTabId; label: string }[] = [
   { id: "reviews", label: "Đánh giá" },
   { id: "faq", label: "Câu hỏi thường gặp" },
 ];
-
-const DEFAULT_GALLERY_SIDE: {
-  title: string;
-  icon: "shield" | "bolt" | "headset" | "badge";
-  kind: "brand" | "delivery" | "support" | "digital";
-}[] = [
-  { title: "License chính hãng", kind: "brand", icon: "shield" },
-  { title: "Giao key nhanh", kind: "delivery", icon: "bolt" },
-  { title: "Hỗ trợ kích hoạt", kind: "support", icon: "headset" },
-  { title: "Giao hàng kỹ thuật số", kind: "digital", icon: "badge" },
-];
-
-function gallerySideChips(data: PdpProductData, variant: PdpVariantOption) {
-  return DEFAULT_GALLERY_SIDE.map((item) => {
-    if (item.kind === "brand") {
-      return {
-        title: item.title,
-        sub: `Nguồn ${data.brandName}`,
-        icon: item.icon,
-      };
-    }
-    if (item.kind === "delivery") {
-      return {
-        title: variant.fulfillmentInstant ? "Giao key nhanh" : "KEYON xử lý",
-        sub:
-          variant.slaPromise?.trim() ||
-          (variant.fulfillmentInstant
-            ? "Tự động sau thanh toán"
-            : variant.deliveryLabel),
-        icon: item.icon,
-      };
-    }
-    if (item.kind === "digital") {
-      return {
-        title: item.title,
-        sub: variant.receiveLabel,
-        icon: item.icon,
-      };
-    }
-    return {
-      title: item.title,
-      sub: "Ticket trong Tài khoản",
-      icon: item.icon,
-    };
-  });
-}
 
 function featureBarItems(
   features: string[],
@@ -368,7 +321,6 @@ function Gallery({
   onThumb: (n: number) => void;
   discount?: number;
 }) {
-  const chips = gallerySideChips(data, variant);
   const gallery = data.galleryUrls?.length ? data.galleryUrls : null;
   const demoCount = 6;
   const thumbs = gallery ?? Array.from({ length: demoCount }, (_, i) => i);
@@ -464,31 +416,6 @@ function Gallery({
             -{discount}%
           </span>
         ) : null}
-
-        <ul
-          className="pointer-events-none absolute bottom-4 left-4 z-[2] hidden w-[10rem] flex-col gap-3 lg:flex"
-          aria-hidden
-        >
-          {chips.map((item) => (
-            <li key={item.title} className="flex items-start gap-2">
-              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center text-[#5EEAD4] drop-shadow-[0_1px_2px_rgba(0,0,0,0.55)]">
-                <GalleryChipIcon name={item.icon} />
-              </span>
-              <span className="min-w-0 [text-shadow:0_1px_3px_rgba(0,0,0,0.75)]">
-                <p
-                  className={`${CARD_META_CLASS} font-bold leading-snug text-white`}
-                >
-                  {item.title}
-                </p>
-                <p
-                  className={`mt-0.5 ${FIELD_CAPTION_CLASS} leading-snug text-white/85`}
-                >
-                  {item.sub}
-                </p>
-              </span>
-            </li>
-          ))}
-        </ul>
       </button>
 
       <div className="mt-3 flex items-center gap-1.5">
@@ -1511,34 +1438,6 @@ function BoltIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
       <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" />
-    </svg>
-  );
-}
-
-function GalleryChipIcon({ name }: { name: "shield" | "bolt" | "headset" | "badge" }) {
-  const props = {
-    width: 18,
-    height: 18,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 2,
-    "aria-hidden": true as const,
-  };
-  if (name === "bolt") return <svg {...props} fill="currentColor" stroke="none"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" /></svg>;
-  if (name === "shield") return <svg {...props}><path d="M12 3 4.5 6v5.5c0 4.5 3.2 7.8 7.5 9 4.3-1.2 7.5-4.5 7.5-9V6L12 3Z" /><path d="m9 12 2 2 4-4" /></svg>;
-  if (name === "headset") {
-    return (
-      <svg {...props}>
-        <path d="M4 14v-2a8 8 0 0 1 16 0v2" />
-        <path d="M4 14a2 2 0 0 0 2 2h1v-5H6a2 2 0 0 0-2 2v1Z" />
-        <path d="M20 14a2 2 0 0 1-2 2h-1v-5h1a2 2 0 0 1 2 2v1Z" />
-      </svg>
-    );
-  }
-  return (
-    <svg {...props}>
-      <path d="M12 3 14.5 8.5 20.5 9.3 16.2 13.4 17.4 19.3 12 16.4 6.6 19.3 7.8 13.4 3.5 9.3 9.5 8.5 12 3Z" />
     </svg>
   );
 }
