@@ -1163,7 +1163,7 @@ function CollapsibleDescription({ body }: { body: string }) {
             aria-expanded={expanded}
             aria-controls="pdp-full-description"
           >
-            {expanded ? "Thu gọn mô tả" : "Xem thêm mô tả"}
+            {expanded ? "Thu gọn" : "Xem thêm"}
             <span aria-hidden className="text-base leading-none">
               {expanded ? "↑" : "↓"}
             </span>
