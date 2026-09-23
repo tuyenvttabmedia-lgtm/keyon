@@ -5,6 +5,7 @@ import type { Prisma, SalesMotion } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { audit } from "@/lib/audit";
 import { toErrorResponse, AppError } from "@/lib/errors";
+import { sanitizeBlogHtml } from "@/lib/sanitize-blog-html";
 import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
 import {
   formatIssues,
@@ -235,7 +236,9 @@ export async function PATCH(req: Request) {
     };
     if (body.productName) productPatch.name = body.productName;
     if (body.productDescription !== undefined) {
-      productPatch.description = body.productDescription;
+      productPatch.description = body.productDescription
+        ? sanitizeBlogHtml(body.productDescription)
+        : null;
     }
     if (body.productShortDescription !== undefined) {
       productPatch.shortDescription = body.productShortDescription;

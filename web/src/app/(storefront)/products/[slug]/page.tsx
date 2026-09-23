@@ -40,6 +40,7 @@ import {
 import { loadSiteSettings } from "@/server/seo/settings";
 import { buildProductJsonLd } from "@/server/seo/product-json-ld";
 import { absoluteUrl } from "@/server/seo/site-url";
+import { isHtmlBody, stripHtml } from "@/server/cms/blog-utils";
 
 /** Strip internal demo prefixes from customer-facing blurb. */
 function cleanStorefrontBlurb(raw: string | null | undefined): string | undefined {
@@ -355,8 +356,11 @@ export default async function ProductPage({
     description:
       product.seoDescription?.trim() ||
       product.shortDescription?.trim() ||
-      product.description?.trim() ||
-      undefined,
+      (product.description?.trim()
+        ? isHtmlBody(product.description)
+          ? stripHtml(product.description).slice(0, 300)
+          : product.description.trim().slice(0, 300)
+        : undefined),
     brandName: product.brand.name,
     sku: initialDb.sku,
     priceVnd: activeVariant.priceVnd,

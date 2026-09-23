@@ -4,6 +4,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { audit } from "@/lib/audit";
 import { toErrorResponse, AppError } from "@/lib/errors";
+import { sanitizeBlogHtml } from "@/lib/sanitize-blog-html";
 import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
 import {
   formatIssues,
@@ -125,7 +126,9 @@ export async function POST(req: Request) {
         brandId: body.brandId,
         name: body.name,
         slug,
-        description: body.description ?? null,
+        description: body.description
+          ? sanitizeBlogHtml(body.description)
+          : null,
         shortDescription: body.shortDescription ?? null,
         categoryKey: body.categoryKey ?? null,
         badgeLabel: body.badgeLabel ?? null,

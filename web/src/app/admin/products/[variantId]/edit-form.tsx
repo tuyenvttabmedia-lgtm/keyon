@@ -39,6 +39,8 @@ import {
   parseSeoKeywords,
 } from "@/storefront/lib/license-catalog";
 import { listToLines } from "@/storefront/lib/product-cms";
+import { RichTextEditor } from "@/app/admin/blog/rich-text-editor";
+import { isHtmlBody, legacyBodyToHtml } from "@/server/cms/blog-utils";
 
 type Props = {
   variantId: string;
@@ -94,6 +96,12 @@ export function ProductEditForm(props: Props) {
     seoKeywordsText: listToLines(props.seoKeywords),
     licenseDefaults: props.licenseDefaults,
     variantLicense: props.variantLicense,
+    /** TipTap expects HTML; convert legacy plain text once. */
+    productDescription: props.productDescription.trim()
+      ? isHtmlBody(props.productDescription)
+        ? props.productDescription
+        : legacyBodyToHtml(props.productDescription)
+      : "<p></p>",
     compareAt: props.compareAtPriceVnd ?? ("" as string | number),
   });
   const [msg, setMsg] = useState<string | null>(null);
@@ -257,7 +265,10 @@ export function ProductEditForm(props: Props) {
           Slug: <code className="font-mono">{props.productSlug}</code>
         </p>
         <label className="block text-sm">
-          <span className="font-medium">Mô tả ngắn (PDP lead)</span>
+          <span className="font-medium">Mô tả ngắn (lead PDP)</span>
+          <p className="mt-0.5 text-[11px] text-muted">
+            1–2 câu dưới tiêu đề — không dán bài dài.
+          </p>
           <textarea
             rows={2}
             className="mt-1 w-full rounded-lg border border-border px-3 py-2"
@@ -267,15 +278,20 @@ export function ProductEditForm(props: Props) {
             }
           />
         </label>
-        <label className="block text-sm">
-          <span className="font-medium">Mô tả đầy đủ</span>
-          <textarea
-            rows={4}
-            className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-            value={form.productDescription}
-            onChange={(e) => setForm({ ...form, productDescription: e.target.value })}
+        <div className="block text-sm">
+          <span className="font-medium">Mô tả đầy đủ (tab PDP)</span>
+          <p className="mb-2 mt-0.5 text-[11px] text-muted">
+            Soạn có tiêu đề / đoạn / danh sách / bảng. Dán Word/Docs được làm sạch.
+          </p>
+          <RichTextEditor
+            value={form.productDescription || "<p></p>"}
+            onChange={(html) =>
+              setForm({ ...form, productDescription: html })
+            }
+            mediaPurpose="product"
+            placeholder="Viết mô tả sản phẩm…"
           />
-        </label>
+        </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block text-sm">
             <span className="font-medium">Danh mục</span>

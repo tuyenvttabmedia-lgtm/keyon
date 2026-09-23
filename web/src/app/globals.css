@@ -1168,7 +1168,8 @@ html {
 }
 
 .blog-prose,
-.policy-prose {
+.policy-prose,
+.pdp-prose {
   color: #334155;
   font-size: 0.975rem;
   line-height: 1.75;

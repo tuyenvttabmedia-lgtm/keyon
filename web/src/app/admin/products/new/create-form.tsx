@@ -32,6 +32,7 @@ import {
   type VariantLicenseFields,
 } from "../LicenseCatalogFields";
 import { parseSeoKeywords } from "@/storefront/lib/license-catalog";
+import { RichTextEditor } from "@/app/admin/blog/rich-text-editor";
 
 type BrandOpt = { id: string; name: string };
 type SupplierOpt = { id: string; name: string };
@@ -433,21 +434,15 @@ export function ProductCreateForm({
             </label>
           </div>
           <label className="block text-sm">
-            <span className="font-medium">Mô tả ngắn</span>
+            <span className="font-medium">Mô tả ngắn (lead PDP)</span>
+            <p className="mt-0.5 text-[11px] text-muted">
+              1–2 câu dưới tiêu đề — không dán bài dài vào đây.
+            </p>
             <textarea
               rows={2}
               className="mt-1 w-full rounded-lg border border-border px-3 py-2"
               value={form.shortDescription}
               onChange={(e) => setForm({ ...form, shortDescription: e.target.value })}
-            />
-          </label>
-          <label className="block text-sm">
-            <span className="font-medium">Mô tả đầy đủ</span>
-            <textarea
-              rows={4}
-              className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-              value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
             />
           </label>
           <ProductLicenseDefaultsPanel
@@ -603,7 +598,22 @@ export function ProductCreateForm({
       {step === 4 ? (
         <div className="space-y-6">
           <div className="rounded-2xl border border-border bg-card p-6">
-            <h2 className="mb-3 font-semibold text-navy">Bước 4 · Nội dung PDP</h2>
+            <h2 className="mb-1 font-semibold text-navy">
+              Bước 4 · Mô tả đầy đủ (PDP)
+            </h2>
+            <p className="mb-3 text-xs text-muted">
+              Soạn như bài viết: tiêu đề, đoạn, danh sách, bảng. Dán từ Word/Docs
+              sẽ được làm sạch định dạng.
+            </p>
+            <RichTextEditor
+              value={form.description || "<p></p>"}
+              onChange={(html) => setForm({ ...form, description: html })}
+              mediaPurpose="product"
+              placeholder="Viết mô tả sản phẩm… Có thể dán từ Word / Docs."
+            />
+          </div>
+          <div className="rounded-2xl border border-border bg-card p-6">
+            <h2 className="mb-3 font-semibold text-navy">Nội dung PDP khác</h2>
             <div className="grid gap-4 lg:grid-cols-3">
               <label className="block text-sm">
                 <span className="font-medium">Features</span>
