@@ -1,4 +1,4 @@
-﻿-- Catalog license merchandising + SEO enrichment (additive only)
+-- Catalog license merchandising + SEO enrichment (additive only)
 ALTER TABLE "Product" ADD COLUMN IF NOT EXISTS "focusKeyword" TEXT;
 ALTER TABLE "Product" ADD COLUMN IF NOT EXISTS "seoKeywords" JSONB NOT NULL DEFAULT '[]';
 ALTER TABLE "Product" ADD COLUMN IF NOT EXISTS "canonicalUrl" TEXT;
