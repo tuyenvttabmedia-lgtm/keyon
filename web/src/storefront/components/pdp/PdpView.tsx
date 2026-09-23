@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { StarRating } from "@/storefront/components/StarRating";
 import { ShopProductCard } from "@/storefront/components/shop/ShopProductCard";
@@ -27,6 +27,7 @@ import {
   INPUT_TEXT_CLASS,
   LINK_ACCENT_CLASS,
   LINK_CLASS,
+  LINK_FIELD_CLASS,
   OVERLINE_CLASS,
   PDP_PRICE_CLASS,
   PDP_TITLE_CLASS,
@@ -910,10 +911,7 @@ function TabsSection({
             <div className="min-w-0">
               <h2 className={SUBSECTION_TITLE_CLASS}>Tổng quan sản phẩm</h2>
               {data.description?.trim() ? (
-                <StaticPageHtml
-                  body={data.description}
-                  className="blog-prose pdp-prose mt-4 max-w-none"
-                />
+                <CollapsibleDescription body={data.description} />
               ) : (
                 <p className={`mt-4 ${BODY_MUTED_CLASS}`}>
                   {`${data.name} — giấy phép bản quyền số phân phối trên KEYON. Chọn gói, thanh toán rõ, nhận trong Tài sản.`}
@@ -1112,6 +1110,64 @@ function LicenseWarningBlock() {
         {LICENSE_WARNING_COPY}
       </p>
     </aside>
+  );
+}
+
+function CollapsibleDescription({ body }: { body: string }) {
+  /** ~8–10 dòng prose — đủ scan, không đẩy Features xuống đáy trang. */
+  const COLLAPSED_MAX_PX = 280;
+  const [expanded, setExpanded] = useState(false);
+  const [needsClamp, setNeedsClamp] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = contentRef.current;
+    if (!el) return;
+    function measure() {
+      if (!contentRef.current) return;
+      setNeedsClamp(contentRef.current.scrollHeight > COLLAPSED_MAX_PX + 12);
+    }
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [body]);
+
+  const clamped = needsClamp && !expanded;
+
+  return (
+    <div className="mt-4">
+      <div className="relative">
+        <div
+          ref={contentRef}
+          id="pdp-full-description"
+          className={clamped ? "max-h-[280px] overflow-hidden" : undefined}
+        >
+          <StaticPageHtml
+            body={body}
+            className="blog-prose pdp-prose max-w-none"
+          />
+        </div>
+        {clamped ? (
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-white via-white/90 to-transparent"
+            aria-hidden
+          />
+        ) : null}
+      </div>
+      {needsClamp ? (
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          className={`mt-3 inline-flex items-center gap-1 ${LINK_FIELD_CLASS}`}
+          aria-expanded={expanded}
+          aria-controls="pdp-full-description"
+        >
+          {expanded ? "Thu gọn" : "Xem thêm"}
+          <span aria-hidden>{expanded ? "↑" : "↓"}</span>
+        </button>
+      ) : null}
+    </div>
   );
 }
 
