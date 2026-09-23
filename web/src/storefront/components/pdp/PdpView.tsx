@@ -677,7 +677,7 @@ function PurchaseColumn({
         </div>
       </div>
 
-      <LicenseInfoBlock license={license} />
+      <LicenseInfoBlock license={license} variant="compact" />
 
       {!data.loggedIn ? (
         <input
@@ -865,7 +865,7 @@ function TabsSection({
               </section>
             ) : null}
 
-            <LicenseInfoBlock license={license} dense />
+            <LicenseInfoBlock license={license} variant="full" />
           </div>
         ) : null}
 
@@ -917,7 +917,7 @@ function TabsSection({
                 ) : null}
               </div>
             ) : null}
-            <LicenseInfoBlock license={license} dense />
+            <LicenseInfoBlock license={license} variant="full" />
           </div>
         ) : null}
 
@@ -978,58 +978,102 @@ function TabsSection({
 
 function LicenseInfoBlock({
   license,
-  dense,
+  variant = "full",
 }: {
   license: ReturnType<typeof resolveLicensePresentation>;
-  dense?: boolean;
+  /** compact = buy column (short facts, 1 col). full = tab (policies full-width). */
+  variant?: "compact" | "full";
 }) {
-  const rows: { label: string; value: string }[] = [];
+  type Row = { label: string; value: string };
+
+  const facts: Row[] = [];
   if (license.channelLabel)
-    rows.push({ label: "Loại bản quyền", value: license.channelLabel });
+    facts.push({ label: "Loại bản quyền", value: license.channelLabel });
   if (license.termLabel)
-    rows.push({ label: "Thời hạn", value: license.termLabel });
+    facts.push({ label: "Thời hạn", value: license.termLabel });
   if (license.seats)
-    rows.push({ label: "Thiết bị / ghế", value: license.seats });
+    facts.push({ label: "Thiết bị / ghế", value: license.seats });
   if (license.regionLabel)
-    rows.push({ label: "Vùng", value: license.regionLabel });
+    facts.push({ label: "Vùng", value: license.regionLabel });
   if (license.activationLabel)
-    rows.push({ label: "Kích hoạt", value: license.activationLabel });
+    facts.push({ label: "Kích hoạt", value: license.activationLabel });
   if (license.platformLabels.length)
-    rows.push({
+    facts.push({
       label: "Nền tảng",
       value: license.platformLabels.join(", "),
     });
   if (license.languageLabel)
-    rows.push({ label: "Ngôn ngữ", value: license.languageLabel });
-  if (license.accountRequired)
-    rows.push({ label: "Tài khoản", value: license.accountRequired });
-  if (license.transferPolicy)
-    rows.push({ label: "Chuyển nhượng", value: license.transferPolicy });
-  if (license.upgradePolicy)
-    rows.push({ label: "Nâng cấp", value: license.upgradePolicy });
+    facts.push({ label: "Ngôn ngữ", value: license.languageLabel });
 
-  if (!rows.length) return null;
+  const policies: Row[] = [];
+  if (license.accountRequired)
+    policies.push({ label: "Tài khoản", value: license.accountRequired });
+  if (license.transferPolicy)
+    policies.push({ label: "Chuyển nhượng", value: license.transferPolicy });
+  if (license.upgradePolicy)
+    policies.push({ label: "Nâng cấp", value: license.upgradePolicy });
+
+  if (variant === "compact") {
+    if (!facts.length) return null;
+    return (
+      <div className="mt-4 rounded-xl border border-border bg-surface px-3.5 py-3">
+        <p className={`${OVERLINE_CLASS} text-muted-soft`}>
+          Thông tin bản quyền
+        </p>
+        <dl className="mt-2 space-y-0">
+          {facts.map((r) => (
+            <div
+              key={r.label}
+              className={`flex items-baseline justify-between gap-3 border-b border-border/50 py-1.5 last:border-b-0 ${BODY_CLASS}`}
+            >
+              <dt className="shrink-0 text-muted-soft">{r.label}</dt>
+              <dd className="min-w-0 text-right font-semibold text-navy line-clamp-2">
+                {r.value}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    );
+  }
+
+  if (!facts.length && !policies.length) return null;
 
   return (
-    <div
-      className={`rounded-2xl border border-border/80 bg-surface ${
-        dense ? "mt-0 p-4 sm:p-5" : "mt-4 p-3.5"
-      }`}
-    >
+    <div className="rounded-2xl border border-border/80 bg-surface p-4 sm:p-5">
       <p className={CARD_TITLE_CLASS}>Thông tin bản quyền</p>
-      <dl className="mt-3 grid gap-x-8 sm:grid-cols-2">
-        {rows.map((r) => (
-          <div
-            key={r.label}
-            className={`grid grid-cols-[minmax(6.5rem,0.38fr)_minmax(0,0.62fr)] items-start gap-2 border-b border-border/60 py-2.5 last:border-b-0 sm:last:border-b sm:[&:nth-last-child(-n+2)]:border-b-0 ${BODY_CLASS}`}
-          >
-            <dt className="shrink-0 text-muted-soft">{r.label}</dt>
-            <dd className="min-w-0 break-words font-semibold text-navy">
-              {r.value}
-            </dd>
-          </div>
-        ))}
-      </dl>
+      {facts.length ? (
+        <dl className="mt-3 grid gap-x-8 sm:grid-cols-2">
+          {facts.map((r) => (
+            <div
+              key={r.label}
+              className={`flex items-baseline justify-between gap-3 border-b border-border/60 py-2.5 ${BODY_CLASS}`}
+            >
+              <dt className="shrink-0 text-muted-soft">{r.label}</dt>
+              <dd className="min-w-0 text-right font-semibold text-navy">
+                {r.value}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      ) : null}
+      {policies.length ? (
+        <dl
+          className={`space-y-0 ${facts.length ? "mt-2 border-t border-border/70 pt-1" : "mt-3"}`}
+        >
+          {policies.map((r) => (
+            <div
+              key={r.label}
+              className={`grid gap-1 border-b border-border/60 py-3 last:border-b-0 sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:gap-4 ${BODY_CLASS}`}
+            >
+              <dt className="text-muted-soft">{r.label}</dt>
+              <dd className="min-w-0 whitespace-pre-line font-medium leading-relaxed text-navy">
+                {r.value}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      ) : null}
     </div>
   );
 }
@@ -1049,10 +1093,10 @@ function SpecsCard({
         {specs.map((s) => (
           <div
             key={s.label}
-            className={`grid grid-cols-[minmax(5.5rem,0.38fr)_minmax(0,0.62fr)] items-start gap-2 border-b border-border/70 py-2.5 ${BODY_CLASS} last:border-b-0`}
+            className={`flex items-baseline justify-between gap-3 border-b border-border/70 py-2.5 ${BODY_CLASS} last:border-b-0`}
           >
-            <dt className="text-muted-soft">{s.label}</dt>
-            <dd className="min-w-0 break-words font-semibold text-navy">
+            <dt className="shrink-0 text-muted-soft">{s.label}</dt>
+            <dd className="min-w-0 break-words text-right font-semibold text-navy">
               {s.value}
             </dd>
           </div>
