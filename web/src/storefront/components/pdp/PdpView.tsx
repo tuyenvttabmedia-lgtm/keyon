@@ -27,7 +27,6 @@ import {
   INPUT_TEXT_CLASS,
   LINK_ACCENT_CLASS,
   LINK_CLASS,
-  LINK_FIELD_CLASS,
   OVERLINE_CLASS,
   PDP_PRICE_CLASS,
   PDP_TITLE_CLASS,
@@ -1156,16 +1155,20 @@ function CollapsibleDescription({ body }: { body: string }) {
         ) : null}
       </div>
       {needsClamp ? (
-        <button
-          type="button"
-          onClick={() => setExpanded((v) => !v)}
-          className={`mt-3 inline-flex items-center gap-1 ${LINK_FIELD_CLASS}`}
-          aria-expanded={expanded}
-          aria-controls="pdp-full-description"
-        >
-          {expanded ? "Thu gọn" : "Xem thêm"}
-          <span aria-hidden>{expanded ? "↑" : "↓"}</span>
-        </button>
+        <div className="mt-4 flex justify-center">
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            className={`inline-flex h-10 items-center justify-center gap-2 rounded-xl border-2 border-accent bg-accent-soft px-5 ${CTA_LABEL_CLASS} text-accent ${TRANSITION_UI} hover:bg-accent hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent`}
+            aria-expanded={expanded}
+            aria-controls="pdp-full-description"
+          >
+            {expanded ? "Thu gọn mô tả" : "Xem thêm mô tả"}
+            <span aria-hidden className="text-base leading-none">
+              {expanded ? "↑" : "↓"}
+            </span>
+          </button>
+        </div>
       ) : null}
     </div>
   );
