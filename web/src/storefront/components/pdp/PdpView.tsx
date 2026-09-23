@@ -816,7 +816,7 @@ function TabsSection({
 
       <div className="mt-6">
         {tab === "description" ? (
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(280px,0.9fr)] lg:items-start lg:gap-8">
+          <div className="space-y-8">
             <div className="min-w-0">
               {data.description?.trim() ? (
                 <StaticPageHtml
@@ -828,10 +828,17 @@ function TabsSection({
                   {`${data.name} — giấy phép bản quyền số phân phối trên KEYON. Chọn gói, thanh toán rõ, nhận trong Tài sản.`}
                 </p>
               )}
-              {data.features.length ? (
-                <ul className="mt-6 space-y-2.5 border-t border-border/70 pt-5">
+            </div>
+
+            {data.features.length ? (
+              <section>
+                <p className={CARD_TITLE_CLASS}>Điểm nổi bật</p>
+                <ul className="mt-4 grid gap-x-8 gap-y-2.5 sm:grid-cols-2">
                   {data.features.map((f) => (
-                    <li key={f} className={`flex items-start gap-2.5 ${BODY_CLASS}`}>
+                    <li
+                      key={f}
+                      className={`flex items-start gap-2.5 ${BODY_CLASS}`}
+                    >
                       <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
                         <CheckIcon small />
                       </span>
@@ -839,54 +846,75 @@ function TabsSection({
                     </li>
                   ))}
                 </ul>
-              ) : null}
-            </div>
-            <div className="min-w-0 space-y-4">
-              <SpecsCard title="Thông số" specs={data.specs} />
-              {data.systemSpecs.length ? (
+              </section>
+            ) : null}
+
+            {data.specs.length || data.systemSpecs.length ? (
+              <section
+                className={`grid gap-4 ${
+                  data.specs.length && data.systemSpecs.length
+                    ? "lg:grid-cols-2"
+                    : ""
+                }`}
+              >
+                <SpecsCard title="Thông số" specs={data.specs} />
                 <SpecsCard
                   title="Yêu cầu hệ thống"
                   specs={data.systemSpecs}
                 />
-              ) : null}
-            </div>
+              </section>
+            ) : null}
+
+            <LicenseInfoBlock license={license} dense />
           </div>
         ) : null}
 
         {tab === "details" ? (
           <div className="space-y-4">
-            <div className="rounded-2xl border border-border/80 bg-surface p-4 sm:p-5 md:p-6">
-              <p className={CARD_TITLE_CLASS}>Thông số chi tiết</p>
-              <dl className="mt-4 grid gap-x-8 gap-y-0 sm:grid-cols-2">
-                {data.specs.map((s) => (
-                  <div
-                    key={s.label}
-                    className={`grid grid-cols-[minmax(0,0.4fr)_minmax(0,0.6fr)] items-start gap-3 border-b border-border/70 py-3 ${BODY_CLASS}`}
-                  >
-                    <dt className="text-muted-soft">{s.label}</dt>
-                    <dd className="break-words text-right font-semibold text-navy sm:text-left">
-                      {s.value}
-                    </dd>
+            {data.specs.length || data.systemSpecs.length ? (
+              <div
+                className={`grid gap-4 ${
+                  data.specs.length && data.systemSpecs.length
+                    ? "lg:grid-cols-2"
+                    : ""
+                }`}
+              >
+                {data.specs.length ? (
+                  <div className="rounded-2xl border border-border/80 bg-surface p-4 sm:p-5 md:p-6">
+                    <p className={CARD_TITLE_CLASS}>Thông số chi tiết</p>
+                    <dl className="mt-4 space-y-0">
+                      {data.specs.map((s) => (
+                        <div
+                          key={s.label}
+                          className={`grid grid-cols-[minmax(6rem,0.38fr)_minmax(0,0.62fr)] items-start gap-3 border-b border-border/70 py-3 ${BODY_CLASS}`}
+                        >
+                          <dt className="text-muted-soft">{s.label}</dt>
+                          <dd className="min-w-0 break-words font-semibold text-navy">
+                            {s.value}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
                   </div>
-                ))}
-              </dl>
-            </div>
-            {data.systemSpecs.length ? (
-              <div className="rounded-2xl border border-border/80 bg-surface p-4 sm:p-5 md:p-6">
-                <p className={CARD_TITLE_CLASS}>Yêu cầu hệ thống</p>
-                <dl className="mt-4 grid gap-x-8 gap-y-0 sm:grid-cols-2">
-                  {data.systemSpecs.map((s) => (
-                    <div
-                      key={s.label}
-                      className={`grid grid-cols-[minmax(0,0.35fr)_minmax(0,0.65fr)] items-start gap-3 border-b border-border/70 py-3 ${BODY_CLASS}`}
-                    >
-                      <dt className="text-muted-soft">{s.label}</dt>
-                      <dd className="break-words font-semibold text-navy">
-                        {s.value}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
+                ) : null}
+                {data.systemSpecs.length ? (
+                  <div className="rounded-2xl border border-border/80 bg-surface p-4 sm:p-5 md:p-6">
+                    <p className={CARD_TITLE_CLASS}>Yêu cầu hệ thống</p>
+                    <dl className="mt-4 space-y-0">
+                      {data.systemSpecs.map((s) => (
+                        <div
+                          key={s.label}
+                          className={`grid grid-cols-[minmax(6rem,0.38fr)_minmax(0,0.62fr)] items-start gap-3 border-b border-border/70 py-3 ${BODY_CLASS}`}
+                        >
+                          <dt className="text-muted-soft">{s.label}</dt>
+                          <dd className="min-w-0 break-words font-semibold text-navy">
+                            {s.value}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+                ) : null}
               </div>
             ) : null}
             <LicenseInfoBlock license={license} dense />
@@ -984,18 +1012,16 @@ function LicenseInfoBlock({
 
   return (
     <div
-      className={`rounded-xl border border-border bg-surface ${
-        dense ? "mt-0 p-4" : "mt-4 p-3.5"
+      className={`rounded-2xl border border-border/80 bg-surface ${
+        dense ? "mt-0 p-4 sm:p-5" : "mt-4 p-3.5"
       }`}
     >
-      <p className={`${OVERLINE_CLASS} text-muted-soft`}>
-        Thông tin bản quyền
-      </p>
-      <dl className={`mt-2 grid gap-x-6 ${dense ? "sm:grid-cols-2" : ""}`}>
+      <p className={CARD_TITLE_CLASS}>Thông tin bản quyền</p>
+      <dl className="mt-3 grid gap-x-8 sm:grid-cols-2">
         {rows.map((r) => (
           <div
             key={r.label}
-            className={`grid grid-cols-[minmax(6.5rem,0.38fr)_minmax(0,0.62fr)] items-start gap-2 border-b border-border/60 py-2 last:border-b-0 ${BODY_CLASS}`}
+            className={`grid grid-cols-[minmax(6.5rem,0.38fr)_minmax(0,0.62fr)] items-start gap-2 border-b border-border/60 py-2.5 last:border-b-0 sm:last:border-b sm:[&:nth-last-child(-n+2)]:border-b-0 ${BODY_CLASS}`}
           >
             <dt className="shrink-0 text-muted-soft">{r.label}</dt>
             <dd className="min-w-0 break-words font-semibold text-navy">
