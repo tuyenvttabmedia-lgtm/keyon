@@ -1,6 +1,11 @@
 /** Shared helpers for Product CMS JSON fields (admin + PDP). */
 
-export type ProductSpecRow = { label: string; value: string };
+export type ProductSpecRow = {
+  label: string;
+  value: string;
+  /** general (default) | system (system requirements) */
+  group?: "general" | "system";
+};
 export type ProductFaqRow = { id: string; question: string; answer: string };
 
 export function parseStringList(raw: unknown): string[] {
@@ -15,9 +20,32 @@ export function parseSpecRows(raw: unknown): ProductSpecRow[] {
     if (!row || typeof row !== "object") continue;
     const label = String((row as { label?: unknown }).label ?? "").trim();
     const value = String((row as { value?: unknown }).value ?? "").trim();
-    if (label && value) out.push({ label, value });
+    if (!label || !value) continue;
+    const groupRaw = String((row as { group?: unknown }).group ?? "")
+      .trim()
+      .toLowerCase();
+    const group =
+      groupRaw === "system" ? ("system" as const) : ("general" as const);
+    out.push({
+      label,
+      value,
+      ...(groupRaw === "system" || groupRaw === "general" ? { group } : {}),
+    });
   }
   return out;
+}
+
+export function splitSpecsByGroup(rows: ProductSpecRow[]): {
+  general: ProductSpecRow[];
+  system: ProductSpecRow[];
+} {
+  const general: ProductSpecRow[] = [];
+  const system: ProductSpecRow[] = [];
+  for (const row of rows) {
+    if (row.group === "system") system.push(row);
+    else general.push(row);
+  }
+  return { general, system };
 }
 
 export function parseFaqRows(raw: unknown): ProductFaqRow[] {
@@ -46,13 +74,25 @@ export function listToLines(list: string[]): string {
   return list.join("\n");
 }
 
-/** Admin textarea: Label|Value per line */
+/**
+ * Admin textarea specs:
+ * - `Label|Value` → general
+ * - `system|Label|Value` → system requirements
+ */
 export function linesToSpecs(text: string): ProductSpecRow[] {
   return text
     .split(/\r?\n/)
     .map((l) => l.trim())
     .filter(Boolean)
     .map((line) => {
+      const parts = line.split("|").map((p) => p.trim());
+      if (parts[0]?.toLowerCase() === "system" && parts.length >= 3) {
+        return {
+          group: "system" as const,
+          label: parts[1] || "—",
+          value: parts.slice(2).join("|") || "—",
+        };
+      }
       const i = line.indexOf("|");
       if (i < 0) return { label: line, value: "—" };
       return { label: line.slice(0, i).trim(), value: line.slice(i + 1).trim() || "—" };
@@ -61,7 +101,13 @@ export function linesToSpecs(text: string): ProductSpecRow[] {
 }
 
 export function specsToLines(rows: ProductSpecRow[]): string {
-  return rows.map((r) => `${r.label}|${r.value}`).join("\n");
+  return rows
+    .map((r) =>
+      r.group === "system"
+        ? `system|${r.label}|${r.value}`
+        : `${r.label}|${r.value}`,
+    )
+    .join("\n");
 }
 
 /** Admin textarea: Q||A per line (double pipe) */

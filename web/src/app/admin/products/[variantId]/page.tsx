@@ -13,6 +13,16 @@ import {
   PRODUCT_CATEGORY_KEYS,
 } from "@/storefront/lib/product-cms";
 import {
+  parsePlatforms,
+  parseSeoKeywords,
+  optionalEnum,
+  LICENSE_CHANNELS,
+  LICENSE_TERMS,
+  LICENSE_REGIONS,
+  ACTIVATION_METHODS,
+  PRODUCT_LANGUAGES,
+} from "@/storefront/lib/license-catalog";
+import {
   DELIVERABLE_ADMIN_LABELS,
   FULFILLMENT_ADMIN_LABELS,
 } from "@/storefront/lib/catalog-admin-labels";
@@ -20,6 +30,10 @@ import { ProductEditForm } from "./edit-form";
 import { AddVariantForm } from "./add-variant-form";
 import { CloneProductButton } from "../CloneProductButton";
 import { ADMIN_PAGE_TITLE_CLASS } from "@/storefront/typography";
+import type {
+  ProductLicenseDefaults,
+  VariantLicenseFields,
+} from "../LicenseCatalogFields";
 
 export const dynamic = "force-dynamic";
 
@@ -69,6 +83,31 @@ export default async function AdminProductEditPage({
     p.categoryKey && (PRODUCT_CATEGORY_KEYS as readonly string[]).includes(p.categoryKey)
       ? (p.categoryKey as ProductCategoryKey)
       : "";
+
+  const licenseDefaults: ProductLicenseDefaults = {
+    platforms: parsePlatforms(p.platforms),
+    language: optionalEnum(p.language, PRODUCT_LANGUAGES) ?? "",
+    licenseChannelDefault:
+      optionalEnum(p.licenseChannelDefault, LICENSE_CHANNELS) ?? "",
+    licenseTermDefault:
+      optionalEnum(p.licenseTermDefault, LICENSE_TERMS) ?? "",
+    seatsDefault: p.seatsDefault ?? "",
+    activationMethodDefault:
+      optionalEnum(p.activationMethodDefault, ACTIVATION_METHODS) ?? "",
+    transferPolicy: p.transferPolicy ?? "",
+    upgradePolicy: p.upgradePolicy ?? "",
+    accountRequired: p.accountRequired ?? "",
+  };
+
+  const variantLicense: VariantLicenseFields = {
+    licenseChannel:
+      optionalEnum(variant.licenseChannel, LICENSE_CHANNELS) ?? "",
+    licenseTerm: optionalEnum(variant.licenseTerm, LICENSE_TERMS) ?? "",
+    seatsLabel: variant.seatsLabel ?? "",
+    regionCode: optionalEnum(variant.regionCode, LICENSE_REGIONS) ?? "",
+    activationMethod:
+      optionalEnum(variant.activationMethod, ACTIVATION_METHODS) ?? "",
+  };
 
   return (
     <div className="space-y-6">
@@ -142,6 +181,13 @@ export default async function AdminProductEditPage({
         seoTitle={p.seoTitle ?? ""}
         seoDescription={p.seoDescription ?? ""}
         ogImageUrl={p.ogImageUrl ?? ""}
+        focusKeyword={p.focusKeyword ?? ""}
+        seoKeywords={parseSeoKeywords(p.seoKeywords)}
+        canonicalUrl={p.canonicalUrl ?? ""}
+        ogTitle={p.ogTitle ?? ""}
+        ogDescription={p.ogDescription ?? ""}
+        licenseDefaults={licenseDefaults}
+        variantLicense={variantLicense}
         relatedProductIds={parseStringList(p.relatedProductIds)}
         relatedOptions={allProducts.map((x) => ({
           id: x.id,

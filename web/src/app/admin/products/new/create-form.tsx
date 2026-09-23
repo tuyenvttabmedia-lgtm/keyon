@@ -23,6 +23,15 @@ import {
   FULFILLMENT_ADMIN_LABELS,
   FULFILLMENT_OPTIONS,
 } from "@/storefront/lib/catalog-admin-labels";
+import {
+  ProductLicenseDefaultsPanel,
+  VariantLicenseFieldsPanel,
+  emptyProductLicenseDefaults,
+  emptyVariantLicenseFields,
+  type ProductLicenseDefaults,
+  type VariantLicenseFields,
+} from "../LicenseCatalogFields";
+import { parseSeoKeywords } from "@/storefront/lib/license-catalog";
 
 type BrandOpt = { id: string; name: string };
 type SupplierOpt = { id: string; name: string };
@@ -94,6 +103,13 @@ export function ProductCreateForm({
     publishNow: false,
     seoTitle: "",
     seoDescription: "",
+    focusKeyword: "",
+    seoKeywordsText: "",
+    canonicalUrl: "",
+    ogTitle: "",
+    ogDescription: "",
+    licenseDefaults: emptyProductLicenseDefaults() as ProductLicenseDefaults,
+    variantLicense: emptyVariantLicenseFields() as VariantLicenseFields,
   });
 
   const previewSlug = useMemo(
@@ -249,6 +265,27 @@ export function ProductCreateForm({
           seoTitle: form.seoTitle.trim() || null,
           seoDescription: form.seoDescription.trim() || null,
           ogImageUrl: form.ogImageUrl.trim() || null,
+          focusKeyword: form.focusKeyword.trim() || null,
+          seoKeywords: parseSeoKeywords(form.seoKeywordsText),
+          canonicalUrl: form.canonicalUrl.trim() || null,
+          ogTitle: form.ogTitle.trim() || null,
+          ogDescription: form.ogDescription.trim() || null,
+          platforms: form.licenseDefaults.platforms,
+          language: form.licenseDefaults.language || null,
+          licenseChannelDefault:
+            form.licenseDefaults.licenseChannelDefault || null,
+          licenseTermDefault: form.licenseDefaults.licenseTermDefault || null,
+          seatsDefault: form.licenseDefaults.seatsDefault.trim() || null,
+          activationMethodDefault:
+            form.licenseDefaults.activationMethodDefault || null,
+          transferPolicy: form.licenseDefaults.transferPolicy.trim() || null,
+          upgradePolicy: form.licenseDefaults.upgradePolicy.trim() || null,
+          accountRequired: form.licenseDefaults.accountRequired.trim() || null,
+          licenseChannel: form.variantLicense.licenseChannel || null,
+          licenseTerm: form.variantLicense.licenseTerm || null,
+          seatsLabel: form.variantLicense.seatsLabel.trim() || null,
+          regionCode: form.variantLicense.regionCode || null,
+          activationMethod: form.variantLicense.activationMethod || null,
         }),
       });
       const data = await res.json();
@@ -413,6 +450,12 @@ export function ProductCreateForm({
               onChange={(e) => setForm({ ...form, description: e.target.value })}
             />
           </label>
+          <ProductLicenseDefaultsPanel
+            value={form.licenseDefaults}
+            onChange={(licenseDefaults) =>
+              setForm({ ...form, licenseDefaults })
+            }
+          />
         </div>
       ) : null}
 
@@ -530,6 +573,10 @@ export function ProductCreateForm({
               onChange={(e) => setForm({ ...form, slaPromise: e.target.value })}
             />
           </label>
+          <VariantLicenseFieldsPanel
+            value={form.variantLicense}
+            onChange={(variantLicense) => setForm({ ...form, variantLicense })}
+          />
         </div>
       ) : null}
 
@@ -568,10 +615,14 @@ export function ProductCreateForm({
                 />
               </label>
               <label className="block text-sm">
-                <span className="font-medium">Specs (Label|Value)</span>
+                <span className="font-medium">Specs</span>
+                <p className="mt-0.5 text-[11px] text-muted">
+                  `Label|Value` · yêu cầu HT: `system|CPU|…`
+                </p>
                 <textarea
                   rows={5}
                   className="mt-1 w-full rounded-lg border border-border px-3 py-2 font-mono text-xs"
+                  placeholder={"Nhà phát hành|Microsoft\nsystem|RAM|4 GB"}
                   value={form.specsText}
                   onChange={(e) => setForm({ ...form, specsText: e.target.value })}
                 />
@@ -599,12 +650,65 @@ export function ProductCreateForm({
                 />
               </label>
               <label className="block text-sm">
+                <span className="font-medium">Focus keyword</span>
+                <input
+                  className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                  value={form.focusKeyword}
+                  onChange={(e) =>
+                    setForm({ ...form, focusKeyword: e.target.value })
+                  }
+                />
+              </label>
+              <label className="block text-sm lg:col-span-2">
                 <span className="font-medium">Meta description</span>
                 <textarea
                   rows={3}
                   className="mt-1 w-full rounded-lg border border-border px-3 py-2"
                   value={form.seoDescription}
                   onChange={(e) => setForm({ ...form, seoDescription: e.target.value })}
+                />
+              </label>
+              <label className="block text-sm lg:col-span-2">
+                <span className="font-medium">Keywords phụ</span>
+                <input
+                  className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                  placeholder="windows 11, bản quyền, …"
+                  value={form.seoKeywordsText}
+                  onChange={(e) =>
+                    setForm({ ...form, seoKeywordsText: e.target.value })
+                  }
+                />
+              </label>
+              <label className="block text-sm">
+                <span className="font-medium">Canonical URL</span>
+                <input
+                  className="mt-1 w-full rounded-lg border border-border px-3 py-2 font-mono text-xs"
+                  placeholder="https://keyon.vn/products/…"
+                  value={form.canonicalUrl}
+                  onChange={(e) =>
+                    setForm({ ...form, canonicalUrl: e.target.value })
+                  }
+                />
+              </label>
+              <label className="block text-sm">
+                <span className="font-medium">OG title</span>
+                <input
+                  className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                  placeholder="Mặc định = meta title"
+                  value={form.ogTitle}
+                  onChange={(e) => setForm({ ...form, ogTitle: e.target.value })}
+                />
+              </label>
+              <label className="block text-sm lg:col-span-2">
+                <span className="font-medium">OG description</span>
+                <textarea
+                  rows={2}
+                  className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                  placeholder="Mặc định = meta description"
+                  value={form.ogDescription}
+                  onChange={(e) =>
+                    setForm({ ...form, ogDescription: e.target.value })
+                  }
                 />
               </label>
             </div>

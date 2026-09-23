@@ -29,6 +29,16 @@ import {
   SALES_MOTION_ADMIN_LABELS,
   SALES_MOTION_OPTIONS,
 } from "@/storefront/lib/catalog-admin-labels";
+import {
+  ProductLicenseDefaultsPanel,
+  VariantLicenseFieldsPanel,
+  type ProductLicenseDefaults,
+  type VariantLicenseFields,
+} from "../LicenseCatalogFields";
+import {
+  parseSeoKeywords,
+} from "@/storefront/lib/license-catalog";
+import { listToLines } from "@/storefront/lib/product-cms";
 
 type Props = {
   variantId: string;
@@ -47,6 +57,13 @@ type Props = {
   seoTitle: string;
   seoDescription: string;
   ogImageUrl: string;
+  focusKeyword: string;
+  seoKeywords: string[];
+  canonicalUrl: string;
+  ogTitle: string;
+  ogDescription: string;
+  licenseDefaults: ProductLicenseDefaults;
+  variantLicense: VariantLicenseFields;
   relatedProductIds: string[];
   relatedOptions: RelatedProductOpt[];
   variantName: string;
@@ -74,6 +91,9 @@ export function ProductEditForm(props: Props) {
     featuresText: props.features.join("\n"),
     specsText: specsToLines(props.specs),
     faqsText: faqsToLines(props.faqs),
+    seoKeywordsText: listToLines(props.seoKeywords),
+    licenseDefaults: props.licenseDefaults,
+    variantLicense: props.variantLicense,
     compareAt: props.compareAtPriceVnd ?? ("" as string | number),
   });
   const [msg, setMsg] = useState<string | null>(null);
@@ -141,6 +161,27 @@ export function ProductEditForm(props: Props) {
           seoTitle: form.seoTitle.trim() || null,
           seoDescription: form.seoDescription.trim() || null,
           ogImageUrl: form.ogImageUrl.trim() || null,
+          focusKeyword: form.focusKeyword.trim() || null,
+          seoKeywords: parseSeoKeywords(form.seoKeywordsText),
+          canonicalUrl: form.canonicalUrl.trim() || null,
+          ogTitle: form.ogTitle.trim() || null,
+          ogDescription: form.ogDescription.trim() || null,
+          platforms: form.licenseDefaults.platforms,
+          language: form.licenseDefaults.language || null,
+          licenseChannelDefault:
+            form.licenseDefaults.licenseChannelDefault || null,
+          licenseTermDefault: form.licenseDefaults.licenseTermDefault || null,
+          seatsDefault: form.licenseDefaults.seatsDefault.trim() || null,
+          activationMethodDefault:
+            form.licenseDefaults.activationMethodDefault || null,
+          transferPolicy: form.licenseDefaults.transferPolicy.trim() || null,
+          upgradePolicy: form.licenseDefaults.upgradePolicy.trim() || null,
+          accountRequired: form.licenseDefaults.accountRequired.trim() || null,
+          licenseChannel: form.variantLicense.licenseChannel || null,
+          licenseTerm: form.variantLicense.licenseTerm || null,
+          seatsLabel: form.variantLicense.seatsLabel.trim() || null,
+          regionCode: form.variantLicense.regionCode || null,
+          activationMethod: form.variantLicense.activationMethod || null,
           relatedProductIds: form.relatedProductIds,
           name: form.variantName,
           priceVnd: form.priceVnd,
@@ -266,6 +307,10 @@ export function ProductEditForm(props: Props) {
             />
           </label>
         </div>
+        <ProductLicenseDefaultsPanel
+          value={form.licenseDefaults}
+          onChange={(licenseDefaults) => setForm({ ...form, licenseDefaults })}
+        />
       </div>
 
       <div id="variant" className="space-y-4 rounded-2xl border border-border bg-card p-6">
@@ -358,6 +403,10 @@ export function ProductEditForm(props: Props) {
           />
           Gói này đang bán (variant active)
         </label>
+        <VariantLicenseFieldsPanel
+          value={form.variantLicense}
+          onChange={(variantLicense) => setForm({ ...form, variantLicense })}
+        />
       </div>
 
       <div id="seo" className="space-y-4 rounded-2xl border border-border bg-card p-6 lg:col-span-2">
@@ -373,6 +422,14 @@ export function ProductEditForm(props: Props) {
             />
           </label>
           <label className="block text-sm">
+            <span className="font-medium">Focus keyword</span>
+            <input
+              className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+              value={form.focusKeyword}
+              onChange={(e) => setForm({ ...form, focusKeyword: e.target.value })}
+            />
+          </label>
+          <label className="block text-sm lg:col-span-2">
             <span className="font-medium">Meta description</span>
             <textarea
               rows={3}
@@ -380,6 +437,44 @@ export function ProductEditForm(props: Props) {
               placeholder="Mô tả ngắn cho Google (150–160 ký tự)"
               value={form.seoDescription}
               onChange={(e) => setForm({ ...form, seoDescription: e.target.value })}
+            />
+          </label>
+          <label className="block text-sm lg:col-span-2">
+            <span className="font-medium">Keywords phụ (mỗi dòng hoặc cách bằng dấu phẩy)</span>
+            <textarea
+              rows={2}
+              className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+              value={form.seoKeywordsText}
+              onChange={(e) =>
+                setForm({ ...form, seoKeywordsText: e.target.value })
+              }
+            />
+          </label>
+          <label className="block text-sm">
+            <span className="font-medium">Canonical URL</span>
+            <input
+              className="mt-1 w-full rounded-lg border border-border px-3 py-2 font-mono text-xs"
+              value={form.canonicalUrl}
+              onChange={(e) => setForm({ ...form, canonicalUrl: e.target.value })}
+            />
+          </label>
+          <label className="block text-sm">
+            <span className="font-medium">OG title</span>
+            <input
+              className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+              value={form.ogTitle}
+              onChange={(e) => setForm({ ...form, ogTitle: e.target.value })}
+            />
+          </label>
+          <label className="block text-sm lg:col-span-2">
+            <span className="font-medium">OG description</span>
+            <textarea
+              rows={2}
+              className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+              value={form.ogDescription}
+              onChange={(e) =>
+                setForm({ ...form, ogDescription: e.target.value })
+              }
             />
           </label>
         </div>
@@ -437,10 +532,13 @@ export function ProductEditForm(props: Props) {
           </label>
           <label className="block text-sm">
             <span className="font-medium">Specs</span>
+            <p className="mt-0.5 text-[11px] text-muted">
+              `Label|Value` · hệ thống: `system|Label|Value`
+            </p>
             <textarea
               rows={8}
               className="mt-1 w-full rounded-lg border border-border px-3 py-2 font-mono text-xs"
-              placeholder={"Nhà phát hành|Microsoft\nThiết bị|1 thiết bị"}
+              placeholder={"Nhà phát hành|Microsoft\nsystem|RAM|4 GB"}
               value={form.specsText}
               onChange={(e) => setForm({ ...form, specsText: e.target.value })}
             />

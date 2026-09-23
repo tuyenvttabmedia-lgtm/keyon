@@ -27,8 +27,10 @@ import {
   parseFaqRows,
   parseSpecRows,
   parseStringList,
+  splitSpecsByGroup,
   PRODUCT_CATEGORY_KEYS,
 } from "@/storefront/lib/product-cms";
+import { parseSeoKeywords } from "@/storefront/lib/license-catalog";
 import { mapProductsToShopCards } from "@/storefront/lib/related-products";
 import { variantAllowsCheckout, variantShowsQuoteCta } from "@/lib/variant-checkout";
 import {
@@ -36,6 +38,8 @@ import {
   toNextMetadata,
 } from "@/server/seo/metadata";
 import { loadSiteSettings } from "@/server/seo/settings";
+import { buildProductJsonLd } from "@/server/seo/product-json-ld";
+import { absoluteUrl } from "@/server/seo/site-url";
 
 /** Strip internal demo prefixes from customer-facing blurb. */
 function cleanStorefrontBlurb(raw: string | null | undefined): string | undefined {
@@ -66,6 +70,11 @@ export async function generateMetadata({
         shortDescription: true,
         description: true,
         ogImageUrl: true,
+        ogTitle: true,
+        ogDescription: true,
+        canonicalUrl: true,
+        focusKeyword: true,
+        seoKeywords: true,
         galleryUrls: true,
       },
     }),
@@ -75,8 +84,10 @@ export async function generateMetadata({
     return { title: "Sản phẩm" };
   }
   const gallery = parseStringList(product.galleryUrls);
+  const keywords = parseSeoKeywords(product.seoKeywords);
+  const path = `/products/${slug}`;
   const seo = resolveWithGlobalFallback(settings, {
-    path: `/products/${slug}`,
+    path,
     title: product.seoTitle?.trim() || product.name,
     description:
       product.seoDescription?.trim() ||
@@ -85,7 +96,35 @@ export async function generateMetadata({
       undefined,
     ogImageUrl: product.ogImageUrl || gallery[0] || null,
   });
-  return toNextMetadata(seo);
+  const meta = toNextMetadata(seo);
+  const ogTitle =
+    product.ogTitle?.trim() || seo.title;
+  const ogDescription =
+    product.ogDescription?.trim() || seo.description;
+  const canonical =
+    product.canonicalUrl?.trim() || seo.canonical;
+
+  return {
+    ...meta,
+    alternates: { canonical },
+    keywords: [
+      ...(product.focusKeyword?.trim()
+        ? [product.focusKeyword.trim()]
+        : []),
+      ...keywords,
+    ].filter(Boolean),
+    openGraph: {
+      ...meta.openGraph,
+      title: ogTitle,
+      description: ogDescription,
+      url: canonical,
+    },
+    twitter: {
+      ...meta.twitter,
+      title: ogTitle,
+      description: ogDescription,
+    },
+  };
 }
 
 export default async function ProductPage({
@@ -126,7 +165,9 @@ export default async function ProductPage({
 
   const cmsGallery = parseStringList(product.galleryUrls);
   const cmsFeatures = parseStringList(product.features);
-  const cmsSpecs = parseSpecRows(product.specs);
+  const cmsSpecsAll = parseSpecRows(product.specs);
+  const { general: cmsSpecs, system: cmsSystemSpecs } =
+    splitSpecsByGroup(cmsSpecsAll);
   const cmsFaqs = parseFaqRows(product.faqs);
 
   const variants: PdpVariantOption[] = variantsRaw.map((v) => {
@@ -149,6 +190,11 @@ export default async function ProductPage({
       canBuy,
       fulfillmentInstant: v.fulfillmentStrategy === "INSTANT",
       quoteRequired: variantShowsQuoteCta(v),
+      licenseChannel: v.licenseChannel,
+      licenseTerm: v.licenseTerm,
+      seatsLabel: v.seatsLabel,
+      regionCode: v.regionCode,
+      activationMethod: v.activationMethod,
     };
   });
 
@@ -284,6 +330,18 @@ export default async function ProductPage({
             value: receive.label,
           },
         ],
+    systemSpecs: cmsSystemSpecs,
+    licenseDefaults: {
+      licenseChannelDefault: product.licenseChannelDefault,
+      licenseTermDefault: product.licenseTermDefault,
+      seatsDefault: product.seatsDefault,
+      activationMethodDefault: product.activationMethodDefault,
+      platforms: product.platforms,
+      language: product.language,
+      transferPolicy: product.transferPolicy,
+      upgradePolicy: product.upgradePolicy,
+      accountRequired: product.accountRequired,
+    },
     guides: defaultGuides(activeVariant.fulfillmentInstant),
     faqs: cmsFaqs,
     related,
@@ -291,5 +349,31 @@ export default async function ProductPage({
     loggedIn: Boolean(session),
   };
 
-  return <PdpView data={data} />;
+  const initialDb = variantsRaw.find((v) => v.id === activeVariant.id)!;
+  const jsonLd = buildProductJsonLd({
+    name: product.name,
+    description:
+      product.seoDescription?.trim() ||
+      product.shortDescription?.trim() ||
+      product.description?.trim() ||
+      undefined,
+    brandName: product.brand.name,
+    sku: initialDb.sku,
+    priceVnd: activeVariant.priceVnd,
+    url: absoluteUrl(
+      `/products/${product.slug}?variant=${activeVariant.id}`,
+    ),
+    imageUrl: cmsGallery[0] ?? product.ogImageUrl,
+    availability: activeVariant.canBuy ? "InStock" : "OutOfStock",
+  });
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <PdpView data={data} />
+    </>
+  );
 }

@@ -1,5 +1,6 @@
 import type { ShopCategoryId, ShopProduct } from "@/storefront/components/shop/types";
 import type { ReceiveKind } from "@/storefront/content/types";
+import type { resolveLicensePresentation } from "@/storefront/lib/license-catalog";
 
 export type PdpVariantOption = {
   id: string;
@@ -14,7 +15,26 @@ export type PdpVariantOption = {
   canBuy: boolean;
   fulfillmentInstant: boolean;
   quoteRequired?: boolean;
+  licenseChannel?: string | null;
+  licenseTerm?: string | null;
+  seatsLabel?: string | null;
+  regionCode?: string | null;
+  activationMethod?: string | null;
 };
+
+export type PdpLicenseDefaults = {
+  licenseChannelDefault?: string | null;
+  licenseTermDefault?: string | null;
+  seatsDefault?: string | null;
+  activationMethodDefault?: string | null;
+  platforms?: unknown;
+  language?: string | null;
+  transferPolicy?: string | null;
+  upgradePolicy?: string | null;
+  accountRequired?: string | null;
+};
+
+export type PdpLicensePresentation = ReturnType<typeof resolveLicensePresentation>;
 
 export type PdpProductData = {
   slug: string;
@@ -37,6 +57,8 @@ export type PdpProductData = {
   initialVariantId: string;
   features: string[];
   specs: { label: string; value: string }[];
+  systemSpecs: { label: string; value: string }[];
+  licenseDefaults: PdpLicenseDefaults;
   guides: string[];
   faqs: { id: string; question: string; answer: string }[];
   related: ShopProduct[];

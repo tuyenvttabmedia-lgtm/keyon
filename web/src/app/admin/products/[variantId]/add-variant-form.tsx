@@ -12,6 +12,11 @@ import {
   FULFILLMENT_ADMIN_LABELS,
   FULFILLMENT_OPTIONS,
 } from "@/storefront/lib/catalog-admin-labels";
+import {
+  VariantLicenseFieldsPanel,
+  emptyVariantLicenseFields,
+  type VariantLicenseFields,
+} from "../LicenseCatalogFields";
 
 type SupplierOpt = { id: string; name: string };
 
@@ -39,6 +44,7 @@ export function AddVariantForm({ productId, suppliers }: Props) {
     supplierId: "",
     lowStockThreshold: 10,
     active: true,
+    variantLicense: emptyVariantLicenseFields() as VariantLicenseFields,
   });
 
   async function submit() {
@@ -83,6 +89,11 @@ export function AddVariantForm({ productId, suppliers }: Props) {
           supplierId: form.supplierId || null,
           lowStockThreshold: form.lowStockThreshold,
           active: form.active,
+          licenseChannel: form.variantLicense.licenseChannel || null,
+          licenseTerm: form.variantLicense.licenseTerm || null,
+          seatsLabel: form.variantLicense.seatsLabel.trim() || null,
+          regionCode: form.variantLicense.regionCode || null,
+          activationMethod: form.variantLicense.activationMethod || null,
         }),
       });
       const data = await res.json();
@@ -211,6 +222,10 @@ export function AddVariantForm({ productId, suppliers }: Props) {
           </select>
         </label>
       </div>
+      <VariantLicenseFieldsPanel
+        value={form.variantLicense}
+        onChange={(variantLicense) => setForm({ ...form, variantLicense })}
+      />
       {msg ? (
         <pre className="whitespace-pre-wrap text-sm text-danger">{msg}</pre>
       ) : null}

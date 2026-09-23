@@ -75,7 +75,7 @@ export function catalogPublishWarnings(input: CatalogPublishInput): CatalogValid
   if (!input.galleryUrls?.length) {
     warnings.push({
       field: "galleryUrls",
-      message: "Chưa có gallery — PDP sẽ dùng ảnh demo cho đến khi upload Media",
+      message: "Chưa có gallery — nên thêm ảnh trước khi xuất bản",
     });
   }
   if (

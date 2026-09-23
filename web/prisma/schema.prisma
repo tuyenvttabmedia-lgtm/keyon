@@ -343,7 +343,7 @@ model Product {
   galleryUrls      Json             @default("[]")
   /// Feature bullets (JSON string[])
   features         Json             @default("[]")
-  /// Spec rows (JSON { label, value }[])
+  /// Spec rows (JSON { label, value, group? }[]) — group: general|system
   specs            Json             @default("[]")
   /// FAQ items (JSON { id, question, answer }[])
   faqs             Json             @default("[]")
@@ -353,8 +353,26 @@ model Product {
   seoDescription   String?
   /// Open Graph / social share image URL (fallback: first gallery image)
   ogImageUrl       String?
+  /// Focus keyword (SEO)
+  focusKeyword     String?
+  /// Secondary keywords (JSON string[])
+  seoKeywords      Json             @default("[]")
+  canonicalUrl     String?
+  ogTitle          String?
+  ogDescription    String?
   /// Curated related product IDs for PDP (JSON string[], max ~8)
   relatedProductIds Json            @default("[]")
+  /// Platforms (JSON string[]: windows|macos|…)
+  platforms        Json             @default("[]")
+  language         String?
+  /// Default merchandising hints for new variants (SKU may override)
+  licenseChannelDefault    String?
+  licenseTermDefault       String?
+  seatsDefault             String?
+  activationMethodDefault  String?
+  transferPolicy           String?
+  upgradePolicy            String?
+  accountRequired          String?
   active           Boolean          @default(true)
   variants         ProductVariant[]
   createdAt        DateTime         @default(now())
@@ -367,6 +385,7 @@ model ProductVariant {
   product              Product              @relation(fields: [productId], references: [id])
   sku                  String               @unique
   name                 String
+  /// Ops/fulfillment commercial model — NOT Retail/OEM channel
   licenseModel         LicenseModel
   fulfillmentStrategy  FulfillmentStrategy
   deliverableType      DeliverableType
@@ -381,6 +400,13 @@ model ProductVariant {
   costVnd              Int                  @default(0)
   /// Instant low-stock alert threshold (Inventory Read Model)
   lowStockThreshold    Int                  @default(10)
+  /// Catalog merchandising (Retail/OEM/…) — distinct from licenseModel
+  licenseChannel       String?
+  /// Display term: PERPETUAL | 1_YEAR | …
+  licenseTerm          String?
+  seatsLabel           String?
+  regionCode           String?
+  activationMethod     String?
   active               Boolean              @default(true)
   createdAt            DateTime             @default(now())
   updatedAt            DateTime             @updatedAt

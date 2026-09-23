@@ -38,6 +38,7 @@ import {
 } from "@/storefront/typography";
 import { QUOTE_HREF, QUOTE_LABEL } from "@/storefront/lib/cta";
 import type { PdpProductData, PdpTabId, PdpVariantOption } from "./types";
+import { resolveLicensePresentation } from "@/storefront/lib/license-catalog";
 import {
   ELEVATION_CTA_HOVER,
   ELEVATION_FLOAT,
@@ -151,6 +152,21 @@ export function PdpView({ data }: { data: PdpProductData }) {
     [data.variants, variantId],
   );
 
+  const license = useMemo(
+    () =>
+      resolveLicensePresentation({
+        product: data.licenseDefaults,
+        variant: {
+          licenseChannel: variant.licenseChannel,
+          licenseTerm: variant.licenseTerm,
+          seatsLabel: variant.seatsLabel,
+          regionCode: variant.regionCode,
+          activationMethod: variant.activationMethod,
+        },
+      }),
+    [data.licenseDefaults, variant],
+  );
+
   const tabLabels = useMemo(
     () =>
       TABS.filter((t) => {
@@ -219,6 +235,7 @@ export function PdpView({ data }: { data: PdpProductData }) {
           <PurchaseColumn
             data={data}
             variant={variant}
+            license={license}
             qty={qty}
             onQty={setQty}
             onSelectVariant={selectVariant}
@@ -242,6 +259,7 @@ export function PdpView({ data }: { data: PdpProductData }) {
         <TabsSection
           data={data}
           variant={variant}
+          license={license}
           tab={tab}
           tabs={tabLabels}
           onTab={setTab}
@@ -467,6 +485,7 @@ function Gallery({
 function PurchaseColumn({
   data,
   variant,
+  license,
   qty,
   onQty,
   onSelectVariant,
@@ -481,6 +500,7 @@ function PurchaseColumn({
 }: {
   data: PdpProductData;
   variant: PdpVariantOption;
+  license: ReturnType<typeof resolveLicensePresentation>;
   qty: number;
   onQty: (n: number) => void;
   onSelectVariant: (id: string) => void;
@@ -648,9 +668,14 @@ function PurchaseColumn({
             {variant.slaPromise?.trim()
               ? ` · SLA: ${variant.slaPromise.trim()}`
               : ""}
+            {license.activationLabel
+              ? ` · Kích hoạt: ${license.activationLabel}`
+              : ""}
           </p>
         </div>
       </div>
+
+      <LicenseInfoBlock license={license} />
 
       {!data.loggedIn ? (
         <input
@@ -756,12 +781,14 @@ function FeatureBar({
 function TabsSection({
   data,
   variant,
+  license,
   tab,
   tabs,
   onTab,
 }: {
   data: PdpProductData;
   variant: PdpVariantOption;
+  license: ReturnType<typeof resolveLicensePresentation>;
   tab: PdpTabId;
   tabs: { id: PdpTabId; label: string }[];
   onTab: (id: PdpTabId) => void;
@@ -804,24 +831,55 @@ function TabsSection({
                 ))}
               </ul>
             </div>
-            <SpecsCard specs={data.specs} />
+            <div className="space-y-4">
+              <SpecsCard title="Thông số" specs={data.specs} />
+              {data.systemSpecs.length ? (
+                <SpecsCard
+                  title="Yêu cầu hệ thống"
+                  specs={data.systemSpecs}
+                />
+              ) : null}
+            </div>
           </div>
         ) : null}
 
         {tab === "details" ? (
-          <div className="rounded-2xl border border-border/80 bg-surface p-4 sm:p-5 md:p-6">
-            <p className={CARD_TITLE_CLASS}>Thông số chi tiết</p>
-            <dl className="mt-4 grid gap-x-10 gap-y-0 sm:grid-cols-2">
-              {data.specs.map((s) => (
-                <div
-                  key={s.label}
-                  className={`flex items-start justify-between gap-3 border-b border-border/70 py-3 ${BODY_CLASS}`}
-                >
-                  <dt className="text-muted-soft">{s.label}</dt>
-                  <dd className="text-right font-semibold text-navy">{s.value}</dd>
-                </div>
-              ))}
-            </dl>
+          <div className="space-y-4">
+            <div className="rounded-2xl border border-border/80 bg-surface p-4 sm:p-5 md:p-6">
+              <p className={CARD_TITLE_CLASS}>Thông số chi tiết</p>
+              <dl className="mt-4 grid gap-x-10 gap-y-0 sm:grid-cols-2">
+                {data.specs.map((s) => (
+                  <div
+                    key={s.label}
+                    className={`flex items-start justify-between gap-3 border-b border-border/70 py-3 ${BODY_CLASS}`}
+                  >
+                    <dt className="text-muted-soft">{s.label}</dt>
+                    <dd className="text-right font-semibold text-navy">
+                      {s.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+            {data.systemSpecs.length ? (
+              <div className="rounded-2xl border border-border/80 bg-surface p-4 sm:p-5 md:p-6">
+                <p className={CARD_TITLE_CLASS}>Yêu cầu hệ thống</p>
+                <dl className="mt-4 grid gap-x-10 gap-y-0 sm:grid-cols-2">
+                  {data.systemSpecs.map((s) => (
+                    <div
+                      key={s.label}
+                      className={`flex items-start justify-between gap-3 border-b border-border/70 py-3 ${BODY_CLASS}`}
+                    >
+                      <dt className="text-muted-soft">{s.label}</dt>
+                      <dd className="text-right font-semibold text-navy">
+                        {s.value}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            ) : null}
+            <LicenseInfoBlock license={license} dense />
           </div>
         ) : null}
 
@@ -880,14 +938,75 @@ function TabsSection({
   );
 }
 
+function LicenseInfoBlock({
+  license,
+  dense,
+}: {
+  license: ReturnType<typeof resolveLicensePresentation>;
+  dense?: boolean;
+}) {
+  const rows: { label: string; value: string }[] = [];
+  if (license.channelLabel)
+    rows.push({ label: "Loại bản quyền", value: license.channelLabel });
+  if (license.termLabel)
+    rows.push({ label: "Thời hạn", value: license.termLabel });
+  if (license.seats)
+    rows.push({ label: "Thiết bị / ghế", value: license.seats });
+  if (license.regionLabel)
+    rows.push({ label: "Vùng", value: license.regionLabel });
+  if (license.activationLabel)
+    rows.push({ label: "Kích hoạt", value: license.activationLabel });
+  if (license.platformLabels.length)
+    rows.push({
+      label: "Nền tảng",
+      value: license.platformLabels.join(", "),
+    });
+  if (license.languageLabel)
+    rows.push({ label: "Ngôn ngữ", value: license.languageLabel });
+  if (license.accountRequired)
+    rows.push({ label: "Tài khoản", value: license.accountRequired });
+  if (license.transferPolicy)
+    rows.push({ label: "Chuyển nhượng", value: license.transferPolicy });
+  if (license.upgradePolicy)
+    rows.push({ label: "Nâng cấp", value: license.upgradePolicy });
+
+  if (!rows.length) return null;
+
+  return (
+    <div
+      className={`rounded-xl border border-border bg-surface ${
+        dense ? "mt-0 p-4" : "mt-4 p-3.5"
+      }`}
+    >
+      <p className={`${OVERLINE_CLASS} text-muted-soft`}>
+        Thông tin bản quyền
+      </p>
+      <dl className={`mt-2 grid gap-x-6 ${dense ? "sm:grid-cols-2" : ""}`}>
+        {rows.map((r) => (
+          <div
+            key={r.label}
+            className={`flex items-start justify-between gap-3 border-b border-border/60 py-2 last:border-b-0 ${BODY_CLASS}`}
+          >
+            <dt className="shrink-0 text-muted-soft">{r.label}</dt>
+            <dd className="text-right font-semibold text-navy">{r.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  );
+}
+
 function SpecsCard({
+  title = "Thông số",
   specs,
 }: {
+  title?: string;
   specs: { label: string; value: string }[];
 }) {
+  if (!specs.length) return null;
   return (
     <div className="rounded-2xl border border-border/80 bg-surface p-4 sm:p-5">
-      <p className={CARD_TITLE_CLASS}>Thông số</p>
+      <p className={CARD_TITLE_CLASS}>{title}</p>
       <dl className="mt-3 space-y-0">
         {specs.map((s) => (
           <div

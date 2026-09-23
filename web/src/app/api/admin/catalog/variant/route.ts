@@ -10,71 +10,85 @@ import {
   formatIssues,
   validateCatalogPublish,
 } from "@/storefront/lib/catalog-validation";
+import {
+  productCatalogFieldsSchema,
+  productSpecSchema,
+  variantLicenseFieldsSchema,
+  normalizeProductCatalogWrite,
+  normalizeVariantLicenseWrite,
+} from "@/storefront/lib/catalog-license-fields";
 
-const patchSchema = z.object({
-  variantId: z.string().min(1),
-  active: z.boolean().optional(),
-  priceVnd: z.number().int().positive().optional(),
-  costVnd: z.number().int().nonnegative().optional(),
-  compareAtPriceVnd: z.number().int().positive().nullable().optional(),
-  name: z.string().min(1).optional(),
-  slaPromise: z.string().nullable().optional(),
-  lowStockThreshold: z.number().int().nonnegative().optional(),
-  salesMotion: z.enum(["SELF_SERVE", "QUOTE_REQUIRED"]).optional(),
-  /** Product fields */
-  productName: z.string().min(1).optional(),
-  productDescription: z.string().nullable().optional(),
-  productShortDescription: z.string().nullable().optional(),
-  productActive: z.boolean().optional(),
-  categoryKey: z.enum(PRODUCT_CATEGORY_KEYS).nullable().optional(),
-  badgeLabel: z.string().nullable().optional(),
-  galleryUrls: z.array(z.string().min(1)).optional(),
-  features: z.array(z.string().min(1)).optional(),
-  specs: z
-    .array(z.object({ label: z.string().min(1), value: z.string().min(1) }))
-    .optional(),
-  faqs: z
-    .array(
-      z.object({
-        id: z.string().min(1),
-        question: z.string().min(1),
-        answer: z.string().min(1),
-      }),
-    )
-    .optional(),
-  seoTitle: z.string().nullable().optional(),
-  seoDescription: z.string().nullable().optional(),
-  ogImageUrl: z.string().nullable().optional(),
-  relatedProductIds: z.array(z.string().min(1)).max(8).optional(),
-});
+const patchSchema = z
+  .object({
+    variantId: z.string().min(1),
+    active: z.boolean().optional(),
+    priceVnd: z.number().int().positive().optional(),
+    costVnd: z.number().int().nonnegative().optional(),
+    compareAtPriceVnd: z.number().int().positive().nullable().optional(),
+    name: z.string().min(1).optional(),
+    slaPromise: z.string().nullable().optional(),
+    lowStockThreshold: z.number().int().nonnegative().optional(),
+    salesMotion: z.enum(["SELF_SERVE", "QUOTE_REQUIRED"]).optional(),
+    /** Product fields */
+    productName: z.string().min(1).optional(),
+    productDescription: z.string().nullable().optional(),
+    productShortDescription: z.string().nullable().optional(),
+    productActive: z.boolean().optional(),
+    categoryKey: z.enum(PRODUCT_CATEGORY_KEYS).nullable().optional(),
+    badgeLabel: z.string().nullable().optional(),
+    galleryUrls: z.array(z.string().min(1)).optional(),
+    features: z.array(z.string().min(1)).optional(),
+    specs: z.array(productSpecSchema).optional(),
+    faqs: z
+      .array(
+        z.object({
+          id: z.string().min(1),
+          question: z.string().min(1),
+          answer: z.string().min(1),
+        }),
+      )
+      .optional(),
+    seoTitle: z.string().nullable().optional(),
+    seoDescription: z.string().nullable().optional(),
+    ogImageUrl: z.string().nullable().optional(),
+    relatedProductIds: z.array(z.string().min(1)).max(8).optional(),
+  })
+  .merge(productCatalogFieldsSchema)
+  .merge(variantLicenseFieldsSchema);
 
-const createSchema = z.object({
-  productId: z.string().min(1),
-  name: z.string().min(1),
-  sku: z.string().min(1),
-  priceVnd: z.number().int().positive(),
-  compareAtPriceVnd: z.number().int().positive().nullable().optional(),
-  costVnd: z.number().int().nonnegative().optional(),
-  licenseModel: z.enum(["PERPETUAL", "SUBSCRIPTION", "MAINTENANCE"]).default("PERPETUAL"),
-  fulfillmentStrategy: z
-    .enum(["MANUAL", "INSTANT", "SEMI_AUTOMATED", "MANAGED_SUBSCRIPTION"])
-    .default("MANUAL"),
-  deliverableType: z
-    .enum(["KEY", "ACCOUNT", "SUBSCRIPTION", "DIGITAL_FILE", "EXTERNAL_PORTAL"])
-    .default("KEY"),
-  salesMotion: z.enum(["SELF_SERVE", "QUOTE_REQUIRED"]).default("SELF_SERVE"),
-  slaPromise: z.string().nullable().optional(),
-  supplierId: z.string().nullable().optional(),
-  lowStockThreshold: z.number().int().nonnegative().optional(),
-  active: z.boolean().optional(),
-});
+const createSchema = z
+  .object({
+    productId: z.string().min(1),
+    name: z.string().min(1),
+    sku: z.string().min(1),
+    priceVnd: z.number().int().positive(),
+    compareAtPriceVnd: z.number().int().positive().nullable().optional(),
+    costVnd: z.number().int().nonnegative().optional(),
+    licenseModel: z
+      .enum(["PERPETUAL", "SUBSCRIPTION", "MAINTENANCE"])
+      .default("PERPETUAL"),
+    fulfillmentStrategy: z
+      .enum(["MANUAL", "INSTANT", "SEMI_AUTOMATED", "MANAGED_SUBSCRIPTION"])
+      .default("MANUAL"),
+    deliverableType: z
+      .enum(["KEY", "ACCOUNT", "SUBSCRIPTION", "DIGITAL_FILE", "EXTERNAL_PORTAL"])
+      .default("KEY"),
+    salesMotion: z.enum(["SELF_SERVE", "QUOTE_REQUIRED"]).default("SELF_SERVE"),
+    slaPromise: z.string().nullable().optional(),
+    supplierId: z.string().nullable().optional(),
+    lowStockThreshold: z.number().int().nonnegative().optional(),
+    active: z.boolean().optional(),
+  })
+  .merge(variantLicenseFieldsSchema);
 
 export async function POST(req: Request) {
   try {
     const session = await requireStaffSession({ capability: "catalog_mutate" });
     const body = createSchema.parse(await req.json());
 
-    const product = await prisma.product.findUnique({ where: { id: body.productId } });
+    const product = await prisma.product.findUnique({
+      where: { id: body.productId },
+    });
     if (!product) throw new AppError("Product not found", 404);
 
     const issues = validateCatalogPublish({
@@ -90,13 +104,19 @@ export async function POST(req: Request) {
     });
     if (issues.length) throw new AppError(formatIssues(issues), 400);
 
-    const skuTaken = await prisma.productVariant.findUnique({ where: { sku: body.sku } });
+    const skuTaken = await prisma.productVariant.findUnique({
+      where: { sku: body.sku },
+    });
     if (skuTaken) throw new AppError("SKU đã tồn tại", 409);
 
     if (body.supplierId) {
-      const supplier = await prisma.supplier.findUnique({ where: { id: body.supplierId } });
+      const supplier = await prisma.supplier.findUnique({
+        where: { id: body.supplierId },
+      });
       if (!supplier) throw new AppError("Supplier not found", 404);
     }
+
+    const licenseWrite = normalizeVariantLicenseWrite(body);
 
     const created = await prisma.productVariant.create({
       data: {
@@ -113,6 +133,7 @@ export async function POST(req: Request) {
         compareAtPriceVnd: body.compareAtPriceVnd ?? null,
         costVnd: body.costVnd ?? 0,
         lowStockThreshold: body.lowStockThreshold ?? 10,
+        ...licenseWrite,
         active: body.active ?? true,
       },
       include: { product: { include: { brand: true } }, supplier: true },
@@ -123,7 +144,11 @@ export async function POST(req: Request) {
       sku: body.sku,
     });
 
-    return NextResponse.json({ ok: true, variant: created, variantId: created.id });
+    return NextResponse.json({
+      ok: true,
+      variant: created,
+      variantId: created.id,
+    });
   } catch (e) {
     return toErrorResponse(e, "catalog.variant.create");
   }
@@ -147,9 +172,13 @@ export async function PATCH(req: Request) {
         : variant.compareAtPriceVnd;
     const nextCost = body.costVnd ?? variant.costVnd;
     const nextProductActive =
-      typeof body.productActive === "boolean" ? body.productActive : variant.product.active;
+      typeof body.productActive === "boolean"
+        ? body.productActive
+        : variant.product.active;
     const nextCategory =
-      body.categoryKey !== undefined ? body.categoryKey : variant.product.categoryKey;
+      body.categoryKey !== undefined
+        ? body.categoryKey
+        : variant.product.categoryKey;
     const nextGallery =
       body.galleryUrls !== undefined
         ? body.galleryUrls
@@ -170,6 +199,9 @@ export async function PATCH(req: Request) {
     });
     if (issues.length) throw new AppError(formatIssues(issues), 400);
 
+    const licenseWrite = normalizeVariantLicenseWrite(body);
+    const catalogWrite = normalizeProductCatalogWrite(body);
+
     const variantData: {
       active?: boolean;
       priceVnd?: number;
@@ -179,7 +211,12 @@ export async function PATCH(req: Request) {
       slaPromise?: string | null;
       lowStockThreshold?: number;
       salesMotion?: SalesMotion;
-    } = {};
+      licenseChannel?: string | null;
+      licenseTerm?: string | null;
+      seatsLabel?: string | null;
+      regionCode?: string | null;
+      activationMethod?: string | null;
+    } = { ...licenseWrite };
     if (typeof body.active === "boolean") variantData.active = body.active;
     if (typeof body.priceVnd === "number") variantData.priceVnd = body.priceVnd;
     if (typeof body.costVnd === "number") variantData.costVnd = body.costVnd;
@@ -193,7 +230,9 @@ export async function PATCH(req: Request) {
     }
     if (body.salesMotion) variantData.salesMotion = body.salesMotion;
 
-    const productPatch: Prisma.ProductUpdateInput = {};
+    const productPatch: Prisma.ProductUpdateInput = {
+      ...catalogWrite,
+    };
     if (body.productName) productPatch.name = body.productName;
     if (body.productDescription !== undefined) {
       productPatch.description = body.productDescription;
