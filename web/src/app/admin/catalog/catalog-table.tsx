@@ -105,6 +105,43 @@ function RowMenu({ row }: { row: CatalogRow }) {
     }
   }
 
+  async function setProductLive(next: boolean) {
+    if (next) {
+      if (
+        !confirm(
+          `Xuất bản lại «${row.productName}»?\nSản phẩm sẽ hiện lại trên cửa hàng. Bật từng gói (ON) nếu cần bán.`,
+        )
+      ) {
+        return;
+      }
+    } else if (
+      !confirm(
+        `Ngừng bán / lưu trữ «${row.productName}»?\nẨn khỏi cửa hàng và tắt mọi gói. Không xóa dữ liệu, đơn hàng hay kho key.`,
+      )
+    ) {
+      return;
+    }
+    setBusy(true);
+    try {
+      const res = await fetch("/api/admin/catalog/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          variantIds: [row.id],
+          action: next ? "product_publish" : "product_draft",
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Cập nhật thất bại");
+      setOpen(false);
+      router.refresh();
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Lỗi");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   const item = PORTAL_MENU_ITEM_CLASS;
 
   return (
@@ -123,7 +160,7 @@ function RowMenu({ row }: { row: CatalogRow }) {
         open={open}
         onClose={() => setOpen(false)}
         anchorRef={btnRef}
-        width={176}
+        width={200}
       >
         <a
           href={`/products/${row.productSlug}`}
@@ -144,6 +181,25 @@ function RowMenu({ row }: { row: CatalogRow }) {
         <button type="button" className={item} disabled={busy} onClick={clone}>
           Clone
         </button>
+        {row.productActive ? (
+          <button
+            type="button"
+            className={`${item} text-amber-800`}
+            disabled={busy}
+            onClick={() => setProductLive(false)}
+          >
+            Ngừng bán / Lưu trữ
+          </button>
+        ) : (
+          <button
+            type="button"
+            className={`${item} text-accent`}
+            disabled={busy}
+            onClick={() => setProductLive(true)}
+          >
+            Xuất bản lại
+          </button>
+        )}
         <Link
           href={`/admin/products/${row.id}#variant`}
           className={item}
@@ -184,12 +240,26 @@ export function CatalogTable({ rows }: { rows: CatalogRow[] }) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<"all" | "live" | "archived">(
+    "all",
+  );
   const [priceMode, setPriceMode] = useState<
     "set_price" | "adjust_price_percent" | "adjust_price_amount" | "set_cost"
   >("set_price");
   const [priceInput, setPriceInput] = useState("");
 
-  const page = useClientPagination(rows, "keyon.admin.catalog.pageSize", rows.length);
+  const filteredRows =
+    statusFilter === "all"
+      ? rows
+      : statusFilter === "live"
+        ? rows.filter((r) => r.productActive)
+        : rows.filter((r) => !r.productActive);
+
+  const page = useClientPagination(
+    filteredRows,
+    "keyon.admin.catalog.pageSize",
+    statusFilter,
+  );
   const pageIds = page.pageItems.map((r) => r.id);
   const allPageSelected =
     pageIds.length > 0 && pageIds.every((id) => selected.has(id));
@@ -217,6 +287,15 @@ export function CatalogTable({ rows }: { rows: CatalogRow[] }) {
 
   async function run(action: BulkAction, extras?: Record<string, number>) {
     if (selected.size === 0) return;
+    if (action === "product_draft") {
+      if (
+        !confirm(
+          `Ngừng bán / lưu trữ ${selected.size} gói đã chọn?\nẨn sản phẩm khỏi cửa hàng và tắt mọi gói liên quan. Không xóa dữ liệu.`,
+        )
+      ) {
+        return;
+      }
+    }
     setLoading(true);
     setMsg(null);
     try {
@@ -231,7 +310,11 @@ export function CatalogTable({ rows }: { rows: CatalogRow[] }) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Bulk failed");
-      setMsg(`Đã cập nhật ${data.affectedVariants} gói`);
+      setMsg(
+        action === "product_draft"
+          ? `Đã lưu trữ ${data.affectedProducts} sản phẩm (${data.affectedVariants} gói)`
+          : `Đã cập nhật ${data.affectedVariants} gói`,
+      );
       setSelected(new Set());
       router.refresh();
     } catch (e) {
@@ -254,11 +337,39 @@ export function CatalogTable({ rows }: { rows: CatalogRow[] }) {
     else await run("adjust_price_amount", { amount: Math.round(n) });
   }
 
+  const liveCount = rows.filter((r) => r.productActive).length;
+  const archivedCount = rows.length - liveCount;
+
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-border bg-card px-3 py-2">
+        <div className="flex flex-wrap gap-1 rounded-lg border border-border p-0.5">
+          {(
+            [
+              { id: "all" as const, label: `Tất cả (${rows.length})` },
+              { id: "live" as const, label: `Đang bán (${liveCount})` },
+              { id: "archived" as const, label: `Đã lưu trữ (${archivedCount})` },
+            ] as const
+          ).map((f) => (
+            <button
+              key={f.id}
+              type="button"
+              onClick={() => {
+                setStatusFilter(f.id);
+                setSelected(new Set());
+              }}
+              className={`rounded-md px-2.5 py-1 text-xs font-semibold ${
+                statusFilter === f.id
+                  ? "bg-navy text-white"
+                  : "text-muted hover:bg-surface"
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
         <span className="text-sm text-muted">
-          Đã chọn {selected.size}/{rows.length}
+          Đã chọn {selected.size}/{filteredRows.length}
         </span>
         <PageSizeSelect
           value={page.pageSize}
@@ -296,10 +407,10 @@ export function CatalogTable({ rows }: { rows: CatalogRow[] }) {
           type="button"
           disabled={loading || selected.size === 0}
           onClick={() => run("product_draft")}
-          className="rounded-lg border border-border px-2.5 py-1.5 text-xs font-semibold disabled:opacity-40"
-          title="Archive = về nháp (không xóa)"
+          className="rounded-lg border border-amber-300 bg-amber-50 px-2.5 py-1.5 text-xs font-semibold text-amber-900 disabled:opacity-40"
+          title="Ẩn khỏi cửa hàng + tắt mọi gói — không xóa dữ liệu"
         >
-          Archive (nháp)
+          Ngừng bán / Lưu trữ
         </button>
         {msg ? <span className="text-xs text-muted">{msg}</span> : null}
       </div>
@@ -413,10 +524,10 @@ export function CatalogTable({ rows }: { rows: CatalogRow[] }) {
                       className={`inline-flex rounded-full px-2 py-0.5 font-medium ${BADGE_CLASS} ${
                         v.productActive
                           ? "bg-emerald-50 text-emerald-800"
-                          : "bg-amber-50 text-amber-800"
+                          : "bg-amber-50 text-amber-900"
                       }`}
                     >
-                      {v.productActive ? "Live" : "Nháp"}
+                      {v.productActive ? "Đang bán" : "Đã lưu trữ"}
                     </span>
                   </div>
                 </td>

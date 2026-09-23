@@ -205,8 +205,8 @@ export function ProductEditForm(props: Props) {
       if (!res.ok) throw new Error(data.error ?? "Lỗi");
       setMsg(
         form.productActive
-          ? "Đã lưu & xuất bản — PDP / SEO đã cập nhật"
-          : "Đã lưu nháp — chưa hiện cửa hàng",
+          ? "Đã lưu & xuất bản — sản phẩm đang bán trên cửa hàng"
+          : "Đã lưu trữ — ẩn cửa hàng, đã tắt mọi gói (không xóa dữ liệu)",
       );
       router.refresh();
     } catch (e) {
@@ -221,24 +221,50 @@ export function ProductEditForm(props: Props) {
       <div className="space-y-4 rounded-2xl border border-border bg-card p-6 lg:col-span-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="font-semibold text-navy">Trạng thái xuất bản</h2>
+            <h2 className="font-semibold text-navy">Trạng thái bán hàng</h2>
             <p className="text-xs text-muted">
-              Nháp = không hiện shop. Xuất bản cần danh mục; gallery trống sẽ cảnh báo.
+              Ngừng bán / lưu trữ = ẩn cửa hàng + tắt mọi gói. Không xóa dữ liệu, đơn hay kho
+              key. Xuất bản lại chỉ hiện sản phẩm — bật từng gói (ON) nếu cần bán.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <label className="flex items-center gap-2 rounded-xl border border-border bg-surface px-3 py-2 text-sm">
-              <input
-                type="checkbox"
-                checked={form.productActive}
-                onChange={(e) =>
-                  setForm({ ...form, productActive: e.target.checked })
-                }
-              />
-              <span className="font-semibold text-navy">
-                {form.productActive ? "Đang xuất bản" : "Đang nháp"}
-              </span>
-            </label>
+            <span
+              className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+                form.productActive
+                  ? "bg-emerald-50 text-emerald-800 ring-1 ring-emerald-200"
+                  : "bg-amber-50 text-amber-900 ring-1 ring-amber-200"
+              }`}
+            >
+              {form.productActive ? "Đang bán" : "Đã lưu trữ"}
+            </span>
+            {form.productActive ? (
+              <button
+                type="button"
+                disabled={loading}
+                onClick={() => {
+                  if (
+                    !confirm(
+                      "Ngừng bán / lưu trữ sản phẩm này?\nẨn khỏi cửa hàng và tắt mọi gói. Không xóa dữ liệu.",
+                    )
+                  ) {
+                    return;
+                  }
+                  setForm({ ...form, productActive: false, active: false });
+                }}
+                className="inline-flex h-10 items-center rounded-xl border border-amber-300 bg-amber-50 px-4 text-sm font-semibold text-amber-900 hover:bg-amber-100 disabled:opacity-40"
+              >
+                Ngừng bán / Lưu trữ
+              </button>
+            ) : (
+              <button
+                type="button"
+                disabled={loading}
+                onClick={() => setForm({ ...form, productActive: true })}
+                className="inline-flex h-10 items-center rounded-xl bg-accent/10 px-4 text-sm font-semibold text-accent hover:bg-accent/20 disabled:opacity-40"
+              >
+                Xuất bản lại
+              </button>
+            )}
             <a
               href={`/products/${props.productSlug}`}
               target="_blank"
@@ -249,6 +275,10 @@ export function ProductEditForm(props: Props) {
             </a>
           </div>
         </div>
+        <p className="text-xs text-muted">
+          Nhấn <strong>Lưu</strong> bên dưới để áp dụng trạng thái. Lưu trữ sẽ tắt toàn bộ gói
+          của sản phẩm này.
+        </p>
       </div>
 
       <div className="space-y-4 rounded-2xl border border-border bg-card p-6">

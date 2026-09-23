@@ -122,9 +122,9 @@ export default async function AdminProductEditPage({
           <p className="text-sm text-muted">
             {variant.name} · {DELIVERABLE_ADMIN_LABELS[variant.deliverableType]} ·{" "}
             {p.active ? (
-              <span className="font-medium text-emerald-700">Đã xuất bản</span>
+              <span className="font-medium text-emerald-700">Đang bán</span>
             ) : (
-              <span className="font-medium text-amber-700">Nháp</span>
+              <span className="font-medium text-amber-700">Đã lưu trữ</span>
             )}
           </p>
         </div>

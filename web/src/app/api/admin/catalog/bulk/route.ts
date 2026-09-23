@@ -48,11 +48,23 @@ export async function POST(req: Request) {
         where: { id: { in: ids } },
         data: { active: body.action === "variant_on" },
       });
-    } else if (body.action === "product_publish" || body.action === "product_draft") {
+    } else if (body.action === "product_publish") {
       await prisma.product.updateMany({
         where: { id: { in: productIds } },
-        data: { active: body.action === "product_publish" },
+        data: { active: true },
       });
+    } else if (body.action === "product_draft") {
+      /** Soft archive: hide from storefront + stop all packages (no hard delete). */
+      await prisma.$transaction([
+        prisma.product.updateMany({
+          where: { id: { in: productIds } },
+          data: { active: false },
+        }),
+        prisma.productVariant.updateMany({
+          where: { productId: { in: productIds } },
+          data: { active: false },
+        }),
+      ]);
     } else if (body.action === "set_price") {
       if (body.value == null || body.value <= 0) {
         throw new AppError("Giá set_price phải > 0", 400);

@@ -268,6 +268,13 @@ export async function PATCH(req: Request) {
           data: productPatch,
         });
       }
+      /** Soft archive: when product unpublished, stop every package under it. */
+      if (body.productActive === false) {
+        await tx.productVariant.updateMany({
+          where: { productId: variant.productId },
+          data: { active: false },
+        });
+      }
       return tx.productVariant.update({
         where: { id: body.variantId },
         data: variantData,
