@@ -87,15 +87,8 @@ export function catalogPublishWarnings(input: CatalogPublishInput): CatalogValid
       message: "QUOTE_REQUIRED + Instant không mở checkout — khách chỉ gửi báo giá",
     });
   }
-  if (
-    input.fulfillmentStrategy === "MANUAL" &&
-    input.deliverableType === "KEY"
-  ) {
-    warnings.push({
-      field: "deliverableType",
-      message: "Gói MANUAL kiểu dịch vụ nên DIGITAL_FILE — KEY dễ nhầm kho Instant",
-    });
-  }
+  // MANUAL + KEY is the normal KEYON path (ops giao key thủ công) — không cảnh báo.
+  // Instant pool chỉ khi fulfillmentStrategy === INSTANT.
   return warnings;
 }
 
