@@ -409,9 +409,15 @@ function Gallery({
   useEffect(() => {
     if (!lightbox) return;
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setLightbox(false);
-      else if (e.key === "ArrowLeft") stepImage(-1);
-      else if (e.key === "ArrowRight") stepImage(1);
+      if (e.key === "Escape") {
+        setLightbox(false);
+        return;
+      }
+      if (e.key === "ArrowLeft") {
+        onThumb(Math.max(0, activeIndex - 1));
+      } else if (e.key === "ArrowRight") {
+        onThumb(Math.min(thumbs.length - 1, activeIndex + 1));
+      }
     }
     window.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
@@ -420,7 +426,7 @@ function Gallery({
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
     };
-  }, [lightbox, activeIndex, thumbs.length]);
+  }, [lightbox, activeIndex, thumbs.length, onThumb]);
 
   return (
     <div className="min-w-0">
