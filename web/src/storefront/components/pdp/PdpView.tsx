@@ -677,8 +677,6 @@ function PurchaseColumn({
         </div>
       </div>
 
-      <LicenseInfoBlock license={license} variant="compact" />
-
       {!data.loggedIn ? (
         <input
           type="email"
