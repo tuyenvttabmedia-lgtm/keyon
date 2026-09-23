@@ -77,7 +77,8 @@ export function ProductCreateForm({
   const [slugLocked, setSlugLocked] = useState(true);
   const [previewMode, setPreviewMode] = useState<"desktop" | "mobile">("desktop");
   const [form, setForm] = useState({
-    brandId: brands[0]?.id ?? "",
+    /** Empty until admin picks — avoid silent Adobe (first A–Z brand) default. */
+    brandId: "",
     name: "",
     slug: "",
     description: "",
@@ -338,7 +339,9 @@ export function ProductCreateForm({
               className="mt-1 w-full rounded-lg border border-border px-3 py-2"
               value={form.brandId}
               onChange={(e) => setForm({ ...form, brandId: e.target.value })}
+              required
             >
+              <option value="">— Chọn brand —</option>
               {brands.map((b) => (
                 <option key={b.id} value={b.id}>
                   {b.name}
