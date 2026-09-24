@@ -142,6 +142,28 @@ function RowMenu({ row }: { row: CatalogRow }) {
     }
   }
 
+  async function deleteProductForever() {
+    const typed = window.prompt(
+      `XÓA VĨNH VIỄN «${row.productName}»?\n\n• Chỉ được xóa nếu chưa có đơn hàng và không có key RESERVED/CONSUMED.\n• Key AVAILABLE/DISABLED trong kho Instant cũng bị xóa theo.\n• Không hoàn tác.\n\nGõ XÓA để xác nhận:`,
+    );
+    if (typed !== "XÓA") return;
+    setBusy(true);
+    try {
+      const res = await fetch(
+        `/api/admin/catalog/product/${encodeURIComponent(row.productId)}`,
+        { method: "DELETE" },
+      );
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Xóa thất bại");
+      setOpen(false);
+      router.refresh();
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Lỗi xóa");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   const item = PORTAL_MENU_ITEM_CLASS;
 
   return (
@@ -200,6 +222,14 @@ function RowMenu({ row }: { row: CatalogRow }) {
             Xuất bản lại
           </button>
         )}
+        <button
+          type="button"
+          className={`${item} text-red-700`}
+          disabled={busy}
+          onClick={deleteProductForever}
+        >
+          Xóa vĩnh viễn…
+        </button>
         <Link
           href={`/admin/products/${row.id}#variant`}
           className={item}

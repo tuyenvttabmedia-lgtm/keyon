@@ -273,11 +273,39 @@ export function ProductEditForm(props: Props) {
             >
               Xem PDP ↗
             </a>
+            <button
+              type="button"
+              disabled={loading}
+              onClick={async () => {
+                const typed = window.prompt(
+                  `XÓA VĨNH VIỄN «${form.productName}»?\n\nChỉ khi chưa có đơn và không có key RESERVED/CONSUMED.\nGõ XÓA để xác nhận:`,
+                );
+                if (typed !== "XÓA") return;
+                setLoading(true);
+                setMsg(null);
+                try {
+                  const res = await fetch(
+                    `/api/admin/catalog/product/${encodeURIComponent(props.productId)}`,
+                    { method: "DELETE" },
+                  );
+                  const data = await res.json();
+                  if (!res.ok) throw new Error(data.error ?? "Xóa thất bại");
+                  router.push("/admin/catalog");
+                  router.refresh();
+                } catch (e) {
+                  setMsg(e instanceof Error ? e.message : "Lỗi xóa");
+                  setLoading(false);
+                }
+              }}
+              className="inline-flex h-10 items-center rounded-xl border border-red-300 bg-red-50 px-4 text-sm font-semibold text-red-800 hover:bg-red-100 disabled:opacity-40"
+            >
+              Xóa vĩnh viễn…
+            </button>
           </div>
         </div>
         <p className="text-xs text-muted">
-          Nhấn <strong>Lưu</strong> bên dưới để áp dụng trạng thái. Lưu trữ sẽ tắt toàn bộ gói
-          của sản phẩm này.
+          Nhấn <strong>Lưu</strong> bên dưới để áp dụng trạng thái bán hàng. Lưu trữ tắt toàn bộ
+          gói. Xóa vĩnh viễn chỉ dành cho sản phẩm demo / chưa bán — cần role ADMIN.
         </p>
       </div>
 
