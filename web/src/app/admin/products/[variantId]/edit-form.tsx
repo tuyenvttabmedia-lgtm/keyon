@@ -37,16 +37,19 @@ import {
   type ProductLicenseDefaults,
   type VariantLicenseFields,
 } from "../LicenseCatalogFields";
-import {
-  parseSeoKeywords,
-} from "@/storefront/lib/license-catalog";
+import { parseSeoKeywords } from "@/storefront/lib/license-catalog";
 import { listToLines } from "@/storefront/lib/product-cms";
 import { RichTextEditor } from "@/app/admin/blog/rich-text-editor";
-import { isHtmlBody, legacyBodyToHtml } from "@/server/cms/blog-utils";
+import {
+  isHtmlBody,
+  legacyBodyToHtml,
+  stripHtml,
+} from "@/server/cms/blog-utils";
 import {
   confirmPermanentDeletePhrase,
   PERMANENT_DELETE_PROMPT_HINT,
 } from "@/app/admin/catalog/confirm-permanent-delete";
+import { ELEVATION_NONE, TRANSITION_UI, Z_STICKY } from "@/storefront/effects";
 
 type Props = {
   variantId: string;
@@ -92,8 +95,42 @@ type Props = {
   supplierId: string | null;
 };
 
+const EDIT_TABS = [
+  { id: "basics", label: "Cơ bản" },
+  { id: "description", label: "Mô tả" },
+  { id: "guide", label: "Hướng dẫn" },
+  { id: "media", label: "Media" },
+  { id: "content", label: "Features · Specs" },
+  { id: "seo", label: "SEO" },
+  { id: "variant", label: "Gói / Giá" },
+  { id: "related", label: "Liên quan" },
+] as const;
+
+type EditTabId = (typeof EDIT_TABS)[number]["id"];
+
+function Panel({
+  title,
+  hint,
+  children,
+}: {
+  title: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="space-y-4 rounded-2xl border border-border bg-card p-5 sm:p-6">
+      <div>
+        <h2 className="font-semibold text-navy">{title}</h2>
+        {hint ? <p className="mt-0.5 text-xs text-muted">{hint}</p> : null}
+      </div>
+      {children}
+    </div>
+  );
+}
+
 export function ProductEditForm(props: Props) {
   const router = useRouter();
+  const [tab, setTab] = useState<EditTabId>("basics");
   const [form, setForm] = useState({
     ...props,
     galleryUrls: props.galleryUrls,
@@ -104,7 +141,6 @@ export function ProductEditForm(props: Props) {
     seoKeywordsText: listToLines(props.seoKeywords),
     licenseDefaults: props.licenseDefaults,
     variantLicense: props.variantLicense,
-    /** TipTap expects HTML; convert legacy plain text once. */
     productDescription: props.productDescription.trim()
       ? isHtmlBody(props.productDescription)
         ? props.productDescription
@@ -231,20 +267,54 @@ export function ProductEditForm(props: Props) {
     }
   }
 
+  async function permanentlyDelete() {
+    const typed = window.prompt(
+      `XÓA VĨNH VIỄN «${form.productName}»?\n\nChỉ khi chưa có đơn và không có key RESERVED/CONSUMED.\n${PERMANENT_DELETE_PROMPT_HINT}`,
+    );
+    const check = confirmPermanentDeletePhrase(typed);
+    if (check.cancelled) return;
+    if (!check.ok) {
+      alert("Chưa xóa. Bạn cần gõ đúng DELETE để xác nhận.");
+      return;
+    }
+    setLoading(true);
+    setMsg(null);
+    try {
+      const res = await fetch(
+        `/api/admin/catalog/product/${encodeURIComponent(props.productId)}`,
+        { method: "DELETE" },
+      );
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(
+          (data as { error?: string }).error ??
+            `Xóa thất bại (HTTP ${res.status})`,
+        );
+      }
+      router.push("/admin/catalog");
+      router.refresh();
+    } catch (e) {
+      setMsg(e instanceof Error ? e.message : "Lỗi xóa");
+      setLoading(false);
+    }
+  }
+
+  const serpDesc =
+    form.seoDescription.trim() ||
+    form.productShortDescription.trim() ||
+    stripHtml(form.productDescription).slice(0, 160) ||
+    "—";
+
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
-      <div className="space-y-4 rounded-2xl border border-border bg-card p-6 lg:col-span-2">
+    <div className="space-y-4">
+      {/* Sticky actions — always reachable while editing long editors */}
+      <div
+        className={`sticky top-[var(--admin-topbar-h,3.5rem)] ${Z_STICKY} space-y-3 rounded-2xl border border-border bg-white/95 px-4 py-3 backdrop-blur ${ELEVATION_NONE}`}
+      >
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h2 className="font-semibold text-navy">Trạng thái bán hàng</h2>
-            <p className="text-xs text-muted">
-              Ngừng bán / lưu trữ = ẩn cửa hàng + tắt mọi gói. Không xóa dữ liệu, đơn hay kho
-              key. Xuất bản lại chỉ hiện sản phẩm — bật từng gói (ON) nếu cần bán.
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
             <span
-              className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+              className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${
                 form.productActive
                   ? "bg-emerald-50 text-emerald-800 ring-1 ring-emerald-200"
                   : "bg-amber-50 text-amber-900 ring-1 ring-amber-200"
@@ -252,6 +322,21 @@ export function ProductEditForm(props: Props) {
             >
               {form.productActive ? "Đang bán" : "Đã lưu trữ"}
             </span>
+            <span className="truncate text-sm text-muted">
+              <span className="font-medium text-navy">{form.productName}</span>
+              <span className="mx-1.5 text-border">·</span>
+              <code className="font-mono text-[11px]">{props.productSlug}</code>
+            </span>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <a
+              href={`/products/${props.productSlug}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex h-9 items-center rounded-xl border border-border px-3 text-sm font-semibold text-navy hover:border-accent hover:text-accent"
+            >
+              Xem PDP ↗
+            </a>
             {form.productActive ? (
               <button
                 type="button"
@@ -266,106 +351,156 @@ export function ProductEditForm(props: Props) {
                   }
                   setForm({ ...form, productActive: false, active: false });
                 }}
-                className="inline-flex h-10 items-center rounded-xl border border-amber-300 bg-amber-50 px-4 text-sm font-semibold text-amber-900 hover:bg-amber-100 disabled:opacity-40"
+                className="inline-flex h-9 items-center rounded-xl border border-amber-300 bg-amber-50 px-3 text-sm font-semibold text-amber-900 hover:bg-amber-100 disabled:opacity-40"
               >
-                Ngừng bán / Lưu trữ
+                Lưu trữ
               </button>
             ) : (
               <button
                 type="button"
                 disabled={loading}
                 onClick={() => setForm({ ...form, productActive: true })}
-                className="inline-flex h-10 items-center rounded-xl bg-accent/10 px-4 text-sm font-semibold text-accent hover:bg-accent/20 disabled:opacity-40"
+                className="inline-flex h-9 items-center rounded-xl bg-accent/10 px-3 text-sm font-semibold text-accent hover:bg-accent/20 disabled:opacity-40"
               >
                 Xuất bản lại
               </button>
             )}
-            <a
-              href={`/products/${props.productSlug}`}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex h-10 items-center rounded-xl border border-border px-4 text-sm font-semibold text-navy hover:border-accent hover:text-accent"
-            >
-              Xem PDP ↗
-            </a>
             <button
               type="button"
               disabled={loading}
-              onClick={async () => {
-                const typed = window.prompt(
-                  `XÓA VĨNH VIỄN «${form.productName}»?\n\nChỉ khi chưa có đơn và không có key RESERVED/CONSUMED.\n${PERMANENT_DELETE_PROMPT_HINT}`,
-                );
-                const check = confirmPermanentDeletePhrase(typed);
-                if (check.cancelled) return;
-                if (!check.ok) {
-                  alert("Chưa xóa. Bạn cần gõ đúng DELETE để xác nhận.");
-                  return;
-                }
-                setLoading(true);
-                setMsg(null);
-                try {
-                  const res = await fetch(
-                    `/api/admin/catalog/product/${encodeURIComponent(props.productId)}`,
-                    { method: "DELETE" },
-                  );
-                  const data = await res.json().catch(() => ({}));
-                  if (!res.ok) {
-                    throw new Error(
-                      (data as { error?: string }).error ??
-                        `Xóa thất bại (HTTP ${res.status})`,
-                    );
-                  }
-                  router.push("/admin/catalog");
-                  router.refresh();
-                } catch (e) {
-                  setMsg(e instanceof Error ? e.message : "Lỗi xóa");
-                  setLoading(false);
-                }
-              }}
-              className="inline-flex h-10 items-center rounded-xl border border-red-300 bg-red-50 px-4 text-sm font-semibold text-red-800 hover:bg-red-100 disabled:opacity-40"
+              onClick={() => void permanentlyDelete()}
+              className="inline-flex h-9 items-center rounded-xl border border-red-200 px-3 text-sm font-semibold text-red-700 hover:bg-red-50 disabled:opacity-40"
             >
-              Xóa vĩnh viễn…
+              Xóa…
+            </button>
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => void save()}
+              className="inline-flex h-9 items-center rounded-xl bg-accent px-4 text-sm font-semibold text-white disabled:opacity-50"
+            >
+              {loading ? "Đang lưu…" : "Lưu thay đổi"}
             </button>
           </div>
         </div>
-        <p className="text-xs text-muted">
-          Nhấn <strong>Lưu</strong> bên dưới để áp dụng trạng thái bán hàng. Lưu trữ tắt toàn bộ
-          gói. Xóa vĩnh viễn chỉ dành cho sản phẩm demo / chưa bán — cần role ADMIN.
-        </p>
+        {msg ? (
+          <p
+            className={`text-sm ${
+              msg.startsWith("Đã") ? "text-emerald-700" : "text-danger"
+            }`}
+          >
+            {msg}
+          </p>
+        ) : null}
+
+        <nav
+          className="-mx-1 flex gap-1 overflow-x-auto pb-0.5"
+          aria-label="Mục chỉnh sửa sản phẩm"
+        >
+          {EDIT_TABS.map((t) => {
+            const on = tab === t.id;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setTab(t.id)}
+                className={`shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium ${TRANSITION_UI} ${
+                  on
+                    ? "bg-accent text-white"
+                    : "text-muted hover:bg-surface hover:text-navy"
+                }`}
+              >
+                {t.label}
+              </button>
+            );
+          })}
+        </nav>
       </div>
 
-      <div className="space-y-4 rounded-2xl border border-border bg-card p-6">
-        <h2 className="font-semibold text-navy">Sản phẩm</h2>
-        <label className="block text-sm">
-          <span className="font-medium">Tên sản phẩm</span>
-          <input
-            className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-            value={form.productName}
-            onChange={(e) => setForm({ ...form, productName: e.target.value })}
-          />
-        </label>
-        <p className="text-xs text-muted">
-          Slug: <code className="font-mono">{props.productSlug}</code>
-        </p>
-        <label className="block text-sm">
-          <span className="font-medium">Mô tả ngắn (lead PDP)</span>
-          <p className="mt-0.5 text-[11px] text-muted">
-            1–2 câu dưới tiêu đề — không dán bài dài.
+      {tab === "basics" ? (
+        <Panel
+          title="Thông tin cơ bản"
+          hint="Tên, lead PDP, danh mục — license defaults áp dụng khi tạo gói mới."
+        >
+          <label className="block text-sm">
+            <span className="font-medium">Tên sản phẩm</span>
+            <input
+              className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+              value={form.productName}
+              onChange={(e) =>
+                setForm({ ...form, productName: e.target.value })
+              }
+            />
+          </label>
+          <p className="text-xs text-muted">
+            Slug: <code className="font-mono">{props.productSlug}</code> (không
+            đổi tại đây)
           </p>
-          <textarea
-            rows={2}
-            className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-            value={form.productShortDescription}
-            onChange={(e) =>
-              setForm({ ...form, productShortDescription: e.target.value })
+          <label className="block text-sm">
+            <span className="font-medium">Mô tả ngắn (lead PDP)</span>
+            <p className="mt-0.5 text-[11px] text-muted">
+              1–2 câu dưới tiêu đề — không dán bài dài.
+            </p>
+            <textarea
+              rows={2}
+              className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+              value={form.productShortDescription}
+              onChange={(e) =>
+                setForm({ ...form, productShortDescription: e.target.value })
+              }
+            />
+          </label>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="block text-sm">
+              <span className="font-medium">Danh mục</span>
+              <select
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                value={form.categoryKey}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    categoryKey: e.target.value as ProductCategoryKey | "",
+                  })
+                }
+              >
+                <option value="">— Chọn danh mục —</option>
+                {PRODUCT_CATEGORY_KEYS.map((k) => (
+                  <option key={k} value={k}>
+                    {CATEGORY_ADMIN_LABELS[k]}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="block text-sm">
+              <span className="font-medium">Badge tùy chỉnh</span>
+              <input
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                placeholder="HỆ ĐIỀU HÀNH"
+                value={form.badgeLabel}
+                onChange={(e) =>
+                  setForm({ ...form, badgeLabel: e.target.value })
+                }
+              />
+            </label>
+          </div>
+          <ProductLicenseDefaultsPanel
+            value={form.licenseDefaults}
+            onChange={(licenseDefaults) =>
+              setForm({ ...form, licenseDefaults })
             }
           />
-        </label>
-        <div className="block text-sm">
-          <span className="font-medium">Mô tả đầy đủ (tab PDP)</span>
-          <p className="mb-2 mt-0.5 text-[11px] text-muted">
-            Soạn có tiêu đề / đoạn / danh sách / bảng. Dán Word/Docs được làm sạch.
+          <p className="rounded-xl border border-border bg-surface px-3 py-2 text-xs text-muted">
+            Lưu trữ ẩn cửa hàng + tắt mọi gói — không xóa đơn / kho key. Nhấn{" "}
+            <strong>Lưu thay đổi</strong> để áp dụng trạng thái.
           </p>
+        </Panel>
+      ) : null}
+
+      {tab === "description" ? (
+        <Panel
+          title="Mô tả đầy đủ (tab PDP)"
+          hint="Tiêu đề, đoạn, danh sách, bảng, ảnh. Dán Word/Docs được làm sạch."
+        >
           <RichTextEditor
             value={form.productDescription || "<p></p>"}
             onChange={(html) =>
@@ -374,338 +509,340 @@ export function ProductEditForm(props: Props) {
             mediaPurpose="product"
             placeholder="Viết mô tả sản phẩm…"
           />
-        </div>
-        <div className="block text-sm">
-          <span className="font-medium">
-            Hướng dẫn sử dụng / kích hoạt (tab PDP)
-          </span>
-          <p className="mb-2 mt-0.5 text-[11px] text-muted">
-            Soạn như mô tả: tiêu đề, đoạn, danh sách, ảnh, bảng. Dán Word/Docs
-            được làm sạch. Hiển thị ở tab «Hướng dẫn sử dụng».
-          </p>
+        </Panel>
+      ) : null}
+
+      {tab === "guide" ? (
+        <Panel
+          title="Hướng dẫn sử dụng / kích hoạt (tab PDP)"
+          hint="Nội dung riêng theo sản phẩm — không phải hướng dẫn thanh toán chung."
+        >
           <RichTextEditor
             value={form.usageGuideHtml || "<p></p>"}
             onChange={(html) => setForm({ ...form, usageGuideHtml: html })}
             mediaPurpose="product"
             placeholder="Viết hướng dẫn kích hoạt / sử dụng phần mềm…"
           />
+        </Panel>
+      ) : null}
+
+      {tab === "media" ? (
+        <div className="space-y-4">
+          <Panel
+            title="Gallery PDP"
+            hint="Chọn / tải nhiều ảnh một lần · ảnh đầu = ảnh chính."
+          >
+            <GalleryEditor
+              urls={form.galleryUrls}
+              onChange={(galleryUrls) => setForm({ ...form, galleryUrls })}
+            />
+          </Panel>
+          <Panel
+            title="OG image (chia sẻ MXH)"
+            hint="Để trống = dùng ảnh gallery đầu tiên."
+          >
+            <OgImagePicker
+              url={form.ogImageUrl}
+              onChange={(ogImageUrl) => setForm({ ...form, ogImageUrl })}
+              fallbackHint={form.galleryUrls[0]}
+            />
+          </Panel>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2">
+      ) : null}
+
+      {tab === "content" ? (
+        <Panel
+          title="Features · Specs · FAQ"
+          hint="Bullets / thông số / hỏi đáp hiển thị trên PDP."
+        >
+          <div className="grid gap-4 lg:grid-cols-3">
+            <label className="block text-sm">
+              <span className="font-medium">Features (bullets)</span>
+              <textarea
+                rows={10}
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm"
+                value={form.featuresText}
+                onChange={(e) =>
+                  setForm({ ...form, featuresText: e.target.value })
+                }
+              />
+            </label>
+            <label className="block text-sm">
+              <span className="font-medium">Specs</span>
+              <p className="mt-0.5 text-[11px] text-muted">
+                `Label|Value` · hệ thống: `system|Label|Value`
+              </p>
+              <textarea
+                rows={10}
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2 font-mono text-xs"
+                placeholder={"Nhà phát hành|Microsoft\nsystem|RAM|4 GB"}
+                value={form.specsText}
+                onChange={(e) =>
+                  setForm({ ...form, specsText: e.target.value })
+                }
+              />
+            </label>
+            <label className="block text-sm">
+              <span className="font-medium">FAQ (Q||A)</span>
+              <textarea
+                rows={10}
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm"
+                placeholder={"Sản phẩm này là gì?||...\nCách kích hoạt?||..."}
+                value={form.faqsText}
+                onChange={(e) =>
+                  setForm({ ...form, faqsText: e.target.value })
+                }
+              />
+            </label>
+          </div>
+        </Panel>
+      ) : null}
+
+      {tab === "seo" ? (
+        <Panel title="SEO" hint="Meta / Open Graph cho trang sản phẩm.">
+          <div className="grid gap-4 lg:grid-cols-2">
+            <label className="block text-sm">
+              <span className="font-medium">Meta title</span>
+              <input
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                placeholder={form.productName || "Tên sản phẩm"}
+                value={form.seoTitle}
+                onChange={(e) =>
+                  setForm({ ...form, seoTitle: e.target.value })
+                }
+              />
+            </label>
+            <label className="block text-sm">
+              <span className="font-medium">Focus keyword</span>
+              <input
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                value={form.focusKeyword}
+                onChange={(e) =>
+                  setForm({ ...form, focusKeyword: e.target.value })
+                }
+              />
+            </label>
+            <label className="block text-sm lg:col-span-2">
+              <span className="font-medium">Meta description</span>
+              <textarea
+                rows={3}
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                placeholder="Mô tả ngắn cho Google (150–160 ký tự)"
+                value={form.seoDescription}
+                onChange={(e) =>
+                  setForm({ ...form, seoDescription: e.target.value })
+                }
+              />
+            </label>
+            <label className="block text-sm lg:col-span-2">
+              <span className="font-medium">
+                Keywords phụ (mỗi dòng hoặc cách bằng dấu phẩy)
+              </span>
+              <textarea
+                rows={2}
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                value={form.seoKeywordsText}
+                onChange={(e) =>
+                  setForm({ ...form, seoKeywordsText: e.target.value })
+                }
+              />
+            </label>
+            <label className="block text-sm">
+              <span className="font-medium">Canonical URL</span>
+              <input
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2 font-mono text-xs"
+                value={form.canonicalUrl}
+                onChange={(e) =>
+                  setForm({ ...form, canonicalUrl: e.target.value })
+                }
+              />
+            </label>
+            <label className="block text-sm">
+              <span className="font-medium">OG title</span>
+              <input
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                value={form.ogTitle}
+                onChange={(e) => setForm({ ...form, ogTitle: e.target.value })}
+              />
+            </label>
+            <label className="block text-sm lg:col-span-2">
+              <span className="font-medium">OG description</span>
+              <textarea
+                rows={2}
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                value={form.ogDescription}
+                onChange={(e) =>
+                  setForm({ ...form, ogDescription: e.target.value })
+                }
+              />
+            </label>
+          </div>
+          <div className="rounded-xl border border-border bg-surface px-3 py-2 text-sm">
+            <p className="text-xs text-muted">Preview SERP</p>
+            <p className="text-sky-700">
+              {form.seoTitle.trim() || form.productName || "—"}
+            </p>
+            <p className="line-clamp-2 text-muted">{serpDesc}</p>
+          </div>
+        </Panel>
+      ) : null}
+
+      {tab === "variant" ? (
+        <Panel
+          title="Gói đang sửa"
+          hint={`SKU ${form.sku} · ${form.receiveLabel} · ${form.strategyLabel}`}
+        >
           <label className="block text-sm">
-            <span className="font-medium">Danh mục</span>
-            <select
+            <span className="font-medium">Tên gói</span>
+            <input
               className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-              value={form.categoryKey}
+              value={form.variantName}
+              onChange={(e) =>
+                setForm({ ...form, variantName: e.target.value })
+              }
+            />
+          </label>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <label className="block text-sm">
+              <span className="font-medium">Giá bán (đ)</span>
+              <input
+                type="number"
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                value={form.priceVnd}
+                onChange={(e) =>
+                  setForm({ ...form, priceVnd: Number(e.target.value) })
+                }
+              />
+            </label>
+            <label className="block text-sm">
+              <span className="font-medium">Giá gốc / gạch (đ)</span>
+              <input
+                type="number"
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                placeholder="Để trống = không giảm"
+                value={form.compareAt}
+                onChange={(e) =>
+                  setForm({ ...form, compareAt: e.target.value })
+                }
+              />
+            </label>
+            <label className="block text-sm">
+              <span className="font-medium">Giá vốn (đ)</span>
+              <input
+                type="number"
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                value={form.costVnd}
+                onChange={(e) =>
+                  setForm({ ...form, costVnd: Number(e.target.value) })
+                }
+              />
+            </label>
+          </div>
+          <label className="block text-sm">
+            <span className="font-medium">SLA / thời gian giao (text khách)</span>
+            <input
+              className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+              value={form.slaPromise}
+              onChange={(e) =>
+                setForm({ ...form, slaPromise: e.target.value })
+              }
+            />
+          </label>
+          <label className="block text-sm">
+            <span className="font-medium">Ngưỡng tồn thấp</span>
+            <input
+              type="number"
+              className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+              value={form.lowStockThreshold}
               onChange={(e) =>
                 setForm({
                   ...form,
-                  categoryKey: e.target.value as ProductCategoryKey | "",
+                  lowStockThreshold: Number(e.target.value),
+                })
+              }
+            />
+          </label>
+          <label className="block text-sm">
+            <span className="font-medium">Mô hình hệ thống (ops)</span>
+            <p className="mt-0.5 text-[11px] text-muted">
+              Khác kênh Retail/OEM trên PDP — dùng cho fulfillment / báo cáo nội
+              bộ.
+            </p>
+            <select
+              className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+              value={form.licenseModel}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  licenseModel: e.target.value as
+                    | "PERPETUAL"
+                    | "SUBSCRIPTION"
+                    | "MAINTENANCE",
                 })
               }
             >
-              <option value="">— Chọn danh mục —</option>
-              {PRODUCT_CATEGORY_KEYS.map((k) => (
+              {LICENSE_MODEL_OPTIONS.map((k) => (
                 <option key={k} value={k}>
-                  {CATEGORY_ADMIN_LABELS[k]}
+                  {LICENSE_MODEL_ADMIN_LABELS[k]}
                 </option>
               ))}
             </select>
           </label>
           <label className="block text-sm">
-            <span className="font-medium">Badge tùy chỉnh</span>
-            <input
+            <span className="font-medium">Hình thức bán</span>
+            <select
               className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-              placeholder="HỆ ĐIỀU HÀNH"
-              value={form.badgeLabel}
-              onChange={(e) => setForm({ ...form, badgeLabel: e.target.value })}
-            />
-          </label>
-        </div>
-        <ProductLicenseDefaultsPanel
-          value={form.licenseDefaults}
-          onChange={(licenseDefaults) => setForm({ ...form, licenseDefaults })}
-        />
-      </div>
-
-      <div id="variant" className="space-y-4 rounded-2xl border border-border bg-card p-6">
-        <h2 className="font-semibold text-navy">Variant / gói đang sửa</h2>
-        <p className="text-xs text-muted">
-          SKU <code className="font-mono">{form.sku}</code> · {form.receiveLabel} ·{" "}
-          {form.strategyLabel}
-        </p>
-        <label className="block text-sm">
-          <span className="font-medium">Tên gói</span>
-          <input
-            className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-            value={form.variantName}
-            onChange={(e) => setForm({ ...form, variantName: e.target.value })}
-          />
-        </label>
-        <div className="grid gap-4 sm:grid-cols-3">
-          <label className="block text-sm">
-            <span className="font-medium">Giá bán (đ)</span>
-            <input
-              type="number"
-              className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-              value={form.priceVnd}
-              onChange={(e) => setForm({ ...form, priceVnd: Number(e.target.value) })}
-            />
-          </label>
-          <label className="block text-sm">
-            <span className="font-medium">Giá gốc / gạch (đ)</span>
-            <input
-              type="number"
-              className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-              placeholder="Để trống = không giảm"
-              value={form.compareAt}
-              onChange={(e) => setForm({ ...form, compareAt: e.target.value })}
-            />
-          </label>
-          <label className="block text-sm">
-            <span className="font-medium">Giá vốn (đ)</span>
-            <input
-              type="number"
-              className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-              value={form.costVnd}
-              onChange={(e) => setForm({ ...form, costVnd: Number(e.target.value) })}
-            />
-          </label>
-        </div>
-        <label className="block text-sm">
-          <span className="font-medium">SLA / thời gian giao (text khách)</span>
-          <input
-            className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-            value={form.slaPromise}
-            onChange={(e) => setForm({ ...form, slaPromise: e.target.value })}
-          />
-        </label>
-        <label className="block text-sm">
-          <span className="font-medium">Ngưỡng tồn thấp</span>
-          <input
-            type="number"
-            className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-            value={form.lowStockThreshold}
-            onChange={(e) =>
-              setForm({ ...form, lowStockThreshold: Number(e.target.value) })
-            }
-          />
-        </label>
-        <label className="block text-sm">
-          <span className="font-medium">Mô hình hệ thống (ops)</span>
-          <p className="mt-0.5 text-[11px] text-muted">
-            Khác kênh Retail/OEM trên PDP — dùng cho fulfillment / báo cáo nội bộ.
-          </p>
-          <select
-            className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-            value={form.licenseModel}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                licenseModel: e.target
-                  .value as "PERPETUAL" | "SUBSCRIPTION" | "MAINTENANCE",
-              })
-            }
-          >
-            {LICENSE_MODEL_OPTIONS.map((k) => (
-              <option key={k} value={k}>
-                {LICENSE_MODEL_ADMIN_LABELS[k]}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="block text-sm">
-          <span className="font-medium">Hình thức bán</span>
-          <select
-            className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-            value={form.salesMotion}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                salesMotion: e.target.value as "SELF_SERVE" | "QUOTE_REQUIRED",
-              })
-            }
-          >
-            {SALES_MOTION_OPTIONS.map((k) => (
-              <option key={k} value={k}>
-                {SALES_MOTION_ADMIN_LABELS[k]}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            checked={form.active}
-            onChange={(e) => setForm({ ...form, active: e.target.checked })}
-          />
-          Gói này đang bán (variant active)
-        </label>
-        <VariantLicenseFieldsPanel
-          value={form.variantLicense}
-          onChange={(variantLicense) => setForm({ ...form, variantLicense })}
-        />
-      </div>
-
-      <div id="seo" className="space-y-4 rounded-2xl border border-border bg-card p-6 lg:col-span-2">
-        <h2 className="font-semibold text-navy">SEO</h2>
-        <div className="grid gap-4 lg:grid-cols-2">
-          <label className="block text-sm">
-            <span className="font-medium">Meta title</span>
-            <input
-              className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-              placeholder={form.productName || "Tên sản phẩm"}
-              value={form.seoTitle}
-              onChange={(e) => setForm({ ...form, seoTitle: e.target.value })}
-            />
-          </label>
-          <label className="block text-sm">
-            <span className="font-medium">Focus keyword</span>
-            <input
-              className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-              value={form.focusKeyword}
-              onChange={(e) => setForm({ ...form, focusKeyword: e.target.value })}
-            />
-          </label>
-          <label className="block text-sm lg:col-span-2">
-            <span className="font-medium">Meta description</span>
-            <textarea
-              rows={3}
-              className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-              placeholder="Mô tả ngắn cho Google (150–160 ký tự)"
-              value={form.seoDescription}
-              onChange={(e) => setForm({ ...form, seoDescription: e.target.value })}
-            />
-          </label>
-          <label className="block text-sm lg:col-span-2">
-            <span className="font-medium">Keywords phụ (mỗi dòng hoặc cách bằng dấu phẩy)</span>
-            <textarea
-              rows={2}
-              className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-              value={form.seoKeywordsText}
+              value={form.salesMotion}
               onChange={(e) =>
-                setForm({ ...form, seoKeywordsText: e.target.value })
+                setForm({
+                  ...form,
+                  salesMotion: e.target.value as
+                    | "SELF_SERVE"
+                    | "QUOTE_REQUIRED",
+                })
+              }
+            >
+              {SALES_MOTION_OPTIONS.map((k) => (
+                <option key={k} value={k}>
+                  {SALES_MOTION_ADMIN_LABELS[k]}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={form.active}
+              onChange={(e) =>
+                setForm({ ...form, active: e.target.checked })
               }
             />
+            Gói này đang bán (variant active)
           </label>
-          <label className="block text-sm">
-            <span className="font-medium">Canonical URL</span>
-            <input
-              className="mt-1 w-full rounded-lg border border-border px-3 py-2 font-mono text-xs"
-              value={form.canonicalUrl}
-              onChange={(e) => setForm({ ...form, canonicalUrl: e.target.value })}
-            />
-          </label>
-          <label className="block text-sm">
-            <span className="font-medium">OG title</span>
-            <input
-              className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-              value={form.ogTitle}
-              onChange={(e) => setForm({ ...form, ogTitle: e.target.value })}
-            />
-          </label>
-          <label className="block text-sm lg:col-span-2">
-            <span className="font-medium">OG description</span>
-            <textarea
-              rows={2}
-              className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-              value={form.ogDescription}
-              onChange={(e) =>
-                setForm({ ...form, ogDescription: e.target.value })
-              }
-            />
-          </label>
-        </div>
-        <div className="rounded-xl border border-border bg-surface px-3 py-2 text-sm">
-          <p className="text-xs text-muted">Preview SERP</p>
-          <p className="text-sky-700">
-            {form.seoTitle.trim() || form.productName || "—"}
-          </p>
-          <p className="text-muted line-clamp-2">
-            {form.seoDescription.trim() ||
-              form.productShortDescription ||
-              form.productDescription ||
-              "—"}
-          </p>
-        </div>
-        <div className="pt-2">
-          <h3 className="mb-2 text-sm font-semibold text-navy">OG image</h3>
-          <OgImagePicker
-            url={form.ogImageUrl}
-            onChange={(ogImageUrl) => setForm({ ...form, ogImageUrl })}
-            fallbackHint={form.galleryUrls[0]}
+          <VariantLicenseFieldsPanel
+            value={form.variantLicense}
+            onChange={(variantLicense) =>
+              setForm({ ...form, variantLicense })
+            }
           />
-        </div>
-      </div>
+        </Panel>
+      ) : null}
 
-      <div id="media" className="space-y-4 rounded-2xl border border-border bg-card p-6 lg:col-span-2">
-        <h2 className="font-semibold text-navy">Gallery PDP</h2>
-        <GalleryEditor
-          urls={form.galleryUrls}
-          onChange={(galleryUrls) => setForm({ ...form, galleryUrls })}
-        />
-      </div>
-
-      <div className="space-y-4 rounded-2xl border border-border bg-card p-6 lg:col-span-2">
-        <h2 className="font-semibold text-navy">Sản phẩm liên quan (PDP)</h2>
-        <RelatedProductsEditor
-          currentProductId={props.productId}
-          options={props.relatedOptions}
-          selectedIds={form.relatedProductIds}
-          onChange={(relatedProductIds) => setForm({ ...form, relatedProductIds })}
-        />
-      </div>
-
-      <div className="space-y-4 rounded-2xl border border-border bg-card p-6 lg:col-span-2">
-        <h2 className="font-semibold text-navy">Nội dung PDP</h2>
-        <div className="grid gap-4 lg:grid-cols-3">
-          <label className="block text-sm">
-            <span className="font-medium">Features (bullets)</span>
-            <textarea
-              rows={8}
-              className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm"
-              value={form.featuresText}
-              onChange={(e) => setForm({ ...form, featuresText: e.target.value })}
-            />
-          </label>
-          <label className="block text-sm">
-            <span className="font-medium">Specs</span>
-            <p className="mt-0.5 text-[11px] text-muted">
-              `Label|Value` · hệ thống: `system|Label|Value`
-            </p>
-            <textarea
-              rows={8}
-              className="mt-1 w-full rounded-lg border border-border px-3 py-2 font-mono text-xs"
-              placeholder={"Nhà phát hành|Microsoft\nsystem|RAM|4 GB"}
-              value={form.specsText}
-              onChange={(e) => setForm({ ...form, specsText: e.target.value })}
-            />
-          </label>
-          <label className="block text-sm">
-            <span className="font-medium">FAQ</span>
-            <textarea
-              rows={8}
-              className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm"
-              placeholder={"Sản phẩm này là gì?||...\nCách kích hoạt?||..."}
-              value={form.faqsText}
-              onChange={(e) => setForm({ ...form, faqsText: e.target.value })}
-            />
-          </label>
-        </div>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-3 lg:col-span-2">
-        <button
-          type="button"
-          disabled={loading}
-          onClick={save}
-          className="rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
+      {tab === "related" ? (
+        <Panel
+          title="Sản phẩm liên quan (PDP)"
+          hint="Tối đa ~8 sản phẩm gợi ý dưới trang."
         >
-          {loading ? "Đang lưu…" : "Lưu thay đổi"}
-        </button>
-        {msg && (
-          <pre className="whitespace-pre-wrap text-sm text-muted">{msg}</pre>
-        )}
-      </div>
+          <RelatedProductsEditor
+            currentProductId={props.productId}
+            options={props.relatedOptions}
+            selectedIds={form.relatedProductIds}
+            onChange={(relatedProductIds) =>
+              setForm({ ...form, relatedProductIds })
+            }
+          />
+        </Panel>
+      ) : null}
     </div>
   );
 }

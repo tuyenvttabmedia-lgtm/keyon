@@ -110,17 +110,21 @@ export default async function AdminProductEditPage({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <Link href="/admin/catalog" className="text-sm text-accent hover:underline">
-            ← Sản phẩm / Catalog
+            ← Catalog
           </Link>
-          <h1 className={`mt-2 ${ADMIN_PAGE_TITLE_CLASS}`}>
-            Sửa · {variant.product.brand.name} · {variant.product.name}
+          <h1 className={`mt-1 ${ADMIN_PAGE_TITLE_CLASS}`}>
+            {variant.product.brand.name} · {variant.product.name}
           </h1>
           <p className="text-sm text-muted">
-            {variant.name} · {DELIVERABLE_ADMIN_LABELS[variant.deliverableType]} ·{" "}
+            Đang sửa gói{" "}
+            <span className="font-medium text-navy">{variant.name}</span>
+            <span className="mx-1.5 text-border">·</span>
+            {DELIVERABLE_ADMIN_LABELS[variant.deliverableType]}
+            <span className="mx-1.5 text-border">·</span>
             {p.active ? (
               <span className="font-medium text-emerald-700">Đang bán</span>
             ) : (
@@ -131,38 +135,51 @@ export default async function AdminProductEditPage({
         <CloneProductButton variantId={variant.id} />
       </div>
 
-      <div className="rounded-2xl border border-border bg-card p-4">
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-sm font-semibold text-navy">Các gói của sản phẩm này</h2>
-          <span className="text-xs text-muted">{p.variants.length} gói</span>
+      <details className="rounded-2xl border border-border bg-card open:pb-4">
+        <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-navy marker:content-none [&::-webkit-details-marker]:hidden">
+          <span className="flex flex-wrap items-center justify-between gap-2">
+            <span>
+              Các gói của sản phẩm
+              <span className="ml-2 font-normal text-muted">
+                {p.variants.length} gói
+              </span>
+            </span>
+            <span className="text-xs font-normal text-accent">Mở / thu gói</span>
+          </span>
+        </summary>
+        <div className="border-t border-border px-4 pt-3">
+          <ul className="mb-3 divide-y divide-border rounded-xl border border-border">
+            {p.variants.map((v) => {
+              const current = v.id === variant.id;
+              return (
+                <li key={v.id}>
+                  <Link
+                    href={`/admin/products/${v.id}`}
+                    className={`flex items-center justify-between gap-3 px-3 py-2.5 text-sm hover:bg-surface ${
+                      current
+                        ? "bg-accent/5 font-semibold text-accent"
+                        : "text-navy"
+                    }`}
+                  >
+                    <span>
+                      {v.name}{" "}
+                      <span className="font-mono text-xs text-muted">
+                        ({v.sku})
+                      </span>
+                    </span>
+                    <span className="text-xs text-muted">
+                      {v.priceVnd.toLocaleString("vi-VN")}đ
+                      {!v.active ? " · tắt" : ""}
+                      {current ? " · đang sửa" : ""}
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+          <AddVariantForm productId={p.id} suppliers={suppliers} />
         </div>
-        <ul className="mb-4 divide-y divide-border rounded-xl border border-border">
-          {p.variants.map((v) => {
-            const current = v.id === variant.id;
-            return (
-              <li key={v.id}>
-                <Link
-                  href={`/admin/products/${v.id}`}
-                  className={`flex items-center justify-between gap-3 px-3 py-2.5 text-sm hover:bg-surface ${
-                    current ? "bg-accent/5 font-semibold text-accent" : "text-navy"
-                  }`}
-                >
-                  <span>
-                    {v.name}{" "}
-                    <span className="font-mono text-xs text-muted">({v.sku})</span>
-                  </span>
-                  <span className="text-xs text-muted">
-                    {v.priceVnd.toLocaleString("vi-VN")}đ
-                    {!v.active ? " · tắt" : ""}
-                    {current ? " · đang sửa" : ""}
-                  </span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-        <AddVariantForm productId={p.id} suppliers={suppliers} />
-      </div>
+      </details>
 
       <ProductEditForm
         variantId={variant.id}
