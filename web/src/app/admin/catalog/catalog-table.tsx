@@ -9,6 +9,10 @@ import {
 } from "@/components/PortalMenu";
 import { ToggleActiveButton } from "./toggle-active";
 import { UpdatePriceForm } from "./update-price";
+import {
+  confirmPermanentDeletePhrase,
+  PERMANENT_DELETE_PROMPT_HINT,
+} from "./confirm-permanent-delete";
 import { BADGE_CLASS } from "@/storefront/typography";
 import {
   ListPaginationBar,
@@ -148,18 +152,29 @@ function RowMenu({ row }: { row: CatalogRow }) {
 
   async function deleteProductForever() {
     const typed = window.prompt(
-      `XÓA VĨNH VIỄN «${row.productName}»?\n\n• Chỉ được xóa nếu chưa có đơn hàng và không có key RESERVED/CONSUMED.\n• Key AVAILABLE/DISABLED trong kho Instant cũng bị xóa theo.\n• Không hoàn tác.\n\nGõ XÓA để xác nhận:`,
+      `XÓA VĨNH VIỄN «${row.productName}»?\n\n• Chỉ được xóa nếu chưa có đơn hàng và không có key RESERVED/CONSUMED.\n• Key AVAILABLE/DISABLED trong kho Instant cũng bị xóa theo.\n• Không hoàn tác.\n\n${PERMANENT_DELETE_PROMPT_HINT}`,
     );
-    if (typed !== "XÓA") return;
+    const check = confirmPermanentDeletePhrase(typed);
+    if (check.cancelled) return;
+    if (!check.ok) {
+      alert("Chưa xóa. Bạn cần gõ đúng XOA (hoặc XÓA) để xác nhận.");
+      return;
+    }
     setBusy(true);
     try {
       const res = await fetch(
         `/api/admin/catalog/product/${encodeURIComponent(row.productId)}`,
         { method: "DELETE" },
       );
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Xóa thất bại");
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(
+          (data as { error?: string }).error ??
+            `Xóa thất bại (HTTP ${res.status})`,
+        );
+      }
       setOpen(false);
+      alert(`Đã xóa vĩnh viễn «${row.productName}».`);
       router.refresh();
     } catch (e) {
       alert(e instanceof Error ? e.message : "Lỗi xóa");

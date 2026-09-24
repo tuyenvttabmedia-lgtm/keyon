@@ -43,6 +43,10 @@ import {
 import { listToLines } from "@/storefront/lib/product-cms";
 import { RichTextEditor } from "@/app/admin/blog/rich-text-editor";
 import { isHtmlBody, legacyBodyToHtml } from "@/server/cms/blog-utils";
+import {
+  confirmPermanentDeletePhrase,
+  PERMANENT_DELETE_PROMPT_HINT,
+} from "@/app/admin/catalog/confirm-permanent-delete";
 
 type Props = {
   variantId: string;
@@ -282,9 +286,14 @@ export function ProductEditForm(props: Props) {
               disabled={loading}
               onClick={async () => {
                 const typed = window.prompt(
-                  `XÓA VĨNH VIỄN «${form.productName}»?\n\nChỉ khi chưa có đơn và không có key RESERVED/CONSUMED.\nGõ XÓA để xác nhận:`,
+                  `XÓA VĨNH VIỄN «${form.productName}»?\n\nChỉ khi chưa có đơn và không có key RESERVED/CONSUMED.\n${PERMANENT_DELETE_PROMPT_HINT}`,
                 );
-                if (typed !== "XÓA") return;
+                const check = confirmPermanentDeletePhrase(typed);
+                if (check.cancelled) return;
+                if (!check.ok) {
+                  alert("Chưa xóa. Bạn cần gõ đúng XOA (hoặc XÓA) để xác nhận.");
+                  return;
+                }
                 setLoading(true);
                 setMsg(null);
                 try {
@@ -292,8 +301,13 @@ export function ProductEditForm(props: Props) {
                     `/api/admin/catalog/product/${encodeURIComponent(props.productId)}`,
                     { method: "DELETE" },
                   );
-                  const data = await res.json();
-                  if (!res.ok) throw new Error(data.error ?? "Xóa thất bại");
+                  const data = await res.json().catch(() => ({}));
+                  if (!res.ok) {
+                    throw new Error(
+                      (data as { error?: string }).error ??
+                        `Xóa thất bại (HTTP ${res.status})`,
+                    );
+                  }
                   router.push("/admin/catalog");
                   router.refresh();
                 } catch (e) {
