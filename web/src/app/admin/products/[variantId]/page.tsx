@@ -178,7 +178,7 @@ export default async function AdminProductEditPage({
         features={parseStringList(p.features)}
         specs={parseSpecRows(p.specs)}
         faqs={parseFaqRows(p.faqs)}
-        usageGuides={parseStringList(p.usageGuides)}
+        usageGuideHtml={p.usageGuideHtml ?? ""}
         seoTitle={p.seoTitle ?? ""}
         seoDescription={p.seoDescription ?? ""}
         ogImageUrl={p.ogImageUrl ?? ""}

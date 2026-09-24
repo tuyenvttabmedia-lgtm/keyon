@@ -52,7 +52,7 @@ const patchSchema = z
         }),
       )
       .optional(),
-    usageGuides: z.array(z.string().min(1)).optional(),
+    usageGuideHtml: z.string().nullable().optional(),
     seoTitle: z.string().nullable().optional(),
     seoDescription: z.string().nullable().optional(),
     ogImageUrl: z.string().nullable().optional(),
@@ -258,7 +258,11 @@ export async function PATCH(req: Request) {
     if (body.features !== undefined) productPatch.features = body.features;
     if (body.specs !== undefined) productPatch.specs = body.specs;
     if (body.faqs !== undefined) productPatch.faqs = body.faqs;
-    if (body.usageGuides !== undefined) productPatch.usageGuides = body.usageGuides;
+    if (body.usageGuideHtml !== undefined) {
+      productPatch.usageGuideHtml = body.usageGuideHtml
+        ? sanitizeBlogHtml(body.usageGuideHtml)
+        : null;
+    }
     if (body.seoTitle !== undefined) productPatch.seoTitle = body.seoTitle;
     if (body.seoDescription !== undefined) {
       productPatch.seoDescription = body.seoDescription;

@@ -1026,22 +1026,11 @@ function TabsSection({
             <h2 className={SUBSECTION_TITLE_CLASS}>
               Hướng dẫn sử dụng & kích hoạt
             </h2>
-            {data.guides.length > 0 ? (
-              <ol className="grid gap-3 sm:grid-cols-2">
-                {data.guides.map((g, i) => (
-                  <li
-                    key={`${i}-${g.slice(0, 24)}`}
-                    className={`flex gap-3 rounded-xl border border-border/80 bg-surface px-4 py-3.5 ${BODY_CLASS} ${TRANSITION_UI} hover:border-accent/30`}
-                  >
-                    <span
-                      className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent ${BADGE_CLASS} text-white`}
-                    >
-                      {i + 1}
-                    </span>
-                    {g}
-                  </li>
-                ))}
-              </ol>
+            {stripHtml(data.usageGuideHtml).trim() ? (
+              <CollapsibleDescription
+                body={data.usageGuideHtml}
+                contentId="pdp-usage-guide"
+              />
             ) : (
               <p className={BODY_MUTED_CLASS}>
                 Chưa có hướng dẫn kích hoạt cho sản phẩm này. Liên hệ KEYON để
@@ -1121,7 +1110,13 @@ function LicenseWarningBlock() {
   );
 }
 
-function CollapsibleDescription({ body }: { body: string }) {
+function CollapsibleDescription({
+  body,
+  contentId = "pdp-full-description",
+}: {
+  body: string;
+  contentId?: string;
+}) {
   /** ~8–10 dòng prose — đủ scan, không đẩy Features xuống đáy trang. */
   const COLLAPSED_MAX_PX = 280;
   const [expanded, setExpanded] = useState(false);
@@ -1148,7 +1143,7 @@ function CollapsibleDescription({ body }: { body: string }) {
       <div className="relative">
         <div
           ref={contentRef}
-          id="pdp-full-description"
+          id={contentId}
           className={clamped ? "max-h-[280px] overflow-hidden" : undefined}
         >
           <StaticPageHtml
@@ -1170,7 +1165,7 @@ function CollapsibleDescription({ body }: { body: string }) {
             onClick={() => setExpanded((v) => !v)}
             className={`inline-flex h-10 items-center justify-center gap-2 rounded-xl border-2 border-accent bg-accent-soft px-5 ${CTA_LABEL_CLASS} text-accent ${TRANSITION_UI} hover:bg-accent hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent`}
             aria-expanded={expanded}
-            aria-controls="pdp-full-description"
+            aria-controls={contentId}
           >
             {expanded ? "Thu gọn" : "Xem thêm"}
             <span aria-hidden className="text-base leading-none">

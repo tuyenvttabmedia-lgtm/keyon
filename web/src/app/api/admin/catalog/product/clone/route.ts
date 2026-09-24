@@ -65,7 +65,7 @@ export async function POST(req: Request) {
           features: source.features ?? [],
           specs: source.specs ?? [],
           faqs: source.faqs ?? [],
-          usageGuides: source.usageGuides ?? [],
+          usageGuideHtml: source.usageGuideHtml,
           seoTitle: source.seoTitle,
           seoDescription: source.seoDescription,
           ogImageUrl: source.ogImageUrl,

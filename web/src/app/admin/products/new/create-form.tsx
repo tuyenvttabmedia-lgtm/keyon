@@ -92,7 +92,7 @@ export function ProductCreateForm({
     featuresText: "",
     specsText: "",
     faqsText: "",
-    usageGuidesText: "",
+    usageGuideHtml: "",
     variantName: "License Retail",
     sku: "",
     priceVnd: 499000,
@@ -254,7 +254,7 @@ export function ProductCreateForm({
           features: linesToList(form.featuresText),
           specs: linesToSpecs(form.specsText),
           faqs: linesToFaqs(form.faqsText),
-          usageGuides: linesToList(form.usageGuidesText),
+          usageGuideHtml: form.usageGuideHtml || null,
           variantName: form.variantName,
           sku: form.sku,
           priceVnd: form.priceVnd,
@@ -642,6 +642,21 @@ export function ProductCreateForm({
             />
           </div>
           <div className="rounded-2xl border border-border bg-card p-6">
+            <h2 className="mb-1 font-semibold text-navy">
+              Hướng dẫn sử dụng / kích hoạt (tab PDP)
+            </h2>
+            <p className="mb-3 text-xs text-muted">
+              Soạn như mô tả: tiêu đề, đoạn, danh sách, ảnh, bảng. Dán từ
+              Word/Docs sẽ được làm sạch. Hiển thị ở tab «Hướng dẫn sử dụng».
+            </p>
+            <RichTextEditor
+              value={form.usageGuideHtml || "<p></p>"}
+              onChange={(html) => setForm({ ...form, usageGuideHtml: html })}
+              mediaPurpose="product"
+              placeholder="Viết hướng dẫn kích hoạt / sử dụng phần mềm…"
+            />
+          </div>
+          <div className="rounded-2xl border border-border bg-card p-6">
             <h2 className="mb-3 font-semibold text-navy">Nội dung PDP khác</h2>
             <div className="grid gap-4 lg:grid-cols-3">
               <label className="block text-sm">
@@ -676,26 +691,6 @@ export function ProductCreateForm({
                 />
               </label>
             </div>
-            <label className="mt-4 block text-sm">
-              <span className="font-medium">
-                Hướng dẫn sử dụng / kích hoạt (tab PDP)
-              </span>
-              <p className="mt-0.5 text-[11px] text-muted">
-                Mỗi dòng = 1 bước — riêng cho sản phẩm này (không phải hướng dẫn
-                thanh toán).
-              </p>
-              <textarea
-                rows={5}
-                className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm"
-                placeholder={
-                  "Mở Settings → Accounts → Access work or school\nChọn Connect và đăng nhập bằng tài khoản đã mua"
-                }
-                value={form.usageGuidesText}
-                onChange={(e) =>
-                  setForm({ ...form, usageGuidesText: e.target.value })
-                }
-              />
-            </label>
           </div>
           <div className="rounded-2xl border border-border bg-card p-6">
             <h2 className="mb-3 font-semibold text-navy">SEO</h2>

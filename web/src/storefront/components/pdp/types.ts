@@ -59,7 +59,8 @@ export type PdpProductData = {
   specs: { label: string; value: string }[];
   systemSpecs: { label: string; value: string }[];
   licenseDefaults: PdpLicenseDefaults;
-  guides: string[];
+  /** Rich HTML for «Hướng dẫn sử dụng» tab (empty → empty state) */
+  usageGuideHtml: string;
   faqs: { id: string; question: string; answer: string }[];
   related: ShopProduct[];
   defaultEmail: string;

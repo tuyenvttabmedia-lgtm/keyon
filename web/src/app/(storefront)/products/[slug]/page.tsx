@@ -169,7 +169,7 @@ export default async function ProductPage({
   const { general: cmsSpecs, system: cmsSystemSpecs } =
     splitSpecsByGroup(cmsSpecsAll);
   const cmsFaqs = parseFaqRows(product.faqs);
-  const cmsUsageGuides = parseStringList(product.usageGuides);
+  const cmsUsageGuideHtml = product.usageGuideHtml?.trim() ?? "";
 
   const variants: PdpVariantOption[] = variantsRaw.map((v) => {
     const receive = receiveFromDeliverable(v.deliverableType);
@@ -343,7 +343,7 @@ export default async function ProductPage({
       upgradePolicy: product.upgradePolicy,
       accountRequired: product.accountRequired,
     },
-    guides: cmsUsageGuides,
+    usageGuideHtml: cmsUsageGuideHtml,
     faqs: cmsFaqs,
     related,
     defaultEmail: session?.email ?? "",
