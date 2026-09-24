@@ -104,7 +104,7 @@ export default async function AdminInventorySkuPage({
             href={`/admin/stock/${encodeURIComponent(sku)}`}
             className="rounded-lg border border-border bg-white px-3 py-1.5 text-xs font-semibold text-navy"
           >
-            Xem License
+            Xem kho key
           </Link>
           <Link
             href={`/admin/products/${variant.id}`}

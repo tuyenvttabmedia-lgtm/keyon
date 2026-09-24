@@ -175,9 +175,14 @@ export default async function AdminStockPage({
     <div className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 className={ADMIN_PAGE_TITLE_CLASS}>Kho License</h2>
+          <h2 className={ADMIN_PAGE_TITLE_CLASS}>Kho key Instant</h2>
           <p className="text-sm text-muted">
-            Giao Instant · tồn kho License · nhập key · xem chi tiết SKU
+            Nhập / disable key Instant · xem chi tiết SKU. Loại bản quyền Retail/OEM: sửa
+            Sản phẩm. Theo dõi số tồn:{" "}
+            <Link href="/admin/inventory" className="font-medium text-accent hover:underline">
+              Tồn kho
+            </Link>
+            .
           </p>
         </div>
         <Link
@@ -186,6 +191,26 @@ export default async function AdminStockPage({
         >
           Tồn kho (cảnh báo) →
         </Link>
+      </div>
+      <div
+        role="note"
+        className="rounded-xl border border-border bg-card px-4 py-3 text-sm text-navy"
+      >
+        <p className="font-semibold text-navy">Phân biệt nhanh</p>
+        <ul className="mt-1.5 list-inside list-disc space-y-0.5 text-muted">
+          <li>
+            <strong className="font-medium text-navy">Màn này</strong> — thao tác key Instant
+            (nhập, disable, reveal).
+          </li>
+          <li>
+            <strong className="font-medium text-navy">Sản phẩm</strong> — kênh Retail/OEM, thời
+            hạn, core/ghế (hiển thị PDP).
+          </li>
+          <li>
+            <strong className="font-medium text-navy">Tồn kho</strong> — dashboard số Available /
+            Reserved / Consumed (chỉ đọc).
+          </li>
+        </ul>
       </div>
       {thinInstant.length > 0 ? (
         <div

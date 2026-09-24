@@ -27,6 +27,10 @@ export type CatalogRow = {
   receiveLabel: string;
   deliveryLabel: string;
   fulfillmentStrategy: string;
+  /** Merchandising channel label (Retail/OEM/…) or null */
+  licenseChannelLabel: string | null;
+  /** Merchandising term label or null */
+  licenseTermLabel: string | null;
   priceVnd: number;
   costVnd: number;
   variantActive: boolean;
@@ -492,6 +496,7 @@ export function CatalogTable({ rows }: { rows: CatalogRow[] }) {
               </th>
               <th className="px-3 py-2">SKU</th>
               <th className="px-3 py-2">Sản phẩm</th>
+              <th className="px-3 py-2">Kênh / hạn</th>
               <th className="px-3 py-2">Delivery</th>
               <th className="px-3 py-2">Provider</th>
               <th className="px-3 py-2">Inventory</th>
@@ -519,6 +524,18 @@ export function CatalogTable({ rows }: { rows: CatalogRow[] }) {
                   </p>
                   <p className="text-muted">{v.variantName}</p>
                   <p className="text-xs text-muted">{v.deliveryLabel}</p>
+                </td>
+                <td className="px-3 py-3 text-xs">
+                  {v.licenseChannelLabel || v.licenseTermLabel ? (
+                    <div className="space-y-0.5">
+                      <p className="font-medium text-navy">
+                        {v.licenseChannelLabel ?? "—"}
+                      </p>
+                      <p className="text-muted">{v.licenseTermLabel ?? "—"}</p>
+                    </div>
+                  ) : (
+                    <span className="text-muted">—</span>
+                  )}
                 </td>
                 <td className="px-3 py-3">{v.receiveLabel}</td>
                 <td className="px-3 py-3 text-muted">{v.supplierName ?? "—"}</td>

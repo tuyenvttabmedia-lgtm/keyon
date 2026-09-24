@@ -149,7 +149,7 @@ export function InventoryConsole({
   }
 
   const kpiCards = [
-    { label: "License khả dụng", value: kpis.available, tone: "text-emerald-700" },
+    { label: "Key khả dụng", value: kpis.available, tone: "text-emerald-700" },
     { label: "Đang giữ", value: kpis.reserved, tone: "text-amber-700" },
     { label: "Đã sử dụng", value: kpis.consumed, tone: "text-navy" },
     { label: "SKU sắp hết", value: kpis.lowStockSkus, tone: "text-amber-800" },

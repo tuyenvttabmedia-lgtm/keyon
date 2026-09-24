@@ -1,7 +1,7 @@
 import { requireStaffSession } from "@/server/auth/require-staff";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import type { Prisma, SalesMotion } from "@prisma/client";
+import type { LicenseModel, Prisma, SalesMotion } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { audit } from "@/lib/audit";
 import { toErrorResponse, AppError } from "@/lib/errors";
@@ -30,6 +30,9 @@ const patchSchema = z
     slaPromise: z.string().nullable().optional(),
     lowStockThreshold: z.number().int().nonnegative().optional(),
     salesMotion: z.enum(["SELF_SERVE", "QUOTE_REQUIRED"]).optional(),
+    licenseModel: z
+      .enum(["PERPETUAL", "SUBSCRIPTION", "MAINTENANCE"])
+      .optional(),
     /** Product fields */
     productName: z.string().min(1).optional(),
     productDescription: z.string().nullable().optional(),
@@ -212,6 +215,7 @@ export async function PATCH(req: Request) {
       slaPromise?: string | null;
       lowStockThreshold?: number;
       salesMotion?: SalesMotion;
+      licenseModel?: LicenseModel;
       licenseChannel?: string | null;
       licenseTerm?: string | null;
       seatsLabel?: string | null;
@@ -230,6 +234,7 @@ export async function PATCH(req: Request) {
       variantData.lowStockThreshold = body.lowStockThreshold;
     }
     if (body.salesMotion) variantData.salesMotion = body.salesMotion;
+    if (body.licenseModel) variantData.licenseModel = body.licenseModel;
 
     const productPatch: Prisma.ProductUpdateInput = {
       ...catalogWrite,

@@ -26,6 +26,8 @@ import {
 } from "@/storefront/lib/catalog-validation";
 import {
   CATEGORY_ADMIN_LABELS,
+  LICENSE_MODEL_ADMIN_LABELS,
+  LICENSE_MODEL_OPTIONS,
   SALES_MOTION_ADMIN_LABELS,
   SALES_MOTION_OPTIONS,
 } from "@/storefront/lib/catalog-admin-labels";
@@ -76,6 +78,7 @@ type Props = {
   lowStockThreshold: number;
   active: boolean;
   salesMotion: "SELF_SERVE" | "QUOTE_REQUIRED";
+  licenseModel: "PERPETUAL" | "SUBSCRIPTION" | "MAINTENANCE";
   strategyLabel: string;
   receiveLabel: string;
   sku: string;
@@ -199,6 +202,7 @@ export function ProductEditForm(props: Props) {
           lowStockThreshold: form.lowStockThreshold,
           active: form.active,
           salesMotion: form.salesMotion,
+          licenseModel: form.licenseModel,
         }),
       });
       const data = await res.json();
@@ -449,6 +453,29 @@ export function ProductEditForm(props: Props) {
               setForm({ ...form, lowStockThreshold: Number(e.target.value) })
             }
           />
+        </label>
+        <label className="block text-sm">
+          <span className="font-medium">Mô hình hệ thống (ops)</span>
+          <p className="mt-0.5 text-[11px] text-muted">
+            Khác kênh Retail/OEM trên PDP — dùng cho fulfillment / báo cáo nội bộ.
+          </p>
+          <select
+            className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+            value={form.licenseModel}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                licenseModel: e.target
+                  .value as "PERPETUAL" | "SUBSCRIPTION" | "MAINTENANCE",
+              })
+            }
+          >
+            {LICENSE_MODEL_OPTIONS.map((k) => (
+              <option key={k} value={k}>
+                {LICENSE_MODEL_ADMIN_LABELS[k]}
+              </option>
+            ))}
+          </select>
         </label>
         <label className="block text-sm">
           <span className="font-medium">Hình thức bán</span>

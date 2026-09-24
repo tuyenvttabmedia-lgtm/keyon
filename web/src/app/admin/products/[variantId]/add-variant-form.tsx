@@ -11,6 +11,8 @@ import {
   DELIVERABLE_OPTIONS,
   FULFILLMENT_ADMIN_LABELS,
   FULFILLMENT_OPTIONS,
+  LICENSE_MODEL_ADMIN_LABELS,
+  LICENSE_MODEL_OPTIONS,
 } from "@/storefront/lib/catalog-admin-labels";
 import {
   VariantLicenseFieldsPanel,
@@ -36,10 +38,10 @@ export function AddVariantForm({ productId, suppliers }: Props) {
     priceVnd: 499000,
     compareAt: "",
     costVnd: 0,
-    licenseModel: "PERPETUAL" as const,
-    fulfillmentStrategy: "MANUAL" as const,
-    deliverableType: "KEY" as const,
-    salesMotion: "SELF_SERVE" as const,
+    licenseModel: "PERPETUAL" as "PERPETUAL" | "SUBSCRIPTION" | "MAINTENANCE",
+    fulfillmentStrategy: "MANUAL" as "MANUAL" | "INSTANT" | "SEMI_AUTOMATED" | "MANAGED_SUBSCRIPTION",
+    deliverableType: "KEY" as "KEY" | "ACCOUNT" | "SUBSCRIPTION" | "DIGITAL_FILE" | "EXTERNAL_PORTAL",
+    salesMotion: "SELF_SERVE" as "SELF_SERVE" | "QUOTE_REQUIRED",
     slaPromise: "",
     supplierId: "",
     lowStockThreshold: 10,
@@ -167,6 +169,25 @@ export function AddVariantForm({ productId, suppliers }: Props) {
             value={form.compareAt}
             onChange={(e) => setForm({ ...form, compareAt: e.target.value })}
           />
+        </label>
+        <label className="block text-sm">
+          <span className="font-medium">Mô hình hệ thống (ops)</span>
+          <select
+            className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+            value={form.licenseModel}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                licenseModel: e.target.value as typeof form.licenseModel,
+              })
+            }
+          >
+            {LICENSE_MODEL_OPTIONS.map((k) => (
+              <option key={k} value={k}>
+                {LICENSE_MODEL_ADMIN_LABELS[k]}
+              </option>
+            ))}
+          </select>
         </label>
         <label className="block text-sm">
           <span className="font-medium">Fulfillment</span>

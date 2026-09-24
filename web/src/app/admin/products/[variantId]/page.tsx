@@ -204,6 +204,7 @@ export default async function AdminProductEditPage({
         lowStockThreshold={variant.lowStockThreshold}
         active={variant.active}
         salesMotion={variant.salesMotion}
+        licenseModel={variant.licenseModel}
         strategyLabel={strategy}
         receiveLabel={receive.label}
         sku={variant.sku}

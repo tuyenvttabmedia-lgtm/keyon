@@ -22,6 +22,8 @@ import {
   DELIVERABLE_OPTIONS,
   FULFILLMENT_ADMIN_LABELS,
   FULFILLMENT_OPTIONS,
+  LICENSE_MODEL_ADMIN_LABELS,
+  LICENSE_MODEL_OPTIONS,
 } from "@/storefront/lib/catalog-admin-labels";
 import {
   ProductLicenseDefaultsPanel,
@@ -95,7 +97,7 @@ export function ProductCreateForm({
     priceVnd: 499000,
     compareAt: "",
     costVnd: 0,
-    licenseModel: "PERPETUAL" as const,
+    licenseModel: "PERPETUAL" as "PERPETUAL" | "SUBSCRIPTION" | "MAINTENANCE",
     fulfillmentStrategy: "MANUAL" as "MANUAL" | "INSTANT",
     deliverableType: "KEY" as const,
     salesMotion: "SELF_SERVE" as const,
@@ -510,6 +512,28 @@ export function ProductCreateForm({
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="block text-sm">
+              <span className="font-medium">Mô hình hệ thống (ops)</span>
+              <p className="mt-0.5 text-[11px] text-muted">
+                PERPETUAL / Thuê bao / Bảo trì — khác kênh Retail/OEM trên PDP.
+              </p>
+              <select
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                value={form.licenseModel}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    licenseModel: e.target.value as typeof form.licenseModel,
+                  })
+                }
+              >
+                {LICENSE_MODEL_OPTIONS.map((k) => (
+                  <option key={k} value={k}>
+                    {LICENSE_MODEL_ADMIN_LABELS[k]}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="block text-sm">
               <span className="font-medium">Fulfillment</span>
               <select
                 className="mt-1 w-full rounded-lg border border-border px-3 py-2"
@@ -528,7 +552,7 @@ export function ProductCreateForm({
                 ))}
               </select>
             </label>
-            <label className="block text-sm">
+            <label className="block text-sm sm:col-span-2">
               <span className="font-medium">Loại nhận</span>
               <select
                 className="mt-1 w-full rounded-lg border border-border px-3 py-2"

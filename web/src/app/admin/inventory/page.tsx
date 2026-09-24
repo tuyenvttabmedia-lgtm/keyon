@@ -86,14 +86,14 @@ export default async function AdminInventoryPage() {
         <div>
           <h1 className={ADMIN_PAGE_TITLE_CLASS}>Tồn kho</h1>
           <p className="text-sm text-muted">
-            Theo dõi số lượng license và cảnh báo tồn kho
+            Theo dõi Available / Reserved / Consumed (chỉ đọc). Nhập key: Kho key Instant.
           </p>
         </div>
         <Link
           href="/admin/stock"
           className="text-sm font-medium text-accent hover:underline"
         >
-          Kho License (nhập key) →
+          Kho key Instant (nhập key) →
         </Link>
       </div>
 

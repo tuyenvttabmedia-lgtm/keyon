@@ -97,7 +97,7 @@ const GROUPS: NavGroup[] = [
   {
     title: "Kho",
     items: [
-      { href: "/admin/stock", label: "License", match: "prefix", icon: KeyRound },
+      { href: "/admin/stock", label: "Kho key Instant", match: "prefix", icon: KeyRound },
       { href: "/admin/inventory", label: "Tồn kho", match: "prefix", icon: Boxes },
       { href: "/admin/suppliers", label: "Nhà cung cấp", match: "prefix", icon: Truck },
     ],

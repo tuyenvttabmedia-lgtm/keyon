@@ -5,6 +5,13 @@ import {
   deliveryPromiseLabel,
   receiveFromDeliverable,
 } from "@/storefront/lib/customer-labels";
+import {
+  LICENSE_CHANNEL_LABELS,
+  LICENSE_CHANNELS,
+  LICENSE_TERM_LABELS,
+  LICENSE_TERMS,
+  optionalEnum,
+} from "@/storefront/lib/license-catalog";
 import { ADMIN_PAGE_TITLE_CLASS } from "@/storefront/typography";
 import { CatalogTable, type CatalogRow } from "./catalog-table";
 
@@ -56,6 +63,13 @@ export default async function AdminCatalogPage({
       else health = "healthy";
     }
 
+    const channel =
+      optionalEnum(v.licenseChannel, LICENSE_CHANNELS) ??
+      optionalEnum(v.product.licenseChannelDefault, LICENSE_CHANNELS);
+    const term =
+      optionalEnum(v.licenseTerm, LICENSE_TERMS) ??
+      optionalEnum(v.product.licenseTermDefault, LICENSE_TERMS);
+
     return {
       id: v.id,
       productId: v.productId,
@@ -67,6 +81,8 @@ export default async function AdminCatalogPage({
       receiveLabel: receive.label,
       deliveryLabel: deliveryPromiseLabel(v.fulfillmentStrategy),
       fulfillmentStrategy: v.fulfillmentStrategy,
+      licenseChannelLabel: channel ? LICENSE_CHANNEL_LABELS[channel] : null,
+      licenseTermLabel: term ? LICENSE_TERM_LABELS[term] : null,
       priceVnd: v.priceVnd,
       costVnd: v.costVnd,
       variantActive: v.active,
