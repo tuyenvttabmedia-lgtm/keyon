@@ -1027,10 +1027,12 @@ function TabsSection({
               Hướng dẫn sử dụng & kích hoạt
             </h2>
             {stripHtml(data.usageGuideHtml).trim() ? (
-              <CollapsibleDescription
-                body={data.usageGuideHtml}
-                contentId="pdp-usage-guide"
-              />
+              <div className="mt-4">
+                <StaticPageHtml
+                  body={data.usageGuideHtml}
+                  className="blog-prose pdp-prose max-w-none"
+                />
+              </div>
             ) : (
               <p className={BODY_MUTED_CLASS}>
                 Chưa có hướng dẫn kích hoạt cho sản phẩm này. Liên hệ KEYON để
