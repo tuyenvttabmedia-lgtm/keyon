@@ -14,7 +14,6 @@ import {
   computeSocialSold,
 } from "@/storefront/lib/social-proof";
 import {
-  defaultGuides,
   PDP_CATEGORY_BADGE,
 } from "@/storefront/components/pdp/pdp-utils";
 import type { ShopCategoryId, ShopProduct } from "@/storefront/components/shop/types";
@@ -170,6 +169,7 @@ export default async function ProductPage({
   const { general: cmsSpecs, system: cmsSystemSpecs } =
     splitSpecsByGroup(cmsSpecsAll);
   const cmsFaqs = parseFaqRows(product.faqs);
+  const cmsUsageGuides = parseStringList(product.usageGuides);
 
   const variants: PdpVariantOption[] = variantsRaw.map((v) => {
     const receive = receiveFromDeliverable(v.deliverableType);
@@ -343,7 +343,7 @@ export default async function ProductPage({
       upgradePolicy: product.upgradePolicy,
       accountRequired: product.accountRequired,
     },
-    guides: defaultGuides(activeVariant.fulfillmentInstant),
+    guides: cmsUsageGuides,
     faqs: cmsFaqs,
     related,
     defaultEmail: session?.email ?? "",

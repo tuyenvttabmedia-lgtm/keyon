@@ -117,20 +117,37 @@ export function MediaLibrary({
 
   async function uploadFiles(list: FileList | File[] | null) {
     if (!list || list.length === 0) return;
-    const file = list[0];
+    const filesToUpload = Array.from(list);
     setUploading(true);
     setMsg(null);
+    let lastAsset: MediaDto | null = null;
+    let okCount = 0;
     try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch("/api/admin/media", { method: "POST", body: fd });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Upload thất bại");
-      setMsg("Đã tải ảnh lên thành công");
+      for (const file of filesToUpload) {
+        const fd = new FormData();
+        fd.append("file", file);
+        const res = await fetch("/api/admin/media", { method: "POST", body: fd });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error ?? `Upload thất bại: ${file.name}`);
+        okCount += 1;
+        if (data.asset) lastAsset = data.asset as MediaDto;
+      }
+      setMsg(
+        okCount === 1
+          ? "Đã tải ảnh lên thành công"
+          : `Đã tải ${okCount} ảnh lên thành công`,
+      );
       await refresh();
-      if (data.asset) setDetail(data.asset);
+      if (lastAsset) setDetail(lastAsset);
     } catch (e) {
-      setMsg(e instanceof Error ? e.message : "Lỗi");
+      setMsg(
+        okCount > 0
+          ? `Đã tải ${okCount}/${filesToUpload.length} ảnh — ${e instanceof Error ? e.message : "Lỗi"}`
+          : e instanceof Error
+            ? e.message
+            : "Lỗi",
+      );
+      await refresh();
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";
@@ -152,12 +169,13 @@ export function MediaLibrary({
           onClick={() => fileRef.current?.click()}
           className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
         >
-          {uploading ? "Đang tải lên…" : "+ Tải ảnh lên"}
+          {uploading ? "Đang tải lên…" : "+ Tải ảnh lên (nhiều)"}
         </button>
         <input
           ref={fileRef}
           type="file"
           accept="image/png,image/jpeg,image/webp,image/gif"
+          multiple
           className="hidden"
           disabled={uploading}
           onChange={(e) => void uploadFiles(e.target.files)}

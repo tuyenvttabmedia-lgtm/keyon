@@ -62,6 +62,7 @@ type Props = {
   features: string[];
   specs: ProductSpecRow[];
   faqs: ProductFaqRow[];
+  usageGuides: string[];
   seoTitle: string;
   seoDescription: string;
   ogImageUrl: string;
@@ -100,6 +101,7 @@ export function ProductEditForm(props: Props) {
     featuresText: props.features.join("\n"),
     specsText: specsToLines(props.specs),
     faqsText: faqsToLines(props.faqs),
+    usageGuidesText: props.usageGuides.join("\n"),
     seoKeywordsText: listToLines(props.seoKeywords),
     licenseDefaults: props.licenseDefaults,
     variantLicense: props.variantLicense,
@@ -173,6 +175,7 @@ export function ProductEditForm(props: Props) {
           features: linesToList(form.featuresText),
           specs: linesToSpecs(form.specsText),
           faqs: linesToFaqs(form.faqsText),
+          usageGuides: linesToList(form.usageGuidesText),
           seoTitle: form.seoTitle.trim() || null,
           seoDescription: form.seoDescription.trim() || null,
           ogImageUrl: form.ogImageUrl.trim() || null,
@@ -669,6 +672,26 @@ export function ProductEditForm(props: Props) {
             />
           </label>
         </div>
+        <label className="block text-sm">
+          <span className="font-medium">
+            Hướng dẫn sử dụng / kích hoạt (tab PDP)
+          </span>
+          <p className="mt-0.5 text-[11px] text-muted">
+            Mỗi dòng = 1 bước. Hiển thị ở tab «Hướng dẫn sử dụng» trên trang sản
+            phẩm — không dùng hướng dẫn thanh toán chung.
+          </p>
+          <textarea
+            rows={6}
+            className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm"
+            placeholder={
+              "Mở Settings → Accounts → Access work or school\nChọn Connect và đăng nhập bằng tài khoản đã mua\nKiểm tra license đã kích hoạt trong portal nhà cung cấp"
+            }
+            value={form.usageGuidesText}
+            onChange={(e) =>
+              setForm({ ...form, usageGuidesText: e.target.value })
+            }
+          />
+        </label>
       </div>
 
       <div className="flex flex-wrap items-center gap-3 lg:col-span-2">

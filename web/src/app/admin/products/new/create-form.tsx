@@ -92,6 +92,7 @@ export function ProductCreateForm({
     featuresText: "",
     specsText: "",
     faqsText: "",
+    usageGuidesText: "",
     variantName: "License Retail",
     sku: "",
     priceVnd: 499000,
@@ -253,6 +254,7 @@ export function ProductCreateForm({
           features: linesToList(form.featuresText),
           specs: linesToSpecs(form.specsText),
           faqs: linesToFaqs(form.faqsText),
+          usageGuides: linesToList(form.usageGuidesText),
           variantName: form.variantName,
           sku: form.sku,
           priceVnd: form.priceVnd,
@@ -674,6 +676,26 @@ export function ProductCreateForm({
                 />
               </label>
             </div>
+            <label className="mt-4 block text-sm">
+              <span className="font-medium">
+                Hướng dẫn sử dụng / kích hoạt (tab PDP)
+              </span>
+              <p className="mt-0.5 text-[11px] text-muted">
+                Mỗi dòng = 1 bước — riêng cho sản phẩm này (không phải hướng dẫn
+                thanh toán).
+              </p>
+              <textarea
+                rows={5}
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm"
+                placeholder={
+                  "Mở Settings → Accounts → Access work or school\nChọn Connect và đăng nhập bằng tài khoản đã mua"
+                }
+                value={form.usageGuidesText}
+                onChange={(e) =>
+                  setForm({ ...form, usageGuidesText: e.target.value })
+                }
+              />
+            </label>
           </div>
           <div className="rounded-2xl border border-border bg-card p-6">
             <h2 className="mb-3 font-semibold text-navy">SEO</h2>

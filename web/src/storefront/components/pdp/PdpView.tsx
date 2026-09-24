@@ -1023,26 +1023,35 @@ function TabsSection({
 
         {tab === "guide" ? (
           <div className="space-y-5">
-            <h2 className={SUBSECTION_TITLE_CLASS}>Hướng dẫn mua & nhận license</h2>
-            <ol className="grid gap-3 sm:grid-cols-2">
-              {data.guides.map((g, i) => (
-                <li
-                  key={g}
-                  className={`flex gap-3 rounded-xl border border-border/80 bg-surface px-4 py-3.5 ${BODY_CLASS} ${TRANSITION_UI} hover:border-accent/30`}
-                >
-                  <span
-                    className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent ${BADGE_CLASS} text-white`}
+            <h2 className={SUBSECTION_TITLE_CLASS}>
+              Hướng dẫn sử dụng & kích hoạt
+            </h2>
+            {data.guides.length > 0 ? (
+              <ol className="grid gap-3 sm:grid-cols-2">
+                {data.guides.map((g, i) => (
+                  <li
+                    key={`${i}-${g.slice(0, 24)}`}
+                    className={`flex gap-3 rounded-xl border border-border/80 bg-surface px-4 py-3.5 ${BODY_CLASS} ${TRANSITION_UI} hover:border-accent/30`}
                   >
-                    {i + 1}
-                  </span>
-                  {g}
-                </li>
-              ))}
-            </ol>
+                    <span
+                      className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent ${BADGE_CLASS} text-white`}
+                    >
+                      {i + 1}
+                    </span>
+                    {g}
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p className={BODY_MUTED_CLASS}>
+                Chưa có hướng dẫn kích hoạt cho sản phẩm này. Liên hệ KEYON để
+                được hỗ trợ từng bước theo gói bạn đã mua.
+              </p>
+            )}
             <p className={BODY_MUTED_CLASS}>
-              Cần hướng dẫn kích hoạt theo sản phẩm cụ thể?{" "}
+              Cần hỗ trợ kích hoạt?{" "}
               <Link href={quoteHref} className={LINK_ACCENT_CLASS}>
-                Liên hệ KEYON để được hướng dẫn kích hoạt
+                Liên hệ KEYON
               </Link>
               .
             </p>

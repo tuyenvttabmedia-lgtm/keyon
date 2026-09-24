@@ -57,7 +57,9 @@ export function GalleryEditor({ urls, onChange }: Props) {
         >
           Mở Media ↗
         </a>
-        <span className="text-xs text-muted">Ảnh đầu = ảnh chính PDP</span>
+        <span className="text-xs text-muted">
+          Chọn / tải nhiều ảnh một lần · ảnh đầu = ảnh chính PDP
+        </span>
       </div>
 
       {urls.length === 0 ? (

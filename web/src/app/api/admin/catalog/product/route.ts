@@ -49,6 +49,7 @@ const schema = z
         }),
       )
       .optional(),
+    usageGuides: z.array(z.string()).optional(),
     seoTitle: z.string().nullable().optional(),
     seoDescription: z.string().nullable().optional(),
     ogImageUrl: z.string().nullable().optional(),
@@ -136,6 +137,7 @@ export async function POST(req: Request) {
         features: body.features ?? [],
         specs: body.specs ?? [],
         faqs: body.faqs ?? [],
+        usageGuides: body.usageGuides ?? [],
         seoTitle: body.seoTitle ?? null,
         seoDescription: body.seoDescription ?? null,
         ogImageUrl: body.ogImageUrl ?? null,

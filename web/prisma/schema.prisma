@@ -347,6 +347,8 @@ model Product {
   specs            Json             @default("[]")
   /// FAQ items (JSON { id, question, answer }[])
   faqs             Json             @default("[]")
+  /// Usage / activation guide steps for PDP tab (JSON string[])
+  usageGuides      Json             @default("[]")
   /// SEO meta title (fallback: product name)
   seoTitle         String?
   /// SEO meta description

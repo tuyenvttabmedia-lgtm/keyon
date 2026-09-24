@@ -159,16 +159,22 @@ export function MediaPicker({
   }
 
   async function onUpload(list: FileList | null) {
-    if (!list?.[0]) return;
+    if (!list?.length) return;
+    const filesToUpload = Array.from(list);
     setUploading(true);
     setError(null);
+    const uploadedUrls: string[] = [];
     try {
-      const fd = new FormData();
-      fd.append("file", list[0]);
-      if (purpose) fd.append("purpose", purpose);
-      const res = await fetch("/api/admin/media", { method: "POST", body: fd });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Upload thất bại");
+      for (const file of filesToUpload) {
+        const fd = new FormData();
+        fd.append("file", file);
+        if (purpose) fd.append("purpose", purpose);
+        const res = await fetch("/api/admin/media", { method: "POST", body: fd });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error ?? `Upload thất bại: ${file.name}`);
+        const url = (data.url || data.publicUrl) as string | undefined;
+        if (url) uploadedUrls.push(url);
+      }
 
       const params = new URLSearchParams();
       if (q.trim()) params.set("q", q.trim());
@@ -178,11 +184,11 @@ export function MediaPicker({
         setFiles(normalizeFiles((listData.files ?? listData.items ?? []) as MediaFile[]));
       }
 
-      const url = (data.url || data.publicUrl) as string | undefined;
-      if (url) {
+      if (uploadedUrls.length) {
         setSelected((prev) => {
-          const next = multiple ? new Set(prev) : new Set<string>();
-          next.add(url);
+          if (!multiple) return new Set([uploadedUrls[uploadedUrls.length - 1]!]);
+          const next = new Set(prev);
+          for (const url of uploadedUrls) next.add(url);
           return next;
         });
       }
@@ -243,6 +249,7 @@ export function MediaPicker({
             ref={fileRef}
             type="file"
             accept="image/png,image/jpeg,image/webp,image/gif"
+            multiple={multiple}
             className="hidden"
             onChange={(e) => void onUpload(e.target.files)}
           />
@@ -253,7 +260,7 @@ export function MediaPicker({
           {error ? <p className="text-sm text-danger">{error}</p> : null}
           {!loading && !error && files.length === 0 ? (
             <p className="text-sm text-muted">
-              Chưa có ảnh. Tải lên ngay trong hộp thoại này.
+              Chưa có ảnh. Tải lên nhiều ảnh cùng lúc trong hộp thoại này.
             </p>
           ) : null}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
