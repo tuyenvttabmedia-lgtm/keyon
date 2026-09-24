@@ -157,7 +157,7 @@ function RowMenu({ row }: { row: CatalogRow }) {
     const check = confirmPermanentDeletePhrase(typed);
     if (check.cancelled) return;
     if (!check.ok) {
-      alert("Chưa xóa. Bạn cần gõ đúng XOA (hoặc XÓA) để xác nhận.");
+      alert("Chưa xóa. Bạn cần gõ đúng DELETE để xác nhận.");
       return;
     }
     setBusy(true);
