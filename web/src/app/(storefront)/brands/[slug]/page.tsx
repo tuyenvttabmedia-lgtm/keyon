@@ -1,5 +1,3 @@
-import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/db";
@@ -8,6 +6,14 @@ import {
   toNextMetadata,
 } from "@/server/seo/metadata";
 import { loadSiteSettings } from "@/server/seo/settings";
+import { BrandDetailView } from "@/storefront/components/brands/BrandDetailView";
+import { inferMark } from "@/storefront/components/shop/shop-utils";
+import type { ShopCategoryId } from "@/storefront/components/shop/types";
+import {
+  parseStringList,
+  PRODUCT_CATEGORY_KEYS,
+} from "@/storefront/lib/product-cms";
+import { receiveFromDeliverable } from "@/storefront/lib/customer-labels";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +29,7 @@ export async function generateMetadata({
     }),
     loadSiteSettings(),
   ]);
-  if (!brand) return { title: "Brand" };
+  if (!brand) return { title: "Thương hiệu" };
 
   const seo = resolveWithGlobalFallback(settings, {
     path: `/brands/${slug}`,
@@ -65,11 +71,17 @@ export default async function BrandLandingPage({
           name: true,
           slug: true,
           shortDescription: true,
+          galleryUrls: true,
+          categoryKey: true,
           variants: {
             where: { active: true },
             orderBy: { priceVnd: "asc" },
             take: 1,
-            select: { priceVnd: true },
+            select: {
+              name: true,
+              priceVnd: true,
+              deliverableType: true,
+            },
           },
         },
       },
@@ -77,114 +89,46 @@ export default async function BrandLandingPage({
   });
   if (!brand) notFound();
 
-  const bannerDesktop = brand.bannerDesktopUrl?.trim() || null;
-  const bannerMobile = brand.bannerMobileUrl?.trim() || bannerDesktop;
-  const logo = brand.logoUrl?.trim() || null;
+  const products = brand.products
+    .map((p) => {
+      const variant = p.variants[0];
+      if (!variant) return null;
+      const gallery = parseStringList(p.galleryUrls);
+      const categoryId =
+        p.categoryKey &&
+        (PRODUCT_CATEGORY_KEYS as readonly string[]).includes(p.categoryKey)
+          ? (p.categoryKey as ShopCategoryId)
+          : ("other" as ShopCategoryId);
+      const receive = receiveFromDeliverable(variant.deliverableType);
+      return {
+        id: p.id,
+        brandName: brand.name,
+        productName: p.name,
+        packageName: variant.name,
+        priceVnd: variant.priceVnd,
+        receiveLabel: receive.label,
+        receiveKind: receive.kind,
+        href: `/products/${p.slug}`,
+        imageUrl: gallery[0],
+        mark: inferMark(categoryId, p.name),
+        ctaLabel: "Xem chi tiết",
+      };
+    })
+    .filter((p): p is NonNullable<typeof p> => p != null);
 
   return (
-    <div>
-      {bannerDesktop || bannerMobile ? (
-        <div className="relative w-full overflow-hidden bg-navy">
-          {bannerDesktop ? (
-            <div className="relative hidden aspect-[21/7] w-full md:block">
-              <Image
-                src={bannerDesktop}
-                alt=""
-                fill
-                className="object-cover"
-                priority
-                unoptimized
-              />
-            </div>
-          ) : null}
-          {bannerMobile ? (
-            <div className="relative aspect-[4/3] w-full md:hidden">
-              <Image
-                src={bannerMobile}
-                alt=""
-                fill
-                className="object-cover"
-                priority
-                unoptimized
-              />
-            </div>
-          ) : null}
-        </div>
-      ) : null}
-
-      <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
-        <div className="flex flex-wrap items-start gap-4">
-          {logo ? (
-            <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-border bg-white">
-              <Image
-                src={logo}
-                alt={brand.name}
-                fill
-                className="object-contain p-1"
-                unoptimized
-              />
-            </div>
-          ) : null}
-          <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted">
-              Thương hiệu
-              {brand.featured ? " · Featured" : ""}
-            </p>
-            <h1 className="mt-1 text-3xl font-bold text-navy">{brand.name}</h1>
-            {brand.shortDescription ? (
-              <p className="mt-2 text-sm text-muted">{brand.shortDescription}</p>
-            ) : null}
-            <p className="mt-2 text-sm text-muted">
-              {brand.products.length} sản phẩm ·{" "}
-              <Link href="/products" className="text-accent hover:underline">
-                Xem shop
-              </Link>
-              {" · "}
-              <Link href="/brands" className="text-accent hover:underline">
-                Tất cả brand
-              </Link>
-            </p>
-          </div>
-        </div>
-
-        {brand.description ? (
-          <div className="mt-8 whitespace-pre-wrap text-sm leading-relaxed text-navy/90">
-            {brand.description}
-          </div>
-        ) : null}
-
-        {brand.products.length === 0 ? (
-          <p className="mt-10 text-sm text-muted">Chưa có sản phẩm đang bán.</p>
-        ) : (
-          <ul className="mt-8 divide-y divide-border rounded-2xl border border-border bg-card">
-            {brand.products.map((p) => {
-              const price = p.variants[0]?.priceVnd;
-              return (
-                <li key={p.id}>
-                  <Link
-                    href={`/products/${p.slug}`}
-                    className="flex flex-wrap items-center justify-between gap-2 px-4 py-4 hover:bg-[#f8fafc]"
-                  >
-                    <div>
-                      <p className="font-semibold text-navy">{p.name}</p>
-                      {p.shortDescription ? (
-                        <p className="mt-0.5 line-clamp-1 text-sm text-muted">
-                          {p.shortDescription}
-                        </p>
-                      ) : null}
-                    </div>
-                    <p className="text-sm font-semibold text-accent">
-                      {price != null
-                        ? `Từ ${price.toLocaleString("vi-VN")}đ`
-                        : "Xem chi tiết"}
-                    </p>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </div>
-    </div>
+    <BrandDetailView
+      brand={{
+        name: brand.name,
+        slug: brand.slug,
+        logoUrl: brand.logoUrl?.trim() || null,
+        shortDescription: brand.shortDescription?.trim() || null,
+        description: brand.description?.trim() || null,
+        featured: brand.featured,
+        bannerDesktopUrl: brand.bannerDesktopUrl?.trim() || null,
+        bannerMobileUrl: brand.bannerMobileUrl?.trim() || null,
+        products,
+      }}
+    />
   );
 }
