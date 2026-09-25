@@ -28,7 +28,7 @@ export const dynamic = "force-dynamic";
 
 type Props = {
   params: Promise<{ topic: string }>;
-  searchParams: Promise<{ q?: string; tag?: string }>;
+  searchParams: Promise<{ q?: string; tag?: string; page?: string }>;
 };
 
 async function loadTaxonomy() {
@@ -118,6 +118,7 @@ export default async function TopicArchivePage({
       initialQuery={sp.q?.trim() ?? ""}
       initialCategory={raw}
       initialTag={sp.tag?.trim() ?? ""}
+      initialPage={Number.parseInt(sp.page ?? "1", 10) || 1}
       topicArchive={raw}
       hubHref={KNOWLEDGE_HUB_PATH}
     />

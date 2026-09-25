@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import type { BlogPost, CmsBlog } from "@/server/cms/types";
 import {
@@ -49,14 +50,14 @@ import {
   ELEVATION_HAIRLINE,
   ELEVATION_NONE,
   HOVER_LIFT_CARD,
-  HOVER_OUTLINE_FILL,
   HOVER_ROW,
   MOTION_NORMAL,
   TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
 
-const PAGE_SIZE = 6;
+/** Listing hub: 12 / trang — khớp lưới 2–3 cột khi mở rộng; list sidebar cũng ổn. */
+export const BLOG_HUB_PAGE_SIZE = 12;
 
 type SortId = "newest" | "oldest";
 
@@ -66,6 +67,8 @@ export function BlogIndexView({
   initialQuery = "",
   initialCategory = "all",
   initialTag = "",
+  initialPage = 1,
+  pageSize = BLOG_HUB_PAGE_SIZE,
   section,
   topicArchive,
   hubHref = resourceHubHref(),
@@ -76,18 +79,24 @@ export function BlogIndexView({
   initialCategory?: BlogCategoryFilter;
   /** URL `?tag=` slug — filters posts that have a matching tag label. */
   initialTag?: string;
+  /** URL `?page=` — 1-based. */
+  initialPage?: number;
+  /** Bài / trang (mặc định 12). */
+  pageSize?: number;
   /** When set, breadcrumb under /kien-thuc/{chuyen-muc} */
   section?: ResourceSectionId;
   /** Topic archive page `/kien-thuc/chu-de/{topic}` */
   topicArchive?: BlogCategoryId;
   hubHref?: string;
 }) {
+  const router = useRouter();
+  const pathname = usePathname();
   const [query, setQuery] = useState(initialQuery);
   const [sort, setSort] = useState<SortId>("newest");
   const [category, setCategory] =
     useState<BlogCategoryFilter>(initialCategory);
   const [tagSlug] = useState(slugifyTag(initialTag));
-  const [visible, setVisible] = useState(PAGE_SIZE);
+  const [page, setPage] = useState(() => Math.max(1, Math.floor(initialPage) || 1));
   const [saved, setSaved] = useState<Record<string, boolean>>({});
   const [bookmarksReady, setBookmarksReady] = useState(false);
 
@@ -159,7 +168,7 @@ export function BlogIndexView({
 
   const latestPool = useMemo(() => {
     const heroId = featured[0]?.id;
-    // Avoid duplicating the large featured hero; keep enough posts for the list.
+    // Avoid duplicating the large featured hero on page 1; keep enough posts for the list.
     return filtered.filter(
       (p) =>
         p.id !== heroId ||
@@ -169,8 +178,53 @@ export function BlogIndexView({
     );
   }, [filtered, featured, category, query, tagSlug]);
 
-  const latest = latestPool.slice(0, visible);
-  const canLoadMore = visible < latestPool.length;
+  const total = latestPool.length;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize) || 1);
+  const safePage = Math.min(Math.max(1, page), totalPages);
+  const start = (safePage - 1) * pageSize;
+  const latest = latestPool.slice(start, start + pageSize);
+  const from = total === 0 ? 0 : start + 1;
+  const to = Math.min(start + pageSize, total);
+
+  useEffect(() => {
+    if (page !== safePage) setPage(safePage);
+  }, [page, safePage]);
+
+  function syncListUrl(next: {
+    page: number;
+    query: string;
+    category: BlogCategoryFilter;
+  }) {
+    const params = new URLSearchParams();
+    const q = next.query.trim();
+    if (q) params.set("q", q);
+    if (tagSlug) params.set("tag", tagSlug);
+    if (!topicArchive && next.category !== "all") {
+      params.set("chu-de", next.category);
+    }
+    if (next.page > 1) params.set("page", String(next.page));
+    const qs = params.toString();
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+  }
+
+  function goToPage(nextPage: number) {
+    const p = Math.min(Math.max(1, nextPage), totalPages);
+    setPage(p);
+    syncListUrl({ page: p, query, category });
+    const el = document.getElementById("bai-viet");
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    else window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function resetToFirstPage(next: {
+    query?: string;
+    category?: BlogCategoryFilter;
+  }) {
+    const q = next.query ?? query;
+    const cat = next.category ?? category;
+    setPage(1);
+    syncListUrl({ page: 1, query: q, category: cat });
+  }
 
   const trending = useMemo(() => {
     return [...posts]
@@ -189,6 +243,8 @@ export function BlogIndexView({
       return next;
     });
   }
+
+  const showFeatured = safePage === 1 && featured.length > 0;
 
   return (
     <div className="pb-0">
@@ -242,8 +298,9 @@ export function BlogIndexView({
               <input
                 value={query}
                 onChange={(e) => {
-                  setQuery(e.target.value);
-                  setVisible(PAGE_SIZE);
+                  const v = e.target.value;
+                  setQuery(v);
+                  resetToFirstPage({ query: v });
                 }}
                 placeholder={cms.searchPlaceholder}
                 className={`h-11 w-full rounded-xl border border-border bg-white pl-10 pr-3 ${INPUT_TEXT_CLASS} outline-none ${TRANSITION_UI} focus:border-accent`}
@@ -253,7 +310,10 @@ export function BlogIndexView({
               <span className="sr-only">Sắp xếp</span>
               <select
                 value={sort}
-                onChange={(e) => setSort(e.target.value as SortId)}
+                onChange={(e) => {
+                  setSort(e.target.value as SortId);
+                  resetToFirstPage({});
+                }}
                 className={`h-11 w-full appearance-none rounded-xl border border-border bg-white py-2 pl-3 pr-9 sm:w-[9.5rem] ${CTA_COMPACT_CLASS} text-navy outline-none ${TRANSITION_UI} focus:border-accent`}
               >
                 <option value="newest">{cms.sortNewest}</option>
@@ -266,8 +326,8 @@ export function BlogIndexView({
           </div>
         </div>
 
-        {/* Featured hero */}
-        {featured.length > 0 ? (
+        {/* Featured hero — chỉ trang 1 */}
+        {showFeatured ? (
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.9fr)] lg:items-stretch">
             <FeaturedHero post={featured[0]!} badge={cms.featuredBadge} />
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 lg:grid-rows-2">
@@ -293,7 +353,7 @@ export function BlogIndexView({
                 type="button"
                 onClick={() => {
                   setCategory(c.id);
-                  setVisible(PAGE_SIZE);
+                  resetToFirstPage({ category: c.id });
                 }}
                 className={`flex min-w-[5.25rem] shrink-0 flex-col items-center gap-2 rounded-xl border px-3 py-3 ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${
                   active
@@ -318,8 +378,17 @@ export function BlogIndexView({
 
         {/* Latest + sidebar */}
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.65fr)_minmax(16rem,0.85fr)] lg:items-start">
-          <section className="min-w-0">
-            <h2 className={SUBSECTION_TITLE_CLASS}>{cms.latestTitle}</h2>
+          <section id="bai-viet" className="min-w-0 scroll-mt-24">
+            <div className="flex flex-wrap items-end justify-between gap-2">
+              <h2 className={SUBSECTION_TITLE_CLASS}>{cms.latestTitle}</h2>
+              <p className={CARD_META_CLASS}>
+                {total === 0
+                  ? "0 bài viết"
+                  : totalPages > 1
+                    ? `${from}–${to} / ${total} bài viết · Trang ${safePage}/${totalPages}`
+                    : `${total} bài viết`}
+              </p>
+            </div>
             {latest.length === 0 ? (
               <div
                 className={`mt-5 rounded-2xl border border-dashed border-border bg-white px-6 py-14 text-center ${ELEVATION_NONE}`}
@@ -342,17 +411,12 @@ export function BlogIndexView({
                 ))}
               </ul>
             )}
-            {canLoadMore ? (
-              <div className="mt-6 flex justify-center">
-                <button
-                  type="button"
-                  onClick={() => setVisible((n) => n + PAGE_SIZE)}
-                  className={`inline-flex h-11 items-center gap-2 rounded-xl border border-border bg-white px-5 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} ${HOVER_OUTLINE_FILL}`}
-                >
-                  {cms.loadMoreCta}
-                  <span aria-hidden>↓</span>
-                </button>
-              </div>
+            {totalPages > 1 ? (
+              <BlogPagination
+                page={safePage}
+                totalPages={totalPages}
+                onChange={goToPage}
+              />
             ) : null}
           </section>
 
@@ -413,7 +477,7 @@ export function BlogIndexView({
                         type="button"
                         onClick={() => {
                           setCategory(t.id);
-                          setVisible(PAGE_SIZE);
+                          resetToFirstPage({ category: t.id });
                         }}
                         className={`flex w-full items-center gap-3 rounded-xl px-2.5 py-2.5 text-left ${TRANSITION_UI} ${
                           active
@@ -790,4 +854,96 @@ function CatIcon({
         </svg>
       );
   }
+}
+
+function BlogPagination({
+  page,
+  totalPages,
+  onChange,
+}: {
+  page: number;
+  totalPages: number;
+  onChange: (p: number) => void;
+}) {
+  const pages = paginationWindow(page, totalPages);
+  return (
+    <nav
+      className="mt-8 flex items-center justify-center gap-1.5"
+      aria-label="Phân trang bài viết"
+    >
+      <BlogPageBtn
+        disabled={page <= 1}
+        onClick={() => onChange(page - 1)}
+        label="Trang trước"
+      >
+        ‹
+      </BlogPageBtn>
+      {pages.map((p, i) =>
+        p === "…" ? (
+          <span key={`e-${i}`} className="px-1 text-muted-soft">
+            …
+          </span>
+        ) : (
+          <BlogPageBtn
+            key={p}
+            active={p === page}
+            onClick={() => onChange(p)}
+            label={`Trang ${p}`}
+          >
+            {p}
+          </BlogPageBtn>
+        ),
+      )}
+      <BlogPageBtn
+        disabled={page >= totalPages}
+        onClick={() => onChange(page + 1)}
+        label="Trang sau"
+      >
+        ›
+      </BlogPageBtn>
+    </nav>
+  );
+}
+
+function BlogPageBtn({
+  children,
+  onClick,
+  disabled,
+  active,
+  label,
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+  disabled?: boolean;
+  active?: boolean;
+  label: string;
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      aria-current={active ? "page" : undefined}
+      disabled={disabled}
+      onClick={onClick}
+      className={`inline-flex h-9 min-w-9 items-center justify-center rounded-lg px-2 ${CTA_COMPACT_CLASS} transition disabled:opacity-40 ${
+        active
+          ? "bg-accent text-white"
+          : "border border-border bg-white text-navy hover:border-accent hover:text-accent"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
+function paginationWindow(page: number, total: number): (number | "…")[] {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+  const out: (number | "…")[] = [1];
+  const start = Math.max(2, page - 1);
+  const end = Math.min(total - 1, page + 1);
+  if (start > 2) out.push("…");
+  for (let i = start; i <= end; i += 1) out.push(i);
+  if (end < total - 1) out.push("…");
+  out.push(total);
+  return out;
 }

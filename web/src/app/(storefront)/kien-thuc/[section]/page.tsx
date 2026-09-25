@@ -33,6 +33,7 @@ type Props = {
     "chu-de"?: string;
     category?: string;
     tag?: string;
+    page?: string;
   }>;
 };
 
@@ -110,6 +111,7 @@ export default async function ResourceSectionIndexPage({
       initialQuery={sp.q?.trim() ?? ""}
       initialCategory={initialCategory}
       initialTag={sp.tag?.trim() ?? ""}
+      initialPage={Number.parseInt(sp.page ?? "1", 10) || 1}
       section={section}
     />
   );
