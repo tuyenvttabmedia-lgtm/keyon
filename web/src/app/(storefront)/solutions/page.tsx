@@ -7,12 +7,7 @@ import { toVideoEmbedUrl } from "@/storefront/components/solutions/intro-video";
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
-  return {
-    ...(await buildMainPageMetadata("/solutions")),
-    title: "Giải pháp | KEYON",
-    description:
-      "Giải pháp KEYON theo nhu cầu: năng suất, cloud & hạ tầng, bảo mật, sao lưu, quản lý bản quyền và mix theo quy mô.",
-  };
+  return buildMainPageMetadata("/solutions");
 }
 
 export default async function SolutionsHubPage() {

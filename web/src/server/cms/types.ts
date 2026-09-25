@@ -780,6 +780,31 @@ export const defaultSettings: SiteSettings = {
       title: "Thương hiệu — KEYON",
       description: "Danh sách thương hiệu phần mềm trên KEYON.",
     },
+    "/categories": {
+      title: "Danh mục sản phẩm — KEYON",
+      description:
+        "Duyệt phần mềm theo danh mục: Windows, Office, Adobe, cloud, bảo mật và hơn thế trên KEYON.",
+    },
+    "/business": {
+      title: "Doanh nghiệp — KEYON",
+      description:
+        "Volume licensing, subscription, tư vấn bản quyền và báo giá B2B trên KEYON.",
+    },
+    "/solutions": {
+      title: "Giải pháp — KEYON",
+      description:
+        "Giải pháp KEYON theo nhu cầu: năng suất, cloud, bảo mật, sao lưu và quản lý bản quyền.",
+    },
+    "/support": {
+      title: "Trung tâm hỗ trợ — KEYON",
+      description:
+        "Tìm hướng dẫn, FAQ và gửi yêu cầu hỗ trợ sản phẩm, đơn hàng, bản quyền trên KEYON.",
+    },
+    "/how-it-works": {
+      title: "Cách KEYON hoạt động",
+      description:
+        "Ba bước: chọn gói, thanh toán VietQR, nhận deliverable trong Tài khoản KEYON.",
+    },
   },
 };
 

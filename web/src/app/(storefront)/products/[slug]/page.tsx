@@ -368,9 +368,7 @@ export default async function ProductPage({
     brandName: product.brand.name,
     sku: initialDb.sku,
     priceVnd: activeVariant.priceVnd,
-    url: absoluteUrl(
-      `/products/${product.slug}?variant=${activeVariant.id}`,
-    ),
+    url: absoluteUrl(`/products/${product.slug}`),
     imageUrl: cmsGallery[0] ?? product.ogImageUrl,
     availability: activeVariant.canBuy ? "InStock" : "OutOfStock",
   });

@@ -14,6 +14,7 @@ import {
   toNextMetadata,
 } from "@/server/seo/metadata";
 import { loadSiteSettings } from "@/server/seo/settings";
+import { buildItemListJsonLd } from "@/server/seo/structured-data";
 
 export const dynamic = "force-dynamic";
 
@@ -86,15 +87,36 @@ export default async function CategoryPage({ params, searchParams }: Props) {
 
   const { products, categories } = await loadShopCatalog();
   const initialQuery = (sp.q ?? "").trim();
+  const label = CATEGORY_LABELS[cat];
+  const listed = products.filter((p) => p.categoryId === cat);
+  const itemListLd =
+    !initialQuery && listed.length
+      ? buildItemListJsonLd({
+          name: label,
+          path: `/categories/${cat}`,
+          items: listed.map((p) => ({
+            name: p.productName,
+            path: p.href,
+          })),
+        })
+      : null;
 
   return (
-    <Suspense fallback={null}>
-      <ShopView
-        products={products}
-        categories={categories}
-        initialCategory={cat as ShopCategoryId}
-        initialQuery={initialQuery}
-      />
-    </Suspense>
+    <>
+      {itemListLd ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }}
+        />
+      ) : null}
+      <Suspense fallback={null}>
+        <ShopView
+          products={products}
+          categories={categories}
+          initialCategory={cat as ShopCategoryId}
+          initialQuery={initialQuery}
+        />
+      </Suspense>
+    </>
   );
 }

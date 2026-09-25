@@ -20,12 +20,7 @@ import { isBlogPostLive } from "@/server/cms/blog-utils";
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
-  return {
-    ...(await buildMainPageMetadata("/support")),
-    title: "Trung tâm hỗ trợ | KEYON",
-    description:
-      "Tìm hướng dẫn, câu hỏi thường gặp và gửi yêu cầu hỗ trợ về sản phẩm, đơn hàng, bản quyền và tài khoản KEYON.",
-  };
+  return buildMainPageMetadata("/support");
 }
 
 export default async function SupportHubPage() {

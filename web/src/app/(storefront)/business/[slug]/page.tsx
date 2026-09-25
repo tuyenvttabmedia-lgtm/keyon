@@ -8,6 +8,7 @@ import { ImplementationLanding } from "@/storefront/components/business/Implemen
 import { ContractsLanding } from "@/storefront/components/business/ContractsLanding";
 import { BUSINESS_PAGES } from "@/storefront/nav/ia-pages";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
+import { absoluteTitle } from "@/server/seo/title";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (slug === "volume-licensing") {
     return {
       ...(await buildMainPageMetadata(`/business/${slug}`)),
-      title: "Mua bản quyền số lượng lớn | KEYON",
+      title: absoluteTitle("Mua bản quyền số lượng lớn | KEYON"),
       description:
         "Volume licensing KEYON: chọn quy mô 5 / 10 / 50 / 100+ người dùng và nhận tư vấn báo giá theo nhu cầu.",
     };
@@ -32,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (slug === "subscriptions") {
     return {
       ...(await buildMainPageMetadata(`/business/${slug}`)),
-      title: "Subscription & Gia hạn | KEYON",
+      title: absoluteTitle("Subscription & Gia hạn | KEYON"),
       description:
         "Theo dõi subscription, thời hạn và chu kỳ gia hạn tập trung — tư vấn phương án phù hợp với doanh nghiệp.",
     };
@@ -40,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (slug === "licensing-consulting") {
     return {
       ...(await buildMainPageMetadata(`/business/${slug}`)),
-      title: "Tư vấn bản quyền | KEYON",
+      title: absoluteTitle("Tư vấn bản quyền | KEYON"),
       description:
         "Chưa chắc nên chọn Office, Microsoft 365, Windows hay Security? KEYON hỗ trợ phân tích nhu cầu và tư vấn trước khi mua.",
     };
@@ -48,7 +49,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (slug === "implementation") {
     return {
       ...(await buildMainPageMetadata(`/business/${slug}`)),
-      title: "Dịch vụ triển khai | KEYON",
+      title: absoluteTitle("Dịch vụ triển khai | KEYON"),
       description:
         "Bàn giao và kích hoạt bản quyền theo quy mô tổ chức — onboarding IT, không phải catalog MSP cloud.",
     };
@@ -56,14 +57,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (slug === "contracts") {
     return {
       ...(await buildMainPageMetadata(`/business/${slug}`)),
-      title: "Hợp đồng & đơn hàng doanh nghiệp | KEYON",
+      title: absoluteTitle("Hợp đồng & đơn hàng doanh nghiệp | KEYON"),
       description:
         "Theo dõi đơn hàng và license tổ chức trên Tài khoản KEYON. PO và gia hạn qua đội kinh doanh.",
     };
   }
   return {
     ...(await buildMainPageMetadata(`/business/${slug}`)),
-    title: `${page.title} | KEYON`,
+    title: absoluteTitle(`${page.title} | KEYON`),
     description: page.subtitle,
   };
 }

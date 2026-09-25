@@ -56,6 +56,13 @@ const nextConfig: NextConfig = {
         destination: "/solutions/by-need",
         permanent: true,
       },
+      // Canonical host: apex only (www → keyon.vn)
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.keyon.vn" }],
+        destination: "https://keyon.vn/:path*",
+        permanent: true,
+      },
     ];
   },
 };

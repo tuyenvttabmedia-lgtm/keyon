@@ -28,6 +28,7 @@ import { SOLUTION_PAGES } from "@/storefront/nav/ia-pages";
 import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
 import { inferCategory } from "@/storefront/components/shop/shop-utils";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
+import { absoluteTitle } from "@/server/seo/title";
 import { defaultCmsProductivity, readJsonFile } from "@/server/cms/store";
 import { resolveMediaUrl } from "@/lib/media-url";
 import { resolveStorage } from "@/server/storage/config";
@@ -49,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (slug === "by-need") {
     return {
       ...(await buildMainPageMetadata("/solutions/by-need")),
-      title: "Giải pháp theo nhu cầu | KEYON",
+      title: absoluteTitle("Giải pháp theo nhu cầu | KEYON"),
       description:
         "Kết hợp năng suất, hạ tầng, bảo mật và sao lưu đúng quy mô sử dụng — tư vấn mix trên KEYON.",
     };
@@ -57,7 +58,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (slug === "cloud") {
     return {
       ...(await buildMainPageMetadata("/solutions/cloud")),
-      title: "Cloud linh hoạt cho doanh nghiệp | KEYON",
+      title: absoluteTitle("Cloud linh hoạt cho doanh nghiệp | KEYON"),
       description:
         "Giải pháp cloud KEYON: hạ tầng, storage, backup và tư vấn triển khai cho doanh nghiệp hiện đại.",
     };
@@ -65,7 +66,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (slug === "productivity") {
     return {
       ...(await buildMainPageMetadata("/solutions/productivity")),
-      title: "Năng suất & Cộng tác | KEYON",
+      title: absoluteTitle("Năng suất & Cộng tác | KEYON"),
       description:
         "Microsoft 365, Office, Teams và công cụ cộng tác chính hãng trên KEYON — kích hoạt nhanh, hỗ trợ tiếng Việt.",
     };
@@ -73,7 +74,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (slug === "security") {
     return {
       ...(await buildMainPageMetadata("/solutions/security")),
-      title: "Bảo mật | KEYON",
+      title: absoluteTitle("Bảo mật | KEYON"),
       description:
         "Giải pháp bảo mật KEYON: endpoint, antivirus và bảo vệ thiết bị — license chính hãng, hỗ trợ tiếng Việt.",
     };
@@ -81,7 +82,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (slug === "backup") {
     return {
       ...(await buildMainPageMetadata("/solutions/backup")),
-      title: "Backup & Khôi phục | KEYON",
+      title: absoluteTitle("Backup & Khôi phục | KEYON"),
       description:
         "Sao lưu và khôi phục dữ liệu trên KEYON — endpoint, server, cloud và SaaS, license chính hãng.",
     };
@@ -89,14 +90,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (slug === "license-management") {
     return {
       ...(await buildMainPageMetadata("/solutions/license-management")),
-      title: "Quản lý bản quyền | KEYON",
+      title: absoluteTitle("Quản lý bản quyền | KEYON"),
       description:
         "Theo dõi, cảnh báo gia hạn và tối ưu chi phí license trên một nền tảng KEYON — minh bạch và chủ động.",
     };
   }
   return {
     ...(await buildMainPageMetadata(`/solutions/${slug}`)),
-    title: `${page.title} | KEYON`,
+    title: absoluteTitle(`${page.title} | KEYON`),
     description: page.subtitle,
   };
 }

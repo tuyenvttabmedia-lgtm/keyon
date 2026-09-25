@@ -22,6 +22,7 @@ import {
 } from "@/storefront/lib/resources";
 import { mergeBlogTaxonomy } from "@/storefront/lib/blog-taxonomy";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
+import { absoluteTitle } from "@/server/seo/title";
 import type { MainSeoPageKey } from "@/lib/seo-main-pages";
 
 export const dynamic = "force-dynamic";
@@ -57,7 +58,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const path = resourceIndexHref(section) as MainSeoPageKey;
   return {
     ...(await buildMainPageMetadata(path)),
-    title: `${meta?.title ?? section} | KEYON`,
+    title: absoluteTitle(`${meta?.title ?? section} | KEYON`),
     description: meta?.subtitle,
   };
 }

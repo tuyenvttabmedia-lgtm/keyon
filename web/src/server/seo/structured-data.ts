@@ -47,6 +47,33 @@ export function buildFaqPageJsonLd(
   };
 }
 
+export function buildItemListJsonLd(input: {
+  name: string;
+  path: string;
+  items: { name: string; path: string }[];
+}): Record<string, unknown> | null {
+  if (!input.items.length) return null;
+  const origin = getSiteOrigin();
+  const pageUrl = input.path.startsWith("http")
+    ? input.path
+    : absoluteUrl(input.path);
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: input.name,
+    url: pageUrl,
+    numberOfItems: input.items.length,
+    itemListElement: input.items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      url: item.path.startsWith("http")
+        ? item.path
+        : `${origin}${item.path.startsWith("/") ? item.path : `/${item.path}`}`,
+    })),
+  };
+}
+
 export function buildArticleJsonLd(input: {
   title: string;
   description?: string;

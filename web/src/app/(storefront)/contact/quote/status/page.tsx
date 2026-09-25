@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { buildMainPageMetadata } from "@/server/seo/metadata";
 import { isQuotePublicTrackingEnabled } from "@/server/quote/tracking";
 import { QuoteTrackView } from "@/storefront/components/quote/QuoteTrackView";
+import { absoluteTitle } from "@/server/seo/title";
+import { NOINDEX_ROBOTS } from "@/server/seo/noindex";
 import {
   BREADCRUMB_CLASS,
   BREADCRUMB_CURRENT_CLASS,
@@ -13,10 +14,10 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Tra cứu yêu cầu báo giá | KEYON",
+    title: absoluteTitle("Tra cứu yêu cầu báo giá | KEYON"),
     description:
       "Tra cứu trạng thái yêu cầu báo giá KEYON bằng mã QT- và xác minh OTP qua email.",
-    robots: { index: false, follow: false },
+    robots: NOINDEX_ROBOTS,
   };
 }
 

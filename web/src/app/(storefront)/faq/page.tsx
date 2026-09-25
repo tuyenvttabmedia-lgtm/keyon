@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { FaqSupportView } from "@/storefront/components/FaqSupportView";
 import { getFaqForPage } from "@/storefront/content/get-home-content";
+import { selectFaqVisibleItems } from "@/storefront/content/faq-visible";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
 import { buildFaqPageJsonLd } from "@/server/seo/structured-data";
 
@@ -20,8 +21,15 @@ export default async function FaqPage({ searchParams }: Props) {
   const openId = sp.open?.trim() || null;
   const opened = openId ? faq.items.find((i) => i.id === openId) : undefined;
   const pageNum = Math.max(1, Number.parseInt(sp.page ?? "1", 10) || 1);
+  const visible = selectFaqVisibleItems({
+    categories: faq.categories,
+    items: faq.items,
+    query: sp.q?.trim() || "",
+    category: sp.cat?.trim() || opened?.category || null,
+    page: pageNum,
+  });
   const faqLd = buildFaqPageJsonLd(
-    faq.items.map((i) => ({ question: i.question, answer: i.answer })),
+    visible.map((i) => ({ question: i.question, answer: i.answer })),
   );
 
   return (

@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
 import { readSession } from "@/lib/auth";
 import { getHomeContent } from "@/storefront/content/get-home-content";
 import { SiteHeader } from "@/storefront/components/SiteHeader";
 import { SiteFooter } from "@/storefront/components/SiteFooter";
+import { NOINDEX_ROBOTS } from "@/server/seo/noindex";
+
+export const metadata: Metadata = {
+  title: "Xác thực",
+  robots: NOINDEX_ROBOTS,
+};
 
 /** Same shell as Home: header + navy footer. Auth pages own the split body. */
 export default async function AuthLayout({
