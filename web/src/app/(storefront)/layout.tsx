@@ -3,19 +3,13 @@ import { getHomeContent } from "@/storefront/content/get-home-content";
 import { SiteHeader } from "@/storefront/components/SiteHeader";
 import { SiteFooter } from "@/storefront/components/SiteFooter";
 import { SiteJsonLd } from "@/storefront/components/seo/SiteJsonLd";
-import { AnalyticsScripts } from "@/storefront/components/seo/AnalyticsScripts";
-import { loadSiteSettings } from "@/server/seo/settings";
 
 export default async function StorefrontLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [session, home, settings] = await Promise.all([
-    readSession(),
-    getHomeContent(),
-    loadSiteSettings(),
-  ]);
+  const [session, home] = await Promise.all([readSession(), getHomeContent()]);
   const isStaff =
     session?.role === "ADMIN" ||
     session?.role === "FULFILLMENT" ||
@@ -24,10 +18,6 @@ export default async function StorefrontLayout({
   return (
     <>
       <SiteJsonLd />
-      <AnalyticsScripts
-        ga4MeasurementId={settings.ga4MeasurementId}
-        gtmContainerId={settings.gtmContainerId}
-      />
       <SiteHeader
         brand={home.brand}
         sessionEmail={session?.email}
