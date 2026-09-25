@@ -70,7 +70,7 @@ const SECTION_META: Record<
   },
 };
 
-/** Latest grid: compact cards — 4 slots like Home news. */
+/** Compact latest grid — Home news density. */
 const LATEST_LIMIT = 4;
 
 export function KnowledgeHubView({
@@ -84,13 +84,36 @@ export function KnowledgeHubView({
   const topics = [...taxonomy.topics]
     .filter((t) => t.visible)
     .sort((a, b) => a.sortOrder - b.sortOrder);
-  const featured = pickFeatured(posts, 3);
-  const latest = posts.slice(0, LATEST_LIMIT);
-  const heroSide = featured.length > 0 ? featured : posts.slice(0, 3);
+
+  // Hero = entry reading (1 + 2). Không lặp lại block Nổi bật riêng.
+  const heroPosts = pickFeatured(posts, 3);
+  const heroIds = new Set(heroPosts.map((p) => p.id));
+
+  // Mới nhất: ưu tiên bài chưa nằm trong hero; bù thêm nếu thiếu.
+  const latestExclusive = posts.filter((p) => !heroIds.has(p.id));
+  const latest =
+    latestExclusive.length >= LATEST_LIMIT
+      ? latestExclusive.slice(0, LATEST_LIMIT)
+      : [
+          ...latestExclusive,
+          ...posts
+            .filter((p) => heroIds.has(p.id))
+            .slice(0, LATEST_LIMIT - latestExclusive.length),
+        ].slice(0, LATEST_LIMIT);
+
+  const sectionRows = sections.map((s) => {
+    const id = s.id as ResourceSectionId;
+    return {
+      section: s,
+      id,
+      count: filterPostsBySection(posts, id).length,
+      meta: SECTION_META[id] ?? SECTION_META.news,
+    };
+  });
 
   return (
     <div className="bg-white pb-0">
-      {/* Hero — 2 cột, lấp khoảng trống bên phải */}
+      {/* Hero */}
       <section className="relative overflow-x-clip border-b border-border bg-[#F7FAFC]">
         <div
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_88%_18%,rgba(14,165,164,0.09),transparent_42%),radial-gradient(ellipse_at_8%_88%,rgba(14,165,233,0.05),transparent_48%)]"
@@ -110,8 +133,8 @@ export function KnowledgeHubView({
             <span className={BREADCRUMB_CURRENT_CLASS}>Kiến thức</span>
           </nav>
 
-          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-10 xl:gap-12">
-            <div className="min-w-0 max-w-[540px]">
+          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10">
+            <div className="min-w-0 max-w-[520px]">
               <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
                 Kiến thức
               </p>
@@ -157,75 +180,52 @@ export function KnowledgeHubView({
               ) : null}
             </div>
 
-            <HeroSpotlight posts={heroSide} total={posts.length} />
+            <HeroReadingPanel posts={heroPosts} total={posts.length} />
           </div>
         </div>
       </section>
 
-      {/* Chuyên mục — card dày hơn, có bài mới nhất */}
-      <section className="border-b border-border bg-white py-9 md:py-11">
+      {/* Chuyên mục — hàng gọn, không nhét “Bài mới” (tránh trùng hero) */}
+      <section className="border-b border-border bg-white py-7 md:py-8">
         <div className="home-container">
-          <header className="max-w-2xl">
-            <h2 className={SECTION_TITLE_CLASS}>Chuyên mục</h2>
-            <p className={`mt-1.5 ${SECTION_LEAD_CLASS}`}>
-              Chọn loại nội dung phù hợp — hướng dẫn, phân tích hoặc tin cập
-              nhật.
-            </p>
-          </header>
+          <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
+            <div>
+              <h2 className={SECTION_TITLE_CLASS}>Chuyên mục</h2>
+              <p className={`mt-1 ${SECTION_LEAD_CLASS}`}>
+                Hướng dẫn, phân tích hoặc tin cập nhật
+              </p>
+            </div>
+          </div>
 
-          <ul className="mt-7 grid gap-3 md:grid-cols-3 md:gap-4">
-            {sections.map((s) => {
-              const id = s.id as ResourceSectionId;
-              const meta = SECTION_META[id] ?? SECTION_META.news;
-              const sectionPosts = filterPostsBySection(posts, id);
-              const count = sectionPosts.length;
-              const latestInSection = sectionPosts[0] ?? null;
+          <ul className="grid gap-2.5 sm:grid-cols-3">
+            {sectionRows.map(({ section: s, id, count, meta }) => {
               const Icon = meta.Icon;
-
               return (
                 <li key={s.id}>
                   <Link
                     href={resourceIndexHref(id)}
-                    className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-white p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/40 ${ELEVATION_CARD_HOVER}`}
+                    className={`group relative flex h-full gap-3 overflow-hidden rounded-2xl border border-border/80 bg-white p-3.5 sm:flex-col sm:p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/40 ${ELEVATION_CARD_HOVER}`}
                   >
                     <span
                       className="pointer-events-none absolute inset-0 opacity-90"
                       style={{
-                        background: `radial-gradient(ellipse 80% 55% at 12% 0%, ${meta.glow}, transparent 70%)`,
+                        background: `radial-gradient(ellipse 70% 50% at 8% 0%, ${meta.glow}, transparent 68%)`,
                       }}
                       aria-hidden
                     />
-                    <div className="relative z-[1] flex flex-1 flex-col">
-                      <span
-                        className={`inline-flex h-11 w-11 items-center justify-center rounded-xl ${meta.iconBg}`}
-                        aria-hidden
-                      >
-                        <Icon size={20} strokeWidth={1.75} />
-                      </span>
-                      <h3 className={`mt-4 ${SUBSECTION_TITLE_CLASS}`}>
-                        {s.label}
-                      </h3>
-                      <p className={`mt-1.5 flex-1 ${BODY_MUTED_CLASS}`}>
+                    <span
+                      className={`relative z-[1] inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${meta.iconBg}`}
+                      aria-hidden
+                    >
+                      <Icon size={18} strokeWidth={1.75} />
+                    </span>
+                    <div className="relative z-[1] min-w-0 flex-1">
+                      <h3 className={CARD_TITLE_CLASS}>{s.label}</h3>
+                      <p className={`mt-1 line-clamp-2 ${BODY_MUTED_CLASS}`}>
                         {s.subtitle}
                       </p>
-
-                      {latestInSection ? (
-                        <div className="mt-4 rounded-xl border border-border/70 bg-[#F7FAFC] px-3 py-2.5">
-                          <p className={CARD_META_CLASS}>Bài mới</p>
-                          <p
-                            className={`mt-0.5 line-clamp-2 ${CARD_TITLE_CLASS}`}
-                          >
-                            {latestInSection.title}
-                          </p>
-                        </div>
-                      ) : (
-                        <div className="mt-4 rounded-xl border border-dashed border-border/70 bg-[#F7FAFC] px-3 py-2.5">
-                          <p className={CARD_META_CLASS}>Sắp có bài viết</p>
-                        </div>
-                      )}
-
                       <p
-                        className={`mt-4 inline-flex items-center gap-1 ${CTA_COMPACT_CLASS} text-accent ${MOTION_NORMAL} transition-colors group-hover:text-accent-hover`}
+                        className={`mt-2.5 inline-flex items-center gap-1 ${CTA_COMPACT_CLASS} text-accent ${MOTION_NORMAL} transition-colors group-hover:text-accent-hover`}
                       >
                         {count === 0
                           ? "Xem chuyên mục"
@@ -243,25 +243,8 @@ export function KnowledgeHubView({
         </div>
       </section>
 
-      {/* Featured */}
-      {featured.length > 0 ? (
-        <section className="border-b border-border bg-[#F7FAFC]">
-          <div className="home-container py-9 md:py-11">
-            <h2 className={SECTION_TITLE_CLASS}>Nổi bật</h2>
-            <div className="mt-6 grid gap-3 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-stretch lg:gap-4">
-              <FeaturedHero post={featured[0]!} />
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 lg:grid-rows-2">
-                {featured.slice(1, 3).map((p) => (
-                  <FeaturedSide key={p.id} post={p} />
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-      ) : null}
-
-      {/* Mới nhất — 4 bài, 4 cột desktop (gọn như Home) */}
-      <section className="bg-white py-9 md:py-11">
+      {/* Mới nhất — không lặp block Nổi bật; card gọn không excerpt */}
+      <section className="bg-white py-8 md:py-10">
         <div className="home-container">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
             <div>
@@ -284,7 +267,6 @@ export function KnowledgeHubView({
             </p>
           ) : (
             <>
-              {/* Mobile: hàng gọn */}
               <ul className="flex flex-col gap-2.5 md:hidden">
                 {latest.map((p) => (
                   <li key={p.id}>
@@ -293,17 +275,29 @@ export function KnowledgeHubView({
                 ))}
               </ul>
 
-              {/* Tablet: 2 cột */}
-              <ul className="hidden gap-3 md:grid md:grid-cols-2 lg:hidden">
+              <ul
+                className={`hidden gap-3 md:grid lg:hidden ${
+                  latest.length === 1
+                    ? "md:grid-cols-1 md:max-w-md"
+                    : "md:grid-cols-2"
+                }`}
+              >
                 {latest.map((p) => (
                   <li key={p.id}>
-                    <LatestCard post={p} compact />
+                    <LatestCard post={p} />
                   </li>
                 ))}
               </ul>
 
-              {/* Desktop: 4 cột gọn */}
-              <ul className="hidden gap-3.5 lg:grid lg:grid-cols-4">
+              <ul
+                className={`hidden gap-3.5 lg:grid ${
+                  latest.length <= 2
+                    ? "lg:grid-cols-2 lg:max-w-3xl"
+                    : latest.length === 3
+                      ? "lg:grid-cols-3"
+                      : "lg:grid-cols-4"
+                }`}
+              >
                 {latest.map((p) => (
                   <li key={p.id}>
                     <LatestCard post={p} />
@@ -315,7 +309,6 @@ export function KnowledgeHubView({
         </div>
       </section>
 
-      {/* Support strip */}
       <section className="pb-9 md:pb-12">
         <div className="home-container">
           <div className="flex flex-col items-stretch gap-4 rounded-2xl bg-footer px-5 py-6 text-white sm:px-6 md:flex-row md:items-center md:justify-between md:px-8">
@@ -323,7 +316,9 @@ export function KnowledgeHubView({
               <h2 className={`${SECTION_TITLE_CLASS} !text-white`}>
                 Cần hỗ trợ nhanh?
               </h2>
-              <p className={`mt-2 max-w-xl ${SECTION_LEAD_CLASS} !text-slate-300`}>
+              <p
+                className={`mt-2 max-w-xl ${SECTION_LEAD_CLASS} !text-slate-300`}
+              >
                 FAQ và trung tâm hỗ trợ — tách khỏi hub kiến thức.
               </p>
             </div>
@@ -348,7 +343,7 @@ export function KnowledgeHubView({
   );
 }
 
-function HeroSpotlight({
+function HeroReadingPanel({
   posts,
   total,
 }: {
@@ -375,10 +370,10 @@ function HeroSpotlight({
   const tone = COVER_TONE_CLASS[coverToneOf(primary)];
 
   return (
-    <div className="grid gap-3">
+    <div className="grid gap-2.5">
       <Link
         href={resourcePostHref(primary)}
-        className={`group relative flex min-h-[11.5rem] flex-col justify-end overflow-hidden rounded-2xl bg-gradient-to-br p-4 text-white sm:min-h-[13rem] sm:p-5 ${tone} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD}`}
+        className={`group relative flex min-h-[10.5rem] flex-col justify-end overflow-hidden rounded-2xl bg-gradient-to-br p-4 text-white sm:min-h-[12rem] sm:p-5 ${tone} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD}`}
       >
         {primary.coverUrl ? (
           <Image
@@ -395,10 +390,10 @@ function HeroSpotlight({
           <span
             className={`inline-flex rounded-md bg-accent px-2 py-0.5 ${BADGE_CLASS} text-white`}
           >
-            Đọc ngay
+            Nổi bật
           </span>
           <h2
-            className={`mt-2.5 line-clamp-2 ${SUBSECTION_TITLE_CLASS} !text-white`}
+            className={`mt-2 line-clamp-2 ${SUBSECTION_TITLE_CLASS} !text-white`}
           >
             {primary.title}
           </h2>
@@ -419,7 +414,7 @@ function HeroSpotlight({
                   className={`group flex gap-2.5 overflow-hidden rounded-xl border border-border/80 bg-white p-2 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/40`}
                 >
                   <span
-                    className={`relative h-[4.25rem] w-[4.75rem] shrink-0 overflow-hidden rounded-lg bg-gradient-to-br ${t}`}
+                    className={`relative h-16 w-[4.5rem] shrink-0 overflow-hidden rounded-lg bg-gradient-to-br ${t}`}
                   >
                     {p.coverUrl ? (
                       <Image
@@ -427,12 +422,12 @@ function HeroSpotlight({
                         alt=""
                         fill
                         className="object-cover"
-                        sizes="76px"
+                        sizes="72px"
                         unoptimized
                       />
                     ) : null}
                   </span>
-                  <span className="min-w-0 flex-1 self-center py-0.5 pr-1">
+                  <span className="min-w-0 flex-1 self-center py-0.5 pr-0.5">
                     <span className={`block ${CARD_META_CLASS}`}>
                       {categoryLabel(p)}
                     </span>
@@ -449,7 +444,7 @@ function HeroSpotlight({
         </ul>
       ) : null}
 
-      <p className={`text-center ${CARD_META_CLASS}`}>
+      <p className={`text-center sm:text-right ${CARD_META_CLASS}`}>
         {total > 0
           ? `${total} bài viết trên hub Kiến thức`
           : "Hub kiến thức KEYON"}
@@ -458,120 +453,31 @@ function HeroSpotlight({
   );
 }
 
-function FeaturedHero({ post }: { post: BlogPost }) {
-  const tone = COVER_TONE_CLASS[coverToneOf(post)];
-  return (
-    <Link
-      href={resourcePostHref(post)}
-      className={`group relative flex min-h-[16rem] flex-col justify-end overflow-hidden rounded-2xl bg-gradient-to-br p-5 text-white sm:min-h-[18rem] sm:p-6 ${tone} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD}`}
-    >
-      {post.coverUrl ? (
-        <Image
-          src={post.coverUrl}
-          alt={post.coverAlt || ""}
-          fill
-          className={`object-cover opacity-80 ${MOTION_NORMAL} transition-transform group-hover:scale-105`}
-          sizes="(max-width: 1024px) 100vw, 55vw"
-          unoptimized
-        />
-      ) : null}
-      <div className="relative z-[1]">
-        <span
-          className={`inline-flex rounded-md bg-accent px-2.5 py-1 ${BADGE_CLASS} text-white`}
-        >
-          Nổi bật
-        </span>
-        <p className={`mt-3 ${CARD_META_CLASS} !text-white/70`}>
-          {formatPostDate(post)}
-        </p>
-        <h3
-          className={`mt-2 max-w-xl line-clamp-3 ${SUBSECTION_TITLE_CLASS} !text-white`}
-        >
-          {post.title}
-        </h3>
-        <p className="mt-2 max-w-xl line-clamp-2 text-sm text-white/75">
-          {post.excerpt}
-        </p>
-      </div>
-    </Link>
-  );
-}
-
-function FeaturedSide({ post }: { post: BlogPost }) {
-  const tone = COVER_TONE_CLASS[coverToneOf(post)];
-  return (
-    <Link
-      href={resourcePostHref(post)}
-      className={`group relative flex min-h-[8.5rem] overflow-hidden rounded-2xl bg-gradient-to-br ${tone} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD}`}
-    >
-      {post.coverUrl ? (
-        <Image
-          src={post.coverUrl}
-          alt={post.coverAlt || ""}
-          fill
-          className={`object-cover opacity-75 ${MOTION_NORMAL} transition-transform group-hover:scale-105`}
-          sizes="(max-width: 1024px) 50vw, 28vw"
-          unoptimized
-        />
-      ) : null}
-      <div className="relative z-[1] flex flex-1 flex-col justify-end p-4 text-white">
-        <p className={`${CARD_META_CLASS} !text-white/70`}>
-          {categoryLabel(post)}
-        </p>
-        <h3 className={`mt-1 line-clamp-2 ${CARD_TITLE_CLASS} !text-white`}>
-          {post.title}
-        </h3>
-      </div>
-    </Link>
-  );
-}
-
-function LatestCard({
-  post,
-  compact = false,
-}: {
-  post: BlogPost;
-  compact?: boolean;
-}) {
+function LatestCard({ post }: { post: BlogPost }) {
   const tone = COVER_TONE_CLASS[coverToneOf(post)];
   return (
     <Link
       href={resourcePostHref(post)}
       className={`group flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-white ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-border ${ELEVATION_CARD_HOVER}`}
     >
-      <div
-        className={`relative bg-gradient-to-br ${tone} ${
-          compact ? "aspect-[5/3]" : "aspect-[4/3]"
-        }`}
-      >
+      <div className={`relative aspect-[5/3] bg-gradient-to-br ${tone}`}>
         {post.coverUrl ? (
           <Image
             src={post.coverUrl}
             alt={post.coverAlt || ""}
             fill
             className={`object-cover ${MOTION_NORMAL} transition-transform group-hover:scale-105`}
-            sizes={
-              compact
-                ? "(max-width: 1024px) 50vw, 25vw"
-                : "(max-width: 1024px) 50vw, 22vw"
-            }
+            sizes="(max-width: 1024px) 50vw, 22vw"
             unoptimized
           />
         ) : null}
       </div>
-      <div className={`flex flex-1 flex-col ${compact ? "p-3" : "p-3.5"}`}>
+      <div className="flex flex-1 flex-col p-3">
         <p className={CARD_META_CLASS}>
           {categoryLabel(post)} · {formatPostDate(post)}
         </p>
-        <h3 className={`mt-1.5 line-clamp-2 ${CARD_TITLE_CLASS}`}>
-          {post.title}
-        </h3>
-        {!compact ? (
-          <p className={`mt-1.5 line-clamp-2 ${BODY_MUTED_CLASS}`}>
-            {post.excerpt}
-          </p>
-        ) : null}
-        <p className={`mt-auto pt-2.5 ${CARD_META_CLASS}`}>
+        <h3 className={`mt-1 line-clamp-2 ${CARD_TITLE_CLASS}`}>{post.title}</h3>
+        <p className={`mt-auto pt-2 ${CARD_META_CLASS}`}>
           {authorOf(post)} · {readMinutesOf(post)} phút
         </p>
       </div>
