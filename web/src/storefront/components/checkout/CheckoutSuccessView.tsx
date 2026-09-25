@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
 import type { CmsCheckout } from "@/server/cms/types";
 import type { ShopProduct } from "@/storefront/components/shop/types";
 import { formatVnd } from "@/storefront/components/shop/shop-utils";
+import { trackPurchase } from "@/storefront/lib/analytics";
 import {
   IconBadgeCheck,
   IconHeadset,
@@ -63,6 +65,7 @@ export type CheckoutSuccessViewProps = {
   cms: CmsCheckout;
   order: CheckoutOrderInfo;
   item: CheckoutItemInfo | null;
+  paid: boolean;
   paidAtLabel: string;
   methodTitle: string;
   isLoggedIn: boolean;
@@ -76,6 +79,7 @@ export function CheckoutSuccessView({
   cms,
   order,
   item,
+  paid,
   paidAtLabel,
   methodTitle,
   isLoggedIn,
@@ -89,6 +93,24 @@ export function CheckoutSuccessView({
     money.listTotal && money.discount > 0
       ? Math.round((money.discount / money.listTotal) * 100)
       : 0;
+
+  useEffect(() => {
+    if (!paid || !item) return;
+    trackPurchase({
+      transactionId: order.code || order.id,
+      value: order.totalVnd,
+      items: [
+        {
+          item_id: `${order.code}:${item.variantName}`,
+          item_name: item.productName,
+          item_brand: item.brandName,
+          item_variant: item.variantName,
+          price: item.unitPriceVnd,
+          quantity: item.quantity,
+        },
+      ],
+    });
+  }, [paid, order.code, order.id, order.totalVnd, item]);
 
   return (
     <div className="bg-surface/40 pb-10">

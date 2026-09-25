@@ -37,6 +37,7 @@ import {
   TAB_CLASS,
 } from "@/storefront/typography";
 import { QUOTE_HREF } from "@/storefront/lib/cta";
+import { trackViewItem } from "@/storefront/lib/analytics";
 import type { PdpProductData, PdpTabId, PdpVariantOption } from "./types";
 import { resolveLicensePresentation } from "@/storefront/lib/license-catalog";
 import { StaticPageHtml } from "@/storefront/components/StaticPageHtml";
@@ -139,6 +140,30 @@ export function PdpView({ data }: { data: PdpProductData }) {
       }),
     [data.licenseDefaults, variant],
   );
+
+  useEffect(() => {
+    trackViewItem({
+      value: variant.priceVnd,
+      items: [
+        {
+          item_id: variant.id,
+          item_name: data.name,
+          item_brand: data.brandName,
+          item_category: data.categoryLabel,
+          item_variant: variant.name,
+          price: variant.priceVnd,
+          quantity: 1,
+        },
+      ],
+    });
+  }, [
+    data.name,
+    data.brandName,
+    data.categoryLabel,
+    variant.id,
+    variant.name,
+    variant.priceVnd,
+  ]);
 
   const tabLabels = useMemo(
     () =>

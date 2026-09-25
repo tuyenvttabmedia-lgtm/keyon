@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { prisma } from "@/lib/db";
 import { defaultCmsContact, readJsonFile } from "@/server/cms/store";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
-import { absoluteTitle } from "@/server/seo/title";
 import { isQuotePublicTrackingEnabled } from "@/server/quote/tracking";
 import {
   QuoteRequestLanding,
@@ -12,12 +11,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
-  return {
-    ...(await buildMainPageMetadata("/contact/quote")),
-    title: absoluteTitle("Yêu cầu báo giá | KEYON"),
-    description:
-      "Gửi yêu cầu tư vấn và báo giá bản quyền doanh nghiệp KEYON — không cần tài khoản, không dùng giỏ hàng.",
-  };
+  return buildMainPageMetadata("/contact/quote");
 }
 
 type Props = {

@@ -127,6 +127,7 @@ export default async function CheckoutSuccessPage({
       cms={cms}
       isLoggedIn={isLoggedIn}
       orderDetailHref={orderDetailHref}
+      paid={paid}
       paidAtLabel={paidAtLabel}
       methodTitle={methodTitle}
       licensePlain={licensePlain}

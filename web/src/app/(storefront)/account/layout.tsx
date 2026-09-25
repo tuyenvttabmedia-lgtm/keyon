@@ -3,14 +3,11 @@ import type { Metadata } from "next";
 import { readSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { AccountShell } from "@/storefront/components/account/AccountShell";
-import { NOINDEX_ROBOTS } from "@/server/seo/noindex";
+import { noindexMetadata } from "@/server/seo/noindex";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Tài khoản",
-  robots: NOINDEX_ROBOTS,
-};
+export const metadata: Metadata = noindexMetadata("Tài khoản");
 
 export default async function AccountLayout({
   children,

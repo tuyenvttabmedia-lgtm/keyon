@@ -126,12 +126,21 @@ export async function buildRootMetadata(): Promise<Metadata> {
     appleTouchIconUrl: settings.appleTouchIconUrl,
     googleSiteVerification: settings.googleSiteVerification,
   });
+  // Global defaults only — do not pin every child route to home canonical/OG url.
+  // Indexed pages set their own via buildMainPageMetadata / toNextMetadata.
+  const { alternates: _alternates, openGraph, ...rest } = meta;
   return {
-    ...meta,
+    ...rest,
     title: {
       default: seo.title,
       template: `%s · ${settings.siteName || "KEYON"}`,
     },
+    openGraph: openGraph
+      ? {
+          ...openGraph,
+          url: undefined,
+        }
+      : undefined,
   };
 }
 

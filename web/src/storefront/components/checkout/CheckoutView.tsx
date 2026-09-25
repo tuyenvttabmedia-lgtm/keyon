@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { CmsCheckout } from "@/server/cms/types";
 import {
@@ -11,6 +11,7 @@ import {
   IconShieldCheck,
   IconTruck,
 } from "@/storefront/components/icons/StoreIcons";
+import { trackBeginCheckout } from "@/storefront/lib/analytics";
 import {
   BADGE_CLASS,
   CARD_META_CLASS,
@@ -311,6 +312,23 @@ export function CheckoutView({
 
   const method = enabledMethods.find((m) => m.id === methodId) ?? enabledMethods[0];
   const canContinue = Boolean(method && method.provider === "sepay_qr");
+
+  useEffect(() => {
+    if (!item) return;
+    trackBeginCheckout({
+      value: order.totalVnd,
+      items: [
+        {
+          item_id: `${order.code}:${item.variantName}`,
+          item_name: item.productName,
+          item_brand: item.brandName,
+          item_variant: item.variantName,
+          price: item.unitPriceVnd,
+          quantity: item.quantity,
+        },
+      ],
+    });
+  }, [order.id, order.code, order.totalVnd, item]);
 
   function continuePay() {
     if (!method || !canContinue) return;

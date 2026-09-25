@@ -14,6 +14,7 @@ import {
   PRODUCT_CATEGORY_KEYS,
 } from "@/storefront/lib/product-cms";
 import { receiveFromDeliverable } from "@/storefront/lib/customer-labels";
+import { buildItemListJsonLd } from "@/server/seo/structured-data";
 
 export const dynamic = "force-dynamic";
 
@@ -116,19 +117,39 @@ export default async function BrandLandingPage({
     })
     .filter((p): p is NonNullable<typeof p> => p != null);
 
+  const itemListLd =
+    products.length > 0
+      ? buildItemListJsonLd({
+          name: brand.name,
+          path: `/brands/${brand.slug}`,
+          items: products.map((p) => ({
+            name: p.productName,
+            path: p.href,
+          })),
+        })
+      : null;
+
   return (
-    <BrandDetailView
-      brand={{
-        name: brand.name,
-        slug: brand.slug,
-        logoUrl: brand.logoUrl?.trim() || null,
-        shortDescription: brand.shortDescription?.trim() || null,
-        description: brand.description?.trim() || null,
-        featured: brand.featured,
-        bannerDesktopUrl: brand.bannerDesktopUrl?.trim() || null,
-        bannerMobileUrl: brand.bannerMobileUrl?.trim() || null,
-        products,
-      }}
-    />
+    <>
+      {itemListLd ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }}
+        />
+      ) : null}
+      <BrandDetailView
+        brand={{
+          name: brand.name,
+          slug: brand.slug,
+          logoUrl: brand.logoUrl?.trim() || null,
+          shortDescription: brand.shortDescription?.trim() || null,
+          description: brand.description?.trim() || null,
+          featured: brand.featured,
+          bannerDesktopUrl: brand.bannerDesktopUrl?.trim() || null,
+          bannerMobileUrl: brand.bannerMobileUrl?.trim() || null,
+          products,
+        }}
+      />
+    </>
   );
 }

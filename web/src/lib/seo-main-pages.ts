@@ -7,6 +7,7 @@ export type MainSeoPageKey =
   | "/"
   | "/products"
   | "/contact"
+  | "/contact/quote"
   | "/about"
   | "/faq"
   | "/support"
@@ -39,6 +40,7 @@ export const MAIN_SEO_PAGES: {
   { path: "/how-it-works", label: "Cách KEYON hoạt động" },
   { path: "/policy", label: "Trang chính sách" },
   { path: "/contact", label: "Trang liên hệ" },
+  { path: "/contact/quote", label: "Yêu cầu báo giá" },
   { path: "/about", label: "Về KEYON" },
   { path: "/brands", label: "Thương hiệu" },
 ];
