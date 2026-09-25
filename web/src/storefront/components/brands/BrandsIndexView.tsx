@@ -138,7 +138,7 @@ export function BrandsIndexView({ brands }: Props) {
               className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3"
             >
               {featured.map((b) => (
-                <BrandCard key={b.id} brand={b} emphasis />
+                <BrandCard key={b.id} brand={b} />
               ))}
             </Reveal>
           </div>
@@ -230,13 +230,7 @@ export function BrandsIndexView({ brands }: Props) {
   );
 }
 
-function BrandCard({
-  brand,
-  emphasis = false,
-}: {
-  brand: BrandListItem;
-  emphasis?: boolean;
-}) {
+function BrandCard({ brand }: { brand: BrandListItem }) {
   const countLabel =
     brand.productCount === 0
       ? "Đang cập nhật"
@@ -247,36 +241,24 @@ function BrandCard({
   return (
     <Link
       href={`/brands/${brand.slug}`}
-      className={`group flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-white ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/40 ${ELEVATION_CARD_HOVER} ${
-        emphasis ? "sm:flex-row sm:items-stretch" : ""
-      }`}
+      className={`group flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-white ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/40 ${ELEVATION_CARD_HOVER}`}
     >
-      <div
-        className={`relative flex shrink-0 items-center justify-center bg-gradient-to-b from-slate-50 to-white ${
-          emphasis
-            ? "aspect-[5/3] sm:aspect-auto sm:w-[132px] sm:self-stretch"
-            : "aspect-[5/3]"
-        }`}
-      >
+      <div className="relative flex aspect-[5/3] shrink-0 items-center justify-center bg-gradient-to-b from-slate-50 to-white">
         {brand.logoUrl ? (
           <Image
             src={brand.logoUrl}
             alt=""
-            width={emphasis ? 120 : 140}
-            height={emphasis ? 56 : 64}
+            width={140}
+            height={64}
             className="h-12 w-auto max-w-[70%] object-contain md:h-14"
             unoptimized
           />
         ) : (
-          <BrandInitial name={brand.name} large={emphasis} />
+          <BrandInitial name={brand.name} />
         )}
       </div>
 
-      <div
-        className={`flex min-w-0 flex-1 flex-col ${
-          emphasis ? "p-4 sm:py-4 sm:pr-4 sm:pl-0" : "p-4"
-        }`}
-      >
+      <div className="flex min-w-0 flex-1 flex-col p-4">
         <div className="flex items-start justify-between gap-2">
           <h3 className={`line-clamp-2 ${CARD_TITLE_CLASS}`}>{brand.name}</h3>
           {brand.featured ? (
@@ -297,7 +279,10 @@ function BrandCard({
           className={`mt-auto inline-flex items-center gap-1 pt-3 ${CTA_COMPACT_CLASS} text-accent ${MOTION_NORMAL} transition-colors group-hover:text-accent-hover`}
         >
           Xem sản phẩm
-          <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
+          <span
+            aria-hidden
+            className="transition-transform group-hover:translate-x-0.5"
+          >
             →
           </span>
         </span>
@@ -306,7 +291,7 @@ function BrandCard({
   );
 }
 
-function BrandInitial({ name, large }: { name: string; large?: boolean }) {
+function BrandInitial({ name }: { name: string }) {
   const initials = name
     .split(/\s+/)
     .filter(Boolean)
@@ -315,9 +300,7 @@ function BrandInitial({ name, large }: { name: string; large?: boolean }) {
     .join("");
   return (
     <span
-      className={`inline-flex items-center justify-center rounded-2xl bg-navy-soft font-bold text-navy ${
-        large ? "h-16 w-16 text-xl" : "h-14 w-14 text-lg"
-      }`}
+      className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-navy-soft text-lg font-bold text-navy"
       aria-hidden
     >
       {initials || "?"}
