@@ -44,6 +44,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     );
   }
 
+  // Match Google’s install snippet closely (async loader + inline bootstrap).
   return (
     <>
       <script
@@ -53,7 +54,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <script
         id="keyon-ga4"
         dangerouslySetInnerHTML={{
-          __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${ga4}');`,
+          __html: `
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${ga4}');
+`,
         }}
       />
     </>
