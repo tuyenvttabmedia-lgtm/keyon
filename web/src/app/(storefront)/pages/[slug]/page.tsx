@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import {
   loadPublishedStaticPages,
   loadStaticPageBySlug,
@@ -15,21 +16,46 @@ import { ELEVATION_HAIRLINE, TRANSITION_UI } from "@/storefront/effects";
 import { PolicyDetailView } from "@/storefront/components/policy/PolicyDetailView";
 import { StaticPageHtml } from "@/storefront/components/StaticPageHtml";
 import { loadPolicyCms } from "@/storefront/components/policy/load-policy-cms";
+import {
+  resolveWithGlobalFallback,
+  toNextMetadata,
+} from "@/server/seo/metadata";
+import { loadSiteSettings } from "@/server/seo/settings";
 
 export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const page = await loadStaticPageBySlug(slug, { publishedOnly: true });
+  const [page, settings] = await Promise.all([
+    loadStaticPageBySlug(slug, { publishedOnly: true }),
+    loadSiteSettings(),
+  ]);
   if (!page || page.collection === "policy") {
-    return { title: "Trang — KEYON" };
+    return toNextMetadata(
+      resolveWithGlobalFallback(settings, {
+        path: "/",
+        title: "Trang — KEYON",
+      }),
+      {
+        faviconUrl: settings.faviconUrl,
+        appleTouchIconUrl: settings.appleTouchIconUrl,
+        googleSiteVerification: settings.googleSiteVerification,
+        robotsIndex: false,
+      },
+    );
   }
-  return {
+  const seo = resolveWithGlobalFallback(settings, {
+    path: `/pages/${slug}`,
     title: page.metaTitle || `${page.title} — KEYON`,
     description: page.metaDescription || page.description,
-  };
+  });
+  return toNextMetadata(seo, {
+    faviconUrl: settings.faviconUrl,
+    appleTouchIconUrl: settings.appleTouchIconUrl,
+    googleSiteVerification: settings.googleSiteVerification,
+  });
 }
 
 export default async function PublicStaticPage({ params }: Props) {

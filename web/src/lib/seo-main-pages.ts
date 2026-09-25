@@ -6,7 +6,6 @@ export const SEO_DESC_MAX = 160;
 export type MainSeoPageKey =
   | "/"
   | "/products"
-  | "/blog"
   | "/contact"
   | "/about"
   | "/faq"

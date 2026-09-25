@@ -684,6 +684,43 @@ export function ProductEditForm(props: Props) {
             </p>
             <p className="line-clamp-2 text-muted">{serpDesc}</p>
           </div>
+          <ul className="space-y-1.5 rounded-xl border border-border bg-surface px-3 py-3 text-xs text-muted">
+            <li>
+              {(form.seoTitle.trim() || form.productName).length <= 60
+                ? "✓"
+                : "!"}{" "}
+              Meta title ≤ 60 ký tự (
+              {(form.seoTitle.trim() || form.productName).length})
+            </li>
+            <li>
+              {(form.seoDescription.trim() || form.productShortDescription.trim())
+                .length > 0
+                ? "✓"
+                : "!"}{" "}
+              Có meta description
+            </li>
+            <li>
+              {(
+                form.seoDescription.trim() || form.productShortDescription.trim()
+              ).length <= 160
+                ? "✓"
+                : "!"}{" "}
+              Description ≤ 160 ký tự
+            </li>
+            <li>
+              {form.galleryUrls.length > 0 || form.ogImageUrl.trim()
+                ? "✓"
+                : "!"}{" "}
+              Có ảnh gallery hoặc OG
+            </li>
+            <li>
+              {form.categoryKey ? "✓" : "!"} Có danh mục (URL category)
+            </li>
+            <li>
+              {stripHtml(form.usageGuideHtml).trim() ? "✓" : "·"} Hướng dẫn
+              kích hoạt (tuỳ chọn, tốt cho PDP)
+            </li>
+          </ul>
         </Panel>
       ) : null}
 

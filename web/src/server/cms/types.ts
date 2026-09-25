@@ -186,7 +186,16 @@ export type SiteSettings = {
   faviconUrl?: string;
   /** Optional Apple touch icon (180×180 PNG recommended). */
   appleTouchIconUrl?: string;
-  /** Keyed by path, e.g. "/", "/products", "/blog". */
+  /**
+   * Google Search Console HTML-tag verification token
+   * (content=… only — not the full meta tag).
+   */
+  googleSiteVerification?: string;
+  /** GA4 Measurement ID, e.g. G-XXXXXXXX */
+  ga4MeasurementId?: string;
+  /** Google Tag Manager container, e.g. GTM-XXXXXXX */
+  gtmContainerId?: string;
+  /** Keyed by path, e.g. "/", "/products". */
   pageSeo?: Record<string, PageSeoOverride>;
 };
 
@@ -749,10 +758,6 @@ export const defaultSettings: SiteSettings = {
       title: "Hướng dẫn — KEYON",
       description:
         "How-to kích hoạt, nhận license và dùng Tài khoản KEYON.",
-    },
-    "/blog": {
-      title: "Tin tức — KEYON",
-      description: "Kiến thức bản quyền, license và vận hành phần mềm cho doanh nghiệp.",
     },
     "/contact": {
       title: "Liên hệ — KEYON",

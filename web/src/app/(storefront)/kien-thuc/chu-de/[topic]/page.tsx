@@ -18,7 +18,11 @@ import {
   resourceTopicHref,
 } from "@/storefront/lib/resources";
 import { mergeBlogTaxonomy, topicLabelMap } from "@/storefront/lib/blog-taxonomy";
-import { absoluteUrl } from "@/server/seo/site-url";
+import {
+  resolveWithGlobalFallback,
+  toNextMetadata,
+} from "@/server/seo/metadata";
+import { loadSiteSettings } from "@/server/seo/settings";
 
 export const dynamic = "force-dynamic";
 
@@ -42,18 +46,39 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { topic: raw } = await params;
-  const taxonomy = await loadTaxonomy();
+  const [taxonomy, settings] = await Promise.all([
+    loadTaxonomy(),
+    loadSiteSettings(),
+  ]);
   const labels = topicLabelMap(taxonomy);
   const label = labels[raw] ?? CATEGORY_LABEL[raw] ?? raw;
   const known =
     taxonomy.topics.some((t) => t.id === raw) || Boolean(CATEGORY_LABEL[raw]);
-  if (!known) return { title: "Chủ đề | KEYON" };
   const path = resourceTopicHref(raw);
-  return {
-    title: `${label} — Kiến thức | KEYON`,
+  if (!known) {
+    return toNextMetadata(
+      resolveWithGlobalFallback(settings, {
+        path: KNOWLEDGE_HUB_PATH,
+        title: "Chủ đề · KEYON",
+      }),
+      {
+        faviconUrl: settings.faviconUrl,
+        appleTouchIconUrl: settings.appleTouchIconUrl,
+        googleSiteVerification: settings.googleSiteVerification,
+        robotsIndex: false,
+      },
+    );
+  }
+  const seo = resolveWithGlobalFallback(settings, {
+    path,
+    title: `${label} — Kiến thức · KEYON`,
     description: `Bài viết về ${label} trên KEYON — hướng dẫn, chuyên sâu và tin tức bản quyền phần mềm.`,
-    alternates: { canonical: absoluteUrl(path) },
-  };
+  });
+  return toNextMetadata(seo, {
+    faviconUrl: settings.faviconUrl,
+    appleTouchIconUrl: settings.appleTouchIconUrl,
+    googleSiteVerification: settings.googleSiteVerification,
+  });
 }
 
 export default async function TopicArchivePage({

@@ -56,13 +56,19 @@ export function resolveWithGlobalFallback(
   };
 }
 
-export function toNextMetadata(seo: ResolvedSeo, opts?: {
-  robotsIndex?: boolean;
-  robotsFollow?: boolean;
-  type?: "website" | "article";
-  faviconUrl?: string | null;
-  appleTouchIconUrl?: string | null;
-}): Metadata {
+export function toNextMetadata(
+  seo: ResolvedSeo,
+  opts?: {
+    robotsIndex?: boolean;
+    robotsFollow?: boolean;
+    type?: "website" | "article";
+    faviconUrl?: string | null;
+    appleTouchIconUrl?: string | null;
+    googleSiteVerification?: string | null;
+    /** When true, use title template from root layout instead of absolute. */
+    useTitleTemplate?: boolean;
+  },
+): Metadata {
   const index =
     opts?.robotsIndex !== undefined
       ? opts.robotsIndex && allowSearchIndexing()
@@ -77,12 +83,19 @@ export function toNextMetadata(seo: ResolvedSeo, opts?: {
     absoluteAssetUrl(opts?.appleTouchIconUrl?.trim() || null, getSiteOrigin()) ||
     favicon;
 
+  const verification = opts?.googleSiteVerification?.trim()
+    ? { google: opts.googleSiteVerification.trim() }
+    : undefined;
+
   return {
     metadataBase: new URL(getSiteOrigin()),
-    title: seo.title,
+    title: opts?.useTitleTemplate
+      ? seo.title
+      : { absolute: seo.title },
     description: seo.description,
     alternates: { canonical: seo.canonical },
     robots: { index, follow },
+    ...(verification ? { verification } : {}),
     icons: {
       icon: [{ url: favicon }],
       shortcut: [{ url: favicon }],
@@ -108,10 +121,18 @@ export function toNextMetadata(seo: ResolvedSeo, opts?: {
 export async function buildRootMetadata(): Promise<Metadata> {
   const settings = await loadSiteSettings();
   const seo = resolveWithGlobalFallback(settings, { path: "/" });
-  return toNextMetadata(seo, {
+  const meta = toNextMetadata(seo, {
     faviconUrl: settings.faviconUrl,
     appleTouchIconUrl: settings.appleTouchIconUrl,
+    googleSiteVerification: settings.googleSiteVerification,
   });
+  return {
+    ...meta,
+    title: {
+      default: seo.title,
+      template: `%s · ${settings.siteName || "KEYON"}`,
+    },
+  };
 }
 
 export async function buildMainPageMetadata(path: string): Promise<Metadata> {
@@ -126,6 +147,7 @@ export async function buildMainPageMetadata(path: string): Promise<Metadata> {
   return toNextMetadata(seo, {
     faviconUrl: settings.faviconUrl,
     appleTouchIconUrl: settings.appleTouchIconUrl,
+    googleSiteVerification: settings.googleSiteVerification,
   });
 }
 

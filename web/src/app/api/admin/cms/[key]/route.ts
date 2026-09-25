@@ -125,6 +125,29 @@ const settingsSchema = z.object({
         /^https?:\/\//i.test(v),
       "Apple touch icon phải là path hoặc URL hợp lệ",
     ),
+  googleSiteVerification: z
+    .string()
+    .max(120)
+    .optional()
+    .transform((v) => v?.trim() || undefined),
+  ga4MeasurementId: z
+    .string()
+    .max(32)
+    .optional()
+    .transform((v) => v?.trim().toUpperCase() || undefined)
+    .refine(
+      (v) => !v || /^G-[A-Z0-9]+$/.test(v),
+      "GA4 phải dạng G-XXXXXXXX",
+    ),
+  gtmContainerId: z
+    .string()
+    .max(32)
+    .optional()
+    .transform((v) => v?.trim().toUpperCase() || undefined)
+    .refine(
+      (v) => !v || /^GTM-[A-Z0-9]+$/.test(v),
+      "GTM phải dạng GTM-XXXXXXX",
+    ),
   pageSeo: z
     .record(z.string(), pageSeoOverrideSchema)
     .optional()

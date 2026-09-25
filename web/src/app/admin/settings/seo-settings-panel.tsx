@@ -398,6 +398,86 @@ export function SeoSettingsPanel({
         </div>
       </section>
 
+      {/* B2. Search Console + Analytics */}
+      <section className="space-y-4 border-t border-border pt-6">
+        <div>
+          <h3 className="text-sm font-semibold text-navy">
+            Search Console & Analytics
+          </h3>
+          <p className="mt-0.5 text-xs text-muted">
+            Dán token / ID từ Google. Để trống = không gắn thẻ (an toàn cho
+            staging). Nếu có cả GTM và GA4, site chỉ nạp GTM (GA4 cấu hình trong
+            GTM).
+          </p>
+        </div>
+        <div className="grid max-w-2xl gap-4 sm:grid-cols-1">
+          <label className="block text-sm">
+            <span className="font-medium text-navy">
+              Google Search Console — verification
+            </span>
+            <p className="mt-0.5 text-[11px] text-muted">
+              Chỉ phần <code className="font-mono">content=&quot;…&quot;</code>{" "}
+              của thẻ HTML (vd.{" "}
+              <code className="font-mono">AbCdEf123…</code>), không dán cả thẻ
+              meta.
+            </p>
+            <input
+              className="mt-1 w-full rounded-lg border border-border px-3 py-2 font-mono text-xs"
+              placeholder="google-site-verification token"
+              value={form.googleSiteVerification ?? ""}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  googleSiteVerification: e.target.value.trim() || undefined,
+                })
+              }
+            />
+          </label>
+          <label className="block text-sm">
+            <span className="font-medium text-navy">GA4 Measurement ID</span>
+            <input
+              className="mt-1 w-full rounded-lg border border-border px-3 py-2 font-mono text-xs"
+              placeholder="G-XXXXXXXX"
+              value={form.ga4MeasurementId ?? ""}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  ga4MeasurementId: e.target.value.trim() || undefined,
+                })
+              }
+            />
+          </label>
+          <label className="block text-sm">
+            <span className="font-medium text-navy">GTM Container ID</span>
+            <input
+              className="mt-1 w-full rounded-lg border border-border px-3 py-2 font-mono text-xs"
+              placeholder="GTM-XXXXXXX"
+              value={form.gtmContainerId ?? ""}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  gtmContainerId: e.target.value.trim() || undefined,
+                })
+              }
+            />
+          </label>
+        </div>
+        <p className="max-w-2xl text-xs text-muted">
+          Sau khi lưu: (1) xác minh domain trên Search Console, (2) Submit{" "}
+          <a
+            href="/sitemap.xml"
+            target="_blank"
+            rel="noreferrer"
+            className="font-medium text-accent hover:underline"
+          >
+            /sitemap.xml
+          </a>
+          . Tên miền canonical ={" "}
+          <span className="font-mono text-navy">{siteOrigin}</span> — phải khớp
+          prod.
+        </p>
+      </section>
+
       {/* C. SEO kỹ thuật */}
       <section className="space-y-3 border-t border-border pt-6">
         <div>

@@ -38,6 +38,10 @@ import {
 } from "@/server/seo/metadata";
 import { loadSiteSettings } from "@/server/seo/settings";
 import { buildProductJsonLd } from "@/server/seo/product-json-ld";
+import {
+  buildBreadcrumbJsonLd,
+  buildFaqPageJsonLd,
+} from "@/server/seo/structured-data";
 import { absoluteUrl } from "@/server/seo/site-url";
 import { isHtmlBody, stripHtml } from "@/server/cms/blog-utils";
 
@@ -371,12 +375,35 @@ export default async function ProductPage({
     availability: activeVariant.canBuy ? "InStock" : "OutOfStock",
   });
 
+  const breadcrumbLd = buildBreadcrumbJsonLd([
+    { name: "Trang chủ", path: "/" },
+    { name: "Sản phẩm", path: "/products" },
+    ...(categoryLabel
+      ? [{ name: categoryLabel, path: `/categories/${categoryId}` }]
+      : []),
+    { name: product.name, path: `/products/${product.slug}` },
+  ]);
+
+  const faqLd = buildFaqPageJsonLd(
+    cmsFaqs.map((f) => ({ question: f.question, answer: f.answer })),
+  );
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
+      {faqLd ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+        />
+      ) : null}
       <PdpView data={data} />
     </>
   );

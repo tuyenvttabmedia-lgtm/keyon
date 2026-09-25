@@ -33,6 +33,16 @@ export function normalizeSiteSettings(raw: Partial<SiteSettings> | null | undefi
     if (!isMainSeoPath(key)) delete mergedPageSeo[key];
   }
 
+  const googleSiteVerification =
+    (raw?.googleSiteVerification ?? base.googleSiteVerification)?.trim() ||
+    undefined;
+  const ga4MeasurementId =
+    (raw?.ga4MeasurementId ?? base.ga4MeasurementId)?.trim().toUpperCase() ||
+    undefined;
+  const gtmContainerId =
+    (raw?.gtmContainerId ?? base.gtmContainerId)?.trim().toUpperCase() ||
+    undefined;
+
   return {
     siteName: (base.siteName || defaultSettings.siteName).trim() || "KEYON",
     supportEmail:
@@ -44,6 +54,15 @@ export function normalizeSiteSettings(raw: Partial<SiteSettings> | null | undefi
     ogImageUrl: base.ogImageUrl?.trim() || undefined,
     faviconUrl: base.faviconUrl?.trim() || undefined,
     appleTouchIconUrl: base.appleTouchIconUrl?.trim() || undefined,
+    googleSiteVerification,
+    ga4MeasurementId:
+      ga4MeasurementId && /^G-[A-Z0-9]+$/.test(ga4MeasurementId)
+        ? ga4MeasurementId
+        : undefined,
+    gtmContainerId:
+      gtmContainerId && /^GTM-[A-Z0-9]+$/.test(gtmContainerId)
+        ? gtmContainerId
+        : undefined,
     pageSeo: mergedPageSeo,
   };
 }
