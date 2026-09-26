@@ -134,7 +134,7 @@ export function SolutionsShowcase({ items, title, subtitle }: Props) {
   return (
     <section
       id="solutions"
-      className="home-solutions scroll-mt-24 border-t border-border bg-white py-8 md:py-10 lg:py-12"
+      className="home-solutions scroll-mt-24 border-t border-border bg-white py-5 md:py-4 lg:py-6"
     >
       <div className="home-container">
         <div className="mb-5 flex flex-col gap-2.5 md:mb-6 md:flex-row md:items-end md:justify-between md:gap-8">
