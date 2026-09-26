@@ -48,11 +48,11 @@ type Props = {
 };
 
 const SLOT_CLASS: Record<SolutionChip["slot"], string> = {
-  tl: "left-[2%] top-[8%]",
-  tr: "right-0 top-[14%]",
-  ml: "left-0 top-[44%] hidden sm:flex",
-  bl: "bottom-[10%] left-[3%]",
-  br: "bottom-[6%] right-[1%]",
+  tl: "left-0 top-[4%]",
+  tr: "right-0 top-[6%]",
+  ml: "-left-1 top-[48%] hidden sm:flex",
+  bl: "bottom-[4%] left-0",
+  br: "bottom-[2%] right-0",
 };
 
 const PANEL_FADE =
@@ -324,7 +324,7 @@ function SolutionVisual({
   tabId: HomeSolutionTabId;
 }) {
   return (
-    <div className="home-solutions__visual relative min-h-[260px] overflow-hidden bg-gradient-to-br from-slate-50 via-white to-cyan-50/40 px-5 py-9 sm:min-h-[300px] sm:px-7 sm:py-10 lg:min-h-[340px] lg:px-8 lg:py-11">
+    <div className="home-solutions__visual relative min-h-[280px] overflow-hidden bg-gradient-to-br from-slate-50 via-white to-cyan-50/40 px-6 py-10 sm:min-h-[320px] sm:px-8 sm:py-11 lg:min-h-[360px] lg:px-9 lg:py-12">
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.35]"
         aria-hidden
@@ -345,9 +345,9 @@ function SolutionVisual({
         aria-hidden
       />
 
-      <div className="relative mx-auto flex h-full max-w-[440px] items-center justify-center">
+      <div className="relative mx-auto flex h-full max-w-[420px] items-center justify-center px-2">
         <div
-          className="pointer-events-none absolute bottom-[12%] left-1/2 h-3 w-[70%] -translate-x-1/2 rounded-[100%] bg-slate-900/10 blur-md"
+          className="pointer-events-none absolute bottom-[10%] left-1/2 h-3 w-[62%] -translate-x-1/2 rounded-[100%] bg-slate-900/10 blur-md"
           aria-hidden
         />
 
@@ -356,10 +356,10 @@ function SolutionVisual({
         {chips.map((chip, i) => (
           <span
             key={chip.id}
-            className={`absolute z-[1] inline-flex max-w-[10.5rem] items-center gap-2 rounded-xl border border-border/70 bg-white/95 px-2.5 py-1.5 ${ELEVATION_FLOAT} ${SLOT_CLASS[chip.slot]} motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-[cubic-bezier(0.2,0,0,1)]`}
+            className={`absolute z-[1] inline-flex max-w-[9.75rem] items-center gap-2 rounded-xl border border-border/70 bg-white/95 px-2.5 py-1.5 ${ELEVATION_HAIRLINE} ${SLOT_CLASS[chip.slot]} motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-[cubic-bezier(0.2,0,0,1)]`}
             style={{ transitionDelay: `${i * 30}ms` }}
           >
-            <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
+            <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent">
               <ChipGlyph id={chip.id} />
             </span>
             <span
@@ -383,7 +383,7 @@ function DashboardMock({
 }) {
   const tiles = DASHBOARD_TILES[tabId];
   return (
-    <div className="relative z-0 w-[min(100%,292px)] sm:w-[312px]">
+    <div className="relative z-0 w-[min(100%,268px)] sm:w-[288px]">
       <div
         className={`rounded-2xl border border-slate-200/90 bg-slate-800/95 p-[7px] ${ELEVATION_FLOAT}`}
       >

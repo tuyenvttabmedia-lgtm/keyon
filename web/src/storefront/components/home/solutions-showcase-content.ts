@@ -46,7 +46,6 @@ export const HOME_SOLUTION_SHOWCASE: Record<
       { id: "cloud", label: "Lưu trữ cloud", slot: "tr" },
       { id: "m365", label: "Microsoft 365", slot: "br" },
       { id: "cal", label: "Lịch làm việc", slot: "bl" },
-      { id: "team", label: "Cộng tác nhóm", slot: "ml" },
     ],
   },
   cloud: {
@@ -65,7 +64,6 @@ export const HOME_SOLUTION_SHOWCASE: Record<
       { id: "scale", label: "Theo quy mô", slot: "tr" },
       { id: "sku", label: "Tư vấn SKU", slot: "br" },
       { id: "handoff", label: "Bàn giao license", slot: "bl" },
-      { id: "quote", label: "Báo giá khi cần", slot: "ml" },
     ],
   },
   security: {
@@ -84,7 +82,6 @@ export const HOME_SOLUTION_SHOWCASE: Record<
       { id: "web", label: "Internet security", slot: "tr" },
       { id: "key", label: "Key / tài khoản rõ", slot: "br" },
       { id: "guide", label: "Hướng dẫn kích hoạt", slot: "bl" },
-      { id: "support", label: "Hỗ trợ tiếng Việt", slot: "ml" },
     ],
   },
   backup: {
@@ -103,7 +100,6 @@ export const HOME_SOLUTION_SHOWCASE: Record<
       { id: "restore", label: "Khôi phục tại chỗ", slot: "tr" },
       { id: "infra", label: "Hạ tầng của bạn", slot: "br" },
       { id: "guide", label: "Hướng dẫn kích hoạt", slot: "bl" },
-      { id: "quote", label: "Tư vấn chọn gói", slot: "ml" },
     ],
   },
   "license-management": {
@@ -122,7 +118,6 @@ export const HOME_SOLUTION_SHOWCASE: Record<
       { id: "renew", label: "Nhắc gia hạn", slot: "tr" },
       { id: "track", label: "Theo dõi hạn dùng", slot: "br" },
       { id: "order", label: "Đơn & giao nhận", slot: "bl" },
-      { id: "support", label: "Hỗ trợ gia hạn", slot: "ml" },
     ],
   },
 };
