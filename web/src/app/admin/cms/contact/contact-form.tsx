@@ -104,8 +104,9 @@ export function ContactForm({ initial }: { initial: CmsContact }) {
                 }
               />
               <span className="mt-1 block text-xs text-muted">
-                Dán URL trong thuộc tính <code>src</code> của iframe (không dán
-                cả thẻ HTML). Để trống = nền placeholder.
+                Dán URL trong <code>src</code> của iframe Google Maps / OSM,
+                hoặc dán cả thẻ <code>&lt;iframe&gt;</code> — hệ thống sẽ lấy
+                URL tự động. Để trống = không hiện bản đồ.
               </span>
             </label>
           </section>

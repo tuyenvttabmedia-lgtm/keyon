@@ -27,7 +27,7 @@ const securityHeaders = [
       "font-src 'self' data:",
       "style-src 'self' 'unsafe-inline'",
       "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://www.googletagmanager.com",
-      "frame-src 'self' https://challenges.cloudflare.com https://www.googletagmanager.com",
+      "frame-src 'self' https://challenges.cloudflare.com https://www.googletagmanager.com https://www.google.com https://maps.google.com https://www.openstreetmap.org",
       // No blanket https: — Turnstile + media + GA4/GTM collection endpoints only.
       "connect-src 'self' https://challenges.cloudflare.com https://*.wasabisys.com https://s3.ap-southeast-1.wasabisys.com https://qr.sepay.vn https://my.sepay.vn https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com",
       "upgrade-insecure-requests",

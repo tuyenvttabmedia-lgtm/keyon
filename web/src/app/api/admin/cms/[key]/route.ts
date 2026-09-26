@@ -55,6 +55,7 @@ import {
   slugifyFaqCategory,
 } from "@/server/cms/faq";
 import { normalizeCmsCategories } from "@/server/cms/home-categories";
+import { normalizeMapEmbedUrl } from "@/storefront/lib/map-embed";
 
 const safeInternalHref = z
   .string()
@@ -991,7 +992,11 @@ export async function PUT(
         instantPerks: z.array(z.string()),
       })
       .parse(body);
-    const normalized: CmsContact = { ...defaultCmsContact, ...data };
+    const normalized: CmsContact = {
+      ...defaultCmsContact,
+      ...data,
+      mapEmbedUrl: normalizeMapEmbedUrl(data.mapEmbedUrl),
+    };
     await writeJsonFile("contact-page.json", normalized);
     return NextResponse.json({ ok: true, data: normalized });
   }

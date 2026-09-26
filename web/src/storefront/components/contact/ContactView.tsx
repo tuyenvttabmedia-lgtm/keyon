@@ -28,6 +28,7 @@ import {
   OPACITY_DISABLED_BUSY,
   TRANSITION_UI,
 } from "@/storefront/effects";
+import { normalizeMapEmbedUrl } from "@/storefront/lib/map-embed";
 import { TurnstileField } from "@/storefront/components/auth/TurnstileField";
 import { useTurnstileSiteKey } from "@/storefront/components/auth/use-turnstile-site-key";
 import { isPlaceholderHotline } from "@/storefront/components/support/shared";
@@ -362,7 +363,7 @@ export function ContactView({ cms }: { cms: CmsContact }) {
         </section>
 
         <ContactMap
-          embedUrl={cms.mapEmbedUrl}
+          embedUrl={normalizeMapEmbedUrl(cms.mapEmbedUrl)}
           company={cms.mapCompany}
           address={cms.mapAddress}
           mapsUrl={cms.mapMapsUrl}
@@ -456,16 +457,20 @@ function ContactMap({
           </span>
           <div className="min-w-0">
             <p className={CARD_TITLE_CLASS}>{company}</p>
-            <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{address}</p>
-            <a
-              href={mapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`mt-3 inline-flex items-center gap-1.5 ${CTA_COMPACT_CLASS} text-accent ${TRANSITION_UI} hover:underline`}
-            >
-              {mapsCta}
-              <ExternalIcon />
-            </a>
+            {address.trim() ? (
+              <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{address}</p>
+            ) : null}
+            {mapsUrl.trim() ? (
+              <a
+                href={mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`mt-3 inline-flex items-center gap-1.5 ${CTA_COMPACT_CLASS} text-accent ${TRANSITION_UI} hover:underline`}
+              >
+                {mapsCta}
+                <ExternalIcon />
+              </a>
+            ) : null}
           </div>
         </div>
       </div>
