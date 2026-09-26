@@ -47,29 +47,28 @@ export const HOME_SOLUTION_SHOWCASE: Record<
     chips: [
       {
         id: "mail",
-        label: "Email doanh nghiệp chuyên nghiệp",
+        label: "Email doanh nghiệp",
         slot: "tl",
         tone: "sky",
       },
       {
         id: "cloud",
-        label: "Lưu trữ an toàn trên cloud",
+        label: "Lưu trữ cloud",
         slot: "tr",
         tone: "violet",
       },
       {
         id: "m365",
-        label: "Bộ ứng dụng Microsoft 365",
+        label: "Microsoft 365",
         slot: "br",
         tone: "teal",
       },
       {
         id: "cal",
-        label: "Lịch làm việc thông minh",
+        label: "Lịch làm việc",
         slot: "bl",
         tone: "amber",
       },
-      { id: "team", label: "Cộng tác nhóm", slot: "ml", tone: "emerald" },
     ],
   },
   cloud: {
@@ -84,11 +83,10 @@ export const HOME_SOLUTION_SHOWCASE: Record<
       "Không thay MSP vận hành tenant",
     ],
     chips: [
-      { id: "cloud", label: "Cloud trên catalog", slot: "tl", tone: "sky" },
-      { id: "scale", label: "Theo quy mô tổ chức", slot: "tr", tone: "violet" },
-      { id: "sku", label: "Tư vấn chọn SKU", slot: "br", tone: "teal" },
+      { id: "cloud", label: "Cloud catalog", slot: "tl", tone: "sky" },
+      { id: "scale", label: "Theo quy mô", slot: "tr", tone: "violet" },
+      { id: "sku", label: "Tư vấn SKU", slot: "br", tone: "teal" },
       { id: "handoff", label: "Bàn giao license", slot: "bl", tone: "amber" },
-      { id: "quote", label: "Báo giá khi cần", slot: "ml", tone: "emerald" },
     ],
   },
   security: {
@@ -103,11 +101,10 @@ export const HOME_SOLUTION_SHOWCASE: Record<
       "Tư vấn chọn gói khi cần",
     ],
     chips: [
-      { id: "shield", label: "Bảo vệ endpoint", slot: "tl", tone: "sky" },
+      { id: "shield", label: "Endpoint", slot: "tl", tone: "sky" },
       { id: "web", label: "Internet security", slot: "tr", tone: "violet" },
       { id: "key", label: "Key / tài khoản rõ", slot: "br", tone: "teal" },
       { id: "guide", label: "Hướng dẫn kích hoạt", slot: "bl", tone: "amber" },
-      { id: "support", label: "Hỗ trợ tiếng Việt", slot: "ml", tone: "emerald" },
     ],
   },
   backup: {
@@ -122,11 +119,10 @@ export const HOME_SOLUTION_SHOWCASE: Record<
       "Không dịch vụ DR thuê ngoài",
     ],
     chips: [
-      { id: "backup", label: "Gói backup catalog", slot: "tl", tone: "sky" },
+      { id: "backup", label: "Gói backup", slot: "tl", tone: "sky" },
       { id: "restore", label: "Khôi phục tại chỗ", slot: "tr", tone: "violet" },
       { id: "infra", label: "Hạ tầng của bạn", slot: "br", tone: "teal" },
       { id: "guide", label: "Hướng dẫn kích hoạt", slot: "bl", tone: "amber" },
-      { id: "quote", label: "Tư vấn chọn gói", slot: "ml", tone: "emerald" },
     ],
   },
   "license-management": {
@@ -145,7 +141,6 @@ export const HOME_SOLUTION_SHOWCASE: Record<
       { id: "renew", label: "Nhắc gia hạn", slot: "tr", tone: "violet" },
       { id: "track", label: "Theo dõi hạn dùng", slot: "br", tone: "teal" },
       { id: "order", label: "Đơn & giao nhận", slot: "bl", tone: "amber" },
-      { id: "support", label: "Hỗ trợ gia hạn", slot: "ml", tone: "emerald" },
     ],
   },
 };

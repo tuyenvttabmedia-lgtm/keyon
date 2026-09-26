@@ -15,7 +15,6 @@ import {
   BODY_MUTED_CLASS,
   CARD_META_CLASS,
   CARD_TITLE_CLASS,
-  CTA_COMPACT_CLASS,
   CTA_LABEL_CLASS,
   LINK_ACCENT_CLASS,
   OVERLINE_CLASS,
@@ -28,7 +27,6 @@ import {
 import {
   EASE_STANDARD,
   ELEVATION_CTA_HOVER,
-  ELEVATION_FLOAT,
   ELEVATION_HAIRLINE,
   MOTION_NORMAL,
   TRANSITION_COLORS,
@@ -49,19 +47,19 @@ type Props = {
 };
 
 const SLOT_CLASS: Record<SolutionChip["slot"], string> = {
-  tl: "left-0 top-[2%] sm:left-[1%] sm:top-[4%]",
-  tr: "right-0 top-[8%] sm:right-[1%] sm:top-[10%]",
-  ml: "-left-1 top-[46%] hidden sm:flex",
-  bl: "bottom-[8%] left-[2%] sm:bottom-[6%] sm:left-[4%]",
-  br: "bottom-[2%] right-[2%] sm:bottom-[4%] sm:right-[6%]",
+  tl: "left-1 top-[6%]",
+  tr: "right-1 top-[12%]",
+  ml: "left-0 top-[48%] hidden sm:flex",
+  bl: "bottom-[8%] left-2",
+  br: "bottom-[4%] right-2",
 };
 
 const TONE_WELL: Record<NonNullable<SolutionChip["tone"]>, string> = {
-  sky: "bg-sky-100 text-sky-600",
-  violet: "bg-violet-100 text-violet-600",
-  cyan: "bg-cyan-100 text-cyan-700",
-  amber: "bg-amber-100 text-amber-700",
-  emerald: "bg-emerald-100 text-emerald-700",
+  sky: "bg-sky-50 text-sky-600",
+  violet: "bg-violet-50 text-violet-600",
+  cyan: "bg-cyan-50 text-cyan-700",
+  amber: "bg-amber-50 text-amber-700",
+  emerald: "bg-emerald-50 text-emerald-700",
   teal: "bg-accent-soft text-accent",
 };
 
@@ -69,8 +67,8 @@ const PANEL_FADE =
   "motion-safe:transition-[opacity,transform] motion-safe:duration-300 motion-safe:ease-[cubic-bezier(0.2,0,0,1)]";
 
 /**
- * Home Giải pháp — mockup-aligned ecosystem showcase.
- * Scoped `.home-solutions` only. Composition: header → tabs → featured panel.
+ * Home Giải pháp — ecosystem tabs + panel, toned to Home cadence
+ * (white ground, hairline elevation, compact padding).
  */
 export function SolutionsShowcase({ items, title, subtitle }: Props) {
   const tabs = pickSolutionTabs(items);
@@ -94,7 +92,7 @@ export function SolutionsShowcase({ items, title, subtitle }: Props) {
       fadeTimer.current = setTimeout(() => {
         setActiveId(id);
         setPanelIn(true);
-      }, 150);
+      }, 140);
     },
     [activeId],
   );
@@ -107,6 +105,7 @@ export function SolutionsShowcase({ items, title, subtitle }: Props) {
   ) as HomeSolutionTabId;
   const panel = HOME_SOLUTION_SHOWCASE[tabId];
   const activeIndex = Math.max(0, tabs.findIndex((t) => t.id === active.id));
+  const chips = panel.chips.slice(0, 4);
   const sectionTitle =
     title?.trim() && title.trim() !== "Giải pháp"
       ? title.trim()
@@ -140,34 +139,16 @@ export function SolutionsShowcase({ items, title, subtitle }: Props) {
   return (
     <section
       id="solutions"
-      className="home-solutions relative scroll-mt-24 overflow-hidden border-t border-border/60 py-14 lg:py-20"
+      className="home-solutions scroll-mt-24 border-t border-border bg-white py-8 md:py-10 lg:py-12"
     >
-      {/* Soft cyan atmosphere — mockup */}
-      <div
-        className="pointer-events-none absolute inset-0 bg-[#F7FBFC]"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute -left-24 -top-20 h-72 w-72 rounded-full bg-accent/[0.09] blur-3xl"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute -bottom-28 -right-16 h-80 w-80 rounded-full bg-sky-300/15 blur-3xl"
-        aria-hidden
-      />
-
-      <div className="home-container relative">
-        <div className="mb-8 flex flex-col gap-3 lg:mb-10 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
+      <div className="home-container">
+        <div className="mb-5 flex flex-col gap-2.5 md:mb-6 md:flex-row md:items-end md:justify-between md:gap-8">
           <div className="max-w-2xl">
-            <p
-              className={`${OVERLINE_CLASS} uppercase tracking-[0.14em] text-accent`}
-            >
+            <p className={`${OVERLINE_CLASS} text-accent`}>
               {HOME_SOLUTIONS_SECTION_COPY.overline}
             </p>
-            <h2 className={`mt-2.5 ${SECTION_TITLE_CLASS}`}>{sectionTitle}</h2>
-            <p className={`mt-2.5 max-w-xl ${SECTION_LEAD_CLASS}`}>
-              {sectionLead}
-            </p>
+            <h2 className={`mt-2 ${SECTION_TITLE_CLASS}`}>{sectionTitle}</h2>
+            <p className={`mt-2 max-w-xl ${SECTION_LEAD_CLASS}`}>{sectionLead}</p>
           </div>
           <Link
             href={HOME_SOLUTIONS_SECTION_COPY.viewAllHref}
@@ -182,7 +163,7 @@ export function SolutionsShowcase({ items, title, subtitle }: Props) {
           aria-label="Chủ đề giải pháp"
           id={tablistId}
           onKeyDown={onTabKeyDown}
-          className="home-solutions__nav mb-5 flex gap-2.5 overflow-x-auto pb-1 lg:mb-6 lg:grid lg:grid-cols-5 lg:gap-3 lg:overflow-visible lg:pb-0"
+          className="home-solutions__nav mb-4 flex gap-2 overflow-x-auto pb-0.5 lg:mb-5 lg:grid lg:grid-cols-5 lg:overflow-visible"
         >
           {tabs.map((tab, i) => {
             const selected = tab.id === active.id;
@@ -201,36 +182,36 @@ export function SolutionsShowcase({ items, title, subtitle }: Props) {
                 aria-controls={`${tablistId}-panel`}
                 tabIndex={selected ? 0 : -1}
                 onClick={() => selectTab(tab.id)}
-                className={`inline-flex min-w-[11.25rem] flex-col gap-1.5 rounded-2xl border bg-white px-3.5 py-3 text-left ${TRANSITION_COLORS} ${MOTION_NORMAL} ${EASE_STANDARD} lg:min-w-0 ${
+                className={`inline-flex min-w-[10.5rem] items-center gap-2 rounded-xl border px-3 py-2 text-left ${TRANSITION_COLORS} ${MOTION_NORMAL} ${EASE_STANDARD} lg:min-w-0 ${
                   selected
-                    ? `border-accent text-accent ${ELEVATION_HAIRLINE} ring-1 ring-accent/25`
-                    : `border-border/80 text-navy ${ELEVATION_HAIRLINE} hover:border-accent/35 hover:text-accent`
+                    ? "border-accent bg-accent-soft/60 text-accent"
+                    : "border-border/80 bg-white text-navy hover:border-accent/40 hover:text-accent"
                 }`}
               >
-                <span className="flex items-center gap-2">
+                <span
+                  className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${
+                    selected
+                      ? "bg-white text-accent"
+                      : "bg-slate-50 text-muted"
+                  }`}
+                >
+                  <SolutionGlyph art={tab.art} size={14} />
+                </span>
+                <span className="min-w-0">
                   <span
-                    className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${
-                      selected
-                        ? "bg-accent-soft text-accent"
-                        : "bg-slate-50 text-muted"
-                    }`}
-                  >
-                    <SolutionGlyph art={tab.art} size={15} />
-                  </span>
-                  <span
-                    className={`tabular-nums ${BADGE_CLASS} ${
+                    className={`block tabular-nums ${BADGE_CLASS} ${
                       selected ? "text-accent" : "text-muted"
                     }`}
                   >
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                </span>
-                <span
-                  className={`leading-snug ${
-                    selected ? TAB_ACTIVE_CLASS : TAB_CLASS
-                  } ${selected ? "!text-accent" : ""}`}
-                >
-                  {showcase?.tabLabel ?? tab.title}
+                  <span
+                    className={`block truncate leading-snug ${
+                      selected ? TAB_ACTIVE_CLASS : TAB_CLASS
+                    } ${selected ? "!text-accent" : ""}`}
+                  >
+                    {showcase?.tabLabel ?? tab.title}
+                  </span>
                 </span>
               </button>
             );
@@ -241,20 +222,20 @@ export function SolutionsShowcase({ items, title, subtitle }: Props) {
           role="tabpanel"
           id={`${tablistId}-panel`}
           aria-labelledby={`${tablistId}-${active.id}`}
-          className={`home-solutions__panel grid overflow-hidden rounded-[1.35rem] border border-border/70 bg-white ${ELEVATION_FLOAT} lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]`}
+          className={`home-solutions__panel grid overflow-hidden rounded-2xl border border-border/80 bg-white ${ELEVATION_HAIRLINE} lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]`}
         >
           <div
-            className={`${PANEL_FADE} ${
+            className={`border-b border-border/70 lg:border-b-0 lg:border-r ${PANEL_FADE} ${
               panelIn
                 ? "opacity-100 motion-safe:translate-y-0"
                 : "opacity-0 motion-safe:translate-y-1"
             }`}
           >
-            <SolutionVisual art={active.art} chips={panel.chips} />
+            <SolutionVisual art={active.art} chips={chips} />
           </div>
 
           <div
-            className={`flex flex-col justify-center px-6 py-8 sm:px-8 sm:py-9 lg:px-9 lg:py-10 xl:px-11 ${PANEL_FADE} ${
+            className={`flex flex-col justify-center px-5 py-6 sm:px-7 sm:py-7 lg:px-8 lg:py-8 ${PANEL_FADE} ${
               panelIn
                 ? "opacity-100 motion-safe:translate-y-0"
                 : "opacity-0 motion-safe:translate-y-1"
@@ -263,12 +244,10 @@ export function SolutionsShowcase({ items, title, subtitle }: Props) {
             <p className={`${OVERLINE_CLASS} text-accent`}>
               {String(activeIndex + 1).padStart(2, "0")} / {panel.panelKicker}
             </p>
-            <h3 className={`mt-3 ${SUBSECTION_TITLE_CLASS} sm:text-2xl`}>
-              {panel.headline}
-            </h3>
-            <p className={`mt-3 max-w-md ${SECTION_LEAD_CLASS}`}>{panel.lead}</p>
+            <h3 className={`mt-2 ${SUBSECTION_TITLE_CLASS}`}>{panel.headline}</h3>
+            <p className={`mt-2.5 max-w-md ${SECTION_LEAD_CLASS}`}>{panel.lead}</p>
 
-            <ul className="mt-5 space-y-2.5">
+            <ul className="mt-4 space-y-2">
               {panel.checks.map((line) => (
                 <li key={line} className={`flex gap-2.5 ${BODY_MUTED_CLASS}`}>
                   <CheckIcon />
@@ -277,7 +256,7 @@ export function SolutionsShowcase({ items, title, subtitle }: Props) {
               ))}
             </ul>
 
-            <div className="mt-7 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
               <Link
                 href={active.href}
                 className={`inline-flex h-11 items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
@@ -286,10 +265,9 @@ export function SolutionsShowcase({ items, title, subtitle }: Props) {
               </Link>
               <Link
                 href={HOME_SOLUTIONS_SECTION_COPY.secondaryCtaHref}
-                className={`inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-white px-4 ${CTA_COMPACT_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+                className={LINK_ACCENT_CLASS}
               >
-                <DocIcon />
-                {HOME_SOLUTIONS_SECTION_COPY.secondaryCta}
+                {HOME_SOLUTIONS_SECTION_COPY.secondaryCta} →
               </Link>
             </div>
           </div>
@@ -307,79 +285,31 @@ function SolutionVisual({
   chips: SolutionChip[];
 }) {
   return (
-    <div className="home-solutions__visual relative min-h-[280px] overflow-hidden bg-gradient-to-br from-[#EEF8FA] via-white to-[#E8F4F8] px-5 py-10 sm:min-h-[320px] sm:px-7 sm:py-11 lg:min-h-[380px] lg:px-8 lg:py-12">
-      {/* Soft grid */}
+    <div className="home-solutions__visual relative min-h-[220px] overflow-hidden bg-slate-50/80 px-4 py-7 sm:min-h-[250px] sm:px-6 sm:py-8 lg:min-h-[280px] lg:px-7 lg:py-9">
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.45]"
+        className="pointer-events-none absolute inset-0 opacity-[0.28]"
         aria-hidden
         style={{
           backgroundImage:
-            "linear-gradient(to right, rgba(14,165,164,0.07) 1px, transparent 1px), linear-gradient(to bottom, rgba(14,165,164,0.07) 1px, transparent 1px)",
-          backgroundSize: "32px 32px",
+            "linear-gradient(to right, rgba(15,23,42,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(15,23,42,0.04) 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
           maskImage:
-            "radial-gradient(ellipse 72% 68% at 48% 48%, black 15%, transparent 72%)",
+            "radial-gradient(ellipse 70% 65% at 50% 50%, black 20%, transparent 75%)",
         }}
       />
-      <div
-        className="pointer-events-none absolute left-1/4 top-1/3 h-40 w-40 -translate-x-1/2 rounded-full bg-accent/15 blur-3xl"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute bottom-1/4 right-1/4 h-36 w-36 rounded-full bg-sky-400/15 blur-3xl"
-        aria-hidden
-      />
 
-      {/* Connector arcs — mockup glow lines */}
-      <svg
-        className="pointer-events-none absolute inset-0 h-full w-full text-accent/25"
-        viewBox="0 0 480 360"
-        fill="none"
-        aria-hidden
-        preserveAspectRatio="xMidYMid slice"
-      >
-        <path
-          d="M90 95C150 70 200 95 240 140"
-          stroke="currentColor"
-          strokeWidth="1.25"
-          strokeDasharray="3 7"
-        />
-        <path
-          d="M390 110C340 95 300 130 260 155"
-          stroke="currentColor"
-          strokeWidth="1.25"
-          strokeDasharray="3 7"
-        />
-        <path
-          d="M70 230C130 210 180 200 235 175"
-          stroke="currentColor"
-          strokeWidth="1.25"
-          strokeDasharray="3 7"
-        />
-        <path
-          d="M400 250C340 220 300 200 255 175"
-          stroke="currentColor"
-          strokeWidth="1.25"
-          strokeDasharray="3 7"
-        />
-        <circle cx="240" cy="160" r="3.5" fill="currentColor" opacity="0.5" />
-      </svg>
-
-      <div className="relative mx-auto flex h-full max-w-[460px] items-center justify-center">
-        <div
-          className="pointer-events-none absolute bottom-[8%] left-1/2 h-4 w-[68%] -translate-x-1/2 rounded-[100%] bg-slate-900/12 blur-md"
-          aria-hidden
-        />
+      <div className="relative mx-auto flex h-full max-w-[400px] items-center justify-center">
         <LaptopFrame art={art} />
         {chips.map((chip) => (
           <span
             key={chip.id}
-            className={`absolute z-[1] inline-flex max-w-[12.5rem] items-center gap-2 rounded-2xl border border-white/80 bg-white/95 px-2.5 py-2 backdrop-blur-[2px] ${ELEVATION_FLOAT} ${SLOT_CLASS[chip.slot]}`}
+            className={`absolute z-[1] inline-flex max-w-[10.5rem] items-center gap-1.5 rounded-xl border border-border/70 bg-white px-2 py-1.5 ${ELEVATION_HAIRLINE} ${SLOT_CLASS[chip.slot]}`}
           >
             {chip.id === "m365" ? (
               <M365SuiteMark />
             ) : (
               <span
-                className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${
+                className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md ${
                   TONE_WELL[chip.tone ?? "teal"]
                 }`}
               >
@@ -400,94 +330,73 @@ function SolutionVisual({
 
 function LaptopFrame({ art }: { art: SolutionItem["art"] }) {
   return (
-    <div className="relative z-0 w-[min(100%,276px)] sm:w-[300px]">
+    <div className="relative z-0 w-[min(100%,240px)] sm:w-[256px]">
       <div
-        className={`rounded-[16px] border border-slate-700/80 bg-gradient-to-b from-slate-700 to-slate-900 p-[6px] ${ELEVATION_FLOAT}`}
+        className={`rounded-xl border border-slate-200 bg-slate-800/90 p-[5px] ${ELEVATION_HAIRLINE}`}
       >
-        <div className="overflow-hidden rounded-[11px] bg-white">
-          {/* Title bar with KEYON mark — not browser traffic lights only */}
-          <div className="flex items-center gap-2 border-b border-border/70 bg-slate-50/95 px-3 py-2">
-            <span className={`inline-flex h-6 w-6 items-center justify-center rounded-md bg-navy ${BADGE_CLASS} text-white`}>
+        <div className="overflow-hidden rounded-[9px] bg-white">
+          <div className="flex items-center gap-1.5 border-b border-border/70 bg-slate-50 px-2.5 py-1.5">
+            <span
+              className={`inline-flex h-5 w-5 items-center justify-center rounded bg-navy ${BADGE_CLASS} text-white`}
+            >
               K
             </span>
             <span className={`${CARD_META_CLASS} !font-semibold !text-navy`}>
               KEYON
             </span>
-            <span className={`ml-auto ${CARD_META_CLASS}`}>Workspace</span>
           </div>
-          <div className="grid grid-cols-[58px_1fr] gap-2.5 p-2.5 sm:grid-cols-[64px_1fr] sm:p-3">
-            <aside className="space-y-1.5 rounded-xl bg-slate-50 p-1.5">
-              {[0, 1, 2, 3, 4].map((i) => (
+          <div className="grid grid-cols-[48px_1fr] gap-2 p-2 sm:grid-cols-[52px_1fr] sm:p-2.5">
+            <aside className="space-y-1 rounded-lg bg-slate-50 p-1">
+              {[0, 1, 2, 3].map((i) => (
                 <div
                   key={i}
-                  className={`h-5 rounded-md ${
+                  className={`h-4 rounded ${
                     i === 1
-                      ? "bg-accent/30"
+                      ? "bg-accent/25"
                       : "border border-border/50 bg-white"
                   }`}
                 />
               ))}
             </aside>
-            <div className="min-w-0 space-y-2">
-              <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0 space-y-1.5">
+              <div className="flex items-center justify-between gap-1">
                 <div className="min-w-0">
                   <p className={CARD_META_CLASS}>Tổng quan</p>
-                  <p className={`${CARD_TITLE_CLASS} mt-0.5 truncate`}>
-                    Bảng điều khiển
-                  </p>
+                  <p className={`${CARD_TITLE_CLASS} truncate`}>Điều khiển</p>
                 </div>
-                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
-                  <SolutionGlyph art={art} size={14} />
+                <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent">
+                  <SolutionGlyph art={art} size={13} />
                 </span>
               </div>
-              <div className="grid grid-cols-2 gap-1.5">
-                {[
-                  { label: "Email", bar: "w-3/4" },
-                  { label: "Lịch", bar: "w-1/2" },
-                  { label: "Tài liệu", bar: "w-2/3" },
-                  { label: "Nhóm", bar: "w-3/5" },
-                ].map((cell) => (
+              <div className="grid grid-cols-2 gap-1">
+                {["Email", "Lịch", "Tài liệu", "Nhóm"].map((label) => (
                   <div
-                    key={cell.label}
-                    className="rounded-lg border border-border/60 bg-slate-50/90 px-2 py-1.5"
+                    key={label}
+                    className="rounded-md border border-border/60 bg-slate-50/90 px-1.5 py-1"
                   >
-                    <p className={CARD_META_CLASS}>{cell.label}</p>
-                    <div
-                      className={`mt-1.5 h-1.5 rounded-full bg-accent/25 ${cell.bar}`}
-                    />
+                    <p className={CARD_META_CLASS}>{label}</p>
+                    <div className="mt-1 h-1 w-2/3 rounded-full bg-accent/20" />
                   </div>
                 ))}
-              </div>
-              {/* Activity strip — depth without fake metrics */}
-              <div className="rounded-lg border border-border/50 bg-white px-2 py-1.5">
-                <div className="flex items-center gap-2">
-                  <span className="h-1.5 flex-1 rounded-full bg-accent/20" />
-                  <span className="h-1.5 w-8 rounded-full bg-slate-100" />
-                </div>
-                <div className="mt-1.5 flex items-center gap-2">
-                  <span className="h-1.5 w-10 rounded-full bg-slate-100" />
-                  <span className="h-1.5 flex-1 rounded-full bg-sky-200/60" />
-                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="mx-auto mt-0.5 h-2.5 w-[74%] rounded-b-md bg-slate-400/80" />
-      <div className="mx-auto h-[3px] w-[88%] rounded-b-sm bg-slate-300/90" />
+      <div className="mx-auto mt-0.5 h-1.5 w-[70%] rounded-b bg-slate-300/80" />
+      <div className="mx-auto h-0.5 w-[82%] rounded-b bg-slate-200" />
     </div>
   );
 }
 
-/** Generic colored suite tiles — no third-party logos. */
 function M365SuiteMark() {
   return (
-    <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-50 p-1 ring-1 ring-border/60">
-      <span className="grid grid-cols-2 gap-0.5">
-        <span className="h-2.5 w-2.5 rounded-[2px] bg-[#2B579A]" />
-        <span className="h-2.5 w-2.5 rounded-[2px] bg-[#217346]" />
-        <span className="h-2.5 w-2.5 rounded-[2px] bg-[#C43E1C]" />
-        <span className="h-2.5 w-2.5 rounded-[2px] bg-[#0078D4]" />
+    <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-slate-50 p-0.5 ring-1 ring-border/50">
+      <span className="grid grid-cols-2 gap-px">
+        <span className="h-2 w-2 rounded-[1px] bg-[#2B579A]" />
+        <span className="h-2 w-2 rounded-[1px] bg-[#217346]" />
+        <span className="h-2 w-2 rounded-[1px] bg-[#C43E1C]" />
+        <span className="h-2 w-2 rounded-[1px] bg-[#0078D4]" />
       </span>
     </span>
   );
@@ -509,29 +418,10 @@ function CheckIcon() {
   );
 }
 
-function DocIcon() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M8 7h8M8 11h8M8 15h5"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-      />
-      <path
-        d="M6 3h9l3 3v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 function ChipGlyph({ id }: { id: string }) {
   const props = {
-    width: 14,
-    height: 14,
+    width: 12,
+    height: 12,
     viewBox: "0 0 24 24",
     fill: "none",
     stroke: "currentColor",
