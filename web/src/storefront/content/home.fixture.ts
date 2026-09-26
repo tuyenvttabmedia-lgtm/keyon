@@ -202,7 +202,7 @@ export const homeFixture: HomeContent = {
     visible: true,
     title: "Giải pháp số cho mọi nhu cầu vận hành",
     subtitle:
-      "Từ năng suất, cloud, bảo mật đến backup và quản lý bản quyền — KEYON giúp chọn gói chính hãng, bàn giao rõ ràng và theo dõi trên Tài khoản.",
+      "Từ năng suất, cloud, bảo mật đến backup và quản lý bản quyền — KEYON giúp doanh nghiệp lựa chọn, triển khai và quản lý các giải pháp số phù hợp.",
     ctaLabel: "Khám phá giải pháp →",
     ctaHref: "/solutions",
     secondaryCtaLabel: "Dành cho doanh nghiệp",
@@ -217,14 +217,14 @@ export const homeFixture: HomeContent = {
       },
       {
         id: "cloud",
-        title: "Cloud",
+        title: "Cloud & Hạ tầng",
         description: "Gói cloud / hạ tầng trên catalog KEYON.",
         href: "/solutions/cloud",
         art: "cloud",
       },
       {
         id: "security",
-        title: "Bảo mật",
+        title: "Bảo mật & An toàn",
         description: "Gói endpoint / antivirus chính hãng.",
         href: "/solutions/security",
         art: "shield",

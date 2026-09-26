@@ -316,7 +316,7 @@ async function loadHomeContent(): Promise<HomeContent> {
       cmsSolutionsTitle !== "Giải pháp doanh nghiệp"
         ? cmsSolutionsTitle
         : homeFixture.solutions.title,
-    subtitle: cmsHome.solutionsSubtitle || homeFixture.solutions.subtitle,
+    subtitle: homeFixture.solutions.subtitle,
     ctaLabel: homeFixture.solutions.ctaLabel,
     ctaHref: "/solutions",
     secondaryCtaLabel: homeFixture.solutions.secondaryCtaLabel,

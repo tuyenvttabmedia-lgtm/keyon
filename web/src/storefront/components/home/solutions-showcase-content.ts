@@ -1,6 +1,6 @@
 import type { SolutionItem } from "@/storefront/content/types";
 
-/** Home Solutions showcase — 5 tabs matching mockup (by-need lives on /solutions hub). */
+/** Home Solutions — 5 tabs aligned to mockup (by-need stays on /solutions hub). */
 export const HOME_SOLUTION_TAB_IDS = [
   "productivity",
   "cloud",
@@ -16,20 +16,16 @@ export type SolutionChip = {
   label: string;
   /** Placement token for desktop float layout */
   slot: "tl" | "tr" | "ml" | "bl" | "br";
+  /** Icon well tint — matches mockup colored chips */
+  tone?: "sky" | "violet" | "cyan" | "amber" | "emerald" | "teal";
 };
 
 export type SolutionShowcasePanel = {
-  /** Short tab label (mockup density) */
   tabLabel: string;
-  /** Panel kicker after index, e.g. NĂNG SUẤT & CỘNG TÁC */
   panelKicker: string;
-  /** Right-column headline */
   headline: string;
-  /** Right-column lead — go-live prod voice */
   lead: string;
-  /** Check list (max 4) */
   checks: string[];
-  /** Floating chips around visual */
   chips: SolutionChip[];
 };
 
@@ -41,19 +37,39 @@ export const HOME_SOLUTION_SHOWCASE: Record<
     tabLabel: "Năng suất & Cộng tác",
     panelKicker: "Năng suất & Cộng tác",
     headline: "Làm việc hiệu quả hơn, ở mọi nơi",
-    lead: "Microsoft 365, Office, Teams và công cụ cộng tác chính hãng — kích hoạt nhanh, hỗ trợ tiếng Việt.",
+    lead: "Bộ giải pháp Microsoft 365, email doanh nghiệp, cộng tác và lưu trữ giúp đội ngũ làm việc liền mạch, an toàn và hiệu quả.",
     checks: [
       "Microsoft 365 / Office chính hãng",
-      "Email và lịch làm việc trên Microsoft 365",
+      "Email doanh nghiệp bảo mật cao",
       "Teams và cộng tác trực tuyến",
-      "OneDrive / lưu trữ theo gói đã mua",
+      "OneDrive và lưu trữ thông minh",
     ],
     chips: [
-      { id: "mail", label: "Email doanh nghiệp", slot: "tl" },
-      { id: "cloud", label: "Lưu trữ trên cloud", slot: "tr" },
-      { id: "m365", label: "Bộ ứng dụng Microsoft 365", slot: "br" },
-      { id: "cal", label: "Lịch làm việc", slot: "bl" },
-      { id: "team", label: "Cộng tác nhóm", slot: "ml" },
+      {
+        id: "mail",
+        label: "Email doanh nghiệp chuyên nghiệp",
+        slot: "tl",
+        tone: "sky",
+      },
+      {
+        id: "cloud",
+        label: "Lưu trữ an toàn trên cloud",
+        slot: "tr",
+        tone: "violet",
+      },
+      {
+        id: "m365",
+        label: "Bộ ứng dụng Microsoft 365",
+        slot: "br",
+        tone: "teal",
+      },
+      {
+        id: "cal",
+        label: "Lịch làm việc thông minh",
+        slot: "bl",
+        tone: "amber",
+      },
+      { id: "team", label: "Cộng tác nhóm", slot: "ml", tone: "emerald" },
     ],
   },
   cloud: {
@@ -62,17 +78,17 @@ export const HOME_SOLUTION_SHOWCASE: Record<
     headline: "Chọn đúng gói cloud trên catalog",
     lead: "Gói cloud / hạ tầng đang bán trên KEYON — tư vấn chọn SKU theo nhu cầu. Không vận hành Azure/AWS thuê ngoài.",
     checks: [
-      "Gói cloud / storage / backup trên catalog",
-      "Tư vấn theo số người dùng và ngân sách",
-      "Bàn giao license rõ ràng sau thanh toán",
+      "Gói cloud / storage trên catalog",
+      "Tư vấn theo quy mô & ngân sách",
+      "Bàn giao license rõ ràng",
       "Không thay MSP vận hành tenant",
     ],
     chips: [
-      { id: "cloud", label: "Cloud trên catalog", slot: "tl" },
-      { id: "scale", label: "Theo quy mô tổ chức", slot: "tr" },
-      { id: "sku", label: "Tư vấn chọn SKU", slot: "br" },
-      { id: "handoff", label: "Bàn giao license", slot: "bl" },
-      { id: "quote", label: "Báo giá khi cần", slot: "ml" },
+      { id: "cloud", label: "Cloud trên catalog", slot: "tl", tone: "sky" },
+      { id: "scale", label: "Theo quy mô tổ chức", slot: "tr", tone: "violet" },
+      { id: "sku", label: "Tư vấn chọn SKU", slot: "br", tone: "teal" },
+      { id: "handoff", label: "Bàn giao license", slot: "bl", tone: "amber" },
+      { id: "quote", label: "Báo giá khi cần", slot: "ml", tone: "emerald" },
     ],
   },
   security: {
@@ -81,17 +97,17 @@ export const HOME_SOLUTION_SHOWCASE: Record<
     headline: "Bảo vệ endpoint bằng gói chính hãng",
     lead: "Antivirus / internet security trên KEYON — xem rõ loại nhận trước khi mua, hỗ trợ kích hoạt tiếng Việt.",
     checks: [
-      "Endpoint / Antivirus / Internet Security",
-      "Loại nhận (key / tài khoản) ghi rõ trên SKU",
-      "Kích hoạt theo hướng dẫn sau bàn giao",
+      "Endpoint / Antivirus chính hãng",
+      "Loại nhận ghi rõ trên SKU",
+      "Kích hoạt theo hướng dẫn",
       "Tư vấn chọn gói khi cần",
     ],
     chips: [
-      { id: "shield", label: "Bảo vệ endpoint", slot: "tl" },
-      { id: "web", label: "Internet security", slot: "tr" },
-      { id: "key", label: "Key / tài khoản rõ ràng", slot: "br" },
-      { id: "guide", label: "Hướng dẫn kích hoạt", slot: "bl" },
-      { id: "support", label: "Hỗ trợ tiếng Việt", slot: "ml" },
+      { id: "shield", label: "Bảo vệ endpoint", slot: "tl", tone: "sky" },
+      { id: "web", label: "Internet security", slot: "tr", tone: "violet" },
+      { id: "key", label: "Key / tài khoản rõ", slot: "br", tone: "teal" },
+      { id: "guide", label: "Hướng dẫn kích hoạt", slot: "bl", tone: "amber" },
+      { id: "support", label: "Hỗ trợ tiếng Việt", slot: "ml", tone: "emerald" },
     ],
   },
   backup: {
@@ -100,17 +116,17 @@ export const HOME_SOLUTION_SHOWCASE: Record<
     headline: "License backup trên hạ tầng của bạn",
     lead: "Gói / license backup trên catalog — kích hoạt phần mềm trên hạ tầng khách hàng. KEYON không lưu bản sao dữ liệu.",
     checks: [
-      "Tìm gói backup trên cửa hàng",
+      "Gói backup trên cửa hàng",
       "Kích hoạt trên hạ tầng của bạn",
       "Tư vấn chọn gói khi cần",
       "Không dịch vụ DR thuê ngoài",
     ],
     chips: [
-      { id: "backup", label: "Gói backup catalog", slot: "tl" },
-      { id: "restore", label: "Khôi phục tại chỗ", slot: "tr" },
-      { id: "infra", label: "Trên hạ tầng của bạn", slot: "br" },
-      { id: "guide", label: "Hướng dẫn kích hoạt", slot: "bl" },
-      { id: "quote", label: "Tư vấn chọn gói", slot: "ml" },
+      { id: "backup", label: "Gói backup catalog", slot: "tl", tone: "sky" },
+      { id: "restore", label: "Khôi phục tại chỗ", slot: "tr", tone: "violet" },
+      { id: "infra", label: "Hạ tầng của bạn", slot: "br", tone: "teal" },
+      { id: "guide", label: "Hướng dẫn kích hoạt", slot: "bl", tone: "amber" },
+      { id: "quote", label: "Tư vấn chọn gói", slot: "ml", tone: "emerald" },
     ],
   },
   "license-management": {
@@ -125,11 +141,11 @@ export const HOME_SOLUTION_SHOWCASE: Record<
       "Hỗ trợ tiếng Việt",
     ],
     chips: [
-      { id: "account", label: "Trong Tài khoản", slot: "tl" },
-      { id: "renew", label: "Nhắc gia hạn", slot: "tr" },
-      { id: "track", label: "Theo dõi hạn dùng", slot: "br" },
-      { id: "order", label: "Đơn & giao nhận", slot: "bl" },
-      { id: "support", label: "Hỗ trợ gia hạn", slot: "ml" },
+      { id: "account", label: "Trong Tài khoản", slot: "tl", tone: "sky" },
+      { id: "renew", label: "Nhắc gia hạn", slot: "tr", tone: "violet" },
+      { id: "track", label: "Theo dõi hạn dùng", slot: "br", tone: "teal" },
+      { id: "order", label: "Đơn & giao nhận", slot: "bl", tone: "amber" },
+      { id: "support", label: "Hỗ trợ gia hạn", slot: "ml", tone: "emerald" },
     ],
   },
 };
@@ -138,10 +154,12 @@ export const HOME_SOLUTIONS_SECTION_COPY = {
   overline: "Giải pháp",
   title: "Giải pháp số cho mọi nhu cầu vận hành",
   subtitle:
-    "Từ năng suất, cloud, bảo mật đến backup và quản lý bản quyền — KEYON giúp chọn gói chính hãng, bàn giao rõ ràng và theo dõi trên Tài khoản.",
+    "Từ năng suất, cloud, bảo mật đến backup và quản lý bản quyền — KEYON giúp doanh nghiệp lựa chọn, triển khai và quản lý các giải pháp số phù hợp.",
   viewAllLabel: "Xem tất cả giải pháp",
   viewAllHref: "/solutions",
   primaryCta: "Tìm hiểu giải pháp",
+  secondaryCta: "Xem tài liệu chi tiết",
+  secondaryCtaHref: "/how-it-works",
 } as const;
 
 export function pickSolutionTabs(items: SolutionItem[]): SolutionItem[] {
