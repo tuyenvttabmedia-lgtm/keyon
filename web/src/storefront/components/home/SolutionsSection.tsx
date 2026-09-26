@@ -14,6 +14,8 @@ export function SolutionsSection({ data }: { data: Solutions }) {
       items={data.items}
       title={data.title}
       subtitle={data.subtitle}
+      secondaryCtaLabel={data.secondaryCtaLabel}
+      secondaryCtaHref={data.secondaryCtaHref}
     />
   );
 }
