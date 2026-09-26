@@ -61,7 +61,7 @@ type Props = {
 /** Three-step purchase journey — layout from owner mockup (equal-height cards). */
 export function HowItWorksJourney({
   heading = "h1",
-  kicker = "Hành trình mua hàng",
+  kicker,
   title = "Cách KEYON hoạt động",
   lead = "Ba bước: chọn gói → thanh toán → nhận deliverable trong Tài khoản.",
   ctaHref = "/how-it-works",
@@ -74,8 +74,14 @@ export function HowItWorksJourney({
     <section aria-label="Cách KEYON hoạt động" className="flex flex-col gap-6 md:gap-8">
       <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-10">
         <header>
-          <p className={`${OVERLINE_CLASS} text-accent`}>{kicker}</p>
-          <TitleTag className={`mt-2 ${SECTION_TITLE_CLASS}`}>{title}</TitleTag>
+          {kicker ? (
+            <p className={`${OVERLINE_CLASS} text-accent`}>{kicker}</p>
+          ) : null}
+          <TitleTag
+            className={`${kicker ? "mt-2" : ""} ${SECTION_TITLE_CLASS}`}
+          >
+            {title}
+          </TitleTag>
           <p className={`mt-3 max-w-[46ch] ${SECTION_LEAD_CLASS}`}>{lead}</p>
         </header>
 
