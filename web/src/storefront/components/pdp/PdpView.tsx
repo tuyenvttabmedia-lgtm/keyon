@@ -347,8 +347,60 @@ function Gallery({
   discount?: number;
 }) {
   const gallery = data.galleryUrls?.length ? data.galleryUrls : null;
-  const demoCount = 6;
-  const thumbs = gallery ?? Array.from({ length: demoCount }, (_, i) => i);
+
+  if (!gallery?.length) {
+    return (
+      <div className="min-w-0">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-border bg-surface">
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-6 text-center">
+            <p className={`font-semibold text-navy ${CARD_TITLE_CLASS}`}>
+              {data.name}
+            </p>
+            <p className={BODY_MUTED_CLASS}>
+              {data.brandName}
+              {variant.name ? ` · ${variant.name}` : ""}
+            </p>
+          </div>
+          {discount ? (
+            <span
+              className={`absolute left-3 top-3 rounded-md bg-rose-600 px-2 py-0.5 ${BADGE_CLASS} text-white`}
+            >
+              −{discount}%
+            </span>
+          ) : null}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <GalleryImages
+      data={data}
+      variant={variant}
+      gallery={gallery}
+      thumb={thumb}
+      onThumb={onThumb}
+      discount={discount}
+    />
+  );
+}
+
+function GalleryImages({
+  data,
+  variant,
+  gallery,
+  thumb,
+  onThumb,
+  discount,
+}: {
+  data: PdpProductData;
+  variant: PdpVariantOption;
+  gallery: string[];
+  thumb: number;
+  onThumb: (n: number) => void;
+  discount?: number;
+}) {
+  const thumbs = gallery;
   const visible = 4;
   const canSlide = thumbs.length > visible;
   const maxStart = Math.max(0, thumbs.length - visible);

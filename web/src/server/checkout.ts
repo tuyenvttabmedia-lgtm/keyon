@@ -7,6 +7,7 @@ import { emitPaymentEvent } from "@/server/payment/events";
 import { childLogger } from "@/lib/logger";
 import { randomBytes } from "crypto";
 import { variantAllowsCheckout } from "@/lib/variant-checkout";
+import { resolveSupplierApi } from "@/server/supplier/config";
 
 const log = childLogger("checkout");
 
@@ -38,6 +39,25 @@ export async function createCheckoutOrder(input: {
       "Strategy chưa mở — chỉ Manual / Instant / Semi-Automated (1 SKU)",
       400,
     );
+  }
+
+  // Pax8 HTTP chưa live — không bán SEMI qua stub (tránh giao portal giả).
+  if (variant.fulfillmentStrategy === "SEMI_AUTOMATED") {
+    const supplier = await resolveSupplierApi();
+    const httpReady =
+      supplier.pax8.driver === "http" &&
+      Boolean(
+        supplier.pax8.baseUrl &&
+          supplier.pax8.clientId &&
+          supplier.pax8.clientSecret,
+      );
+    if (!httpReady) {
+      throw new AppError(
+        "Sản phẩm Semi-Automated chưa mở bán — đang chờ tích hợp nhà cung cấp",
+        503,
+        "SUPPLIER_NOT_READY",
+      );
+    }
   }
 
   const totalVnd = variant.priceVnd * qty;

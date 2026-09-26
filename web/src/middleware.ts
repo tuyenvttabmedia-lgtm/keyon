@@ -42,6 +42,16 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const method = req.method.toUpperCase();
 
+  // Design-system demos — not part of public storefront in production.
+  if (pathname === "/demo" || pathname.startsWith("/demo/")) {
+    const allow =
+      process.env.ALLOW_DEMO === "1" || process.env.ALLOW_DEMO === "true";
+    if (process.env.NODE_ENV === "production" && !allow) {
+      return new NextResponse("Not Found", { status: 404 });
+    }
+    return NextResponse.next();
+  }
+
   if (
     pathname.startsWith("/api/") &&
     method !== "GET" &&
@@ -120,5 +130,11 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin", "/admin/:path*", "/api/:path*"],
+  matcher: [
+    "/admin",
+    "/admin/:path*",
+    "/api/:path*",
+    "/demo",
+    "/demo/:path*",
+  ],
 };

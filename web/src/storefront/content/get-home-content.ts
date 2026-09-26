@@ -386,7 +386,7 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
       title: categories.title || homeFixture.categories.title,
       viewAllHref: categories.viewAllHref || homeFixture.categories.viewAllHref,
       viewAllLabel: categories.viewAllLabel || homeFixture.categories.viewAllLabel,
-      items: categoryItems.length ? categoryItems : homeFixture.categories.items,
+      items: categoryItems,
     },
     featured: {
       ...homeFixture.featured,

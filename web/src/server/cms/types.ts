@@ -1104,7 +1104,7 @@ export type CmsCheckout = {
 
 export const defaultCmsCheckout: CmsCheckout = {
   securityLine: "Thông tin giao dịch được bảo vệ theo chính sách KEYON",
-  warrantyBadge: "Bảo hành 12 tháng",
+  warrantyBadge: "Hỗ trợ kích hoạt",
   emailHelp: "Tự động gửi sau khi thanh toán",
   paidNote:
     "KEYON gửi giấy phép sau khi nhận tiền. Đã thanh toán ≠ đã giao — theo dõi trong Đơn hàng / Tài sản.",
@@ -1412,14 +1412,11 @@ export const defaultCmsContact: CmsContact = {
   heroTitleAccent: "KEYON",
   heroLead:
     "Gửi tin nhắn, email hoặc tạo ticket. KEYON phản hồi trong giờ làm việc.",
-  mapCompany: "KEYON., JSC",
-  mapAddress:
-    "Tầng 7, Tòa nhà Hà Nội Tower, 49 Hai Bà Trưng, Hoàn Kiếm, Hà Nội, Việt Nam",
-  mapMapsUrl:
-    "https://www.google.com/maps/search/?api=1&query=49+Hai+Ba+Trung+Hoan+Kiem+Ha+Noi",
+  mapCompany: "KEYON",
+  mapAddress: "",
+  mapMapsUrl: "",
   mapMapsCta: "Xem trên Google Maps",
-  mapEmbedUrl:
-    "https://www.openstreetmap.org/export/embed.html?bbox=105.833%2C21.018%2C105.850%2C21.031&layer=mapnik&marker=21.0245%2C105.8412",
+  mapEmbedUrl: "",
   infoTitle: "Thông tin liên hệ",
   infoLead: "Bạn có thể liên hệ với chúng tôi qua các kênh sau",
   hotlineLabel: "Hotline",
@@ -2204,7 +2201,7 @@ export const defaultCmsAccount: CmsAccount = {
   contactPhone: "",
   contactEmail: "support@keyon.vn",
   contactBarLead: "Có thắc mắc về đơn hàng? Liên hệ ngay:",
-  warrantyBadge: "Bảo hành: 12 tháng",
+  warrantyBadge: "Hỗ trợ kích hoạt",
   supportCardTitle: "Bạn cần hỗ trợ?",
   supportCardBody:
     "Nếu bạn gặp vấn đề với license hoặc đơn hàng, hãy liên hệ với chúng tôi.",

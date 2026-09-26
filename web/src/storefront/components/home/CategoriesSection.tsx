@@ -106,6 +106,7 @@ function hexToRgba(hex: string, alpha: number): string {
 
 export function CategoriesSection({ data }: { data: Categories }) {
   if (!data.visible) return null;
+  if (!data.items.length) return null;
 
   // Mobile/tablet: 2×3 (6). Desktop: đủ 7 danh mục.
   const mobileItems = data.items.slice(0, 6);

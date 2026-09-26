@@ -16,7 +16,17 @@ export async function assertTurnstileToken(
   remoteip?: string | null,
 ): Promise<void> {
   const resolved = await resolveTurnstile();
-  if (!resolved.ready) return;
+  if (!resolved.ready) {
+    // Production: fail closed — do not accept auth/forms without CAPTCHA.
+    if (process.env.NODE_ENV === "production") {
+      throw new AppError(
+        "Turnstile chưa cấu hình trên production — liên hệ quản trị",
+        503,
+        "TURNSTILE_NOT_CONFIGURED",
+      );
+    }
+    return;
+  }
 
   if (!token?.trim()) {
     throw new AppError("Vui lòng xác nhận bạn không phải robot", 400);

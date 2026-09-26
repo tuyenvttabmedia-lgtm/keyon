@@ -65,6 +65,12 @@ export function validateCatalogPublish(input: CatalogPublishInput): CatalogValid
   if (!input.categoryKey) {
     issues.push({ field: "categoryKey", message: "Xuất bản cần chọn danh mục" });
   }
+  if (!input.galleryUrls?.length) {
+    issues.push({
+      field: "galleryUrls",
+      message: "Xuất bản cần ít nhất một ảnh gallery",
+    });
+  }
   return issues;
 }
 
@@ -72,12 +78,6 @@ export function validateCatalogPublish(input: CatalogPublishInput): CatalogValid
 export function catalogPublishWarnings(input: CatalogPublishInput): CatalogValidationIssue[] {
   if (!input.publishing) return [];
   const warnings: CatalogValidationIssue[] = [];
-  if (!input.galleryUrls?.length) {
-    warnings.push({
-      field: "galleryUrls",
-      message: "Chưa có gallery — nên thêm ảnh trước khi xuất bản",
-    });
-  }
   if (
     input.salesMotion === "QUOTE_REQUIRED" &&
     input.fulfillmentStrategy === "INSTANT"
