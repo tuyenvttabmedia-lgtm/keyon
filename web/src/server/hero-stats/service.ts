@@ -3,7 +3,7 @@ import {
   HeroStatsRepository,
   lastDayKeys,
 } from "./repository";
-import type { HeroPublicStats, HeroRecentActivity, HeroStatCard } from "./types";
+import type { HeroPublicStats, HeroStatCard } from "./types";
 
 const WINDOW_DAYS = 7;
 
@@ -42,59 +42,6 @@ function mapSeries(keys: string[], map: Map<string, number>): number[] {
   return keys.map((k) => map.get(k) ?? 0);
 }
 
-function relativeTimeVi(date: Date, now = new Date()): string {
-  const sec = Math.max(0, Math.floor((now.getTime() - date.getTime()) / 1000));
-  if (sec < 60) return "vừa xong";
-  const min = Math.floor(sec / 60);
-  if (min < 60) return `${min} phút trước`;
-  const hr = Math.floor(min / 60);
-  if (hr < 24) return `${hr} giờ trước`;
-  const day = Math.floor(hr / 24);
-  return `${day} ngày trước`;
-}
-
-function markFromBrand(
-  brandName: string | undefined,
-  title: string,
-): Pick<HeroRecentActivity, "mark" | "tone"> {
-  const b = (brandName ?? "").toLowerCase();
-  const t = title.toLowerCase();
-  const hay = `${b} ${t}`;
-
-  if (hay.includes("adobe")) return { mark: "Ad", tone: "adobe" };
-  if (hay.includes("autodesk") || hay.includes("autocad")) {
-    return { mark: "AC", tone: "autodesk" };
-  }
-  if (
-    hay.includes("microsoft 365") ||
-    hay.includes("office 365") ||
-    hay.includes("m365") ||
-    (hay.includes("office") && !hay.includes("openoffice"))
-  ) {
-    return { mark: "365", tone: "office" };
-  }
-  if (hay.includes("windows") || hay.includes("microsoft")) {
-    return { mark: "MS", tone: "win" };
-  }
-  if (brandName?.trim()) {
-    const parts = brandName.trim().split(/\s+/);
-    const mark =
-      parts.length >= 2
-        ? `${parts[0][0] ?? ""}${parts[1][0] ?? ""}`.toUpperCase()
-        : brandName.slice(0, 2).toUpperCase();
-    return { mark: mark || "KN", tone: "generic" };
-  }
-  return { mark: title.slice(0, 2).toUpperCase() || "KN", tone: "generic" };
-}
-
-/** Prefer catalog product name; fall back to line title (public-safe, no secrets). */
-function publicActivityTitle(productName: string | undefined, lineTitle: string): string {
-  const name = (productName ?? "").trim() || lineTitle.trim();
-  return name.replace(/\s+/g, " ").slice(0, 72);
-}
-
-const RECENT_DISPLAY = 2;
-
 function toCard(
   label: string,
   value: number,
@@ -130,7 +77,6 @@ async function computePublicStats(): Promise<HeroPublicStats> {
     soldDaily,
     deliveryDaily,
     pendingDaily,
-    recentRows,
   ] = await Promise.all([
     HeroStatsRepository.sumSoldQuantity(),
     HeroStatsRepository.sumSoldQuantity(weekAgo),
@@ -141,31 +87,7 @@ async function computePublicStats(): Promise<HeroPublicStats> {
     HeroStatsRepository.dailySoldQuantity(rangeFrom, rangeTo),
     HeroStatsRepository.dailyDeliveryCounts(rangeFrom, rangeTo),
     HeroStatsRepository.dailyOpenJobCreatedCounts(rangeFrom, rangeTo),
-    HeroStatsRepository.recentDeliveries(12),
   ]);
-
-  const seenProducts = new Set<string>();
-  const recent: HeroRecentActivity[] = [];
-  for (const r of recentRows) {
-    const product = r.orderItem.variant.product;
-    const dedupeKey = product.id || r.orderItem.title;
-    if (seenProducts.has(dedupeKey)) continue;
-    seenProducts.add(dedupeKey);
-
-    const title = publicActivityTitle(product.name, r.orderItem.title);
-    const brandName = product.brand.name;
-    const { mark, tone } = markFromBrand(brandName, title);
-    recent.push({
-      id: r.id,
-      title,
-      brandName,
-      href: product.slug ? `/products/${product.slug}` : undefined,
-      meta: `Đã giao thành công · ${relativeTimeVi(r.createdAt, now)}`,
-      mark,
-      tone,
-    });
-    if (recent.length >= RECENT_DISPLAY) break;
-  }
 
   const totalSeries = toCumulative(mapSeries(keys, soldDaily));
   const activatedSeries = toCumulative(mapSeries(keys, deliveryDaily));
@@ -190,14 +112,15 @@ async function computePublicStats(): Promise<HeroPublicStats> {
         pendingSeries,
       ),
     },
-    recent,
+    // Type compat — Home UI does not render recent activity.
+    recent: [],
   };
 }
 
 /** Cached public hero stats — Outer Layer read model. */
 export const getHeroPublicStats = unstable_cache(
   async () => computePublicStats(),
-  ["hero-public-stats-v5"],
+  ["hero-public-stats-v6"],
   { revalidate: 60 },
 );
 

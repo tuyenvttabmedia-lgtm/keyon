@@ -107,7 +107,7 @@ async function loadHomeContent(): Promise<HomeContent> {
         },
       },
       orderBy: { updatedAt: "desc" },
-      take: 40,
+      take: 16,
     }),
     readJsonFile("faq.json", defaultCmsFaq),
     prisma.brand.findMany({
@@ -409,7 +409,11 @@ async function loadHomeContent(): Promise<HomeContent> {
       items: published.map((p, i) => ({
         id: p.id,
         title: p.title,
-        excerpt: p.excerpt,
+        excerpt: (() => {
+          const raw = (p.excerpt || "").trim();
+          if (raw.length <= 140) return raw;
+          return `${raw.slice(0, 137).trimEnd()}…`;
+        })(),
         dateLabel: new Date(p.publishedAt ?? p.updatedAt).toLocaleDateString(
           "vi-VN",
         ),
@@ -505,7 +509,7 @@ async function loadHomeContent(): Promise<HomeContent> {
   };
 }
 
-const getHomeContentCached = unstable_cache(loadHomeContent, ["storefront-home-content-v1"], {
+const getHomeContentCached = unstable_cache(loadHomeContent, ["storefront-home-content-v2"], {
   revalidate: 60,
 });
 

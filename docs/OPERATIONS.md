@@ -163,6 +163,19 @@ Một số resolver (Vultr recursive / `.vn` hold path) trả sai A record → N
 
 Kiểm tra: `resolvectl query media.keyon.vn` phải ra `104.21.*` / `172.67.*`, không ra `117.122.125.107`.
 
+### HTML CDN cache (Cloudflare + nginx)
+
+Next.js gửi `Vary: rsc, next-router-state-tree, …` → Cloudflare mặc định **không cache HTML** (`cf-cache-status: DYNAMIC`).
+
+**Origin (đã script):** `ops/apply-nginx-html-cache.sh`
+
+- `proxy_cache` 60s cho document GET (bỏ qua Flight/RSC + cookie `keyon_session`)
+- `Vary: Accept-Encoding` only + `Cloudflare-CDN-Cache-Control: public, max-age=60` (document) / `no-store` (Flight)
+
+**Cloudflare Dashboard (khuyến nghị — 1 lần):** Cache Rules → nếu hostname `keyon.vn` và URI là `/` hoặc `/contact` `/faq` `/about` `/business` `/solutions` `/brands` `/how-it-works` `/support` `/policy` → Eligible for cache · Edge TTL = Override 1 minute · ignore query string (tuỳ). Không cần “Cache Everything” toàn site (tránh cache `/account`).
+
+Kiểm tra: `curl -sI https://keyon.vn/ | grep -iE 'cf-cache|x-keyon-cache|cloudflare-cdn|vary'` — sau warm hit kỳ vọng `cf-cache-status: HIT` hoặc `X-Keyon-Cache: HIT`.
+
 ---
 
 ## 7. Đổi / bật SePay
