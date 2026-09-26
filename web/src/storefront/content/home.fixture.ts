@@ -200,9 +200,9 @@ export const homeFixture: HomeContent = {
   },
   solutions: {
     visible: true,
-    title: "Giải pháp",
+    title: "Giải pháp số cho mọi nhu cầu vận hành",
     subtitle:
-      "Theo nhu cầu tổ chức — năng suất, hạ tầng, bảo mật, sao lưu và quản lý bản quyền. Mua theo quy mô nằm ở Doanh nghiệp.",
+      "Từ năng suất, cloud, bảo mật đến backup và quản lý bản quyền — KEYON giúp chọn gói chính hãng, bàn giao rõ ràng và theo dõi trên Tài khoản.",
     ctaLabel: "Khám phá giải pháp →",
     ctaHref: "/solutions",
     secondaryCtaLabel: "Dành cho doanh nghiệp",
