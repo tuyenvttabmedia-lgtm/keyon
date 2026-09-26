@@ -202,10 +202,10 @@ export function CmsHomeForm({ initial }: { initial: CmsHome }) {
 
       <SectionCard
         step={3}
-        title="Danh mục sản phẩm"
-        source="Ô danh mục + số lượng live từ catalog"
+        title="Danh mục Home"
+        source="Ô Home gắn categoryKey catalog · URL /categories/{slug} · số SP live"
         editHref="/admin/cms/categories"
-        editLabel="Sửa Danh mục →"
+        editLabel="Sửa Danh mục Home →"
       />
 
       <SectionCard

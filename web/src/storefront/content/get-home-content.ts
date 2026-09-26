@@ -20,6 +20,7 @@ import {
   type CmsPartners,
 } from "@/server/cms/store";
 import { normalizeFaqDocument } from "@/server/cms/faq";
+import { normalizeCmsCategories } from "@/server/cms/home-categories";
 import { pickHomeFaqs } from "@/storefront/content/faq-groups";
 import { ProductRatingsService, getProductRatingMap } from "@/server/product-ratings";
 import type { CategoryIconKey, CategoryItem } from "./types";
@@ -76,7 +77,9 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
     readJsonFile<CmsFooter>("footer.json", defaultCmsFooter),
     readJsonFile<CmsNav>("nav.json", defaultCmsNav),
     readJsonFile<CmsPartners>("partners.json", defaultCmsPartners),
-    readJsonFile<CmsCategories>("categories.json", defaultCmsCategories),
+    readJsonFile<CmsCategories>("categories.json", defaultCmsCategories).then(
+      (raw) => normalizeCmsCategories(raw),
+    ),
     getProductRatingMap(),
     readJsonFile<CmsBanner>("banner.json", defaultCmsBanner),
     prisma.product.findMany({
@@ -235,35 +238,32 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
 
   const categorySource =
     categories.items?.length > 0 ? categories.items : defaultCmsCategories.items;
-  // Hide empty shop tiles; map CMS iconKey → live shop category counts.
+  // Hide empty shop tiles; catalog categoryKey → canonical /categories/{key}.
   const categoryItems: CategoryItem[] = categorySource
     .filter((c) => c.visible !== false)
     .slice()
     .sort((a, b) => a.sortOrder - b.sortOrder)
     .map((c) => {
-      const shopCat = shopCatFromCmsIcon(c.iconKey);
-      const liveCount =
-        shopCat && shopCat !== "all" ? shopCounts[shopCat] : undefined;
-      const countLabel =
-        liveCount !== undefined
-          ? `${liveCount} sản phẩm`
-          : c.countLabel;
-      const href =
-        shopCat && shopCat !== "all"
-          ? `/categories/${shopCat}`
-          : c.href || "/products";
+      const shopCat =
+        c.categoryKey &&
+        (PRODUCT_CATEGORY_KEYS as readonly string[]).includes(c.categoryKey)
+          ? (c.categoryKey as ShopCategoryId)
+          : shopCatFromCmsIcon(c.iconKey);
+      if (!shopCat || shopCat === "all") return null;
+      const liveCount = shopCounts[shopCat] ?? 0;
       return {
         id: c.id,
         title: c.title,
-        countLabel,
-        href,
-        icon: toCategoryIcon(c.iconKey),
+        countLabel: `${liveCount} sản phẩm`,
+        href: `/categories/${shopCat}`,
+        icon: toCategoryIcon(c.iconKey ?? shopCat),
         iconUrl: c.iconUrl,
         accentColor: c.accentColor,
         liveCount,
       };
     })
-    .filter((c) => c.liveCount === undefined || c.liveCount > 0)
+    .filter((c): c is NonNullable<typeof c> => c != null)
+    .filter((c) => c.liveCount > 0)
     .slice(0, 8)
     .map(({ liveCount, ...rest }) => {
       void liveCount;

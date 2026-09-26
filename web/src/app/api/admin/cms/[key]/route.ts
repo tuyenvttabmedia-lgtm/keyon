@@ -38,7 +38,6 @@ import {
   type CmsContact,
   type CmsPolicy,
   type CmsStaticPage,
-  type CmsCategories,
   type CmsBlogTaxonomy,
   type CmsFaqDocument,
   type CmsFooter,
@@ -55,6 +54,7 @@ import {
   resolveCategoryId,
   slugifyFaqCategory,
 } from "@/server/cms/faq";
+import { normalizeCmsCategories } from "@/server/cms/home-categories";
 
 const safeInternalHref = z
   .string()
@@ -208,6 +208,10 @@ export async function GET(
     if (key === "faq") {
       const raw = await readJsonFile(entry.file, entry.fallback);
       return NextResponse.json(normalizeFaqDocument(raw));
+    }
+    if (key === "categories") {
+      const raw = await readJsonFile(entry.file, entry.fallback);
+      return NextResponse.json(normalizeCmsCategories(raw));
     }
     if (key === "blog-taxonomy") {
       const raw = await readJsonFile(entry.file, entry.fallback);
@@ -620,7 +624,7 @@ export async function PUT(
     return NextResponse.json({ ok: true, data: cleaned });
   }
   if (key === "categories") {
-    const iconKey = z.enum([
+    const categoryKey = z.enum([
       "windows",
       "office",
       "adobe",
@@ -630,7 +634,8 @@ export async function PUT(
       "backup",
       "other",
     ]);
-    const data = z
+    const iconKey = categoryKey;
+    const parsed = z
       .object({
         title: z.string(),
         viewAllHref: z.string().min(1),
@@ -639,9 +644,10 @@ export async function PUT(
           .array(
             z.object({
               id: z.string(),
+              categoryKey: categoryKey.optional(),
               title: z.string().min(1).max(24),
-              countLabel: z.string(),
-              href: z.string().min(1),
+              countLabel: z.string().optional(),
+              href: z.string().optional(),
               iconUrl: z.string().optional(),
               accentColor: z.string().optional(),
               iconKey: iconKey.optional(),
@@ -651,7 +657,15 @@ export async function PUT(
           )
           .max(8),
       })
-      .parse(body) satisfies CmsCategories;
+      .parse(body);
+    const data = normalizeCmsCategories(parsed);
+    const keys = data.items.map((i) => i.categoryKey);
+    if (new Set(keys).size !== keys.length) {
+      return NextResponse.json(
+        { error: "Mỗi danh mục catalog chỉ được gắn một ô Home" },
+        { status: 400 },
+      );
+    }
     await writeJsonFile("categories.json", data);
     return NextResponse.json({ ok: true, data });
   }

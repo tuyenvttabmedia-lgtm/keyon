@@ -16,34 +16,54 @@ import {
   ADMIN_TOOLBAR,
 } from "@/app/admin/ui/tokens";
 import { Z_STICKY } from "@/storefront/effects";
-
-const ICON_KEYS: CmsCategoryIconKey[] = [
-  "windows",
-  "office",
-  "adobe",
-  "cloud",
-  "security",
-  "autodesk",
-  "backup",
-  "other",
-];
+import { CATEGORY_LABELS } from "@/storefront/components/shop/shop-utils";
+import type { ShopCategoryId } from "@/storefront/components/shop/types";
+import {
+  PRODUCT_CATEGORY_KEYS,
+  type ProductCategoryKey,
+} from "@/storefront/lib/product-cms";
 
 const MAX_ITEMS = 8;
 
-function newItem(sortOrder: number): CmsCategoryItem {
+const ACCENTS: Record<ProductCategoryKey, string> = {
+  windows: "#2563EB",
+  office: "#EA580C",
+  adobe: "#E11D48",
+  security: "#0EA5A4",
+  backup: "#1A73E8",
+  cloud: "#0284C7",
+  autodesk: "#0696D7",
+  other: "#64748B",
+};
+
+function hrefFor(key: ProductCategoryKey) {
+  return `/categories/${key}`;
+}
+
+function newItem(
+  categoryKey: ProductCategoryKey,
+  sortOrder: number,
+): CmsCategoryItem {
   return {
-    id: `c_${Date.now()}`,
-    title: "Danh mục mới",
+    id: `c_${categoryKey}_${Date.now()}`,
+    categoryKey,
+    title: CATEGORY_LABELS[categoryKey].slice(0, 24),
     countLabel: "0 sản phẩm",
-    href: "/products",
-    iconKey: "other",
-    accentColor: "#0EA5A4",
+    href: hrefFor(categoryKey),
+    iconKey: categoryKey as CmsCategoryIconKey,
+    accentColor: ACCENTS[categoryKey],
     visible: true,
     sortOrder,
   };
 }
 
-export function CategoriesForm({ initial }: { initial: CmsCategories }) {
+export function CategoriesForm({
+  initial,
+  catalogCounts,
+}: {
+  initial: CmsCategories;
+  catalogCounts: Record<ShopCategoryId, number>;
+}) {
   const [form, setForm] = useState(initial);
   const [baseline, setBaseline] = useState(() => JSON.stringify(initial));
   const [msg, setMsg] = useState<string | null>(null);
@@ -53,11 +73,22 @@ export function CategoriesForm({ initial }: { initial: CmsCategories }) {
   const dirty = useMemo(() => JSON.stringify(form) !== baseline, [form, baseline]);
   const visibleCount = form.items.filter((i) => i.visible).length;
 
+  const usedKeys = useMemo(
+    () => new Set(form.items.map((i) => i.categoryKey)),
+    [form.items],
+  );
+  const availableKeys = useMemo(
+    () =>
+      PRODUCT_CATEGORY_KEYS.filter((k) => !usedKeys.has(k as ProductCategoryKey)),
+    [usedKeys],
+  );
+
   const addItem = useCallback(() => {
-    if (form.items.length >= MAX_ITEMS) return;
+    if (form.items.length >= MAX_ITEMS || availableKeys.length === 0) return;
+    const key = availableKeys[0] as ProductCategoryKey;
     setForm((prev) => ({
       ...prev,
-      items: [...prev.items, newItem(prev.items.length)],
+      items: [...prev.items, newItem(key, prev.items.length)],
     }));
     setMsg(null);
     requestAnimationFrame(() => {
@@ -65,7 +96,7 @@ export function CategoriesForm({ initial }: { initial: CmsCategories }) {
         ?.querySelector<HTMLElement>("[data-category-row]:last-of-type")
         ?.scrollIntoView({ behavior: "smooth", block: "center" });
     });
-  }, [form.items.length]);
+  }, [form.items.length, availableKeys]);
 
   async function save() {
     setSaving(true);
@@ -78,7 +109,9 @@ export function CategoriesForm({ initial }: { initial: CmsCategories }) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Lỗi");
-      setBaseline(JSON.stringify(form));
+      const saved = data.data as CmsCategories;
+      setForm(saved);
+      setBaseline(JSON.stringify(saved));
       setMsg("Đã lưu và xuất bản");
     } catch (e) {
       setMsg(e instanceof Error ? e.message : "Lỗi");
@@ -97,14 +130,18 @@ export function CategoriesForm({ initial }: { initial: CmsCategories }) {
             Danh mục Home · {form.items.length}/{MAX_ITEMS}
           </p>
           <p className="text-xs text-muted">
-            {visibleCount} đang hiện trên Home
+            {visibleCount} đang hiện trên Home · link luôn /categories/…
             {dirty ? " · có thay đổi chưa lưu" : ""}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
-            disabled={saving || form.items.length >= MAX_ITEMS}
+            disabled={
+              saving ||
+              form.items.length >= MAX_ITEMS ||
+              availableKeys.length === 0
+            }
             onClick={addItem}
             className={`${ADMIN_BTN_GHOST} disabled:opacity-40`}
           >
@@ -124,6 +161,10 @@ export function CategoriesForm({ initial }: { initial: CmsCategories }) {
 
       <section className={`${ADMIN_PANEL} space-y-3 p-4`}>
         <p className="text-sm font-medium text-navy">Section trên Home</p>
+        <p className="text-xs text-muted">
+          Taxonomy catalog (slug) quản ở Catalog sản phẩm — categoryKey. Tại đây
+          chỉ chọn ô hiện trên Home, thứ tự và giao diện.
+        </p>
         <div className="grid gap-3 sm:grid-cols-3">
           <label className="block text-sm">
             <span className="text-muted">Tiêu đề</span>
@@ -159,15 +200,18 @@ export function CategoriesForm({ initial }: { initial: CmsCategories }) {
       <section className="space-y-2">
         <div className="flex flex-wrap items-end justify-between gap-2">
           <div>
-            <p className="text-sm font-medium text-navy">Danh sách</p>
+            <p className="text-sm font-medium text-navy">Danh sách ô Home</p>
             <p className="text-xs text-muted">
-              Icon Media ưu tiên hơn SVG fallback. Số lượng SP nhập tay
-              (`countLabel`).
+              Mỗi catalog category tối đa một ô. Số SP lấy live từ catalog.
             </p>
           </div>
           <button
             type="button"
-            disabled={saving || form.items.length >= MAX_ITEMS}
+            disabled={
+              saving ||
+              form.items.length >= MAX_ITEMS ||
+              availableKeys.length === 0
+            }
             onClick={addItem}
             className="text-sm font-medium text-accent hover:underline disabled:opacity-40"
           >
@@ -181,11 +225,12 @@ export function CategoriesForm({ initial }: { initial: CmsCategories }) {
           >
             <p className="text-sm font-medium text-navy">Chưa có danh mục</p>
             <p className="max-w-sm text-xs text-muted">
-              Thêm tối đa {MAX_ITEMS} mục để hiện trên Home.
+              Thêm tối đa {MAX_ITEMS} ô gắn với danh mục catalog.
             </p>
             <button
               type="button"
               onClick={addItem}
+              disabled={availableKeys.length === 0}
               className={ADMIN_BTN_PRIMARY}
             >
               + Thêm danh mục đầu tiên
@@ -199,6 +244,8 @@ export function CategoriesForm({ initial }: { initial: CmsCategories }) {
                 item={item}
                 index={idx}
                 total={form.items.length}
+                catalogCount={catalogCounts[item.categoryKey] ?? 0}
+                usedKeys={usedKeys}
                 onChange={(nextItem) => {
                   const next = [...form.items];
                   next[idx] = nextItem;
@@ -237,6 +284,8 @@ function CategoryRow({
   item,
   index,
   total,
+  catalogCount,
+  usedKeys,
   onChange,
   onRemove,
   onMove,
@@ -244,25 +293,49 @@ function CategoryRow({
   item: CmsCategoryItem;
   index: number;
   total: number;
+  catalogCount: number;
+  usedKeys: Set<string>;
   onChange: (item: CmsCategoryItem) => void;
   onRemove: () => void;
   onMove: (dir: -1 | 1) => void;
 }) {
   const [pickerOpen, setPickerOpen] = useState(false);
+  const keyOptions = PRODUCT_CATEGORY_KEYS.filter(
+    (k) => k === item.categoryKey || !usedKeys.has(k),
+  );
+
+  function setCategoryKey(nextKey: ProductCategoryKey) {
+    const prevLabel = CATEGORY_LABELS[item.categoryKey];
+    const keepTitle =
+      item.title.trim() &&
+      item.title.trim() !== prevLabel &&
+      item.title.trim() !== prevLabel.slice(0, 24);
+    onChange({
+      ...item,
+      categoryKey: nextKey,
+      href: hrefFor(nextKey),
+      iconKey: nextKey as CmsCategoryIconKey,
+      title: keepTitle ? item.title : CATEGORY_LABELS[nextKey].slice(0, 24),
+      accentColor: item.accentColor || ACCENTS[nextKey],
+    });
+  }
 
   return (
-    <div
-      data-category-row
-      className={`${ADMIN_PANEL} p-3 sm:p-3.5`}
-    >
+    <div data-category-row className={`${ADMIN_PANEL} p-3 sm:p-3.5`}>
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/70 pb-2.5">
-        <div className="flex min-w-0 items-center gap-2.5">
+        <div className="flex min-w-0 flex-wrap items-center gap-2.5">
           <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-surface text-xs font-semibold text-muted">
             {index + 1}
           </span>
           <p className="truncate text-sm font-semibold text-navy">
-            {item.title || "Chưa đặt tên"}
+            {item.title || CATEGORY_LABELS[item.categoryKey]}
           </p>
+          <span className="rounded-md bg-surface px-1.5 py-0.5 font-mono text-[11px] text-muted">
+            {hrefFor(item.categoryKey)}
+          </span>
+          <span className="rounded-md bg-emerald-50 px-1.5 py-0.5 text-[11px] font-semibold text-emerald-800">
+            {catalogCount} SP
+          </span>
           {!item.visible ? (
             <span className="rounded-md bg-amber-50 px-1.5 py-0.5 text-[11px] font-semibold text-amber-800">
               Ẩn
@@ -323,7 +396,7 @@ function CategoryRow({
                 className="text-[10px] font-bold uppercase"
                 style={{ color: item.accentColor || "#0EA5A4" }}
               >
-                {(item.iconKey || "other").slice(0, 3)}
+                {item.categoryKey.slice(0, 3)}
               </span>
             )}
           </div>
@@ -346,25 +419,6 @@ function CategoryRow({
                 </button>
               ) : null}
             </div>
-            <label className="block text-xs text-muted">
-              SVG fallback
-              <select
-                className={`mt-1 ${ADMIN_INPUT}`}
-                value={item.iconKey ?? "other"}
-                onChange={(e) =>
-                  onChange({
-                    ...item,
-                    iconKey: e.target.value as CmsCategoryIconKey,
-                  })
-                }
-              >
-                {ICON_KEYS.map((k) => (
-                  <option key={k} value={k}>
-                    {k}
-                  </option>
-                ))}
-              </select>
-            </label>
             <MediaPicker
               open={pickerOpen}
               onClose={() => setPickerOpen(false)}
@@ -378,9 +432,25 @@ function CategoryRow({
           </div>
         </div>
 
-        <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-3">
           <label className="block text-xs text-muted">
-            Tiêu đề (max 24)
+            Catalog category
+            <select
+              className={`mt-1 ${ADMIN_INPUT}`}
+              value={item.categoryKey}
+              onChange={(e) =>
+                setCategoryKey(e.target.value as ProductCategoryKey)
+              }
+            >
+              {keyOptions.map((k) => (
+                <option key={k} value={k}>
+                  {CATEGORY_LABELS[k as ShopCategoryId]} ({k})
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="block text-xs text-muted">
+            Tiêu đề ô (max 24)
             <input
               maxLength={24}
               className={`mt-1 ${ADMIN_INPUT}`}
@@ -389,28 +459,12 @@ function CategoryRow({
             />
           </label>
           <label className="block text-xs text-muted">
-            Số lượng
-            <input
-              className={`mt-1 ${ADMIN_INPUT}`}
-              value={item.countLabel}
-              onChange={(e) => onChange({ ...item, countLabel: e.target.value })}
-            />
-          </label>
-          <label className="block text-xs text-muted sm:col-span-2 xl:col-span-1">
-            Link
-            <input
-              className={`mt-1 ${ADMIN_INPUT}`}
-              value={item.href}
-              onChange={(e) => onChange({ ...item, href: e.target.value })}
-            />
-          </label>
-          <label className="block text-xs text-muted sm:col-span-2 xl:col-span-1">
             Màu accent
             <div className="mt-1 flex gap-2">
               <input
                 type="color"
                 className="h-9 w-10 cursor-pointer rounded-lg border border-border bg-white p-1"
-                value={item.accentColor || "#0EA5A4"}
+                value={item.accentColor || ACCENTS[item.categoryKey]}
                 onChange={(e) =>
                   onChange({ ...item, accentColor: e.target.value })
                 }

@@ -1,3 +1,5 @@
+import type { ProductCategoryKey } from "@/storefront/lib/product-cms";
+
 export type BlogCategoryId = string;
 
 export type BlogCoverTone =
@@ -384,11 +386,16 @@ export type CmsCategoryIconKey =
 
 export type CmsCategoryItem = {
   id: string;
+  /** Catalog taxonomy — drives `/categories/{key}` on Home. */
+  categoryKey: ProductCategoryKey;
   title: string;
+  /** Display-only; storefront overwrites with live catalog count. */
   countLabel: string;
+  /** Always `/categories/{categoryKey}` after normalize. */
   href: string;
   iconUrl?: string;
   accentColor?: string;
+  /** SVG fallback; defaults to categoryKey. */
   iconKey?: CmsCategoryIconKey;
   visible: boolean;
   sortOrder: number;
@@ -627,6 +634,7 @@ export const defaultCmsCategories: CmsCategories = {
   items: [
     {
       id: "c1",
+      categoryKey: "windows",
       title: "Windows & OS",
       countLabel: "0 sản phẩm",
       href: "/categories/windows",
@@ -637,6 +645,7 @@ export const defaultCmsCategories: CmsCategories = {
     },
     {
       id: "c2",
+      categoryKey: "office",
       title: "Microsoft 365 & Office",
       countLabel: "0 sản phẩm",
       href: "/categories/office",
@@ -647,6 +656,7 @@ export const defaultCmsCategories: CmsCategories = {
     },
     {
       id: "c3",
+      categoryKey: "adobe",
       title: "Adobe",
       countLabel: "0 sản phẩm",
       href: "/categories/adobe",
@@ -657,6 +667,7 @@ export const defaultCmsCategories: CmsCategories = {
     },
     {
       id: "c4",
+      categoryKey: "security",
       title: "Bảo mật",
       countLabel: "0 sản phẩm",
       href: "/categories/security",
@@ -667,6 +678,7 @@ export const defaultCmsCategories: CmsCategories = {
     },
     {
       id: "c5",
+      categoryKey: "backup",
       title: "Backup & Storage",
       countLabel: "0 sản phẩm",
       href: "/categories/backup",
@@ -677,6 +689,7 @@ export const defaultCmsCategories: CmsCategories = {
     },
     {
       id: "c6",
+      categoryKey: "cloud",
       title: "Cloud & hạ tầng",
       countLabel: "0 sản phẩm",
       href: "/categories/cloud",
@@ -687,6 +700,7 @@ export const defaultCmsCategories: CmsCategories = {
     },
     {
       id: "c7",
+      categoryKey: "autodesk",
       title: "Autodesk",
       countLabel: "0 sản phẩm",
       href: "/categories/autodesk",
@@ -697,6 +711,7 @@ export const defaultCmsCategories: CmsCategories = {
     },
     {
       id: "c8",
+      categoryKey: "other",
       title: "Khác",
       countLabel: "0 sản phẩm",
       href: "/categories/other",

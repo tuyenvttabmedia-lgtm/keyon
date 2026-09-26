@@ -3,7 +3,7 @@ import Link from "next/link";
 const CMS_NAV = [
   { href: "/admin/cms", label: "Trang chủ" },
   { href: "/admin/cms/partners", label: "Đối tác" },
-  { href: "/admin/cms/categories", label: "Danh mục SP" },
+  { href: "/admin/cms/categories", label: "Danh mục Home" },
   { href: "/admin/cms/blog-taxonomy", label: "Danh mục bài viết" },
   { href: "/admin/cms/banner", label: "Banner Why" },
   { href: "/admin/cms/faq", label: "FAQ" },
