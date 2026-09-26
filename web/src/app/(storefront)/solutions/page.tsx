@@ -4,7 +4,7 @@ import { buildMainPageMetadata } from "@/server/seo/metadata";
 import { defaultCmsSolutions, readJsonFile } from "@/server/cms/store";
 import { toVideoEmbedUrl } from "@/storefront/components/solutions/intro-video";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildMainPageMetadata("/solutions");

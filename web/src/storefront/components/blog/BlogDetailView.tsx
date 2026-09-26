@@ -283,7 +283,6 @@ export function BlogDetailView({
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 70vw"
                 priority
-                unoptimized
               />
             ) : (
               <div className="absolute inset-0 flex items-end p-6">
@@ -407,7 +406,6 @@ export function BlogDetailView({
                       fill
                       className="object-cover"
                       sizes="56px"
-                      unoptimized
                     />
                   ) : null}
                 </span>
@@ -445,7 +443,6 @@ export function BlogDetailView({
                       fill
                       className="object-cover"
                       sizes="56px"
-                      unoptimized
                     />
                   ) : null}
                 </span>
@@ -578,7 +575,6 @@ export function BlogDetailView({
                           fill
                           className="object-cover"
                           sizes="56px"
-                          unoptimized
                         />
                       ) : null}
                     </span>

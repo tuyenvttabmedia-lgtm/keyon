@@ -81,7 +81,7 @@ export function ShopProductCard({ item }: { item: ShopProduct }) {
             width={180}
             height={140}
             className="h-full max-h-[140px] w-auto object-contain"
-            unoptimized
+            sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 180px"
           />
         ) : (
           <ProductArt item={item} />
@@ -146,7 +146,6 @@ export function ShopProductListItem({ item }: { item: ShopProduct }) {
             width={120}
             height={100}
             className="max-h-[90px] w-auto object-contain"
-            unoptimized
           />
         ) : (
           <div className="scale-90">

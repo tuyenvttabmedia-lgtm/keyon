@@ -17,7 +17,7 @@ import {
 import { buildMainPageMetadata } from "@/server/seo/metadata";
 import { isBlogPostLive } from "@/server/cms/blog-utils";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildMainPageMetadata("/support");

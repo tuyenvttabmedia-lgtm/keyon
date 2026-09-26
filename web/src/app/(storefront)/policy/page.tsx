@@ -3,7 +3,7 @@ import { PolicyView } from "@/storefront/components/policy/PolicyView";
 import { loadPolicyCms } from "@/storefront/components/policy/load-policy-cms";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildMainPageMetadata("/policy");

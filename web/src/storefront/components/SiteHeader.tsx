@@ -29,6 +29,7 @@ type Props = {
   /** @deprecated Phase 1: IA tree is source of truth; kept for layout compat */
   navItems?: NavItem[];
   brand: HeaderBrand;
+  /** Optional SSR seed; normally loaded client-side via /api/auth/me */
   sessionEmail?: string | null;
   isStaff?: boolean;
   showSearch?: boolean;
@@ -46,15 +47,38 @@ function pathActive(pathname: string, href: string): boolean {
 }
 
 /** Storefront header — IA v1 mega / dropdown (NAV-01..05) */
-export function SiteHeader({ brand, sessionEmail, isStaff }: Props) {
+export function SiteHeader({
+  brand,
+  sessionEmail: sessionEmailProp = null,
+  isStaff: isStaffProp = false,
+}: Props) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openId, setOpenId] = useState<string | null>(null);
+  const [sessionEmail, setSessionEmail] = useState<string | null>(sessionEmailProp);
+  const [isStaff, setIsStaff] = useState(isStaffProp);
   const pathname = usePathname();
   const name = brand.brandName?.trim() || "KEYON";
   const tagline = brand.tagline?.trim() ?? "";
   const logoUrl = resolveMediaUrl(brand.logoUrl) || undefined;
   const mark = name.charAt(0).toUpperCase() || "K";
   const navRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/auth/me", { credentials: "same-origin" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data: { email?: string | null; isStaff?: boolean } | null) => {
+        if (cancelled || !data) return;
+        setSessionEmail(data.email?.trim() || null);
+        setIsStaff(Boolean(data.isStaff));
+      })
+      .catch(() => {
+        /* keep anonymous chrome */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     setMobileOpen(false);
@@ -94,7 +118,6 @@ export function SiteHeader({ brand, sessionEmail, isStaff }: Props) {
                   className="object-contain object-left"
                   sizes="(max-width: 640px) 42vw, 220px"
                   priority
-                  unoptimized
                 />
               </span>
             ) : (

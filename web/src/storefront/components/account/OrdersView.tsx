@@ -528,7 +528,6 @@ function OrderRow({
                 fill
                 className="object-cover"
                 sizes="40px"
-                unoptimized
               />
             ) : (
               <div className="flex h-full items-center justify-center text-[10px] font-bold text-navy">

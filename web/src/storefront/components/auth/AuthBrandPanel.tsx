@@ -55,7 +55,6 @@ export function AuthBrandPanel({
           height={262}
           className="auth-brand-k-img"
           priority
-          unoptimized
         />
       </div>
 

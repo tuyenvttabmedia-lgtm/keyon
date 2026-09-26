@@ -1,28 +1,23 @@
-import { readSession } from "@/lib/auth";
 import { getHomeContent } from "@/storefront/content/get-home-content";
 import { SiteHeader } from "@/storefront/components/SiteHeader";
 import { SiteFooter } from "@/storefront/components/SiteFooter";
 import { SiteJsonLd } from "@/storefront/components/seo/SiteJsonLd";
 
+/**
+ * Marketing shell — no cookies()/readSession here so pages can use ISR.
+ * Auth chrome loads client-side via /api/auth/me.
+ */
 export default async function StorefrontLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [session, home] = await Promise.all([readSession(), getHomeContent()]);
-  const isStaff =
-    session?.role === "ADMIN" ||
-    session?.role === "FULFILLMENT" ||
-    session?.role === "CS";
+  const home = await getHomeContent();
 
   return (
     <>
       <SiteJsonLd />
-      <SiteHeader
-        brand={home.brand}
-        sessionEmail={session?.email}
-        isStaff={isStaff}
-      />
+      <SiteHeader brand={home.brand} />
       <main className="flex-1">{children}</main>
       <SiteFooter
         logoUrl={home.footer.logoUrl}

@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
 import { BrandsIndexView } from "@/storefront/components/brands/BrandsIndexView";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildMainPageMetadata("/brands");

@@ -4,6 +4,9 @@ import { HeroStatsService } from "@/server/hero-stats";
 import { HomeView } from "@/storefront/components/home/HomeView";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
 
+/** ISR — marketing HTML cacheable; CMS/stats refresh within a minute. */
+export const revalidate = 60;
+
 export async function generateMetadata(): Promise<Metadata> {
   return buildMainPageMetadata("/");
 }

@@ -177,7 +177,6 @@ function PartnerSlide({ item }: { item: PartnerItem }) {
       width={160}
       height={48}
       className="h-7 w-auto max-h-7 max-w-[118px] object-contain object-center md:h-8 md:max-h-8 md:max-w-[128px]"
-      unoptimized
     />
   ) : (
     <BrandMark name={item.name} color={item.brandColor} />

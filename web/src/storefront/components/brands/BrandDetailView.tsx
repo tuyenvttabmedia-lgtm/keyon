@@ -61,7 +61,6 @@ export function BrandDetailView({ brand }: { brand: BrandDetailData }) {
                 fill
                 className="object-cover"
                 priority
-                unoptimized
               />
               <div
                 className="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/35 to-navy/10"
@@ -79,7 +78,6 @@ export function BrandDetailView({ brand }: { brand: BrandDetailData }) {
                 fill
                 className="object-cover"
                 priority
-                unoptimized
               />
               <div
                 className="absolute inset-0 bg-gradient-to-t from-navy/85 via-navy/40 to-transparent"
@@ -283,7 +281,6 @@ function BrandIdentity({
               alt={brand.name}
               fill
               className="object-contain p-2"
-              unoptimized
               priority
             />
           ) : (

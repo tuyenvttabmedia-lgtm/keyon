@@ -159,7 +159,7 @@ Một số resolver (Vultr recursive / `.vn` hold path) trả sai A record → N
 - `tailscale set --accept-dns=false`
 - `/etc/systemd/resolved.conf.d/99-keyon-public-dns.conf` → `DNS=1.1.1.1 1.0.0.1 8.8.8.8`
 - `systemctl restart systemd-resolved`
-- Next `images.unoptimized: true` (tránh image optimizer fetch CDN từ origin)
+- Next image optimizer enabled (VPS DNS → Cloudflare). If Node fetch to `media.keyon.vn` fails again, set `images.unoptimized: true` temporarily.
 
 Kiểm tra: `resolvectl query media.keyon.vn` phải ra `104.21.*` / `172.67.*`, không ra `117.122.125.107`.
 

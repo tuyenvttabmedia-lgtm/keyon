@@ -182,7 +182,6 @@ function CategoryCard({
                   ? "h-12 w-12 object-contain"
                   : "h-10 w-10 object-contain"
               }
-              unoptimized
             />
           ) : (
             <CategoryIcon icon={item.icon} size={isDesktop ? "lg" : "md"} />

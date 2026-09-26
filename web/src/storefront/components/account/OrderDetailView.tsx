@@ -197,7 +197,6 @@ export function OrderDetailView({
                           fill
                           className="object-cover"
                           sizes="72px"
-                          unoptimized
                         />
                       ) : (
                         <div className="flex h-full items-center justify-center text-xs font-bold text-navy">

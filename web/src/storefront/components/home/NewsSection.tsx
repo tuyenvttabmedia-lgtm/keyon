@@ -132,7 +132,6 @@ function NewsThumb({
           sizes={sizes}
           // Wasabi / media.keyon.vn: Next image optimizer on VPS returns 500
           // (cannot fetch CDN). Serve the public CDN URL directly.
-          unoptimized
         />
       ) : null}
       {item.tag ? (

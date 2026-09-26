@@ -3,7 +3,7 @@ import { defaultCmsContact, readJsonFile } from "@/server/cms/store";
 import { ContactView } from "@/storefront/components/contact/ContactView";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildMainPageMetadata("/contact");

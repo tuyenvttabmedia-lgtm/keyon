@@ -307,7 +307,6 @@ export function SiteFooter({
                     fill
                     className="object-contain object-left"
                     sizes="(max-width: 640px) 48vw, 200px"
-                    unoptimized
                   />
                 </span>
               ) : (

@@ -53,7 +53,7 @@ export function ProductCard({
               width={180}
               height={140}
               className={`h-full w-auto object-contain ${compact ? "max-h-[88px]" : "max-h-[140px]"}`}
-              unoptimized
+              sizes={compact ? "120px" : "(max-width: 640px) 45vw, 180px"}
               priority={priority}
             />
           ) : (

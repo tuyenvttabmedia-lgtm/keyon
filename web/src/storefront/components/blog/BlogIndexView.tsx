@@ -576,7 +576,6 @@ function FeaturedHero({ post, badge }: { post: BlogPost; badge: string }) {
           fill
           className={`object-cover opacity-80 ${MOTION_NORMAL} transition-transform group-hover:scale-105`}
           sizes="(max-width: 1024px) 100vw, 60vw"
-          unoptimized
         />
       ) : (
         <div
@@ -621,7 +620,6 @@ function FeaturedSide({ post }: { post: BlogPost }) {
           fill
           className={`object-cover opacity-75 ${MOTION_NORMAL} transition-transform group-hover:scale-105`}
           sizes="(max-width: 1024px) 50vw, 30vw"
-          unoptimized
         />
       ) : null}
       <div className="relative z-[1]">
@@ -670,7 +668,6 @@ function LatestCard({
             fill
             className={`object-cover ${MOTION_NORMAL} transition-transform hover:scale-105`}
             sizes="208px"
-            unoptimized
           />
         ) : null}
       </Link>

@@ -70,7 +70,6 @@ function WhySideBanner({ banner }: { banner: Why["sideBanner"] }) {
           fill
           className="object-cover"
           sizes="280px"
-          unoptimized
         />
         <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/20 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 z-[1] p-4">

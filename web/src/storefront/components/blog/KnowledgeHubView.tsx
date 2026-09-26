@@ -382,7 +382,6 @@ function HeroReadingPanel({
             fill
             className={`object-cover opacity-80 ${MOTION_NORMAL} transition-transform group-hover:scale-105`}
             sizes="(max-width: 1024px) 100vw, 40vw"
-            unoptimized
             priority
           />
         ) : null}
@@ -423,7 +422,6 @@ function HeroReadingPanel({
                         fill
                         className="object-cover"
                         sizes="72px"
-                        unoptimized
                       />
                     ) : null}
                   </span>
@@ -468,7 +466,6 @@ function LatestCard({ post }: { post: BlogPost }) {
             fill
             className={`object-cover ${MOTION_NORMAL} transition-transform group-hover:scale-105`}
             sizes="(max-width: 1024px) 50vw, 22vw"
-            unoptimized
           />
         ) : null}
       </div>
@@ -502,7 +499,6 @@ function LatestRow({ post }: { post: BlogPost }) {
             fill
             className="object-cover"
             sizes="176px"
-            unoptimized
           />
         ) : null}
       </span>

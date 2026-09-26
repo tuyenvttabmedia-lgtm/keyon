@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import type { HomeContent } from "./types";
 import { homeFixture } from "./home.fixture";
 import {
@@ -56,9 +57,9 @@ function cmsTextOrFallback(
 /**
  * Home content: fixture + overlay CMS (hero, nav, footer, news, partners, categories, ratings, why banner).
  * Partners on Home resolve from Catalog Brand (CMS only stores brandId + order/visibility).
- * Wrapped in React cache() so layout + page share one load per request.
+ * React cache() = per-request dedupe; unstable_cache = cross-request ISR (60s).
  */
-export const getHomeContent = cache(async (): Promise<HomeContent> => {
+async function loadHomeContent(): Promise<HomeContent> {
   const [
     cmsHome,
     posts,
@@ -502,7 +503,13 @@ export const getHomeContent = cache(async (): Promise<HomeContent> => {
       dmcaAlt: footer.dmcaAlt?.trim() || defaultCmsFooter.dmcaAlt,
     },
   };
+}
+
+const getHomeContentCached = unstable_cache(loadHomeContent, ["storefront-home-content-v1"], {
+  revalidate: 60,
 });
+
+export const getHomeContent = cache(() => getHomeContentCached());
 
 const SOCIAL_NETWORKS = new Set([
   "facebook",

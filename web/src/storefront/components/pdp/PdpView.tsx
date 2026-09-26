@@ -479,7 +479,6 @@ function GalleryImages({
             fill
             className="object-cover"
             sizes="(max-width: 1024px) 100vw, 50vw"
-            unoptimized
             priority
           />
         ) : (
@@ -534,7 +533,6 @@ function GalleryImages({
                       className="object-cover"
                       sizes="120px"
                       loading="lazy"
-                      unoptimized
                     />
                   ) : (
                     <ProductHeroArt
@@ -583,7 +581,6 @@ function GalleryImages({
                   fill
                   className="object-contain"
                   sizes="90vw"
-                  unoptimized
                   priority
                 />
               ) : (
@@ -1403,7 +1400,6 @@ function StickyBar({
                 fill
                 className="object-cover"
                 sizes="48px"
-                unoptimized
               />
             ) : (
               <div className="flex h-full items-center justify-center p-1">

@@ -5,7 +5,7 @@ import { selectFaqVisibleItems } from "@/storefront/content/faq-visible";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
 import { buildFaqPageJsonLd } from "@/server/seo/structured-data";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildMainPageMetadata("/faq");

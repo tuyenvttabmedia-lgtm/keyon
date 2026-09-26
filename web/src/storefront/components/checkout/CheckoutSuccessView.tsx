@@ -165,7 +165,6 @@ export function CheckoutSuccessView({
                         fill
                         className="object-cover"
                         sizes="64px"
-                        unoptimized
                       />
                     ) : (
                       <div
@@ -260,7 +259,6 @@ export function CheckoutSuccessView({
                         fill
                         className="object-cover"
                         sizes="56px"
-                        unoptimized
                       />
                     ) : null}
                   </div>
@@ -438,7 +436,6 @@ function SuccessRecoCard({ item }: { item: ShopProduct }) {
             width={120}
             height={90}
             className="max-h-[90px] w-auto object-contain"
-            unoptimized
           />
         ) : (
           <span className={`${BADGE_CLASS} text-navy`}>

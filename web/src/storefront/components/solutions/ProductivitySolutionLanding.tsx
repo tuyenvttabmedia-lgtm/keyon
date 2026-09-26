@@ -569,7 +569,7 @@ function WorkScene({
   if (imageUrl) {
     return (
       <div className="absolute inset-0">
-        <Image src={imageUrl} alt={label} fill className="object-cover" unoptimized sizes="320px" />
+        <Image src={imageUrl} alt={label} fill className="object-cover" sizes="320px" />
         <div className="absolute inset-0 bg-gradient-to-t from-navy/50 via-transparent to-transparent" />
         <div className="absolute bottom-4 left-4 right-4">
           <span
@@ -622,7 +622,6 @@ function ConsultPortrait({ imageUrl }: { imageUrl?: string }) {
           alt="Tư vấn KEYON"
           fill
           className="object-cover object-top"
-          unoptimized
           sizes="280px"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-navy/25 to-transparent" />
@@ -861,7 +860,6 @@ function ProductivityHeroArt({ imageUrl }: { imageUrl?: string }) {
             width={900}
             height={700}
             className="mx-auto h-auto max-h-[300px] w-auto max-w-full object-contain object-center sm:max-h-[340px]"
-            unoptimized
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 48vw, 520px"
             priority
           />

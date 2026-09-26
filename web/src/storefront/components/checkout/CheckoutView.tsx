@@ -176,7 +176,6 @@ export function CheckoutSummaryAside({
                   fill
                   className="object-cover"
                   sizes="56px"
-                  unoptimized
                 />
               ) : null}
             </div>
@@ -358,7 +357,6 @@ export function CheckoutView({
                         fill
                         className="object-cover"
                         sizes="96px"
-                        unoptimized
                       />
                     ) : (
                       <div

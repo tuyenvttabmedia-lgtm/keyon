@@ -251,7 +251,6 @@ function BrandCard({ brand }: { brand: BrandListItem }) {
             width={140}
             height={64}
             className="h-12 w-auto max-w-[70%] object-contain md:h-14"
-            unoptimized
           />
         ) : (
           <BrandInitial name={brand.name} />
@@ -339,7 +338,6 @@ function BrandsHeroArt({
                   width={96}
                   height={40}
                   className="h-7 w-auto max-w-full object-contain sm:h-8"
-                  unoptimized
                 />
               ) : (
                 <span className="h-8 w-8 rounded-lg bg-navy-soft" aria-hidden />
