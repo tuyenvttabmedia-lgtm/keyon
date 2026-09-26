@@ -13,6 +13,7 @@ import {
 import type { SolutionItem } from "@/storefront/content/types";
 import {
   BODY_MUTED_CLASS,
+  CARD_META_CLASS,
   CARD_TITLE_CLASS,
   CTA_LABEL_CLASS,
   LINK_ACCENT_CLASS,
@@ -24,10 +25,11 @@ import {
 } from "@/storefront/typography";
 import {
   EASE_STANDARD,
+  ELEVATION_CARD_HOVER,
   ELEVATION_CTA_HOVER,
   ELEVATION_HAIRLINE,
-  MOTION_NORMAL,
-  TRANSITION_COLORS,
+  HOVER_LIFT_CARD,
+  TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
 import {
@@ -175,10 +177,10 @@ export function SolutionsShowcase({ items, title, subtitle }: Props) {
                 aria-controls={panelDomId}
                 tabIndex={selected ? 0 : -1}
                 onClick={() => selectTab(tab.id)}
-                className={`inline-flex min-w-[10.5rem] items-center gap-2.5 rounded-xl border px-3 py-2.5 text-left ${TRANSITION_COLORS} ${MOTION_NORMAL} ${EASE_STANDARD} lg:min-w-0 ${
+                className={`inline-flex min-w-[10.5rem] items-center gap-2.5 rounded-xl border px-3 py-2.5 text-left ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${EASE_STANDARD} lg:min-w-0 ${
                   selected
-                    ? "border-accent bg-accent-soft/60 text-accent"
-                    : "border-border/80 bg-white text-navy hover:border-accent/40 hover:text-accent"
+                    ? `border-accent bg-accent-soft/60 text-accent ${ELEVATION_HAIRLINE}`
+                    : `border-border/80 bg-white text-navy hover:border-accent/35 ${ELEVATION_HAIRLINE} ${ELEVATION_CARD_HOVER}`
                 }`}
               >
                 <span
@@ -221,14 +223,20 @@ export function SolutionsShowcase({ items, title, subtitle }: Props) {
         >
           <div
             key={active.id}
-            className={`grid lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.35fr)] ${PANEL_FADE} ${
+            className={`grid lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.25fr)] lg:items-stretch ${PANEL_FADE} ${
               panelIn
                 ? "opacity-100 motion-safe:translate-y-0"
                 : "opacity-0 motion-safe:translate-y-1"
             }`}
           >
-            <div className="border-b border-border/70 bg-slate-50/70 lg:border-b-0 lg:border-r">
-              <SolutionVisual topic={tabId} title={panel.panelKicker} chips={chips} />
+            <div className="border-b border-border/70 bg-slate-50/80 lg:border-b-0 lg:border-r">
+              <SolutionVisual
+                topic={tabId}
+                title={panel.panelKicker}
+                lead={panel.lead}
+                chips={chips}
+                highlights={panel.checks}
+              />
             </div>
 
             <div className="flex flex-col justify-center px-5 py-6 sm:px-7 sm:py-7 lg:px-8 lg:py-8 xl:pr-10">
@@ -278,29 +286,40 @@ export function SolutionsShowcase({ items, title, subtitle }: Props) {
 function SolutionVisual({
   topic,
   title,
+  lead,
   chips,
+  highlights,
 }: {
   topic: HomeSolutionTabId;
   title: string;
+  lead: string;
   chips: SolutionChip[];
+  highlights: string[];
 }) {
+  const cardFx = `${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/30 ${ELEVATION_CARD_HOVER}`;
+
   return (
-    <div className="home-solutions__visual flex h-full flex-col justify-center gap-4 px-5 py-6 sm:px-6 sm:py-7 lg:px-7 lg:py-8">
-      <div className="flex items-center gap-3">
-        <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent">
+    <div className="home-solutions__visual flex h-full min-h-[300px] flex-col gap-3 p-4 sm:min-h-[320px] sm:p-5 lg:min-h-full lg:p-5">
+      <div
+        className={`flex items-start gap-3 rounded-xl border border-border/80 bg-white p-3.5 ${cardFx}`}
+      >
+        <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent">
           <SolutionTopicIcon topic={topic} size="md" />
         </span>
-        <p className={`${CARD_TITLE_CLASS} leading-snug`}>{title}</p>
+        <div className="min-w-0">
+          <p className={`${CARD_TITLE_CLASS} leading-snug`}>{title}</p>
+          <p className={`mt-1 line-clamp-2 ${BODY_MUTED_CLASS}`}>{lead}</p>
+        </div>
       </div>
 
-      <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+      <ul className="grid flex-1 grid-cols-2 gap-2 content-stretch sm:gap-2.5">
         {chips.map((chip) => (
           <li
             key={chip.id}
-            className={`flex items-center gap-2.5 rounded-xl border border-border/70 bg-white px-3 py-2.5 ${ELEVATION_HAIRLINE}`}
+            className={`flex min-h-[4.5rem] flex-col justify-center gap-2 rounded-xl border border-border/80 bg-white px-3 py-3 ${cardFx}`}
           >
             <span
-              className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
+              className={`inline-flex h-8 w-8 items-center justify-center rounded-lg ${
                 TONE_WELL[chip.tone ?? "teal"]
               }`}
             >
@@ -312,6 +331,23 @@ function SolutionVisual({
           </li>
         ))}
       </ul>
+
+      <div
+        className={`rounded-xl border border-border/80 bg-white px-3.5 py-3 ${ELEVATION_HAIRLINE}`}
+      >
+        <ul className="space-y-2">
+          {highlights.slice(0, 3).map((line) => (
+            <li key={line} className="flex items-start gap-2">
+              <span className="mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
+                <CheckMarkIcon />
+              </span>
+              <span className={`${CARD_META_CLASS} !text-navy leading-snug`}>
+                {line}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
