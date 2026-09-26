@@ -1,48 +1,49 @@
 import Link from "next/link";
 import type { HomeContent, SolutionItem } from "@/storefront/content/types";
+import { SOLUTION_PAGES } from "@/storefront/nav/ia-pages";
 import {
   BODY_MUTED_CLASS,
   CARD_TITLE_CLASS,
+  CTA_COMPACT_CLASS,
   CTA_LABEL_CLASS,
   LINK_ACCENT_CLASS,
-  OVERLINE_CLASS,
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
   SUBSECTION_TITLE_CLASS,
 } from "@/storefront/typography";
 import {
-  ELEVATION_CARD_HOVER,
   ELEVATION_CTA_HOVER,
   ELEVATION_HAIRLINE,
-  HOVER_LIFT_CARD,
-  TRANSITION_PANEL,
+  TRANSITION_COLORS,
   TRANSITION_UI,
 } from "@/storefront/effects";
 
 type Solutions = HomeContent["solutions"];
 
 /**
- * Home Giải pháp — editorial layout: one featured topic + compact grid.
- * Neutral surfaces (no rainbow pastels); unified accent icon language.
+ * Home Giải pháp — one editorial panel:
+ * featured row (content-dense) + divided topic list (no pastel / empty navy void).
  */
 export function SolutionsSection({ data }: { data: Solutions }) {
   if (!data.visible || data.items.length === 0) return null;
 
   const [featured, ...rest] = data.items;
+  const featuredPage = featured ? SOLUTION_PAGES[featured.id] : undefined;
 
   return (
     <section
       id="solutions"
-      className="scroll-mt-24 border-y border-border/70 bg-slate-50/60 py-10 md:py-12 lg:py-14"
+      className="scroll-mt-24 border-t border-border bg-white py-10 md:py-12 lg:py-16"
     >
       <div className="home-container">
-        <div className="mb-8 max-w-2xl md:mb-10">
-          <p className={`${OVERLINE_CLASS} text-accent`}>Giải pháp</p>
-          <h2 className={`mt-2 ${SECTION_TITLE_CLASS}`}>{data.title}</h2>
-          {data.subtitle ? (
-            <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>{data.subtitle}</p>
-          ) : null}
-          <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
+        <div className="mb-8 flex flex-col gap-5 lg:mb-10 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
+          <div className="max-w-xl">
+            <h2 className={SECTION_TITLE_CLASS}>{data.title}</h2>
+            {data.subtitle ? (
+              <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>{data.subtitle}</p>
+            ) : null}
+          </div>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 lg:shrink-0">
             {data.ctaLabel && data.ctaHref ? (
               <Link
                 href={data.ctaHref}
@@ -52,109 +53,138 @@ export function SolutionsSection({ data }: { data: Solutions }) {
               </Link>
             ) : null}
             {data.secondaryCtaLabel && data.secondaryCtaHref ? (
-              <Link
-                href={data.secondaryCtaHref}
-                className={LINK_ACCENT_CLASS}
-              >
+              <Link href={data.secondaryCtaHref} className={LINK_ACCENT_CLASS}>
                 {data.secondaryCtaLabel} →
               </Link>
             ) : null}
           </div>
         </div>
 
-        {featured ? <FeaturedSolutionCard item={featured} /> : null}
+        <div
+          className={`overflow-hidden rounded-2xl border border-border bg-white ${ELEVATION_HAIRLINE}`}
+        >
+          {featured ? (
+            <FeaturedSolutionRow
+              item={featured}
+              subtitle={featuredPage?.subtitle ?? featured.description}
+              bullets={(featuredPage?.bullets ?? []).slice(0, 3)}
+            />
+          ) : null}
 
-        {rest.length > 0 ? (
-          <ul
-            className={`grid gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4 ${
-              featured ? "mt-4 md:mt-5" : ""
-            }`}
-          >
-            {rest.map((item) => (
-              <li key={item.id}>
-                <SolutionTopicCard item={item} />
-              </li>
-            ))}
-          </ul>
-        ) : null}
+          {rest.length > 0 ? (
+            <ul className="divide-y divide-border">
+              {rest.map((item, i) => (
+                <li key={item.id}>
+                  <SolutionListRow item={item} index={i + 2} />
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
       </div>
     </section>
   );
 }
 
-/** Compact grid used by hub-style listings (same visual language as Home rest cards). */
+/** Shared compact grid for other surfaces that still need a card grid. */
 export function SolutionTopicGrid({ items }: { items: SolutionItem[] }) {
   return (
-    <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
-      {items.map((item) => (
+    <ul className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-white">
+      {items.map((item, i) => (
         <li key={item.id}>
-          <SolutionTopicCard item={item} />
+          <SolutionListRow item={item} index={i + 1} />
         </li>
       ))}
     </ul>
   );
 }
 
-function FeaturedSolutionCard({ item }: { item: SolutionItem }) {
+function FeaturedSolutionRow({
+  item,
+  subtitle,
+  bullets,
+}: {
+  item: SolutionItem;
+  subtitle: string;
+  bullets: string[];
+}) {
   return (
     <Link
       href={item.href}
-      className={`group grid overflow-hidden rounded-2xl border border-border bg-white ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/40 md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.15fr)]`}
+      className={`group grid border-b border-border md:grid-cols-[auto_minmax(0,1fr)] ${TRANSITION_COLORS} hover:bg-slate-50/80`}
     >
-      <div className="relative flex min-h-[160px] items-center justify-center overflow-hidden bg-navy px-6 py-10 md:min-h-[220px] md:py-12">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.14]"
-          aria-hidden
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 20% 20%, #2dd4bf 0%, transparent 42%), radial-gradient(circle at 85% 75%, #38bdf8 0%, transparent 40%)",
-          }}
-        />
-        <div className="relative flex flex-col items-center text-center">
-          <span className="inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-white backdrop-blur-sm transition group-hover:scale-[1.03] motion-safe:transition-transform">
-            <SolutionIcon art={item.art} size={28} />
-          </span>
-          <span className={`mt-4 ${OVERLINE_CLASS} tracking-[0.14em] text-teal-200/90`}>
-            Nổi bật
-          </span>
-        </div>
+      <div className="flex items-center gap-4 border-b border-border bg-navy px-5 py-6 text-white md:w-[200px] md:flex-col md:items-start md:justify-center md:border-b-0 md:border-r md:px-6 md:py-8 lg:w-[220px]">
+        <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/10 text-teal-200">
+          <SolutionIcon art={item.art} size={22} />
+        </span>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-teal-200/90">
+          Bắt đầu từ đây
+        </p>
       </div>
 
-      <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10">
-        <h3 className={SUBSECTION_TITLE_CLASS}>{item.title}</h3>
-        <p className={`mt-3 max-w-xl ${SECTION_LEAD_CLASS}`}>{item.description}</p>
+      <div className="flex flex-col justify-center px-5 py-6 sm:px-7 sm:py-8 lg:px-8">
+        <h3 className={`${SUBSECTION_TITLE_CLASS} transition-colors group-hover:text-accent`}>
+          {item.title}
+        </h3>
+        <p className={`mt-2 max-w-2xl ${SECTION_LEAD_CLASS}`}>{subtitle}</p>
+        {bullets.length > 0 ? (
+          <ul className={`mt-4 grid gap-2 sm:grid-cols-1 ${BODY_MUTED_CLASS}`}>
+            {bullets.map((b) => (
+              <li key={b} className="flex gap-2.5">
+                <span
+                  className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
+                  aria-hidden
+                />
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
+        ) : null}
         <span
-          className={`mt-6 inline-flex items-center gap-1.5 ${LINK_ACCENT_CLASS}`}
+          className={`mt-5 inline-flex w-fit items-center gap-1.5 rounded-lg bg-accent px-3.5 py-2 ${CTA_COMPACT_CLASS} text-white ${TRANSITION_UI} group-hover:bg-accent-hover`}
         >
-          Tìm hiểu
-          <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
-            →
-          </span>
+          Tìm hiểu giải pháp
+          <span aria-hidden>→</span>
         </span>
       </div>
     </Link>
   );
 }
 
-function SolutionTopicCard({ item }: { item: SolutionItem }) {
+function SolutionListRow({
+  item,
+  index,
+}: {
+  item: SolutionItem;
+  index: number;
+}) {
+  const page = SOLUTION_PAGES[item.id];
+  const lead = page?.subtitle ?? item.description;
+
   return (
     <Link
       href={item.href}
-      className={`group flex h-full gap-4 rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/40`}
+      className={`group flex items-start gap-3 px-5 py-4 sm:items-center sm:gap-4 sm:px-7 sm:py-5 ${TRANSITION_COLORS} hover:bg-slate-50/80`}
     >
-      <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent transition group-hover:bg-accent group-hover:text-white">
-        <SolutionIcon art={item.art} size={20} />
+      <span className="hidden w-7 shrink-0 pt-0.5 text-[12px] font-semibold tabular-nums text-muted/70 sm:block">
+        {String(index).padStart(2, "0")}
+      </span>
+      <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent transition-colors group-hover:bg-accent group-hover:text-white">
+        <SolutionIcon art={item.art} size={18} />
       </span>
       <div className="min-w-0 flex-1">
-        <h3 className={CARD_TITLE_CLASS}>{item.title}</h3>
-        <p className={`mt-1 line-clamp-2 ${BODY_MUTED_CLASS}`}>{item.description}</p>
-        <span className={`mt-3 inline-flex items-center gap-1 ${LINK_ACCENT_CLASS}`}>
-          Tìm hiểu
-          <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
-            →
-          </span>
-        </span>
+        <h3 className={`${CARD_TITLE_CLASS} transition-colors group-hover:text-accent`}>
+          {item.title}
+        </h3>
+        <p className={`mt-0.5 line-clamp-2 ${BODY_MUTED_CLASS}`}>{lead}</p>
       </div>
+      <span
+        className={`mt-1 hidden shrink-0 ${CTA_COMPACT_CLASS} text-accent sm:inline-flex sm:items-center sm:gap-1`}
+        aria-hidden
+      >
+        Tìm hiểu
+        <span className="transition-transform group-hover:translate-x-0.5">→</span>
+      </span>
     </Link>
   );
 }
