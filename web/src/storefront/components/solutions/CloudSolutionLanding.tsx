@@ -2,17 +2,14 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
-  Activity,
   Building2,
   Cloud,
   CloudUpload,
   CreditCard,
-  Database,
   HardDrive,
   Headphones,
   Maximize2,
   Monitor,
-  Network,
   Server,
   ShieldCheck,
   ShoppingCart,
@@ -27,6 +24,7 @@ import {
   BREADCRUMB_CLASS,
   BREADCRUMB_CURRENT_CLASS,
   CARD_META_CLASS,
+  CARD_PRICE_CLASS,
   CARD_TITLE_CLASS,
   CTA_COMPACT_CLASS,
   CTA_LABEL_CLASS,
@@ -76,38 +74,24 @@ const SERVICES: {
 }[] = [
   {
     title: "Cloud Infrastructure",
-    description: "Gói hạ tầng / máy chủ trên catalog — xem loại nhận trước khi mua.",
+    description: "License và gói hạ tầng, máy chủ trên catalog KEYON.",
     href: "/categories/cloud",
     Icon: Cloud,
     tone: "bg-sky-100 text-sky-700",
   },
   {
-    title: "Cloud Storage",
-    description: "Gói lưu trữ liên quan trên cửa hàng — tư vấn khi cần chọn dung lượng.",
-    href: "/products?q=storage",
+    title: "Cloud Storage & Backup",
+    description: "Gói lưu trữ và license sao lưu — kích hoạt trên hạ tầng của bạn.",
+    href: "/solutions/backup",
     Icon: HardDrive,
     tone: "bg-indigo-100 text-indigo-700",
   },
   {
-    title: "Cloud Database",
-    description: "Gói / SKU liên quan (nếu có) — báo giá theo nhu cầu, không vận hành DB thuê ngoài.",
-    href: "/contact/quote",
-    Icon: Database,
+    title: "Cloud Security",
+    description: "License bảo mật trên catalog, theo điều kiện của từng nhà cung cấp.",
+    href: "/categories/security",
+    Icon: ShieldCheck,
     tone: "bg-teal-100 text-teal-800",
-  },
-  {
-    title: "Cloud Backup",
-    description: "License phần mềm backup trên KEYON — kích hoạt trên hạ tầng của bạn.",
-    href: "/solutions/backup",
-    Icon: CloudUpload,
-    tone: "bg-cyan-100 text-cyan-800",
-  },
-  {
-    title: "Cloud Network",
-    description: "Gói liên quan mạng / bảo vệ (nếu có trên catalog) — tư vấn chọn SKU.",
-    href: "/contact/quote",
-    Icon: Network,
-    tone: "bg-violet-100 text-violet-700",
   },
 ];
 
@@ -118,34 +102,6 @@ const PLATFORMS: { name: string; tint: string; Logo: () => ReactNode }[] = [
   { name: "Acronis", tint: "bg-[#1A73E8]/10 text-[#1A73E8]", Logo: AcronisMark },
   { name: "Cloudflare", tint: "bg-[#F6821F]/10 text-[#F6821F]", Logo: CloudflareMark },
   { name: "Veeam", tint: "bg-[#00B336]/10 text-[#00B336]", Logo: VeeamMark },
-];
-
-const TRUST: { title: string; body: string; Icon: LucideIcon }[] = [
-  {
-    title: "Gói trên catalog",
-    body: "Chỉ bán gói / license đang có — xem mô tả và loại nhận trên từng SKU.",
-    Icon: ShoppingCart,
-  },
-  {
-    title: "Loại nhận rõ",
-    body: "Key, tài khoản hoặc hướng dẫn bàn giao — ghi trước khi thanh toán.",
-    Icon: Monitor,
-  },
-  {
-    title: "Theo điều kiện vendor",
-    body: "Uptime, SLA hay bảo mật hạ tầng (nếu có) thuộc nhà cung cấp / gói.",
-    Icon: ShieldCheck,
-  },
-  {
-    title: "Hỗ trợ tiếng Việt",
-    body: "Tư vấn chọn gói, bàn giao và kích hoạt — không giám sát hạ tầng 24/7.",
-    Icon: Headphones,
-  },
-  {
-    title: "Không thay MSP",
-    body: "KEYON không vận hành tenant Azure/AWS của bạn — cần MSP thì báo qua form.",
-    Icon: Building2,
-  },
 ];
 
 const SEGMENTS: {
@@ -161,7 +117,7 @@ const SEGMENTS: {
     title: "Doanh nghiệp vừa & nhỏ",
     description: "Chọn gói catalog theo ngân sách — mua ngay hoặc gửi báo giá.",
     items: [
-      "Gói cloud / storage đang bán",
+      "License và gói Cloud trên catalog",
       "Loại nhận rõ trước mua",
       "Hỗ trợ kích hoạt tiếng Việt",
     ],
@@ -200,24 +156,36 @@ const SEGMENTS: {
 ];
 
 const STEPS: { title: string; body: string; Icon: LucideIcon }[] = [
-  { title: "Chọn gói", body: "Chọn SKU cloud / hạ tầng trên catalog hoặc gửi báo giá.", Icon: ShoppingCart },
-  { title: "Thanh toán", body: "VietQR / chuyển khoản — rõ ràng trên KEYON.", Icon: CreditCard },
-  { title: "Nhận bàn giao", body: "Nhận deliverable hoặc hỗ trợ kích hoạt theo gói.", Icon: CloudUpload },
-  { title: "Theo dõi", body: "License đã mua nằm trong Tài khoản KEYON.", Icon: Monitor },
+  { title: "Chọn gói", body: "Chọn sản phẩm Cloud hoặc hạ tầng phù hợp.", Icon: ShoppingCart },
+  { title: "Thanh toán", body: "Thanh toán theo phương thức được hỗ trợ trên KEYON.", Icon: CreditCard },
+  { title: "Nhận bàn giao", body: "Nhận license, thông tin kích hoạt hoặc thông tin truy cập theo sản phẩm.", Icon: CloudUpload },
+  { title: "Theo dõi", body: "Theo dõi thông tin sản phẩm và hỗ trợ trong Tài khoản KEYON.", Icon: Monitor },
 ];
 
 const HERO_VALUES: { title: string; body: string; Icon: LucideIcon }[] = [
-  { title: "Gói trên catalog", body: "Mua SKU đang bán hoặc báo giá", Icon: ShoppingCart },
-  { title: "Loại nhận rõ", body: "Key / tài khoản / hướng dẫn", Icon: ShieldCheck },
-  { title: "Không vận hành MSP", body: "KEYON bán & bàn giao — không chạy tenant", Icon: Maximize2 },
+  {
+    title: "Gói trên catalog",
+    body: "Mua các license và gói Cloud đang được KEYON cung cấp.",
+    Icon: ShoppingCart,
+  },
+  {
+    title: "Loại nhận rõ ràng",
+    body: "Biết trước sản phẩm, license và thông tin bàn giao.",
+    Icon: ShieldCheck,
+  },
+  {
+    title: "Hỗ trợ tiếng Việt",
+    body: "Được hướng dẫn kích hoạt và sử dụng theo từng sản phẩm.",
+    Icon: Headphones,
+  },
 ];
 
 const PRODUCT_ICONS: Record<NonNullable<CloudFeaturedProduct["icon"]>, LucideIcon> = {
   server: Server,
-  pro: Activity,
+  pro: Server,
   storage: HardDrive,
   backup: CloudUpload,
-  database: Database,
+  database: HardDrive,
 };
 
 export function CloudSolutionLanding({ featured }: Props) {
@@ -245,21 +213,20 @@ export function CloudSolutionLanding({ featured }: Props) {
             <span aria-hidden className="text-muted-soft">
               ›
             </span>
-            <span className={BREADCRUMB_CURRENT_CLASS}>Cloud</span>
+            <span className={BREADCRUMB_CURRENT_CLASS}>Cloud & Hạ tầng</span>
           </nav>
 
           <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-10 xl:gap-12">
             <div className="min-w-0">
               <h1 className={`max-w-xl ${HERO_TITLE_CLASS}`}>
-                Gói cloud & hạ tầng
-                <span className="mt-1 block">Trên catalog KEYON</span>
+                Cloud & Hạ tầng cho doanh nghiệp
               </h1>
               <p className={`mt-4 max-w-lg ${PAGE_LEAD_CLASS}`}>
-                Mua license / gói cloud–hạ tầng đang có, nhận deliverable rõ ràng và hỗ trợ
-                kích hoạt tiếng Việt. KEYON không thay MSP vận hành Azure hay AWS của bạn.
+                Khám phá license Cloud, gói hạ tầng và các sản phẩm liên quan trên KEYON, với
+                thông tin rõ ràng, bàn giao minh bạch và hỗ trợ tiếng Việt.
               </p>
 
-              <ul className="mt-6 grid gap-4 sm:grid-cols-3 sm:gap-3">
+              <ul className="mt-7 grid gap-5 sm:grid-cols-3">
                 {HERO_VALUES.map((item) => (
                   <li key={item.title} className="flex gap-3 sm:flex-col sm:gap-2">
                     <span
@@ -276,10 +243,15 @@ export function CloudSolutionLanding({ featured }: Props) {
                 ))}
               </ul>
 
+              <p className={`mt-5 max-w-lg ${BODY_MUTED_CLASS}`}>
+                Lưu ý: KEYON cung cấp license và gói Cloud theo catalog, không thay thế MSP
+                trong việc vận hành Azure, AWS hoặc hạ tầng Cloud của doanh nghiệp.
+              </p>
+
               <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/categories/cloud"
-                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
                   Xem sản phẩm cloud →
                 </Link>
@@ -304,12 +276,12 @@ export function CloudSolutionLanding({ featured }: Props) {
       <section className="py-9 md:py-11 lg:py-12">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
-            <h2 className={SECTION_TITLE_CLASS}>Hướng gói cloud trên KEYON</h2>
+            <h2 className={SECTION_TITLE_CLASS}>Danh mục Cloud & Hạ tầng</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Các nhóm sản phẩm thường gặp trên catalog — không phải dịch vụ vận hành thuê ngoài.
+              Khám phá các nhóm sản phẩm Cloud và hạ tầng đang được cung cấp trên KEYON.
             </p>
           </header>
-          <ul className="mt-7 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-4">
+          <ul className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {SERVICES.map((s) => (
               <li key={s.title}>
                 <article
@@ -321,7 +293,7 @@ export function CloudSolutionLanding({ featured }: Props) {
                   >
                     <s.Icon {...ICON_MD} />
                   </span>
-                  <h3 className={`mt-4 ${CARD_TITLE_CLASS} text-[15px]`}>{s.title}</h3>
+                  <h3 className={`mt-4 ${CARD_TITLE_CLASS}`}>{s.title}</h3>
                   <p className={`mt-2 flex-1 ${BODY_MUTED_CLASS}`}>{s.description}</p>
                   <Link
                     href={s.href}
@@ -341,10 +313,9 @@ export function CloudSolutionLanding({ featured }: Props) {
       <section className="border-y border-border bg-surface py-9 md:py-10">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
-            <h2 className={SECTION_TITLE_CLASS}>Thương hiệu thường gặp</h2>
+            <h2 className={SECTION_TITLE_CLASS}>Nền tảng & thương hiệu</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Một số thương hiệu / nền tảng có thể liên quan tới gói trên catalog — KEYON bán
-              license hoặc gói, không vận hành tài khoản cloud của bạn.
+              Khám phá các nền tảng Cloud, Backup và hạ tầng đang có trên catalog KEYON.
             </p>
           </header>
 
@@ -365,27 +336,10 @@ export function CloudSolutionLanding({ featured }: Props) {
             ))}
           </ul>
 
-          <div className="mt-7 rounded-2xl border border-border/70 bg-white px-4 py-5 sm:px-6 md:py-6">
-            <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3">
-              {TRUST.map((t) => (
-                <li
-                  key={t.title}
-                  className="flex flex-col items-start gap-2 text-left lg:items-center lg:text-center"
-                >
-                  <span
-                    className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-soft text-accent"
-                    aria-hidden
-                  >
-                    <t.Icon {...ICON_SM} />
-                  </span>
-                  <div>
-                    <p className={CARD_TITLE_CLASS}>{t.title}</p>
-                    <p className={`mt-1 ${CARD_META_CLASS}`}>{t.body}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <p className={`mx-auto mt-5 max-w-2xl text-center ${BODY_MUTED_CLASS}`}>
+            KEYON cung cấp sản phẩm, license hoặc gói theo từng catalog và điều kiện của nhà
+            cung cấp.
+          </p>
         </div>
       </section>
 
@@ -395,7 +349,7 @@ export function CloudSolutionLanding({ featured }: Props) {
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Giải pháp theo nhu cầu</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Chọn hướng phù hợp quy mô — từ SME đến doanh nghiệp lớn.
+              Chọn gói Cloud và hạ tầng phù hợp với quy mô và nhu cầu sử dụng của doanh nghiệp.
             </p>
           </header>
           <ul className="mt-7 grid gap-4 md:grid-cols-3">
@@ -456,11 +410,11 @@ export function CloudSolutionLanding({ featured }: Props) {
             <div>
               <h2 className={SECTION_TITLE_CLASS}>Sản phẩm & dịch vụ nổi bật</h2>
               <p className={`mt-2 max-w-xl ${SECTION_LEAD_CLASS}`}>
-                Gói đang có trên catalog KEYON — xem chi tiết trước khi mua.
+                Sản phẩm Cloud đang được cung cấp trên KEYON — xem chi tiết trước khi mua.
               </p>
             </div>
             <Link href="/categories/cloud" className={`shrink-0 ${LINK_ACCENT_CLASS}`}>
-              Xem tất cả dịch vụ →
+              Xem sản phẩm Cloud →
             </Link>
           </div>
           <ul className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-4">
@@ -485,7 +439,7 @@ export function CloudSolutionLanding({ featured }: Props) {
                         </li>
                       ))}
                     </ul>
-                    <p className="mt-3 font-display text-[15px] font-bold tabular-nums tracking-tight text-navy">
+                    <p className={`mt-3 ${CARD_PRICE_CLASS} !text-navy`}>
                       {p.priceLabel}
                     </p>
                     {p.priceHint ? (
@@ -510,9 +464,9 @@ export function CloudSolutionLanding({ featured }: Props) {
       <section className="py-9 md:py-11 lg:py-12">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
-            <h2 className={SECTION_TITLE_CLASS}>Quy trình triển khai đơn giản</h2>
+            <h2 className={SECTION_TITLE_CLASS}>Quy trình mua & nhận bàn giao</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Bốn bước rõ ràng — từ chọn gói đến sử dụng trên KEYON.
+              Bốn bước rõ ràng từ lựa chọn sản phẩm đến nhận thông tin bàn giao.
             </p>
           </header>
           <ol className="relative mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
@@ -529,7 +483,7 @@ export function CloudSolutionLanding({ featured }: Props) {
                     <step.Icon {...ICON_LG} />
                   </span>
                   <span
-                    className={`absolute -right-1 -top-1 flex h-7 w-7 items-center justify-center rounded-full bg-accent text-[12px] font-bold text-white ${ELEVATION_HAIRLINE}`}
+                    className={`absolute -right-1 -top-1 flex h-7 w-7 items-center justify-center rounded-full bg-accent font-bold text-white ${CARD_META_CLASS} !text-white ${ELEVATION_HAIRLINE}`}
                   >
                     {i + 1}
                   </span>
@@ -543,12 +497,12 @@ export function CloudSolutionLanding({ featured }: Props) {
       </section>
 
       <SolutionFinalCta
-        title="Cần tư vấn chọn gói cloud / hạ tầng?"
-        subtitle="Gửi yêu cầu báo giá — phạm vi mua và bàn giao license, không vận hành tenant thuê ngoài."
+        title="Chưa biết chọn gói Cloud nào phù hợp?"
+        subtitle="Gửi yêu cầu cho KEYON để được tư vấn sản phẩm phù hợp với nhu cầu sử dụng và quy mô doanh nghiệp."
         primaryHref="/contact/quote"
         primaryLabel="Gửi yêu cầu tư vấn →"
         secondaryHref="/categories/cloud"
-        secondaryLabel="Xem sản phẩm cloud"
+        secondaryLabel="Xem sản phẩm Cloud"
       />
     </div>
   );
@@ -725,8 +679,8 @@ function CloudHeroArt() {
               <Zap size={14} strokeWidth={2} />
             </span>
             <div>
-              <p className={`${BADGE_CLASS} font-semibold text-navy`}>Hiệu suất cao</p>
-              <p className={`mt-0.5 ${CARD_META_CLASS}`}>SSD · băng thông</p>
+              <p className={`${BADGE_CLASS} font-semibold text-navy`}>License trên catalog</p>
+              <p className={`mt-0.5 ${CARD_META_CLASS}`}>Cloud · hạ tầng</p>
             </div>
           </div>
         </div>
@@ -741,8 +695,8 @@ function CloudHeroArt() {
               <ShieldCheck size={14} strokeWidth={2} />
             </span>
             <div>
-              <p className={`${BADGE_CLASS} font-semibold text-navy`}>Bảo mật đa lớp</p>
-              <p className={`mt-0.5 ${CARD_META_CLASS}`}>Firewall · mã hóa</p>
+              <p className={`${BADGE_CLASS} font-semibold text-navy`}>Bàn giao rõ</p>
+              <p className={`mt-0.5 ${CARD_META_CLASS}`}>Theo từng sản phẩm</p>
             </div>
           </div>
         </div>
@@ -757,8 +711,8 @@ function CloudHeroArt() {
               <Maximize2 size={14} strokeWidth={2} />
             </span>
             <div>
-              <p className={`${BADGE_CLASS} font-semibold text-navy`}>Linh hoạt mở rộng</p>
-              <p className={`mt-0.5 ${CARD_META_CLASS}`}>Scale theo nhu cầu</p>
+              <p className={`${BADGE_CLASS} font-semibold text-navy`}>Hỗ trợ tiếng Việt</p>
+              <p className={`mt-0.5 ${CARD_META_CLASS}`}>Kích hoạt theo gói</p>
             </div>
           </div>
         </div>

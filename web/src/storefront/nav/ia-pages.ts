@@ -67,13 +67,13 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
   cloud: {
     slug: "cloud",
     kicker: "Giải pháp",
-    title: "Cloud & Hạ tầng",
+    title: "Cloud & Hạ tầng cho doanh nghiệp",
     subtitle:
-      "Gói cloud / hạ tầng đang bán trên KEYON — tư vấn chọn SKU. Không vận hành Azure/AWS thuê ngoài.",
+      "Khám phá license Cloud, gói hạ tầng và các sản phẩm liên quan trên KEYON, với thông tin rõ ràng, bàn giao minh bạch và hỗ trợ tiếng Việt.",
     bullets: [
-      "Gói cloud / storage / backup trên catalog (nếu có)",
-      "Tư vấn chọn gói theo số người dùng / ngân sách",
-      "Bàn giao license — không thay MSP vận hành tenant",
+      "License và gói Cloud trên catalog",
+      "Thông tin bàn giao rõ trước khi mua",
+      "Hỗ trợ kích hoạt bằng tiếng Việt",
     ],
     primaryCta: { label: "Xem sản phẩm cloud", href: "/categories/cloud" },
     secondaryCta: { label: "Gửi yêu cầu tư vấn", href: "/contact/quote" },

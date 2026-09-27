@@ -58,9 +58,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (slug === "cloud") {
     return {
       ...(await buildMainPageMetadata("/solutions/cloud")),
-      title: absoluteTitle("Cloud linh hoạt cho doanh nghiệp | KEYON"),
+      title: absoluteTitle("Cloud & Hạ tầng cho doanh nghiệp | KEYON"),
       description:
-        "Giải pháp cloud KEYON: hạ tầng, storage, backup và tư vấn triển khai cho doanh nghiệp hiện đại.",
+        "Khám phá license Cloud, gói hạ tầng và các sản phẩm liên quan trên KEYON, với thông tin rõ ràng, bàn giao minh bạch và hỗ trợ tiếng Việt.",
     };
   }
   if (slug === "microsoft-365-office") {
