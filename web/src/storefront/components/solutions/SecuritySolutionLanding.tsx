@@ -145,7 +145,7 @@ const PILLARS: { title: string; body: string; Icon: LucideIcon }[] = [
 const WHY: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "License chính hãng",
-    body: "Nguồn cung rõ ràng — đúng loại nhận trước khi mua.",
+    body: "Nguồn cung rõ ràng — đúng loại license trước khi mua.",
     Icon: ShieldCheck,
   },
   {
