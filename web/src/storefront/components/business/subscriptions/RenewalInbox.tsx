@@ -20,26 +20,26 @@ import { CARD_SURFACE, SECTION_PAD, SUB_CONSULT_HREF } from "./shared";
 /** Conceptual work types — not a fake inbox of named subscriptions. */
 const WORK_TYPES = [
   {
-    title: "Sắp đến kỳ gia hạn",
-    body: "Nhận biết sớm các gói sắp đến mốc cần quyết định tiếp tục hay điều chỉnh.",
+    title: "Kiểm tra sản phẩm và thời hạn",
+    body: "Xem subscription đang dùng và ngày hết hạn trước khi quyết định.",
     Icon: Clock3,
     tone: "text-amber-700 bg-amber-50",
   },
   {
-    title: "Cần xác nhận nhu cầu",
-    body: "Xem lại số lượng người dùng hoặc phạm vi sử dụng trước khi gia hạn.",
+    title: "Xác nhận số lượng cần gia hạn",
+    body: "Giữ nguyên, tăng hoặc giảm theo nhu cầu sử dụng tiếp theo.",
     Icon: MessageCircle,
     tone: "text-sky-700 bg-sky-50",
   },
   {
-    title: "Đang chờ xử lý",
-    body: "Theo dõi các yêu cầu tư vấn / báo giá liên quan đến subscription.",
+    title: "Nhận báo giá",
+    body: "KEYON gửi báo giá theo sản phẩm, số lượng và thời hạn mới.",
     Icon: Hourglass,
     tone: "text-navy bg-navy/5",
   },
   {
-    title: "Đã hoàn tất",
-    body: "Ghi nhận các kỳ đã xử lý xong để dễ đối chiếu lần sau.",
+    title: "Thanh toán và nhận hướng dẫn",
+    body: "Hoàn tất thanh toán, rồi nhận thông tin hoặc hướng dẫn gia hạn.",
     Icon: CheckCircle2,
     tone: "text-accent bg-accent-soft",
   },
@@ -51,17 +51,17 @@ export function RenewalInbox() {
       <div className="home-container">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
           <header className="max-w-2xl">
-            <h2 className={SECTION_TITLE_CLASS}>Biết việc gì cần xử lý trước kỳ gia hạn</h2>
+            <h2 className={SECTION_TITLE_CLASS}>Gia hạn bản quyền khi đến kỳ</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              KEYON giúp phân loại việc cần xem xét trước kỳ gia hạn: sắp hạn, cần xác nhận, hoặc
-              đang chờ báo giá — để chủ động kế hoạch renew.
+              Kiểm tra thời hạn license, xác nhận sản phẩm cần gia hạn và nhận báo giá theo nhu cầu
+              sử dụng tiếp theo.
             </p>
           </header>
           <Link
             href={SUB_CONSULT_HREF}
             className={`inline-flex h-12 shrink-0 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
           >
-            Yêu cầu tư vấn →
+            Nhận tư vấn →
           </Link>
         </div>
 

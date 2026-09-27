@@ -209,7 +209,7 @@ export const BUSINESS_BUY_LINKS: NavLink[] = [
   {
     label: "Subscription & Gia hạn",
     href: "/business/subscriptions",
-    description: "Quản lý thuê bao, renewal và chu kỳ sử dụng",
+    description: "Mua theo thời hạn, theo dõi ngày hết hạn và hỗ trợ gia hạn",
   },
   {
     label: "Hợp đồng & đơn hàng",

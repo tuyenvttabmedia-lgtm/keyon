@@ -4,6 +4,7 @@ import {
   BODY_MUTED_CLASS,
   BREADCRUMB_CLASS,
   BREADCRUMB_CURRENT_CLASS,
+  CARD_TITLE_CLASS,
   CTA_LABEL_CLASS,
   HERO_TITLE_CLASS,
   PAGE_LEAD_CLASS,
@@ -23,18 +24,18 @@ import { SubscriptionMobilePreview } from "./SubscriptionMobilePreview";
 
 const BENEFITS = [
   {
-    title: "Theo dõi tập trung",
-    body: "Tập trung thông tin subscription tại một nơi.",
+    title: "Subscription chính hãng",
+    body: "License và subscription có thông tin nguồn cung rõ ràng.",
     Icon: LayoutGrid,
   },
   {
-    title: "Nhắc thời hạn",
-    body: "Chủ động theo dõi các mốc cần xử lý.",
+    title: "Theo dõi thời hạn",
+    body: "Dễ kiểm tra thời hạn sử dụng và thời điểm cần gia hạn.",
     Icon: Bell,
   },
   {
-    title: "Quản lý chu kỳ",
-    body: "Nắm rõ thời hạn và chu kỳ sử dụng.",
+    title: "Gia hạn đúng kỳ",
+    body: "Hỗ trợ kiểm tra và gia hạn theo sản phẩm đang sử dụng.",
     Icon: RefreshCw,
   },
 ] as const;
@@ -65,12 +66,12 @@ export function SubscriptionHero() {
 
         <div className={LANDING_HERO_GRID}>
           <div className="min-w-0 max-w-[540px]">
-            <h1 className={`max-w-[20ch] ${HERO_TITLE_CLASS}`}>
-              Theo dõi subscription và chủ động mỗi kỳ gia hạn
+            <h1 className={HERO_TITLE_CLASS}>
+              Subscription &amp; gia hạn bản quyền phần mềm
             </h1>
             <p className={`mt-3.5 ${PAGE_LEAD_CLASS}`}>
-              Theo dõi subscription, thời hạn và chu kỳ sử dụng tập trung — giúp doanh nghiệp chủ
-              động kế hoạch gia hạn trước khi đến hạn.
+              Mua subscription phần mềm theo thời hạn phù hợp, theo dõi ngày hết hạn và được hỗ trợ
+              khi gia hạn hoặc thay đổi nhu cầu sử dụng.
             </p>
 
             <ul className="mt-5 space-y-2.5">
@@ -80,7 +81,7 @@ export function SubscriptionHero() {
                     <Icon size={16} strokeWidth={1.85} aria-hidden />
                   </span>
                   <div className="min-w-0">
-                    <p className="text-[14px] font-bold text-navy">{title}</p>
+                    <p className={CARD_TITLE_CLASS}>{title}</p>
                     <p className={BODY_MUTED_CLASS}>{body}</p>
                   </div>
                 </li>
@@ -90,9 +91,9 @@ export function SubscriptionHero() {
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
               <Link
                 href={SUB_CONSULT_HREF}
-                className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
               >
-                Tư vấn subscription →
+                Nhận tư vấn →
               </Link>
               <Link
                 href={HOW_IT_WORKS_HREF}

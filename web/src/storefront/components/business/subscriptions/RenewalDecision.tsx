@@ -20,17 +20,17 @@ import {
 const OPTIONS = [
   {
     title: "Tiếp tục",
-    body: "Gia hạn subscription đang sử dụng.",
+    body: "Gia hạn đúng sản phẩm và thời hạn đang dùng.",
     Icon: RefreshCw,
   },
   {
     title: "Điều chỉnh",
-    body: "Xem xét số lượng người dùng hoặc nhu cầu mới.",
+    body: "Tăng, giảm hoặc đổi sản phẩm khi nhu cầu thay đổi.",
     Icon: SlidersHorizontal,
   },
   {
     title: "Tư vấn",
-    body: "Trao đổi với KEYON trước khi quyết định.",
+    body: "KEYON kiểm tra nhu cầu và gửi báo giá trước khi chốt.",
     Icon: MessageCircle,
   },
 ] as const;
@@ -41,16 +41,15 @@ export function RenewalDecision() {
       <div className="home-container">
         <div className="grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-10">
           <div className="min-w-0 lg:col-span-5">
-            <h2 className={SECTION_TITLE_CLASS}>Khi đến kỳ gia hạn</h2>
+            <h2 className={SECTION_TITLE_CLASS}>Khi nhu cầu sử dụng thay đổi</h2>
             <p className={`mt-3 ${SECTION_LEAD_CLASS}`}>
-              Doanh nghiệp không phải lúc nào cũng cần đơn giản là “mua lại”. Có thể tiếp tục,
-              điều chỉnh hoặc trao đổi trước khi chốt.
+              Có thể gia hạn nguyên gói, điều chỉnh số lượng hoặc nhờ KEYON tư vấn trước khi chốt.
             </p>
             <Link
               href={SUB_CONSULT_HREF}
               className={`mt-6 inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
             >
-              Yêu cầu tư vấn →
+              Nhận tư vấn →
             </Link>
           </div>
 

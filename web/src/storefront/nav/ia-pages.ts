@@ -154,17 +154,17 @@ export const BUSINESS_PAGES: Record<string, IaPage> = {
     kicker: "Doanh nghiệp",
     title: "Subscription & Gia hạn",
     subtitle:
-      "Theo dõi subscription, thời hạn và chu kỳ gia hạn tập trung — chủ động trước mỗi kỳ renew.",
+      "Mua subscription phần mềm theo thời hạn phù hợp, theo dõi ngày hết hạn và được hỗ trợ khi gia hạn hoặc thay đổi nhu cầu sử dụng.",
     bullets: [
-      "Theo dõi trạng thái và chu kỳ sử dụng",
-      "Nhận thông tin trước kỳ gia hạn",
-      "Tư vấn tiếp tục, điều chỉnh hoặc báo giá",
+      "Subscription có thông tin nguồn cung rõ ràng",
+      "Theo dõi thời hạn sử dụng",
+      "Hỗ trợ gia hạn theo sản phẩm đang dùng",
     ],
     primaryCta: {
-      label: "Tư vấn subscription",
+      label: "Nhận tư vấn",
       href: "/contact/quote?intent=subscription-consult&requestType=SUBSCRIPTION",
     },
-    secondaryCta: { label: "Tìm hiểu cách hoạt động", href: "/business/subscriptions#lifecycle" },
+    secondaryCta: { label: "Xem sản phẩm", href: "/products" },
   },
   "licensing-consulting": {
     slug: "licensing-consulting",

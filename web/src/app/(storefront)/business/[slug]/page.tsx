@@ -33,9 +33,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (slug === "subscriptions") {
     return {
       ...(await buildMainPageMetadata(`/business/${slug}`)),
-      title: absoluteTitle("Subscription & Gia hạn | KEYON"),
+      title: absoluteTitle("Subscription & Gia hạn bản quyền phần mềm | KEYON"),
       description:
-        "Theo dõi subscription, thời hạn và chu kỳ gia hạn tập trung — tư vấn phương án phù hợp với doanh nghiệp.",
+        "Mua subscription phần mềm và gia hạn bản quyền tại KEYON. Tư vấn sản phẩm, thời hạn, số lượng và hỗ trợ gia hạn theo nhu cầu.",
     };
   }
   if (slug === "licensing-consulting") {

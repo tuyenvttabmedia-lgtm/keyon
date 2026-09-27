@@ -71,10 +71,10 @@ const BIZ_CARDS: BizCard[] = [
   {
     id: "subscriptions",
     title: "Subscription & Gia hạn",
-    body: "Theo dõi chu kỳ subscription, nhắc gia hạn; renew qua đội kinh doanh / báo giá.",
+    body: "Mua subscription theo thời hạn, theo dõi ngày hết hạn và được hỗ trợ khi gia hạn.",
     href: "/business/subscriptions",
     cta: "Tìm hiểu thêm",
-    features: ["Theo dõi chu kỳ", "Nhắc gia hạn", "Hỗ trợ renew"],
+    features: ["Mua theo thời hạn", "Theo dõi ngày hết hạn", "Hỗ trợ gia hạn"],
     Icon: RefreshCw,
     tone: "bg-violet-600 text-white",
   },

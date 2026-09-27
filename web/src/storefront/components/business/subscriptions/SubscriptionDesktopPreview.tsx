@@ -24,8 +24,8 @@ export function SubscriptionDesktopPreview() {
       >
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className={CARD_TITLE_CLASS}>Subscription Hub</p>
-            <p className={CARD_META_CLASS}>Theo dõi trạng thái gói</p>
+            <p className={CARD_TITLE_CLASS}>Theo dõi thời hạn</p>
+            <p className={CARD_META_CLASS}>Subscription đang dùng</p>
           </div>
           <span className="rounded-md bg-accent-soft px-2 py-1 text-[11px] font-semibold text-accent">
             KEYON
@@ -67,7 +67,7 @@ export function SubscriptionDesktopPreview() {
         <div className="mt-3 rounded-xl border border-accent/25 bg-accent-soft/40 px-3 py-2.5">
           <p className="text-[12px] font-bold text-navy">Sắp đến kỳ gia hạn</p>
           <p className={`mt-0.5 ${CARD_META_CLASS}`}>
-            Nhắc trước hạn để kịp xem xét và chọn hướng xử lý.
+            Kiểm tra thời hạn, rồi liên hệ KEYON khi cần gia hạn.
           </p>
         </div>
       </div>

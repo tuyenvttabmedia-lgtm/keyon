@@ -10,7 +10,7 @@ import {
   ELEVATION_HAIRLINE,
   TRANSITION_UI,
 } from "@/storefront/effects";
-import { SECTION_PAD, SUB_BUSINESS_HREF, SUB_CONSULT_HREF } from "./shared";
+import { PRODUCTS_HREF, SECTION_PAD, SUB_CONSULT_HREF } from "./shared";
 
 /** White command panel on teal-tinted ground — not purple/navy volume banner. */
 export function SubscriptionCTA() {
@@ -24,10 +24,10 @@ export function SubscriptionCTA() {
             <div className="min-w-0 max-w-xl">
               <p className={`${OVERLINE_CLASS} tracking-[0.16em] text-accent`}>Cần hỗ trợ?</p>
               <h2 className={`mt-2 ${SECTION_TITLE_CLASS}`}>
-                Chuẩn bị cho kỳ gia hạn tiếp theo
+                Cần tư vấn subscription hoặc gia hạn?
               </h2>
               <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-                Trao đổi với KEYON để xem xét nhu cầu subscription và phương án gia hạn phù hợp.
+                Gửi sản phẩm và số lượng bạn đang sử dụng, KEYON sẽ tư vấn phương án phù hợp.
               </p>
             </div>
             <div className="flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center">
@@ -35,13 +35,13 @@ export function SubscriptionCTA() {
                 href={SUB_CONSULT_HREF}
                 className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
               >
-                Tư vấn subscription →
+                Nhận tư vấn →
               </Link>
               <Link
-                href={SUB_BUSINESS_HREF}
+                href={PRODUCTS_HREF}
                 className={`inline-flex h-12 items-center justify-center rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
               >
-                Liên hệ kinh doanh
+                Xem sản phẩm →
               </Link>
             </div>
           </div>

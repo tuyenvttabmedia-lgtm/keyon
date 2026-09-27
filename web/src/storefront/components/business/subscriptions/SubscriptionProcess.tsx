@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import {
-  Bell,
   ClipboardList,
   Eye,
   RefreshCcw,
-  Scale,
+  Wallet,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -31,64 +30,47 @@ const STEPS: {
   visual: { label: string; tone: string }[];
 }[] = [
   {
-    title: "Thêm / ghi nhận subscription",
-    body: "Đưa subscription vào hệ thống theo dõi tập trung.",
-    previewTitle: "Ghi nhận",
-    previewBody:
-      "Thêm thông tin gói đang dùng — trạng thái và chu kỳ được gắn vào một bản ghi rõ ràng.",
+    title: "Chọn subscription",
+    body: "Chọn sản phẩm, số lượng và thời hạn sử dụng.",
+    previewTitle: "Chọn subscription",
+    previewBody: "Chọn sản phẩm, số lượng người dùng hoặc thiết bị, và thời hạn cần mua.",
     Icon: ClipboardList,
     visual: [
-      { label: "Bản ghi mới", tone: "bg-accent/20 text-accent" },
-      { label: "Chu kỳ gắn sẵn", tone: "bg-white/10 text-slate-200" },
+      { label: "Sản phẩm", tone: "bg-accent/20 text-accent" },
+      { label: "Thời hạn", tone: "bg-white/10 text-slate-200" },
     ],
   },
   {
-    title: "Theo dõi chu kỳ",
-    body: "Nắm thời hạn và trạng thái trong quá trình sử dụng.",
-    previewTitle: "Theo dõi",
-    previewBody:
-      "Subscription Hub hiển thị trạng thái đang hoạt động, sắp gia hạn hoặc cần xem xét để bạn xử lý đúng lúc.",
+    title: "Xác nhận nhu cầu",
+    body: "KEYON kiểm tra sản phẩm và hình thức cấp phép phù hợp.",
+    previewTitle: "Xác nhận nhu cầu",
+    previewBody: "KEYON kiểm tra sản phẩm, số lượng và hình thức cấp phép trước khi báo giá.",
     Icon: Eye,
     visual: [
-      { label: "Đang hoạt động", tone: "bg-accent/20 text-accent" },
-      { label: "Trong chu kỳ", tone: "bg-white/10 text-slate-200" },
+      { label: "Sản phẩm", tone: "bg-accent/20 text-accent" },
+      { label: "Số lượng", tone: "bg-white/10 text-slate-200" },
     ],
   },
   {
-    title: "Nhận thông tin trước kỳ gia hạn",
-    body: "Biết trước mốc cần xử lý để chủ động kế hoạch.",
-    previewTitle: "Nhắc trước hạn",
-    previewBody:
-      "Thông báo gia hạn xuất hiện trong hàng đợi — đủ thời gian để xem xét trước khi đến hạn.",
-    Icon: Bell,
+    title: "Thanh toán & nhận license",
+    body: "Hoàn tất thanh toán và nhận thông tin license theo sản phẩm.",
+    previewTitle: "Thanh toán & nhận license",
+    previewBody: "Sau thanh toán, nhận thông tin license hoặc hướng dẫn theo từng sản phẩm.",
+    Icon: Wallet,
     visual: [
-      { label: "Sắp gia hạn", tone: "bg-amber-400/20 text-amber-200" },
-      { label: "Trong hàng đợi", tone: "bg-white/10 text-slate-200" },
+      { label: "Thanh toán", tone: "bg-accent/20 text-accent" },
+      { label: "License", tone: "bg-white/10 text-slate-200" },
     ],
   },
   {
-    title: "Xem xét nhu cầu",
-    body: "Quyết định tiếp tục, điều chỉnh hoặc tư vấn.",
-    previewTitle: "Xem xét",
-    previewBody:
-      "Ba hướng: tiếp tục gói hiện tại, điều chỉnh quy mô, hoặc trao đổi với KEYON trước khi chốt.",
-    Icon: Scale,
-    visual: [
-      { label: "Tiếp tục", tone: "bg-white/10 text-slate-200" },
-      { label: "Điều chỉnh", tone: "bg-sky-400/20 text-sky-200" },
-      { label: "Tư vấn", tone: "bg-accent/20 text-accent" },
-    ],
-  },
-  {
-    title: "Gia hạn / cập nhật",
-    body: "Hoàn tất theo luồng phù hợp — mua trực tiếp hoặc báo giá.",
-    previewTitle: "Gia hạn",
-    previewBody:
-      "Gói có giá rõ: Mua ngay → Checkout. Cần tư vấn: Yêu cầu báo giá. Không dùng giỏ hàng.",
+    title: "Theo dõi & gia hạn",
+    body: "Kiểm tra thời hạn và liên hệ KEYON khi cần gia hạn.",
+    previewTitle: "Theo dõi & gia hạn",
+    previewBody: "Kiểm tra ngày hết hạn trong Tài khoản, rồi liên hệ KEYON khi cần gia hạn hoặc đổi nhu cầu.",
     Icon: RefreshCcw,
     visual: [
-      { label: "Mua ngay", tone: "bg-accent/20 text-accent" },
-      { label: "Báo giá", tone: "bg-white/10 text-slate-200" },
+      { label: "Thời hạn", tone: "bg-amber-400/20 text-amber-200" },
+      { label: "Gia hạn", tone: "bg-accent/20 text-accent" },
     ],
   },
 ];
@@ -103,9 +85,9 @@ export function SubscriptionProcess() {
     <section className={`border-t border-border bg-[#F4F8FB] ${SECTION_PAD}`}>
       <div className="home-container">
         <header className="max-w-2xl">
-          <h2 className={SECTION_TITLE_CLASS}>Quy trình quản lý subscription</h2>
+          <h2 className={SECTION_TITLE_CLASS}>Quy trình mua và gia hạn</h2>
           <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-            Timeline hoạt động theo từng bước — khác với stepper vòng tròn của volume licensing.
+            Chọn subscription, xác nhận nhu cầu, nhận license, rồi theo dõi thời hạn để gia hạn khi cần.
           </p>
         </header>
 
@@ -124,7 +106,7 @@ export function SubscriptionProcess() {
                     type="button"
                     onClick={() => setActive(i)}
                     className={`flex w-full items-start gap-3 rounded-xl px-2 py-3 text-left ${TRANSITION_PANEL} ${
-                      selected ? "bg-white shadow-sm" : "hover:bg-white/70"
+                      selected ? "bg-white" : "hover:bg-white/70"
                     }`}
                   >
                     <span
@@ -172,13 +154,13 @@ export function SubscriptionProcess() {
                   </span>
                   <div className="min-w-0">
                     <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent">
-                      Bước {String(active + 1).padStart(2, "0")} / 05
+                      Bước {String(active + 1).padStart(2, "0")} / {String(STEPS.length).padStart(2, "0")}
                     </p>
                     <h3 className="mt-0.5 text-lg font-bold sm:text-xl">{current.previewTitle}</h3>
                   </div>
                 </div>
 
-                <p className={`mt-4 max-w-lg text-[15px] leading-relaxed text-slate-300`}>
+                <p className="mt-4 max-w-lg text-sm leading-relaxed text-slate-300 sm:text-base">
                   {current.previewBody}
                 </p>
 
@@ -188,7 +170,7 @@ export function SubscriptionProcess() {
                 >
                   <div className="flex items-center justify-between gap-3">
                     <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
-                      Tín hiệu trạng thái
+                      Tiến độ
                     </span>
                     <span className="h-1.5 w-16 overflow-hidden rounded-full bg-white/10">
                       <span
@@ -207,7 +189,7 @@ export function SubscriptionProcess() {
                       </span>
                     ))}
                   </div>
-                  <div className="mt-4 grid grid-cols-5 gap-1.5">
+                  <div className="mt-4 grid grid-cols-4 gap-1.5">
                     {STEPS.map((_, i) => (
                       <span
                         key={STEPS[i]!.title}
@@ -219,9 +201,6 @@ export function SubscriptionProcess() {
                   </div>
                 </div>
 
-                <p className="mt-5 text-[12px] leading-relaxed text-slate-400">
-                  Mô tả luồng vận hành — chưa gắn dữ liệu subscription cá nhân.
-                </p>
               </div>
             </div>
           </div>

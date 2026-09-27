@@ -1,7 +1,7 @@
 import { CARD_META_CLASS, CARD_TITLE_CLASS } from "@/storefront/typography";
 import { ELEVATION_FLOAT, ELEVATION_HAIRLINE } from "@/storefront/effects";
 
-const STEPS = ["Dùng", "Nhắc", "Xem", "Renew"] as const;
+const STEPS = ["Mua", "Dùng", "Theo dõi", "Gia hạn"] as const;
 
 /** Mobile-only decorative card — no fake products or dead action links. */
 export function SubscriptionMobilePreview() {
@@ -12,8 +12,8 @@ export function SubscriptionMobilePreview() {
         aria-hidden
       >
         <div className="border-b border-border px-4 py-3">
-          <p className={CARD_TITLE_CLASS}>Subscription Hub</p>
-          <p className={CARD_META_CLASS}>Theo dõi trạng thái gói</p>
+          <p className={CARD_TITLE_CLASS}>Theo dõi thời hạn</p>
+          <p className={CARD_META_CLASS}>Subscription đang dùng</p>
         </div>
 
         <div className="space-y-3 p-4">

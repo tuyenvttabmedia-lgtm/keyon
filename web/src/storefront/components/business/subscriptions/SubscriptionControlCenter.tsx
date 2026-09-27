@@ -23,23 +23,23 @@ import { SECTION_PAD } from "./shared";
 
 const POINTS = [
   {
-    title: "Tổng quan subscription",
-    body: "Nhìn toàn bộ gói đang theo dõi ở một nơi.",
+    title: "Sản phẩm đang dùng",
+    body: "Biết subscription nào đang trong thời hạn.",
     Icon: LayoutDashboard,
   },
   {
-    title: "Theo dõi trạng thái",
-    body: "Phân biệt đang dùng, sắp hạn hoặc cần xem xét.",
+    title: "Trạng thái thời hạn",
+    body: "Phân biệt đang dùng, sắp hết hạn hoặc cần xem lại.",
     Icon: ListChecks,
   },
   {
-    title: "Mốc gia hạn",
-    body: "Biết trước kỳ cần xử lý để chủ động kế hoạch.",
+    title: "Ngày cần gia hạn",
+    body: "Kiểm tra thời điểm cần liên hệ để gia hạn.",
     Icon: CalendarClock,
   },
   {
-    title: "Lịch sử xử lý",
-    body: "Giữ dấu vết các lần xem xét và gia hạn.",
+    title: "Hỗ trợ khi đổi nhu cầu",
+    body: "Nhờ KEYON tư vấn khi tăng, giảm hoặc đổi sản phẩm.",
     Icon: History,
   },
 ] as const;
@@ -56,13 +56,12 @@ export function SubscriptionControlCenter() {
       <div className="home-container">
         <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-10">
           <div className="min-w-0 lg:col-span-5">
-            <p className={`${OVERLINE_CLASS} tracking-[0.16em] text-accent`}>Quản lý tập trung</p>
+            <p className={`${OVERLINE_CLASS} tracking-[0.16em] text-accent`}>Thời hạn sử dụng</p>
             <h2 className={`mt-2.5 ${SECTION_TITLE_CLASS}`}>
-              Nắm rõ những gì đang sử dụng và điều gì sắp tới
+              Kiểm tra subscription đang dùng và ngày hết hạn
             </h2>
             <p className={`mt-3 ${SECTION_LEAD_CLASS}`}>
-              Thông tin subscription, trạng thái và thời hạn được tổ chức rõ ràng để doanh nghiệp
-              dễ theo dõi và ra quyết định.
+              Theo dõi thời hạn trong Tài khoản KEYON, rồi liên hệ khi cần gia hạn hoặc đổi nhu cầu.
             </p>
             <ul className="mt-6 grid gap-3 sm:grid-cols-2">
               {POINTS.map(({ title, Icon }) => (
@@ -86,7 +85,7 @@ export function SubscriptionControlCenter() {
               <div className="border-b border-border px-4 py-3 sm:px-5">
                 <p className={CARD_TITLE_CLASS}>Trạng thái theo dõi</p>
                 <p className={CARD_META_CLASS}>
-                  Các trạng thái KEYON dùng khi theo dõi subscription
+                  Các mốc khi theo dõi thời hạn subscription
                 </p>
               </div>
               <ul className="divide-y divide-border">

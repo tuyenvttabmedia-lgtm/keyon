@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   CirclePlay,
   Eye,
@@ -16,16 +17,17 @@ import {
   ELEVATION_CARD_HOVER,
   ELEVATION_HAIRLINE,
   HOVER_LIFT_CARD,
+  HOVER_LINK_ACCENT,
   TRANSITION_PANEL,
 } from "@/storefront/effects";
 import { SECTION_PAD } from "./shared";
 
 const STEPS: { title: string; body: string; Icon: LucideIcon }[] = [
-  { title: "Kích hoạt", body: "Ghi nhận subscription mới vào hệ thống.", Icon: Rocket },
-  { title: "Đang sử dụng", body: "Theo dõi trạng thái và hạn dùng trên Tài khoản.", Icon: CirclePlay },
-  { title: "Theo dõi", body: "Nắm chu kỳ và thông tin liên quan.", Icon: Eye },
-  { title: "Sắp gia hạn", body: "Nhận tín hiệu trước mốc cần xử lý.", Icon: Timer },
-  { title: "Gia hạn", body: "Tiếp tục, điều chỉnh hoặc tư vấn.", Icon: RefreshCcw },
+  { title: "Mua subscription", body: "Chọn sản phẩm và thời hạn sử dụng.", Icon: Rocket },
+  { title: "Thời hạn", body: "Biết ngày hết hạn trước khi mua.", Icon: Timer },
+  { title: "Đang sử dụng", body: "Dùng license trong thời hạn đã mua.", Icon: CirclePlay },
+  { title: "Theo dõi", body: "Kiểm tra thời hạn trong Tài khoản KEYON.", Icon: Eye },
+  { title: "Gia hạn", body: "Liên hệ KEYON khi cần gia hạn hoặc đổi nhu cầu.", Icon: RefreshCcw },
 ];
 
 /** Horizontal lifecycle — visual signature for this landing. */
@@ -36,9 +38,22 @@ export function LifecycleTimeline() {
     <section id="lifecycle" className={`scroll-mt-24 bg-white ${SECTION_PAD}`}>
       <div className="home-container">
         <header className="mx-auto max-w-2xl text-center">
-          <h2 className={SECTION_TITLE_CLASS}>Một subscription, một vòng đời rõ ràng</h2>
+          <h2 className={SECTION_TITLE_CLASS}>Từ lúc mua đến lúc gia hạn</h2>
           <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-            Từ kích hoạt đến gia hạn — từng trạng thái nối tiếp, dễ theo dõi.
+            Chọn sản phẩm theo số lượng người dùng, thiết bị và thời hạn sử dụng — KEYON hỗ trợ tư
+            vấn trước khi mua. Xem{" "}
+            <Link href="/solutions/microsoft-365-office" className={HOVER_LINK_ACCENT}>
+              Microsoft 365 &amp; Office
+            </Link>{" "}
+            hoặc{" "}
+            <Link href="/products" className={HOVER_LINK_ACCENT}>
+              danh mục sản phẩm
+            </Link>
+            . Mua nhiều license một lần nằm ở{" "}
+            <Link href="/business/volume-licensing" className={HOVER_LINK_ACCENT}>
+              Mua bản quyền số lượng lớn
+            </Link>
+            .
           </p>
         </header>
 
