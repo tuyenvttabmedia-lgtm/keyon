@@ -196,7 +196,7 @@ export function ShopCatalog({
   );
 
   return (
-    <div className="home-container py-6 md:py-8">
+    <div className="home-container home-section">
       <div className="mb-4 flex items-center justify-between lg:hidden">
         <p className={BODY_MUTED_CLASS}>
           {total > 0 ? `${from}–${to} / ${total} sản phẩm` : "0 sản phẩm"}

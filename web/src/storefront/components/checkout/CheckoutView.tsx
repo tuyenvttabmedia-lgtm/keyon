@@ -338,7 +338,7 @@ export function CheckoutView({
 
   return (
     <div className="bg-surface/40 pb-10">
-      <div className="home-container py-6 md:py-8">
+      <div className="home-container home-section">
         <CheckoutStepper current={2} />
         <p className={`mt-3 text-center ${FIELD_CAPTION_CLASS} text-accent`}>
           {cms.securityLine}

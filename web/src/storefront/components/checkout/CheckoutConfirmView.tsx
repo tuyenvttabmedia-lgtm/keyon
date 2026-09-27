@@ -124,7 +124,7 @@ export function CheckoutConfirmView({
 
   return (
     <div className="bg-surface/40 pb-10">
-      <div className="home-container py-6 md:py-8">
+      <div className="home-container home-section">
         <CheckoutStepper current={3} />
 
         <header className="mx-auto mt-8 max-w-3xl text-center">

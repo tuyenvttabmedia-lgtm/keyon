@@ -146,7 +146,7 @@ export function ByNeedSolutionLanding() {
         </div>
       </section>
 
-      <section className="bg-[#F7FAFC] py-10 md:py-12 lg:py-14">
+      <section className="bg-[#F7FAFC] home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Theo quy mô</h2>
@@ -174,7 +174,7 @@ export function ByNeedSolutionLanding() {
         </div>
       </section>
 
-      <section className="bg-white py-10 md:py-12 lg:py-14">
+      <section className="bg-white home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Các hướng giải pháp</h2>

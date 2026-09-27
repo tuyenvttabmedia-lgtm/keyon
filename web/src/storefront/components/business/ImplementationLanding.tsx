@@ -189,7 +189,7 @@ export function ImplementationLanding() {
         </div>
       </section>
 
-      <section className="bg-white py-10 md:py-12 lg:py-14">
+      <section className="bg-white home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Phạm vi KEYON làm</h2>
@@ -221,7 +221,7 @@ export function ImplementationLanding() {
         </div>
       </section>
 
-      <section className="bg-[#F4F8FB] py-10 md:py-12 lg:py-14">
+      <section className="bg-[#F4F8FB] home-section">
         <div className="home-container grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-start">
           <div>
             <h2 className={SECTION_TITLE_CLASS}>Không nằm trong phạm vi này</h2>
@@ -264,7 +264,7 @@ export function ImplementationLanding() {
         </div>
       </section>
 
-      <section className="bg-white py-10 md:py-12 lg:py-14">
+      <section className="bg-white home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Quy trình</h2>
@@ -293,7 +293,7 @@ export function ImplementationLanding() {
         </div>
       </section>
 
-      <section className="pb-10 pt-2 md:pb-12 lg:pb-14">
+      <section className="home-section">
         <div className="home-container">
           <div className="flex flex-col items-stretch gap-5 rounded-2xl bg-navy px-5 py-7 sm:px-8 md:flex-row md:items-center md:justify-between md:px-10 md:py-9">
             <div className="min-w-0 max-w-xl">

@@ -6,8 +6,8 @@ export const AREAS_ID = "consulting-areas";
 export const FORM_HREF = `#${FORM_ID}` as const;
 export const AREAS_HREF = `#${AREAS_ID}` as const;
 
-/** Match Volume / Subscription landings. */
-export const SECTION_PAD = "py-10 md:py-12 lg:py-14" as const;
+/** Same vertical rhythm as Home (`.home-section`). */
+export const SECTION_PAD = "home-section" as const;
 
 export const SURFACE =
   "rounded-2xl border border-border bg-white" as const;

@@ -143,7 +143,7 @@ export function SolutionsHubLanding({ introEmbedUrl }: Props) {
         </div>
       </section>
 
-      <section className="border-b border-border bg-white py-6 md:py-7">
+      <section className="border-b border-border bg-white home-section">
         <div className="home-container">
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {TRUST.map((t) => (
@@ -159,7 +159,7 @@ export function SolutionsHubLanding({ introEmbedUrl }: Props) {
         </div>
       </section>
 
-      <section id="solution-catalog" className="scroll-mt-24 py-10 md:py-12 lg:py-14">
+      <section id="solution-catalog" className="scroll-mt-24 home-section">
         <div className="home-container">
           <header className="mb-8 max-w-2xl md:mb-10">
             <h2 className={SECTION_TITLE_CLASS}>Khám phá giải pháp theo nhu cầu</h2>

@@ -290,7 +290,7 @@ export function ProductivitySolutionLanding({
       </section>
 
       {/* ── Value pillars ────────────────────────────────────── */}
-      <section className="pb-8 md:pb-9">
+      <section className="home-section">
         <div className="home-container">
           <ul className="grid gap-6 rounded-2xl bg-navy px-6 py-7 sm:grid-cols-2 sm:px-8 sm:py-8 lg:grid-cols-4 lg:gap-5 lg:px-9 lg:py-9">
             {VALUE_PILLARS.map((v) => (
@@ -312,7 +312,7 @@ export function ProductivitySolutionLanding({
       </section>
 
       {/* ── Work modes ───────────────────────────────────────── */}
-      <section className="pb-8 md:pb-9">
+      <section className="home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Giải pháp theo cách bạn làm việc</h2>
@@ -325,7 +325,7 @@ export function ProductivitySolutionLanding({
 
       {/* ── Products — left title + right cards (mockup) ─────── */}
       {showFeatured ? (
-      <section className="py-8 md:py-9">
+      <section className="home-section">
         <div className="home-container">
           <div className="relative overflow-hidden rounded-2xl bg-navy px-5 py-6 sm:px-6 sm:py-7 lg:px-8 lg:py-8">
             <div className="grid items-center gap-5 lg:grid-cols-[minmax(148px,0.38fr)_minmax(0,1fr)] lg:gap-5 xl:gap-6">
@@ -384,7 +384,7 @@ export function ProductivitySolutionLanding({
       ) : null}
 
       {/* ── Ecosystem + consult ──────────────────────────────── */}
-      <section className="py-8 md:py-9">
+      <section className="home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>

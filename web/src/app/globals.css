@@ -102,6 +102,26 @@ html {
   }
 }
 
+/* Same vertical rhythm as Home content sections: py-5 / md:py-4 / lg:py-6. */
+.home-section {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .home-section {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-section {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+}
+
 /* Home motion — PRODUCTION-UI-SPEC §2.11 (fast/normal/slow + standard easing) */
 :root {
   --motion-fast: 120ms;

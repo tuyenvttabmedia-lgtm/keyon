@@ -409,7 +409,7 @@ export function QuoteRequestLanding({
     <div className="bg-white">
       {/* Hero */}
       <section className="border-b border-border bg-[#F7FAFC]">
-        <div className="home-container py-8 md:py-10 lg:py-11">
+        <div className="home-container home-section">
           <nav className={`mb-5 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
             <Link href="/" className={HOVER_LINK_ACCENT}>
               Trang chủ
@@ -482,7 +482,7 @@ export function QuoteRequestLanding({
       </section>
 
       {/* Form + sidebar */}
-      <section className="home-container py-9 md:py-11">
+      <section className="home-container home-section">
         <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
           <div className="min-w-0 lg:col-span-8">
             {submitted ? (
@@ -969,7 +969,7 @@ export function QuoteRequestLanding({
       </section>
 
       {/* Process */}
-      <section className="border-t border-border bg-[#F7FAFC] py-10 md:py-12">
+      <section className="border-t border-border bg-[#F7FAFC] home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Quy trình nhận báo giá tại KEYON</h2>

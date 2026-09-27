@@ -302,7 +302,7 @@ export function BusinessHubLanding() {
       </section>
 
       {/* ── Buying motions ───────────────────────────────────── */}
-      <section className="bg-[#F4F8FB] py-10 md:py-12 lg:py-14">
+      <section className="bg-[#F4F8FB] home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Mua, gia hạn, triển khai & đơn DN</h2>
@@ -362,7 +362,7 @@ export function BusinessHubLanding() {
               "radial-gradient(ellipse 42% 70% at 92% 50%, rgba(14,165,164,0.28), transparent 55%), radial-gradient(ellipse 35% 45% at 8% 85%, rgba(14,165,233,0.08), transparent 50%)",
           }}
         />
-        <div className="home-container relative py-7 md:py-9 lg:py-10">
+        <div className="home-container relative pb-5 pt-5 md:pb-4 md:pt-5 lg:pb-6 lg:pt-8">
           <h2 className={`${SECTION_TITLE_CLASS} !text-white`}>KEYON giúp doanh nghiệp</h2>
 
           <div className="mt-5 grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(180px,0.26fr)] lg:gap-10 xl:gap-12">
@@ -391,7 +391,7 @@ export function BusinessHubLanding() {
       </section>
 
       {/* ── Process ──────────────────────────────────────────── */}
-      <section className="bg-white py-10 md:py-12 lg:py-14">
+      <section className="bg-white home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Quy trình làm việc</h2>

@@ -102,14 +102,14 @@ export function BrandDetailView({ brand }: { brand: BrandDetailData }) {
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_86%_16%,rgba(14,165,164,0.09),transparent_42%),radial-gradient(ellipse_at_10%_90%,rgba(14,165,233,0.05),transparent_48%)]"
             aria-hidden
           />
-          <div className="home-container relative py-8 md:py-10">
+          <div className="home-container relative home-section">
             <BrandIdentity brand={brand} countLabel={countLabel} />
           </div>
         </section>
       )}
 
       {brand.description ? (
-        <section className="border-b border-border bg-white py-8 md:py-10">
+        <section className="border-b border-border bg-white home-section">
           <div className="home-container">
             <div className="mx-auto max-w-3xl">
               <h2 className={SECTION_TITLE_CLASS}>Giới thiệu</h2>
@@ -125,7 +125,7 @@ export function BrandDetailView({ brand }: { brand: BrandDetailData }) {
 
       <section
         id="san-pham"
-        className="scroll-mt-24 bg-white py-8 md:py-10 lg:py-12"
+        className="scroll-mt-24 bg-white home-section"
       >
         <div className="home-container">
           <header className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">

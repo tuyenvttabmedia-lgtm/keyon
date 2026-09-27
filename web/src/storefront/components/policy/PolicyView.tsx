@@ -48,7 +48,7 @@ export function PolicyView({ cms }: { cms: CmsPolicy }) {
         </div>
       </section>
 
-      <div className="home-container space-y-6 py-8 md:space-y-8 md:py-10">
+      <div className="home-container home-section space-y-6 md:space-y-8">
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {cms.items.map((item) => (
             <PolicyCard key={item.id} item={item} cta={cms.cardCta} />

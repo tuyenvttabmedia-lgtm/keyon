@@ -19,7 +19,7 @@ import {
 export function HowItWorksLanding() {
   return (
     <div className="bg-[#F7FAFC]">
-      <section className="border-b border-border bg-white py-8 md:py-10">
+      <section className="border-b border-border bg-white home-section">
         <div className="home-container">
           <SolutionPageChrome
             kicker="Hỗ trợ"
@@ -36,7 +36,7 @@ export function HowItWorksLanding() {
         </div>
       </section>
 
-      <section className="py-8 md:py-10 lg:py-12">
+      <section className="home-section">
         <div className="home-container">
           <HowItWorksJourney heading="h1" ctaHref="/account/assets" />
 

@@ -169,7 +169,7 @@ export function LicenseManagementSolutionLanding({
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(14,165,164,0.07),transparent_55%)]"
           aria-hidden
         />
-        <div className="home-container relative py-8 md:py-10 lg:py-11">
+        <div className="home-container relative home-section">
           <nav
             className={`mb-6 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}
           >
@@ -237,7 +237,7 @@ export function LicenseManagementSolutionLanding({
         </div>
       </section>
 
-      <section className="py-9 md:py-11">
+      <section className="home-section">
         <div className="home-container">
           <header className="max-w-2xl">
             <h2 className={SECTION_TITLE_CLASS}>Bạn quản lý được gì trên KEYON</h2>
@@ -267,7 +267,7 @@ export function LicenseManagementSolutionLanding({
         </div>
       </section>
 
-      <section className="border-y border-border bg-[#F7FAFC] py-9 md:py-11">
+      <section className="border-y border-border bg-[#F7FAFC] home-section">
         <div className="home-container">
           <header className="max-w-2xl">
             <h2 className={SECTION_TITLE_CLASS}>Quy trình trong 4 bước</h2>
@@ -291,7 +291,7 @@ export function LicenseManagementSolutionLanding({
         </div>
       </section>
 
-      <section className="py-9 md:py-11">
+      <section className="home-section">
         <div className="home-container">
           <header className="max-w-2xl">
             <h2 className={SECTION_TITLE_CLASS}>Bản quyền phổ biến trên catalog</h2>

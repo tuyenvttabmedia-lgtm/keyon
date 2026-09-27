@@ -219,7 +219,7 @@ export function PdpView({ data }: { data: PdpProductData }) {
 
   return (
     <div className="bg-white pb-28">
-      <div className="home-container py-6 md:py-8">
+      <div className="home-container home-section">
         <Breadcrumb data={data} variant={variant} />
 
         <div className="mt-6 grid items-start gap-8 lg:grid-cols-2 lg:gap-10">

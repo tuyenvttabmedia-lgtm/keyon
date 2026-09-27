@@ -210,7 +210,7 @@ export function VolumeLicensingLanding() {
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_88%_20%,rgba(14,165,164,0.08),transparent_42%),radial-gradient(ellipse_at_10%_90%,rgba(14,165,233,0.05),transparent_48%)]"
           aria-hidden
         />
-        <div className="home-container relative py-7 md:py-9 lg:py-10">
+        <div className="home-container relative pb-5 pt-5 md:pb-4 md:pt-5 lg:pb-6 lg:pt-8">
           <nav className={`mb-6 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
             <Link href="/" className={HOVER_LINK_ACCENT}>
               Trang chủ
@@ -281,7 +281,7 @@ export function VolumeLicensingLanding() {
       </section>
 
       {/* ── Volume scale cards (mockup layout, no fake discounts) ─ */}
-      <section className="bg-white py-10 md:py-12 lg:py-14">
+      <section className="bg-white home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>
@@ -361,7 +361,7 @@ export function VolumeLicensingLanding() {
       </section>
 
       {/* ── Why KEYON ────────────────────────────────────────── */}
-      <section className="border-y border-border bg-[#F4F8FB] py-10 md:py-12 lg:py-14">
+      <section className="border-y border-border bg-[#F4F8FB] home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Vì sao doanh nghiệp chọn KEYON?</h2>
@@ -411,7 +411,7 @@ export function VolumeLicensingLanding() {
       </section>
 
       {/* ── Process ──────────────────────────────────────────── */}
-      <section className="bg-white py-10 md:py-12 lg:py-14">
+      <section className="bg-white home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Quy trình mua bản quyền số lượng lớn</h2>
@@ -459,7 +459,7 @@ export function VolumeLicensingLanding() {
       </section>
 
       {/* ── CTA ──────────────────────────────────────────────── */}
-      <section className="pb-10 pt-2 md:pb-12 lg:pb-14">
+      <section className="home-section">
         <div className="home-container">
           <div className="flex flex-col items-stretch gap-5 rounded-2xl bg-navy px-5 py-7 sm:px-8 md:flex-row md:items-center md:justify-between md:px-10 md:py-9">
             <div className="min-w-0 max-w-xl">

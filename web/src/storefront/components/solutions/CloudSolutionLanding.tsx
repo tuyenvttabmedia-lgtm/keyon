@@ -199,7 +199,7 @@ export function CloudSolutionLanding({ featured }: Props) {
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(14,165,164,0.08),_transparent_55%),radial-gradient(ellipse_at_bottom_left,_rgba(14,165,233,0.06),_transparent_50%)]"
           aria-hidden
         />
-        <div className="home-container relative py-7 md:py-9 lg:py-10">
+        <div className="home-container relative pb-5 pt-5 md:pb-4 md:pt-5 lg:pb-6 lg:pt-8">
           <nav className={`mb-5 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
             <Link href="/" className={HOVER_LINK_ACCENT}>
               Trang chủ
@@ -273,7 +273,7 @@ export function CloudSolutionLanding({ featured }: Props) {
       </section>
 
       {/* ── Services ─────────────────────────────────────────── */}
-      <section className="py-9 md:py-11 lg:py-12">
+      <section className="home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Danh mục Cloud & Hạ tầng</h2>
@@ -310,7 +310,7 @@ export function CloudSolutionLanding({ featured }: Props) {
       </section>
 
       {/* ── Platforms ────────────────────────────────────────── */}
-      <section className="border-y border-border bg-surface py-9 md:py-10">
+      <section className="border-y border-border bg-surface home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Nền tảng & thương hiệu</h2>
@@ -344,7 +344,7 @@ export function CloudSolutionLanding({ featured }: Props) {
       </section>
 
       {/* ── Segments ─────────────────────────────────────────── */}
-      <section className="py-9 md:py-11 lg:py-12">
+      <section className="home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Giải pháp theo nhu cầu</h2>
@@ -404,7 +404,7 @@ export function CloudSolutionLanding({ featured }: Props) {
 
       {/* ── Featured products ────────────────────────────────── */}
       {showFeatured ? (
-      <section className="border-t border-border bg-surface py-9 md:py-11 lg:py-12">
+      <section className="border-t border-border bg-surface home-section">
         <div className="home-container">
           <div className="mb-5 flex flex-col gap-2.5 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -461,7 +461,7 @@ export function CloudSolutionLanding({ featured }: Props) {
       ) : null}
 
       {/* ── Process ──────────────────────────────────────────── */}
-      <section className="py-9 md:py-11 lg:py-12">
+      <section className="home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Quy trình mua & nhận bàn giao</h2>

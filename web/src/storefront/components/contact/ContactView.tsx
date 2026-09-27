@@ -109,7 +109,7 @@ export function ContactView({ cms }: { cms: CmsContact }) {
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(14,165,164,0.07),transparent_55%)]"
           aria-hidden
         />
-        <div className="home-container relative py-8 md:py-10">
+        <div className="home-container relative home-section">
           <nav
             className={`mb-5 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}
           >
@@ -129,7 +129,7 @@ export function ContactView({ cms }: { cms: CmsContact }) {
         </div>
       </section>
 
-      <div className="home-container space-y-8 py-8 md:space-y-10 md:py-10">
+      <div className="home-container home-section space-y-8 md:space-y-10">
         <section className="grid gap-6 lg:grid-cols-[minmax(0,1.55fr)_minmax(16rem,0.9fr)] lg:items-start lg:gap-8">
           <div
             className={`rounded-2xl border border-border bg-white p-5 sm:p-6 lg:p-7 ${ELEVATION_NONE}`}

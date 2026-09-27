@@ -29,7 +29,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function AboutPage() {
   return (
     <div className="bg-white">
-      <SectionSurface variant="white" className="border-b border-border py-10 md:py-14">
+      <SectionSurface variant="white" className="border-b border-border home-section">
         <nav className="text-sm text-muted" aria-label="Breadcrumb">
           <Link href="/" className="hover:text-accent">
             Trang chủ
@@ -62,7 +62,7 @@ export default function AboutPage() {
         </div>
       </SectionSurface>
 
-      <SectionSurface variant="soft" className="border-b border-border py-12 md:py-14">
+      <SectionSurface variant="soft" className="border-b border-border home-section">
         <div className="grid gap-4 md:grid-cols-3">
           {[
             {
@@ -97,7 +97,7 @@ export default function AboutPage() {
         </div>
       </SectionSurface>
 
-      <SectionSurface variant="white" className="border-b border-border py-12 md:py-14">
+      <SectionSurface variant="white" className="border-b border-border home-section">
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-12">
           <div>
             <h2 className={SECTION_TITLE_CLASS}>

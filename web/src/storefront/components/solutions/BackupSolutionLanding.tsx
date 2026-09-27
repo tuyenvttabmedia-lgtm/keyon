@@ -255,7 +255,7 @@ export function BackupSolutionLanding({ featured }: Props) {
       </section>
 
       {/* ── Data pillars ─────────────────────────────────────── */}
-      <section className="py-9 md:py-11">
+      <section className="home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Mọi dữ liệu đều đáng được bảo vệ</h2>
@@ -288,7 +288,7 @@ export function BackupSolutionLanding({ featured }: Props) {
 
       {/* ── Solution selector ────────────────────────────────── */}
       {showFeatured ? (
-      <section className="pb-9 md:pb-11">
+      <section className="home-section">
         <div className="home-container">
           <header className="mb-5 flex flex-wrap items-end justify-between gap-3">
             <div>
@@ -403,7 +403,7 @@ export function BackupSolutionLanding({ featured }: Props) {
       ) : null}
 
       {/* ── Recovery flow ────────────────────────────────────── */}
-      <section className="relative overflow-hidden pb-9 md:pb-11">
+      <section className="relative overflow-hidden home-section">
         <div
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(15,23,42,0.06)_1px,transparent_0)] bg-[length:18px_18px]"
           aria-hidden

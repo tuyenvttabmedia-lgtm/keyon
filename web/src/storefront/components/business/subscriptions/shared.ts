@@ -8,7 +8,7 @@ export const ACCOUNT_ASSETS_HREF = "/account/assets";
 export const PRODUCTS_HREF = "/products";
 
 /** Consistent section vertical rhythm (matches Volume / Business landings). */
-export const SECTION_PAD = "py-10 md:py-12 lg:py-14" as const;
+export const SECTION_PAD = "home-section" as const;
 
 /** Interactive marketing card surface — lift + hairline shadow. */
 export const CARD_SURFACE =

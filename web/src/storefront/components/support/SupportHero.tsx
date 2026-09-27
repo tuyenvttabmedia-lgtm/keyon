@@ -24,7 +24,7 @@ export function SupportHero({ docs, suggestions }: Props) {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(14,165,164,0.07),transparent_55%)]"
         aria-hidden
       />
-      <div className="home-container relative py-8 md:py-10 lg:py-11">
+      <div className="home-container relative home-section">
         <nav className={`mb-5 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
           <Link href="/" className={HOVER_LINK_ACCENT}>
             Trang chủ

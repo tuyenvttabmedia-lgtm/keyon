@@ -125,7 +125,7 @@ export function BrandsIndexView({ brands }: Props) {
       </section>
 
       {featured.length > 0 ? (
-        <section className="border-b border-border bg-white py-8 md:py-10">
+        <section className="border-b border-border bg-white home-section">
           <div className="home-container">
             <header className="mb-5">
               <h2 className={SECTION_TITLE_CLASS}>Nổi bật</h2>
@@ -145,7 +145,7 @@ export function BrandsIndexView({ brands }: Props) {
         </section>
       ) : null}
 
-      <section className="bg-white py-8 md:py-10 lg:py-12">
+      <section className="bg-white home-section">
         <div className="home-container">
           <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>

@@ -17,7 +17,7 @@ export function FaqHomeSection({ data }: { data: FaqHome }) {
   if (!data.visible || !data.items.length) return null;
 
   return (
-    <section className="bg-[#f8fafc] py-8 md:py-10">
+    <section className="bg-[#f8fafc] home-section">
       <div className="home-container">
         <HomeSectionHeading
           title={data.title}

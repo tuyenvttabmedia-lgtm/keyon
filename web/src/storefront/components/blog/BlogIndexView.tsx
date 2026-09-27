@@ -248,7 +248,7 @@ export function BlogIndexView({
 
   return (
     <div className="pb-0">
-      <div className="home-container space-y-8 py-8 md:space-y-10 md:py-12">
+      <div className="home-container home-section space-y-8 md:space-y-10">
         <nav className={`flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
           <Link href="/" className="transition-colors hover:text-accent">
             Trang chủ

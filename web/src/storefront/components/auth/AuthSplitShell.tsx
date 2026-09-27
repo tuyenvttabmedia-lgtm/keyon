@@ -27,7 +27,7 @@ export function AuthSplitShell({
   children,
 }: ShellProps) {
   return (
-    <div className="w-full flex-1 bg-background py-8 md:py-10 lg:py-12">
+    <div className="w-full flex-1 bg-background home-section">
       <div className="home-container">
         <div className="grid w-full overflow-hidden rounded-2xl border border-border bg-card lg:grid-cols-2 lg:items-stretch">
           <AuthBrandPanel

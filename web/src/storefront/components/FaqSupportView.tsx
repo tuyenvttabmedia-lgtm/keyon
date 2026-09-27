@@ -485,7 +485,7 @@ export function FaqSupportView({
 
   return (
     <div className="bg-[#F7FAFC]">
-      <div className="home-container py-8 md:py-10">
+      <div className="home-container home-section">
         <nav className={`text-muted ${CARD_META_CLASS}`} aria-label="Breadcrumb">
           <Link href="/" className="hover:text-accent">
             Trang chủ

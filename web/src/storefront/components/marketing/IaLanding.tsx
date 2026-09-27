@@ -13,7 +13,7 @@ export function IaLandingPage({
   return (
     <div className="bg-[var(--background)]">
       <section className="border-b border-[var(--border)] bg-gradient-to-b from-[var(--surface)] to-[var(--background)]">
-        <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-20">
+        <div className="home-container home-section">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
             <Link href={hubHref} className="hover:text-[var(--foreground)]">
               {hubLabel}
@@ -53,7 +53,7 @@ export function IaLandingPage({
       </section>
 
       {page.bullets && page.bullets.length > 0 ? (
-        <section className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
+        <section className="home-container home-section">
           <h2 className="font-display text-xl font-semibold text-[var(--foreground)]">Bạn nhận được gì</h2>
           <ul className="mt-5 space-y-3">
             {page.bullets.map((b) => (
@@ -68,7 +68,7 @@ export function IaLandingPage({
 
       {page.related && page.related.length > 0 ? (
         <section className="border-t border-[var(--border)] bg-[var(--surface)]">
-          <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
+          <div className="home-container home-section">
             <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--muted)]">Liên quan</h2>
             <ul className="mt-4 flex flex-wrap gap-3">
               {page.related.map((r) => (
@@ -103,7 +103,7 @@ export function ResourceStub({
   return (
     <div className="bg-[var(--background)]">
       <section className="border-b border-[var(--border)] bg-gradient-to-b from-[var(--surface)] to-[var(--background)]">
-        <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-20">
+        <div className="home-container home-section">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
             <Link href="/kien-thuc" className="hover:text-[var(--foreground)]">
               Kiến thức
@@ -142,14 +142,14 @@ export function IaHubPage({
   return (
     <div className="bg-[var(--background)]">
       <section className="border-b border-[var(--border)] bg-gradient-to-b from-[var(--surface)] to-[var(--background)]">
-        <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-20">
+        <div className="home-container home-section">
           <h1 className="font-display text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl">
             {title}
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-[var(--muted)] sm:text-lg">{subtitle}</p>
         </div>
       </section>
-      <section className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
+      <section className="home-container home-section">
         <ul className="grid gap-4 sm:grid-cols-2">
           {items.map((item) => (
             <li key={item.href}>

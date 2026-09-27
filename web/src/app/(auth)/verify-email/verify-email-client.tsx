@@ -53,7 +53,7 @@ export function VerifyEmailClient() {
   }, [token]);
 
   return (
-    <div className="home-container py-12 md:py-16">
+    <div className="home-container home-section">
       <div className={`mx-auto max-w-md space-y-4 ${CARD_PORTAL}`}>
         <h1 className={PAGE_TITLE_CLASS}>Xác thực email</h1>
         <p className={SECTION_LEAD_CLASS}>

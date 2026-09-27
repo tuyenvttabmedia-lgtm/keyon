@@ -62,7 +62,7 @@ export function NewsSection({ data }: { data: News }) {
           : "md:grid-cols-2";
 
   return (
-    <section className="py-5 md:py-4 lg:py-6">
+    <section className="home-section">
       <div className="home-container">
         <HomeSectionHeading
           title={data.title}

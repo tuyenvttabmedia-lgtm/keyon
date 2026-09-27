@@ -34,7 +34,7 @@ export default async function CategoriesIndexPage() {
   );
 
   return (
-    <div className="home-container py-10 md:py-14">
+    <div className="home-container home-section">
       <h1 className={PAGE_TITLE_CLASS}>Danh mục sản phẩm</h1>
       <p className={`mt-3 max-w-2xl ${SECTION_LEAD_CLASS}`}>
         Chọn nhóm phần mềm bản quyền chính hãng trên KEYON — xem giá và nhận

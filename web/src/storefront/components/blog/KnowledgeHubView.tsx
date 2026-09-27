@@ -186,7 +186,7 @@ export function KnowledgeHubView({
       </section>
 
       {/* Chuyên mục — hàng gọn, không nhét “Bài mới” (tránh trùng hero) */}
-      <section className="border-b border-border bg-white py-7 md:py-8">
+      <section className="border-b border-border bg-white home-section">
         <div className="home-container">
           <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
             <div>
@@ -244,7 +244,7 @@ export function KnowledgeHubView({
       </section>
 
       {/* Mới nhất — không lặp block Nổi bật; card gọn không excerpt */}
-      <section className="bg-white py-8 md:py-10">
+      <section className="bg-white home-section">
         <div className="home-container">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
             <div>
@@ -309,7 +309,7 @@ export function KnowledgeHubView({
         </div>
       </section>
 
-      <section className="pb-9 md:pb-12">
+      <section className="home-section">
         <div className="home-container">
           <div className="flex flex-col items-stretch gap-4 rounded-2xl bg-footer px-5 py-6 text-white sm:px-6 md:flex-row md:items-center md:justify-between md:px-8">
             <div>

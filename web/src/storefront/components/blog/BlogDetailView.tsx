@@ -200,7 +200,7 @@ export function BlogDetailView({
   const indexHref = resourceIndexHref(section);
 
   return (
-    <div className="home-container space-y-6 py-8 md:space-y-8 md:py-12">
+    <div className="home-container home-section space-y-6 md:space-y-8">
       <nav className={`flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
         <Link href="/" className={HOVER_LINK_ACCENT}>
           Trang chủ

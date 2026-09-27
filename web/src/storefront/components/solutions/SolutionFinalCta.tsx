@@ -28,7 +28,7 @@ export function SolutionFinalCta({
   secondaryLabel = "Xem sản phẩm",
 }: Props) {
   return (
-    <section className="pb-10 md:pb-12 lg:pb-14">
+    <section className="home-section">
       <div className="home-container">
         <div className="rounded-2xl bg-navy px-6 py-9 text-center sm:px-10 sm:py-11">
           <h2 className={`${SECTION_TITLE_CLASS} !text-white`}>{title}</h2>

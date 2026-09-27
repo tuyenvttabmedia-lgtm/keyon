@@ -114,7 +114,7 @@ export function CheckoutSuccessView({
 
   return (
     <div className="bg-surface/40 pb-10">
-      <div className="home-container py-6 md:py-8">
+      <div className="home-container home-section">
         <CheckoutStepper current={4} />
 
         <div className="mt-8 grid items-start gap-5 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)] lg:gap-6">

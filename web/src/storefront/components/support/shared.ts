@@ -1,6 +1,6 @@
 /** Support Center shared links and helpers — no fake contact / counts. */
 
-export const SECTION_PAD = "py-10 md:py-12 lg:py-14" as const;
+export const SECTION_PAD = "home-section" as const;
 export const SURFACE =
   "rounded-2xl border border-border bg-white" as const;
 export const SURFACE_MUTED =

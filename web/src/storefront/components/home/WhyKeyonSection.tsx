@@ -27,7 +27,7 @@ export function WhyKeyonSection({ data }: { data: Why }) {
   const items = data.items.slice(0, 6);
 
   return (
-    <section className="py-5 md:py-4 lg:py-7">
+    <section className="home-section">
       <div className="home-container">
         <div className="grid items-start gap-5 lg:grid-cols-[210px_minmax(0,1.55fr)_280px] lg:items-stretch lg:gap-5">
           <div className="lg:self-start">

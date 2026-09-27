@@ -175,7 +175,7 @@ export function PolicyDetailView({
       </section>
 
       <div className="bg-[#F4F8FB]">
-        <div className="home-container py-6 md:py-8">
+        <div className="home-container home-section">
           <div
             className={`grid gap-5 rounded-2xl border border-border bg-white p-4 sm:p-5 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-5 lg:p-6 xl:grid-cols-[14rem_minmax(0,1fr)] ${ELEVATION_HAIRLINE}`}
           >

@@ -127,7 +127,7 @@ export function ContractsLanding() {
         </div>
       </section>
 
-      <section className="bg-white py-10 md:py-12 lg:py-14">
+      <section className="bg-white home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Bạn theo dõi được gì hôm nay</h2>
@@ -157,7 +157,7 @@ export function ContractsLanding() {
         </div>
       </section>
 
-      <section className="bg-[#F4F8FB] py-10 md:py-12 lg:py-14">
+      <section className="bg-[#F4F8FB] home-section">
         <div className="home-container grid gap-8 lg:grid-cols-2 lg:items-start">
           <div>
             <h2 className={SECTION_TITLE_CLASS}>Chưa có trên trang này</h2>

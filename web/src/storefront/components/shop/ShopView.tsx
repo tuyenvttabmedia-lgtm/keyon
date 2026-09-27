@@ -29,7 +29,7 @@ export function ShopView(props: ShopCatalogProps) {
   return (
     <div>
       <section className="border-b border-border bg-white">
-        <div className="home-container py-6 md:py-8">
+        <div className="home-container home-section">
           <nav className={BREADCRUMB_CLASS} aria-label="Breadcrumb">
             <ol className="flex flex-wrap items-center gap-1.5">
               <li>

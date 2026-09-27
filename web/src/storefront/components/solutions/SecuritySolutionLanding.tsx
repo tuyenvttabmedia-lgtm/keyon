@@ -204,7 +204,7 @@ export function SecuritySolutionLanding({ featured }: Props) {
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_88%_18%,rgba(14,165,164,0.1),transparent_42%),radial-gradient(ellipse_at_8%_88%,rgba(14,165,233,0.06),transparent_48%)]"
           aria-hidden
         />
-        <div className="home-container relative py-7 md:py-9 lg:py-10">
+        <div className="home-container relative pb-5 pt-5 md:pb-4 md:pt-5 lg:pb-6 lg:pt-8">
           <nav className={`mb-6 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
             <Link href="/" className={HOVER_LINK_ACCENT}>
               Trang chủ
@@ -274,7 +274,7 @@ export function SecuritySolutionLanding({ featured }: Props) {
 
       {/* ── Trust points ─────────────────────────────────────── */}
       <section className="bg-navy">
-        <div className="home-container py-6 md:py-7">
+        <div className="home-container home-section">
           <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
             {TRUST_POINTS.map((s) => (
               <li key={s.title} className="flex items-start gap-3.5">
@@ -295,7 +295,7 @@ export function SecuritySolutionLanding({ featured }: Props) {
       </section>
 
       {/* ── Protection pillars ───────────────────────────────── */}
-      <section className="py-9 md:py-11">
+      <section className="home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Các lớp bảo mật trên KEYON</h2>
@@ -329,7 +329,7 @@ export function SecuritySolutionLanding({ featured }: Props) {
 
       {/* ── Products ─────────────────────────────────────────── */}
       {showFeatured ? (
-      <section className="pb-9 md:pb-11">
+      <section className="home-section">
         <div className="home-container">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
             <div>
@@ -405,7 +405,7 @@ export function SecuritySolutionLanding({ featured }: Props) {
       ) : null}
 
       {/* ── Why KEYON ────────────────────────────────────────── */}
-      <section className="pb-8 md:pb-9">
+      <section className="home-section">
         <div className="home-container">
           <div className="relative overflow-hidden rounded-2xl bg-navy px-5 py-8 sm:px-8 sm:py-9 lg:px-10">
             <div
@@ -444,7 +444,7 @@ export function SecuritySolutionLanding({ featured }: Props) {
       </section>
 
       {/* ── 4 steps ──────────────────────────────────────────── */}
-      <section className="pb-8 md:pb-9">
+      <section className="home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>4 bước mua và kích hoạt gói bảo mật</h2>
