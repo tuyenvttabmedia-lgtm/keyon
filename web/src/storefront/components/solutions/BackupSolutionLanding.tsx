@@ -212,11 +212,6 @@ export function BackupSolutionLanding({ featured }: Props) {
                 Khám phá phần mềm và license backup cho PC, máy chủ, Microsoft 365 và dữ liệu
                 Cloud trên KEYON, với thông tin rõ ràng và hỗ trợ kích hoạt tiếng Việt.
               </p>
-              <p className={`mt-3 max-w-xl ${BODY_MUTED_CLASS}`}>
-                Lưu ý: KEYON cung cấp license và phần mềm backup; việc lưu trữ, sao lưu và
-                khôi phục được thực hiện trên hệ thống của khách hàng hoặc theo dịch vụ của
-                nhà cung cấp.
-              </p>
 
               <ul className="mt-5 grid gap-3 sm:grid-cols-3 sm:gap-2.5">
                 {HERO_POINTS.map((p) => (

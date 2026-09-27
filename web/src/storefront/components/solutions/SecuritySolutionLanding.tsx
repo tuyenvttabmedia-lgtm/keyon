@@ -230,10 +230,6 @@ export function SecuritySolutionLanding({ featured }: Props) {
                 Khám phá các sản phẩm và license bảo mật cho thiết bị, email, dữ liệu, danh tính
                 và mạng trên KEYON, với thông tin rõ ràng và hỗ trợ tiếng Việt.
               </p>
-              <p className={`mt-3 max-w-xl ${BODY_MUTED_CLASS}`}>
-                Lưu ý: KEYON cung cấp sản phẩm và license bảo mật theo catalog, không thay thế
-                SOC hoặc dịch vụ giám sát an ninh mạng thuê ngoài.
-              </p>
 
               <ul className="mt-6 space-y-3.5">
                 {HERO_POINTS.map((p) => (
