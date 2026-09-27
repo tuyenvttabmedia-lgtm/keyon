@@ -24,10 +24,10 @@ import {
   CTA_LABEL_CLASS,
   FONT_DISPLAY,
   HERO_TITLE_CLASS,
-  OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
+  SUBSECTION_TITLE_CLASS,
 } from "@/storefront/typography";
 import {
   ELEVATION_CARD_HOVER,
@@ -83,11 +83,17 @@ const HERO_ORBIT: { id: string; seat: string }[] = [
 ];
 
 const TRUST: { title: string; body: string }[] = [
-  { title: "Chính hãng", body: "License đúng nguồn, ghi rõ loại nhận trên gói." },
-  { title: "Giao sau thanh toán", body: "Key / tài khoản / hồ sơ vào Tài khoản." },
+  { title: "Chính hãng", body: "License đúng nguồn, ghi rõ loại license trên từng gói." },
+  {
+    title: "Bàn giao rõ ràng",
+    body: "Key, tài khoản hoặc thông tin license được bàn giao theo từng sản phẩm.",
+  },
   { title: "Hỗ trợ tiếng Việt", body: "Tư vấn chọn gói trước và sau khi mua." },
-  { title: "Cá nhân & tổ chức", body: "Mua lẻ trên Sản phẩm, volume ở Doanh nghiệp." },
+  { title: "Cá nhân & tổ chức", body: "Mua lẻ trên Sản phẩm, số lượng lớn ở Doanh nghiệp." },
 ];
+
+const TECH_TOPIC_IDS = ["microsoft-365-office", "cloud", "security", "backup"] as const;
+const ADVISE_TOPIC_IDS = ["license-management", "by-need"] as const;
 
 type Props = {
   introEmbedUrl: string | null;
@@ -111,23 +117,23 @@ export function SolutionsHubLanding({ introEmbedUrl }: Props) {
                   { label: "Giải pháp" },
                 ]}
               />
-              <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
-                Hướng chọn gói
-              </p>
               <h1 className={`mt-2.5 max-w-3xl ${HERO_TITLE_CLASS}`}>
-                Chọn hướng giải pháp — rồi mua license trên KEYON
+                Giải pháp phần mềm, Cloud & bản quyền
               </h1>
+              <p className="mt-3 max-w-xl font-display text-lg font-semibold tracking-tight text-navy sm:text-xl">
+                Chọn đúng giải pháp — rồi mua đúng license trên KEYON.
+              </p>
               <p className={`mt-4 max-w-2xl ${PAGE_LEAD_CLASS}`}>
-                Chọn hướng theo việc cần giải quyết — năng suất, hạ tầng, bảo mật,
-                sao lưu, quản lý bản quyền — rồi chốt gói trên Sản phẩm. Mua số
-                lượng lớn và gia hạn nằm ở Doanh nghiệp.
+                Khám phá Microsoft 365, Cloud, bảo mật, backup và quản lý bản quyền theo nhu
+                cầu cá nhân, đội nhóm và doanh nghiệp. Chọn hướng phù hợp trước khi mua sản
+                phẩm trên KEYON.
               </p>
               <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:items-center">
                 <a
                   href="#solution-catalog"
-                  className={`inline-flex h-11 items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                  className={`inline-flex h-11 items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
-                  Khám phá giải pháp →
+                  Xem các giải pháp →
                 </a>
                 <SolutionsIntroVideoButton embedUrl={introEmbedUrl} />
               </div>
@@ -155,59 +161,90 @@ export function SolutionsHubLanding({ introEmbedUrl }: Props) {
 
       <section id="solution-catalog" className="scroll-mt-24 py-10 md:py-12 lg:py-14">
         <div className="home-container">
-          <header className="mb-6 max-w-2xl md:mb-8">
-            <h2 className={SECTION_TITLE_CLASS}>Danh mục giải pháp</h2>
+          <header className="mb-8 max-w-2xl md:mb-10">
+            <h2 className={SECTION_TITLE_CLASS}>Khám phá giải pháp theo nhu cầu</h2>
             <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>
-              Sáu hướng giải pháp trên KEYON — chọn theo nhu cầu trước khi mua trên catalog.
+              Chọn vấn đề bạn cần giải quyết, sau đó tìm sản phẩm và license phù hợp trên KEYON.
             </p>
           </header>
-          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
-            {SOLUTION_TOPICS.map((topic) => {
-              const page = SOLUTION_PAGES[topic.id];
-              const bullets = (page?.bullets ?? [topic.description]).slice(0, 3);
-              const Icon = ICON[topic.art];
-              return (
-                <li key={topic.id}>
-                  <Link
-                    href={topic.href}
-                    className={`group flex h-full flex-col rounded-2xl border border-border bg-white p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
-                  >
-                    <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent">
-                      <Icon size={20} strokeWidth={1.85} aria-hidden />
-                    </span>
-                    <h3 className={`mt-4 ${CARD_TITLE_CLASS}`}>{topic.label}</h3>
-                    <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>
-                      {page?.subtitle ?? topic.description}
-                    </p>
-                    <ul className={`mt-3 flex-1 space-y-1.5 ${BODY_MUTED_CLASS}`}>
-                      {bullets.map((b) => (
-                        <li key={b} className="flex gap-2">
-                          <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent" />
-                          <span>{b}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <span
-                      className={`mt-4 ${CTA_COMPACT_CLASS} text-accent ${TRANSITION_UI} group-hover:underline`}
-                    >
-                      Tìm hiểu →
-                    </span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+          <TopicGroup
+            title="Giải pháp công nghệ"
+            ids={TECH_TOPIC_IDS}
+          />
+          <TopicGroup
+            title="Quản lý & tư vấn"
+            ids={ADVISE_TOPIC_IDS}
+            className="mt-8 md:mt-10"
+          />
         </div>
       </section>
 
       <SolutionFinalCta
-        title="Cần tư vấn chọn gói hoặc báo giá DN?"
-        subtitle="Tư vấn chọn gói, bàn giao sau mua và hỗ trợ tiếng Việt — không thay Order bằng hợp đồng trên landing."
+        title="Cần tư vấn chọn giải pháp hoặc báo giá doanh nghiệp?"
+        subtitle="KEYON hỗ trợ tư vấn sản phẩm, license và phương án phù hợp theo nhu cầu sử dụng."
         primaryHref={QUOTE_HREF}
         primaryLabel={`${QUOTE_LABEL} →`}
         secondaryHref="/business"
         secondaryLabel="Dành cho doanh nghiệp"
       />
+    </div>
+  );
+}
+
+function TopicGroup({
+  title,
+  ids,
+  className = "",
+}: {
+  title: string;
+  ids: readonly string[];
+  className?: string;
+}) {
+  const byId = Object.fromEntries(SOLUTION_TOPICS.map((t) => [t.id, t]));
+  const topics = ids.flatMap((id) => {
+    const topic = byId[id];
+    return topic ? [topic] : [];
+  });
+
+  return (
+    <div className={className}>
+      <h3 className={SUBSECTION_TITLE_CLASS}>{title}</h3>
+      <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-2 lg:gap-4">
+        {topics.map((topic) => {
+          const page = SOLUTION_PAGES[topic.id];
+          const bullets = (page?.bullets ?? [topic.description]).slice(0, 3);
+          const Icon = ICON[topic.art];
+          return (
+            <li key={topic.id}>
+              <Link
+                href={topic.href}
+                className={`group flex h-full flex-col rounded-2xl border border-border bg-white p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
+              >
+                <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent">
+                  <Icon size={20} strokeWidth={1.85} aria-hidden />
+                </span>
+                <h4 className={`mt-4 ${CARD_TITLE_CLASS}`}>{topic.label}</h4>
+                <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>
+                  {page?.subtitle ?? topic.description}
+                </p>
+                <ul className={`mt-3 flex-1 space-y-1.5 ${BODY_MUTED_CLASS}`}>
+                  {bullets.map((b) => (
+                    <li key={b} className="flex gap-2">
+                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent" />
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+                <span
+                  className={`mt-4 ${CTA_COMPACT_CLASS} text-accent ${TRANSITION_UI} group-hover:underline`}
+                >
+                  Tìm hiểu →
+                </span>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }

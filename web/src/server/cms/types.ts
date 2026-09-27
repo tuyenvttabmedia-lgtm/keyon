@@ -811,9 +811,9 @@ export const defaultSettings: SiteSettings = {
         "Volume licensing, subscription, tư vấn bản quyền và báo giá B2B trên KEYON.",
     },
     "/solutions": {
-      title: "Giải pháp — KEYON",
+      title: "Giải pháp phần mềm, Cloud & bản quyền | KEYON",
       description:
-        "Giải pháp KEYON theo nhu cầu: năng suất, cloud, bảo mật, sao lưu và quản lý bản quyền.",
+        "Khám phá giải pháp Microsoft 365, Cloud, bảo mật, backup và quản lý bản quyền. Chọn sản phẩm phù hợp nhu cầu trên KEYON.",
     },
     "/support": {
       title: "Trung tâm hỗ trợ — KEYON",

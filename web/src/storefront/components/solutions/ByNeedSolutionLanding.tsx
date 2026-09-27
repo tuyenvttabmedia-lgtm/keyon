@@ -120,16 +120,15 @@ export function ByNeedSolutionLanding() {
                 Kết hợp đúng sản phẩm với quy mô sử dụng
               </h1>
               <p className={`mt-4 ${PAGE_LEAD_CLASS}`}>
-                Không phải trang quản lý license đã mua. Đây là bước chọn mix —
-                năng suất, cloud, bảo mật, sao lưu — rồi mới mua hoặc nhờ KEYON
-                tư vấn gói.
+                Kết hợp nhiều sản phẩm theo nhu cầu thực tế của cá nhân, đội nhóm hoặc
+                doanh nghiệp. KEYON hỗ trợ chọn theo số người dùng, nhu cầu và ngân sách.
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="/business/licensing-consulting"
-                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
-                  Tư vấn mix giải pháp →
+                  Liên hệ tư vấn →
                 </Link>
                 <Link
                   href="/solutions"
@@ -180,7 +179,7 @@ export function ByNeedSolutionLanding() {
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Các hướng giải pháp</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Chọn một hướng rồi ghép thêm khi cần — hoặc để KEYON tư vấn mix.
+              Chọn một hướng, rồi bổ sung sản phẩm khác khi cần — hoặc nhờ KEYON tư vấn.
             </p>
           </header>
           <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -203,10 +202,10 @@ export function ByNeedSolutionLanding() {
       </section>
 
       <SolutionFinalCta
-        title="Cần KEYON ghép giúp?"
-        subtitle="Tư vấn mix theo số người dùng — khác bước theo dõi license trong tài khoản."
+        title="Cần KEYON tư vấn cách kết hợp?"
+        subtitle="KEYON hỗ trợ chọn sản phẩm theo số người dùng, nhu cầu và ngân sách."
         primaryHref="/business/licensing-consulting"
-        primaryLabel="Nhận tư vấn mix"
+        primaryLabel="Liên hệ tư vấn"
         secondaryHref="/solutions/license-management"
         secondaryLabel="Quản lý bản quyền"
       />
@@ -229,7 +228,7 @@ function ByNeedHeroArt() {
             </span>
             <div>
               <p className={CARD_TITLE_CLASS}>Ghép giải pháp theo nhu cầu</p>
-              <p className={CARD_META_CLASS}>Chọn mix theo nhu cầu</p>
+              <p className={CARD_META_CLASS}>Chọn theo nhu cầu</p>
             </div>
           </div>
           <span className="rounded-md bg-accent-soft px-2 py-1 text-[11px] font-semibold text-accent">

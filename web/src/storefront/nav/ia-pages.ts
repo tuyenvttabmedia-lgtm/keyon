@@ -32,13 +32,13 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
     kicker: "Giải pháp",
     title: "Giải pháp theo nhu cầu",
     subtitle:
-      "Kết hợp năng suất, hạ tầng, bảo mật và sao lưu đúng quy mô — không mua rời từng SKU rồi mới ghép.",
+      "Chưa biết nên kết hợp sản phẩm nào? KEYON hỗ trợ chọn giải pháp theo số người dùng, nhu cầu và ngân sách.",
     bullets: [
-      "Chọn hướng theo việc cần làm, rồi chốt gói trên Sản phẩm",
-      "Đội nhóm và tổ chức: tư vấn mix theo số người dùng",
-      "Khác quản lý bản quyền — đây là bước chọn mix, không phải theo dõi license đã có",
+      "Kết hợp nhiều sản phẩm theo nhu cầu thực tế",
+      "Phù hợp cá nhân, đội nhóm và doanh nghiệp",
+      "Tư vấn trước khi mua",
     ],
-    primaryCta: { label: "Nhận tư vấn mix", href: "/business/licensing-consulting" },
+    primaryCta: { label: "Liên hệ tư vấn", href: "/business/licensing-consulting" },
     secondaryCta: { label: "Tất cả giải pháp", href: "/solutions" },
     related: [
       { label: "Microsoft 365 & Office", href: "/solutions/microsoft-365-office" },
@@ -71,7 +71,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
     subtitle:
       "Khám phá license Cloud, gói hạ tầng và các sản phẩm liên quan trên KEYON, với thông tin rõ ràng, bàn giao minh bạch và hỗ trợ tiếng Việt.",
     bullets: [
-      "License và gói Cloud trên catalog",
+      "License và gói Cloud trên KEYON",
       "Thông tin bàn giao rõ trước khi mua",
       "Hỗ trợ kích hoạt bằng tiếng Việt",
     ],
@@ -110,14 +110,13 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
   "license-management": {
     slug: "license-management",
     kicker: "Giải pháp",
-    title: "Quản lý phần mềm & bản quyền",
+    title: "Quản lý bản quyền",
     subtitle:
-      "Theo dõi license đã mua trên Tài khoản — hạn dùng, nhắc trước renew và hỗ trợ gia hạn.",
+      "Theo dõi license đã mua, thời hạn sử dụng, gia hạn và thông tin sản phẩm ngay trong tài khoản KEYON.",
     bullets: [
-      "License mua trên KEYON vào Tài khoản sau bàn giao",
-      "Nhắc trước khi đến hạn (theo dữ liệu Tài khoản)",
-      "Renew / điều chỉnh qua Mua ngay hoặc báo giá",
-      "Hỗ trợ tiếng Việt",
+      "License đã mua nằm trong Tài khoản sau khi bàn giao",
+      "Nhắc trước khi đến hạn",
+      "Gia hạn hoặc điều chỉnh qua mua thêm hoặc báo giá",
     ],
     primaryCta: { label: "Vào Tài khoản", href: "/account" },
     secondaryCta: { label: "Gửi yêu cầu tư vấn", href: "/contact/quote" },

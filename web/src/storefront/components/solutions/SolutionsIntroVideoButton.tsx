@@ -29,7 +29,7 @@ export function SolutionsIntroVideoButton({ embedUrl }: Props) {
         href="/how-it-works"
         className={`inline-flex h-11 items-center justify-center rounded-xl border border-border bg-white px-5 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
       >
-        Xem cách KEYON hoạt động
+        Cách KEYON hoạt động →
       </Link>
     );
   }
@@ -41,7 +41,7 @@ export function SolutionsIntroVideoButton({ embedUrl }: Props) {
         onClick={() => setOpen(true)}
         className={`inline-flex h-11 items-center justify-center rounded-xl border border-border bg-white px-5 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
       >
-        Xem video giới thiệu
+        Cách KEYON hoạt động →
       </button>
       {open ? (
         <div className={`fixed inset-0 ${Z_OVERLAY}`}>

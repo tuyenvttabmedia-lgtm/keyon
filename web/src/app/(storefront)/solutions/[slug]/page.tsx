@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ...(await buildMainPageMetadata("/solutions/by-need")),
       title: absoluteTitle("Giải pháp theo nhu cầu | KEYON"),
       description:
-        "Kết hợp năng suất, hạ tầng, bảo mật và sao lưu đúng quy mô sử dụng — tư vấn mix trên KEYON.",
+        "Kết hợp nhiều sản phẩm theo nhu cầu thực tế. KEYON hỗ trợ chọn giải pháp theo số người dùng, nhu cầu và ngân sách.",
     };
   }
   if (slug === "cloud") {

@@ -129,11 +129,11 @@ export const HOME_SOLUTION_SHOWCASE: Record<
     tabLabel: "Quản lý bản quyền",
     panelKicker: "Quản lý bản quyền",
     headline: "Theo dõi license đã mua trên Tài khoản",
-    lead: "License mua trên KEYON vào Tài khoản sau bàn giao — hạn dùng, nhắc trước renew và hỗ trợ gia hạn.",
+    lead: "License đã mua nằm trong Tài khoản KEYON — thời hạn sử dụng, nhắc gia hạn và hỗ trợ tiếng Việt.",
     checks: [
       "License vào Tài khoản sau bàn giao",
       "Nhắc trước khi đến hạn",
-      "Renew qua Mua ngay hoặc báo giá",
+      "Gia hạn qua mua thêm hoặc báo giá",
       "Hỗ trợ tiếng Việt",
     ],
     chips: [

@@ -136,7 +136,7 @@ export const SOLUTION_TOPICS: {
     id: "cloud",
     label: "Cloud & Hạ tầng",
     href: "/solutions/cloud",
-    description: "Gói cloud / hạ tầng trên catalog — tư vấn chọn SKU",
+    description: "License và gói Cloud, hạ tầng trên KEYON.",
     art: "cloud",
   },
   {
@@ -157,16 +157,17 @@ export const SOLUTION_TOPICS: {
   },
   {
     id: "license-management",
-    label: "Quản lý phần mềm & bản quyền",
+    label: "Quản lý bản quyền",
     href: "/solutions/license-management",
-    description: "Theo dõi license đã mua, hạn dùng và gia hạn",
+    description: "Theo dõi license đã mua, thời hạn sử dụng và gia hạn trong Tài khoản KEYON.",
     art: "stack",
   },
   {
     id: "by-need",
     label: "Giải pháp theo nhu cầu",
     href: "/solutions/by-need",
-    description: "Kết hợp sản phẩm phù hợp với quy mô sử dụng",
+    description:
+      "Kết hợp nhiều sản phẩm theo nhu cầu thực tế của cá nhân, đội nhóm hoặc doanh nghiệp.",
     art: "bars",
   },
 ];
