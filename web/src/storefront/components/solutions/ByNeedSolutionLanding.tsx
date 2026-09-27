@@ -54,7 +54,7 @@ const SCALES: { title: string; body: string; Icon: LucideIcon }[] = [
   },
   {
     title: "Tổ chức",
-    body: "Mix theo phòng ban, rồi mua volume / subscription qua KEYON.",
+    body: "Kết hợp theo phòng ban, rồi mua số lượng lớn hoặc gói đăng ký qua KEYON.",
     Icon: Building2,
   },
 ];
