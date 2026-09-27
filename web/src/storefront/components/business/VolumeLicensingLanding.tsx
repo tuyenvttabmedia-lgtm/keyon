@@ -23,6 +23,7 @@ import {
   BREADCRUMB_CURRENT_CLASS,
   CARD_META_CLASS,
   CARD_TITLE_CLASS,
+  CTA_COMPACT_CLASS,
   CTA_LABEL_CLASS,
   HERO_TITLE_CLASS,
   OVERLINE_CLASS,
@@ -59,7 +60,7 @@ const VOLUMES: {
     id: "5",
     name: "Nhóm nhỏ",
     usersLabel: "5 người dùng",
-    body: "Phù hợp startup, nhóm làm việc nhỏ",
+    body: "Phù hợp nhóm nhỏ, startup và văn phòng quy mô nhỏ.",
     people: 3,
     cta: "quote",
   },
@@ -67,7 +68,7 @@ const VOLUMES: {
     id: "10",
     name: "Nhóm vừa",
     usersLabel: "10 người dùng",
-    body: "Phù hợp doanh nghiệp vừa và nhỏ",
+    body: "Phù hợp doanh nghiệp vừa và nhóm làm việc nhiều người.",
     people: 4,
     cta: "quote",
   },
@@ -75,7 +76,7 @@ const VOLUMES: {
     id: "50",
     name: "Doanh nghiệp",
     usersLabel: "50 người dùng",
-    body: "Tối ưu cho doanh nghiệp quy mô vừa",
+    body: "Phù hợp doanh nghiệp có nhu cầu cấp phép cho nhiều người dùng.",
     people: 5,
     cta: "quote",
   },
@@ -83,57 +84,81 @@ const VOLUMES: {
     id: "100",
     name: "Doanh nghiệp lớn",
     usersLabel: "100 người dùng",
-    body: "Quản lý trên Tài khoản KEYON sau khi mua",
+    body: "Quản lý nhiều license và sản phẩm theo nhu cầu doanh nghiệp.",
     people: 5,
     cta: "quote",
   },
   {
     id: "100+",
-    name: "Enterprise",
-    usersLabel: "100+ người dùng",
-    body: "Giải pháp tùy chỉnh theo nhu cầu",
+    name: "100+ người dùng",
+    usersLabel: "",
+    body: "Phương án cấp phép và báo giá theo nhu cầu thực tế.",
     people: 4,
     showInfinity: true,
     cta: "consult",
   },
 ];
 
-const HERO_POINTS: { title: string; Icon: LucideIcon }[] = [
-  { title: "Tư vấn theo nhu cầu", Icon: MessageCircle },
-  { title: "Quản lý tập trung", Icon: LayoutGrid },
-  { title: "Hỗ trợ triển khai", Icon: Rocket },
-  { title: "Báo giá doanh nghiệp", Icon: FileText },
+const HERO_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
+  {
+    title: "Tư vấn theo nhu cầu",
+    body: "Chọn sản phẩm và hình thức cấp phép phù hợp.",
+    Icon: MessageCircle,
+  },
+  {
+    title: "Quản lý license",
+    body: "Theo dõi license và thời hạn trong tài khoản KEYON.",
+    Icon: LayoutGrid,
+  },
+  {
+    title: "Hỗ trợ kích hoạt",
+    body: "Hướng dẫn kích hoạt theo từng sản phẩm.",
+    Icon: Rocket,
+  },
+  {
+    title: "Báo giá doanh nghiệp",
+    body: "Báo giá theo sản phẩm, số lượng và thời hạn.",
+    Icon: FileText,
+  },
 ];
+
+const RELATED_LINKS = [
+  { label: "Microsoft 365 & Office", href: "/solutions/microsoft-365-office" },
+  { label: "Cloud & Hạ tầng", href: "/solutions/cloud" },
+  { label: "Bảo mật", href: "/solutions/security" },
+  { label: "Backup & Khôi phục", href: "/solutions/backup" },
+  { label: "Giải pháp cho doanh nghiệp", href: "/business" },
+] as const;
 
 const WHY: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Tư vấn theo nhu cầu",
-    body: "Đề xuất hình thức cấp phép phù hợp quy mô và ngân sách thực tế.",
+    body: "Đề xuất sản phẩm và hình thức cấp phép phù hợp với quy mô và nhu cầu sử dụng.",
     Icon: MessageCircle,
   },
   {
     title: "Thông tin bản quyền rõ ràng",
-    body: "Mô tả gói, điều kiện sử dụng và quy trình giao nhận minh bạch.",
+    body: "Mô tả sản phẩm, điều kiện sử dụng và thời hạn license minh bạch.",
     Icon: ShieldCheck,
   },
   {
-    title: "Quản lý tập trung",
-    body: "Theo dõi và phân bổ license trên nền tảng KEYON sau khi mua.",
+    title: "Quản lý license",
+    body: "Theo dõi sản phẩm, license và thời hạn sử dụng trong Tài khoản KEYON.",
     Icon: LayoutGrid,
   },
   {
-    title: "Hỗ trợ triển khai",
-    body: "Hướng dẫn kích hoạt và triển khai cho đội IT / người dùng.",
+    title: "Hỗ trợ kích hoạt",
+    body: "Hướng dẫn cài đặt và kích hoạt theo phạm vi hỗ trợ của từng sản phẩm.",
     Icon: Rocket,
   },
   {
     title: "Hỗ trợ sau mua",
-    body: "Đồng hành khi gia hạn, thay đổi quy mô hoặc cần hỗ trợ kỹ thuật.",
+    body: "Hỗ trợ khi gia hạn, thay đổi quy mô hoặc cần xử lý vấn đề liên quan đến license.",
     Icon: Headphones,
   },
   {
     title: "Thanh toán doanh nghiệp",
-    body: "Quy trình báo giá → chấp thuận → thanh toán phù hợp tổ chức.",
+    body: "Quy trình báo giá, xác nhận và thanh toán phù hợp với nhu cầu tổ chức.",
     Icon: Wallet,
   },
 ];
@@ -141,27 +166,27 @@ const WHY: { title: string; body: string; Icon: LucideIcon }[] = [
 const PROCESS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Tiếp nhận nhu cầu",
-    body: "Thu thập quy mô người dùng, sản phẩm quan tâm và ngân sách dự kiến.",
+    body: "Xác định sản phẩm, số lượng và nhu cầu cấp phép của doanh nghiệp.",
     Icon: ClipboardList,
   },
   {
     title: "Tư vấn giải pháp",
-    body: "Đề xuất hình thức cấp phép và phương án triển khai phù hợp.",
+    body: "Tư vấn sản phẩm và hình thức cấp phép phù hợp.",
     Icon: MessageCircle,
   },
   {
     title: "Báo giá",
-    body: "Gửi báo giá theo sản phẩm và số lượng — rõ ràng trước khi chốt.",
+    body: "Gửi báo giá theo sản phẩm, số lượng và thời hạn sử dụng.",
     Icon: FileText,
   },
   {
     title: "Thanh toán & bàn giao",
-    body: "Thanh toán theo thỏa thuận, cấp license và hỗ trợ kích hoạt.",
+    body: "Hoàn tất thanh toán và nhận license theo thỏa thuận.",
     Icon: Rocket,
   },
   {
     title: "Hỗ trợ sau mua",
-    body: "Đồng hành gia hạn, mở rộng seat và hỗ trợ kích hoạt khi cần.",
+    body: "Hướng dẫn kích hoạt và hỗ trợ khi cần gia hạn hoặc thay đổi.",
     Icon: Headphones,
   },
 ];
@@ -205,25 +230,29 @@ export function VolumeLicensingLanding() {
           <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] md:gap-10 lg:gap-12">
             <div className="min-w-0 max-w-[540px]">
               <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
-                Bản quyền số lượng lớn
+                Bản quyền doanh nghiệp
               </p>
-              <h1 className={`mt-3 max-w-[18ch] ${HERO_TITLE_CLASS}`}>
-                Báo giá bản quyền theo quy mô người dùng của tổ chức
+              <h1 className={`mt-3 ${HERO_TITLE_CLASS}`}>
+                Mua bản quyền phần mềm số lượng lớn cho doanh nghiệp
               </h1>
               <p className={`mt-4 max-w-[520px] ${PAGE_LEAD_CLASS}`}>
-                Phù hợp 5 / 10 / 50 / 100+ người dùng — nhận tư vấn và báo giá theo nhu cầu.
+                Từ nhóm nhỏ đến doanh nghiệp 100+ người dùng — KEYON tư vấn sản phẩm, hình thức cấp
+                phép, báo giá và bàn giao theo nhu cầu thực tế.
               </p>
 
               <ul className="mt-6 grid gap-3 sm:grid-cols-2">
                 {HERO_POINTS.map((p) => (
-                  <li key={p.title} className="flex items-center gap-2.5">
+                  <li key={p.title} className="flex items-start gap-2.5">
                     <span
-                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"
+                      className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"
                       aria-hidden
                     >
                       <p.Icon {...ICON_SM} />
                     </span>
-                    <span className={`${CARD_TITLE_CLASS}`}>{p.title}</span>
+                    <span className="min-w-0">
+                      <span className={`block ${CARD_TITLE_CLASS}`}>{p.title}</span>
+                      <span className={`mt-0.5 block ${CARD_META_CLASS}`}>{p.body}</span>
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -231,9 +260,9 @@ export function VolumeLicensingLanding() {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <Link
                   href={quoteHref(volume)}
-                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
-                  Nhận báo giá →
+                  Nhận báo giá doanh nghiệp →
                 </Link>
                 <Link
                   href="/business/licensing-consulting"
@@ -259,8 +288,8 @@ export function VolumeLicensingLanding() {
               Doanh nghiệp của bạn cần bao nhiêu bản quyền?
             </h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Chọn quy mô phù hợp số lượng người dùng của doanh nghiệp. KEYON sẽ tư vấn hình thức
-              cấp phép và gửi báo giá theo nhu cầu thực tế.
+              Chọn quy mô sử dụng dự kiến. KEYON sẽ tư vấn số lượng license và sản phẩm phù hợp với
+              nhu cầu thực tế.
             </p>
           </header>
 
@@ -282,8 +311,8 @@ export function VolumeLicensingLanding() {
                       className="w-full"
                       aria-pressed={active}
                     >
-                      <p className={`${CARD_TITLE_CLASS} text-[15px]`}>{v.name}</p>
-                      <p className={`mt-1 ${CARD_META_CLASS}`}>{v.usersLabel}</p>
+                      <p className={CARD_TITLE_CLASS}>{v.name}</p>
+                      <p className={`mt-1 min-h-[1.125rem] ${CARD_META_CLASS}`}>{v.usersLabel}</p>
                       <div className="flex justify-center">
                         <PeopleGlyph count={v.people} infinity={v.showInfinity} />
                       </div>
@@ -293,7 +322,7 @@ export function VolumeLicensingLanding() {
                     <Link
                       href={quoteHref(v.id)}
                       onClick={() => setVolume(v.id)}
-                      className={`mt-5 inline-flex h-10 w-full items-center justify-center rounded-xl text-[13px] font-semibold ${TRANSITION_UI} ${
+                      className={`mt-5 inline-flex h-10 w-full items-center justify-center rounded-xl ${CTA_COMPACT_CLASS} ${TRANSITION_UI} ${
                         v.cta === "consult"
                           ? `bg-accent text-white hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`
                           : "border border-border bg-white text-navy hover:border-accent hover:text-accent"
@@ -316,14 +345,14 @@ export function VolumeLicensingLanding() {
               >
                 <Building2 size={18} strokeWidth={1.8} />
               </span>
-              <p className="text-[13px] leading-relaxed text-muted">
-                Giá cuối cùng phụ thuộc vào sản phẩm, thời hạn và nhu cầu triển khai của doanh
-                nghiệp. Liên hệ KEYON để nhận báo giá chi tiết theo quy mô thực tế.
+              <p className={BODY_MUTED_CLASS}>
+                Giá phụ thuộc vào sản phẩm, số lượng, thời hạn và hình thức cấp phép. Liên hệ KEYON
+                để nhận báo giá theo nhu cầu thực tế.
               </p>
             </div>
             <Link
               href={quoteHref(volume)}
-              className={`inline-flex h-10 shrink-0 items-center justify-center rounded-xl border border-accent/40 bg-white px-4 text-[13px] font-semibold text-accent ${TRANSITION_UI} hover:bg-accent-soft`}
+              className={`inline-flex h-10 shrink-0 items-center justify-center rounded-xl border border-accent/40 bg-white px-4 ${CTA_COMPACT_CLASS} text-accent ${TRANSITION_UI} hover:bg-accent-soft`}
             >
               Liên hệ kinh doanh →
             </Link>
@@ -337,8 +366,25 @@ export function VolumeLicensingLanding() {
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Vì sao doanh nghiệp chọn KEYON?</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Tư vấn chọn gói, bàn giao license và quản lý trong Tài khoản — phù hợp nhu cầu tổ chức.
+              Tư vấn sản phẩm, báo giá, bàn giao license và hỗ trợ sau mua theo nhu cầu doanh nghiệp.
             </p>
+            <nav
+              aria-label="Giải pháp liên quan"
+              className={`mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 ${BODY_MUTED_CLASS}`}
+            >
+              {RELATED_LINKS.map((link, i) => (
+                <span key={link.href} className="inline-flex items-center gap-3">
+                  {i > 0 ? (
+                    <span aria-hidden className="text-muted-soft">
+                      ·
+                    </span>
+                  ) : null}
+                  <Link href={link.href} className={HOVER_LINK_ACCENT}>
+                    {link.label}
+                  </Link>
+                </span>
+              ))}
+            </nav>
           </header>
 
           <ul className="mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
@@ -421,21 +467,21 @@ export function VolumeLicensingLanding() {
                 Bạn cần báo giá theo nhu cầu riêng?
               </h2>
               <p className={`mt-2 ${SECTION_LEAD_CLASS} !text-slate-300`}>
-                Chọn quy mô dự kiến và gửi yêu cầu — KEYON sẽ liên hệ tư vấn và báo giá phù hợp.
+                Chọn quy mô và sản phẩm bạn cần — KEYON tư vấn phương án cấp phép và báo giá phù hợp.
               </p>
             </div>
             <div className="flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center">
               <Link
                 href={quoteHref(volume)}
-                className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
               >
-                Gửi yêu cầu tư vấn →
+                Nhận báo giá doanh nghiệp →
               </Link>
               <Link
-                href="/contact/quote"
+                href="/business/licensing-consulting"
                 className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-white/30 bg-transparent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:text-accent`}
               >
-                Liên hệ báo giá
+                Tư vấn giải pháp
               </Link>
             </div>
           </div>
@@ -493,7 +539,7 @@ function VolumeHeroArt() {
             </span>
             <div>
               <p className={`${CARD_TITLE_CLASS}`}>Quản lý license doanh nghiệp</p>
-              <p className={`${CARD_META_CLASS}`}>Tổng quan vận hành</p>
+              <p className={`${CARD_META_CLASS}`}>Theo dõi trong Tài khoản</p>
             </div>
           </div>
           <span className={`${BADGE_CLASS} rounded-md bg-accent-soft px-2 py-1 font-semibold text-accent`}>
@@ -522,13 +568,13 @@ function VolumeHeroArt() {
 
         <div className="mt-4 rounded-xl border border-dashed border-border bg-surface/60 px-3 py-3">
           <p className={`${CARD_META_CLASS}`}>
-            Sau mua volume, theo dõi trạng thái và hạn dùng trong Tài khoản KEYON.
+            Sau khi mua, theo dõi license và thời hạn trong Tài khoản KEYON.
           </p>
         </div>
       </div>
 
       <ul className="mt-3 flex flex-wrap justify-center gap-2 sm:gap-2.5">
-        {["Tư vấn theo nhu cầu", "Báo giá rõ ràng", "Hỗ trợ triển khai"].map((t) => (
+        {["Tư vấn theo nhu cầu", "Báo giá doanh nghiệp", "Hỗ trợ kích hoạt"].map((t) => (
           <li
             key={t}
             className={`inline-flex items-center gap-1.5 rounded-full border border-border bg-white px-3 py-1.5 ${CARD_META_CLASS} font-medium text-navy ${ELEVATION_HAIRLINE}`}

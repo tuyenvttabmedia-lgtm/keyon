@@ -25,9 +25,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (slug === "volume-licensing") {
     return {
       ...(await buildMainPageMetadata(`/business/${slug}`)),
-      title: absoluteTitle("Mua bản quyền số lượng lớn | KEYON"),
+      title: absoluteTitle("Mua bản quyền phần mềm số lượng lớn | KEYON"),
       description:
-        "Volume licensing KEYON: chọn quy mô 5 / 10 / 50 / 100+ người dùng và nhận tư vấn báo giá theo nhu cầu.",
+        "Mua bản quyền phần mềm số lượng lớn cho doanh nghiệp. KEYON tư vấn license, báo giá theo quy mô, bàn giao và hỗ trợ kích hoạt.",
     };
   }
   if (slug === "subscriptions") {

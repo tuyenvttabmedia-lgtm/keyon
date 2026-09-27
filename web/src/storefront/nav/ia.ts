@@ -204,7 +204,7 @@ export const BUSINESS_BUY_LINKS: NavLink[] = [
   {
     label: "Mua bản quyền số lượng lớn",
     href: "/business/volume-licensing",
-    description: "5 / 10 / 50 / 100+ license · báo giá cho tổ chức",
+    description: "Tư vấn license, báo giá và bàn giao theo quy mô doanh nghiệp",
   },
   {
     label: "Subscription & Gia hạn",
