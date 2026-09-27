@@ -185,7 +185,7 @@ export function SolutionsHubLanding({ introEmbedUrl }: Props) {
         primaryHref={QUOTE_HREF}
         primaryLabel={`${QUOTE_LABEL} →`}
         secondaryHref="/business"
-        secondaryLabel="Dành cho doanh nghiệp"
+        secondaryLabel="Dành cho doanh nghiệp →"
       />
     </div>
   );
