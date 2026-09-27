@@ -82,9 +82,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (slug === "backup") {
     return {
       ...(await buildMainPageMetadata("/solutions/backup")),
-      title: absoluteTitle("Backup & Khôi phục | KEYON"),
+      title: absoluteTitle("Phần mềm Backup & Khôi phục dữ liệu | KEYON"),
       description:
-        "Sao lưu và khôi phục dữ liệu trên KEYON — endpoint, server, cloud và SaaS, license chính hãng.",
+        "Khám phá phần mềm và license backup cho PC, server, Microsoft 365 và Cloud. KEYON hỗ trợ lựa chọn, bàn giao và hướng dẫn kích hoạt.",
     };
   }
   if (slug === "license-management") {

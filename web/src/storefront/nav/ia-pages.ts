@@ -95,10 +95,14 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
   backup: {
     slug: "backup",
     kicker: "Giải pháp",
-    title: "Sao lưu & Khôi phục",
+    title: "Backup & Khôi phục",
     subtitle:
-      "License / gói backup trên catalog — kích hoạt phần mềm trên hạ tầng của bạn (KEYON không lưu bản sao dữ liệu).",
-    bullets: ["Tìm gói backup trên cửa hàng", "Tư vấn chọn gói khi cần"],
+      "Khám phá phần mềm và license backup cho PC, máy chủ, Microsoft 365 và dữ liệu Cloud trên KEYON, với thông tin rõ ràng và hỗ trợ kích hoạt tiếng Việt.",
+    bullets: [
+      "License backup cho PC, server và Cloud",
+      "Tính năng theo từng sản phẩm",
+      "Hướng dẫn kích hoạt bằng tiếng Việt",
+    ],
     primaryCta: { label: "Tìm sản phẩm backup", href: "/categories/backup" },
     secondaryCta: { label: "Gửi yêu cầu tư vấn", href: "/contact/quote" },
     draftCapable: true,

@@ -79,8 +79,8 @@ const MIX_ROWS: { label: string; hint: string; Icon: LucideIcon; tone: string }[
     tone: "bg-emerald-100 text-emerald-800",
   },
   {
-    label: "Sao lưu & Khôi phục",
-    hint: "Backup (nếu có trên catalog)",
+    label: "Backup & Khôi phục",
+    hint: "PC, server, Cloud",
     Icon: HardDrive,
     tone: "bg-amber-100 text-amber-800",
   },

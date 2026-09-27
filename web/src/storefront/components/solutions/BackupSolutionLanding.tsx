@@ -77,17 +77,17 @@ const ICON_SM = { size: 18, strokeWidth: 1.85, "aria-hidden": true as const };
 const HERO_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "License phần mềm backup",
-    body: "Mua gói chính hãng trên KEYON — kích hoạt trên máy / hạ tầng của bạn.",
+    body: "Chọn sản phẩm và license backup phù hợp với thiết bị hoặc hạ tầng.",
     Icon: CloudUpload,
   },
   {
-    title: "Theo điều kiện vendor",
-    body: "Mã hóa, lịch sao lưu và khôi phục thuộc sản phẩm bạn cài.",
+    title: "Tính năng theo vendor",
+    body: "Lịch sao lưu, lưu trữ, mã hóa và khôi phục tùy theo sản phẩm và gói license.",
     Icon: Lock,
   },
   {
     title: "Hỗ trợ chọn gói",
-    body: "Tư vấn tiếng Việt khi cần chọn endpoint, server hoặc SaaS backup.",
+    body: "Tư vấn tiếng Việt khi cần lựa chọn backup cho PC, server, Microsoft 365 hoặc Cloud.",
     Icon: RefreshCw,
   },
 ];
@@ -110,12 +110,12 @@ const DATA_PILLARS: { title: string; body: string; Icon: LucideIcon }[] = [
   },
   {
     title: "Ứng dụng & SaaS",
-    body: "Gói backup Microsoft 365 / Workspace (nếu có trên catalog).",
+    body: "Backup dữ liệu Microsoft 365 và các nền tảng SaaS theo phạm vi hỗ trợ của từng sản phẩm.",
     Icon: AppWindow,
   },
   {
     title: "Dữ liệu đám mây",
-    body: "License backup dữ liệu cloud — KEYON không lưu bản sao dữ liệu của bạn.",
+    body: "Backup dữ liệu trên các nền tảng Cloud theo phạm vi hỗ trợ của từng sản phẩm.",
     Icon: Cloud,
   },
 ];
@@ -158,8 +158,8 @@ const FLOW: { title: string; body: string; Icon: LucideIcon; highlight?: boolean
     Icon: Check,
   },
   {
-    title: "Tiếp tục lịch sao lưu",
-    body: "Lịch và chính sách do bạn / IT cấu hình trên sản phẩm.",
+    title: "Tiếp tục bảo vệ dữ liệu",
+    body: "Duy trì lịch sao lưu và chính sách bảo vệ theo cấu hình của sản phẩm.",
     Icon: ShieldCheck,
   },
 ];
@@ -201,13 +201,21 @@ export function BackupSolutionLanding({ featured }: Props) {
 
           <div className={LANDING_HERO_GRID}>
             <div className="min-w-0 max-w-[520px]">
-              <h1 className={`max-w-[18ch] ${HERO_TITLE_CLASS}`}>
+              <h1 className={`max-w-xl ${HERO_TITLE_CLASS}`}>
+                Giải pháp Backup & Khôi phục dữ liệu
+              </h1>
+              <p className="mt-3 max-w-xl font-display text-lg font-semibold tracking-tight text-navy sm:text-xl">
                 Dữ liệu của bạn.{" "}
                 <span className="text-accent">Luôn có đường quay trở lại.</span>
-              </h1>
-              <p className={`mt-3 max-w-[42ch] ${PAGE_LEAD_CLASS}`}>
-                License / gói backup (Acronis, …) trên KEYON — mua, nhận deliverable và kích
-                hoạt phần mềm. KEYON không lưu bản sao dữ liệu hay vận hành DR thuê ngoài.
+              </p>
+              <p className={`mt-3 max-w-xl ${PAGE_LEAD_CLASS}`}>
+                Khám phá phần mềm và license backup cho PC, máy chủ, Microsoft 365 và dữ liệu
+                Cloud trên KEYON, với thông tin rõ ràng và hỗ trợ kích hoạt tiếng Việt.
+              </p>
+              <p className={`mt-3 max-w-xl ${BODY_MUTED_CLASS}`}>
+                Lưu ý: KEYON cung cấp license và phần mềm backup; việc lưu trữ, sao lưu và
+                khôi phục được thực hiện trên hệ thống của khách hàng hoặc theo dịch vụ của
+                nhà cung cấp.
               </p>
 
               <ul className="mt-5 grid gap-3 sm:grid-cols-3 sm:gap-2.5">
@@ -230,9 +238,9 @@ export function BackupSolutionLanding({ featured }: Props) {
               <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/categories/backup"
-                  className={`inline-flex h-11 items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                  className={`inline-flex h-11 items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
-                  Xem sản phẩm backup →
+                  Xem sản phẩm Backup →
                 </Link>
                 <Link
                   href="/contact/quote"
@@ -276,6 +284,10 @@ export function BackupSolutionLanding({ featured }: Props) {
               </li>
             ))}
           </ul>
+          <p className={`mx-auto mt-5 max-w-2xl text-center ${BODY_MUTED_CLASS}`}>
+            KEYON cung cấp license; dữ liệu được lưu trữ theo hệ thống và cấu hình của khách
+            hàng hoặc nhà cung cấp.
+          </p>
         </div>
       </section>
 
@@ -432,9 +444,7 @@ export function BackupSolutionLanding({ featured }: Props) {
                   <s.Icon size={s.highlight ? 28 : 20} strokeWidth={1.8} />
                 </span>
                 <p
-                  className={`mt-3 max-w-[16ch] ${CARD_TITLE_CLASS} ${
-                    s.highlight ? "text-[15px]" : ""
-                  }`}
+                  className={`mt-3 max-w-[16ch] ${CARD_TITLE_CLASS}`}
                 >
                   {s.title}
                 </p>
@@ -447,11 +457,11 @@ export function BackupSolutionLanding({ featured }: Props) {
 
       <SolutionFinalCta
         title="Đừng để mất dữ liệu mới bắt đầu sao lưu."
-        subtitle="Chọn gói backup trên catalog — kích hoạt phần mềm trên hạ tầng của bạn."
-        primaryHref="/contact/quote"
-        primaryLabel="Liên hệ tư vấn →"
-        secondaryHref="/categories/backup"
-        secondaryLabel="Khám phá giải pháp →"
+        subtitle="Chọn phần mềm backup phù hợp và bắt đầu bảo vệ dữ liệu trên hệ thống của bạn."
+        primaryHref="/categories/backup"
+        primaryLabel="Xem sản phẩm Backup →"
+        secondaryHref="/contact/quote"
+        secondaryLabel="Liên hệ tư vấn →"
       />
     </div>
   );
@@ -529,7 +539,7 @@ function BackupHeroArt() {
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-500 text-white shadow-[0_0_16px_rgba(16,185,129,0.4)] sm:h-10 sm:w-10">
               <Check size={18} strokeWidth={2.6} />
             </span>
-            <p className={`mt-1.5 ${BADGE_CLASS} font-semibold text-white`}>Backup Complete</p>
+            <p className={`mt-1.5 ${BADGE_CLASS} font-semibold text-white`}>Sao lưu hoàn tất</p>
             <p className="mt-0.5 text-[10px] text-slate-400">Hôm nay · 14:20</p>
           </div>
         </div>
@@ -573,7 +583,7 @@ function BackupHeroArt() {
           <History size={15} strokeWidth={1.9} />
         </span>
         <div className="min-w-0">
-          <p className={`${BADGE_CLASS} font-semibold text-navy`}>Restore Point</p>
+          <p className={`${BADGE_CLASS} font-semibold text-navy`}>Điểm khôi phục</p>
           <p className="text-[10px] text-muted">10:30 AM · Hôm nay</p>
         </div>
       </div>
