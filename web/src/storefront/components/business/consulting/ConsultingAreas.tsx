@@ -23,7 +23,7 @@ const AREAS = [
   {
     title: "Microsoft 365",
     body: "Tìm hiểu các lựa chọn phù hợp với nhu cầu làm việc và cộng tác.",
-    href: "/solutions/productivity",
+    href: "/solutions/microsoft-365-office",
     Icon: Cloud,
   },
   {

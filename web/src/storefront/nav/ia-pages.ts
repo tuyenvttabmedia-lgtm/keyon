@@ -18,7 +18,7 @@ export type IaPage = {
 
 /** Topic landings (`/solutions/{slug}`). Hub is `/solutions`. */
 export const ACTIVE_SOLUTION_SLUGS = [
-  "productivity",
+  "microsoft-365-office",
   "cloud",
   "security",
   "backup",
@@ -41,17 +41,17 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
     primaryCta: { label: "Nhận tư vấn mix", href: "/business/licensing-consulting" },
     secondaryCta: { label: "Tất cả giải pháp", href: "/solutions" },
     related: [
-      { label: "Năng suất & Cộng tác", href: "/solutions/productivity" },
+      { label: "Microsoft 365 & Office", href: "/solutions/microsoft-365-office" },
       { label: "Cloud & Hạ tầng", href: "/solutions/cloud" },
       { label: "Bảo mật", href: "/solutions/security" },
     ],
   },
-  productivity: {
-    slug: "productivity",
+  "microsoft-365-office": {
+    slug: "microsoft-365-office",
     kicker: "Giải pháp",
-    title: "Năng suất & Cộng tác",
+    title: "Microsoft 365 & Office cho công việc hiện đại",
     subtitle:
-      "Microsoft 365, Office, Teams và công cụ cộng tác chính hãng — kích hoạt nhanh, hỗ trợ tiếng Việt.",
+      "Khám phá Microsoft 365 và Office bản quyền cho cá nhân, doanh nghiệp với Word, Excel, PowerPoint, Teams, OneDrive và nhiều công cụ khác.",
     bullets: [
       "Microsoft Office / Microsoft 365",
       "Teams, Outlook, OneDrive",

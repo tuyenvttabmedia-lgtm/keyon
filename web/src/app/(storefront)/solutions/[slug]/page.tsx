@@ -63,12 +63,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         "Giải pháp cloud KEYON: hạ tầng, storage, backup và tư vấn triển khai cho doanh nghiệp hiện đại.",
     };
   }
-  if (slug === "productivity") {
+  if (slug === "microsoft-365-office") {
     return {
-      ...(await buildMainPageMetadata("/solutions/productivity")),
-      title: absoluteTitle("Năng suất & Cộng tác | KEYON"),
+      ...(await buildMainPageMetadata("/solutions/microsoft-365-office")),
+      title: absoluteTitle("Microsoft 365 & Office | KEYON"),
       description:
-        "Microsoft 365, Office, Teams và công cụ cộng tác chính hãng trên KEYON — kích hoạt nhanh, hỗ trợ tiếng Việt.",
+        "Khám phá Microsoft 365 và Office bản quyền cho cá nhân, doanh nghiệp với Word, Excel, PowerPoint, Teams, OneDrive và nhiều công cụ khác.",
     };
   }
   if (slug === "security") {
@@ -510,7 +510,7 @@ export default async function SolutionPage({ params }: Props) {
     );
   }
 
-  if (slug === "productivity") {
+  if (slug === "microsoft-365-office") {
     const [{ featured }, cmsRaw, storage] = await Promise.all([
       loadProductivityFeatured(),
       readJsonFile("productivity.json", defaultCmsProductivity),

@@ -244,7 +244,7 @@ export type CmsBanner = {
   visible: boolean;
 };
 
-/** Landing `/solutions/productivity` — ảnh hero blob + tư vấn + scene work-mode. */
+/** Landing `/solutions/microsoft-365-office` — ảnh hero blob + tư vấn + scene work-mode. */
 export type CmsProductivity = {
   /** Hero cột phải — banner trong organic blob (khuyến nghị ~960×720). */
   heroImageUrl: string;
@@ -548,7 +548,7 @@ export const defaultCmsFooter: CmsFooter = {
       title: "Sản phẩm",
       links: [
         { label: "Windows", href: "/categories/windows" },
-        { label: "Microsoft Office", href: "/categories/office" },
+        { label: "Microsoft 365 & Office", href: "/categories/office" },
         { label: "Adobe", href: "/categories/adobe" },
         { label: "Cloud & Server", href: "/categories/cloud" },
         { label: "Tất cả sản phẩm", href: "/products" },

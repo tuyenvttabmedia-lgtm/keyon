@@ -68,7 +68,7 @@ export function SolutionsShowcase({ items, title, subtitle }: Props) {
   const tabs = pickSolutionTabs(items);
   const tablistId = useId();
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const [activeId, setActiveId] = useState(tabs[0]?.id ?? "productivity");
+  const [activeId, setActiveId] = useState(tabs[0]?.id ?? "microsoft-365-office");
   const [panelIn, setPanelIn] = useState(true);
   const fadeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -95,7 +95,7 @@ export function SolutionsShowcase({ items, title, subtitle }: Props) {
 
   const active = tabs.find((t) => t.id === activeId) ?? tabs[0]!;
   const tabId = (
-    active.id in HOME_SOLUTION_SHOWCASE ? active.id : "productivity"
+    active.id in HOME_SOLUTION_SHOWCASE ? active.id : "microsoft-365-office"
   ) as HomeSolutionTabId;
   const panel = HOME_SOLUTION_SHOWCASE[tabId];
   const activeIndex = Math.max(0, tabs.findIndex((t) => t.id === active.id));
@@ -163,7 +163,7 @@ export function SolutionsShowcase({ items, title, subtitle }: Props) {
               HOME_SOLUTION_SHOWCASE[tab.id as HomeSolutionTabId];
             const iconKey = (tab.id in TAB_ICONS
               ? tab.id
-              : "productivity") as HomeSolutionTabId;
+              : "microsoft-365-office") as HomeSolutionTabId;
             return (
               <button
                 key={tab.id}
@@ -355,7 +355,7 @@ function SolutionVisual({
 /* ─── Filled product icons (Categories-style, not thin Lucide outlines) ─── */
 
 const TAB_ICONS: Record<HomeSolutionTabId, true> = {
-  productivity: true,
+  "microsoft-365-office": true,
   cloud: true,
   security: true,
   backup: true,
@@ -379,8 +379,7 @@ function SolutionTopicIcon({
     "aria-hidden": true,
   };
   switch (topic) {
-    case "productivity":
-      // Filled app suite (4 tiles) — reads as productivity suite
+    case "microsoft-365-office":
       return (
         <svg {...props} fill="currentColor">
           <rect x="3" y="3" width="8" height="8" rx="1.5" />

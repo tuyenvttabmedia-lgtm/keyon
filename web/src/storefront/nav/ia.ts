@@ -54,9 +54,9 @@ export const SHOP_COLLECTIONS: NavLink[] = [
     description: "Windows, Windows Server",
   },
   {
-    label: "Office & Năng suất",
+    label: "Microsoft 365 & Office",
     href: "/categories/office",
-    description: "Office, Microsoft 365",
+    description: "Word, Excel, PowerPoint, Teams, OneDrive",
   },
   {
     label: "Cloud & Hạ tầng",
@@ -125,10 +125,11 @@ export const SOLUTION_TOPICS: {
   art: SolutionTopicArt;
 }[] = [
   {
-    id: "productivity",
-    label: "Năng suất & Cộng tác",
-    href: "/solutions/productivity",
-    description: "Làm việc hiệu quả hơn với Microsoft 365, Office",
+    id: "microsoft-365-office",
+    label: "Microsoft 365 & Office",
+    href: "/solutions/microsoft-365-office",
+    description:
+      "Khám phá Microsoft 365 và Office bản quyền cho cá nhân, doanh nghiệp với Word, Excel, PowerPoint, Teams, OneDrive và nhiều công cụ khác.",
     art: "trend",
   },
   {
@@ -169,7 +170,7 @@ export const SOLUTION_TOPICS: {
 ];
 
 const SOLUTION_NEED_IDS = [
-  "productivity",
+  "microsoft-365-office",
   "cloud",
   "security",
   "backup",

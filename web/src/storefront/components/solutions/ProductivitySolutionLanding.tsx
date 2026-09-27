@@ -238,18 +238,17 @@ export function ProductivitySolutionLanding({
             <span aria-hidden className="text-muted-soft">
               ›
             </span>
-            <span className={BREADCRUMB_CURRENT_CLASS}>Năng suất & Cộng tác</span>
+            <span className={BREADCRUMB_CURRENT_CLASS}>Microsoft 365 & Office</span>
           </nav>
 
           <div className={LANDING_HERO_GRID}>
             <div className="min-w-0">
               <h1 className={`max-w-[520px] ${HERO_TITLE_CLASS}`}>
-                License năng suất
-                <span className="mt-1 block">Microsoft trên KEYON</span>
+                Microsoft 365 & Office cho công việc hiện đại
               </h1>
               <p className={`mt-4 max-w-[510px] ${PAGE_LEAD_CLASS}`}>
-                Microsoft 365, Office và Teams chính hãng — mua, nhận deliverable, kích hoạt và
-                theo dõi hạn trong Tài khoản. KEYON không vận hành Microsoft 365 tenant của bạn.
+                Khám phá Microsoft 365 và Office bản quyền cho cá nhân, doanh nghiệp với Word,
+                Excel, PowerPoint, Teams, OneDrive và nhiều công cụ khác.
               </p>
 
               <ul className="mt-6 space-y-3">
@@ -856,7 +855,7 @@ function ProductivityHeroArt({ imageUrl }: { imageUrl?: string }) {
         <div className="relative max-h-[300px] w-full sm:max-h-[340px]">
           <Image
             src={imageUrl}
-            alt="Năng suất & Cộng tác"
+            alt="Microsoft 365 & Office"
             width={900}
             height={700}
             className="mx-auto h-auto max-h-[300px] w-auto max-w-full object-contain object-center sm:max-h-[340px]"

@@ -65,7 +65,7 @@ export const homeFixture: HomeContent = {
       },
       {
         id: "c2",
-        title: "Microsoft Office",
+        title: "Microsoft 365 & Office",
         countLabel: "12 sản phẩm",
         href: "/products",
         icon: "office",
@@ -209,10 +209,11 @@ export const homeFixture: HomeContent = {
     secondaryCtaHref: "/business",
     items: [
       {
-        id: "productivity",
-        title: "Năng suất & Cộng tác",
-        description: "Office, Microsoft 365, làm việc nhóm.",
-        href: "/solutions/productivity",
+        id: "microsoft-365-office",
+        title: "Microsoft 365 & Office",
+        description:
+          "Khám phá Microsoft 365 và Office bản quyền cho cá nhân, doanh nghiệp với Word, Excel, PowerPoint, Teams, OneDrive và nhiều công cụ khác.",
+        href: "/solutions/microsoft-365-office",
         art: "trend",
       },
       {
@@ -321,7 +322,7 @@ export const homeFixture: HomeContent = {
         title: "Sản phẩm",
         links: [
           { label: "Windows", href: "/categories/windows" },
-          { label: "Microsoft Office", href: "/categories/office" },
+          { label: "Microsoft 365 & Office", href: "/categories/office" },
           { label: "Adobe", href: "/categories/adobe" },
           { label: "Cloud & Server", href: "/categories/cloud" },
           { label: "Tất cả sản phẩm", href: "/products" },

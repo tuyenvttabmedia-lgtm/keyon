@@ -56,7 +56,7 @@ const ICON_SM = { size: 15, strokeWidth: 1.9 } as const;
 
 const HERO_CHIP_ICON: Record<string, LucideIcon> = {
   security: ShieldCheck,
-  productivity: TrendingUp,
+  "microsoft-365-office": TrendingUp,
   cloud: Cloud,
   "license-management": KeyRound,
   backup: Database,
@@ -65,7 +65,7 @@ const HERO_CHIP_ICON: Record<string, LucideIcon> = {
 
 const HERO_CHIP_LABEL: Record<string, string> = {
   security: "Bảo mật & An toàn",
-  productivity: "Năng suất & Cộng tác",
+  "microsoft-365-office": "Microsoft 365 & Office",
   cloud: "Cloud & Hạ tầng",
   "license-management": "Quản lý bản quyền",
   backup: "Sao lưu & Khôi phục",
@@ -75,7 +75,7 @@ const HERO_CHIP_LABEL: Record<string, string> = {
 /** Mockup orbit seats around the K cube. */
 const HERO_ORBIT: { id: string; seat: string }[] = [
   { id: "security", seat: "tl" },
-  { id: "productivity", seat: "tr" },
+  { id: "microsoft-365-office", seat: "tr" },
   { id: "cloud", seat: "ml" },
   { id: "license-management", seat: "mr" },
   { id: "backup", seat: "bl" },

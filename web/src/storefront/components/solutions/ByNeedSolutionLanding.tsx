@@ -61,7 +61,7 @@ const SCALES: { title: string; body: string; Icon: LucideIcon }[] = [
 
 const MIX_ROWS: { label: string; hint: string; Icon: LucideIcon; tone: string }[] = [
   {
-    label: "Năng suất & Cộng tác",
+    label: "Microsoft 365 & Office",
     hint: "Office / Microsoft 365",
     Icon: TrendingUp,
     tone: "bg-sky-100 text-sky-800",

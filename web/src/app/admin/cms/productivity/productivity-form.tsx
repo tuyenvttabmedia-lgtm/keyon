@@ -27,7 +27,7 @@ function ProductivityFields({
     <div className="space-y-6">
       <p className="rounded-xl bg-accent-soft/60 px-3 py-2 text-sm text-navy">
         Ảnh dùng trên landing{" "}
-        <strong>/solutions/productivity</strong>. Hero nằm trong khung blob (banner
+        <strong>/solutions/microsoft-365-office</strong>. Hero nằm trong khung blob (banner
         viewBox); ảnh tư vấn hiện ở card cột phải section hệ sinh thái.
       </p>
 

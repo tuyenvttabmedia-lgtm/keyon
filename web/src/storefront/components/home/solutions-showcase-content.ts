@@ -2,7 +2,7 @@ import type { SolutionItem } from "@/storefront/content/types";
 
 /** Home Solutions — 5 tabs aligned to mockup (by-need stays on /solutions hub). */
 export const HOME_SOLUTION_TAB_IDS = [
-  "productivity",
+  "microsoft-365-office",
   "cloud",
   "security",
   "backup",
@@ -33,11 +33,11 @@ export const HOME_SOLUTION_SHOWCASE: Record<
   HomeSolutionTabId,
   SolutionShowcasePanel
 > = {
-  productivity: {
-    tabLabel: "Năng suất & Cộng tác",
-    panelKicker: "Năng suất & Cộng tác",
-    headline: "Làm việc hiệu quả hơn, ở mọi nơi",
-    lead: "Bộ giải pháp Microsoft 365, email doanh nghiệp, cộng tác và lưu trữ giúp đội ngũ làm việc liền mạch, an toàn và hiệu quả.",
+  "microsoft-365-office": {
+    tabLabel: "Microsoft 365 & Office",
+    panelKicker: "Microsoft 365 & Office",
+    headline: "Microsoft 365 & Office cho công việc hiện đại",
+    lead: "Khám phá Microsoft 365 và Office bản quyền cho cá nhân, doanh nghiệp với Word, Excel, PowerPoint, Teams, OneDrive và nhiều công cụ khác.",
     checks: [
       "Microsoft 365 / Office chính hãng",
       "Email doanh nghiệp bảo mật cao",
