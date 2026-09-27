@@ -90,8 +90,8 @@ export const HOME_SOLUTION_SHOWCASE: Record<
     ],
   },
   security: {
-    tabLabel: "Bảo mật & An toàn",
-    panelKicker: "Bảo mật & An toàn",
+    tabLabel: "Bảo mật",
+    panelKicker: "Bảo mật",
     headline: "Bảo vệ endpoint bằng gói chính hãng",
     lead: "Antivirus / internet security trên KEYON — xem rõ loại nhận trước khi mua, hỗ trợ kích hoạt tiếng Việt.",
     checks: [

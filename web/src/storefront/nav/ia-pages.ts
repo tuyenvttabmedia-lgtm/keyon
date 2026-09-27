@@ -81,9 +81,14 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
   security: {
     slug: "security",
     kicker: "Giải pháp",
-    title: "Bảo mật & Bảo vệ dữ liệu",
-    subtitle: "Gói bảo mật endpoint / internet security chính hãng trên KEYON.",
-    bullets: ["Endpoint / Antivirus / Internet Security", "Xem rõ loại nhận trước khi mua"],
+    title: "Bảo mật",
+    subtitle:
+      "Khám phá các sản phẩm và license bảo mật cho thiết bị, email, dữ liệu, danh tính và mạng trên KEYON, với thông tin rõ ràng và hỗ trợ tiếng Việt.",
+    bullets: [
+      "License cho thiết bị, email, dữ liệu, danh tính và mạng",
+      "Thông tin gói rõ trước khi mua",
+      "Bàn giao và hướng dẫn kích hoạt bằng tiếng Việt",
+    ],
     primaryCta: { label: "Xem sản phẩm bảo mật", href: "/categories/security" },
     secondaryCta: { label: "Gửi yêu cầu tư vấn", href: "/contact/quote" },
   },

@@ -74,9 +74,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (slug === "security") {
     return {
       ...(await buildMainPageMetadata("/solutions/security")),
-      title: absoluteTitle("Bảo mật | KEYON"),
+      title: absoluteTitle("Giải pháp bảo mật & phần mềm bảo mật | KEYON"),
       description:
-        "Giải pháp bảo mật KEYON: endpoint, antivirus và bảo vệ thiết bị — license chính hãng, hỗ trợ tiếng Việt.",
+        "Khám phá phần mềm và license bảo mật cho thiết bị, email, dữ liệu, danh tính và mạng. KEYON hỗ trợ lựa chọn, bàn giao và kích hoạt.",
     };
   }
   if (slug === "backup") {

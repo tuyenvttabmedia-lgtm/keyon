@@ -141,9 +141,10 @@ export const SOLUTION_TOPICS: {
   },
   {
     id: "security",
-    label: "Bảo mật & Bảo vệ dữ liệu",
+    label: "Bảo mật",
     href: "/solutions/security",
-    description: "Gói bảo mật endpoint chính hãng trên KEYON",
+    description:
+      "Khám phá các sản phẩm và license bảo mật cho thiết bị, email, dữ liệu, danh tính và mạng trên KEYON.",
     art: "shield",
   },
   {

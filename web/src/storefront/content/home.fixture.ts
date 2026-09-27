@@ -225,7 +225,7 @@ export const homeFixture: HomeContent = {
       },
       {
         id: "security",
-        title: "Bảo mật & An toàn",
+        title: "Bảo mật",
         description: "Gói endpoint / antivirus chính hãng.",
         href: "/solutions/security",
         art: "shield",

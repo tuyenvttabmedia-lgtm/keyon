@@ -76,12 +76,12 @@ const ICON_SM = { size: 18, strokeWidth: 1.85, "aria-hidden": true as const };
 const HERO_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Gói bảo mật trên catalog",
-    body: "Endpoint, internet security và các lớp bảo vệ theo từng SKU vendor.",
+    body: "Sản phẩm bảo mật cho thiết bị, email, dữ liệu, danh tính và mạng.",
     Icon: ShieldCheck,
   },
   {
-    title: "Cập nhật theo vendor",
-    body: "Định nghĩa mối đe dọa và bản vá theo chu kỳ nhà cung cấp phần mềm.",
+    title: "Thông tin theo từng vendor",
+    body: "Thông tin license, tính năng và điều kiện sử dụng được trình bày theo từng sản phẩm.",
     Icon: Zap,
   },
   {
@@ -94,22 +94,22 @@ const HERO_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
 const TRUST_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "License chính hãng",
-    body: "Nguồn cung rõ ràng — đúng loại nhận trước khi mua.",
+    body: "Nguồn cung rõ ràng — đúng loại license trước khi mua.",
     Icon: BadgeCheck,
   },
   {
     title: "Tính năng theo gói",
-    body: "Endpoint, email, dữ liệu… thuộc sản phẩm vendor — xem trang SKU.",
+    body: "Biết rõ tính năng, thiết bị và phạm vi sử dụng của từng SKU.",
     Icon: Shield,
   },
   {
     title: "Bàn giao trên KEYON",
-    body: "Nhận deliverable sau thanh toán — hỗ trợ tiếng Việt.",
+    body: "Nhận thông tin license sau thanh toán — hỗ trợ tiếng Việt.",
     Icon: Monitor,
   },
   {
-    title: "Gói theo quy mô",
-    body: "Cá nhân đến tổ chức — chọn đúng nhu cầu thực tế.",
+    title: "Chọn theo nhu cầu",
+    body: "Từ cá nhân đến doanh nghiệp — chọn sản phẩm phù hợp.",
     Icon: Lock,
   },
 ];
@@ -117,27 +117,27 @@ const TRUST_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
 const PILLARS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Bảo vệ thiết bị",
-    body: "Gói antivirus / endpoint — tính năng chống malware theo sản phẩm vendor.",
+    body: "License endpoint và bảo vệ thiết bị — tính năng theo từng sản phẩm.",
     Icon: Monitor,
   },
   {
     title: "Bảo vệ email",
-    body: "Tùy gói: ngăn phishing, spam và đính kèm độc hại (xem mô tả SKU).",
+    body: "License chống phishing, spam và thư độc hại — phạm vi theo từng gói.",
     Icon: Mail,
   },
   {
     title: "Bảo vệ dữ liệu",
-    body: "Tùy gói: mã hóa, kiểm soát truy cập theo điều kiện phần mềm.",
+    body: "Tính năng bảo vệ dữ liệu tùy theo sản phẩm và gói license.",
     Icon: Cloud,
   },
   {
     title: "Bảo vệ danh tính",
-    body: "Tùy gói: xác thực và kiểm soát tài khoản — KEYON không vận hành IdP thuê ngoài.",
+    body: "Xác thực và kiểm soát tài khoản tùy theo sản phẩm. KEYON không vận hành hệ thống danh tính thuê ngoài.",
     Icon: Fingerprint,
   },
   {
     title: "Bảo vệ mạng",
-    body: "Tùy gói: tường lửa / lọc web theo sản phẩm — không phải SOC KEYON.",
+    body: "Tường lửa và lọc web tùy theo sản phẩm — không phải dịch vụ giám sát mạng thuê ngoài.",
     Icon: Network,
   },
 ];
@@ -149,13 +149,13 @@ const WHY: { title: string; body: string; Icon: LucideIcon }[] = [
     Icon: ShieldCheck,
   },
   {
-    title: "Giá minh bạch",
-    body: "Giá và chu kỳ hiển thị rõ trên từng gói.",
+    title: "Thông tin rõ ràng",
+    body: "Biết trước thời hạn, số thiết bị và phạm vi sử dụng của từng gói.",
     Icon: BadgeCheck,
   },
   {
-    title: "Triển khai nhanh",
-    body: "Nhận deliverable sau thanh toán — kích hoạt theo hướng dẫn.",
+    title: "Nhận nhanh",
+    body: "Nhận license sau thanh toán — kích hoạt theo hướng dẫn.",
     Icon: Rocket,
   },
   {
@@ -169,25 +169,25 @@ const STEPS: { n: string; title: string; body: string; Icon: LucideIcon }[] = [
   {
     n: "1",
     title: "Chọn giải pháp",
-    body: "Chọn gói bảo mật phù hợp thiết bị / quy mô.",
+    body: "Chọn gói bảo mật phù hợp với thiết bị và nhu cầu.",
     Icon: ShoppingCart,
   },
   {
     n: "2",
     title: "Thanh toán",
-    body: "Thanh toán an toàn qua các phương thức trên KEYON.",
+    body: "Thanh toán an toàn qua các phương thức được hỗ trợ.",
     Icon: CreditCard,
   },
   {
     n: "3",
     title: "Nhận license",
-    body: "Nhận key / tài khoản trong Tài khoản KEYON.",
+    body: "Nhận key, tài khoản hoặc thông tin license trong Tài khoản KEYON.",
     Icon: KeyRound,
   },
   {
     n: "4",
     title: "Kích hoạt & sử dụng",
-    body: "Cài đặt, kích hoạt và bắt đầu bảo vệ.",
+    body: "Cài đặt, kích hoạt và bắt đầu sử dụng theo hướng dẫn.",
     Icon: ShieldCheck,
   },
 ];
@@ -223,13 +223,16 @@ export function SecuritySolutionLanding({ featured }: Props) {
 
           <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-8 xl:gap-10">
             <div className="min-w-0">
-              <h1 className={`max-w-[16ch] ${HERO_TITLE_CLASS}`}>
-                Bảo vệ những gì quan trọng nhất
+              <h1 className={`max-w-xl ${HERO_TITLE_CLASS}`}>
+                Giải pháp bảo mật cho doanh nghiệp
               </h1>
               <p className={`mt-4 max-w-xl ${PAGE_LEAD_CLASS}`}>
-                Gói bảo mật endpoint / internet security chính hãng trên KEYON — mua, nhận
-                license và kích hoạt theo hướng dẫn. KEYON không vận hành SOC hay giám sát
-                bảo mật thuê ngoài.
+                Khám phá các sản phẩm và license bảo mật cho thiết bị, email, dữ liệu, danh tính
+                và mạng trên KEYON, với thông tin rõ ràng và hỗ trợ tiếng Việt.
+              </p>
+              <p className={`mt-3 max-w-xl ${BODY_MUTED_CLASS}`}>
+                Lưu ý: KEYON cung cấp sản phẩm và license bảo mật theo catalog, không thay thế
+                SOC hoặc dịch vụ giám sát an ninh mạng thuê ngoài.
               </p>
 
               <ul className="mt-6 space-y-3.5">
@@ -252,9 +255,9 @@ export function SecuritySolutionLanding({ featured }: Props) {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/categories/security"
-                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
-                  Khám phá giải pháp →
+                  Xem sản phẩm bảo mật →
                 </Link>
                 <Link
                   href="/contact/quote"
@@ -299,9 +302,11 @@ export function SecuritySolutionLanding({ featured }: Props) {
       <section className="py-9 md:py-11">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
-            <h2 className={SECTION_TITLE_CLASS}>
-              Các lớp bảo vệ theo gói vendor trên KEYON
-            </h2>
+            <h2 className={SECTION_TITLE_CLASS}>Các lớp bảo mật trên KEYON</h2>
+            <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
+              Khám phá các nhóm sản phẩm bảo mật theo nhu cầu bảo vệ thiết bị, dữ liệu, danh
+              tính và hệ thống.
+            </p>
             <div className="mx-auto mt-2.5 h-1 w-14 rounded-full bg-accent" aria-hidden />
           </header>
 
@@ -416,7 +421,7 @@ export function SecuritySolutionLanding({ featured }: Props) {
                 <h2 className={`${SECTION_TITLE_CLASS} text-white`}>
                   Vì sao chọn giải pháp bảo mật từ KEYON?
                 </h2>
-                <p className="mt-3 max-w-md text-sm leading-relaxed text-slate-300 md:text-[15px]">
+                <p className="mt-3 max-w-md text-sm leading-relaxed text-slate-300">
                   Không chỉ bán key — KEYON giúp bạn chọn đúng gói, nhận đúng loại và
                   quản lý trong Tài khoản sau khi mua.
                 </p>
@@ -480,8 +485,8 @@ export function SecuritySolutionLanding({ featured }: Props) {
       </section>
 
       <SolutionFinalCta
-        title="Chưa biết giải pháp nào phù hợp?"
-        subtitle="Đội ngũ KEYON hỗ trợ chọn gói bảo mật theo thiết bị và ngân sách."
+        title="Chưa biết chọn gói bảo mật nào?"
+        subtitle="KEYON hỗ trợ bạn xác định sản phẩm phù hợp theo thiết bị, số lượng người dùng và nhu cầu bảo vệ."
         primaryHref="/contact/quote"
         primaryLabel="Gửi yêu cầu tư vấn →"
         secondaryHref="/categories/security"
