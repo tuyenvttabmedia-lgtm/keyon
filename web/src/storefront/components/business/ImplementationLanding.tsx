@@ -50,66 +50,82 @@ import {
 const ICON_SM = { size: 16, strokeWidth: 1.85 } as const;
 const ICON_MD = { size: 20, strokeWidth: 1.75 } as const;
 
-const HERO_POINTS: { title: string; Icon: LucideIcon }[] = [
-  { title: "Bàn giao sau mua", Icon: KeyRound },
-  { title: "Kích hoạt theo quy mô", Icon: Users },
-  { title: "Checklist cho IT", Icon: ListChecks },
-  { title: "Hỗ trợ tiếng Việt", Icon: ShieldCheck },
+const HERO_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
+  {
+    title: "Bàn giao đúng phạm vi",
+    body: "License, key và tài khoản được bàn giao theo đơn hàng và phạm vi đã thống nhất.",
+    Icon: KeyRound,
+  },
+  {
+    title: "Hỗ trợ kích hoạt",
+    body: "Hướng dẫn kích hoạt và xử lý các bước cần thiết sau khi nhận license.",
+    Icon: Rocket,
+  },
+  {
+    title: "Checklist cho IT",
+    body: "Chuẩn hóa thông tin bàn giao, số lượng và phạm vi sử dụng cho đội IT.",
+    Icon: ListChecks,
+  },
+  {
+    title: "Theo dõi sau bàn giao",
+    body: "Hỗ trợ kiểm tra và xử lý các vấn đề phát sinh liên quan đến license đã mua.",
+    Icon: ShieldCheck,
+  },
 ];
 
 const IN_SCOPE: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Bàn giao license",
-    body: "Key, tài khoản hoặc gói đã mua — ghi rõ loại nhận trước khi kích hoạt.",
+    body: "Key, tài khoản hoặc license được bàn giao theo đơn hàng, đúng loại và số lượng đã xác nhận.",
     Icon: KeyRound,
   },
   {
     title: "Onboarding đội IT",
-    body: "Hướng dẫn kích hoạt, gán seat và checklist rollout theo số lượng người dùng.",
+    body: "Hướng dẫn các bước kích hoạt, kiểm tra và quản lý license theo phạm vi người dùng.",
     Icon: Users,
   },
   {
     title: "Gắn quản lý trên KEYON",
-    body: "Đưa license vào Tài khoản để theo dõi hạn dùng và gia hạn sau khi bàn giao.",
+    body: "Theo dõi license, thời hạn và thông tin bàn giao trong Tài khoản KEYON khi được hỗ trợ.",
     Icon: ListChecks,
   },
   {
-    title: "Phối hợp khi kẹt vendor",
-    body: "Hỗ trợ làm việc với nhà cung cấp khi kích hoạt hoặc gán bản quyền bị chặn.",
+    title: "Phối hợp khi có vấn đề",
+    body: "Hỗ trợ kiểm tra thông tin license và phối hợp xử lý khi gặp vấn đề trong quá trình kích hoạt.",
     Icon: Handshake,
   },
 ];
 
 const OUT_OF_SCOPE = [
-  "Thiết kế và vận hành hạ tầng cloud / bảo mật endpoint cho tổ chức",
-  "Thay thế đối tác triển khai hệ thống hoặc dịch vụ quản trị IT thuê ngoài",
-  "Cài đặt phần mềm on-prem ngoài phạm vi kích hoạt và bàn giao bản quyền",
+  "Thiết kế và vận hành hạ tầng cloud, máy chủ hoặc endpoint ngoài phạm vi license.",
+  "Thay thế đội IT hoặc đơn vị quản trị hệ thống thuê ngoài.",
+  "Cài đặt, cấu hình hệ thống on-premise hoặc triển khai hạ tầng chuyên sâu.",
 ];
 
 const PROCESS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Tiếp nhận phạm vi",
-    body: "Sản phẩm đã mua hoặc sẽ mua, số máy / người dùng và đầu mối IT phụ trách.",
+    body: "Xác nhận sản phẩm, số lượng người dùng và đầu mối IT phụ trách.",
     Icon: ClipboardList,
   },
   {
     title: "Rà soát license",
-    body: "Khớp loại nhận (key / tài khoản / gói) với quy mô sử dụng thực tế.",
+    body: "Kiểm tra loại license, key hoặc tài khoản và phạm vi sử dụng thực tế.",
     Icon: MessageCircle,
   },
   {
-    title: "Kế hoạch bàn giao",
-    body: "Thứ tự kích hoạt, người nhận và kênh hỗ trợ trong quá trình rollout.",
+    title: "Lên kế hoạch bàn giao",
+    body: "Thống nhất thời gian, người nhận và các bước cần thực hiện.",
     Icon: ListChecks,
   },
   {
     title: "Hỗ trợ kích hoạt",
-    body: "Đồng hành đội IT khi gán seat và xử lý lỗi kích hoạt thường gặp.",
+    body: "Hướng dẫn kích hoạt và phối hợp xử lý các lỗi thường gặp.",
     Icon: Rocket,
   },
   {
-    title: "Checklist bàn giao",
-    body: "Xác nhận đã nhận đủ và đã vào Tài khoản KEYON khi cần quản lý tập trung.",
+    title: "Hoàn tất bàn giao",
+    body: "Xác nhận thông tin bàn giao và cập nhật license để tiếp tục quản lý khi cần.",
     Icon: Headphones,
   },
 ];
@@ -144,24 +160,27 @@ export function ImplementationLanding() {
               <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
                 Dịch vụ triển khai
               </p>
-              <h1 className={`mt-3 max-w-[20ch] ${HERO_TITLE_CLASS}`}>
-                Bàn giao và kích hoạt bản quyền theo quy mô tổ chức
+              <h1 className={`mt-3 max-w-xl ${HERO_TITLE_CLASS}`}>
+                Triển khai và bàn giao bản quyền cho doanh nghiệp
               </h1>
               <p className={`mt-4 max-w-[540px] ${PAGE_LEAD_CLASS}`}>
-                KEYON hỗ trợ bàn giao và kích hoạt bản quyền sau khi mua — đúng loại nhận,
-                đúng quy mô tổ chức, có checklist cho đội IT.
+                KEYON hỗ trợ bàn giao, kích hoạt và hướng dẫn sử dụng bản quyền sau khi mua —
+                phù hợp theo số lượng người dùng, loại license và quy mô tổ chức.
               </p>
 
-              <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+              <ul className="mt-6 grid gap-4 sm:grid-cols-2">
                 {HERO_POINTS.map((p) => (
-                  <li key={p.title} className="flex items-center gap-2.5">
+                  <li key={p.title} className="flex items-start gap-2.5">
                     <span
-                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"
+                      className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"
                       aria-hidden
                     >
                       <p.Icon {...ICON_SM} />
                     </span>
-                    <span className={`${BODY_CLASS} font-medium`}>{p.title}</span>
+                    <span className="min-w-0">
+                      <span className={`block ${CARD_TITLE_CLASS}`}>{p.title}</span>
+                      <span className={`mt-0.5 block ${BODY_MUTED_CLASS}`}>{p.body}</span>
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -169,7 +188,7 @@ export function ImplementationLanding() {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   href={SERVICE_HANDOVER_HREF}
-                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
                   Mua gói bàn giao →
                 </Link>
@@ -192,10 +211,10 @@ export function ImplementationLanding() {
       <section className="bg-white home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
-            <h2 className={SECTION_TITLE_CLASS}>Phạm vi KEYON làm</h2>
+            <h2 className={SECTION_TITLE_CLASS}>KEYON hỗ trợ những gì?</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Dịch vụ này tập trung bàn giao và kích hoạt bản quyền đã (hoặc sắp) mua —
-              khác bước tư vấn chọn gói trước khi mua.
+              Từ bàn giao license đến hỗ trợ kích hoạt, KEYON đồng hành cùng doanh nghiệp sau khi
+              hoàn tất đơn hàng.
             </p>
           </header>
           <ul className="mt-9 grid gap-4 sm:grid-cols-2">
@@ -226,8 +245,8 @@ export function ImplementationLanding() {
           <div>
             <h2 className={SECTION_TITLE_CLASS}>Không nằm trong phạm vi này</h2>
             <p className={`mt-2.5 max-w-xl ${SECTION_LEAD_CLASS}`}>
-              KEYON không thay thế dịch vụ triển khai hạ tầng hay quản trị hệ thống thuê
-              ngoài. Cần hướng đó — đội ngũ sẽ tư vấn và giới thiệu đối tác phù hợp.
+              KEYON tập trung vào bản quyền, bàn giao và hỗ trợ kích hoạt; không thay thế đội ngũ
+              IT hoặc đơn vị vận hành hệ thống của doanh nghiệp.
             </p>
             <ul className="mt-6 space-y-3">
               {OUT_OF_SCOPE.map((line) => (
@@ -246,19 +265,16 @@ export function ImplementationLanding() {
           <aside
             className={`rounded-2xl border border-border bg-white p-5 sm:p-6 ${ELEVATION_HAIRLINE}`}
           >
-            <p className={`${OVERLINE_CLASS} text-accent`}>Khác tư vấn bản quyền</p>
-            <p className={`mt-3 ${CARD_TITLE_CLASS}`}>
-              Tư vấn chọn gói trước khi mua. Triển khai sau khi đã có (hoặc sắp có) license.
-            </p>
-            <p className={`mt-2 ${CARD_META_CLASS}`}>
-              Gửi yêu cầu qua form báo giá loại triển khai — KEYON tiếp nhận và phản hồi
-              qua email / ticket.
+            <p className={`${OVERLINE_CLASS} text-accent`}>Cần tư vấn trước khi mua?</p>
+            <p className={`mt-3 ${BODY_CLASS}`}>
+              Chưa có license hoặc chưa chắc nên chọn gói nào? KEYON có thể tư vấn theo số lượng
+              người dùng, nhu cầu và ngân sách trước khi triển khai.
             </p>
             <Link
               href="/business/licensing-consulting"
-              className={`mt-4 inline-flex ${CARD_META_CLASS} font-medium ${HOVER_LINK_ACCENT}`}
+              className={`mt-4 inline-flex font-semibold text-accent ${HOVER_LINK_ACCENT}`}
             >
-              Sang trang tư vấn bản quyền →
+              Tư vấn chọn bản quyền →
             </Link>
           </aside>
         </div>
@@ -267,9 +283,9 @@ export function ImplementationLanding() {
       <section className="bg-white home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
-            <h2 className={SECTION_TITLE_CLASS}>Quy trình</h2>
+            <h2 className={SECTION_TITLE_CLASS}>Quy trình triển khai</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Năm bước — từ yêu cầu đến checklist bàn giao.
+              Năm bước rõ ràng từ tiếp nhận thông tin đến bàn giao và hỗ trợ kích hoạt.
             </p>
           </header>
           <ol className="relative mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
@@ -298,16 +314,16 @@ export function ImplementationLanding() {
           <div className="flex flex-col items-stretch gap-5 rounded-2xl bg-navy px-5 py-7 sm:px-8 md:flex-row md:items-center md:justify-between md:px-10 md:py-9">
             <div className="min-w-0 max-w-xl">
               <h2 className={`${SECTION_TITLE_CLASS} !text-white`}>
-                Cần hỗ trợ bàn giao hoặc kích hoạt?
+                Cần hỗ trợ triển khai bản quyền?
               </h2>
               <p className={`mt-2 ${SECTION_LEAD_CLASS} !text-slate-300`}>
-                Cho biết sản phẩm, số người dùng và đầu mối IT — KEYON tiếp nhận yêu cầu
-                và phản hồi lịch bàn giao / kích hoạt.
+                Cho biết sản phẩm, số lượng người dùng và đầu mối IT — KEYON sẽ tư vấn phạm vi bàn
+                giao và hỗ trợ phù hợp.
               </p>
             </div>
             <Link
               href={IMPLEMENTATION_QUOTE_HREF}
-              className={`inline-flex h-12 shrink-0 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+              className={`inline-flex h-12 shrink-0 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
             >
               Gửi yêu cầu →
             </Link>
@@ -322,7 +338,7 @@ function ImplementationHeroArt() {
   const steps = [
     { label: "Tiếp nhận phạm vi", Icon: ClipboardList },
     { label: "Rà soát license", Icon: KeyRound },
-    { label: "Checklist bàn giao", Icon: ListChecks },
+    { label: "Bàn giao", Icon: ListChecks },
     { label: "Hỗ trợ kích hoạt", Icon: Rocket },
   ] as const;
 
@@ -338,11 +354,11 @@ function ImplementationHeroArt() {
               <Handshake size={18} strokeWidth={1.8} />
             </span>
             <div>
-              <p className={CARD_TITLE_CLASS}>Onboarding sau mua</p>
-              <p className={CARD_META_CLASS}>Quy trình bàn giao sau mua</p>
+              <p className={CARD_TITLE_CLASS}>Onboarding bản quyền</p>
+              <p className={CARD_META_CLASS}>Bàn giao và kích hoạt sau khi mua</p>
             </div>
           </div>
-          <span className="rounded-md bg-accent-soft px-2 py-1 text-[11px] font-semibold text-accent">
+          <span className={`rounded-md bg-accent-soft px-2 py-1 ${BADGE_CLASS} text-accent`}>
             KEYON
           </span>
         </div>
@@ -353,7 +369,7 @@ function ImplementationHeroArt() {
               key={s.label}
               className="flex items-center gap-3 rounded-xl border border-border/80 bg-[#F7FAFC] px-3 py-2.5"
             >
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent/15 text-[11px] font-bold text-accent">
+              <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent/15 ${BADGE_CLASS} text-accent`}>
                 {String(i + 1).padStart(2, "0")}
               </span>
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-accent border border-border/70">
@@ -366,7 +382,7 @@ function ImplementationHeroArt() {
       </div>
 
       <ul className="mt-3 flex flex-wrap justify-center gap-2">
-        {["Bàn giao key", "Checklist IT", "Hỗ trợ kích hoạt"].map((t) => (
+        {["Bàn giao license", "Checklist IT", "Hỗ trợ kích hoạt"].map((t) => (
           <li
             key={t}
             className={`inline-flex items-center gap-1.5 rounded-full border border-border bg-white px-3 py-1.5 ${CARD_META_CLASS} font-medium text-navy ${ELEVATION_HAIRLINE}`}

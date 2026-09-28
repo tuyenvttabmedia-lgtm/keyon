@@ -227,7 +227,7 @@ export const BUSINESS_ADVISORY_LINKS: NavLink[] = [
   {
     label: "Dịch vụ triển khai",
     href: "/business/implementation",
-    description: "Bàn giao và kích hoạt bản quyền theo quy mô",
+    description: "Bàn giao, kích hoạt và hướng dẫn sử dụng bản quyền sau khi mua",
   },
   {
     label: "Liên hệ kinh doanh",

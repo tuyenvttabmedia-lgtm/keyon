@@ -49,9 +49,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (slug === "implementation") {
     return {
       ...(await buildMainPageMetadata(`/business/${slug}`)),
-      title: absoluteTitle("Dịch vụ triển khai | KEYON"),
+      title: absoluteTitle("Dịch vụ triển khai bản quyền phần mềm | KEYON"),
       description:
-        "Bàn giao và kích hoạt bản quyền theo quy mô tổ chức — onboarding IT, không phải catalog MSP cloud.",
+        "KEYON hỗ trợ triển khai, bàn giao và kích hoạt bản quyền phần mềm cho doanh nghiệp theo số lượng người dùng và nhu cầu thực tế.",
     };
   }
   if (slug === "contracts") {

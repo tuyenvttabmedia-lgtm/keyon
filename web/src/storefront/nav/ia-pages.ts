@@ -191,11 +191,11 @@ export const BUSINESS_PAGES: Record<string, IaPage> = {
     kicker: "Doanh nghiệp",
     title: "Dịch vụ triển khai",
     subtitle:
-      "Bàn giao và kích hoạt bản quyền theo quy mô — checklist cho đội IT sau khi mua.",
+      "KEYON hỗ trợ bàn giao, kích hoạt và hướng dẫn sử dụng bản quyền sau khi mua — theo số lượng người dùng, loại license và quy mô tổ chức.",
     bullets: [
-      "Onboarding sau mua: key, tài khoản, checklist cho IT",
-      "Khác tư vấn bản quyền — triển khai sau khi đã (sắp) có license",
-      "Gửi yêu cầu qua form báo giá loại triển khai",
+      "Bàn giao license, key và tài khoản theo phạm vi đã thống nhất",
+      "Hướng dẫn kích hoạt và checklist cho đội IT",
+      "Không thay thế đội IT hoặc đơn vị vận hành hệ thống",
     ],
     primaryCta: {
       label: "Gửi yêu cầu triển khai",
