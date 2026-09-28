@@ -5,6 +5,7 @@ import {
   ListChecks,
 } from "lucide-react";
 import {
+  BADGE_CLASS,
   BODY_MUTED_CLASS,
   CARD_META_CLASS,
   CARD_TITLE_CLASS,
@@ -24,30 +25,43 @@ import { SECTION_PAD } from "./shared";
 const POINTS = [
   {
     title: "Sản phẩm đang dùng",
-    body: "Biết subscription nào đang trong thời hạn.",
+    body: "Xem các subscription đang được quản lý trong tài khoản.",
     Icon: LayoutDashboard,
   },
   {
-    title: "Trạng thái thời hạn",
-    body: "Phân biệt đang dùng, sắp hết hạn hoặc cần xem lại.",
+    title: "Trạng thái",
+    body: "Biết subscription đang sử dụng, chưa kích hoạt hoặc đã hết hạn.",
     Icon: ListChecks,
   },
   {
-    title: "Ngày cần gia hạn",
-    body: "Kiểm tra thời điểm cần liên hệ để gia hạn.",
+    title: "Thời điểm gia hạn",
+    body: "Kiểm tra thời hạn để chủ động chuẩn bị cho kỳ tiếp theo.",
     Icon: CalendarClock,
   },
   {
-    title: "Hỗ trợ khi đổi nhu cầu",
-    body: "Nhờ KEYON tư vấn khi tăng, giảm hoặc đổi sản phẩm.",
+    title: "Thay đổi nhu cầu",
+    body: "Liên hệ KEYON khi cần thay đổi sản phẩm hoặc số lượng.",
     Icon: History,
   },
 ] as const;
 
+/** Matches Tài khoản → License: đang sử dụng, chưa kích hoạt, hết hạn. */
 const STATUS_LEGEND = [
-  { label: "Đang hoạt động", hint: "Gói đang trong chu kỳ sử dụng", tone: "bg-accent/15 text-accent" },
-  { label: "Sắp gia hạn", hint: "Sắp đến mốc cần quyết định", tone: "bg-amber-50 text-amber-800" },
-  { label: "Cần xem xét", hint: "Cần xác nhận nhu cầu trước khi tiếp tục", tone: "bg-sky-50 text-sky-800" },
+  {
+    label: "Đang sử dụng",
+    hint: "License còn trong thời hạn đã mua.",
+    tone: "bg-accent/15 text-accent",
+  },
+  {
+    label: "Chưa kích hoạt",
+    hint: "Đã nhận license, chưa hoàn tất kích hoạt.",
+    tone: "bg-amber-50 text-amber-800",
+  },
+  {
+    label: "Hết hạn",
+    hint: "Đã qua ngày hết hạn. Liên hệ KEYON khi cần gia hạn.",
+    tone: "bg-rose-50 text-rose-700",
+  },
 ] as const;
 
 export function SubscriptionControlCenter() {
@@ -58,21 +72,23 @@ export function SubscriptionControlCenter() {
           <div className="min-w-0 lg:col-span-5">
             <p className={`${OVERLINE_CLASS} tracking-[0.16em] text-accent`}>Thời hạn sử dụng</p>
             <h2 className={`mt-2.5 ${SECTION_TITLE_CLASS}`}>
-              Kiểm tra subscription đang dùng và ngày hết hạn
+              Kiểm tra subscription và thời hạn
             </h2>
             <p className={`mt-3 ${SECTION_LEAD_CLASS}`}>
-              Theo dõi thời hạn trong Tài khoản KEYON, rồi liên hệ khi cần gia hạn hoặc đổi nhu cầu.
+              Theo dõi subscription đang sử dụng trong Tài khoản KEYON và liên hệ khi cần gia hạn
+              hoặc điều chỉnh nhu cầu.
             </p>
             <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-              {POINTS.map(({ title, Icon }) => (
+              {POINTS.map(({ title, body, Icon }) => (
                 <li
                   key={title}
-                  className={`flex items-center gap-3 rounded-xl border border-border bg-white px-3.5 py-3 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
+                  className={`rounded-xl border border-border bg-white px-3.5 py-3 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
                 >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-soft text-accent">
                     <Icon size={16} strokeWidth={1.85} aria-hidden />
                   </span>
-                  <span className="text-[13px] font-semibold text-navy">{title}</span>
+                  <p className={`mt-2.5 ${CARD_TITLE_CLASS}`}>{title}</p>
+                  <p className={`mt-1 ${BODY_MUTED_CLASS}`}>{body}</p>
                 </li>
               ))}
             </ul>
@@ -83,9 +99,9 @@ export function SubscriptionControlCenter() {
               className={`overflow-hidden rounded-2xl border border-border bg-white ${ELEVATION_FLOAT}`}
             >
               <div className="border-b border-border px-4 py-3 sm:px-5">
-                <p className={CARD_TITLE_CLASS}>Trạng thái theo dõi</p>
+                <p className={CARD_TITLE_CLASS}>Trong Tài khoản KEYON</p>
                 <p className={CARD_META_CLASS}>
-                  Các mốc khi theo dõi thời hạn subscription
+                  Trạng thái license: đang sử dụng, chưa kích hoạt, hết hạn
                 </p>
               </div>
               <ul className="divide-y divide-border">
@@ -96,20 +112,12 @@ export function SubscriptionControlCenter() {
                   >
                     <div className="min-w-0">
                       <span
-                        className={`inline-flex rounded-md px-2 py-0.5 text-[12px] font-semibold ${s.tone}`}
+                        className={`inline-flex rounded-md px-2 py-0.5 ${BADGE_CLASS} ${s.tone}`}
                       >
                         {s.label}
                       </span>
                       <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{s.hint}</p>
                     </div>
-                  </li>
-                ))}
-              </ul>
-              <ul className="grid gap-2 border-t border-border bg-[#F7FAFC] p-4 sm:grid-cols-2 sm:p-5">
-                {POINTS.map(({ title, body }) => (
-                  <li key={title} className="min-w-0">
-                    <p className="text-[12px] font-semibold text-navy">{title}</p>
-                    <p className={`mt-0.5 text-[12px] leading-snug text-muted`}>{body}</p>
                   </li>
                 ))}
               </ul>

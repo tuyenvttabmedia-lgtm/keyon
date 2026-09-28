@@ -20,17 +20,17 @@ import {
 const OPTIONS = [
   {
     title: "Tiếp tục",
-    body: "Gia hạn đúng sản phẩm và thời hạn đang dùng.",
+    body: "Gia hạn đúng sản phẩm và thời hạn đang sử dụng.",
     Icon: RefreshCw,
   },
   {
     title: "Điều chỉnh",
-    body: "Tăng, giảm hoặc đổi sản phẩm khi nhu cầu thay đổi.",
+    body: "Thay đổi số lượng hoặc sản phẩm khi nhu cầu thay đổi.",
     Icon: SlidersHorizontal,
   },
   {
     title: "Tư vấn",
-    body: "KEYON kiểm tra nhu cầu và gửi báo giá trước khi chốt.",
+    body: "KEYON kiểm tra nhu cầu và tư vấn phương án phù hợp trước khi chốt.",
     Icon: MessageCircle,
   },
 ] as const;
@@ -43,7 +43,7 @@ export function RenewalDecision() {
           <div className="min-w-0 lg:col-span-5">
             <h2 className={SECTION_TITLE_CLASS}>Khi nhu cầu sử dụng thay đổi</h2>
             <p className={`mt-3 ${SECTION_LEAD_CLASS}`}>
-              Có thể gia hạn nguyên gói, điều chỉnh số lượng hoặc nhờ KEYON tư vấn trước khi chốt.
+              Có thể phát sinh nhu cầu tăng, giảm số lượng hoặc thay đổi sản phẩm trong quá trình sử dụng.
             </p>
             <Link
               href={SUB_CONSULT_HREF}

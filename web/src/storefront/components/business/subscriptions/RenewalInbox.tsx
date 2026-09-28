@@ -21,25 +21,25 @@ import { CARD_SURFACE, SECTION_PAD, SUB_CONSULT_HREF } from "./shared";
 const WORK_TYPES = [
   {
     title: "Kiểm tra sản phẩm và thời hạn",
-    body: "Xem subscription đang dùng và ngày hết hạn trước khi quyết định.",
+    body: "Xác định subscription đang dùng và thời gian còn lại trước khi gia hạn.",
     Icon: Clock3,
     tone: "text-amber-700 bg-amber-50",
   },
   {
     title: "Xác nhận số lượng cần gia hạn",
-    body: "Giữ nguyên, tăng hoặc giảm theo nhu cầu sử dụng tiếp theo.",
+    body: "Xác nhận số người dùng, thiết bị hoặc sản phẩm cần tiếp tục sử dụng.",
     Icon: MessageCircle,
     tone: "text-sky-700 bg-sky-50",
   },
   {
     title: "Nhận báo giá",
-    body: "KEYON gửi báo giá theo sản phẩm, số lượng và thời hạn mới.",
+    body: "KEYON gửi báo giá theo sản phẩm, số lượng và thời hạn phù hợp.",
     Icon: Hourglass,
     tone: "text-navy bg-navy/5",
   },
   {
     title: "Thanh toán và nhận hướng dẫn",
-    body: "Hoàn tất thanh toán, rồi nhận thông tin hoặc hướng dẫn gia hạn.",
+    body: "Hoàn tất thanh toán và nhận thông tin gia hạn hoặc hướng dẫn tiếp theo.",
     Icon: CheckCircle2,
     tone: "text-accent bg-accent-soft",
   },

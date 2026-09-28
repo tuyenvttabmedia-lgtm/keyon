@@ -13,11 +13,11 @@ const BENEFITS = [
   },
   {
     title: "Theo dõi thời hạn",
-    body: "Dễ kiểm tra subscription đang sử dụng và thời điểm gia hạn.",
+    body: "Dễ kiểm tra subscription đang sử dụng và thời điểm cần gia hạn.",
   },
   {
     title: "Tư vấn khi thay đổi nhu cầu",
-    body: "Hỗ trợ khi cần tăng, giảm hoặc thay đổi sản phẩm.",
+    body: "Hỗ trợ khi cần tăng, giảm số lượng hoặc thay đổi sản phẩm.",
   },
   {
     title: "Hỗ trợ sau mua",
@@ -32,12 +32,10 @@ export function SubscriptionBenefits() {
       <div className="home-container">
         <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
           <div className="min-w-0 lg:col-span-5">
-            <h2 className={SECTION_TITLE_CLASS}>
-              Biết thời hạn, rồi gia hạn khi cần
-            </h2>
+            <h2 className={SECTION_TITLE_CLASS}>Chủ động theo dõi và gia hạn</h2>
             <p className={`mt-3 max-w-md ${SECTION_LEAD_CLASS}`}>
-              KEYON hỗ trợ mua subscription theo thời hạn, theo dõi ngày hết hạn và tư vấn khi cần
-              gia hạn hoặc đổi sản phẩm.
+              KEYON hỗ trợ theo dõi thời hạn, hướng dẫn kích hoạt và tư vấn khi nhu cầu sử dụng thay
+              đổi.
             </p>
           </div>
           <ul className="space-y-5 lg:col-span-7">

@@ -1,4 +1,4 @@
-import { CARD_META_CLASS, CARD_TITLE_CLASS } from "@/storefront/typography";
+import { BADGE_CLASS, CARD_META_CLASS, CARD_TITLE_CLASS } from "@/storefront/typography";
 import { ELEVATION_FLOAT, ELEVATION_HAIRLINE } from "@/storefront/effects";
 
 const STEPS = ["Mua", "Dùng", "Theo dõi", "Gia hạn"] as const;
@@ -17,27 +17,28 @@ export function SubscriptionMobilePreview() {
         </div>
 
         <div className="space-y-3 p-4">
-          <p className="text-[12px] font-semibold uppercase tracking-wide text-muted">
-            Sắp đến kỳ gia hạn
-          </p>
-          <div
-            className={`rounded-xl border border-border bg-[#F7FAFC] px-3.5 py-3 ${ELEVATION_HAIRLINE}`}
-          >
-            <p className={CARD_TITLE_CLASS}>Gói sắp đến hạn</p>
-            <span className="mt-2 inline-flex rounded-md bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-800">
-              Sắp gia hạn
-            </span>
-          </div>
-
-          <p className="text-[12px] font-semibold uppercase tracking-wide text-muted">
-            Đang hoạt động
-          </p>
           <div
             className={`rounded-xl border border-border bg-white px-3.5 py-3 ${ELEVATION_HAIRLINE}`}
           >
-            <p className={CARD_TITLE_CLASS}>Gói đang sử dụng</p>
-            <span className="mt-2 inline-flex rounded-md bg-accent-soft px-2 py-0.5 text-[11px] font-semibold text-accent">
+            <p className={CARD_TITLE_CLASS}>Còn trong thời hạn</p>
+            <span className={`mt-2 inline-flex rounded-md bg-accent-soft px-2 py-0.5 ${BADGE_CLASS} text-accent`}>
               Đang sử dụng
+            </span>
+          </div>
+          <div
+            className={`rounded-xl border border-border bg-[#F7FAFC] px-3.5 py-3 ${ELEVATION_HAIRLINE}`}
+          >
+            <p className={CARD_TITLE_CLASS}>Đã nhận, chờ kích hoạt</p>
+            <span className={`mt-2 inline-flex rounded-md bg-amber-50 px-2 py-0.5 ${BADGE_CLASS} text-amber-800`}>
+              Chưa kích hoạt
+            </span>
+          </div>
+          <div
+            className={`rounded-xl border border-border bg-[#F7FAFC] px-3.5 py-3 ${ELEVATION_HAIRLINE}`}
+          >
+            <p className={CARD_TITLE_CLASS}>Đã qua ngày hết hạn</p>
+            <span className={`mt-2 inline-flex rounded-md bg-rose-50 px-2 py-0.5 ${BADGE_CLASS} text-rose-700`}>
+              Hết hạn
             </span>
           </div>
 
@@ -51,7 +52,7 @@ export function SubscriptionMobilePreview() {
                       i === 0 ? "bg-accent" : "border-2 border-border bg-white"
                     }`}
                   />
-                  <span className="text-[10px] font-medium text-muted">{s}</span>
+                  <span className={`${BADGE_CLASS} text-muted`}>{s}</span>
                 </li>
               ))}
             </ol>

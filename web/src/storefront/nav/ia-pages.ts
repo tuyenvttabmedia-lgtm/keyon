@@ -154,11 +154,11 @@ export const BUSINESS_PAGES: Record<string, IaPage> = {
     kicker: "Doanh nghiệp",
     title: "Subscription & Gia hạn",
     subtitle:
-      "Mua subscription phần mềm theo thời hạn phù hợp, theo dõi ngày hết hạn và được hỗ trợ khi gia hạn hoặc thay đổi nhu cầu sử dụng.",
+      "Mua subscription phần mềm theo thời hạn phù hợp, theo dõi thời gian sử dụng và được hỗ trợ khi gia hạn hoặc thay đổi nhu cầu.",
     bullets: [
-      "Subscription có thông tin nguồn cung rõ ràng",
-      "Theo dõi thời hạn sử dụng",
-      "Hỗ trợ gia hạn theo sản phẩm đang dùng",
+      "Thông tin sản phẩm, thời hạn và hình thức được xác định trước khi mua",
+      "Theo dõi subscription đang sử dụng",
+      "Tư vấn gia hạn theo sản phẩm và số lượng",
     ],
     primaryCta: {
       label: "Nhận tư vấn",

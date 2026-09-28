@@ -42,9 +42,9 @@ const STEPS: {
   },
   {
     title: "Xác nhận nhu cầu",
-    body: "KEYON kiểm tra sản phẩm và hình thức cấp phép phù hợp.",
+    body: "KEYON xác nhận sản phẩm và hình thức cấp phép phù hợp.",
     previewTitle: "Xác nhận nhu cầu",
-    previewBody: "KEYON kiểm tra sản phẩm, số lượng và hình thức cấp phép trước khi báo giá.",
+    previewBody: "KEYON xác nhận sản phẩm và hình thức cấp phép phù hợp.",
     Icon: Eye,
     visual: [
       { label: "Sản phẩm", tone: "bg-accent/20 text-accent" },
@@ -66,7 +66,7 @@ const STEPS: {
     title: "Theo dõi & gia hạn",
     body: "Kiểm tra thời hạn và liên hệ KEYON khi cần gia hạn.",
     previewTitle: "Theo dõi & gia hạn",
-    previewBody: "Kiểm tra ngày hết hạn trong Tài khoản, rồi liên hệ KEYON khi cần gia hạn hoặc đổi nhu cầu.",
+    previewBody: "Kiểm tra thời hạn và liên hệ KEYON khi cần gia hạn.",
     Icon: RefreshCcw,
     visual: [
       { label: "Thời hạn", tone: "bg-amber-400/20 text-amber-200" },

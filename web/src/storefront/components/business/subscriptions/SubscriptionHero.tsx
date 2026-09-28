@@ -24,18 +24,18 @@ import { SubscriptionMobilePreview } from "./SubscriptionMobilePreview";
 
 const BENEFITS = [
   {
-    title: "Subscription chính hãng",
-    body: "License và subscription có thông tin nguồn cung rõ ràng.",
+    title: "Subscription rõ ràng",
+    body: "Thông tin sản phẩm, thời hạn và hình thức subscription được xác định trước khi mua.",
     Icon: LayoutGrid,
   },
   {
     title: "Theo dõi thời hạn",
-    body: "Dễ kiểm tra thời hạn sử dụng và thời điểm cần gia hạn.",
+    body: "Kiểm tra subscription đang sử dụng và thời điểm cần gia hạn.",
     Icon: Bell,
   },
   {
-    title: "Gia hạn đúng kỳ",
-    body: "Hỗ trợ kiểm tra và gia hạn theo sản phẩm đang sử dụng.",
+    title: "Hỗ trợ gia hạn",
+    body: "Tư vấn gia hạn theo sản phẩm, số lượng và nhu cầu sử dụng tiếp theo.",
     Icon: RefreshCw,
   },
 ] as const;
@@ -70,8 +70,8 @@ export function SubscriptionHero() {
               Subscription &amp; gia hạn bản quyền phần mềm
             </h1>
             <p className={`mt-3.5 ${PAGE_LEAD_CLASS}`}>
-              Mua subscription phần mềm theo thời hạn phù hợp, theo dõi ngày hết hạn và được hỗ trợ
-              khi gia hạn hoặc thay đổi nhu cầu sử dụng.
+              Mua subscription phần mềm theo thời hạn phù hợp, theo dõi thời gian sử dụng và được hỗ
+              trợ khi gia hạn hoặc thay đổi nhu cầu.
             </p>
 
             <ul className="mt-5 space-y-2.5">
@@ -99,7 +99,7 @@ export function SubscriptionHero() {
                 href={HOW_IT_WORKS_HREF}
                 className={`inline-flex h-12 items-center justify-center rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
               >
-                Tìm hiểu cách hoạt động
+                Xem cách KEYON hoạt động →
               </Link>
             </div>
           </div>

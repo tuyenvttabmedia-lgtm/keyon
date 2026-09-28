@@ -1,17 +1,17 @@
 import { AlertCircle, CheckCircle2, Clock3 } from "lucide-react";
-import { CARD_META_CLASS, CARD_TITLE_CLASS } from "@/storefront/typography";
+import { BADGE_CLASS, CARD_META_CLASS, CARD_TITLE_CLASS } from "@/storefront/typography";
 import { ELEVATION_FLOAT, ELEVATION_HAIRLINE } from "@/storefront/effects";
 
 const STATUS_CARDS = [
-  { label: "Đang hoạt động", Icon: CheckCircle2, tone: "text-accent bg-accent-soft" },
-  { label: "Sắp gia hạn", Icon: Clock3, tone: "text-amber-700 bg-amber-50" },
-  { label: "Cần xem xét", Icon: AlertCircle, tone: "text-sky-700 bg-sky-50" },
+  { label: "Đang sử dụng", Icon: CheckCircle2, tone: "text-accent bg-accent-soft" },
+  { label: "Chưa kích hoạt", Icon: Clock3, tone: "text-amber-700 bg-amber-50" },
+  { label: "Hết hạn", Icon: AlertCircle, tone: "text-rose-700 bg-rose-50" },
 ] as const;
 
 const ILLUSTRATION_ROWS = [
-  { label: "Gói đang sử dụng", status: "Đang hoạt động", tone: "bg-accent/15 text-accent" },
-  { label: "Gói sắp đến hạn", status: "Sắp gia hạn", tone: "bg-amber-50 text-amber-800" },
-  { label: "Gói cần xem xét", status: "Cần xem xét", tone: "bg-sky-50 text-sky-800" },
+  { label: "Còn trong thời hạn", status: "Đang sử dụng", tone: "bg-accent/15 text-accent" },
+  { label: "Đã nhận, chờ kích hoạt", status: "Chưa kích hoạt", tone: "bg-amber-50 text-amber-800" },
+  { label: "Đã qua ngày hết hạn", status: "Hết hạn", tone: "bg-rose-50 text-rose-700" },
 ] as const;
 
 /** Compact desktop hub — height aligned with other landing hero arts. */
@@ -27,7 +27,7 @@ export function SubscriptionDesktopPreview() {
             <p className={CARD_TITLE_CLASS}>Theo dõi thời hạn</p>
             <p className={CARD_META_CLASS}>Subscription đang dùng</p>
           </div>
-          <span className="rounded-md bg-accent-soft px-2 py-1 text-[11px] font-semibold text-accent">
+          <span className={`rounded-md bg-accent-soft px-2 py-1 ${BADGE_CLASS} text-accent`}>
             KEYON
           </span>
         </div>
@@ -43,7 +43,7 @@ export function SubscriptionDesktopPreview() {
               >
                 <Icon size={14} strokeWidth={1.9} />
               </span>
-              <p className="mt-2 text-[11px] font-semibold leading-snug text-navy">{label}</p>
+              <p className={`mt-2 ${BADGE_CLASS} leading-snug text-navy`}>{label}</p>
             </div>
           ))}
         </div>
@@ -56,7 +56,7 @@ export function SubscriptionDesktopPreview() {
             >
               <p className={`${CARD_TITLE_CLASS} truncate`}>{s.label}</p>
               <span
-                className={`shrink-0 rounded-md px-1.5 py-0.5 text-[10px] font-semibold ${s.tone}`}
+                className={`shrink-0 rounded-md px-1.5 py-0.5 ${BADGE_CLASS} ${s.tone}`}
               >
                 {s.status}
               </span>
@@ -65,9 +65,9 @@ export function SubscriptionDesktopPreview() {
         </ul>
 
         <div className="mt-3 rounded-xl border border-accent/25 bg-accent-soft/40 px-3 py-2.5">
-          <p className="text-[12px] font-bold text-navy">Sắp đến kỳ gia hạn</p>
+          <p className={CARD_TITLE_CLASS}>Kiểm tra thời hạn</p>
           <p className={`mt-0.5 ${CARD_META_CLASS}`}>
-            Kiểm tra thời hạn, rồi liên hệ KEYON khi cần gia hạn.
+            Xem ngày hết hạn trong Tài khoản, rồi liên hệ KEYON khi cần gia hạn.
           </p>
         </div>
       </div>

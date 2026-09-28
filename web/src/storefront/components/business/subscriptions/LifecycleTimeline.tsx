@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
   CirclePlay,
   Eye,
@@ -17,17 +16,36 @@ import {
   ELEVATION_CARD_HOVER,
   ELEVATION_HAIRLINE,
   HOVER_LIFT_CARD,
-  HOVER_LINK_ACCENT,
   TRANSITION_PANEL,
 } from "@/storefront/effects";
 import { SECTION_PAD } from "./shared";
 
 const STEPS: { title: string; body: string; Icon: LucideIcon }[] = [
-  { title: "Mua subscription", body: "Chọn sản phẩm và thời hạn sử dụng.", Icon: Rocket },
-  { title: "Thời hạn", body: "Biết ngày hết hạn trước khi mua.", Icon: Timer },
-  { title: "Đang sử dụng", body: "Dùng license trong thời hạn đã mua.", Icon: CirclePlay },
-  { title: "Theo dõi", body: "Kiểm tra thời hạn trong Tài khoản KEYON.", Icon: Eye },
-  { title: "Gia hạn", body: "Liên hệ KEYON khi cần gia hạn hoặc đổi nhu cầu.", Icon: RefreshCcw },
+  {
+    title: "Chọn subscription",
+    body: "Chọn sản phẩm, số lượng và thời hạn sử dụng.",
+    Icon: Rocket,
+  },
+  {
+    title: "Xác nhận thời hạn",
+    body: "Biết rõ thời gian sử dụng trước khi mua.",
+    Icon: Timer,
+  },
+  {
+    title: "Bắt đầu sử dụng",
+    body: "Nhận license và kích hoạt theo hướng dẫn.",
+    Icon: CirclePlay,
+  },
+  {
+    title: "Theo dõi thời hạn",
+    body: "Kiểm tra subscription đang sử dụng trong Tài khoản KEYON.",
+    Icon: Eye,
+  },
+  {
+    title: "Gia hạn",
+    body: "Liên hệ KEYON khi cần tiếp tục sử dụng hoặc thay đổi nhu cầu.",
+    Icon: RefreshCcw,
+  },
 ];
 
 /** Horizontal lifecycle — visual signature for this landing. */
@@ -40,20 +58,8 @@ export function LifecycleTimeline() {
         <header className="mx-auto max-w-2xl text-center">
           <h2 className={SECTION_TITLE_CLASS}>Từ lúc mua đến lúc gia hạn</h2>
           <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-            Chọn sản phẩm theo số lượng người dùng, thiết bị và thời hạn sử dụng — KEYON hỗ trợ tư
-            vấn trước khi mua. Xem{" "}
-            <Link href="/solutions/microsoft-365-office" className={HOVER_LINK_ACCENT}>
-              Microsoft 365 &amp; Office
-            </Link>{" "}
-            hoặc{" "}
-            <Link href="/products" className={HOVER_LINK_ACCENT}>
-              danh mục sản phẩm
-            </Link>
-            . Mua nhiều license một lần nằm ở{" "}
-            <Link href="/business/volume-licensing" className={HOVER_LINK_ACCENT}>
-              Mua bản quyền số lượng lớn
-            </Link>
-            .
+            Chọn sản phẩm theo số lượng người dùng, thiết bị và thời hạn sử dụng. KEYON hỗ trợ tư
+            vấn trước khi mua và khi cần gia hạn.
           </p>
         </header>
 
