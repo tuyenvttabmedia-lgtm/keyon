@@ -28,6 +28,7 @@ import {
 } from "@/storefront/lib/resources";
 import type { ResourceSectionId } from "@/storefront/lib/resources";
 import type { BlogCategoryId } from "@/server/cms/types";
+import { LANDING_CRUMB_GAP } from "@/storefront/components/marketing/hero-shell";
 import {
   BADGE_CLASS,
   BODY_MUTED_CLASS,
@@ -249,7 +250,8 @@ export function BlogIndexView({
   return (
     <div className="pb-0">
       <div className="home-container home-section space-y-8 md:space-y-10">
-        <nav className={`flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
+        <div>
+        <nav className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
           <Link href="/" className="transition-colors hover:text-accent">
             Trang chủ
           </Link>
@@ -324,6 +326,7 @@ export function BlogIndexView({
               </span>
             </label>
           </div>
+        </div>
         </div>
 
         {/* Featured hero — chỉ trang 1 */}

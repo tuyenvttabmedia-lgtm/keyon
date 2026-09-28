@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LANDING_CRUMB_GAP } from "@/storefront/components/marketing/hero-shell";
 import { BREADCRUMB_CLASS, OVERLINE_CLASS } from "@/storefront/typography";
 
 type Crumb = { label: string; href?: string };
@@ -18,7 +19,7 @@ export function SolutionPageChrome({
   ],
 }: Props) {
   return (
-    <div className={kicker ? "mb-2.5 space-y-1" : "mb-1.5"}>
+    <div className={`${LANDING_CRUMB_GAP}${kicker ? " space-y-1" : ""}`}>
       <nav aria-label="Breadcrumb" className={BREADCRUMB_CLASS}>
         {crumbs.map((c, i) => (
           <span key={`${c.label}-${i}`}>

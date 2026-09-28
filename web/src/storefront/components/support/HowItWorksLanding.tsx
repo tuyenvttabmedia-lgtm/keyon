@@ -6,7 +6,6 @@ import {
   BODY_MUTED_CLASS,
   CARD_TITLE_CLASS,
   LINK_ACCENT_CLASS,
-  PAGE_LEAD_CLASS,
 } from "@/storefront/typography";
 import {
   ELEVATION_CARD_HOVER,
@@ -19,7 +18,7 @@ import {
 export function HowItWorksLanding() {
   return (
     <div className="bg-[#F7FAFC]">
-      <section className="border-b border-border bg-white home-section">
+      <section className="home-section">
         <div className="home-container">
           <SolutionPageChrome
             crumbs={[
@@ -28,16 +27,11 @@ export function HowItWorksLanding() {
               { label: "Cách KEYON hoạt động" },
             ]}
           />
-          <p className={`mt-4 max-w-2xl ${PAGE_LEAD_CLASS}`}>
-            Mua trên KEYON là Order → thanh toán → giao vào Tài khoản. Bước bốn:
-            mở lại license và tạo ticket khi cần hỗ trợ kích hoạt.
-          </p>
-        </div>
-      </section>
-
-      <section className="home-section">
-        <div className="home-container">
-          <HowItWorksJourney heading="h1" ctaHref="/account/assets" />
+          <HowItWorksJourney
+            heading="h1"
+            ctaHref="/account/assets"
+            lead="Mua trên KEYON là Order → thanh toán → giao vào Tài khoản. Bước bốn: mở lại license và tạo ticket khi cần hỗ trợ kích hoạt."
+          />
 
           <article
             className={`mt-4 rounded-2xl border border-border bg-white p-5 md:p-6 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}

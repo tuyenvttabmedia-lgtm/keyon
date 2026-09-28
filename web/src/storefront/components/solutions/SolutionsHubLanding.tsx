@@ -117,7 +117,7 @@ export function SolutionsHubLanding({ introEmbedUrl }: Props) {
                   { label: "Giải pháp" },
                 ]}
               />
-              <h1 className={`mt-2.5 max-w-3xl ${HERO_TITLE_CLASS}`}>
+              <h1 className={`max-w-3xl ${HERO_TITLE_CLASS}`}>
                 Giải pháp phần mềm, Cloud & bản quyền
               </h1>
               <p className="mt-3 max-w-xl font-display text-lg font-semibold tracking-tight text-navy sm:text-xl">

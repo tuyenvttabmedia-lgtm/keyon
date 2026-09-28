@@ -45,6 +45,7 @@ import {
   TRANSITION_UI,
 } from "@/storefront/effects";
 import {
+  LANDING_CRUMB_GAP,
   LANDING_HERO_GRID,
   LANDING_HERO_PAD,
 } from "@/storefront/components/marketing/hero-shell";
@@ -183,7 +184,7 @@ export function BackupSolutionLanding({ featured }: Props) {
           aria-hidden
         />
         <div className={`home-container relative ${LANDING_HERO_PAD}`}>
-          <nav className={`mb-2.5 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
+          <nav className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
             <Link href="/" className={HOVER_LINK_ACCENT}>
               Trang chủ
             </Link>

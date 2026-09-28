@@ -72,7 +72,7 @@ export function HowItWorksJourney({
 
   return (
     <section aria-label="Cách KEYON hoạt động" className="flex flex-col gap-6 md:gap-8">
-      <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-10">
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-10">
         <header>
           {kicker ? (
             <p className={`${OVERLINE_CLASS} text-accent`}>{kicker}</p>

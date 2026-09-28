@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Reveal } from "@/storefront/components/home/Reveal";
 import {
+  LANDING_CRUMB_GAP,
   LANDING_HERO_PAD,
 } from "@/storefront/components/marketing/hero-shell";
 import {
@@ -17,7 +18,6 @@ import {
   CTA_COMPACT_CLASS,
   CTA_LABEL_CLASS,
   INPUT_TEXT_CLASS,
-  OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
   PAGE_TITLE_CLASS,
   SECTION_LEAD_CLASS,
@@ -73,7 +73,7 @@ export function BrandsIndexView({ brands }: Props) {
         />
         <div className={`home-container relative ${LANDING_HERO_PAD}`}>
           <nav
-            className={`mb-5 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}
+            className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}
             aria-label="Breadcrumb"
           >
             <Link href="/" className={HOVER_LINK_ACCENT}>
@@ -85,12 +85,9 @@ export function BrandsIndexView({ brands }: Props) {
             <span className={BREADCRUMB_CURRENT_CLASS}>Thương hiệu</span>
           </nav>
 
-          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-10">
+          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-10">
             <div className="min-w-0 max-w-[560px]">
-              <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
-                Thương hiệu
-              </p>
-              <h1 className={`mt-3 ${PAGE_TITLE_CLASS}`}>
+              <h1 className={PAGE_TITLE_CLASS}>
                 Bản quyền chính hãng từ các thương hiệu bạn tin dùng
               </h1>
               <p className={`mt-4 ${PAGE_LEAD_CLASS}`}>

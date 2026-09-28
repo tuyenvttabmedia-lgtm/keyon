@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import type { CmsContact } from "@/server/cms/types";
+import { LANDING_CRUMB_GAP } from "@/storefront/components/marketing/hero-shell";
 import {
   BODY_CLASS,
   BODY_MUTED_CLASS,
@@ -111,7 +112,7 @@ export function ContactView({ cms }: { cms: CmsContact }) {
         />
         <div className="home-container relative home-section">
           <nav
-            className={`mb-5 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}
+            className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}
           >
             <Link href="/" className={HOVER_LINK_ACCENT}>
               Trang chủ

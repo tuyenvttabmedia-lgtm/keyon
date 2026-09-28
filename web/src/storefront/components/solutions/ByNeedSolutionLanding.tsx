@@ -11,7 +11,7 @@ import {
   Users,
 } from "lucide-react";
 import { SOLUTION_TOPICS } from "@/storefront/nav/ia";
-import { LANDING_HERO_PAD } from "@/storefront/components/marketing/hero-shell";
+import { LANDING_CRUMB_GAP, LANDING_HERO_PAD } from "@/storefront/components/marketing/hero-shell";
 import {
   BADGE_CLASS,
   BODY_MUTED_CLASS,
@@ -96,7 +96,7 @@ export function ByNeedSolutionLanding() {
           aria-hidden
         />
         <div className={`home-container relative ${LANDING_HERO_PAD}`}>
-          <nav className={`mb-5 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
+          <nav className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
             <Link href="/" className={HOVER_LINK_ACCENT}>
               Trang chủ
             </Link>

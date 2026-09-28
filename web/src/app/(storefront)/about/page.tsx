@@ -16,7 +16,8 @@ import {
 } from "@/storefront/components/icons/StoreIcons";
 import { StoreButton } from "@/storefront/components/StoreButton";
 import { SectionSurface } from "@/storefront/components/ui/SectionSurface";
-import { CARD_TITLE_CLASS, PAGE_TITLE_CLASS, SECTION_TITLE_CLASS, SUBSECTION_TITLE_CLASS } from "@/storefront/typography";
+import { LANDING_CRUMB_GAP } from "@/storefront/components/marketing/hero-shell";
+import { BREADCRUMB_CLASS, BREADCRUMB_CURRENT_CLASS, CARD_TITLE_CLASS, PAGE_TITLE_CLASS, SECTION_TITLE_CLASS, SUBSECTION_TITLE_CLASS } from "@/storefront/typography";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
 
 /** About — aligned to about-locked.png. Fewer sections, flat surfaces. */
@@ -30,15 +31,15 @@ export default function AboutPage() {
   return (
     <div className="bg-white">
       <SectionSurface variant="white" className="border-b border-border home-section">
-        <nav className="text-sm text-muted" aria-label="Breadcrumb">
+        <nav className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`} aria-label="Breadcrumb">
           <Link href="/" className="hover:text-accent">
             Trang chủ
           </Link>
-          <span className="mx-2 text-border">›</span>
-          <span className="text-navy">Về KEYON</span>
+          <span className="text-muted-soft" aria-hidden>›</span>
+          <span className={BREADCRUMB_CURRENT_CLASS}>Về KEYON</span>
         </nav>
 
-        <div className="mt-8 grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+        <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-14">
           <div>
             <h1 className={PAGE_TITLE_CLASS}>
               Về KEYON

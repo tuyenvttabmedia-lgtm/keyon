@@ -10,6 +10,7 @@ import {
   Package,
   ShieldCheck,
 } from "lucide-react";
+import { LANDING_CRUMB_GAP } from "@/storefront/components/marketing/hero-shell";
 import {
   BADGE_CLASS,
   BODY_MUTED_CLASS,
@@ -171,7 +172,7 @@ export function LicenseManagementSolutionLanding({
         />
         <div className="home-container relative home-section">
           <nav
-            className={`mb-6 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}
+            className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}
           >
             <Link href="/" className={HOVER_LINK_ACCENT}>
               Trang chủ
@@ -188,7 +189,7 @@ export function LicenseManagementSolutionLanding({
             <span className={BREADCRUMB_CURRENT_CLASS}>Quản lý bản quyền</span>
           </nav>
 
-          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-10">
+          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-10">
             <div className="min-w-0">
               <h1 className={`max-w-[20ch] ${HERO_TITLE_CLASS}`}>
                 License đã mua — xem rõ trong Tài khoản KEYON

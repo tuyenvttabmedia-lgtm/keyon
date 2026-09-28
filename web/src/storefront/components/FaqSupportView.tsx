@@ -13,6 +13,7 @@ import {
   type FaqGroupId,
 } from "@/storefront/content/faq-groups";
 import { FaqAnswer } from "@/storefront/components/FaqAnswer";
+import { LANDING_CRUMB_GAP } from "@/storefront/components/marketing/hero-shell";
 import {
   IconCard,
   IconFolder,
@@ -486,7 +487,7 @@ export function FaqSupportView({
   return (
     <div className="bg-[#F7FAFC]">
       <div className="home-container home-section">
-        <nav className={`text-muted ${CARD_META_CLASS}`} aria-label="Breadcrumb">
+        <nav className={`${LANDING_CRUMB_GAP} text-muted ${CARD_META_CLASS}`} aria-label="Breadcrumb">
           <Link href="/" className="hover:text-accent">
             Trang chủ
           </Link>
@@ -494,7 +495,7 @@ export function FaqSupportView({
           <span className="text-navy">Câu hỏi thường gặp</span>
         </nav>
 
-        <header className="mx-auto mt-6 max-w-2xl text-center">
+        <header className="mx-auto max-w-2xl text-center">
           <h1 className={PAGE_TITLE_CLASS}>Câu hỏi thường gặp</h1>
           <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>
             Gõ từ khóa để tìm nhanh — hoặc chọn nhóm và danh mục bên dưới.

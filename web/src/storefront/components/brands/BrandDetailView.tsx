@@ -1,9 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Reveal } from "@/storefront/components/home/Reveal";
+import { LANDING_CRUMB_GAP } from "@/storefront/components/marketing/hero-shell";
 import { ProductCard } from "@/storefront/components/ProductCard";
 import type { FeaturedProduct } from "@/storefront/content/types";
 import {
+  BADGE_CLASS,
   BODY_CLASS,
   BODY_MUTED_CLASS,
   BREADCRUMB_CLASS,
@@ -12,7 +14,6 @@ import {
   CARD_TITLE_CLASS,
   CTA_COMPACT_CLASS,
   CTA_LABEL_CLASS,
-  OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
   PAGE_TITLE_CLASS,
   SECTION_LEAD_CLASS,
@@ -231,7 +232,7 @@ function BrandIdentity({
   return (
     <div>
       <nav
-        className={`mb-5 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS} ${
+        className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS} ${
           onDark ? "!text-white/70" : ""
         }`}
         aria-label="Breadcrumb"
@@ -291,21 +292,24 @@ function BrandIdentity({
         </div>
 
         <div className="min-w-0 flex-1">
-          <p
-            className={`${OVERLINE_CLASS} tracking-[0.16em] ${
-              onDark ? "text-teal-200" : "text-accent"
-            }`}
-          >
-            Thương hiệu
-            {brand.featured ? " · Nổi bật" : ""}
-          </p>
-          <h1
-            className={`mt-2 ${PAGE_TITLE_CLASS} ${
-              onDark ? "!text-white" : ""
-            }`}
-          >
-            {brand.name}
-          </h1>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <h1
+              className={`${PAGE_TITLE_CLASS} ${
+                onDark ? "!text-white" : ""
+              }`}
+            >
+              {brand.name}
+            </h1>
+            {brand.featured ? (
+              <span
+                className={`inline-flex rounded-full px-2.5 py-0.5 ${BADGE_CLASS} ${
+                  onDark ? "bg-white/15 text-white" : "bg-accent-soft text-accent"
+                }`}
+              >
+                Nổi bật
+              </span>
+            ) : null}
+          </div>
           {brand.shortDescription ? (
             <p
               className={`mt-3 max-w-2xl ${PAGE_LEAD_CLASS} ${

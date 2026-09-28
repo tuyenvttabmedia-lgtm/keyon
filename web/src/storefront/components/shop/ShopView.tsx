@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ShopCatalog } from "./ShopCatalog";
 import type { ShopCatalogProps } from "./types";
+import { LANDING_CRUMB_GAP } from "@/storefront/components/marketing/hero-shell";
 import {
   BREADCRUMB_CLASS,
   BREADCRUMB_CURRENT_CLASS,
@@ -30,7 +31,7 @@ export function ShopView(props: ShopCatalogProps) {
     <div>
       <section className="border-b border-border bg-white">
         <div className="home-container home-section">
-          <nav className={BREADCRUMB_CLASS} aria-label="Breadcrumb">
+          <nav className={`${LANDING_CRUMB_GAP} ${BREADCRUMB_CLASS}`} aria-label="Breadcrumb">
             <ol className="flex flex-wrap items-center gap-1.5">
               <li>
                 <Link href="/" className="transition hover:text-accent">
@@ -42,7 +43,7 @@ export function ShopView(props: ShopCatalogProps) {
             </ol>
           </nav>
 
-          <div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <h1 className={PAGE_TITLE_CLASS}>Cửa hàng</h1>
               <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>

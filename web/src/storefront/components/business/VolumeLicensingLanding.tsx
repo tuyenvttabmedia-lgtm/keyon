@@ -16,6 +16,7 @@ import {
   UserRound,
   Wallet,
 } from "lucide-react";
+import { LANDING_CRUMB_GAP } from "@/storefront/components/marketing/hero-shell";
 import {
   BADGE_CLASS,
   BODY_MUTED_CLASS,
@@ -210,7 +211,7 @@ export function VolumeLicensingLanding() {
           aria-hidden
         />
         <div className="home-container relative pb-5 pt-5 md:pb-4 md:pt-5 lg:pb-6 lg:pt-8">
-          <nav className={`mb-6 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
+          <nav className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
             <Link href="/" className={HOVER_LINK_ACCENT}>
               Trang chủ
             </Link>
@@ -226,7 +227,7 @@ export function VolumeLicensingLanding() {
             <span className={BREADCRUMB_CURRENT_CLASS}>Mua bản quyền số lượng lớn</span>
           </nav>
 
-          <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] md:gap-10 lg:gap-12">
+          <div className="grid items-start gap-8 md:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] md:gap-10 lg:gap-12">
             <div className="min-w-0 max-w-[540px]">
               <h1 className={HERO_TITLE_CLASS}>
                 Mua bản quyền phần mềm số lượng lớn cho doanh nghiệp

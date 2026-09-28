@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { CmsPolicy, CmsPolicyItem } from "@/server/cms/types";
+import { LANDING_CRUMB_GAP } from "@/storefront/components/marketing/hero-shell";
 import { isHtmlBody } from "@/server/cms/blog-utils";
 import { sanitizeBlogHtml } from "@/lib/sanitize-blog-html";
 import {
@@ -148,7 +149,7 @@ export function PolicyDetailView({
         />
         <div className="home-container relative py-5 md:py-6">
           <nav
-            className={`flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS} !text-white/65`}
+            className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS} !text-white/65`}
           >
             <Link href="/" className={`${TRANSITION_UI} hover:text-accent`}>
               Trang chủ
@@ -165,7 +166,7 @@ export function PolicyDetailView({
               {item.title}
             </span>
           </nav>
-          <h1 className={`mt-3 ${SUBSECTION_TITLE_CLASS} !text-white md:text-2xl`}>
+          <h1 className={`${SUBSECTION_TITLE_CLASS} !text-white md:text-2xl`}>
             {item.title}
           </h1>
           <p className={`mt-2 max-w-2xl ${SECTION_LEAD_CLASS} !text-white/75`}>

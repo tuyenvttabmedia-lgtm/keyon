@@ -7,6 +7,7 @@ import {
   HERO_TITLE_CLASS,
   PAGE_LEAD_CLASS,
 } from "@/storefront/typography";
+import { LANDING_CRUMB_GAP } from "@/storefront/components/marketing/hero-shell";
 import { HOVER_LINK_ACCENT } from "@/storefront/effects";
 import { SupportSearch } from "./SupportSearch";
 import type { SuggestChip, SupportSearchDoc } from "./shared";
@@ -25,7 +26,7 @@ export function SupportHero({ docs, suggestions }: Props) {
         aria-hidden
       />
       <div className="home-container relative home-section">
-        <nav className={`mb-5 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
+        <nav className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
           <Link href="/" className={HOVER_LINK_ACCENT}>
             Trang chủ
           </Link>

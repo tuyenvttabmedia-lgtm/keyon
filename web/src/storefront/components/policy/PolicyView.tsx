@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { CmsPolicy, CmsPolicyItem } from "@/server/cms/types";
+import { LANDING_CRUMB_GAP } from "@/storefront/components/marketing/hero-shell";
 import {
   BODY_MUTED_CLASS,
   BREADCRUMB_CLASS,
@@ -29,7 +30,7 @@ export function PolicyView({ cms }: { cms: CmsPolicy }) {
         <div className="home-container py-3 md:py-3.5">
           <div className="max-w-2xl">
             <nav
-              className={`flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}
+              className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}
             >
               <Link href="/" className={`${TRANSITION_UI} hover:text-accent`}>
                 Trang chủ
@@ -37,7 +38,7 @@ export function PolicyView({ cms }: { cms: CmsPolicy }) {
               <span aria-hidden>›</span>
               <span className={BREADCRUMB_CURRENT_CLASS}>Chính sách</span>
             </nav>
-            <h1 className={`mt-2 ${SUBSECTION_TITLE_CLASS} md:text-[1.375rem]`}>
+            <h1 className={`${SUBSECTION_TITLE_CLASS} md:text-[1.375rem]`}>
               {cms.heroTitle}{" "}
               <span className="text-accent">{cms.heroTitleAccent}</span>
             </h1>
