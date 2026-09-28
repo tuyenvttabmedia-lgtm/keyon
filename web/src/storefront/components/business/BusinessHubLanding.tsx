@@ -41,6 +41,7 @@ import {
   TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
+import { LANDING_HERO_PAD } from "@/storefront/components/marketing/hero-shell";
 
 const ICON_MD = { size: 22, strokeWidth: 1.75 } as const;
 const ICON_SM = { size: 16, strokeWidth: 1.85 } as const;
@@ -235,12 +236,12 @@ export function BusinessHubLanding() {
   return (
     <div className="bg-white">
       {/* ── Hero (dark) ──────────────────────────────────────── */}
-      <section className="relative overflow-x-clip bg-[#071a2b] text-white">
+      <section className={`relative overflow-x-clip bg-[#071a2b] text-white ${LANDING_HERO_PAD}`}>
         <div
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_78%_30%,rgba(14,165,164,0.28),transparent_42%),radial-gradient(ellipse_at_12%_80%,rgba(14,165,233,0.1),transparent_48%)]"
           aria-hidden
         />
-        <div className="home-container relative pt-9 md:pt-10 lg:pt-12">
+        <div className="home-container relative">
           <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.46fr)_minmax(0,0.54fr)] md:gap-10 lg:gap-12">
             <div className="min-w-0 w-full max-w-[540px]">
               <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
@@ -279,7 +280,7 @@ export function BusinessHubLanding() {
           </div>
 
           {/* Trust strip inside hero */}
-          <ul className="mt-10 grid gap-5 border-t border-white/10 py-7 sm:grid-cols-2 lg:mt-12 lg:grid-cols-4 lg:gap-4 lg:py-8">
+          <ul className="mt-6 grid gap-5 border-t border-white/10 pt-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
             {HERO_TRUST.map((t) => (
               <li key={t.title} className="flex items-start gap-3">
                 <span
@@ -350,7 +351,7 @@ export function BusinessHubLanding() {
       </section>
 
       {/* ── Benefits + shield ────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-navy">
+      <section className="relative overflow-hidden bg-navy home-section">
         <div
           className="pointer-events-none absolute inset-0"
           aria-hidden
@@ -359,7 +360,7 @@ export function BusinessHubLanding() {
               "radial-gradient(ellipse 42% 70% at 92% 50%, rgba(14,165,164,0.28), transparent 55%), radial-gradient(ellipse 35% 45% at 8% 85%, rgba(14,165,233,0.08), transparent 50%)",
           }}
         />
-        <div className="home-container relative pb-5 pt-5 md:pb-4 md:pt-5 lg:pb-6 lg:pt-8">
+        <div className="home-container relative">
           <h2 className={`${SECTION_TITLE_CLASS} !text-white`}>KEYON đồng hành cùng doanh nghiệp</h2>
           <p className={`mt-2.5 max-w-2xl ${SECTION_LEAD_CLASS} !text-slate-300`}>
             Từ lựa chọn license đến bàn giao và quản lý sau mua, mọi bước đều được thiết kế rõ
@@ -429,7 +430,7 @@ export function BusinessHubLanding() {
       </section>
 
       {/* ── CTA ──────────────────────────────────────────────── */}
-      <section className="pb-10 pt-2 md:pb-12 md:pt-2 lg:pb-14">
+      <section className="home-section">
         <div className="home-container">
           <div className="flex flex-col items-stretch gap-5 rounded-2xl bg-gradient-to-br from-accent-soft via-[#E6FFFB] to-sky-50 px-5 py-7 sm:px-8 md:flex-row md:items-center md:justify-between md:px-10 md:py-9">
             <div className="min-w-0 max-w-xl">
@@ -469,7 +470,7 @@ function BusinessShieldArt() {
       />
       <svg
         viewBox="0 0 200 250"
-        className="relative h-full w-full drop-shadow-[0_20px_48px_rgba(14,165,164,0.35)]"
+        className="relative h-full w-full"
         aria-hidden
       >
         <defs>
