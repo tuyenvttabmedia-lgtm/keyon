@@ -128,7 +128,21 @@ export function ContractsLanding() {
                 doanh.
               </p>
 
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <ul className="mt-5 space-y-2.5">
+                {HERO_POINTS.map((point) => (
+                  <li key={point.title} className="flex items-start gap-2.5">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
+                      <Check size={12} strokeWidth={2.6} aria-hidden />
+                    </span>
+                    <span>
+                      <span className={`block ${CARD_TITLE_CLASS}`}>{point.title}</span>
+                      <span className={`mt-0.5 block ${BODY_MUTED_CLASS}`}>{point.body}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/account/orders"
                   className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
@@ -320,21 +334,6 @@ function ContractsHeroArt() {
           </p>
         </div>
       </div>
-
-      <ul className="mt-3 space-y-2">
-        {HERO_POINTS.map((point) => (
-          <li
-            key={point.title}
-            className={`rounded-xl border border-border bg-white px-3 py-2.5 ${ELEVATION_HAIRLINE}`}
-          >
-            <p className={`inline-flex items-center gap-1.5 ${CARD_TITLE_CLASS}`}>
-              <Check size={14} className="text-accent" strokeWidth={2.5} aria-hidden />
-              {point.title}
-            </p>
-            <p className={`mt-0.5 ${CARD_META_CLASS}`}>{point.body}</p>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
