@@ -19,7 +19,6 @@ import {
   CARD_TITLE_CLASS,
   CTA_LABEL_CLASS,
   HERO_TITLE_CLASS,
-  OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
@@ -116,10 +115,7 @@ export function ContractsLanding() {
 
           <div className={LANDING_HERO_GRID}>
             <div className="min-w-0 max-w-[540px]">
-              <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
-                Doanh nghiệp
-              </p>
-              <h1 className={`mt-3 ${HERO_TITLE_CLASS}`}>
+              <h1 className={HERO_TITLE_CLASS}>
                 Theo dõi đơn hàng và license trên KEYON
               </h1>
               <p className={`mt-4 max-w-[540px] ${PAGE_LEAD_CLASS}`}>

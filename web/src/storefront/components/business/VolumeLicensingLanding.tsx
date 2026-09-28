@@ -26,7 +26,6 @@ import {
   CTA_COMPACT_CLASS,
   CTA_LABEL_CLASS,
   HERO_TITLE_CLASS,
-  OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
@@ -229,10 +228,7 @@ export function VolumeLicensingLanding() {
 
           <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] md:gap-10 lg:gap-12">
             <div className="min-w-0 max-w-[540px]">
-              <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
-                Bản quyền doanh nghiệp
-              </p>
-              <h1 className={`mt-3 ${HERO_TITLE_CLASS}`}>
+              <h1 className={HERO_TITLE_CLASS}>
                 Mua bản quyền phần mềm số lượng lớn cho doanh nghiệp
               </h1>
               <p className={`mt-4 max-w-[520px] ${PAGE_LEAD_CLASS}`}>

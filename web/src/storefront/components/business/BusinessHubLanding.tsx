@@ -25,7 +25,6 @@ import {
   FONT_DISPLAY,
   HERO_TITLE_CLASS,
   LINK_FIELD_CLASS,
-  OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
@@ -244,10 +243,7 @@ export function BusinessHubLanding() {
         <div className="home-container relative">
           <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.46fr)_minmax(0,0.54fr)] md:gap-10 lg:gap-12">
             <div className="min-w-0 w-full max-w-[540px]">
-              <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
-                Doanh nghiệp
-              </p>
-              <h1 className={`mt-3 ${HERO_TITLE_CLASS} !text-white`}>
+              <h1 className={`${HERO_TITLE_CLASS} !text-white`}>
                 <span className="block">Giải pháp</span>
                 <span className="block bg-gradient-to-r from-accent to-teal-100 bg-clip-text text-transparent">
                   bản quyền phần mềm

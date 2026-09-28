@@ -22,7 +22,6 @@ export function HowItWorksLanding() {
       <section className="border-b border-border bg-white home-section">
         <div className="home-container">
           <SolutionPageChrome
-            kicker="Hỗ trợ"
             crumbs={[
               { label: "Trang chủ", href: "/" },
               { label: "Hỗ trợ", href: "/support" },
