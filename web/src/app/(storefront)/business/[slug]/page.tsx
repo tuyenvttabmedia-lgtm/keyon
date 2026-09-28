@@ -41,9 +41,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (slug === "licensing-consulting") {
     return {
       ...(await buildMainPageMetadata(`/business/${slug}`)),
-      title: absoluteTitle("Tư vấn bản quyền | KEYON"),
+      title: absoluteTitle("Tư vấn bản quyền phần mềm cho doanh nghiệp | KEYON"),
       description:
-        "Chưa chắc nên chọn Office, Microsoft 365, Windows hay Security? KEYON hỗ trợ phân tích nhu cầu và tư vấn trước khi mua.",
+        "KEYON tư vấn lựa chọn bản quyền phần mềm, Microsoft 365, Office, Windows và giải pháp bảo mật phù hợp với nhu cầu sử dụng.",
     };
   }
   if (slug === "implementation") {

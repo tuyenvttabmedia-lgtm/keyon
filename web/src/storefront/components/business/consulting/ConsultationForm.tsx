@@ -15,6 +15,7 @@ import {
 import {
   ELEVATION_CTA_HOVER,
   ELEVATION_FLOAT,
+  HOVER_LINK_ACCENT,
   OPACITY_DISABLED_BUSY,
   TRANSITION_UI,
 } from "@/storefront/effects";
@@ -194,9 +195,9 @@ export function ConsultationForm() {
     <section id={FORM_ID} className={`scroll-mt-24 border-t border-border bg-white ${SECTION_PAD}`}>
       <div className="home-container">
         <header className="max-w-2xl">
-          <h2 className={SECTION_TITLE_CLASS}>Mô tả nhu cầu của bạn</h2>
+          <h2 className={SECTION_TITLE_CLASS}>Gửi yêu cầu tư vấn</h2>
           <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-            Không cần đăng nhập hay thanh toán — KEYON sẽ liên hệ tư vấn dựa trên thông tin bạn gửi.
+            Chia sẻ nhu cầu của bạn, KEYON sẽ xem xét và tư vấn phương án phù hợp.
           </p>
         </header>
 
@@ -322,7 +323,7 @@ export function ConsultationForm() {
                   </select>
                 </label>
                 <label className="block">
-                  <span className={FORM_LABEL_CLASS}>Đang quan tâm</span>
+                  <span className={FORM_LABEL_CLASS}>Bạn đang quan tâm sản phẩm nào?</span>
                   <select
                     className={SELECT}
                     value={form.interestedIn}
@@ -336,15 +337,24 @@ export function ConsultationForm() {
                   </select>
                 </label>
               </div>
+              <p className={BODY_MUTED_CLASS}>
+                <Link href="/solutions/cloud" className={HOVER_LINK_ACCENT}>
+                  Cloud & Hạ tầng
+                </Link>
+                <span aria-hidden> · </span>
+                <Link href="/solutions/backup" className={HOVER_LINK_ACCENT}>
+                  Backup & Khôi phục
+                </Link>
+              </p>
 
               <label className="block">
-                <span className={FORM_LABEL_CLASS}>Bạn đang cần giải quyết vấn đề gì?</span>
+                <span className={FORM_LABEL_CLASS}>Nội dung</span>
                 <textarea
                   rows={4}
                   className={TEXTAREA}
                   value={form.message}
                   onChange={(e) => setField("message", e.target.value)}
-                  placeholder="Mô tả ngắn nhu cầu sử dụng, thiết bị, hoặc thắc mắc về bản quyền…"
+                  placeholder="Ví dụ: Doanh nghiệp có 20 nhân viên, cần email Microsoft 365 và muốn biết nên chọn gói nào..."
                 />
               </label>
 

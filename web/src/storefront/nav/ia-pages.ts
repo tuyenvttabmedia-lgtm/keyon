@@ -171,18 +171,18 @@ export const BUSINESS_PAGES: Record<string, IaPage> = {
     kicker: "Doanh nghiệp",
     title: "Tư vấn bản quyền",
     subtitle:
-      "Chưa chắc nên chọn Office nào, Microsoft 365 nào, Windows hay Security? KEYON hỗ trợ tư vấn trước khi mua.",
+      "Chưa biết nên chọn license nào? KEYON giúp phân tích nhu cầu sử dụng, quy mô người dùng và hình thức cấp phép trước khi bạn mua.",
     bullets: [
-      "Hiểu rõ nhu cầu trước khi chọn sản phẩm",
-      "So sánh các phương án cấp phép",
-      "Hỗ trợ trước khi mua — Mua ngay khi đã chọn",
+      "Xác định đúng nhu cầu sử dụng và quy mô",
+      "So sánh hình thức license trước khi mua",
+      "Làm rõ tính năng, thời hạn và điều kiện sử dụng",
     ],
     primaryCta: {
       label: "Nhận tư vấn",
       href: "/business/licensing-consulting#consultation-form",
     },
     secondaryCta: {
-      label: "Xem lĩnh vực tư vấn",
+      label: "Xem KEYON tư vấn gì",
       href: "/business/licensing-consulting#consulting-areas",
     },
   },

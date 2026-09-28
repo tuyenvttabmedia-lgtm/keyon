@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import {
   CTA_LABEL_CLASS,
@@ -9,6 +10,7 @@ import {
 import {
   ELEVATION_CTA_HOVER,
   ELEVATION_HAIRLINE,
+  HOVER_LINK_ACCENT,
   TRANSITION_UI,
 } from "@/storefront/effects";
 import { goToConsultation, SECTION_PAD, SURFACE } from "./shared";
@@ -29,10 +31,13 @@ export function ConsultingFinalCTA() {
           </div>
 
           <div className="relative min-w-0 max-w-xl">
-            <h2 className={SECTION_TITLE_CLASS}>Chưa chắc lựa chọn nào phù hợp?</h2>
+            <h2 className={SECTION_TITLE_CLASS}>Chưa chắc nên chọn bản quyền nào?</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Mô tả nhu cầu. KEYON sẽ giúp bạn hiểu và so sánh các lựa chọn.
+              Mô tả nhu cầu, KEYON sẽ giúp bạn xác định hướng lựa chọn phù hợp.
             </p>
+            <Link href="/business" className={`mt-3 inline-flex ${HOVER_LINK_ACCENT}`}>
+              Giải pháp dành cho doanh nghiệp
+            </Link>
           </div>
 
           <button

@@ -16,11 +16,12 @@ export const SURFACE_MUTED =
 
 export const INTEREST_OPTIONS = [
   { id: "MICROSOFT_365", label: "Microsoft 365" },
-  { id: "OFFICE", label: "Office" },
+  { id: "OFFICE", label: "Microsoft Office" },
   { id: "WINDOWS", label: "Windows" },
   { id: "SECURITY", label: "Security" },
-  { id: "OTHER", label: "Khác" },
-  { id: "NOT_SURE", label: "Chưa chắc" },
+  { id: "CLOUD", label: "Cloud & Hạ tầng" },
+  { id: "BACKUP", label: "Backup & Khôi phục" },
+  { id: "NOT_SURE", label: "Chưa xác định" },
 ] as const;
 
 export type InterestId = (typeof INTEREST_OPTIONS)[number]["id"];

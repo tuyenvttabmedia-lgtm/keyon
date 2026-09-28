@@ -222,7 +222,7 @@ export const BUSINESS_ADVISORY_LINKS: NavLink[] = [
   {
     label: "Tư vấn bản quyền",
     href: "/business/licensing-consulting",
-    description: "Chọn đúng sản phẩm và mô hình cấp phép",
+    description: "Tư vấn chọn bản quyền phần mềm trước khi mua",
   },
   {
     label: "Dịch vụ triển khai",

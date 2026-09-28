@@ -17,14 +17,15 @@ import {
 import { goToConsultation, SECTION_PAD, SURFACE } from "./shared";
 
 const CHECKS = [
-  "Hiểu nhu cầu sử dụng thực tế",
-  "Đề xuất các phương án phù hợp",
-  "So sánh rõ ràng giữa các lựa chọn",
-  "Hỗ trợ trước khi quyết định mua",
+  "Hiểu rõ nhu cầu sử dụng thực tế",
+  "Đề xuất các lựa chọn phù hợp",
+  "So sánh trước khi quyết định",
+  "Làm rõ thời hạn và hình thức license",
+  "Hỗ trợ sau khi chọn sản phẩm",
 ] as const;
 
 const USER_SIZES = ["1–5", "6–25", "26+"] as const;
-const PURPOSES = ["Làm việc văn phòng", "Email & cộng tác", "Thiết kế"] as const;
+const PURPOSES = ["Văn phòng & năng suất", "Email & cộng tác", "Thiết kế & chuyên môn"] as const;
 const FORMS = ["Mua một lần", "Subscription", "Chưa chắc"] as const;
 
 function Chip({
@@ -171,7 +172,7 @@ export function ConsultingWorkspace() {
 
               <div className="mt-6 border-t border-border pt-5">
                 <p className={BODY_MUTED_CLASS}>
-                  KEYON sẽ giúp bạn so sánh các lựa chọn phù hợp — không tự gắn nhãn “tốt nhất”.
+                  KEYON sẽ giúp bạn so sánh các lựa chọn phù hợp với nhu cầu đã chọn.
                 </p>
                 <button
                   type="button"

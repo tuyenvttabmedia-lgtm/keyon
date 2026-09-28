@@ -21,13 +21,13 @@ const QUESTIONS: {
   question: string;
   span?: boolean;
 }[] = [
-  { id: "OFFICE", topic: "Office", question: "Nên chọn phiên bản nào?" },
-  { id: "MICROSOFT_365", topic: "Microsoft 365", question: "Gói nào phù hợp?" },
-  { id: "WINDOWS", topic: "Windows", question: "Có cần nâng cấp?" },
-  { id: "SECURITY", topic: "Security", question: "Nên bảo vệ thế nào?" },
+  { id: "OFFICE", topic: "Office", question: "Nên chọn phiên bản Office nào?" },
+  { id: "MICROSOFT_365", topic: "Microsoft 365", question: "Gói Microsoft 365 nào phù hợp?" },
+  { id: "WINDOWS", topic: "Windows", question: "Tôi cần Windows bản quyền nào?" },
+  { id: "SECURITY", topic: "Security", question: "Nên bảo vệ thiết bị và dữ liệu thế nào?" },
   {
     id: "NOT_SURE",
-    topic: "Tôi chưa xác định được sản phẩm",
+    topic: "Tôi chưa biết nên chọn sản phẩm nào",
     question: "Mô tả nhu cầu để KEYON hỗ trợ.",
     span: true,
   },
@@ -40,7 +40,7 @@ export function ConsultingQuestionBoard() {
         <header className="max-w-2xl">
           <h2 className={SECTION_TITLE_CLASS}>Bạn đang cần giải đáp điều gì?</h2>
           <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-            Chọn câu hỏi gần nhất — KEYON sẽ nhận ngữ cảnh khi bạn gửi yêu cầu tư vấn.
+            Chọn câu hỏi gần với nhu cầu của bạn để xem hướng tư vấn phù hợp từ KEYON.
           </p>
         </header>
 

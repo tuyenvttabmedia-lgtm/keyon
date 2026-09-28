@@ -12,27 +12,27 @@ const STEPS = [
   {
     who: "Bạn",
     title: "Mô tả nhu cầu",
-    body: "Cho KEYON biết bạn đang cần giải quyết vấn đề gì.",
+    body: "Bạn chia sẻ sản phẩm đang quan tâm, số lượng người dùng và mục đích sử dụng.",
   },
   {
     who: "KEYON",
     title: "Làm rõ yêu cầu",
-    body: "Hỏi thêm về quy mô, mục đích và hình thức cấp phép.",
+    body: "KEYON xác định quy mô, tính năng cần thiết và hình thức cấp phép phù hợp.",
   },
   {
     who: "KEYON",
     title: "So sánh lựa chọn",
-    body: "Giải thích điểm khác nhau giữa các phương án phù hợp.",
+    body: "Giải thích các phương án phù hợp để bạn dễ dàng so sánh.",
   },
   {
     who: "Bạn + KEYON",
     title: "Chọn phương án",
-    body: "Cùng chốt hướng đi trước khi mua.",
+    body: "Cùng thống nhất lựa chọn trước khi mua.",
   },
   {
     who: "KEYON",
-    title: "Hỗ trợ mua khi đã chọn",
-    body: "Khi đã chọn sản phẩm: Mua ngay → Checkout — không dùng giỏ hàng. Cần bàn giao sau mua → /business/implementation.",
+    title: "Hỗ trợ sau khi chọn",
+    body: "Hỗ trợ đặt mua, kích hoạt và các bước tiếp theo theo từng sản phẩm.",
   },
 ] as const;
 
@@ -44,7 +44,7 @@ export function ConsultingConversationFlow() {
         <header className="max-w-2xl">
           <h2 className={SECTION_TITLE_CLASS}>Quy trình tư vấn cùng KEYON</h2>
           <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-            Dạng hội thoại — từ mô tả nhu cầu đến hỗ trợ mua khi đã chọn được sản phẩm.
+            Từ lúc xác định nhu cầu đến khi chọn được sản phẩm — KEYON đồng hành trong từng bước.
           </p>
         </header>
 

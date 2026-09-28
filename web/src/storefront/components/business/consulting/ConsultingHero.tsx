@@ -10,6 +10,7 @@ import {
   BODY_MUTED_CLASS,
   BREADCRUMB_CLASS,
   BREADCRUMB_CURRENT_CLASS,
+  CARD_TITLE_CLASS,
   CTA_LABEL_CLASS,
   HERO_TITLE_CLASS,
   PAGE_LEAD_CLASS,
@@ -25,18 +26,18 @@ import { MobileDecisionCard } from "./MobileDecisionCard";
 
 const BENEFITS = [
   {
-    title: "Hiểu rõ nhu cầu",
-    body: "Xác định sản phẩm và hình thức cấp phép phù hợp.",
+    title: "Xác định đúng nhu cầu",
+    body: "Phân tích sản phẩm, số lượng người dùng và cách sử dụng thực tế.",
     Icon: Compass,
   },
   {
-    title: "So sánh lựa chọn",
-    body: "Giúp bạn hiểu điểm khác nhau giữa các phương án.",
+    title: "So sánh hình thức license",
+    body: "Giải thích các lựa chọn phù hợp trước khi bạn quyết định mua.",
     Icon: GitCompare,
   },
   {
-    title: "Hỗ trợ trước khi mua",
-    body: "Giải đáp các vấn đề về sản phẩm và bản quyền.",
+    title: "Tư vấn trước khi mua",
+    body: "Làm rõ tính năng, thời hạn và điều kiện sử dụng của từng sản phẩm.",
     Icon: HelpCircle,
   },
 ] as const;
@@ -67,12 +68,12 @@ export function ConsultingHero() {
 
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] lg:gap-10 xl:gap-12">
           <div className="min-w-0">
-            <h1 className={`max-w-[18ch] ${HERO_TITLE_CLASS}`}>
-              Chọn đúng bản quyền cho nhu cầu của bạn
+            <h1 className={`max-w-xl ${HERO_TITLE_CLASS}`}>
+              Tư vấn chọn bản quyền phần mềm phù hợp
             </h1>
             <p className={`mt-3.5 max-w-xl ${PAGE_LEAD_CLASS}`}>
-              Chưa chắc nên chọn Office nào, Microsoft 365 nào, Windows hay giải pháp bảo mật?
-              KEYON hỗ trợ phân tích nhu cầu và tư vấn trước khi mua.
+              Chưa biết nên chọn license nào? KEYON giúp phân tích nhu cầu sử dụng, quy mô người
+              dùng và hình thức cấp phép trước khi bạn mua.
             </p>
 
             <ul className="mt-6 grid gap-3 sm:grid-cols-3 sm:gap-4">
@@ -81,7 +82,7 @@ export function ConsultingHero() {
                   <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-soft text-accent">
                     <Icon size={17} strokeWidth={1.85} aria-hidden />
                   </span>
-                  <p className="mt-2.5 text-[14px] font-bold text-navy">{title}</p>
+                  <p className={`mt-2.5 ${CARD_TITLE_CLASS}`}>{title}</p>
                   <p className={`mt-1 ${BODY_MUTED_CLASS}`}>{body}</p>
                 </li>
               ))}
@@ -91,7 +92,7 @@ export function ConsultingHero() {
               <button
                 type="button"
                 onClick={() => goToConsultation()}
-                className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
               >
                 Nhận tư vấn →
               </button>
@@ -99,7 +100,7 @@ export function ConsultingHero() {
                 href={AREAS_HREF}
                 className={`inline-flex h-12 items-center justify-center rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
               >
-                Xem lĩnh vực tư vấn
+                Xem KEYON tư vấn gì
               </a>
             </div>
           </div>
