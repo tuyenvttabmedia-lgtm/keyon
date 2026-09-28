@@ -214,7 +214,7 @@ export const BUSINESS_BUY_LINKS: NavLink[] = [
   {
     label: "Hợp đồng & đơn hàng",
     href: "/business/contracts",
-    description: "Theo dõi giao dịch DN trên Tài khoản — chưa phải cổng HĐ pháp lý",
+    description: "Theo dõi đơn hàng và license trong Tài khoản. PO và hợp đồng qua đội kinh doanh",
   },
 ];
 

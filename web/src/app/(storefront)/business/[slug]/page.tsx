@@ -57,9 +57,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (slug === "contracts") {
     return {
       ...(await buildMainPageMetadata(`/business/${slug}`)),
-      title: absoluteTitle("Hợp đồng & đơn hàng doanh nghiệp | KEYON"),
+      title: absoluteTitle("Hợp đồng & Đơn hàng doanh nghiệp | KEYON"),
       description:
-        "Theo dõi đơn hàng và license tổ chức trên Tài khoản KEYON. PO và gia hạn qua đội kinh doanh.",
+        "Theo dõi đơn hàng, license và yêu cầu báo giá doanh nghiệp trên KEYON. Hỗ trợ volume licensing, subscription, PO và gia hạn.",
     };
   }
   return {

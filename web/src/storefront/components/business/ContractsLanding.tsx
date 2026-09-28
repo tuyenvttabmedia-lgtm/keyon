@@ -6,13 +6,12 @@ import {
   ClipboardList,
   FileText,
   KeyRound,
-  Lock,
   RefreshCw,
   ShoppingBag,
   Check,
 } from "lucide-react";
 import {
-  BODY_CLASS,
+  BADGE_CLASS,
   BODY_MUTED_CLASS,
   BREADCRUMB_CLASS,
   BREADCRUMB_CURRENT_CLASS,
@@ -44,26 +43,50 @@ const ICON_MD = { size: 20, strokeWidth: 1.75 } as const;
 
 const WHAT_YOU_SEE: { title: string; body: string; Icon: LucideIcon }[] = [
   {
-    title: "Đơn hàng sau đăng nhập",
-    body: "Xem giao dịch KEYON đã ghi nhận trên tài khoản tổ chức.",
+    title: "Đơn hàng",
+    body: "Xem các đơn hàng KEYON đã ghi nhận trong tài khoản.",
     Icon: ShoppingBag,
   },
   {
-    title: "License trong Tài khoản",
-    body: "Key / tài khoản đã bàn giao nằm ở mục tài sản — theo dõi hạn và gia hạn.",
+    title: "License đã bàn giao",
+    body: "Theo dõi thông tin license hoặc tài sản số đã được bàn giao.",
     Icon: KeyRound,
   },
   {
-    title: "Gia hạn & PO qua sales",
-    body: "Nhu cầu kỳ hạn, báo giá volume hoặc subscription: gửi yêu cầu kinh doanh, không tự tạo HĐ pháp lý trên web.",
+    title: "Gia hạn & PO",
+    body: "Gửi yêu cầu gia hạn, báo giá volume hoặc subscription đến đội kinh doanh KEYON.",
     Icon: RefreshCw,
   },
 ];
 
-const NOT_YET = [
-  "Cổng ký số / số hợp đồng pháp lý riêng",
-  "Hồ sơ HĐ tách khỏi đơn hàng trên web",
-  "Xem đơn khi chưa đăng nhập — portal chỉ mở sau khi có tài khoản",
+const SCOPE = [
+  {
+    title: "Hợp đồng pháp lý riêng",
+    body: "Hồ sơ hợp đồng và ký kết được xử lý theo quy trình doanh nghiệp.",
+  },
+  {
+    title: "Đơn hàng và hợp đồng tách biệt",
+    body: "Đơn hàng trên KEYON không thay thế hồ sơ hợp đồng pháp lý.",
+  },
+  {
+    title: "Theo dõi sau khi đăng nhập",
+    body: "Thông tin đơn hàng và license được hiển thị trong Tài khoản KEYON.",
+  },
+];
+
+const HERO_POINTS = [
+  {
+    title: "Đăng nhập để theo dõi",
+    body: "Xem đơn hàng và license đã mua trong Tài khoản.",
+  },
+  {
+    title: "License đã bàn giao",
+    body: "Theo dõi thông tin license hoặc tài sản số sau khi mua.",
+  },
+  {
+    title: "PO & hợp đồng qua sales",
+    body: "Các giao dịch doanh nghiệp được tư vấn và xử lý theo nhu cầu.",
+  },
 ];
 
 export function ContractsLanding() {
@@ -96,18 +119,19 @@ export function ContractsLanding() {
               <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
                 Doanh nghiệp
               </p>
-              <h1 className={`mt-3 max-w-[20ch] ${HERO_TITLE_CLASS}`}>
-                Theo dõi đơn hàng và giao dịch tổ chức trên KEYON
+              <h1 className={`mt-3 ${HERO_TITLE_CLASS}`}>
+                Theo dõi đơn hàng và license trên KEYON
               </h1>
               <p className={`mt-4 max-w-[540px] ${PAGE_LEAD_CLASS}`}>
-                Đây chưa phải cổng hợp đồng pháp lý. Sau đăng nhập, tổ chức xem đơn và
-                license đã mua; PO / gia hạn tập trung qua đội kinh doanh.
+                Sau khi đăng nhập, doanh nghiệp có thể theo dõi đơn hàng, license đã mua và các yêu
+                cầu gia hạn trên KEYON. Báo giá volume, PO và hợp đồng được xử lý cùng đội kinh
+                doanh.
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/account/orders"
-                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
                   Đăng nhập xem đơn hàng →
                 </Link>
@@ -115,7 +139,7 @@ export function ContractsLanding() {
                   href="/contact/quote?intent=business"
                   className={`inline-flex h-12 items-center justify-center rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
-                  Liên hệ kinh doanh
+                  Liên hệ kinh doanh →
                 </Link>
               </div>
             </div>
@@ -130,10 +154,9 @@ export function ContractsLanding() {
       <section className="bg-white home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
-            <h2 className={SECTION_TITLE_CLASS}>Bạn theo dõi được gì hôm nay</h2>
+            <h2 className={SECTION_TITLE_CLASS}>Theo dõi đơn hàng và license</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Đọc từ đơn hàng và tài sản đã có trên Tài khoản. Admin có thể tìm
-              đơn bằng gợi ý domain/tên lead — không cấp quyền xem chéo cho khách.
+              Xem các giao dịch đã thực hiện và license đã bàn giao trong Tài khoản KEYON.
             </p>
           </header>
           <ul className="mt-9 grid gap-4 md:grid-cols-3">
@@ -149,7 +172,23 @@ export function ContractsLanding() {
                     <item.Icon {...ICON_MD} />
                   </span>
                   <h3 className={`mt-4 ${CARD_TITLE_CLASS}`}>{item.title}</h3>
-                  <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{item.body}</p>
+                  <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>
+                    {item.title === "Gia hạn & PO" ? (
+                      <>
+                        Gửi yêu cầu gia hạn,{" "}
+                        <Link href="/business/volume-licensing" className={HOVER_LINK_ACCENT}>
+                          báo giá volume
+                        </Link>{" "}
+                        hoặc{" "}
+                        <Link href="/business/subscriptions" className={HOVER_LINK_ACCENT}>
+                          subscription
+                        </Link>{" "}
+                        đến đội kinh doanh KEYON.
+                      </>
+                    ) : (
+                      item.body
+                    )}
+                  </p>
                 </article>
               </li>
             ))}
@@ -160,21 +199,32 @@ export function ContractsLanding() {
       <section className="bg-[#F4F8FB] home-section">
         <div className="home-container grid gap-8 lg:grid-cols-2 lg:items-start">
           <div>
-            <h2 className={SECTION_TITLE_CLASS}>Chưa có trên trang này</h2>
+            <h2 className={SECTION_TITLE_CLASS}>Phạm vi hỗ trợ trên KEYON</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Pha sau: lọc đơn theo công ty khi sales cần. Số hợp đồng pháp lý chỉ khi
-              nghiệp vụ và hồ sơ pháp lý yêu cầu.
+              KEYON hỗ trợ theo dõi đơn hàng, license và yêu cầu giao dịch doanh nghiệp. Các hồ sơ
+              hợp đồng pháp lý được xử lý theo quy trình riêng. Tham khảo{" "}
+              <Link href="/solutions" className={HOVER_LINK_ACCENT}>
+                Giải pháp
+              </Link>{" "}
+              và{" "}
+              <Link href="/products" className={HOVER_LINK_ACCENT}>
+                Sản phẩm
+              </Link>{" "}
+              trước khi gửi yêu cầu.
             </p>
-            <ul className="mt-6 space-y-3">
-              {NOT_YET.map((line) => (
-                <li key={line} className="flex items-start gap-2.5">
+            <ul className="mt-6 space-y-4">
+              {SCOPE.map((item) => (
+                <li key={item.title} className="flex items-start gap-2.5">
                   <span
-                    className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-200 text-navy"
+                    className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent"
                     aria-hidden
                   >
-                    <Lock size={11} strokeWidth={2.4} />
+                    <Check size={12} strokeWidth={2.6} />
                   </span>
-                  <span className={BODY_CLASS}>{line}</span>
+                  <span>
+                    <span className={`block ${CARD_TITLE_CLASS}`}>{item.title}</span>
+                    <span className={`mt-0.5 block ${BODY_MUTED_CLASS}`}>{item.body}</span>
+                  </span>
                 </li>
               ))}
             </ul>
@@ -184,8 +234,13 @@ export function ContractsLanding() {
           >
             <FileText className="text-accent" size={22} strokeWidth={1.7} aria-hidden />
             <p className={`mt-3 ${CARD_TITLE_CLASS}`}>Cần báo giá hoặc PO?</p>
-            <p className={`mt-1.5 ${CARD_META_CLASS}`}>
-              Gửi yêu cầu báo giá — không dùng giỏ hàng cho giao dịch doanh nghiệp lớn.
+            <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>
+              Gửi yêu cầu báo giá hoặc nhu cầu mua theo PO. Đội kinh doanh KEYON sẽ tư vấn và xử lý
+              theo quy mô giao dịch. Xem{" "}
+              <Link href="/business/volume-licensing" className={HOVER_LINK_ACCENT}>
+                Mua bản quyền số lượng lớn
+              </Link>
+              .
             </p>
             <div className="mt-5 flex flex-col gap-2.5 sm:flex-row">
               <Link
@@ -203,7 +258,7 @@ export function ContractsLanding() {
             </div>
             <p className={`mt-4 inline-flex items-center gap-1.5 ${CARD_META_CLASS}`}>
               <ClipboardList size={14} strokeWidth={1.8} aria-hidden />
-              Đơn lẻ sau login: Tài khoản → Đơn hàng
+              Theo dõi sau khi đăng nhập: Tài khoản → Đơn hàng
             </p>
           </aside>
         </div>
@@ -214,7 +269,7 @@ export function ContractsLanding() {
 
 function ContractsHeroArt() {
   const rows = [
-    { label: "Đơn hàng tổ chức", hint: "Sau đăng nhập", Icon: ShoppingBag, tone: "bg-sky-100 text-sky-800" },
+    { label: "Đơn hàng doanh nghiệp", hint: "Sau đăng nhập", Icon: ShoppingBag, tone: "bg-sky-100 text-sky-800" },
     { label: "License đã bàn giao", hint: "Trong Tài khoản", Icon: KeyRound, tone: "bg-accent/15 text-accent" },
     { label: "Gia hạn / PO", hint: "Qua đội kinh doanh", Icon: RefreshCw, tone: "bg-amber-100 text-amber-800" },
   ] as const;
@@ -231,11 +286,11 @@ function ContractsHeroArt() {
               <ClipboardList size={18} strokeWidth={1.8} />
             </span>
             <div>
-              <p className={CARD_TITLE_CLASS}>Portal đơn hàng</p>
+              <p className={CARD_TITLE_CLASS}>Tài khoản doanh nghiệp</p>
               <p className={CARD_META_CLASS}>Sau đăng nhập tài khoản</p>
             </div>
           </div>
-          <span className="rounded-md bg-accent-soft px-2 py-1 text-[11px] font-semibold text-accent">
+          <span className={`rounded-md bg-accent-soft px-2 py-1 ${BADGE_CLASS} text-accent`}>
             KEYON
           </span>
         </div>
@@ -261,19 +316,22 @@ function ContractsHeroArt() {
 
         <div className="mt-3 rounded-xl border border-dashed border-border bg-surface/60 px-3 py-2.5">
           <p className={CARD_META_CLASS}>
-            Chưa phải cổng hợp đồng pháp lý — xem đơn và license trong Tài khoản.
+            Xem đơn hàng và license trong Tài khoản.
           </p>
         </div>
       </div>
 
-      <ul className="mt-3 flex flex-wrap justify-center gap-2">
-        {["Cần đăng nhập", "Đơn & license", "PO qua sales"].map((t) => (
+      <ul className="mt-3 space-y-2">
+        {HERO_POINTS.map((point) => (
           <li
-            key={t}
-            className={`inline-flex items-center gap-1.5 rounded-full border border-border bg-white px-3 py-1.5 ${CARD_META_CLASS} font-medium text-navy ${ELEVATION_HAIRLINE}`}
+            key={point.title}
+            className={`rounded-xl border border-border bg-white px-3 py-2.5 ${ELEVATION_HAIRLINE}`}
           >
-            <Check size={12} className="text-accent" strokeWidth={2.5} aria-hidden />
-            {t}
+            <p className={`inline-flex items-center gap-1.5 ${CARD_TITLE_CLASS}`}>
+              <Check size={14} className="text-accent" strokeWidth={2.5} aria-hidden />
+              {point.title}
+            </p>
+            <p className={`mt-0.5 ${CARD_META_CLASS}`}>{point.body}</p>
           </li>
         ))}
       </ul>

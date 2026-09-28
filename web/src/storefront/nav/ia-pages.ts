@@ -208,11 +208,11 @@ export const BUSINESS_PAGES: Record<string, IaPage> = {
     kicker: "Doanh nghiệp",
     title: "Hợp đồng & đơn hàng",
     subtitle:
-      "Theo dõi đơn và license tổ chức sau đăng nhập. Chưa phải cổng hợp đồng pháp lý.",
+      "Sau khi đăng nhập, doanh nghiệp theo dõi đơn hàng, license đã mua và yêu cầu gia hạn. Báo giá volume, PO và hợp đồng được xử lý cùng đội kinh doanh.",
     bullets: [
-      "Đơn hàng: Tài khoản → Đơn hàng (Order hiện có)",
-      "PO / gia hạn tập trung: liên hệ kinh doanh",
-      "Bảng hợp đồng pháp lý trên web chưa mở — pha sau khi có nghiệp vụ",
+      "Xem đơn hàng và license đã mua trong Tài khoản",
+      "Theo dõi license hoặc tài sản số sau khi mua",
+      "PO và hợp đồng được tư vấn theo nhu cầu",
     ],
     primaryCta: { label: "Xem đơn hàng", href: "/account/orders" },
     secondaryCta: { label: "Liên hệ kinh doanh", href: "/contact/quote?intent=business" },

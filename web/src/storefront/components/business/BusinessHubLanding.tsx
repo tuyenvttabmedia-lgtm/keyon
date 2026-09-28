@@ -81,10 +81,10 @@ const BIZ_CARDS: BizCard[] = [
   {
     id: "contracts",
     title: "Hợp đồng & đơn hàng",
-    body: "Xem đơn và license tổ chức sau đăng nhập. PO / gia hạn qua đội kinh doanh.",
+    body: "Theo dõi đơn hàng và license trong Tài khoản. PO và hợp đồng qua đội kinh doanh.",
     href: "/business/contracts",
     cta: "Tìm hiểu thêm",
-    features: ["Đơn trên Tài khoản", "Chưa phải cổng HĐ pháp lý", "Liên hệ khi cần PO"],
+    features: ["Đơn hàng trong Tài khoản", "License đã bàn giao", "PO qua đội kinh doanh"],
     Icon: FileText,
     tone: "bg-orange-600 text-white",
   },
