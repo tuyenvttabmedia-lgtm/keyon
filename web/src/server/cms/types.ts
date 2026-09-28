@@ -779,9 +779,9 @@ export const defaultSettings: SiteSettings = {
       description: "Liên hệ hỗ trợ KEYON — tư vấn mua bản quyền phần mềm.",
     },
     "/contact/quote": {
-      title: "Yêu cầu báo giá — KEYON",
+      title: "Yêu cầu báo giá bản quyền phần mềm | KEYON",
       description:
-        "Gửi yêu cầu tư vấn và báo giá bản quyền doanh nghiệp KEYON — không cần tài khoản.",
+        "Gửi yêu cầu để KEYON tư vấn và báo giá bản quyền phần mềm phù hợp với sản phẩm, số lượng người dùng và nhu cầu doanh nghiệp.",
     },
     "/about": {
       title: "Về KEYON",

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { prisma } from "@/lib/db";
 import { defaultCmsContact, readJsonFile } from "@/server/cms/store";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
+import { absoluteTitle } from "@/server/seo/title";
 import { isQuotePublicTrackingEnabled } from "@/server/quote/tracking";
 import {
   QuoteRequestLanding,
@@ -11,7 +12,12 @@ import {
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
-  return buildMainPageMetadata("/contact/quote");
+  return {
+    ...(await buildMainPageMetadata("/contact/quote")),
+    title: absoluteTitle("Yêu cầu báo giá bản quyền phần mềm | KEYON"),
+    description:
+      "Gửi yêu cầu để KEYON tư vấn và báo giá bản quyền phần mềm phù hợp với sản phẩm, số lượng người dùng và nhu cầu doanh nghiệp.",
+  };
 }
 
 type Props = {

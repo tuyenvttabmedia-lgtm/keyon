@@ -1,11 +1,28 @@
 import { z } from "zod";
 
-export const ESTIMATED_USERS = ["5", "10", "50", "100+", "OTHER"] as const;
+export const ESTIMATED_USERS = [
+  "5",
+  "10",
+  "50",
+  "100+",
+  "OTHER",
+  "1-5",
+  "6-25",
+  "26-50",
+  "51-100",
+] as const;
+/** Consulting form keeps the original buckets. Quote page uses ranges. */
+export const CONSULT_ESTIMATED_USERS = ["5", "10", "50", "100+"] as const;
+export const QUOTE_USER_RANGES = ["1-5", "6-25", "26-50", "51-100", "100+"] as const;
 export const LICENSE_TYPES = [
   "UNDECIDED",
   "PERPETUAL",
   "SUBSCRIPTION",
   "VOLUME",
+  "NEW",
+  "RENEWAL",
+  "UPGRADE",
+  "MIGRATION",
 ] as const;
 export const TERMS = [
   "UNDECIDED",
@@ -21,6 +38,10 @@ export const ESTIMATED_USERS_LABEL: Record<(typeof ESTIMATED_USERS)[number], str
   "50": "50 người dùng",
   "100+": "100+ người dùng",
   OTHER: "Khác",
+  "1-5": "1–5 người dùng",
+  "6-25": "6–25 người dùng",
+  "26-50": "26–50 người dùng",
+  "51-100": "51–100 người dùng",
 };
 
 export const LICENSE_TYPE_LABEL: Record<(typeof LICENSE_TYPES)[number], string> = {
@@ -28,6 +49,10 @@ export const LICENSE_TYPE_LABEL: Record<(typeof LICENSE_TYPES)[number], string> 
   PERPETUAL: "Perpetual",
   SUBSCRIPTION: "Subscription",
   VOLUME: "Volume",
+  NEW: "Mua mới",
+  RENEWAL: "Gia hạn",
+  UPGRADE: "Nâng cấp",
+  MIGRATION: "Chuyển đổi license",
 };
 
 export const TERM_LABEL: Record<(typeof TERMS)[number], string> = {
@@ -73,8 +98,8 @@ export const quoteRequestBodySchema = z
     companyName: z
       .string()
       .trim()
-      .min(2, "Vui lòng nhập tên công ty.")
-      .max(200, "Tên công ty tối đa 200 ký tự."),
+      .min(2, "Vui lòng nhập tên doanh nghiệp.")
+      .max(200, "Tên doanh nghiệp tối đa 200 ký tự."),
     jobTitle: z.string().trim().max(120).optional().or(z.literal("")),
     interestedProducts: z.array(productItem).max(20).default([]),
     estimatedUsers: z.enum(ESTIMATED_USERS),

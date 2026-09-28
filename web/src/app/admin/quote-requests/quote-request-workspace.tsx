@@ -220,7 +220,7 @@ export function QuoteRequestWorkspace({
                 </dd>
               </div>
               <div>
-                <dt className={CARD_META_CLASS}>Loại license</dt>
+                <dt className={CARD_META_CLASS}>Hình thức nhu cầu</dt>
                 <dd className="text-sm text-navy">
                   {LICENSE_TYPE_LABEL[licenseKey] ?? data.licenseType}
                 </dd>

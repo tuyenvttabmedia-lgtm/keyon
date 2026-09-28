@@ -232,7 +232,7 @@ export const BUSINESS_ADVISORY_LINKS: NavLink[] = [
   {
     label: "Liên hệ kinh doanh",
     href: "/contact/quote",
-    description: "Nhận tư vấn và báo giá",
+    description: "Nhận báo giá bản quyền theo nhu cầu doanh nghiệp",
   },
 ];
 

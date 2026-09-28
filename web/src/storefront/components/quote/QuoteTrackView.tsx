@@ -209,9 +209,11 @@ export function QuoteTrackView({
               <dd className="mt-0.5 text-sm text-navy">{quote.productSummary}</dd>
             </div>
             <div>
-              <dt className={CARD_META_CLASS}>License / thời hạn</dt>
+              <dt className={CARD_META_CLASS}>Hình thức nhu cầu</dt>
               <dd className="mt-0.5 text-sm text-navy">
-                {quote.licenseTypeLabel} · {quote.termLabel}
+                {quote.termLabel === "Chưa xác định"
+                  ? quote.licenseTypeLabel
+                  : `${quote.licenseTypeLabel} · ${quote.termLabel}`}
               </dd>
             </div>
             <div>

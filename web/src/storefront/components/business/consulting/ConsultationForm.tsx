@@ -20,7 +20,7 @@ import {
   TRANSITION_UI,
 } from "@/storefront/effects";
 import {
-  ESTIMATED_USERS,
+  CONSULT_ESTIMATED_USERS,
   ESTIMATED_USERS_LABEL,
   normalizePhone,
 } from "@/lib/quote";
@@ -35,7 +35,7 @@ import { TurnstileField } from "@/storefront/components/auth/TurnstileField";
 import { useTurnstileSiteKey } from "@/storefront/components/auth/use-turnstile-site-key";
 
 type CustomerType = "PERSONAL" | "BUSINESS";
-type EstimatedUsers = (typeof ESTIMATED_USERS)[number];
+type EstimatedUsers = (typeof CONSULT_ESTIMATED_USERS)[number];
 
 type FormState = {
   fullName: string;
@@ -315,7 +315,7 @@ export function ConsultationForm() {
                       setField("estimatedUsers", e.target.value as EstimatedUsers)
                     }
                   >
-                    {ESTIMATED_USERS.filter((u) => u !== "OTHER").map((u) => (
+                    {CONSULT_ESTIMATED_USERS.map((u) => (
                       <option key={u} value={u}>
                         {ESTIMATED_USERS_LABEL[u]}
                       </option>

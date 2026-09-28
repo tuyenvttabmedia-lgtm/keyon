@@ -126,8 +126,8 @@ export async function POST(req: Request) {
           `Chức vụ: ${jobTitle || "—"}`,
           `Sản phẩm: ${productLine}`,
           `Quy mô: ${usersLabel}`,
-          `License: ${LICENSE_TYPE_LABEL[body.licenseType]}`,
-          `Thời hạn: ${TERM_LABEL[body.term]}`,
+          `Hình thức nhu cầu: ${LICENSE_TYPE_LABEL[body.licenseType]}`,
+          ...(body.term === "UNDECIDED" ? [] : [`Thời hạn: ${TERM_LABEL[body.term]}`]),
           `Nguồn: ${sourcePath || "—"}`,
           "",
           message || "(Không có mô tả thêm)",
@@ -143,8 +143,8 @@ export async function POST(req: Request) {
           <p><strong>Chức vụ:</strong> ${escapeHtml(jobTitle || "—")}</p>
           <p><strong>Sản phẩm:</strong> ${escapeHtml(productLine)}</p>
           <p><strong>Quy mô:</strong> ${escapeHtml(usersLabel)}</p>
-          <p><strong>License:</strong> ${escapeHtml(LICENSE_TYPE_LABEL[body.licenseType])}</p>
-          <p><strong>Thời hạn:</strong> ${escapeHtml(TERM_LABEL[body.term])}</p>
+          <p><strong>Hình thức nhu cầu:</strong> ${escapeHtml(LICENSE_TYPE_LABEL[body.licenseType])}</p>
+          ${body.term === "UNDECIDED" ? "" : `<p><strong>Thời hạn:</strong> ${escapeHtml(TERM_LABEL[body.term])}</p>`}
           <hr/>
           <p style="white-space:pre-wrap">${escapeHtml(message || "(Không có mô tả thêm)")}</p>
         `;
@@ -176,8 +176,8 @@ export async function POST(req: Request) {
             `SĐT: ${phone}`,
             `Quy mô: ${usersLabel}`,
             `Sản phẩm: ${productLine}`,
-            `License: ${LICENSE_TYPE_LABEL[body.licenseType]}`,
-            `Thời hạn: ${TERM_LABEL[body.term]}`,
+            `Hình thức nhu cầu: ${LICENSE_TYPE_LABEL[body.licenseType]}`,
+            ...(body.term === "UNDECIDED" ? [] : [`Thời hạn: ${TERM_LABEL[body.term]}`]),
             message ? `\n${message.slice(0, 600)}` : "",
           ]
             .filter(Boolean)

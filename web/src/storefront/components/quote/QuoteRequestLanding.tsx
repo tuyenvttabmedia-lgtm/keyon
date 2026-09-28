@@ -10,12 +10,11 @@ import {
   CheckCircle2,
   Lock,
   MessageCircle,
-  Search,
   Send,
   ShieldCheck,
-  X,
 } from "lucide-react";
 import {
+  BADGE_CLASS,
   BODY_MUTED_CLASS,
   BREADCRUMB_CLASS,
   BREADCRUMB_CURRENT_CLASS,
@@ -25,6 +24,7 @@ import {
   FORM_ERROR_CLASS,
   FORM_LABEL_CLASS,
   HERO_TITLE_CLASS,
+  LINK_FIELD_CLASS,
   INPUT_TEXT_CLASS,
   OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
@@ -45,16 +45,14 @@ import { isPlaceholderHotline } from "@/storefront/components/support/shared";
 import { TurnstileField } from "@/storefront/components/auth/TurnstileField";
 import { useTurnstileSiteKey } from "@/storefront/components/auth/use-turnstile-site-key";
 import {
-  ESTIMATED_USERS,
   ESTIMATED_USERS_LABEL,
   LICENSE_TYPE_LABEL,
-  LICENSE_TYPES,
-  TERM_LABEL,
-  TERMS,
+  QUOTE_USER_RANGES,
 } from "@/lib/quote";
 
-type ProductOption = { slug: string; name: string };
-type EstimatedUsers = (typeof ESTIMATED_USERS)[number];
+type ProductOption = { slug?: string; name: string };
+type EstimatedUsers = (typeof QUOTE_USER_RANGES)[number];
+type NeedType = "NEW" | "RENEWAL" | "UPGRADE" | "MIGRATION" | "UNDECIDED";
 
 export type QuoteContactInfo = {
   hotlineValue?: string;
@@ -80,42 +78,122 @@ type FormState = {
   jobTitle: string;
   interestedProducts: ProductOption[];
   estimatedUsers: EstimatedUsers;
-  estimatedUsersOther: string;
-  licenseType: (typeof LICENSE_TYPES)[number];
-  term: (typeof TERMS)[number];
+  licenseType: NeedType;
   message: string;
   privacyAccepted: boolean;
   companyUrl: string;
 };
 
-type FieldErrors = Partial<Record<keyof FormState | "estimatedUsersOther", string>>;
+type FieldErrors = Partial<Record<keyof FormState, string>>;
 
 const INPUT =
   `mt-1.5 h-12 w-full rounded-xl border border-border bg-white px-3 ${INPUT_TEXT_CLASS} outline-none ${TRANSITION_UI} focus:border-accent`;
 const INPUT_ERR = "border-red-400 focus:border-red-500";
 const TEXTAREA =
   `mt-1.5 w-full rounded-xl border border-border bg-white px-3 py-3 ${INPUT_TEXT_CLASS} outline-none ${TRANSITION_UI} focus:border-accent`;
-const SELECT =
-  `mt-1.5 h-12 w-full rounded-xl border border-border bg-white px-3 ${INPUT_TEXT_CLASS} outline-none ${TRANSITION_UI} focus:border-accent`;
-
 const STEPS = [
   { id: 1, label: "Thông tin" },
   { id: 2, label: "Nhu cầu" },
   { id: 3, label: "Xác nhận" },
 ] as const;
 
-const SUPPORT_STEPS = [
+const PRODUCT_INTERESTS: ProductOption[] = [
+  { name: "Microsoft 365" },
+  { name: "Microsoft Office" },
+  { name: "Windows" },
+  { name: "Windows Server" },
+  { name: "Bảo mật" },
+  { name: "Backup & Khôi phục" },
+  { name: "Khác" },
+];
+
+const NEED_OPTIONS: { id: NeedType; label: string }[] = [
+  { id: "NEW", label: "Mua mới" },
+  { id: "RENEWAL", label: "Gia hạn" },
+  { id: "UPGRADE", label: "Nâng cấp" },
+  { id: "MIGRATION", label: "Chuyển đổi license" },
+  { id: "UNDECIDED", label: "Chưa xác định" },
+];
+
+const RANGE_SHORT: Record<EstimatedUsers, string> = {
+  "1-5": "1–5",
+  "6-25": "6–25",
+  "26-50": "26–50",
+  "51-100": "51–100",
+  "100+": "100+",
+};
+
+type StepCopy = { title: string; body: string };
+type UspCopy = { title: string; body: string; icon: "consult" | "quote" | "privacy" };
+
+const QUOTE_USPS: UspCopy[] = [
+  {
+    title: "Tư vấn theo nhu cầu",
+    body: "Đề xuất phương án phù hợp với sản phẩm và quy mô sử dụng.",
+    icon: "consult",
+  },
+  {
+    title: "Báo giá minh bạch",
+    body: "Thông tin chi phí rõ ràng theo sản phẩm, số lượng và thời hạn.",
+    icon: "quote",
+  },
+  {
+    title: "Bảo mật thông tin",
+    body: "Thông tin doanh nghiệp chỉ được sử dụng để tư vấn và báo giá.",
+    icon: "privacy",
+  },
+];
+
+const QUOTE_CARD_STEPS: StepCopy[] = [
+  {
+    title: "Tiếp nhận nhu cầu",
+    body: "KEYON tiếp nhận thông tin sản phẩm và quy mô sử dụng.",
+  },
+  {
+    title: "Tư vấn phương án",
+    body: "Đề xuất loại bản quyền, số lượng và thời hạn phù hợp.",
+  },
+  {
+    title: "Gửi báo giá",
+    body: "Gửi thông tin giá và phương án sử dụng để doanh nghiệp tham khảo.",
+  },
+  {
+    title: "Hỗ trợ mua và kích hoạt",
+    body: "Hỗ trợ thanh toán, bàn giao và kích hoạt khi doanh nghiệp quyết định mua.",
+  },
+];
+
+const QUOTE_SIDEBAR = [
   "Tiếp nhận và phân tích nhu cầu",
-  "Đề xuất phương án cấp phép phù hợp",
+  "Đề xuất phương án bản quyền",
   "Gửi báo giá chi tiết",
-  "Hỗ trợ kích hoạt / bàn giao khi bạn yêu cầu",
+  "Hỗ trợ mua và kích hoạt",
 ] as const;
 
-const IMPLEMENTATION_STEPS = [
-  "Tiếp nhận phạm vi bàn giao / kích hoạt",
-  "Rà soát loại nhận và quy mô",
-  "Kế hoạch rollout cho IT",
-  "Hỗ trợ kích hoạt và checklist bàn giao",
+const IMPLEMENTATION_CARD_STEPS: StepCopy[] = [
+  {
+    title: "Tiếp nhận phạm vi",
+    body: "KEYON tiếp nhận sản phẩm, số người dùng và đội IT phụ trách.",
+  },
+  {
+    title: "Rà soát bản quyền",
+    body: "Kiểm tra loại bản quyền và quy mô trước khi bàn giao.",
+  },
+  {
+    title: "Bàn giao",
+    body: "Chuẩn bị checklist và kế hoạch bàn giao cho đội IT.",
+  },
+  {
+    title: "Hỗ trợ kích hoạt",
+    body: "Hướng dẫn kích hoạt và các bước sau khi nhận bản quyền.",
+  },
+];
+
+const IMPLEMENTATION_SIDEBAR = [
+  "Tiếp nhận phạm vi bàn giao",
+  "Rà soát bản quyền và quy mô",
+  "Checklist bàn giao cho IT",
+  "Hỗ trợ kích hoạt",
 ] as const;
 
 function quoteHeroCopy(requestType: string): {
@@ -123,58 +201,93 @@ function quoteHeroCopy(requestType: string): {
   title: string;
   lead: string;
   crumb: string;
+  cardTitle: string;
+  cardLead: string;
+  cardSteps: readonly StepCopy[];
   sidebarTitle: string;
-  steps: readonly string[];
+  sidebarSteps: readonly string[];
+  usps: readonly UspCopy[];
   messagePlaceholder: string;
 } {
   if (requestType === "IMPLEMENTATION") {
     return {
       overline: "Dịch vụ triển khai",
       title: "Yêu cầu hỗ trợ bàn giao và kích hoạt",
-      lead: "Mô tả sản phẩm đã (sắp) mua, số người dùng và đội IT phụ trách. KEYON tiếp nhận như báo giá — không tự tạo đơn trên giỏ hàng.",
+      lead: "Mô tả sản phẩm đã mua, số người dùng và đội IT phụ trách. KEYON tiếp nhận yêu cầu và hỗ trợ bàn giao, kích hoạt.",
       crumb: "Dịch vụ triển khai",
-      sidebarTitle: "Luồng triển khai",
-      steps: IMPLEMENTATION_STEPS,
+      cardTitle: "Quy trình bàn giao",
+      cardLead: "Không cần tài khoản. Gửi phạm vi để KEYON hỗ trợ bàn giao và kích hoạt.",
+      cardSteps: IMPLEMENTATION_CARD_STEPS,
+      sidebarTitle: "KEYON hỗ trợ bạn từ bàn giao đến kích hoạt",
+      sidebarSteps: IMPLEMENTATION_SIDEBAR,
+      usps: QUOTE_USPS,
       messagePlaceholder:
-        "Ví dụ: đã mua Microsoft 365 cho 40 máy, cần checklist kích hoạt và hỗ trợ gán seat cho IT…",
+        "Mô tả sản phẩm đã mua, số lượng người dùng và phần đội IT cần KEYON hỗ trợ kích hoạt.",
     };
   }
   return {
     overline: "Yêu cầu báo giá",
-    title: "Nhận tư vấn và báo giá phù hợp với nhu cầu doanh nghiệp",
-    lead: "Cho KEYON biết nhu cầu của bạn. Đội ngũ tư vấn sẽ dựa trên thông tin cung cấp để đề xuất phương án bản quyền phù hợp.",
+    title: "Nhận báo giá bản quyền phù hợp với nhu cầu doanh nghiệp",
+    lead: "Cho KEYON biết sản phẩm, số lượng người dùng và nhu cầu của doanh nghiệp. Đội ngũ tư vấn sẽ đề xuất phương án bản quyền và gửi báo giá phù hợp để bạn tham khảo.",
     crumb: "Yêu cầu báo giá",
-    sidebarTitle: "Luồng báo giá doanh nghiệp",
-    steps: SUPPORT_STEPS,
+    cardTitle: "Quy trình báo giá",
+    cardLead: "Không cần tài khoản. Gửi nhu cầu trực tiếp để KEYON tư vấn và báo giá.",
+    cardSteps: QUOTE_CARD_STEPS,
+    sidebarTitle: "KEYON hỗ trợ bạn từ tư vấn đến kích hoạt",
+    sidebarSteps: QUOTE_SIDEBAR,
+    usps: QUOTE_USPS,
     messagePlaceholder:
-      "Ví dụ: sản phẩm đang quan tâm, số lượng người dùng, thời gian dự kiến triển khai hoặc yêu cầu đặc biệt…",
+      "Mô tả sản phẩm, số lượng người dùng hoặc yêu cầu của doanh nghiệp...",
   };
 }
 
 const PROCESS = [
-  { title: "Gửi yêu cầu", body: "Điền thông tin và nhu cầu bản quyền." },
-  { title: "Tiếp nhận & phân tích", body: "KEYON rà soát quy mô và sản phẩm quan tâm." },
-  { title: "Tư vấn giải pháp", body: "Đề xuất hình thức cấp phép phù hợp." },
-  { title: "Gửi báo giá", body: "Báo giá rõ ràng trước khi quyết định." },
-  { title: "Hỗ trợ kích hoạt", body: "Đồng hành kích hoạt và mở license trong Tài khoản." },
+  {
+    title: "Gửi yêu cầu",
+    body: "Cung cấp thông tin liên hệ và nhu cầu bản quyền.",
+  },
+  {
+    title: "Tiếp nhận & phân tích",
+    body: "KEYON kiểm tra sản phẩm, số lượng và thời hạn sử dụng.",
+  },
+  {
+    title: "Tư vấn giải pháp",
+    body: "Đề xuất phương án license phù hợp với nhu cầu thực tế.",
+  },
+  {
+    title: "Gửi báo giá",
+    body: "Gửi thông tin giá và điều kiện áp dụng để doanh nghiệp tham khảo.",
+  },
+  {
+    title: "Hỗ trợ mua và kích hoạt",
+    body: "Hỗ trợ hoàn tất đơn hàng, bàn giao và kích hoạt license.",
+  },
 ] as const;
 
-function mapEstimatedUsers(raw?: string): {
-  estimatedUsers: EstimatedUsers;
-  estimatedUsersOther: string;
-} {
-  if (!raw) return { estimatedUsers: "10", estimatedUsersOther: "" };
-  if ((ESTIMATED_USERS as readonly string[]).includes(raw)) {
-    return { estimatedUsers: raw as EstimatedUsers, estimatedUsersOther: "" };
+function mapEstimatedUsers(raw?: string): EstimatedUsers {
+  if (raw && (QUOTE_USER_RANGES as readonly string[]).includes(raw)) {
+    return raw as EstimatedUsers;
   }
-  if (raw === "100") {
-    return { estimatedUsers: "100+", estimatedUsersOther: "" };
-  }
+  if (raw === "5") return "1-5";
+  if (raw === "10") return "6-25";
+  if (raw === "50") return "26-50";
+  if (raw === "100") return "51-100";
+  if (raw === "100+") return "100+";
   const n = Number(raw);
   if (Number.isFinite(n) && n > 0) {
-    return { estimatedUsers: "OTHER", estimatedUsersOther: String(Math.floor(n)) };
+    if (n <= 5) return "1-5";
+    if (n <= 25) return "6-25";
+    if (n <= 50) return "26-50";
+    if (n <= 100) return "51-100";
+    return "100+";
   }
-  return { estimatedUsers: "10", estimatedUsersOther: "" };
+  return "6-25";
+}
+
+function UspIcon({ kind }: { kind: UspCopy["icon"] }) {
+  if (kind === "consult") return <MessageCircle size={15} strokeWidth={1.9} aria-hidden />;
+  if (kind === "quote") return <CheckCircle2 size={15} strokeWidth={1.9} aria-hidden />;
+  return <ShieldCheck size={15} strokeWidth={1.9} aria-hidden />;
 }
 
 function FieldError({ message }: { message?: string }) {
@@ -198,7 +311,7 @@ export function QuoteRequestLanding({
   initial: QuoteInitial;
   publicTrackingEnabled?: boolean;
 }) {
-  const mapped = mapEstimatedUsers(initial.estimatedUsers);
+  const mappedUsers = mapEstimatedUsers(initial.estimatedUsers);
   const showHotline =
     Boolean(contact.hotlineValue?.trim()) &&
     !isPlaceholderHotline(contact.hotlineValue!);
@@ -215,10 +328,8 @@ export function QuoteRequestLanding({
     companyName: "",
     jobTitle: "",
     interestedProducts: prefillProduct ? [prefillProduct] : [],
-    estimatedUsers: mapped.estimatedUsers,
-    estimatedUsersOther: mapped.estimatedUsersOther,
+    estimatedUsers: mappedUsers,
     licenseType: "UNDECIDED",
-    term: "UNDECIDED",
     message: "",
     privacyAccepted: false,
     companyUrl: "",
@@ -230,21 +341,16 @@ export function QuoteRequestLanding({
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [referenceCode, setReferenceCode] = useState<string | null>(null);
-  const [productQuery, setProductQuery] = useState("");
-  const [productOpen, setProductOpen] = useState(false);
 
   const requestType = (initial.requestType || "GENERAL").toUpperCase();
   const sourcePath = initial.sourcePath || "/contact/quote";
   const hero = quoteHeroCopy(requestType);
 
-  const productResults = useMemo(() => {
-    const q = productQuery.trim().toLowerCase();
-    const selected = new Set(form.interestedProducts.map((p) => p.slug));
-    return products
-      .filter((p) => !selected.has(p.slug))
-      .filter((p) => !q || p.name.toLowerCase().includes(q) || p.slug.includes(q))
-      .slice(0, 8);
-  }, [productQuery, products, form.interestedProducts]);
+  const interestChoices = useMemo(() => {
+    const names = new Set(PRODUCT_INTERESTS.map((p) => p.name));
+    const extra = form.interestedProducts.filter((p) => !names.has(p.name));
+    return [...extra, ...PRODUCT_INTERESTS];
+  }, [form.interestedProducts]);
 
   function setField<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -264,20 +370,16 @@ export function QuoteRequestLanding({
       e.email = "Email chưa đúng định dạng.";
     }
     if (!form.phone.trim()) e.phone = "Vui lòng nhập số điện thoại.";
-    if (form.companyName.trim().length < 2) e.companyName = "Vui lòng nhập tên công ty.";
-    else if (form.companyName.trim().length > 200) e.companyName = "Tên công ty tối đa 200 ký tự.";
+    if (form.companyName.trim().length < 2) e.companyName = "Vui lòng nhập tên doanh nghiệp.";
+    else if (form.companyName.trim().length > 200) {
+      e.companyName = "Tên doanh nghiệp tối đa 200 ký tự.";
+    }
     return e;
   }
 
   function validateStep2(): FieldErrors {
     const e: FieldErrors = {};
-    if (!form.estimatedUsers) e.estimatedUsers = "Vui lòng chọn quy mô dự kiến.";
-    if (form.estimatedUsers === "OTHER") {
-      const n = Number(form.estimatedUsersOther);
-      if (!Number.isFinite(n) || n < 1) {
-        e.estimatedUsersOther = "Vui lòng nhập số lượng người dùng.";
-      }
-    }
+    if (!form.estimatedUsers) e.estimatedUsers = "Vui lòng chọn số lượng người dùng.";
     if (form.message.length > 2000) e.message = "Mô tả tối đa 2.000 ký tự.";
     return e;
   }
@@ -297,7 +399,6 @@ export function QuoteRequestLanding({
       "phone",
       "companyName",
       "estimatedUsers",
-      "estimatedUsersOther",
       "message",
       "privacyAccepted",
     ];
@@ -333,7 +434,7 @@ export function QuoteRequestLanding({
     setErrors(next);
     if (Object.keys(next).length) {
       if (next.fullName || next.email || next.phone || next.companyName) setStep(1);
-      else if (next.estimatedUsers || next.estimatedUsersOther || next.message) setStep(2);
+      else if (next.estimatedUsers || next.message) setStep(2);
       else setStep(3);
       focusFirstError(next);
       return;
@@ -355,10 +456,9 @@ export function QuoteRequestLanding({
           jobTitle: form.jobTitle.trim(),
           interestedProducts: form.interestedProducts,
           estimatedUsers: form.estimatedUsers,
-          estimatedUsersOther:
-            form.estimatedUsers === "OTHER" ? Number(form.estimatedUsersOther) : null,
+          estimatedUsersOther: null,
           licenseType: form.licenseType,
-          term: form.term,
+          term: "UNDECIDED",
           message: form.message.trim(),
           privacyAccepted: true,
           requestType,
@@ -400,10 +500,17 @@ export function QuoteRequestLanding({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prefillProduct]);
 
-  const usersSummary =
-    form.estimatedUsers === "OTHER"
-      ? `${form.estimatedUsersOther || "—"} người dùng`
-      : ESTIMATED_USERS_LABEL[form.estimatedUsers];
+  const usersSummary = ESTIMATED_USERS_LABEL[form.estimatedUsers];
+
+  function toggleInterest(option: ProductOption) {
+    const selected = form.interestedProducts.some((p) => p.name === option.name);
+    setField(
+      "interestedProducts",
+      selected
+        ? form.interestedProducts.filter((p) => p.name !== option.name)
+        : [...form.interestedProducts, option],
+    );
+  }
 
   return (
     <div className="bg-white">
@@ -428,24 +535,23 @@ export function QuoteRequestLanding({
 
           <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.72fr)] lg:gap-12">
             <div className="min-w-0 max-w-xl">
-              <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>{hero.overline}</p>
+              <p className={`${OVERLINE_CLASS} text-accent`}>{hero.overline}</p>
               <h1 className={`mt-3 ${HERO_TITLE_CLASS}`}>
                 {hero.title}
               </h1>
               <p className={`mt-3 ${PAGE_LEAD_CLASS}`}>
                 {hero.lead}
               </p>
-              <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-3">
-                {[
-                  { label: "Tư vấn theo nhu cầu", Icon: MessageCircle },
-                  { label: "Báo giá rõ ràng", Icon: CheckCircle2 },
-                  { label: "Bảo mật thông tin", Icon: ShieldCheck },
-                ].map(({ label, Icon }) => (
-                  <li key={label} className="inline-flex items-center gap-2 text-[13px] font-medium text-navy">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent-soft text-accent">
-                      <Icon size={15} strokeWidth={1.9} aria-hidden />
+              <ul className="mt-6 space-y-4">
+                {hero.usps.map((usp) => (
+                  <li key={usp.title} className="flex items-start gap-3">
+                    <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
+                      <UspIcon kind={usp.icon} />
                     </span>
-                    {label}
+                    <span>
+                      <span className={`block ${CARD_TITLE_CLASS}`}>{usp.title}</span>
+                      <span className={`mt-0.5 block ${BODY_MUTED_CLASS}`}>{usp.body}</span>
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -460,19 +566,20 @@ export function QuoteRequestLanding({
                   <Send size={20} strokeWidth={1.8} />
                 </span>
                 <div>
-                  <p className={CARD_TITLE_CLASS}>{hero.sidebarTitle}</p>
-                  <p className={`mt-1 ${CARD_META_CLASS}`}>
-                    Không cần tài khoản · Không đưa vào giỏ hàng · Báo giá trước khi thanh toán
-                  </p>
+                  <p className={CARD_TITLE_CLASS}>{hero.cardTitle}</p>
+                  <p className={`mt-1 ${BODY_MUTED_CLASS}`}>{hero.cardLead}</p>
                 </div>
               </div>
-              <ol className="mt-5 space-y-2.5">
-                {hero.steps.map((s, i) => (
-                  <li key={s} className="flex items-start gap-2.5 text-[13px] text-navy">
-                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy text-[10px] font-bold text-white">
+              <ol className="mt-5 space-y-3">
+                {hero.cardSteps.map((s, i) => (
+                  <li key={s.title} className="flex items-start gap-2.5">
+                    <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy text-white ${BADGE_CLASS}`}>
                       {i + 1}
                     </span>
-                    {s}
+                    <span>
+                      <span className={`block ${CARD_TITLE_CLASS}`}>{s.title}</span>
+                      <span className={`mt-0.5 block ${BODY_MUTED_CLASS}`}>{s.body}</span>
+                    </span>
                   </li>
                 ))}
               </ol>
@@ -496,7 +603,12 @@ export function QuoteRequestLanding({
 
                 {step === 1 ? (
                   <div className="mt-7 space-y-4">
-                    <h2 className={CARD_TITLE_CLASS}>Thông tin liên hệ & doanh nghiệp</h2>
+                    <div>
+                      <h2 className={CARD_TITLE_CLASS}>Thông tin liên hệ</h2>
+                      <p className={`mt-1 ${BODY_MUTED_CLASS}`}>
+                        Cho KEYON biết cách liên hệ với bạn.
+                      </p>
+                    </div>
                     <div className="grid gap-4 sm:grid-cols-2">
                       <Field
                         id="fullName"
@@ -511,18 +623,8 @@ export function QuoteRequestLanding({
                           value={form.fullName}
                           onChange={(e) => setField("fullName", e.target.value)}
                           autoComplete="name"
+                          placeholder="Nguyễn Văn A"
                           maxLength={100}
-                        />
-                      </Field>
-                      <Field id="jobTitle" label="Chức vụ" error={errors.jobTitle}>
-                        <input
-                          id="jobTitle"
-                          data-field="jobTitle"
-                          className={INPUT}
-                          value={form.jobTitle}
-                          onChange={(e) => setField("jobTitle", e.target.value)}
-                          autoComplete="organization-title"
-                          maxLength={120}
                         />
                       </Field>
                       <Field id="email" label="Email công việc" required error={errors.email}>
@@ -534,6 +636,7 @@ export function QuoteRequestLanding({
                           value={form.email}
                           onChange={(e) => setField("email", e.target.value)}
                           autoComplete="email"
+                          placeholder="you@company.com"
                           maxLength={200}
                         />
                       </Field>
@@ -546,15 +649,15 @@ export function QuoteRequestLanding({
                           onChange={(e) => setField("phone", e.target.value)}
                           autoComplete="tel"
                           inputMode="tel"
+                          placeholder="09xx xxx xxx"
                           maxLength={40}
                         />
                       </Field>
                       <Field
                         id="companyName"
-                        label="Tên công ty"
+                        label="Tên doanh nghiệp"
                         required
                         error={errors.companyName}
-                        className="sm:col-span-2"
                       >
                         <input
                           id="companyName"
@@ -563,7 +666,20 @@ export function QuoteRequestLanding({
                           value={form.companyName}
                           onChange={(e) => setField("companyName", e.target.value)}
                           autoComplete="organization"
+                          placeholder="Tên công ty / tổ chức"
                           maxLength={200}
+                        />
+                      </Field>
+                      <Field id="jobTitle" label="Chức vụ" error={errors.jobTitle}>
+                        <input
+                          id="jobTitle"
+                          data-field="jobTitle"
+                          className={INPUT}
+                          value={form.jobTitle}
+                          onChange={(e) => setField("jobTitle", e.target.value)}
+                          autoComplete="organization-title"
+                          placeholder="Ví dụ: IT Manager, Procurement..."
+                          maxLength={120}
                         />
                       </Field>
                     </div>
@@ -596,168 +712,105 @@ export function QuoteRequestLanding({
 
                 {step === 2 ? (
                   <div className="mt-7 space-y-5">
-                    <h2 className={CARD_TITLE_CLASS}>Nhu cầu bản quyền</h2>
-
                     <div>
-                      <span className={FORM_LABEL_CLASS}>Sản phẩm / Dịch vụ quan tâm</span>
-                      <div className="relative mt-1.5">
-                        <Search
-                          size={16}
-                          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
-                          aria-hidden
-                        />
-                        <input
-                          className={`${INPUT} !mt-0 pl-9`}
-                          placeholder="Tìm sản phẩm…"
-                          value={productQuery}
-                          onChange={(e) => {
-                            setProductQuery(e.target.value);
-                            setProductOpen(true);
-                          }}
-                          onFocus={() => setProductOpen(true)}
-                          onBlur={() => setTimeout(() => setProductOpen(false), 150)}
-                        />
-                        {productOpen && productResults.length > 0 ? (
-                          <ul
-                            className={`absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-xl border border-border bg-white py-1 ${ELEVATION_HAIRLINE}`}
-                          >
-                            {productResults.map((p) => (
-                              <li key={p.slug}>
-                                <button
-                                  type="button"
-                                  className="flex w-full px-3 py-2.5 text-left text-[14px] text-navy hover:bg-accent-soft"
-                                  onMouseDown={(e) => e.preventDefault()}
-                                  onClick={() => {
-                                    setField("interestedProducts", [
-                                      ...form.interestedProducts,
-                                      p,
-                                    ]);
-                                    setProductQuery("");
-                                    setProductOpen(false);
-                                  }}
-                                >
-                                  {p.name}
-                                </button>
-                              </li>
-                            ))}
-                          </ul>
-                        ) : null}
-                      </div>
-                      {form.interestedProducts.length > 0 ? (
-                        <ul className="mt-2.5 flex flex-wrap gap-2">
-                          {form.interestedProducts.map((p) => (
-                            <li
-                              key={p.slug}
-                              className="inline-flex items-center gap-1.5 rounded-full border border-border bg-[#F7FAFC] px-2.5 py-1 text-[13px] text-navy"
-                            >
-                              {p.name}
-                              <button
-                                type="button"
-                                className="text-muted hover:text-navy"
-                                aria-label={`Bỏ ${p.name}`}
-                                onClick={() =>
-                                  setField(
-                                    "interestedProducts",
-                                    form.interestedProducts.filter((x) => x.slug !== p.slug),
-                                  )
-                                }
-                              >
-                                <X size={14} />
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <p className={`mt-2 ${CARD_META_CLASS}`}>
-                          Tùy chọn — bạn có thể mô tả thêm ở phần bên dưới.
-                        </p>
-                      )}
+                      <h2 className={CARD_TITLE_CLASS}>Nhu cầu bản quyền</h2>
+                      <p className={`mt-1 ${BODY_MUTED_CLASS}`}>
+                        Thông tin này giúp KEYON đề xuất phương án và báo giá sát nhu cầu.
+                      </p>
                     </div>
 
                     <div>
-                      <span className={FORM_LABEL_CLASS}>
-                        Quy mô dự kiến <span className="text-red-500">*</span>
-                      </span>
+                      <span className={FORM_LABEL_CLASS}>Sản phẩm bạn quan tâm</span>
                       <div
-                        className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-5"
+                        className="mt-2 flex flex-wrap gap-2"
                         role="group"
-                        aria-label="Quy mô người dùng dự kiến"
+                        aria-label="Sản phẩm bạn quan tâm"
                       >
-                        {ESTIMATED_USERS.map((v) => {
-                          const active = form.estimatedUsers === v;
+                        {interestChoices.map((p) => {
+                          const active = form.interestedProducts.some((x) => x.name === p.name);
                           return (
                             <button
-                              key={v}
+                              key={p.name}
                               type="button"
-                              data-field={v === "OTHER" ? "estimatedUsersOther" : "estimatedUsers"}
-                              onClick={() => setField("estimatedUsers", v)}
-                              className={`inline-flex h-12 items-center justify-center rounded-xl border text-[14px] font-semibold ${TRANSITION_UI} ${
+                              aria-pressed={active}
+                              onClick={() => toggleInterest(p)}
+                              className={`inline-flex h-10 items-center justify-center rounded-xl border px-3 text-sm font-semibold ${TRANSITION_UI} ${
                                 active
                                   ? "border-accent bg-accent-soft text-accent"
                                   : "border-border bg-white text-navy hover:border-accent/40"
                               }`}
                             >
-                              {v === "OTHER" ? "Khác" : v}
+                              {p.name}
+                            </button>
+                          );
+                        })}
+                      </div>
+                      <p className={`mt-2 ${CARD_META_CLASS}`}>
+                        Có thể chọn nhiều mục. Chi tiết thêm ở phần mô tả bên dưới.
+                      </p>
+                    </div>
+
+                    <div>
+                      <span className={FORM_LABEL_CLASS}>
+                        Số lượng người dùng <span className="text-red-500">*</span>
+                      </span>
+                      <div
+                        className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-5"
+                        role="group"
+                        aria-label="Số lượng người dùng"
+                      >
+                        {QUOTE_USER_RANGES.map((v) => {
+                          const active = form.estimatedUsers === v;
+                          return (
+                            <button
+                              key={v}
+                              type="button"
+                              data-field="estimatedUsers"
+                              onClick={() => setField("estimatedUsers", v)}
+                              className={`inline-flex h-12 items-center justify-center rounded-xl border text-sm font-semibold ${TRANSITION_UI} ${
+                                active
+                                  ? "border-accent bg-accent-soft text-accent"
+                                  : "border-border bg-white text-navy hover:border-accent/40"
+                              }`}
+                            >
+                              {RANGE_SHORT[v]}
                             </button>
                           );
                         })}
                       </div>
                       <FieldError message={errors.estimatedUsers} />
-                      {form.estimatedUsers === "OTHER" ? (
-                        <div className="mt-3 max-w-xs">
-                          <label className={FORM_LABEL_CLASS} htmlFor="estimatedUsersOther">
-                            Số lượng người dùng
-                          </label>
-                          <input
-                            id="estimatedUsersOther"
-                            data-field="estimatedUsersOther"
-                            type="number"
-                            min={1}
-                            inputMode="numeric"
-                            className={`${INPUT} ${errors.estimatedUsersOther ? INPUT_ERR : ""}`}
-                            value={form.estimatedUsersOther}
-                            onChange={(e) => setField("estimatedUsersOther", e.target.value)}
-                          />
-                          <FieldError message={errors.estimatedUsersOther} />
-                        </div>
-                      ) : null}
                     </div>
 
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <label className="block">
-                        <span className={FORM_LABEL_CLASS}>Loại hình cấp phép</span>
-                        <select
-                          className={SELECT}
-                          value={form.licenseType}
-                          onChange={(e) =>
-                            setField("licenseType", e.target.value as FormState["licenseType"])
-                          }
-                        >
-                          {LICENSE_TYPES.map((t) => (
-                            <option key={t} value={t}>
-                              {LICENSE_TYPE_LABEL[t]}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-                      <label className="block">
-                        <span className={FORM_LABEL_CLASS}>Thời hạn dự kiến</span>
-                        <select
-                          className={SELECT}
-                          value={form.term}
-                          onChange={(e) => setField("term", e.target.value as FormState["term"])}
-                        >
-                          {TERMS.map((t) => (
-                            <option key={t} value={t}>
-                              {TERM_LABEL[t]}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
+                    <div>
+                      <span className={FORM_LABEL_CLASS}>Hình thức nhu cầu</span>
+                      <div
+                        className="mt-2 flex flex-wrap gap-2"
+                        role="group"
+                        aria-label="Hình thức nhu cầu"
+                      >
+                        {NEED_OPTIONS.map((opt) => {
+                          const active = form.licenseType === opt.id;
+                          return (
+                            <button
+                              key={opt.id}
+                              type="button"
+                              aria-pressed={active}
+                              onClick={() => setField("licenseType", opt.id)}
+                              className={`inline-flex h-10 items-center justify-center rounded-xl border px-3 text-sm font-semibold ${TRANSITION_UI} ${
+                                active
+                                  ? "border-accent bg-accent-soft text-accent"
+                                  : "border-border bg-white text-navy hover:border-accent/40"
+                              }`}
+                            >
+                              {opt.label}
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
 
                     <label className="block">
-                      <span className={FORM_LABEL_CLASS}>Mô tả nhu cầu</span>
+                      <span className={FORM_LABEL_CLASS}>Nội dung cần tư vấn</span>
                       <textarea
                         data-field="message"
                         rows={5}
@@ -777,7 +830,7 @@ export function QuoteRequestLanding({
                       <button
                         type="button"
                         onClick={goBack}
-                        className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-border bg-white px-5 text-[14px] font-semibold text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+                        className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-border bg-white px-5 text-sm font-semibold text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                       >
                         <ArrowLeft size={16} strokeWidth={2.2} aria-hidden />
                         Quay lại
@@ -787,7 +840,7 @@ export function QuoteRequestLanding({
                         onClick={goNext}
                         className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                       >
-                        Xem lại yêu cầu
+                        Tiếp tục
                         <ArrowRight size={16} strokeWidth={2.2} aria-hidden />
                       </button>
                     </div>
@@ -801,34 +854,45 @@ export function QuoteRequestLanding({
                       <button
                         type="button"
                         onClick={() => setStep(1)}
-                        className={`text-[13px] font-semibold text-accent ${HOVER_LINK_ACCENT}`}
+                        className={LINK_FIELD_CLASS}
                       >
                         Chỉnh sửa
                       </button>
                     </div>
 
-                    <dl className="grid gap-3 rounded-xl border border-border bg-[#F7FAFC] p-4 sm:p-5">
-                      <SummaryRow label="Họ và tên" value={form.fullName} />
-                      <SummaryRow label="Email" value={form.email} />
-                      <SummaryRow label="Số điện thoại" value={form.phone} />
-                      <SummaryRow label="Công ty" value={form.companyName} />
-                      {form.jobTitle ? <SummaryRow label="Chức vụ" value={form.jobTitle} /> : null}
-                      <SummaryRow
-                        label="Sản phẩm quan tâm"
-                        value={
-                          form.interestedProducts.length
-                            ? form.interestedProducts.map((p) => p.name).join(", ")
-                            : "—"
-                        }
-                      />
-                      <SummaryRow label="Quy mô" value={usersSummary} />
-                      <SummaryRow
-                        label="Loại license"
-                        value={LICENSE_TYPE_LABEL[form.licenseType]}
-                      />
-                      <SummaryRow label="Thời hạn" value={TERM_LABEL[form.term]} />
-                      <SummaryRow label="Nhu cầu" value={form.message.trim() || "—"} />
-                    </dl>
+                    <div className="space-y-4 rounded-xl border border-border bg-[#F7FAFC] p-4 sm:p-5">
+                      <div>
+                        <h3 className={CARD_TITLE_CLASS}>Thông tin liên hệ</h3>
+                        <dl className="mt-3 grid gap-3">
+                          <SummaryRow label="Họ và tên" value={form.fullName} />
+                          <SummaryRow label="Email" value={form.email} />
+                          <SummaryRow label="Số điện thoại" value={form.phone} />
+                          <SummaryRow label="Doanh nghiệp" value={form.companyName} />
+                          {form.jobTitle ? (
+                            <SummaryRow label="Chức vụ" value={form.jobTitle} />
+                          ) : null}
+                        </dl>
+                      </div>
+                      <div className="border-t border-border pt-4">
+                        <h3 className={CARD_TITLE_CLASS}>Nhu cầu</h3>
+                        <dl className="mt-3 grid gap-3">
+                          <SummaryRow
+                            label="Sản phẩm"
+                            value={
+                              form.interestedProducts.length
+                                ? form.interestedProducts.map((p) => p.name).join(", ")
+                                : "—"
+                            }
+                          />
+                          <SummaryRow label="Số người dùng" value={usersSummary} />
+                          <SummaryRow
+                            label="Hình thức"
+                            value={LICENSE_TYPE_LABEL[form.licenseType]}
+                          />
+                          <SummaryRow label="Nội dung" value={form.message.trim() || "—"} />
+                        </dl>
+                      </div>
+                    </div>
 
                     <label className="flex items-start gap-3" data-field="privacyAccepted">
                       <input
@@ -837,7 +901,7 @@ export function QuoteRequestLanding({
                         checked={form.privacyAccepted}
                         onChange={(e) => setField("privacyAccepted", e.target.checked)}
                       />
-                      <span className={`text-[13px] leading-relaxed text-navy`}>
+                      <span className="text-sm leading-relaxed text-navy">
                         Tôi đồng ý với{" "}
                         <Link
                           href={contact.privacyHref || "/policy/privacy"}
@@ -870,7 +934,7 @@ export function QuoteRequestLanding({
                         type="button"
                         onClick={goBack}
                         disabled={loading}
-                        className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-border bg-white px-5 text-[14px] font-semibold text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent ${OPACITY_DISABLED_BUSY}`}
+                        className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-border bg-white px-5 text-sm font-semibold text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent ${OPACITY_DISABLED_BUSY}`}
                       >
                         <ArrowLeft size={16} strokeWidth={2.2} aria-hidden />
                         Quay lại
@@ -885,8 +949,8 @@ export function QuoteRequestLanding({
                           "Đang gửi…"
                         ) : (
                           <>
-                            <Send size={16} strokeWidth={2} aria-hidden />
                             Gửi yêu cầu báo giá
+                            <ArrowRight size={16} strokeWidth={2.2} aria-hidden />
                           </>
                         )}
                       </button>
@@ -904,17 +968,14 @@ export function QuoteRequestLanding({
 
           <aside className="min-w-0 space-y-4 lg:col-span-4">
             <div className={`rounded-2xl border border-border bg-white p-5 ${ELEVATION_HAIRLINE}`}>
-              <h2 className={CARD_TITLE_CLASS}>Chúng tôi sẽ hỗ trợ bạn</h2>
+              <h2 className={CARD_TITLE_CLASS}>{hero.sidebarTitle}</h2>
               <ul className="mt-4 space-y-3">
-                {hero.steps.map((s, i) => (
+                {hero.sidebarSteps.map((s) => (
                   <li key={s} className="flex items-start gap-2.5">
                     <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
                       <Check size={11} strokeWidth={3} aria-hidden />
                     </span>
-                    <span className="text-[13px] leading-snug text-navy">
-                      <span className="font-semibold">{i + 1}. </span>
-                      {s}
-                    </span>
+                    <span className="text-sm leading-snug text-navy">{s}</span>
                   </li>
                 ))}
               </ul>
@@ -974,7 +1035,7 @@ export function QuoteRequestLanding({
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Quy trình nhận báo giá tại KEYON</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Từ gửi yêu cầu đến hỗ trợ kích hoạt — rõ ràng từng bước.
+              Từ khi gửi yêu cầu đến khi nhận báo giá và hỗ trợ kích hoạt — rõ ràng theo từng bước.
             </p>
           </header>
           <div className="relative mt-10">
