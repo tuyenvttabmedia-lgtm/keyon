@@ -35,6 +35,7 @@ import {
 } from "@/storefront/effects";
 import {
   LANDING_CRUMB_GAP,
+  LANDING_HERO_GRID,
   LANDING_HERO_PAD,
 } from "@/storefront/components/marketing/hero-shell";
 
@@ -113,8 +114,8 @@ export function ContractsLanding() {
             <span className={BREADCRUMB_CURRENT_CLASS}>Hợp đồng & đơn hàng</span>
           </nav>
 
-          <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10 xl:gap-12">
-            <div className="flex h-full min-w-0 max-w-[540px] flex-col">
+          <div className={LANDING_HERO_GRID}>
+            <div className="min-w-0 max-w-[540px]">
               <h1 className={HERO_TITLE_CLASS}>
                 Theo dõi đơn hàng và license trên KEYON
               </h1>
@@ -138,7 +139,7 @@ export function ContractsLanding() {
                 ))}
               </ul>
 
-              <div className="mt-auto flex flex-col gap-3 pt-8 sm:flex-row sm:flex-wrap">
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/account/orders"
                   className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
@@ -154,7 +155,7 @@ export function ContractsLanding() {
               </div>
             </div>
 
-            <div className="flex h-full min-w-0 flex-col">
+            <div className="min-w-0">
               <ContractsHeroArt />
             </div>
           </div>
@@ -282,12 +283,13 @@ function ContractsHeroArt() {
     { label: "Đơn hàng doanh nghiệp", hint: "Sau đăng nhập", Icon: ShoppingBag, tone: "bg-sky-100 text-sky-800" },
     { label: "License đã bàn giao", hint: "Trong Tài khoản", Icon: KeyRound, tone: "bg-accent/15 text-accent" },
     { label: "Gia hạn / PO", hint: "Qua đội kinh doanh", Icon: RefreshCw, tone: "bg-amber-100 text-amber-800" },
+    { label: "Hợp đồng pháp lý", hint: "Không thay đơn hàng trên KEYON", Icon: FileText, tone: "bg-slate-100 text-slate-700" },
   ] as const;
 
   return (
-    <div className="relative mx-auto flex h-full w-full max-w-[440px] flex-col lg:max-w-none">
+    <div className="relative mx-auto w-full max-w-[440px] lg:max-w-none">
       <div
-        className={`relative flex min-h-0 flex-1 flex-col rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
+        className={`relative rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
         aria-hidden
       >
         <div className="flex items-center justify-between gap-3">
@@ -305,11 +307,11 @@ function ContractsHeroArt() {
           </span>
         </div>
 
-        <ul className="mt-4 flex flex-1 flex-col justify-between gap-2">
+        <ul className="mt-4 space-y-2">
           {rows.map((r) => (
             <li
               key={r.label}
-              className="flex flex-1 items-center gap-3 rounded-xl border border-border/80 bg-[#F7FAFC] px-3 py-2.5"
+              className="flex items-center gap-3 rounded-xl border border-border/80 bg-[#F7FAFC] px-3 py-2.5"
             >
               <span
                 className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${r.tone}`}
@@ -324,9 +326,10 @@ function ContractsHeroArt() {
           ))}
         </ul>
 
-        <div className="mt-3 rounded-xl border border-dashed border-border bg-surface/60 px-3 py-2.5">
-          <p className={CARD_META_CLASS}>
-            Xem đơn hàng và license trong Tài khoản.
+        <div className="mt-3 rounded-xl border border-dashed border-border bg-surface/60 px-3 py-3">
+          <p className={CARD_TITLE_CLASS}>Đơn hàng không thay hợp đồng</p>
+          <p className={`mt-1 ${CARD_META_CLASS}`}>
+            Xem đơn hàng và license trong Tài khoản. PO và hợp đồng xử lý cùng đội kinh doanh.
           </p>
         </div>
       </div>

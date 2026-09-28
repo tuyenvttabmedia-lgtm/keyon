@@ -189,8 +189,8 @@ export function LicenseManagementSolutionLanding({
             <span className={BREADCRUMB_CURRENT_CLASS}>Quản lý bản quyền</span>
           </nav>
 
-          <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-10">
-            <div className="flex h-full min-w-0 flex-col">
+          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-10">
+            <div className="min-w-0">
               <h1 className={`max-w-[20ch] ${HERO_TITLE_CLASS}`}>
                 License đã mua — xem rõ trong Tài khoản KEYON
               </h1>
@@ -216,7 +216,7 @@ export function LicenseManagementSolutionLanding({
                 ))}
               </ul>
 
-              <div className="mt-auto flex flex-col gap-3 pt-8 sm:flex-row sm:flex-wrap">
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/account/assets"
                   className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
@@ -368,9 +368,9 @@ function AssetsHeroArt({
   if (loggedIn) {
     if (assets.length === 0) {
       return (
-        <div className="relative mx-auto flex h-full w-full max-w-[480px] flex-col lg:max-w-none">
+        <div className="relative mx-auto w-full max-w-[480px] lg:max-w-none">
           <div
-            className={`relative flex min-h-0 flex-1 flex-col rounded-2xl border border-border bg-white p-5 sm:p-6 ${ELEVATION_HAIRLINE}`}
+            className={`relative rounded-2xl border border-border bg-white p-5 sm:p-6 ${ELEVATION_HAIRLINE}`}
           >
             <p
               className={`${BADGE_CLASS} inline-flex rounded-md bg-accent-soft px-2 py-1 font-semibold text-accent`}
@@ -386,7 +386,7 @@ function AssetsHeroArt({
             </p>
             <Link
               href="/products"
-              className={`mt-auto inline-flex h-11 w-full items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+              className={`mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
             >
               Duyệt sản phẩm →
             </Link>
@@ -403,9 +403,9 @@ function AssetsHeroArt({
     }
 
     return (
-      <div className="relative mx-auto flex h-full w-full max-w-[480px] flex-col lg:max-w-none">
+      <div className="relative mx-auto w-full max-w-[480px] lg:max-w-none">
         <div
-          className={`relative flex min-h-0 flex-1 flex-col rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_HAIRLINE}`}
+          className={`relative rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_HAIRLINE}`}
         >
           <div className="flex items-center justify-between gap-3">
             <div>
@@ -419,13 +419,13 @@ function AssetsHeroArt({
             </span>
           </div>
 
-          <ul className="mt-4 flex flex-1 flex-col justify-between gap-2">
+          <ul className="mt-4 space-y-2">
             {assets.map((r) => {
               const ui = STATUS_UI[r.status];
               return (
                 <li
                   key={r.id}
-                  className="flex flex-1 items-center justify-between gap-3 rounded-xl border border-border bg-[#F7FAFC] px-3 py-2.5"
+                  className="flex items-center justify-between gap-3 rounded-xl border border-border bg-[#F7FAFC] px-3 py-2.5"
                 >
                   <span className="min-w-0">
                     <span className={`block truncate ${CARD_TITLE_CLASS}`}>
@@ -455,9 +455,9 @@ function AssetsHeroArt({
   }
 
   return (
-    <div className="relative mx-auto flex h-full w-full max-w-[480px] flex-col lg:max-w-none">
+    <div className="relative mx-auto w-full max-w-[480px] lg:max-w-none">
       <div
-        className={`relative flex min-h-0 flex-1 flex-col rounded-2xl border border-border bg-white p-5 sm:p-6 ${ELEVATION_HAIRLINE}`}
+        className={`relative rounded-2xl border border-border bg-white p-5 sm:p-6 ${ELEVATION_HAIRLINE}`}
       >
         <p
           className={`${BADGE_CLASS} inline-flex rounded-md bg-accent-soft px-2 py-1 font-semibold text-accent`}
@@ -472,10 +472,10 @@ function AssetsHeroArt({
           minh email).
         </p>
 
-        <ul className="mt-4 flex flex-1 flex-col justify-between gap-2.5">
+        <ul className="mt-4 space-y-2.5">
           {[
             "Danh sách license gắn với tài khoản của bạn",
-            "Trạng thái đang dùng / sắp hết hạn / hết hạn",
+            "Trạng thái đang sử dụng, chưa kích hoạt hoặc hết hạn",
             "Mở key an toàn sau khi xác minh email",
           ].map((line) => (
             <li key={line} className={`flex items-start gap-2 ${BODY_MUTED_CLASS}`}>
@@ -490,9 +490,17 @@ function AssetsHeroArt({
           ))}
         </ul>
 
+        <div className="mt-4 rounded-xl border border-border bg-[#F7FAFC] px-3 py-3">
+          <p className={CARD_TITLE_CLASS}>Ba trạng thái trong Tài sản</p>
+          <p className={`mt-1 ${CARD_META_CLASS}`}>
+            Đang sử dụng khi còn hạn. Chưa kích hoạt khi đã nhận nhưng chưa hoàn tất kích hoạt.
+            Hết hạn khi đã qua ngày hết hạn.
+          </p>
+        </div>
+
         <Link
           href="/login"
-          className={`mt-auto inline-flex h-11 w-full items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+          className={`mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
         >
           Đăng nhập để xem Tài sản →
         </Link>

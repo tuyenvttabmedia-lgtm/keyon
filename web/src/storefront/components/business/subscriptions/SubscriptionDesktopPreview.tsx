@@ -14,12 +14,12 @@ const ILLUSTRATION_ROWS = [
   { label: "Đã qua ngày hết hạn", status: "Hết hạn", tone: "bg-rose-50 text-rose-700" },
 ] as const;
 
-/** Compact desktop hub — height aligned with other landing hero arts. */
+/** Desktop hub for the subscription hero. */
 export function SubscriptionDesktopPreview() {
   return (
-    <div className="relative mx-auto hidden h-full w-full max-w-[440px] flex-col md:flex lg:max-w-none">
+    <div className="relative mx-auto hidden w-full max-w-[440px] md:block lg:max-w-none">
       <div
-        className={`relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
+        className={`relative overflow-hidden rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
         aria-hidden
       >
         <div className="flex items-center justify-between gap-3">
@@ -48,11 +48,11 @@ export function SubscriptionDesktopPreview() {
           ))}
         </div>
 
-        <ul className="mt-3 flex flex-1 flex-col justify-between gap-2">
+        <ul className="mt-3 space-y-2">
           {ILLUSTRATION_ROWS.map((s) => (
             <li
               key={s.label}
-              className="flex flex-1 items-center justify-between gap-2 rounded-xl border border-border bg-[#F7FAFC] px-3 py-2"
+              className="flex items-center justify-between gap-2 rounded-xl border border-border bg-[#F7FAFC] px-3 py-2"
             >
               <p className={`${CARD_TITLE_CLASS} truncate`}>{s.label}</p>
               <span
@@ -68,6 +68,12 @@ export function SubscriptionDesktopPreview() {
           <p className={CARD_TITLE_CLASS}>Kiểm tra thời hạn</p>
           <p className={`mt-0.5 ${CARD_META_CLASS}`}>
             Xem ngày hết hạn trong Tài khoản, rồi liên hệ KEYON khi cần gia hạn.
+          </p>
+        </div>
+        <div className="mt-3 rounded-xl border border-dashed border-border bg-[#F7FAFC] px-3 py-2.5">
+          <p className={CARD_TITLE_CLASS}>Không tự trừ tiền gia hạn</p>
+          <p className={`mt-0.5 ${CARD_META_CLASS}`}>
+            Subscription hết hạn thì dừng. KEYON báo giá khi bạn cần tiếp tục hoặc đổi số lượng.
           </p>
         </div>
       </div>

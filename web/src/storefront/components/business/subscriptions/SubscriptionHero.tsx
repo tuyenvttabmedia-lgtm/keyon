@@ -16,6 +16,7 @@ import {
 } from "@/storefront/effects";
 import {
   LANDING_CRUMB_GAP,
+  LANDING_HERO_GRID,
   LANDING_HERO_PAD,
 } from "@/storefront/components/marketing/hero-shell";
 import { HOW_IT_WORKS_HREF, SUB_CONSULT_HREF } from "./shared";
@@ -64,8 +65,8 @@ export function SubscriptionHero() {
           <span className={BREADCRUMB_CURRENT_CLASS}>Subscription &amp; Gia hạn</span>
         </nav>
 
-        <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10 xl:gap-12">
-          <div className="flex h-full min-w-0 max-w-[540px] flex-col">
+        <div className={LANDING_HERO_GRID}>
+          <div className="min-w-0 max-w-[540px]">
             <h1 className={HERO_TITLE_CLASS}>
               Subscription &amp; gia hạn bản quyền phần mềm
             </h1>
@@ -88,7 +89,7 @@ export function SubscriptionHero() {
               ))}
             </ul>
 
-            <div className="mt-auto flex flex-col gap-3 pt-8 sm:flex-row sm:items-center">
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
               <Link
                 href={SUB_CONSULT_HREF}
                 className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
@@ -104,7 +105,7 @@ export function SubscriptionHero() {
             </div>
           </div>
 
-          <div className="flex h-full min-w-0 flex-col">
+          <div className="min-w-0">
             <SubscriptionDesktopPreview />
             <SubscriptionMobilePreview />
           </div>

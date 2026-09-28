@@ -227,8 +227,8 @@ export function VolumeLicensingLanding() {
             <span className={BREADCRUMB_CURRENT_CLASS}>Mua bản quyền số lượng lớn</span>
           </nav>
 
-          <div className="grid items-stretch gap-8 md:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] md:gap-10 lg:gap-12">
-            <div className="flex h-full min-w-0 max-w-[540px] flex-col">
+          <div className="grid items-start gap-8 md:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] md:gap-10 lg:gap-12">
+            <div className="min-w-0 max-w-[540px]">
               <h1 className={HERO_TITLE_CLASS}>
                 Mua bản quyền phần mềm số lượng lớn cho doanh nghiệp
               </h1>
@@ -254,7 +254,7 @@ export function VolumeLicensingLanding() {
                 ))}
               </ul>
 
-              <div className="mt-auto flex flex-col gap-3 pt-8 sm:flex-row sm:flex-wrap sm:items-center">
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <Link
                   href={quoteHref(volume)}
                   className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
@@ -270,7 +270,7 @@ export function VolumeLicensingLanding() {
               </div>
             </div>
 
-            <div className="flex h-full w-full min-w-0 flex-col">
+            <div className="min-w-0 w-full">
               <VolumeHeroArt />
             </div>
           </div>
@@ -525,9 +525,9 @@ function VolumeHeroArt() {
   ] as const;
 
   return (
-    <div className="relative mx-auto flex h-full w-full max-w-[480px] flex-col lg:max-w-none">
+    <div className="relative mx-auto w-full max-w-[480px] lg:max-w-none">
       <div
-        className={`relative flex min-h-0 flex-1 flex-col rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
+        className={`relative rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
       >
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
@@ -544,11 +544,11 @@ function VolumeHeroArt() {
           </span>
         </div>
 
-        <ul className="mt-4 grid flex-1 grid-cols-2 grid-rows-2 gap-2.5">
+        <ul className="mt-4 grid grid-cols-2 gap-2.5">
           {rows.map((r) => (
             <li
               key={r.label}
-              className={`flex h-full flex-col rounded-xl border border-border/80 bg-surface/80 px-3 py-3 ${TRANSITION_PANEL}`}
+              className={`rounded-xl border border-border/80 bg-surface/80 px-3 py-3 ${TRANSITION_PANEL}`}
             >
               <span
                 className={`inline-flex rounded-md px-2 py-0.5 text-[11px] font-semibold ${r.tone}`}
@@ -566,6 +566,13 @@ function VolumeHeroArt() {
         <div className="mt-4 rounded-xl border border-dashed border-border bg-surface/60 px-3 py-3">
           <p className={`${CARD_META_CLASS}`}>
             Sau khi mua, theo dõi license và thời hạn trong Tài khoản KEYON.
+          </p>
+        </div>
+        <div className="mt-3 rounded-xl border border-border bg-[#F7FAFC] px-3 py-3">
+          <p className={CARD_TITLE_CLASS}>Báo giá theo nhu cầu</p>
+          <p className={`mt-1 ${CARD_META_CLASS}`}>
+            KEYON báo giá theo sản phẩm, số người dùng và thời hạn — không áp một mức chiết khấu
+            cố định cho mọi gói.
           </p>
         </div>
       </div>

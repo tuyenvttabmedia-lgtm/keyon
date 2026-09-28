@@ -30,11 +30,8 @@ const PRODUCTS: {
 /** Desktop decision workspace — CSS grid, not absolute floating cards. */
 export function DesktopDecisionWorkspace() {
   return (
-    <div className="hidden h-full md:flex md:flex-col">
-      <div
-        className={`flex min-h-0 flex-1 flex-col overflow-hidden ${SURFACE} p-4 sm:p-5 ${ELEVATION_FLOAT}`}
-      >
-        <div className="flex min-h-0 flex-1 flex-col justify-between gap-3">
+    <div className="hidden md:block">
+      <div className={`overflow-hidden ${SURFACE} p-4 sm:p-5 ${ELEVATION_FLOAT}`}>
         <div className="grid grid-cols-2 gap-3">
           {PRODUCTS.map(({ id, label, Icon }) => (
             <button
@@ -51,7 +48,7 @@ export function DesktopDecisionWorkspace() {
           ))}
         </div>
 
-        <div className="flex items-center gap-3 rounded-xl border border-accent/20 bg-accent-soft/50 px-4 py-3.5">
+        <div className="mt-3 flex items-center gap-3 rounded-xl border border-accent/20 bg-accent-soft/50 px-4 py-3.5">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent text-[1.1rem] font-black text-white">
             K
           </span>
@@ -61,7 +58,7 @@ export function DesktopDecisionWorkspace() {
           </div>
         </div>
 
-        <div className={`rounded-xl border border-border bg-[#F7FAFC] p-4 ${ELEVATION_HAIRLINE}`}>
+        <div className={`mt-3 rounded-xl border border-border bg-[#F7FAFC] p-4 ${ELEVATION_HAIRLINE}`}>
           <p className={CARD_TITLE_CLASS}>Bạn đang phân vân?</p>
           <p className={`mt-1 ${BODY_MUTED_CLASS}`}>
             Mô tả nhu cầu để KEYON giúp bạn so sánh lựa chọn.
@@ -74,7 +71,10 @@ export function DesktopDecisionWorkspace() {
             Bắt đầu →
           </button>
         </div>
-        </div>
+        <p className={`mt-3 ${CARD_META_CLASS}`}>
+          KEYON hỏi sản phẩm bạn cần, số người dùng và hình thức cấp phép — mua một lần hay
+          subscription — trước khi đề xuất.
+        </p>
       </div>
     </div>
   );
