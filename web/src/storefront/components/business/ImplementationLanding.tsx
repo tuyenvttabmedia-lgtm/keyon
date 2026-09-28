@@ -43,7 +43,6 @@ import {
 import { IMPLEMENTATION_QUOTE_HREF } from "@/storefront/lib/cta";
 import { SERVICE_HANDOVER_HREF } from "@/storefront/lib/service-sku";
 import {
-  LANDING_HERO_GRID,
   LANDING_HERO_PAD,
 } from "@/storefront/components/marketing/hero-shell";
 
@@ -155,12 +154,9 @@ export function ImplementationLanding() {
             <span className={BREADCRUMB_CURRENT_CLASS}>Dịch vụ triển khai</span>
           </nav>
 
-          <div className={LANDING_HERO_GRID}>
-            <div className="min-w-0 max-w-[540px]">
-              <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
-                Dịch vụ triển khai
-              </p>
-              <h1 className={`mt-3 max-w-xl ${HERO_TITLE_CLASS}`}>
+          <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10 xl:gap-12">
+            <div className="flex h-full min-w-0 max-w-[540px] flex-col">
+              <h1 className={`max-w-xl ${HERO_TITLE_CLASS}`}>
                 Triển khai và bàn giao bản quyền cho doanh nghiệp
               </h1>
               <p className={`mt-4 max-w-[540px] ${PAGE_LEAD_CLASS}`}>
@@ -185,7 +181,7 @@ export function ImplementationLanding() {
                 ))}
               </ul>
 
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <div className="mt-auto flex flex-col gap-3 pt-8 sm:flex-row sm:flex-wrap">
                 <Link
                   href={SERVICE_HANDOVER_HREF}
                   className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
@@ -201,7 +197,7 @@ export function ImplementationLanding() {
               </div>
             </div>
 
-            <div className="relative min-w-0">
+            <div className="flex h-full min-w-0 flex-col">
               <ImplementationHeroArt />
             </div>
           </div>
@@ -343,9 +339,9 @@ function ImplementationHeroArt() {
   ] as const;
 
   return (
-    <div className="relative mx-auto w-full max-w-[440px] lg:max-w-none">
+    <div className="mx-auto flex h-full w-full max-w-[440px] flex-col lg:max-w-none">
       <div
-        className={`relative rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
+        className={`flex min-h-0 flex-1 flex-col rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
         aria-hidden
       >
         <div className="flex items-center justify-between gap-3">
@@ -363,11 +359,11 @@ function ImplementationHeroArt() {
           </span>
         </div>
 
-        <ol className="mt-4 space-y-2">
+        <ol className="mt-4 flex flex-1 flex-col justify-between gap-2">
           {steps.map((s, i) => (
             <li
               key={s.label}
-              className="flex items-center gap-3 rounded-xl border border-border/80 bg-[#F7FAFC] px-3 py-2.5"
+              className="flex flex-1 items-center gap-3 rounded-xl border border-border/80 bg-[#F7FAFC] px-3 py-2.5"
             >
               <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent/15 ${BADGE_CLASS} text-accent`}>
                 {String(i + 1).padStart(2, "0")}
