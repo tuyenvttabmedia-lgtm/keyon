@@ -11,11 +11,9 @@ import {
   Users,
 } from "lucide-react";
 import { SOLUTION_TOPICS } from "@/storefront/nav/ia";
+import { LANDING_HERO_PAD } from "@/storefront/components/marketing/hero-shell";
 import {
-  LANDING_HERO_GRID,
-  LANDING_HERO_PAD,
-} from "@/storefront/components/marketing/hero-shell";
-import {
+  BADGE_CLASS,
   BODY_MUTED_CLASS,
   BREADCRUMB_CLASS,
   BREADCRUMB_CURRENT_CLASS,
@@ -114,8 +112,8 @@ export function ByNeedSolutionLanding() {
             <span className={BREADCRUMB_CURRENT_CLASS}>Giải pháp theo nhu cầu</span>
           </nav>
 
-          <div className={LANDING_HERO_GRID}>
-            <div className="min-w-0 max-w-[540px]">
+          <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10 xl:gap-12">
+            <div className="flex h-full min-w-0 max-w-[540px] flex-col">
               <h1 className={HERO_TITLE_CLASS}>
                 Kết hợp đúng sản phẩm với quy mô sử dụng
               </h1>
@@ -123,7 +121,20 @@ export function ByNeedSolutionLanding() {
                 Kết hợp nhiều sản phẩm theo nhu cầu thực tế của cá nhân, đội nhóm hoặc
                 doanh nghiệp. KEYON hỗ trợ chọn theo số người dùng, nhu cầu và ngân sách.
               </p>
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <ul className="mt-6 space-y-3">
+                {SCALES.map((s) => (
+                  <li key={s.title} className="flex items-start gap-2.5">
+                    <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
+                      <s.Icon size={16} strokeWidth={1.8} aria-hidden />
+                    </span>
+                    <span>
+                      <span className={`block ${CARD_TITLE_CLASS}`}>{s.title}</span>
+                      <span className={`mt-0.5 block ${BODY_MUTED_CLASS}`}>{s.body}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-auto flex flex-col gap-3 pt-8 sm:flex-row">
                 <Link
                   href="/business/licensing-consulting"
                   className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
@@ -139,7 +150,7 @@ export function ByNeedSolutionLanding() {
               </div>
             </div>
 
-            <div className="relative min-w-0">
+            <div className="flex h-full min-w-0 flex-col">
               <ByNeedHeroArt />
             </div>
           </div>
@@ -216,9 +227,9 @@ export function ByNeedSolutionLanding() {
 /** Mix panel + scale chips — software-licensing mockup language, no fake metrics. */
 function ByNeedHeroArt() {
   return (
-    <div className="relative mx-auto w-full max-w-[440px] lg:max-w-none">
+    <div className="relative mx-auto flex h-full w-full max-w-[440px] flex-col lg:max-w-none">
       <div
-        className={`relative rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
+        className={`relative flex min-h-0 flex-1 flex-col rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
         aria-hidden
       >
         <div className="flex items-center justify-between gap-3">
@@ -231,16 +242,16 @@ function ByNeedHeroArt() {
               <p className={CARD_META_CLASS}>Chọn theo nhu cầu</p>
             </div>
           </div>
-          <span className="rounded-md bg-accent-soft px-2 py-1 text-[11px] font-semibold text-accent">
+          <span className={`rounded-md bg-accent-soft px-2 py-1 text-accent ${BADGE_CLASS}`}>
             KEYON
           </span>
         </div>
 
-        <ul className="mt-4 space-y-2">
+        <ul className="mt-4 flex flex-1 flex-col justify-between gap-2">
           {MIX_ROWS.map((r) => (
             <li
               key={r.label}
-              className="flex items-center gap-3 rounded-xl border border-border/80 bg-[#F7FAFC] px-3 py-2.5"
+              className="flex flex-1 items-center gap-3 rounded-xl border border-border/80 bg-[#F7FAFC] px-3 py-2.5"
             >
               <span
                 className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${r.tone}`}
