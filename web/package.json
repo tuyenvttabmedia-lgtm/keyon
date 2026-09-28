@@ -17,6 +17,7 @@
     "test:license-pool": "tsx --env-file=.env.local --env-file=.env scripts/license-pool-exit.ts",
     "test:inventory": "tsx --env-file=.env.local --env-file=.env scripts/inventory-exit.ts",
     "test:sepay": "tsx --env-file=.env.local --env-file=.env scripts/sepay-exit.ts",
+    "test:payment-window": "tsx scripts/payment-window-exit.ts",
     "test:monitoring": "tsx --env-file=.env.local --env-file=.env scripts/monitoring-exit.ts",
     "test:dashboard": "tsx --env-file=.env.local --env-file=.env scripts/dashboard-exit.ts",
     "backup:create": "tsx --env-file=.env.local --env-file=.env scripts/backup/create-backup.ts",

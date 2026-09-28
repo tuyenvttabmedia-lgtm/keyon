@@ -16,6 +16,7 @@ import {
   deliveryPromiseLabel,
   receiveFromDeliverable,
 } from "@/storefront/lib/customer-labels";
+import { isQrExpired } from "@/lib/payment-window";
 import { CancelOrderButton } from "../cancel-button";
 import { CopyTextButton } from "../copy-button";
 import { OrderNotesForm } from "../order-notes-form";
@@ -156,10 +157,17 @@ export default async function AdminOrderDetailPage({
   const payment = order.payments[0];
   const hasDelivery = order.items.some((i) => i.deliveries.length > 0);
   const jobStatus = order.items[0]?.fulfillmentJobs[0]?.status ?? null;
+  const qrExpired =
+    order.status === "PENDING_PAYMENT" &&
+    (payment?.status === "EXPIRED" || isQrExpired(payment?.expiresAt ?? null));
   const payUi = paymentStatusForCustomer(
     payment?.status as PaymentStatus | undefined,
     order.status as OrderStatus,
   );
+  if (qrExpired) {
+    payUi.label = "Hết hạn";
+    payUi.tone = "danger";
+  }
   const fulfillUi = fulfillmentStatusForCustomer({
     orderStatus: order.status as OrderStatus,
     hasDelivery,
@@ -319,7 +327,7 @@ export default async function AdminOrderDetailPage({
                 Mở Inbox
               </Link>
             ) : null}
-            {order.status === "PENDING_PAYMENT" ? (
+            {order.status === "PENDING_PAYMENT" && !qrExpired ? (
               <CancelOrderButton orderId={order.id} />
             ) : null}
           </div>

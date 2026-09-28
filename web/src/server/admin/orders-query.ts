@@ -14,6 +14,7 @@ import {
   type SalesMotionFilter,
   type AdminOrderListRow,
 } from "@/lib/admin-orders";
+import { isQrExpired } from "@/lib/payment-window";
 import { receiveFromDeliverable } from "@/storefront/lib/customer-labels";
 import {
   emailDomain,
@@ -368,8 +369,7 @@ export async function queryAdminOrders(input: OrdersListQuery) {
     const paymentExpired =
       payment?.status === "EXPIRED" ||
       (o.status === "PENDING_PAYMENT" &&
-        payment?.expiresAt != null &&
-        payment.expiresAt.getTime() < now);
+        isQrExpired(payment?.expiresAt ?? null, now));
 
     const fulfillmentAt =
       job?.startedAt ?? job?.createdAt ?? (o.status === "FULFILLING" || o.status === "PAID" ? o.paidAt : null);

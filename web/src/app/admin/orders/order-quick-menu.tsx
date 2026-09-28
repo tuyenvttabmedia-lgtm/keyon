@@ -69,7 +69,7 @@ export function OrderQuickMenu({ row }: { row: AdminOrderListRow }) {
           Inbox
         </Link>
       ) : null}
-      {row.status === "PENDING_PAYMENT" ? (
+      {row.status === "PENDING_PAYMENT" && !row.paymentExpired ? (
         <CancelOrderButton orderId={row.id} />
       ) : null}
 

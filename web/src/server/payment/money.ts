@@ -282,21 +282,34 @@ export async function markPaymentExpired(paymentReference: string) {
   }
   if (existing.status === "EXPIRED") return existing;
 
-  const payment = await prisma.$transaction(async (tx) => {
-    const p = await tx.payment.update({
-      where: { id: existing.id },
+  const outcome = await prisma.$transaction(async (tx) => {
+    const bumped = await tx.payment.updateMany({
+      where: {
+        id: existing.id,
+        status: { in: ["CREATED", "AWAITING"] },
+      },
       data: { status: "EXPIRED" },
     });
-    await tx.order.update({
-      where: { id: existing.orderId },
+    if (bumped.count === 0) {
+      const current = await tx.payment.findUniqueOrThrow({
+        where: { id: existing.id },
+      });
+      return { payment: current, applied: false as const };
+    }
+    await tx.order.updateMany({
+      where: { id: existing.orderId, status: "PENDING_PAYMENT" },
       data: { status: "CANCELLED" },
     });
+    const p = await tx.payment.findUniqueOrThrow({ where: { id: existing.id } });
     await tx.paymentDomainEvent.create({
       data: { id: id(), type: "EXPIRED", paymentId: p.id, reason: "ttl_expired" },
     });
-    return p;
+    return { payment: p, applied: true as const };
   });
 
+  if (!outcome.applied) return outcome.payment;
+
+  const payment = outcome.payment;
   await releaseOrderReserves(existing.order.items, "ttl_expired");
   emitPaymentEvent({
     name: "PaymentExpired",

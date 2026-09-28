@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { audit } from "@/lib/audit";
 import { AppError, toErrorResponse } from "@/lib/errors";
 import { LicensePoolService } from "@/server/license-pool";
+import { isQrExpired } from "@/lib/payment-window";
 
 const schema = z.object({ orderId: z.string().min(1) });
 
@@ -14,11 +15,25 @@ export async function POST(req: Request) {
     const { orderId } = schema.parse(await req.json());
     const order = await prisma.order.findUnique({
       where: { id: orderId },
-      include: { items: true },
+      include: {
+        items: true,
+        payments: { orderBy: { createdAt: "desc" }, take: 1 },
+      },
     });
     if (!order) throw new AppError("Order not found", 404);
     if (order.status !== "PENDING_PAYMENT") {
       throw new AppError("Chỉ hủy đơn PENDING_PAYMENT", 400);
+    }
+    const payment = order.payments[0];
+    if (
+      payment?.status === "EXPIRED" ||
+      payment?.status === "CANCELLED" ||
+      isQrExpired(payment?.expiresAt ?? null)
+    ) {
+      throw new AppError(
+        "QR đã hết hạn. Đơn vẫn nhận chuyển khoản đến khi tự đóng.",
+        400,
+      );
     }
 
     await prisma.$transaction(async (tx) => {
