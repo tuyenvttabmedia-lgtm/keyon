@@ -250,6 +250,13 @@ export function BackupSolutionLanding({ featured }: Props) {
 
             <div className="relative w-full min-w-0 lg:justify-self-end">
               <BackupHeroArt />
+              <div className={`mt-3 rounded-2xl border border-border bg-white px-4 py-3 ${ELEVATION_HAIRLINE}`}>
+                <p className={CARD_TITLE_CLASS}>License trên KEYON, dữ liệu trên hệ thống của bạn</p>
+                <p className={`mt-1 ${CARD_META_CLASS}`}>
+                  KEYON bàn giao license phần mềm backup. Bản sao lưu nằm trên hạ tầng của bạn hoặc nhà
+                  cung cấp — không lưu trên KEYON.
+                </p>
+              </div>
             </div>
           </div>
         </div>
