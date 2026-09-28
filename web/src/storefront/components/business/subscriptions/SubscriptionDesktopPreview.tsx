@@ -17,9 +17,9 @@ const ILLUSTRATION_ROWS = [
 /** Compact desktop hub — height aligned with other landing hero arts. */
 export function SubscriptionDesktopPreview() {
   return (
-    <div className="relative mx-auto hidden w-full max-w-[440px] md:block lg:max-w-none">
+    <div className="relative mx-auto hidden h-full w-full max-w-[440px] flex-col md:flex lg:max-w-none">
       <div
-        className={`relative overflow-hidden rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
+        className={`relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
         aria-hidden
       >
         <div className="flex items-center justify-between gap-3">
@@ -48,11 +48,11 @@ export function SubscriptionDesktopPreview() {
           ))}
         </div>
 
-        <ul className="mt-3 space-y-2">
+        <ul className="mt-3 flex flex-1 flex-col justify-between gap-2">
           {ILLUSTRATION_ROWS.map((s) => (
             <li
               key={s.label}
-              className="flex items-center justify-between gap-2 rounded-xl border border-border bg-[#F7FAFC] px-3 py-2"
+              className="flex flex-1 items-center justify-between gap-2 rounded-xl border border-border bg-[#F7FAFC] px-3 py-2"
             >
               <p className={`${CARD_TITLE_CLASS} truncate`}>{s.label}</p>
               <span
