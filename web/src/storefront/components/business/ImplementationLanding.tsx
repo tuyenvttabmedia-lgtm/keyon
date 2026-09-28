@@ -44,6 +44,7 @@ import { IMPLEMENTATION_QUOTE_HREF } from "@/storefront/lib/cta";
 import { SERVICE_HANDOVER_HREF } from "@/storefront/lib/service-sku";
 import {
   LANDING_CRUMB_GAP,
+  LANDING_HERO_GRID,
   LANDING_HERO_PAD,
 } from "@/storefront/components/marketing/hero-shell";
 
@@ -155,8 +156,8 @@ export function ImplementationLanding() {
             <span className={BREADCRUMB_CURRENT_CLASS}>Dịch vụ triển khai</span>
           </nav>
 
-          <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10 xl:gap-12">
-            <div className="flex h-full min-w-0 max-w-[540px] flex-col">
+          <div className={LANDING_HERO_GRID}>
+            <div className="min-w-0 max-w-[540px]">
               <h1 className={`max-w-xl ${HERO_TITLE_CLASS}`}>
                 Triển khai và bàn giao bản quyền cho doanh nghiệp
               </h1>
@@ -182,7 +183,7 @@ export function ImplementationLanding() {
                 ))}
               </ul>
 
-              <div className="mt-auto flex flex-col gap-3 pt-8 sm:flex-row sm:flex-wrap">
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   href={SERVICE_HANDOVER_HREF}
                   className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
@@ -198,7 +199,7 @@ export function ImplementationLanding() {
               </div>
             </div>
 
-            <div className="flex h-full min-w-0 flex-col">
+            <div className="min-w-0">
               <ImplementationHeroArt />
             </div>
           </div>
@@ -333,17 +334,32 @@ export function ImplementationLanding() {
 
 function ImplementationHeroArt() {
   const steps = [
-    { label: "Tiếp nhận phạm vi", Icon: ClipboardList },
-    { label: "Rà soát license", Icon: KeyRound },
-    { label: "Bàn giao", Icon: ListChecks },
-    { label: "Hỗ trợ kích hoạt", Icon: Rocket },
+    {
+      label: "Tiếp nhận phạm vi",
+      hint: "Xác nhận sản phẩm, số người dùng và đầu mối IT",
+      Icon: ClipboardList,
+    },
+    {
+      label: "Rà soát license",
+      hint: "Kiểm tra loại license, key hoặc tài khoản đã mua",
+      Icon: KeyRound,
+    },
+    {
+      label: "Bàn giao",
+      hint: "Thống nhất người nhận và các bước cần thực hiện",
+      Icon: ListChecks,
+    },
+    {
+      label: "Hỗ trợ kích hoạt",
+      hint: "Hướng dẫn kích hoạt và xử lý lỗi thường gặp",
+      Icon: Rocket,
+    },
   ] as const;
 
   return (
-    <div className="mx-auto flex h-full w-full max-w-[440px] flex-col lg:max-w-none">
+    <div className="mx-auto w-full max-w-[440px] lg:max-w-none">
       <div
-        className={`flex min-h-0 flex-1 flex-col rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
-        aria-hidden
+        className={`rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
       >
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
@@ -360,11 +376,11 @@ function ImplementationHeroArt() {
           </span>
         </div>
 
-        <ol className="mt-4 flex flex-1 flex-col justify-between gap-2">
+        <ol className="mt-4 space-y-2">
           {steps.map((s, i) => (
             <li
               key={s.label}
-              className="flex flex-1 items-center gap-3 rounded-xl border border-border/80 bg-[#F7FAFC] px-3 py-2.5"
+              className="flex items-center gap-3 rounded-xl border border-border/80 bg-[#F7FAFC] px-3 py-2.5"
             >
               <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent/15 ${BADGE_CLASS} text-accent`}>
                 {String(i + 1).padStart(2, "0")}
@@ -372,10 +388,20 @@ function ImplementationHeroArt() {
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-accent border border-border/70">
                 <s.Icon size={15} strokeWidth={1.85} />
               </span>
-              <p className={`${CARD_TITLE_CLASS} min-w-0 truncate`}>{s.label}</p>
+              <span className="min-w-0">
+                <span className={`block truncate ${CARD_TITLE_CLASS}`}>{s.label}</span>
+                <span className={`block truncate ${CARD_META_CLASS}`}>{s.hint}</span>
+              </span>
             </li>
           ))}
         </ol>
+        <div className="mt-3 rounded-xl border border-dashed border-border bg-[#F7FAFC] px-3 py-3">
+          <p className={CARD_TITLE_CLASS}>Không thay đội IT nội bộ</p>
+          <p className={`mt-1 ${CARD_META_CLASS}`}>
+            KEYON bàn giao license, checklist và hướng dẫn kích hoạt theo đơn đã mua. Không cài đặt
+            hạ tầng, máy chủ hoặc vận hành hệ thống thay doanh nghiệp.
+          </p>
+        </div>
       </div>
 
       <ul className="mt-3 flex flex-wrap justify-center gap-2">
