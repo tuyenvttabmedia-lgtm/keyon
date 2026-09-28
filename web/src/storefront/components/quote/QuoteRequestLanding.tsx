@@ -26,7 +26,6 @@ import {
   HERO_TITLE_CLASS,
   LINK_FIELD_CLASS,
   INPUT_TEXT_CLASS,
-  OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
@@ -197,7 +196,6 @@ const IMPLEMENTATION_SIDEBAR = [
 ] as const;
 
 function quoteHeroCopy(requestType: string): {
-  overline: string;
   title: string;
   lead: string;
   crumb: string;
@@ -211,7 +209,6 @@ function quoteHeroCopy(requestType: string): {
 } {
   if (requestType === "IMPLEMENTATION") {
     return {
-      overline: "Dịch vụ triển khai",
       title: "Yêu cầu hỗ trợ bàn giao và kích hoạt",
       lead: "Mô tả sản phẩm đã mua, số người dùng và đội IT phụ trách. KEYON tiếp nhận yêu cầu và hỗ trợ bàn giao, kích hoạt.",
       crumb: "Dịch vụ triển khai",
@@ -226,7 +223,6 @@ function quoteHeroCopy(requestType: string): {
     };
   }
   return {
-    overline: "Yêu cầu báo giá",
     title: "Nhận báo giá bản quyền phù hợp với nhu cầu doanh nghiệp",
     lead: "Cho KEYON biết sản phẩm, số lượng người dùng và nhu cầu của doanh nghiệp. Đội ngũ tư vấn sẽ đề xuất phương án bản quyền và gửi báo giá phù hợp để bạn tham khảo.",
     crumb: "Yêu cầu báo giá",
@@ -533,15 +529,10 @@ export function QuoteRequestLanding({
             <span className={BREADCRUMB_CURRENT_CLASS}>{hero.crumb}</span>
           </nav>
 
-          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.72fr)] lg:gap-12">
-            <div className="min-w-0 max-w-xl">
-              <p className={`${OVERLINE_CLASS} text-accent`}>{hero.overline}</p>
-              <h1 className={`mt-3 ${HERO_TITLE_CLASS}`}>
-                {hero.title}
-              </h1>
-              <p className={`mt-3 ${PAGE_LEAD_CLASS}`}>
-                {hero.lead}
-              </p>
+          <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] lg:gap-10 xl:gap-12">
+            <div className="flex h-full min-w-0 flex-col">
+              <h1 className={HERO_TITLE_CLASS}>{hero.title}</h1>
+              <p className={`mt-3 max-w-xl ${PAGE_LEAD_CLASS}`}>{hero.lead}</p>
               <ul className="mt-6 space-y-4">
                 {hero.usps.map((usp) => (
                   <li key={usp.title} className="flex items-start gap-3">
@@ -557,32 +548,33 @@ export function QuoteRequestLanding({
               </ul>
             </div>
 
-            <div
-              className={`hidden rounded-2xl border border-border bg-white p-5 sm:p-6 lg:block ${ELEVATION_HAIRLINE}`}
-              aria-hidden
-            >
-              <div className="flex items-start gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent">
-                  <Send size={20} strokeWidth={1.8} />
-                </span>
-                <div>
-                  <p className={CARD_TITLE_CLASS}>{hero.cardTitle}</p>
-                  <p className={`mt-1 ${BODY_MUTED_CLASS}`}>{hero.cardLead}</p>
+            <div className="hidden h-full min-w-0 lg:block" aria-hidden>
+              <div
+                className={`flex h-full flex-col rounded-2xl border border-border bg-white p-5 sm:p-6 ${ELEVATION_HAIRLINE}`}
+              >
+                <div className="flex items-start gap-3">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent">
+                    <Send size={20} strokeWidth={1.8} />
+                  </span>
+                  <div>
+                    <p className={CARD_TITLE_CLASS}>{hero.cardTitle}</p>
+                    <p className={`mt-1 ${BODY_MUTED_CLASS}`}>{hero.cardLead}</p>
+                  </div>
                 </div>
+                <ol className="mt-5 flex flex-1 flex-col justify-between gap-3">
+                  {hero.cardSteps.map((s, i) => (
+                    <li key={s.title} className="flex flex-1 items-center gap-2.5">
+                      <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy text-white ${BADGE_CLASS}`}>
+                        {i + 1}
+                      </span>
+                      <span>
+                        <span className={`block ${CARD_TITLE_CLASS}`}>{s.title}</span>
+                        <span className={`mt-0.5 block ${BODY_MUTED_CLASS}`}>{s.body}</span>
+                      </span>
+                    </li>
+                  ))}
+                </ol>
               </div>
-              <ol className="mt-5 space-y-3">
-                {hero.cardSteps.map((s, i) => (
-                  <li key={s.title} className="flex items-start gap-2.5">
-                    <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-navy text-white ${BADGE_CLASS}`}>
-                      {i + 1}
-                    </span>
-                    <span>
-                      <span className={`block ${CARD_TITLE_CLASS}`}>{s.title}</span>
-                      <span className={`mt-0.5 block ${BODY_MUTED_CLASS}`}>{s.body}</span>
-                    </span>
-                  </li>
-                ))}
-              </ol>
             </div>
           </div>
         </div>
