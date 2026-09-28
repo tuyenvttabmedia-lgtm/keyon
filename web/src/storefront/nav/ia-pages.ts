@@ -131,7 +131,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
 export const BUSINESS_HUB = {
   title: "Dành cho doanh nghiệp",
   subtitle:
-    "Mua theo quy mô, gia hạn, bàn giao triển khai và theo dõi đơn DN với KEYON. Cá nhân mua lẻ trên Sản phẩm. Nhu cầu theo việc cần làm nằm ở Giải pháp.",
+    "KEYON hỗ trợ doanh nghiệp mua, bàn giao, quản lý và gia hạn bản quyền phần mềm theo quy mô sử dụng.",
 };
 
 export const BUSINESS_PAGES: Record<string, IaPage> = {

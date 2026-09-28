@@ -4,7 +4,6 @@ import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
   BadgeCheck,
-  BadgePercent,
   Check,
   ClipboardList,
   FileText,
@@ -61,27 +60,27 @@ const BIZ_CARDS: BizCard[] = [
   {
     id: "volume",
     title: "Mua bản quyền số lượng lớn",
-    body: "Phù hợp đội nhóm và doanh nghiệp — báo giá theo quy mô, bàn giao tập trung.",
+    body: "Phù hợp khi doanh nghiệp cần nhiều license hoặc triển khai cho nhiều người dùng.",
     href: "/business/volume-licensing",
     cta: "Tìm hiểu thêm",
-    features: ["Volume / multi-seat", "Báo giá theo nhu cầu", "Gắn quản lý trên KEYON"],
+    features: ["Volume / multi-seat", "Báo giá theo nhu cầu", "Quản lý license tập trung"],
     Icon: ShoppingCart,
     tone: "bg-accent text-white",
   },
   {
     id: "subscriptions",
     title: "Subscription & Gia hạn",
-    body: "Mua subscription theo thời hạn, theo dõi thời gian sử dụng và được hỗ trợ khi gia hạn.",
+    body: "Mua subscription theo thời hạn, theo dõi ngày hết hạn và chủ động kế hoạch gia hạn.",
     href: "/business/subscriptions",
     cta: "Tìm hiểu thêm",
-    features: ["Mua theo thời hạn", "Theo dõi thời hạn", "Hỗ trợ gia hạn"],
+    features: ["Mua theo thời hạn", "Theo dõi ngày gia hạn", "Hỗ trợ khi cần thay đổi"],
     Icon: RefreshCw,
     tone: "bg-violet-600 text-white",
   },
   {
     id: "contracts",
-    title: "Hợp đồng & đơn hàng",
-    body: "Theo dõi đơn hàng và license trong Tài khoản. PO và hợp đồng qua đội kinh doanh.",
+    title: "Hợp đồng & Đơn hàng",
+    body: "Theo dõi đơn hàng, license đã bàn giao và các yêu cầu mua sắm dành cho doanh nghiệp.",
     href: "/business/contracts",
     cta: "Tìm hiểu thêm",
     features: ["Đơn hàng trong Tài khoản", "License đã bàn giao", "PO qua đội kinh doanh"],
@@ -91,30 +90,30 @@ const BIZ_CARDS: BizCard[] = [
   {
     id: "consulting",
     title: "Tư vấn bản quyền",
-    body: "Chưa chắc chọn gói nào? KEYON tư vấn trước khi mua — đúng nhu cầu, đúng ngân sách.",
+    body: "Chưa biết nên chọn license nào? KEYON hỗ trợ xác định nhu cầu và phương án phù hợp.",
     href: "/business/licensing-consulting",
     cta: "Tìm hiểu thêm",
-    features: ["Tư vấn chọn gói", "Perpetual vs subscription", "Đề xuất theo quy mô"],
+    features: ["Tư vấn chọn gói", "So sánh hình thức license", "Phân tích theo quy mô"],
     Icon: MessageCircle,
     tone: "bg-sky-600 text-white",
   },
   {
     id: "implementation",
     title: "Dịch vụ triển khai",
-    body: "Bàn giao và kích hoạt bản quyền theo quy mô — checklist cho đội IT.",
+    body: "Hỗ trợ triển khai và bàn giao license theo quy mô, checklist kỹ thuật hoặc yêu cầu của doanh nghiệp.",
     href: "/business/implementation",
     cta: "Tìm hiểu thêm",
-    features: ["Onboarding sau mua", "Checklist cho IT", "Form loại triển khai"],
+    features: ["Onboarding sau mua", "Checklist triển khai", "Hỗ trợ phối hợp IT"],
     Icon: Rocket,
     tone: "bg-navy text-white",
   },
   {
     id: "sales",
     title: "Liên hệ kinh doanh",
-    body: "Đội kinh doanh tiếp nhận báo giá và phối hợp bàn giao khi cần.",
+    body: "Trao đổi trực tiếp với đội kinh doanh khi doanh nghiệp cần báo giá hoặc phương án riêng.",
     href: "/contact/quote",
     cta: "Liên hệ ngay",
-    features: ["Tư vấn B2B", "Báo giá theo nhu cầu", "Hỗ trợ sau mua"],
+    features: ["Tư vấn B2B", "Báo giá theo nhu cầu", "Hỗ trợ hồ sơ mua"],
     Icon: Headphones,
     tone: "bg-emerald-600 text-white",
   },
@@ -122,23 +121,23 @@ const BIZ_CARDS: BizCard[] = [
 
 const HERO_TRUST = [
   {
-    title: "Bản quyền hợp pháp",
-    body: "Theo gói trên catalog — loại nhận rõ",
+    title: "Bản quyền rõ ràng",
+    body: "Nguồn cung và loại license được xác định trước khi mua.",
     Icon: BadgeCheck,
   },
   {
-    title: "Bàn giao rõ ràng",
-    body: "Kích hoạt & giao nhận theo từng đơn",
+    title: "Bàn giao đầy đủ",
+    body: "Nhận key, tài khoản hoặc thông tin license theo từng sản phẩm.",
     Icon: Rocket,
   },
   {
-    title: "Đúng quy mô",
-    body: "Chọn gói theo số người dùng thực tế",
+    title: "Theo đúng quy mô",
+    body: "Tư vấn gói phù hợp với số lượng người dùng và nhu cầu thực tế.",
     Icon: Wallet,
   },
   {
-    title: "Hỗ trợ tiếng Việt",
-    body: "Kinh doanh & ticket sau mua",
+    title: "Hỗ trợ sau mua",
+    body: "Hướng dẫn kích hoạt, gia hạn và xử lý các vấn đề liên quan đến license.",
     Icon: Headphones,
   },
 ] as const;
@@ -146,22 +145,22 @@ const HERO_TRUST = [
 const BENEFITS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Tuân thủ bản quyền",
-    body: "Cung cấp bản quyền hợp pháp theo sản phẩm đã chốt trên KEYON.",
+    body: "Xác định đúng loại license, số lượng và điều kiện sử dụng trước khi mua.",
     Icon: ShoppingCart,
   },
   {
-    title: "Tối ưu chi phí",
-    body: "Chọn đúng gói theo quy mô, tránh mua thừa.",
-    Icon: BadgePercent,
+    title: "Chọn đúng quy mô",
+    body: "Tư vấn số lượng và hình thức license phù hợp, hạn chế mua dư hoặc sai nhu cầu.",
+    Icon: Wallet,
   },
   {
-    title: "Quản lý dễ dàng",
-    body: "Theo dõi license đã mua trên Tài khoản KEYON.",
+    title: "Quản lý tập trung",
+    body: "Theo dõi license, đơn hàng và thông tin mua hàng trong Tài khoản KEYON.",
     Icon: LayoutGrid,
   },
   {
-    title: "Hỗ trợ chuyên sâu",
-    body: "Đội ngũ kỹ thuật & kinh doanh hỗ trợ tiếng Việt.",
+    title: "Hỗ trợ sau mua",
+    body: "Hỗ trợ kích hoạt, gia hạn và các vấn đề liên quan đến license theo từng sản phẩm.",
     Icon: Headphones,
   },
 ];
@@ -174,22 +173,22 @@ const PROCESS: { title: string; body: string; Icon: LucideIcon }[] = [
   },
   {
     title: "Tư vấn giải pháp",
-    body: "Đề xuất gói phù hợp — volume, subscription hoặc kết hợp.",
+    body: "Đề xuất sản phẩm và hình thức license phù hợp với nhu cầu.",
     Icon: MessageCircle,
   },
   {
     title: "Báo giá & chốt",
-    body: "Báo giá minh bạch, điều khoản rõ ràng trước khi mua / bàn giao.",
+    body: "Báo giá minh bạch, điều khoản rõ ràng trước khi mua.",
     Icon: FileText,
   },
   {
     title: "Bàn giao",
-    body: "Cấp license, kích hoạt và checklist cho đội IT khi cần.",
+    body: "Cấp license, hướng dẫn kích hoạt và bàn giao thông tin cần thiết.",
     Icon: Rocket,
   },
   {
     title: "Gia hạn & hỗ trợ",
-    body: "Nhắc hạn, renew và hỗ trợ sau mua theo chu kỳ sử dụng.",
+    body: "Nhắc hạn, hỗ trợ gia hạn và xử lý các vấn đề phát sinh khi cần.",
     Icon: Headphones,
   },
 ];
@@ -247,31 +246,29 @@ export function BusinessHubLanding() {
               <p className={`${OVERLINE_CLASS} tracking-[0.18em] text-accent`}>
                 Doanh nghiệp
               </p>
-              <h1
-                className={`mt-3 max-w-[18ch] ${HERO_TITLE_CLASS} !text-white`}
-              >
-                Mua, bàn giao và quản lý bản quyền số cho{" "}
-                <span className="bg-gradient-to-r from-accent to-teal-100 bg-clip-text text-transparent">
-                  tổ chức
-                </span>{" "}
-                trên KEYON
+              <h1 className={`mt-3 ${HERO_TITLE_CLASS} !text-white`}>
+                <span className="block">Giải pháp</span>
+                <span className="block bg-gradient-to-r from-accent to-teal-100 bg-clip-text text-transparent">
+                  bản quyền phần mềm
+                </span>
+                <span className="block">cho doanh nghiệp</span>
               </h1>
               <p className={`mt-4 max-w-[520px] ${PAGE_LEAD_CLASS} !text-slate-300`}>
-                KEYON giúp tổ chức mua theo quy mô, nhận bàn giao, theo dõi hạn và gửi yêu cầu
-                gia hạn / báo giá — không phải MSP vận hành hạ tầng thuê ngoài.
+                KEYON hỗ trợ doanh nghiệp mua, bàn giao, quản lý và gia hạn bản quyền phần mềm
+                theo quy mô sử dụng — từ nhóm nhỏ đến tổ chức nhiều người dùng.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <Link
                   href="/contact/quote"
-                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
                   Gửi yêu cầu tư vấn →
                 </Link>
                 <Link
-                  href="/contact/quote"
+                  href="/contact"
                   className={`inline-flex h-12 items-center justify-center rounded-xl border border-white/30 bg-transparent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
-                  Liên hệ kinh doanh
+                  Trao đổi với KEYON
                 </Link>
               </div>
             </div>
@@ -305,10 +302,10 @@ export function BusinessHubLanding() {
       <section className="bg-[#F4F8FB] home-section">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
-            <h2 className={SECTION_TITLE_CLASS}>Mua, gia hạn, triển khai & đơn DN</h2>
+            <h2 className={SECTION_TITLE_CLASS}>Doanh nghiệp cần hỗ trợ gì?</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Cách tổ chức mua và làm việc với KEYON — khác với giải pháp theo
-              nhu cầu ở menu Giải pháp.
+              Chọn nhu cầu phù hợp để xem thông tin chi tiết, nhận tư vấn hoặc gửi yêu cầu báo
+              giá đến KEYON.
             </p>
           </header>
 
@@ -363,7 +360,11 @@ export function BusinessHubLanding() {
           }}
         />
         <div className="home-container relative pb-5 pt-5 md:pb-4 md:pt-5 lg:pb-6 lg:pt-8">
-          <h2 className={`${SECTION_TITLE_CLASS} !text-white`}>KEYON giúp doanh nghiệp</h2>
+          <h2 className={`${SECTION_TITLE_CLASS} !text-white`}>KEYON đồng hành cùng doanh nghiệp</h2>
+          <p className={`mt-2.5 max-w-2xl ${SECTION_LEAD_CLASS} !text-slate-300`}>
+            Từ lựa chọn license đến bàn giao và quản lý sau mua, mọi bước đều được thiết kế rõ
+            ràng.
+          </p>
 
           <div className="mt-5 grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(180px,0.26fr)] lg:gap-10 xl:gap-12">
             <ul className="grid grid-cols-1 gap-x-8 gap-y-7 sm:grid-cols-2 sm:gap-y-9 lg:gap-x-10 lg:gap-y-10">
@@ -396,7 +397,7 @@ export function BusinessHubLanding() {
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Quy trình làm việc</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Năm bước rõ ràng — từ tiếp nhận nhu cầu đến đồng hành dài hạn.
+              Từ tiếp nhận nhu cầu đến bàn giao và hỗ trợ sau mua — rõ ràng trong từng bước.
             </p>
           </header>
 
@@ -432,16 +433,16 @@ export function BusinessHubLanding() {
         <div className="home-container">
           <div className="flex flex-col items-stretch gap-5 rounded-2xl bg-gradient-to-br from-accent-soft via-[#E6FFFB] to-sky-50 px-5 py-7 sm:px-8 md:flex-row md:items-center md:justify-between md:px-10 md:py-9">
             <div className="min-w-0 max-w-xl">
-              <h2 className={SECTION_TITLE_CLASS}>Sẵn sàng bắt đầu?</h2>
+              <h2 className={SECTION_TITLE_CLASS}>Doanh nghiệp cần tư vấn bản quyền?</h2>
               <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>
-                Gửi yêu cầu tư vấn về bản quyền, subscription và quản lý license cho doanh
-                nghiệp của bạn.
+                Gửi nhu cầu sử dụng và quy mô người dùng. KEYON sẽ tư vấn phương án phù hợp và
+                báo giá theo nhu cầu.
               </p>
             </div>
             <div className="flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center">
               <Link
                 href="/contact/quote"
-                className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
               >
                 Gửi yêu cầu tư vấn →
               </Link>

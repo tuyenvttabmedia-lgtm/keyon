@@ -806,9 +806,9 @@ export const defaultSettings: SiteSettings = {
         "Duyệt phần mềm theo danh mục: Windows, Office, Adobe, cloud, bảo mật và hơn thế trên KEYON.",
     },
     "/business": {
-      title: "Doanh nghiệp — KEYON",
+      title: "Giải pháp bản quyền phần mềm cho doanh nghiệp | KEYON",
       description:
-        "Volume licensing, subscription, tư vấn bản quyền và báo giá B2B trên KEYON.",
+        "Mua, quản lý và gia hạn bản quyền phần mềm cho doanh nghiệp. KEYON hỗ trợ báo giá, bàn giao license và tư vấn theo quy mô sử dụng.",
     },
     "/solutions": {
       title: "Giải pháp phần mềm, Cloud & bản quyền | KEYON",
