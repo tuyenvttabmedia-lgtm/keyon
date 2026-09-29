@@ -26,18 +26,47 @@ import {
 } from "@/storefront/lib/catalog-validation";
 import {
   CATEGORY_ADMIN_LABELS,
+  DELIVERABLE_ADMIN_LABELS,
+  FULFILLMENT_ADMIN_LABELS,
   LICENSE_MODEL_ADMIN_LABELS,
   LICENSE_MODEL_OPTIONS,
   SALES_MOTION_ADMIN_LABELS,
   SALES_MOTION_OPTIONS,
 } from "@/storefront/lib/catalog-admin-labels";
 import {
+  INFRA_SPEC_TEMPLATES,
+  OFFERING_PROFILE_HINTS,
+  OFFERING_PROFILE_LABELS,
+  OFFERING_PROFILES,
+  commerceDefaults,
+  deliverableOptionsFor,
+  fulfillmentOptionsFor,
+  guideAdminHint,
+  guideAdminTitle,
+  guidePdpLabel,
+  showsLicenseMerchandising,
+  variantNameForProfile,
+  type DeliverableCode,
+  type FulfillmentCode,
+  type OfferingProfile,
+} from "@/storefront/lib/offering-profile";
+import {
   ProductLicenseDefaultsPanel,
   VariantLicenseFieldsPanel,
+  emptyProductLicenseDefaults,
+  emptyVariantLicenseFields,
   type ProductLicenseDefaults,
   type VariantLicenseFields,
 } from "../LicenseCatalogFields";
-import { parseSeoKeywords } from "@/storefront/lib/license-catalog";
+import {
+  LICENSE_REGIONS,
+  LICENSE_REGION_LABELS,
+  LICENSE_TERMS,
+  LICENSE_TERM_LABELS,
+  parseSeoKeywords,
+  type LicenseRegion,
+  type LicenseTermCode,
+} from "@/storefront/lib/license-catalog";
 import { listToLines } from "@/storefront/lib/product-cms";
 import { RichTextEditor } from "@/app/admin/blog/rich-text-editor";
 import {
@@ -74,8 +103,10 @@ type Props = {
   canonicalUrl: string;
   ogTitle: string;
   ogDescription: string;
+  offeringProfile: OfferingProfile;
   licenseDefaults: ProductLicenseDefaults;
   variantLicense: VariantLicenseFields;
+  suppliers: { id: string; name: string }[];
   relatedProductIds: string[];
   relatedOptions: RelatedProductOpt[];
   variantName: string;
@@ -87,11 +118,9 @@ type Props = {
   active: boolean;
   salesMotion: "SELF_SERVE" | "QUOTE_REQUIRED";
   licenseModel: "PERPETUAL" | "SUBSCRIPTION" | "MAINTENANCE";
-  strategyLabel: string;
-  receiveLabel: string;
   sku: string;
-  fulfillmentStrategy: string;
-  deliverableType: string;
+  fulfillmentStrategy: FulfillmentCode;
+  deliverableType: DeliverableCode;
   supplierId: string | null;
 };
 
@@ -155,6 +184,46 @@ export function ProductEditForm(props: Props) {
   });
   const [msg, setMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  function selectProfile(profile: OfferingProfile) {
+    setForm((current) => {
+      const commerce = commerceDefaults(profile);
+      const keepLicense = showsLicenseMerchandising(profile);
+      return {
+        ...current,
+        offeringProfile: profile,
+        licenseModel: commerce.licenseModel,
+        fulfillmentStrategy: commerce.fulfillmentStrategy,
+        deliverableType: commerce.deliverableType,
+        salesMotion: commerce.salesMotion,
+        variantName: variantNameForProfile(current.variantName, profile),
+        licenseDefaults: keepLicense
+          ? current.licenseDefaults
+          : emptyProductLicenseDefaults(),
+        variantLicense: keepLicense
+          ? current.variantLicense
+          : {
+              ...emptyVariantLicenseFields(),
+              licenseTerm:
+                profile === "INFRASTRUCTURE"
+                  ? current.variantLicense.licenseTerm || "1_MONTH"
+                  : "",
+              regionCode:
+                profile === "INFRASTRUCTURE"
+                  ? current.variantLicense.regionCode
+                  : "",
+            },
+        specsText:
+          profile === "INFRASTRUCTURE" && !current.specsText.trim()
+            ? INFRA_SPEC_TEMPLATES.cloud
+            : current.specsText,
+      };
+    });
+  }
+
+  const licenseMerchandising = showsLicenseMerchandising(form.offeringProfile);
+  const fulfillmentChoices = fulfillmentOptionsFor(form.offeringProfile);
+  const deliverableChoices = deliverableOptionsFor(form.offeringProfile);
 
   async function save() {
     setLoading(true);
@@ -250,6 +319,10 @@ export function ProductEditForm(props: Props) {
           active: form.active,
           salesMotion: form.salesMotion,
           licenseModel: form.licenseModel,
+          offeringProfile: form.offeringProfile,
+          fulfillmentStrategy: form.fulfillmentStrategy,
+          deliverableType: form.deliverableType,
+          supplierId: form.supplierId || null,
         }),
       });
       const data = await res.json();
@@ -420,7 +493,7 @@ export function ProductEditForm(props: Props) {
       {tab === "basics" ? (
         <Panel
           title="Thông tin cơ bản"
-          hint="Tên, lead PDP, danh mục — license defaults áp dụng khi tạo gói mới."
+          hint="Tên, lead PDP, danh mục. Hồ sơ bán quyết định trường license và cách giao."
         >
           <label className="block text-sm">
             <span className="font-medium">Tên sản phẩm</span>
@@ -437,9 +510,15 @@ export function ProductEditForm(props: Props) {
             đổi tại đây)
           </p>
           <label className="block text-sm">
-            <span className="font-medium">Mô tả ngắn (lead PDP)</span>
-            <p className="mt-0.5 text-[11px] text-muted">
-              1–2 câu dưới tiêu đề — không dán bài dài.
+            <span className="font-medium">
+              {form.offeringProfile === "SERVICE"
+                ? "Phạm vi ngắn"
+                : "Mô tả ngắn (lead PDP)"}
+            </span>
+            <p className="mt-0.5 text-xs text-muted">
+              {form.offeringProfile === "SERVICE"
+                ? "Một đến hai câu về hạng mục bàn giao — không dán bài dài vào đây."
+                : "1–2 câu dưới tiêu đề — không dán bài dài vào đây."}
             </p>
             <textarea
               rows={2}
@@ -483,12 +562,42 @@ export function ProductEditForm(props: Props) {
               />
             </label>
           </div>
+          <fieldset>
+            <legend className="text-sm font-medium">Hồ sơ bán</legend>
+            <p className="mt-0.5 text-xs text-muted">
+              Danh mục là kệ hàng. Hồ sơ quyết định trường cần điền và cách giao.
+            </p>
+            <div className="mt-2 grid gap-2 sm:grid-cols-2">
+              {OFFERING_PROFILES.map((id) => {
+                const on = form.offeringProfile === id;
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => selectProfile(id)}
+                    className={`rounded-xl border px-3 py-2.5 text-left ${
+                      on ? "border-accent bg-accent/10" : "border-border bg-card"
+                    }`}
+                  >
+                    <span className="block text-sm font-semibold text-navy">
+                      {OFFERING_PROFILE_LABELS[id]}
+                    </span>
+                    <span className="mt-0.5 block text-xs text-muted">
+                      {OFFERING_PROFILE_HINTS[id]}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
+          {licenseMerchandising ? (
           <ProductLicenseDefaultsPanel
             value={form.licenseDefaults}
             onChange={(licenseDefaults) =>
               setForm({ ...form, licenseDefaults })
             }
           />
+          ) : null}
           <p className="rounded-xl border border-border bg-surface px-3 py-2 text-xs text-muted">
             Lưu trữ ẩn cửa hàng + tắt mọi gói — không xóa đơn / kho key. Nhấn{" "}
             <strong>Lưu thay đổi</strong> để áp dụng trạng thái.
@@ -514,14 +623,14 @@ export function ProductEditForm(props: Props) {
 
       {tab === "guide" ? (
         <Panel
-          title="Hướng dẫn sử dụng / kích hoạt (tab PDP)"
-          hint="Nội dung riêng theo sản phẩm — không phải hướng dẫn thanh toán chung."
+          title={guideAdminTitle(form.offeringProfile)}
+          hint={guideAdminHint(form.offeringProfile)}
         >
           <RichTextEditor
             value={form.usageGuideHtml || "<p></p>"}
             onChange={(html) => setForm({ ...form, usageGuideHtml: html })}
             mediaPurpose="product"
-            placeholder="Viết hướng dẫn kích hoạt / sử dụng phần mềm…"
+            placeholder={guideAdminHint(form.offeringProfile)}
           />
         </Panel>
       ) : null}
@@ -569,9 +678,34 @@ export function ProductEditForm(props: Props) {
             </label>
             <label className="block text-sm">
               <span className="font-medium">Specs</span>
-              <p className="mt-0.5 text-[11px] text-muted">
+              <p className="mt-0.5 text-xs text-muted">
                 `Label|Value` · hệ thống: `system|Label|Value`
               </p>
+              {form.offeringProfile === "INFRASTRUCTURE" ? (
+                <div className="mt-1 flex flex-wrap gap-1">
+                  {(
+                    [
+                      ["cloud", "Cloud"],
+                      ["hosting", "Hosting"],
+                      ["backup", "Backup"],
+                    ] as const
+                  ).map(([key, label]) => (
+                    <button
+                      key={key}
+                      type="button"
+                      className="rounded-md border border-border px-2 py-0.5 text-xs font-medium text-navy"
+                      onClick={() =>
+                        setForm({
+                          ...form,
+                          specsText: INFRA_SPEC_TEMPLATES[key],
+                        })
+                      }
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
               <textarea
                 rows={10}
                 className="mt-1 w-full rounded-lg border border-border px-3 py-2 font-mono text-xs"
@@ -717,8 +851,8 @@ export function ProductEditForm(props: Props) {
               {form.categoryKey ? "✓" : "!"} Có danh mục (URL category)
             </li>
             <li>
-              {stripHtml(form.usageGuideHtml).trim() ? "✓" : "·"} Hướng dẫn
-              kích hoạt (tuỳ chọn, tốt cho PDP)
+              {stripHtml(form.usageGuideHtml).trim() ? "✓" : "·"}{" "}
+              {guidePdpLabel(form.offeringProfile)} (tuỳ chọn, tốt cho PDP)
             </li>
           </ul>
         </Panel>
@@ -727,7 +861,7 @@ export function ProductEditForm(props: Props) {
       {tab === "variant" ? (
         <Panel
           title="Gói đang sửa"
-          hint={`SKU ${form.sku} · ${form.receiveLabel} · ${form.strategyLabel}`}
+          hint={`SKU ${form.sku} · ${DELIVERABLE_ADMIN_LABELS[form.deliverableType]} · ${FULFILLMENT_ADMIN_LABELS[form.fulfillmentStrategy]}`}
         >
           <label className="block text-sm">
             <span className="font-medium">Tên gói</span>
@@ -799,11 +933,11 @@ export function ProductEditForm(props: Props) {
               }
             />
           </label>
+          {form.offeringProfile !== "SERVICE" ? (
           <label className="block text-sm">
             <span className="font-medium">Mô hình hệ thống (ops)</span>
-            <p className="mt-0.5 text-[11px] text-muted">
-              Khác kênh Retail/OEM trên PDP — dùng cho fulfillment / báo cáo nội
-              bộ.
+            <p className="mt-0.5 text-xs text-muted">
+              Vĩnh viễn, thuê bao hoặc bảo trì — khác kênh bán trên trang sản phẩm.
             </p>
             <select
               className="mt-1 w-full rounded-lg border border-border px-3 py-2"
@@ -825,6 +959,50 @@ export function ProductEditForm(props: Props) {
               ))}
             </select>
           </label>
+          ) : null}
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="block text-sm">
+              <span className="font-medium">Fulfillment</span>
+              <select
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                value={form.fulfillmentStrategy}
+                disabled={form.offeringProfile === "SERVICE"}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    fulfillmentStrategy: e.target
+                      .value as typeof form.fulfillmentStrategy,
+                  })
+                }
+              >
+                {fulfillmentChoices.map((k) => (
+                  <option key={k} value={k}>
+                    {FULFILLMENT_ADMIN_LABELS[k]}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="block text-sm">
+              <span className="font-medium">Loại nhận</span>
+              <select
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                value={form.deliverableType}
+                disabled={form.offeringProfile === "SERVICE"}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    deliverableType: e.target.value as typeof form.deliverableType,
+                  })
+                }
+              >
+                {deliverableChoices.map((k) => (
+                  <option key={k} value={k}>
+                    {DELIVERABLE_ADMIN_LABELS[k]}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
           <label className="block text-sm">
             <span className="font-medium">Hình thức bán</span>
             <select
@@ -846,6 +1024,25 @@ export function ProductEditForm(props: Props) {
               ))}
             </select>
           </label>
+          {form.offeringProfile === "SERVICE" ? null : (
+            <label className="block text-sm">
+              <span className="font-medium">Supplier</span>
+              <select
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                value={form.supplierId ?? ""}
+                onChange={(e) =>
+                  setForm({ ...form, supplierId: e.target.value || null })
+                }
+              >
+                <option value="">—</option>
+                {form.suppliers.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
           <label className="flex items-center gap-2 text-sm">
             <input
               type="checkbox"
@@ -856,12 +1053,64 @@ export function ProductEditForm(props: Props) {
             />
             Gói này đang bán (variant active)
           </label>
-          <VariantLicenseFieldsPanel
-            value={form.variantLicense}
-            onChange={(variantLicense) =>
-              setForm({ ...form, variantLicense })
-            }
-          />
+          {licenseMerchandising ? (
+            <VariantLicenseFieldsPanel
+              value={form.variantLicense}
+              onChange={(variantLicense) =>
+                setForm({ ...form, variantLicense })
+              }
+            />
+          ) : null}
+          {form.offeringProfile === "INFRASTRUCTURE" ? (
+            <div className="grid gap-3 sm:grid-cols-2">
+              <label className="block text-sm">
+                <span className="font-medium">Chu kỳ gói</span>
+                <select
+                  className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                  value={form.variantLicense.licenseTerm}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      variantLicense: {
+                        ...form.variantLicense,
+                        licenseTerm: e.target.value as LicenseTermCode | "",
+                      },
+                    })
+                  }
+                >
+                  <option value="">—</option>
+                  {LICENSE_TERMS.map((k) => (
+                    <option key={k} value={k}>
+                      {LICENSE_TERM_LABELS[k]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="block text-sm">
+                <span className="font-medium">Khu vực</span>
+                <select
+                  className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                  value={form.variantLicense.regionCode}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      variantLicense: {
+                        ...form.variantLicense,
+                        regionCode: e.target.value as LicenseRegion | "",
+                      },
+                    })
+                  }
+                >
+                  <option value="">—</option>
+                  {LICENSE_REGIONS.map((k) => (
+                    <option key={k} value={k}>
+                      {LICENSE_REGION_LABELS[k]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          ) : null}
         </Panel>
       ) : null}
 

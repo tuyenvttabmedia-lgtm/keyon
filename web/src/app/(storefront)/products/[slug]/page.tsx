@@ -30,6 +30,11 @@ import {
   PRODUCT_CATEGORY_KEYS,
 } from "@/storefront/lib/product-cms";
 import { parseSeoKeywords } from "@/storefront/lib/license-catalog";
+import {
+  catalogDescriptionFallback,
+  catalogFeatureFallback,
+  parseOfferingProfile,
+} from "@/storefront/lib/offering-profile";
 import { mapProductsToShopCards } from "@/storefront/lib/related-products";
 import { variantAllowsCheckout, variantShowsQuoteCta } from "@/lib/variant-checkout";
 import {
@@ -302,12 +307,14 @@ export default async function ProductPage({
     ].slice(0, 4);
   }
 
+  const offeringProfile = parseOfferingProfile(product.offeringProfile);
+
   const data: PdpProductData = {
     slug: product.slug,
     name: product.name,
     description:
       product.description?.trim() ||
-      `${product.name} — bản quyền số chính hãng. Thanh toán rõ, nhận trong Tài khoản KEYON.`,
+      catalogDescriptionFallback(offeringProfile, product.name),
     shortDescription: cleanStorefrontBlurb(product.shortDescription),
     brandName: product.brand.name,
     categoryId,
@@ -322,9 +329,7 @@ export default async function ProductPage({
     initialVariantId: activeVariant.id,
     features: cmsFeatures.length
       ? cmsFeatures
-      : [
-          `${product.name} — bản quyền số chính hãng, giao qua Tài khoản KEYON sau thanh toán.`,
-        ],
+      : [catalogFeatureFallback(offeringProfile, product.name)],
     specs: cmsSpecs.length
       ? cmsSpecs
       : [
@@ -348,6 +353,7 @@ export default async function ProductPage({
       accountRequired: product.accountRequired,
     },
     usageGuideHtml: cmsUsageGuideHtml,
+    offeringProfile,
     faqs: cmsFaqs,
     related,
     defaultEmail: session?.email ?? "",

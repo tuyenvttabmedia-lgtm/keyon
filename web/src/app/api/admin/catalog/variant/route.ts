@@ -1,7 +1,13 @@
 import { requireStaffSession } from "@/server/auth/require-staff";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import type { LicenseModel, Prisma, SalesMotion } from "@prisma/client";
+import type {
+  DeliverableType,
+  FulfillmentStrategy,
+  LicenseModel,
+  Prisma,
+  SalesMotion,
+} from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { audit } from "@/lib/audit";
 import { toErrorResponse, AppError } from "@/lib/errors";
@@ -30,6 +36,13 @@ const patchSchema = z
     slaPromise: z.string().nullable().optional(),
     lowStockThreshold: z.number().int().nonnegative().optional(),
     salesMotion: z.enum(["SELF_SERVE", "QUOTE_REQUIRED"]).optional(),
+    fulfillmentStrategy: z
+      .enum(["MANUAL", "INSTANT", "SEMI_AUTOMATED", "MANAGED_SUBSCRIPTION"])
+      .optional(),
+    deliverableType: z
+      .enum(["KEY", "ACCOUNT", "SUBSCRIPTION", "DIGITAL_FILE", "EXTERNAL_PORTAL"])
+      .optional(),
+    supplierId: z.string().nullable().optional(),
     licenseModel: z
       .enum(["PERPETUAL", "SUBSCRIPTION", "MAINTENANCE"])
       .optional(),
@@ -195,9 +208,11 @@ export async function PATCH(req: Request) {
       priceVnd: nextPrice,
       compareAtPriceVnd: nextCompare,
       costVnd: nextCost,
-      fulfillmentStrategy: variant.fulfillmentStrategy,
-      deliverableType: variant.deliverableType,
-      supplierId: variant.supplierId,
+      fulfillmentStrategy:
+        body.fulfillmentStrategy ?? variant.fulfillmentStrategy,
+      deliverableType: body.deliverableType ?? variant.deliverableType,
+      supplierId:
+        body.supplierId !== undefined ? body.supplierId : variant.supplierId,
       categoryKey: nextCategory,
       galleryUrls: Array.isArray(nextGallery) ? nextGallery : [],
       publishing: nextProductActive === true,
@@ -222,6 +237,9 @@ export async function PATCH(req: Request) {
       seatsLabel?: string | null;
       regionCode?: string | null;
       activationMethod?: string | null;
+      fulfillmentStrategy?: FulfillmentStrategy;
+      deliverableType?: DeliverableType;
+      supplierId?: string | null;
     } = { ...licenseWrite };
     if (typeof body.active === "boolean") variantData.active = body.active;
     if (typeof body.priceVnd === "number") variantData.priceVnd = body.priceVnd;
@@ -236,6 +254,13 @@ export async function PATCH(req: Request) {
     }
     if (body.salesMotion) variantData.salesMotion = body.salesMotion;
     if (body.licenseModel) variantData.licenseModel = body.licenseModel;
+    if (body.fulfillmentStrategy) {
+      variantData.fulfillmentStrategy = body.fulfillmentStrategy;
+    }
+    if (body.deliverableType) variantData.deliverableType = body.deliverableType;
+    if (body.supplierId !== undefined) {
+      variantData.supplierId = body.supplierId || null;
+    }
 
     const productPatch: Prisma.ProductUpdateInput = {
       ...catalogWrite,

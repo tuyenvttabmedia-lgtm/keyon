@@ -1,6 +1,7 @@
 import type { ShopCategoryId, ShopProduct } from "@/storefront/components/shop/types";
 import type { ReceiveKind } from "@/storefront/content/types";
 import type { resolveLicensePresentation } from "@/storefront/lib/license-catalog";
+import type { OfferingProfile } from "@/storefront/lib/offering-profile";
 
 export type PdpVariantOption = {
   id: string;
@@ -61,6 +62,7 @@ export type PdpProductData = {
   licenseDefaults: PdpLicenseDefaults;
   /** Rich HTML for «Hướng dẫn sử dụng» tab (empty → empty state) */
   usageGuideHtml: string;
+  offeringProfile: OfferingProfile;
   faqs: { id: string; question: string; answer: string }[];
   related: ShopProduct[];
   defaultEmail: string;

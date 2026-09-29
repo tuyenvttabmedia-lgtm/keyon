@@ -8,46 +8,73 @@ import {
 } from "@/storefront/lib/catalog-validation";
 import {
   DELIVERABLE_ADMIN_LABELS,
-  DELIVERABLE_OPTIONS,
   FULFILLMENT_ADMIN_LABELS,
-  FULFILLMENT_OPTIONS,
   LICENSE_MODEL_ADMIN_LABELS,
   LICENSE_MODEL_OPTIONS,
+  SALES_MOTION_ADMIN_LABELS,
+  SALES_MOTION_OPTIONS,
 } from "@/storefront/lib/catalog-admin-labels";
+import {
+  commerceDefaults,
+  deliverableOptionsFor,
+  fulfillmentOptionsFor,
+  showsLicenseMerchandising,
+  type OfferingProfile,
+} from "@/storefront/lib/offering-profile";
 import {
   VariantLicenseFieldsPanel,
   emptyVariantLicenseFields,
   type VariantLicenseFields,
 } from "../LicenseCatalogFields";
+import {
+  LICENSE_REGIONS,
+  LICENSE_REGION_LABELS,
+  LICENSE_TERMS,
+  LICENSE_TERM_LABELS,
+  type LicenseRegion,
+  type LicenseTermCode,
+} from "@/storefront/lib/license-catalog";
 
 type SupplierOpt = { id: string; name: string };
 
 type Props = {
   productId: string;
   suppliers: SupplierOpt[];
+  offeringProfile: OfferingProfile;
 };
 
-export function AddVariantForm({ productId, suppliers }: Props) {
+export function AddVariantForm({
+  productId,
+  suppliers,
+  offeringProfile,
+}: Props) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const defaults = commerceDefaults(offeringProfile);
   const [form, setForm] = useState({
     name: "",
     sku: "",
     priceVnd: 499000,
     compareAt: "",
     costVnd: 0,
-    licenseModel: "PERPETUAL" as "PERPETUAL" | "SUBSCRIPTION" | "MAINTENANCE",
-    fulfillmentStrategy: "MANUAL" as "MANUAL" | "INSTANT" | "SEMI_AUTOMATED" | "MANAGED_SUBSCRIPTION",
-    deliverableType: "KEY" as "KEY" | "ACCOUNT" | "SUBSCRIPTION" | "DIGITAL_FILE" | "EXTERNAL_PORTAL",
-    salesMotion: "SELF_SERVE" as "SELF_SERVE" | "QUOTE_REQUIRED",
+    licenseModel: defaults.licenseModel,
+    fulfillmentStrategy: defaults.fulfillmentStrategy,
+    deliverableType: defaults.deliverableType,
+    salesMotion: defaults.salesMotion,
     slaPromise: "",
     supplierId: "",
     lowStockThreshold: 10,
     active: true,
-    variantLicense: emptyVariantLicenseFields() as VariantLicenseFields,
+    variantLicense: {
+      ...emptyVariantLicenseFields(),
+      licenseTerm: offeringProfile === "INFRASTRUCTURE" ? ("1_MONTH" as const) : "",
+    } as VariantLicenseFields,
   });
+  const licenseMerchandising = showsLicenseMerchandising(offeringProfile);
+  const fulfillmentChoices = fulfillmentOptionsFor(offeringProfile);
+  const deliverableChoices = deliverableOptionsFor(offeringProfile);
 
   async function submit() {
     setLoading(true);
@@ -139,7 +166,9 @@ export function AddVariantForm({ productId, suppliers }: Props) {
           <span className="font-medium">Tên gói</span>
           <input
             className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-            placeholder="Home · Pro · OEM…"
+            placeholder={
+              offeringProfile === "SOFTWARE" ? "Home · Pro · OEM…" : "Gói chuẩn"
+            }
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
           />
@@ -170,6 +199,7 @@ export function AddVariantForm({ productId, suppliers }: Props) {
             onChange={(e) => setForm({ ...form, compareAt: e.target.value })}
           />
         </label>
+        {offeringProfile !== "SERVICE" ? (
         <label className="block text-sm">
           <span className="font-medium">Mô hình hệ thống (ops)</span>
           <select
@@ -189,11 +219,13 @@ export function AddVariantForm({ productId, suppliers }: Props) {
             ))}
           </select>
         </label>
+        ) : null}
         <label className="block text-sm">
           <span className="font-medium">Fulfillment</span>
           <select
             className="mt-1 w-full rounded-lg border border-border px-3 py-2"
             value={form.fulfillmentStrategy}
+            disabled={offeringProfile === "SERVICE"}
             onChange={(e) =>
               setForm({
                 ...form,
@@ -201,7 +233,7 @@ export function AddVariantForm({ productId, suppliers }: Props) {
               })
             }
           >
-            {FULFILLMENT_OPTIONS.map((k) => (
+            {fulfillmentChoices.map((k) => (
               <option key={k} value={k}>
                 {FULFILLMENT_ADMIN_LABELS[k]}
               </option>
@@ -213,6 +245,7 @@ export function AddVariantForm({ productId, suppliers }: Props) {
           <select
             className="mt-1 w-full rounded-lg border border-border px-3 py-2"
             value={form.deliverableType}
+            disabled={offeringProfile === "SERVICE"}
             onChange={(e) =>
               setForm({
                 ...form,
@@ -220,13 +253,14 @@ export function AddVariantForm({ productId, suppliers }: Props) {
               })
             }
           >
-            {DELIVERABLE_OPTIONS.map((k) => (
+            {deliverableChoices.map((k) => (
               <option key={k} value={k}>
                 {DELIVERABLE_ADMIN_LABELS[k]}
               </option>
             ))}
           </select>
         </label>
+        {offeringProfile === "SERVICE" ? null : (
         <label className="block text-sm sm:col-span-2">
           <span className="font-medium">Supplier</span>
           <select
@@ -242,11 +276,83 @@ export function AddVariantForm({ productId, suppliers }: Props) {
             ))}
           </select>
         </label>
+        )}
+        <label className="block text-sm sm:col-span-2">
+          <span className="font-medium">Hình thức bán</span>
+          <select
+            className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+            value={form.salesMotion}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                salesMotion: e.target.value as typeof form.salesMotion,
+              })
+            }
+          >
+            {SALES_MOTION_OPTIONS.map((k) => (
+              <option key={k} value={k}>
+                {SALES_MOTION_ADMIN_LABELS[k]}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
+      {licenseMerchandising ? (
       <VariantLicenseFieldsPanel
         value={form.variantLicense}
         onChange={(variantLicense) => setForm({ ...form, variantLicense })}
       />
+      ) : null}
+      {offeringProfile === "INFRASTRUCTURE" ? (
+        <div className="grid gap-3 sm:grid-cols-2">
+          <label className="block text-sm">
+            <span className="font-medium">Chu kỳ gói</span>
+            <select
+              className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+              value={form.variantLicense.licenseTerm}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  variantLicense: {
+                    ...form.variantLicense,
+                    licenseTerm: e.target.value as LicenseTermCode | "",
+                  },
+                })
+              }
+            >
+              <option value="">—</option>
+              {LICENSE_TERMS.map((k) => (
+                <option key={k} value={k}>
+                  {LICENSE_TERM_LABELS[k]}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="block text-sm">
+            <span className="font-medium">Khu vực</span>
+            <select
+              className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+              value={form.variantLicense.regionCode}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  variantLicense: {
+                    ...form.variantLicense,
+                    regionCode: e.target.value as LicenseRegion | "",
+                  },
+                })
+              }
+            >
+              <option value="">—</option>
+              {LICENSE_REGIONS.map((k) => (
+                <option key={k} value={k}>
+                  {LICENSE_REGION_LABELS[k]}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+      ) : null}
       {msg ? (
         <pre className="whitespace-pre-wrap text-sm text-danger">{msg}</pre>
       ) : null}

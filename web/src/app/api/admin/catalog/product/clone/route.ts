@@ -83,6 +83,7 @@ export async function POST(req: Request) {
           transferPolicy: source.transferPolicy,
           upgradePolicy: source.upgradePolicy,
           accountRequired: source.accountRequired,
+          offeringProfile: source.offeringProfile,
           relatedProductIds: parseStringList(source.relatedProductIds),
           active: false,
         },

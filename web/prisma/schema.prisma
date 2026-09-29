@@ -337,6 +337,8 @@ model Product {
   shortDescription String?
   /// Storefront category key: windows|office|adobe|cloud|security|other
   categoryKey      String?
+  /// Wizard profile: SOFTWARE | INFRASTRUCTURE | SERVICE | OTHER. Null = SOFTWARE.
+  offeringProfile  String?
   /// Override badge on PDP (e.g. HỆ ĐIỀU HÀNH); empty → derive from categoryKey
   badgeLabel       String?
   /// Gallery image URLs (JSON string[]) — main + thumbs

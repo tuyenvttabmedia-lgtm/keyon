@@ -19,12 +19,24 @@ import {
 import {
   CATEGORY_ADMIN_LABELS,
   DELIVERABLE_ADMIN_LABELS,
-  DELIVERABLE_OPTIONS,
   FULFILLMENT_ADMIN_LABELS,
-  FULFILLMENT_OPTIONS,
   LICENSE_MODEL_ADMIN_LABELS,
   LICENSE_MODEL_OPTIONS,
+  SALES_MOTION_ADMIN_LABELS,
+  SALES_MOTION_OPTIONS,
 } from "@/storefront/lib/catalog-admin-labels";
+import {
+  INFRA_SPEC_TEMPLATES,
+  commerceDefaults,
+  deliverableOptionsFor,
+  fulfillmentOptionsFor,
+  guideAdminHint,
+  guideAdminTitle,
+  packageStepHint,
+  showsLicenseMerchandising,
+  variantNameForProfile,
+  type OfferingProfile,
+} from "@/storefront/lib/offering-profile";
 import {
   ProductLicenseDefaultsPanel,
   VariantLicenseFieldsPanel,
@@ -33,7 +45,15 @@ import {
   type ProductLicenseDefaults,
   type VariantLicenseFields,
 } from "../LicenseCatalogFields";
-import { parseSeoKeywords } from "@/storefront/lib/license-catalog";
+import {
+  LICENSE_REGIONS,
+  LICENSE_REGION_LABELS,
+  LICENSE_TERMS,
+  LICENSE_TERM_LABELS,
+  parseSeoKeywords,
+  type LicenseRegion,
+  type LicenseTermCode,
+} from "@/storefront/lib/license-catalog";
 import { RichTextEditor } from "@/app/admin/blog/rich-text-editor";
 
 type BrandOpt = { id: string; name: string };
@@ -86,6 +106,7 @@ export function ProductCreateForm({
     description: "",
     shortDescription: "",
     categoryKey: "" as ProductCategoryKey | "",
+    offeringProfile: "SOFTWARE" as OfferingProfile,
     badgeLabel: "",
     galleryUrls: [] as string[],
     ogImageUrl: "",
@@ -99,9 +120,18 @@ export function ProductCreateForm({
     compareAt: "",
     costVnd: 0,
     licenseModel: "PERPETUAL" as "PERPETUAL" | "SUBSCRIPTION" | "MAINTENANCE",
-    fulfillmentStrategy: "MANUAL" as "MANUAL" | "INSTANT",
-    deliverableType: "KEY" as const,
-    salesMotion: "SELF_SERVE" as const,
+    fulfillmentStrategy: "MANUAL" as
+      | "MANUAL"
+      | "INSTANT"
+      | "SEMI_AUTOMATED"
+      | "MANAGED_SUBSCRIPTION",
+    deliverableType: "KEY" as
+      | "KEY"
+      | "ACCOUNT"
+      | "SUBSCRIPTION"
+      | "DIGITAL_FILE"
+      | "EXTERNAL_PORTAL",
+    salesMotion: "SELF_SERVE" as "SELF_SERVE" | "QUOTE_REQUIRED",
     slaPromise: "KEYON xử lý trong SLA",
     supplierId: "",
     lowStockThreshold: 10,
@@ -249,6 +279,7 @@ export function ProductCreateForm({
           description: form.description || null,
           shortDescription: form.shortDescription || null,
           categoryKey: form.categoryKey || null,
+          offeringProfile: form.offeringProfile,
           badgeLabel: form.badgeLabel || null,
           galleryUrls: form.galleryUrls,
           features: linesToList(form.featuresText),
@@ -304,6 +335,43 @@ export function ProductCreateForm({
       setLoading(false);
     }
   }
+
+  function selectProfile(profile: OfferingProfile) {
+    setForm((current) => {
+      const commerce = commerceDefaults(profile);
+      const keepLicense = showsLicenseMerchandising(profile);
+      return {
+        ...current,
+        offeringProfile: profile,
+        ...commerce,
+        variantName: variantNameForProfile(current.variantName, profile),
+        licenseDefaults: keepLicense
+          ? current.licenseDefaults
+          : emptyProductLicenseDefaults(),
+        variantLicense: keepLicense
+          ? current.variantLicense
+          : {
+              ...emptyVariantLicenseFields(),
+              licenseTerm:
+                profile === "INFRASTRUCTURE"
+                  ? current.variantLicense.licenseTerm || "1_MONTH"
+                  : "",
+              regionCode:
+                profile === "INFRASTRUCTURE"
+                  ? current.variantLicense.regionCode
+                  : "",
+            },
+        specsText:
+          profile === "INFRASTRUCTURE" && !current.specsText.trim()
+            ? INFRA_SPEC_TEMPLATES.cloud
+            : current.specsText,
+      };
+    });
+  }
+
+  const fulfillmentChoices = fulfillmentOptionsFor(form.offeringProfile);
+  const deliverableChoices = deliverableOptionsFor(form.offeringProfile);
+  const licenseMerchandising = showsLicenseMerchandising(form.offeringProfile);
 
   return (
     <div className="space-y-6">
@@ -441,9 +509,15 @@ export function ProductCreateForm({
             </label>
           </div>
           <label className="block text-sm">
-            <span className="font-medium">Mô tả ngắn (lead PDP)</span>
-            <p className="mt-0.5 text-[11px] text-muted">
-              1–2 câu dưới tiêu đề — không dán bài dài vào đây.
+            <span className="font-medium">
+              {form.offeringProfile === "SERVICE"
+                ? "Phạm vi ngắn"
+                : "Mô tả ngắn (lead PDP)"}
+            </span>
+            <p className="mt-0.5 text-xs text-muted">
+              {form.offeringProfile === "SERVICE"
+                ? "Một đến hai câu về hạng mục bàn giao — không dán bài dài vào đây."
+                : "1–2 câu dưới tiêu đề — không dán bài dài vào đây."}
             </p>
             <textarea
               rows={2}
@@ -452,12 +526,47 @@ export function ProductCreateForm({
               onChange={(e) => setForm({ ...form, shortDescription: e.target.value })}
             />
           </label>
-          <ProductLicenseDefaultsPanel
-            value={form.licenseDefaults}
-            onChange={(licenseDefaults) =>
-              setForm({ ...form, licenseDefaults })
-            }
-          />
+          <fieldset>
+            <legend className="text-sm font-medium">Hồ sơ bán</legend>
+            <p className="mt-0.5 text-xs text-muted">
+              Danh mục là kệ hàng. Hồ sơ quyết định trường cần điền và cách giao.
+            </p>
+            <div className="mt-2 grid gap-2 sm:grid-cols-2">
+              {(
+                [
+                  ["SOFTWARE", "Bản quyền phần mềm", "Key, tài khoản, số ghế và cách kích hoạt."],
+                  ["INFRASTRUCTURE", "Hạ tầng thuê", "Cloud, hosting, dung lượng. Không kho key."],
+                  ["SERVICE", "Dịch vụ chuyên nghiệp", "Bàn giao thủ công theo phạm vi gói."],
+                  ["OTHER", "Khác", "Tự chọn cách giao và thứ khách nhận."],
+                ] as const
+              ).map(([id, label, hint]) => {
+                const on = form.offeringProfile === id;
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => selectProfile(id)}
+                    className={`rounded-xl border px-3 py-2.5 text-left ${
+                      on ? "border-accent bg-accent/10" : "border-border bg-card"
+                    }`}
+                  >
+                    <span className="block text-sm font-semibold text-navy">
+                      {label}
+                    </span>
+                    <span className="mt-0.5 block text-xs text-muted">{hint}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
+          {licenseMerchandising ? (
+            <ProductLicenseDefaultsPanel
+              value={form.licenseDefaults}
+              onChange={(licenseDefaults) =>
+                setForm({ ...form, licenseDefaults })
+              }
+            />
+          ) : null}
         </div>
       ) : null}
 
@@ -465,7 +574,7 @@ export function ProductCreateForm({
         <div className="space-y-4 rounded-2xl border border-border bg-card p-6">
           <h2 className="font-semibold text-navy">Bước 2 · Gói đầu tiên & giá</h2>
           <p className="text-xs text-muted">
-            Sau khi tạo có thể thêm Home / Pro / OEM trên trang sửa.
+            {packageStepHint(form.offeringProfile)}
           </p>
           <label className="block text-sm">
             <span className="font-medium">Tên gói</span>
@@ -513,10 +622,11 @@ export function ProductCreateForm({
             </label>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
+            {form.offeringProfile !== "SERVICE" ? (
             <label className="block text-sm">
               <span className="font-medium">Mô hình hệ thống (ops)</span>
-              <p className="mt-0.5 text-[11px] text-muted">
-                PERPETUAL / Thuê bao / Bảo trì — khác kênh Retail/OEM trên PDP.
+              <p className="mt-0.5 text-xs text-muted">
+                Vĩnh viễn, thuê bao hoặc bảo trì — khác kênh bán trên trang sản phẩm.
               </p>
               <select
                 className="mt-1 w-full rounded-lg border border-border px-3 py-2"
@@ -535,11 +645,13 @@ export function ProductCreateForm({
                 ))}
               </select>
             </label>
+            ) : null}
             <label className="block text-sm">
               <span className="font-medium">Fulfillment</span>
               <select
                 className="mt-1 w-full rounded-lg border border-border px-3 py-2"
                 value={form.fulfillmentStrategy}
+                disabled={form.offeringProfile === "SERVICE"}
                 onChange={(e) =>
                   setForm({
                     ...form,
@@ -547,7 +659,7 @@ export function ProductCreateForm({
                   })
                 }
               >
-                {FULFILLMENT_OPTIONS.map((k) => (
+                {fulfillmentChoices.map((k) => (
                   <option key={k} value={k}>
                     {FULFILLMENT_ADMIN_LABELS[k]}
                   </option>
@@ -559,6 +671,7 @@ export function ProductCreateForm({
               <select
                 className="mt-1 w-full rounded-lg border border-border px-3 py-2"
                 value={form.deliverableType}
+                disabled={form.offeringProfile === "SERVICE"}
                 onChange={(e) =>
                   setForm({
                     ...form,
@@ -566,14 +679,34 @@ export function ProductCreateForm({
                   })
                 }
               >
-                {DELIVERABLE_OPTIONS.map((k) => (
+                {deliverableChoices.map((k) => (
                   <option key={k} value={k}>
                     {DELIVERABLE_ADMIN_LABELS[k]}
                   </option>
                 ))}
               </select>
             </label>
+            <label className="block text-sm sm:col-span-2">
+              <span className="font-medium">Hình thức bán</span>
+              <select
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                value={form.salesMotion}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    salesMotion: e.target.value as typeof form.salesMotion,
+                  })
+                }
+              >
+                {SALES_MOTION_OPTIONS.map((k) => (
+                  <option key={k} value={k}>
+                    {SALES_MOTION_ADMIN_LABELS[k]}
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
+          {form.offeringProfile === "SERVICE" ? null : (
           <label className="block text-sm">
             <span className="font-medium">Supplier</span>
             <select
@@ -589,6 +722,7 @@ export function ProductCreateForm({
               ))}
             </select>
           </label>
+          )}
           <label className="block text-sm">
             <span className="font-medium">SLA text</span>
             <input
@@ -597,10 +731,62 @@ export function ProductCreateForm({
               onChange={(e) => setForm({ ...form, slaPromise: e.target.value })}
             />
           </label>
-          <VariantLicenseFieldsPanel
-            value={form.variantLicense}
-            onChange={(variantLicense) => setForm({ ...form, variantLicense })}
-          />
+          {licenseMerchandising ? (
+            <VariantLicenseFieldsPanel
+              value={form.variantLicense}
+              onChange={(variantLicense) => setForm({ ...form, variantLicense })}
+            />
+          ) : null}
+          {form.offeringProfile === "INFRASTRUCTURE" ? (
+            <div className="grid gap-3 sm:grid-cols-2">
+              <label className="block text-sm">
+                <span className="font-medium">Chu kỳ gói</span>
+                <select
+                  className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                  value={form.variantLicense.licenseTerm}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      variantLicense: {
+                        ...form.variantLicense,
+                        licenseTerm: e.target.value as LicenseTermCode | "",
+                      },
+                    })
+                  }
+                >
+                  <option value="">—</option>
+                  {LICENSE_TERMS.map((k) => (
+                    <option key={k} value={k}>
+                      {LICENSE_TERM_LABELS[k]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="block text-sm">
+                <span className="font-medium">Khu vực</span>
+                <select
+                  className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                  value={form.variantLicense.regionCode}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      variantLicense: {
+                        ...form.variantLicense,
+                        regionCode: e.target.value as LicenseRegion | "",
+                      },
+                    })
+                  }
+                >
+                  <option value="">—</option>
+                  {LICENSE_REGIONS.map((k) => (
+                    <option key={k} value={k}>
+                      {LICENSE_REGION_LABELS[k]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          ) : null}
         </div>
       ) : null}
 
@@ -643,17 +829,17 @@ export function ProductCreateForm({
           </div>
           <div className="rounded-2xl border border-border bg-card p-6">
             <h2 className="mb-1 font-semibold text-navy">
-              Hướng dẫn sử dụng / kích hoạt (tab PDP)
+              {guideAdminTitle(form.offeringProfile)}
             </h2>
             <p className="mb-3 text-xs text-muted">
               Soạn như mô tả: tiêu đề, đoạn, danh sách, ảnh, bảng. Dán từ
-              Word/Docs sẽ được làm sạch. Hiển thị ở tab «Hướng dẫn sử dụng».
+              Word/Docs sẽ được làm sạch. {guideAdminHint(form.offeringProfile)}
             </p>
             <RichTextEditor
               value={form.usageGuideHtml || "<p></p>"}
               onChange={(html) => setForm({ ...form, usageGuideHtml: html })}
               mediaPurpose="product"
-              placeholder="Viết hướng dẫn kích hoạt / sử dụng phần mềm…"
+              placeholder={guideAdminHint(form.offeringProfile)}
             />
           </div>
           <div className="rounded-2xl border border-border bg-card p-6">
@@ -670,9 +856,34 @@ export function ProductCreateForm({
               </label>
               <label className="block text-sm">
                 <span className="font-medium">Specs</span>
-                <p className="mt-0.5 text-[11px] text-muted">
+                <p className="mt-0.5 text-xs text-muted">
                   `Label|Value` · yêu cầu HT: `system|CPU|…`
                 </p>
+                {form.offeringProfile === "INFRASTRUCTURE" ? (
+                  <div className="mt-1 flex flex-wrap gap-1">
+                    {(
+                      [
+                        ["cloud", "Cloud"],
+                        ["hosting", "Hosting"],
+                        ["backup", "Backup"],
+                      ] as const
+                    ).map(([key, label]) => (
+                      <button
+                        key={key}
+                        type="button"
+                        className="rounded-md border border-border px-2 py-0.5 text-xs font-medium text-navy"
+                        onClick={() =>
+                          setForm({
+                            ...form,
+                            specsText: INFRA_SPEC_TEMPLATES[key],
+                          })
+                        }
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
                 <textarea
                   rows={5}
                   className="mt-1 w-full rounded-lg border border-border px-3 py-2 font-mono text-xs"

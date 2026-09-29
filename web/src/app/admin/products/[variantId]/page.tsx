@@ -2,10 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import {
-  deliveryPromiseLabel,
-  receiveFromDeliverable,
-} from "@/storefront/lib/customer-labels";
-import {
   parseFaqRows,
   parseSpecRows,
   parseStringList,
@@ -24,12 +20,12 @@ import {
 } from "@/storefront/lib/license-catalog";
 import {
   DELIVERABLE_ADMIN_LABELS,
-  FULFILLMENT_ADMIN_LABELS,
 } from "@/storefront/lib/catalog-admin-labels";
 import { ProductEditForm } from "./edit-form";
 import { AddVariantForm } from "./add-variant-form";
 import { CloneProductButton } from "../CloneProductButton";
 import { ADMIN_PAGE_TITLE_CLASS } from "@/storefront/typography";
+import { parseOfferingProfile } from "@/storefront/lib/offering-profile";
 import type {
   ProductLicenseDefaults,
   VariantLicenseFields,
@@ -74,10 +70,6 @@ export default async function AdminProductEditPage({
     select: { id: true, name: true },
   });
 
-  const receive = receiveFromDeliverable(variant.deliverableType);
-  const strategy =
-    FULFILLMENT_ADMIN_LABELS[variant.fulfillmentStrategy] ??
-    deliveryPromiseLabel(variant.fulfillmentStrategy);
   const p = variant.product;
   const cat =
     p.categoryKey && (PRODUCT_CATEGORY_KEYS as readonly string[]).includes(p.categoryKey)
@@ -177,7 +169,11 @@ export default async function AdminProductEditPage({
               );
             })}
           </ul>
-          <AddVariantForm productId={p.id} suppliers={suppliers} />
+          <AddVariantForm
+            productId={p.id}
+            suppliers={suppliers}
+            offeringProfile={parseOfferingProfile(p.offeringProfile)}
+          />
         </div>
       </details>
 
@@ -206,6 +202,8 @@ export default async function AdminProductEditPage({
         ogDescription={p.ogDescription ?? ""}
         licenseDefaults={licenseDefaults}
         variantLicense={variantLicense}
+        offeringProfile={parseOfferingProfile(p.offeringProfile)}
+        suppliers={suppliers}
         relatedProductIds={parseStringList(p.relatedProductIds)}
         relatedOptions={allProducts.map((x) => ({
           id: x.id,
@@ -223,8 +221,6 @@ export default async function AdminProductEditPage({
         active={variant.active}
         salesMotion={variant.salesMotion}
         licenseModel={variant.licenseModel}
-        strategyLabel={strategy}
-        receiveLabel={receive.label}
         sku={variant.sku}
         fulfillmentStrategy={variant.fulfillmentStrategy}
         deliverableType={variant.deliverableType}

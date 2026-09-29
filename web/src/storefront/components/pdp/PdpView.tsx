@@ -39,6 +39,15 @@ import {
 import { QUOTE_HREF } from "@/storefront/lib/cta";
 import { trackViewItem } from "@/storefront/lib/analytics";
 import type { PdpProductData, PdpTabId, PdpVariantOption } from "./types";
+import {
+  catalogDescriptionFallback,
+  guideEmptyCopy,
+  guidePdpHeading,
+  guidePdpLabel,
+  licenseFactsTitle,
+  systemSpecsTitle,
+  type OfferingProfile,
+} from "@/storefront/lib/offering-profile";
 import { resolveLicensePresentation } from "@/storefront/lib/license-catalog";
 import { StaticPageHtml } from "@/storefront/components/StaticPageHtml";
 import { stripHtml } from "@/server/cms/blog-utils";
@@ -82,6 +91,7 @@ function featureBarItems(
   instant: boolean,
   brandName: string,
   receiveLabel: string,
+  profile: OfferingProfile,
 ): { title: string; desc: string }[] {
   if (features.length >= 4) {
     return features.slice(0, 4).map((f) => {
@@ -90,6 +100,42 @@ function featureBarItems(
       const desc = parts.slice(1).join(" — ").trim() || "Theo mô tả sản phẩm";
       return { title, desc };
     });
+  }
+  if (profile === "INFRASTRUCTURE") {
+    return [
+      { title: "Gói thuê rõ", desc: `Nguồn ${brandName}` },
+      {
+        title: "KEYON cấp phát",
+        desc: "Theo dõi trong đơn hàng và Tài sản",
+      },
+      { title: "Thanh toán an toàn", desc: "QR / chuyển khoản rõ" },
+      {
+        title: "Hỗ trợ sử dụng",
+        desc: receiveLabel || "Ticket trong Tài khoản",
+      },
+    ];
+  }
+  if (profile === "SERVICE") {
+    return [
+      { title: "Phạm vi bàn giao", desc: `Theo gói ${brandName}` },
+      { title: "KEYON thực hiện", desc: "Theo dõi trong đơn hàng" },
+      { title: "Thanh toán an toàn", desc: "QR / chuyển khoản rõ" },
+      {
+        title: "Hỗ trợ bàn giao",
+        desc: receiveLabel || "Ticket trong Tài khoản",
+      },
+    ];
+  }
+  if (profile === "OTHER") {
+    return [
+      { title: "Mua trên KEYON", desc: `Nguồn ${brandName}` },
+      { title: "KEYON xử lý", desc: "Theo dõi trong đơn hàng" },
+      { title: "Thanh toán an toàn", desc: "QR / chuyển khoản rõ" },
+      {
+        title: "Hỗ trợ sau mua",
+        desc: receiveLabel || "Ticket trong Tài khoản",
+      },
+    ];
   }
   return [
     {
@@ -178,11 +224,13 @@ export function PdpView({ data }: { data: PdpProductData }) {
               ...t,
               label: `Đánh giá (${data.reviewCount})`,
             }
-          : t.id === "faq"
+            : t.id === "faq"
             ? { ...t, label: "Câu hỏi thường gặp" }
-            : t,
+            : t.id === "guide"
+              ? { ...t, label: guidePdpLabel(data.offeringProfile) }
+              : t,
       ),
-    [data.reviewCount, data.faqs.length],
+    [data.reviewCount, data.faqs.length, data.offeringProfile],
   );
 
   function selectVariant(id: string) {
@@ -253,6 +301,7 @@ export function PdpView({ data }: { data: PdpProductData }) {
           instant={variant.fulfillmentInstant}
           brandName={data.brandName}
           receiveLabel={variant.receiveLabel}
+          profile={data.offeringProfile}
         />
 
         <TabsSection
@@ -908,13 +957,21 @@ function FeatureBar({
   instant,
   brandName,
   receiveLabel,
+  profile,
 }: {
   features: string[];
   instant: boolean;
   brandName: string;
   receiveLabel: string;
+  profile: OfferingProfile;
 }) {
-  const items = featureBarItems(features, instant, brandName, receiveLabel);
+  const items = featureBarItems(
+    features,
+    instant,
+    brandName,
+    receiveLabel,
+    profile,
+  );
 
   return (
     <section className="mt-10 overflow-hidden rounded-2xl border border-border/80 bg-surface md:mt-12">
@@ -987,7 +1044,7 @@ function TabsSection({
                 <CollapsibleDescription body={data.description} />
               ) : (
                 <p className={`mt-4 ${BODY_MUTED_CLASS}`}>
-                  {`${data.name} — giấy phép bản quyền số phân phối trên KEYON. Chọn gói, thanh toán rõ, nhận trong Tài sản.`}
+                  {catalogDescriptionFallback(data.offeringProfile, data.name)}
                 </p>
               )}
             </div>
@@ -1025,15 +1082,18 @@ function TabsSection({
                 >
                   <SpecsCard title="Thông số" specs={data.specs} />
                   <SpecsCard
-                    title="Yêu cầu hệ thống"
+                    title={systemSpecsTitle(data.offeringProfile)}
                     specs={data.systemSpecs}
                   />
                 </div>
               </section>
             ) : null}
 
-            <LicenseInfoBlock license={license} />
-            <LicenseWarningBlock />
+            <LicenseInfoBlock
+              license={license}
+              title={licenseFactsTitle(data.offeringProfile)}
+            />
+            {data.offeringProfile === "SOFTWARE" ? <LicenseWarningBlock /> : null}
           </div>
         ) : null}
 
@@ -1071,7 +1131,9 @@ function TabsSection({
                   ) : null}
                   {data.systemSpecs.length ? (
                     <div className="overflow-x-auto rounded-2xl border border-border/80 bg-surface p-4 sm:p-5 md:p-6">
-                      <p className={CARD_TITLE_CLASS}>Yêu cầu hệ thống</p>
+                      <p className={CARD_TITLE_CLASS}>
+                        {systemSpecsTitle(data.offeringProfile)}
+                      </p>
                       <dl className="mt-4 space-y-0">
                         {data.systemSpecs.map((s) => (
                           <div
@@ -1090,15 +1152,18 @@ function TabsSection({
                 </div>
               </div>
             ) : null}
-            <LicenseInfoBlock license={license} />
-            <LicenseWarningBlock />
+            <LicenseInfoBlock
+              license={license}
+              title={licenseFactsTitle(data.offeringProfile)}
+            />
+            {data.offeringProfile === "SOFTWARE" ? <LicenseWarningBlock /> : null}
           </div>
         ) : null}
 
         {tab === "guide" ? (
           <div className="space-y-5">
             <h2 className={SUBSECTION_TITLE_CLASS}>
-              Hướng dẫn sử dụng & kích hoạt
+              {guidePdpHeading(data.offeringProfile)}
             </h2>
             {stripHtml(data.usageGuideHtml).trim() ? (
               <div className="mt-4">
@@ -1109,8 +1174,7 @@ function TabsSection({
               </div>
             ) : (
               <p className={BODY_MUTED_CLASS}>
-                Chưa có hướng dẫn kích hoạt cho sản phẩm này. Liên hệ KEYON để
-                được hỗ trợ từng bước theo gói bạn đã mua.
+                {guideEmptyCopy(data.offeringProfile)}
               </p>
             )}
             <p className={BODY_MUTED_CLASS}>
@@ -1256,8 +1320,10 @@ function CollapsibleDescription({
 
 function LicenseInfoBlock({
   license,
+  title,
 }: {
   license: LicensePresentation;
+  title: string;
 }) {
   type Row = { label: string; value: string };
 
@@ -1294,7 +1360,7 @@ function LicenseInfoBlock({
     <div className="space-y-4">
       {facts.length ? (
         <div className="overflow-x-auto rounded-2xl border border-border/80 bg-surface p-4 sm:p-5">
-          <h3 className={SUBSECTION_TITLE_CLASS}>Thông tin bản quyền</h3>
+          <h3 className={SUBSECTION_TITLE_CLASS}>{title}</h3>
           <dl className="mt-3 grid gap-x-8 sm:grid-cols-2">
             {facts.map((r) => (
               <div

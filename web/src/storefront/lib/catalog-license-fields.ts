@@ -9,6 +9,7 @@ import {
   parseSeoKeywords,
   optionalEnum,
 } from "@/storefront/lib/license-catalog";
+import { OFFERING_PROFILES } from "@/storefront/lib/offering-profile";
 import { z } from "zod";
 
 const emptyToNull = (v: unknown) => {
@@ -40,6 +41,7 @@ export const productSpecSchema = z.object({
 
 /** Shared Product catalog fields (create + patch). */
 export const productCatalogFieldsSchema = z.object({
+  offeringProfile: optionalEnumSchema(OFFERING_PROFILES),
   focusKeyword: z.preprocess(emptyToNull, z.string().nullable().optional()),
   seoKeywords: z.array(z.string()).optional(),
   canonicalUrl: z.preprocess(emptyToNull, z.string().nullable().optional()),
@@ -69,6 +71,9 @@ export function normalizeProductCatalogWrite(
   body: z.infer<typeof productCatalogFieldsSchema>,
 ) {
   return {
+    ...(body.offeringProfile !== undefined
+      ? { offeringProfile: body.offeringProfile }
+      : {}),
     ...(body.focusKeyword !== undefined
       ? { focusKeyword: body.focusKeyword }
       : {}),
