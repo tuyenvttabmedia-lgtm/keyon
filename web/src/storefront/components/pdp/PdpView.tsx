@@ -2672,12 +2672,10 @@ function specGroup(label: string): "system" | "platform" | "license" | "product"
 }
 
 function softwareReceiveSteps(
-  data: PdpProductData,
   variant: PdpVariantOption,
   license: LicensePresentation,
+  productName: string,
 ) {
-  const fromGuide = guideSteps(data.usageGuideHtml);
-  if (fromGuide.length >= 3) return fromGuide;
   return [
     { title: "Đặt hàng", body: "Thanh toán đơn trên KEYON." },
     {
@@ -2693,7 +2691,7 @@ function softwareReceiveSteps(
         ? `Kích hoạt theo hình thức ${license.activationLabel}.`
         : "Làm theo hướng dẫn kèm license.",
     },
-    { title: "Bắt đầu sử dụng", body: `Cài đặt và bắt đầu dùng ${data.name}.` },
+    { title: "Bắt đầu sử dụng", body: `Cài đặt và bắt đầu dùng ${productName}.` },
   ];
 }
 
@@ -2728,7 +2726,6 @@ function SoftwareProductStory({
       license.transferPolicy ||
       license.upgradePolicy,
   );
-  const guideIsSteps = guideSteps(data.usageGuideHtml).length >= 3;
   const anchors = [
     { id: "tong-quan", label: "Tổng quan", show: Boolean(stripHtml(data.description).trim()) },
     { id: "tinh-nang", label: "Tính năng", show: data.features.length > 0 },
@@ -2809,7 +2806,7 @@ function SoftwareProductStory({
         <section id="kich-hoat" className="scroll-mt-32">
           <h2 className={SUBSECTION_TITLE_CLASS}>Nhận và kích hoạt license</h2>
           <ol className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-5">
-            {softwareReceiveSteps(data, variant, license).map((step, index) => (
+            {softwareReceiveSteps(variant, license, data.name).map((step, index) => (
               <li
                 key={step.title}
                 className={`rounded-2xl border border-border bg-white px-4 py-4 ${ELEVATION_HAIRLINE}`}
@@ -2822,13 +2819,14 @@ function SoftwareProductStory({
               </li>
             ))}
           </ol>
-          {!guideIsSteps && stripHtml(data.usageGuideHtml).trim() ? (
-            <div className="mt-4">
-              <StaticPageHtml
-                body={data.usageGuideHtml}
-                className="blog-prose pdp-prose max-w-none"
-              />
-            </div>
+          {stripHtml(data.usageGuideHtml).trim() ? (
+            <CollapsibleDescription
+              body={data.usageGuideHtml}
+              contentId="pdp-activation-guide"
+              collapsedMaxPx={160}
+              expandLabel="Xem hướng dẫn kích hoạt"
+              hiddenUntilOpen
+            />
           ) : null}
         </section>
 
