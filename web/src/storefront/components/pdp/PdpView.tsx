@@ -704,6 +704,15 @@ function planTermLabel(code: string | null | undefined): string | null {
   return LICENSE_TERM_LABELS[code as LicenseTermCode];
 }
 
+function isBareSpec(row: { label: string; value: string }) {
+  const value = row.value.trim();
+  return !value || value === "—" || value === "-" || value === "–";
+}
+
+function specFact(row: { label: string; value: string }) {
+  return isBareSpec(row) ? row.label.trim() : row.value.trim();
+}
+
 function regionLabel(code: string | null | undefined): string | null {
   if (!code || !(LICENSE_REGIONS as readonly string[]).includes(code)) return null;
   return LICENSE_REGION_LABELS[code as LicenseRegion];
@@ -744,6 +753,37 @@ function PlanBoard({
     }
     return labels;
   }, []);
+  const sharedLabelCount = compareLabels.filter(
+    (label) =>
+      variants.filter((item) =>
+        item.planSpecs.some((row) => row.label === label),
+      ).length > 1,
+  ).length;
+  const compareByLabel =
+    compareLabels.length > 0 && sharedLabelCount * 2 >= compareLabels.length;
+  const maxSpecs = Math.max(0, ...variants.map((item) => item.planSpecs.length));
+  const compareRows = compareByLabel
+    ? compareLabels.map((label) => ({
+        key: label,
+        heading: label,
+        cells: variants.map((item) => {
+          const found = item.planSpecs.find((row) => row.label === label);
+          return found ? specFact(found) : "—";
+        }),
+      }))
+    : Array.from({ length: maxSpecs }, (_, index) => {
+        const named = variants
+          .map((item) => item.planSpecs[index])
+          .find((row) => row && !isBareSpec(row));
+        return {
+          key: `row-${index}`,
+          heading: named?.label ?? "",
+          cells: variants.map((item) => {
+            const row = item.planSpecs[index];
+            return row ? specFact(row) : "—";
+          }),
+        };
+      });
 
   return (
     <div className="mt-6">
@@ -784,7 +824,12 @@ function PlanBoard({
               ) : null}
               {highlight.length ? (
                 <dl className="mt-3 space-y-1.5 border-t border-border pt-3">
-                  {highlight.map((row) => (
+                  {highlight.map((row) =>
+                    isBareSpec(row) ? (
+                      <div key={row.label} className={`font-semibold text-navy ${CARD_META_CLASS}`}>
+                        {row.label}
+                      </div>
+                    ) : (
                     <div
                       key={row.label}
                       className="flex items-baseline justify-between gap-3"
@@ -796,7 +841,8 @@ function PlanBoard({
                         {row.value}
                       </dd>
                     </div>
-                  ))}
+                    ),
+                  )}
                 </dl>
               ) : null}
               {item.planFit?.trim() ? (
@@ -824,7 +870,7 @@ function PlanBoard({
       <p className={`mt-1 lg:hidden ${CARD_META_CLASS}`}>
         Trên điện thoại, vuốt ngang để xem hết các gói.
       </p>
-      {variants.length > 1 && compareLabels.length ? (
+      {variants.length > 1 && compareRows.length ? (
         <div className="mt-3">
           <button
             type="button"
@@ -855,20 +901,19 @@ function PlanBoard({
                   </tr>
                 </thead>
                 <tbody>
-                  {compareLabels.map((label) => (
-                    <tr key={label} className="border-b border-border/70">
+                  {compareRows.map((row) => (
+                    <tr key={row.key} className="border-b border-border/70">
                       <th className={`px-3 py-2 font-medium ${CARD_META_CLASS}`}>
-                        {label}
+                        {row.heading}
                       </th>
-                      {variants.map((item) => (
+                      {variants.map((item, index) => (
                         <td
                           key={item.id}
                           className={`px-3 py-2 ${BODY_CLASS} ${
                             item.id === selectedId ? "bg-accent-soft" : ""
                           }`}
                         >
-                          {item.planSpecs.find((row) => row.label === label)
-                            ?.value ?? "—"}
+                          {row.cells[index]}
                         </td>
                       ))}
                     </tr>
@@ -1722,10 +1767,16 @@ function InfraProductStory({
                   key={row.label}
                   className={`flex items-baseline justify-between gap-3 border-b border-border/70 py-2.5 last:border-b-0 ${BODY_CLASS}`}
                 >
-                  <dt className="shrink-0 text-muted-soft">{row.label}</dt>
-                  <dd className="min-w-0 text-right font-semibold text-navy">
-                    {row.value}
-                  </dd>
+                {isBareSpec(row) ? (
+                  <dd className="font-semibold text-navy">{row.label}</dd>
+                ) : (
+                  <>
+                    <dt className="shrink-0 text-muted-soft">{row.label}</dt>
+                    <dd className="min-w-0 text-right font-semibold text-navy">
+                      {row.value}
+                    </dd>
+                  </>
+                )}
                 </div>
               ))}
             </dl>
@@ -1849,7 +1900,8 @@ function StickyBar({
   const summary = planLayout
     ? variant.planSpecs
         .slice(0, 3)
-        .map((row) => row.value)
+        .map((row) => specFact(row))
+        .filter((value) => value && value !== "—")
         .join(" · ")
     : licenseSummaryParts(license).join(" · ");
   const thumbSrc = data.imageUrl || data.galleryUrls[0] || null;
