@@ -879,7 +879,41 @@ function PlanBoard({
           >
             {compareOpen ? "Ẩn bảng so sánh" : "So sánh cấu hình"}
           </button>
-          {compareOpen ? (
+          {compareOpen && !compareByLabel ? (
+            <div className={`mt-3 grid gap-3 ${columns}`}>
+              {variants.map((item) => (
+                <div
+                  key={item.id}
+                  className={`rounded-xl border px-3 py-3 ${
+                    item.id === selectedId
+                      ? "border-accent bg-accent-soft"
+                      : "border-border bg-white"
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => onSelect(item.id)}
+                    className={`${CARD_TITLE_CLASS} ${
+                      item.id === selectedId ? "text-accent" : "text-navy"
+                    }`}
+                  >
+                    {item.name}
+                  </button>
+                  <ul className="mt-2 space-y-1">
+                    {item.planSpecs.map((row) => (
+                      <li key={row.label} className={CARD_META_CLASS}>
+                        {specFact(row)}
+                      </li>
+                    ))}
+                  </ul>
+                  <p className={`mt-2 font-semibold text-navy ${BODY_CLASS}`}>
+                    {formatVnd(item.priceVnd)}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : null}
+          {compareOpen && compareByLabel ? (
             <div className="mt-3 overflow-x-auto rounded-xl border border-border">
               <table className="min-w-full border-collapse text-left">
                 <thead>
