@@ -513,7 +513,7 @@ function GalleryImages({
     else if (activeIndex >= start + visible) {
       setStart(Math.min(maxStart, activeIndex - visible + 1));
     }
-  }, [activeIndex, start, maxStart]);
+  }, [activeIndex, start, maxStart, visible]);
 
   useEffect(() => {
     if (!lightbox) return;
