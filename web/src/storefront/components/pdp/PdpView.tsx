@@ -62,7 +62,6 @@ import { StaticPageHtml } from "@/storefront/components/StaticPageHtml";
 import { stripHtml } from "@/server/cms/blog-utils";
 import {
   ELEVATION_CTA_HOVER,
-  ELEVATION_FLOAT,
   ELEVATION_HAIRLINE,
   ELEVATION_MODAL,
   ELEVATION_STICKY_UP,
@@ -527,7 +526,7 @@ function GalleryImages({
   const [lightbox, setLightbox] = useState(false);
   const [touchX, setTouchX] = useState<number | null>(null);
 
-  const windowThumbs = thumbs.slice(start, start + visible);
+  const windowThumbs = frame === "square" ? thumbs : thumbs.slice(start, start + visible);
   const activeIndex = Math.min(thumb, thumbs.length - 1);
   const activeUrl =
     typeof thumbs[activeIndex] === "string"
@@ -634,7 +633,7 @@ function GalleryImages({
         <div
           className={
             frame === "square"
-              ? "flex gap-3"
+              ? "flex flex-wrap gap-3"
               : `grid min-w-0 flex-1 gap-2.5 ${
                   windowThumbs.length >= 5
                     ? "grid-cols-5"
@@ -647,7 +646,7 @@ function GalleryImages({
           }
         >
           {windowThumbs.map((item, localIdx) => {
-            const i = start + localIdx;
+            const i = frame === "square" ? localIdx : start + localIdx;
             const url = typeof item === "string" ? item : null;
             return (
               <button
@@ -690,7 +689,7 @@ function GalleryImages({
           })}
         </div>
 
-        {canSlide ? (
+        {canSlide && frame !== "square" ? (
           <button
             type="button"
             onClick={() => goThumbs(1)}
