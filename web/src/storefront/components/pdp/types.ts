@@ -21,6 +21,7 @@ export type PdpVariantOption = {
   seatsLabel?: string | null;
   regionCode?: string | null;
   activationMethod?: string | null;
+  planSpecs: { label: string; value: string }[];
 };
 
 export type PdpLicenseDefaults = {

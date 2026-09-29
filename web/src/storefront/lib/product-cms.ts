@@ -100,6 +100,16 @@ export function linesToSpecs(text: string): ProductSpecRow[] {
     .filter((r) => r.label);
 }
 
+/** Plan board rows: `Label|Value` per line. Groups are ignored. */
+export function linesToPlanSpecs(
+  text: string,
+): { label: string; value: string }[] {
+  return linesToSpecs(text).map((row) => ({
+    label: row.label,
+    value: row.value,
+  }));
+}
+
 export function specsToLines(rows: ProductSpecRow[]): string {
   return rows
     .map((r) =>

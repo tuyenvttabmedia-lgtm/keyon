@@ -6,6 +6,8 @@ import {
   formatIssues,
   validateCatalogDraft,
 } from "@/storefront/lib/catalog-validation";
+import { linesToPlanSpecs } from "@/storefront/lib/product-cms";
+import { INFRA_SPEC_TEMPLATES } from "@/storefront/lib/offering-profile";
 import {
   DELIVERABLE_ADMIN_LABELS,
   FULFILLMENT_ADMIN_LABELS,
@@ -71,6 +73,8 @@ export function AddVariantForm({
       ...emptyVariantLicenseFields(),
       licenseTerm: offeringProfile === "INFRASTRUCTURE" ? ("1_MONTH" as const) : "",
     } as VariantLicenseFields,
+    planSpecsText:
+      offeringProfile === "INFRASTRUCTURE" ? INFRA_SPEC_TEMPLATES.cloud : "",
   });
   const licenseMerchandising = showsLicenseMerchandising(offeringProfile);
   const fulfillmentChoices = fulfillmentOptionsFor(offeringProfile);
@@ -123,6 +127,10 @@ export function AddVariantForm({
           seatsLabel: form.variantLicense.seatsLabel.trim() || null,
           regionCode: form.variantLicense.regionCode || null,
           activationMethod: form.variantLicense.activationMethod || null,
+          planSpecs:
+            offeringProfile === "INFRASTRUCTURE"
+              ? linesToPlanSpecs(form.planSpecsText)
+              : [],
         }),
       });
       const data = await res.json();
@@ -304,6 +312,7 @@ export function AddVariantForm({
       />
       ) : null}
       {offeringProfile === "INFRASTRUCTURE" ? (
+        <>
         <div className="grid gap-3 sm:grid-cols-2">
           <label className="block text-sm">
             <span className="font-medium">Chu kỳ gói</span>
@@ -352,6 +361,39 @@ export function AddVariantForm({
             </select>
           </label>
         </div>
+        <label className="block text-sm">
+          <span className="font-medium">Cấu hình gói này</span>
+          <p className="mt-0.5 text-xs text-muted">
+            Mỗi dòng `Nhãn|Giá trị`. Hiện trên bảng chọn gói.
+          </p>
+          <div className="mt-1 flex flex-wrap gap-1">
+            {(
+              [
+                ["cloud", "Cloud"],
+                ["hosting", "Hosting"],
+                ["backup", "Backup"],
+              ] as const
+            ).map(([key, label]) => (
+              <button
+                key={key}
+                type="button"
+                className="rounded-md border border-border px-2 py-0.5 text-xs font-medium text-navy"
+                onClick={() =>
+                  setForm({ ...form, planSpecsText: INFRA_SPEC_TEMPLATES[key] })
+                }
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <textarea
+            rows={6}
+            className="mt-1 w-full rounded-lg border border-border px-3 py-2 font-mono text-xs"
+            value={form.planSpecsText}
+            onChange={(e) => setForm({ ...form, planSpecsText: e.target.value })}
+          />
+        </label>
+        </>
       ) : null}
       {msg ? (
         <pre className="whitespace-pre-wrap text-sm text-danger">{msg}</pre>

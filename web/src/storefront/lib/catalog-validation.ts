@@ -14,6 +14,8 @@ export type CatalogPublishInput = {
   deliverableType?: DeliverableType | string;
   salesMotion?: string;
   supplierId?: string | null;
+  /** INFRASTRUCTURE may publish with no gallery. */
+  offeringProfile?: string | null;
   /** When true, enforce publish-ready rules */
   publishing: boolean;
 };
@@ -65,7 +67,7 @@ export function validateCatalogPublish(input: CatalogPublishInput): CatalogValid
   if (!input.categoryKey) {
     issues.push({ field: "categoryKey", message: "Xuất bản cần chọn danh mục" });
   }
-  if (!input.galleryUrls?.length) {
+  if (input.offeringProfile !== "INFRASTRUCTURE" && !input.galleryUrls?.length) {
     issues.push({
       field: "galleryUrls",
       message: "Xuất bản cần ít nhất một ảnh gallery",

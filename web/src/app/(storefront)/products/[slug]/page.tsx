@@ -205,6 +205,10 @@ export default async function ProductPage({
       seatsLabel: v.seatsLabel,
       regionCode: v.regionCode,
       activationMethod: v.activationMethod,
+      planSpecs: parseSpecRows(v.planSpecs).map((row) => ({
+        label: row.label,
+        value: row.value,
+      })),
     };
   });
 

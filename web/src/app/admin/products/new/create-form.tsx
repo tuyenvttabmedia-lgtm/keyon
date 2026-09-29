@@ -7,6 +7,7 @@ import { OgImagePicker } from "../OgImagePicker";
 import {
   linesToFaqs,
   linesToList,
+  linesToPlanSpecs,
   linesToSpecs,
   PRODUCT_CATEGORY_KEYS,
   type ProductCategoryKey,
@@ -112,6 +113,7 @@ export function ProductCreateForm({
     ogImageUrl: "",
     featuresText: "",
     specsText: "",
+    planSpecsText: "",
     faqsText: "",
     usageGuideHtml: "",
     variantName: "License Retail",
@@ -157,7 +159,8 @@ export function ProductCreateForm({
       Boolean(form.variantName.trim()) &&
       Boolean(form.sku.trim()) &&
       form.priceVnd > 0;
-    const hasMedia = form.galleryUrls.length > 0;
+    const hasMedia =
+      form.offeringProfile === "INFRASTRUCTURE" || form.galleryUrls.length > 0;
     const hasSeo = Boolean(
       (form.seoTitle.trim() || form.name.trim()) &&
         (form.seoDescription.trim() || form.shortDescription.trim()),
@@ -177,7 +180,7 @@ export function ProductCreateForm({
         ok: hasInventoryReady,
       },
       { key: "seo", label: "Có SEO", ok: hasSeo },
-      { key: "media", label: "Có Media", ok: hasMedia },
+      { key: "media", label: form.offeringProfile === "INFRASTRUCTURE" ? "Ảnh đại diện (tuỳ chọn)" : "Có Media", ok: hasMedia },
       {
         key: "provider",
         label:
@@ -248,6 +251,7 @@ export function ProductCreateForm({
         supplierId: form.supplierId || null,
         categoryKey: form.categoryKey || null,
         galleryUrls: form.galleryUrls,
+        offeringProfile: form.offeringProfile,
         publishing: form.publishNow,
       });
       if (issues.length) throw new Error(formatIssues(issues));
@@ -284,6 +288,10 @@ export function ProductCreateForm({
           galleryUrls: form.galleryUrls,
           features: linesToList(form.featuresText),
           specs: linesToSpecs(form.specsText),
+          planSpecs:
+            form.offeringProfile === "INFRASTRUCTURE"
+              ? linesToPlanSpecs(form.planSpecsText)
+              : [],
           faqs: linesToFaqs(form.faqsText),
           usageGuideHtml: form.usageGuideHtml || null,
           variantName: form.variantName,
@@ -361,10 +369,10 @@ export function ProductCreateForm({
                   ? current.variantLicense.regionCode
                   : "",
             },
-        specsText:
-          profile === "INFRASTRUCTURE" && !current.specsText.trim()
+        planSpecsText:
+          profile === "INFRASTRUCTURE" && !current.planSpecsText.trim()
             ? INFRA_SPEC_TEMPLATES.cloud
-            : current.specsText,
+            : current.planSpecsText,
       };
     });
   }
@@ -738,6 +746,7 @@ export function ProductCreateForm({
             />
           ) : null}
           {form.offeringProfile === "INFRASTRUCTURE" ? (
+            <>
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="block text-sm">
                 <span className="font-medium">Chu kỳ gói</span>
@@ -786,6 +795,45 @@ export function ProductCreateForm({
                 </select>
               </label>
             </div>
+            <label className="block text-sm">
+              <span className="font-medium">Cấu hình gói này</span>
+              <p className="mt-0.5 text-xs text-muted">
+                Mỗi dòng `Nhãn|Giá trị`. Hiện trên bảng chọn gói, riêng cho gói này.
+              </p>
+              <div className="mt-1 flex flex-wrap gap-1">
+                {(
+                  [
+                    ["cloud", "Cloud"],
+                    ["hosting", "Hosting"],
+                    ["backup", "Backup"],
+                  ] as const
+                ).map(([key, label]) => (
+                  <button
+                    key={key}
+                    type="button"
+                    className="rounded-md border border-border px-2 py-0.5 text-xs font-medium text-navy"
+                    onClick={() =>
+                      setForm({
+                        ...form,
+                        planSpecsText: INFRA_SPEC_TEMPLATES[key],
+                      })
+                    }
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <textarea
+                rows={6}
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2 font-mono text-xs"
+                placeholder={"vCPU|2\nRAM|4 GB\nSSD|80 GB"}
+                value={form.planSpecsText}
+                onChange={(e) =>
+                  setForm({ ...form, planSpecsText: e.target.value })
+                }
+              />
+            </label>
+            </>
           ) : null}
         </div>
       ) : null}
@@ -793,7 +841,16 @@ export function ProductCreateForm({
       {step === 3 ? (
         <div className="space-y-6">
           <div className="rounded-2xl border border-border bg-card p-6">
-            <h2 className="mb-3 font-semibold text-navy">Bước 3 · Gallery PDP</h2>
+            <h2 className="mb-1 font-semibold text-navy">
+              {form.offeringProfile === "INFRASTRUCTURE"
+                ? "Bước 3 · Ảnh đại diện"
+                : "Bước 3 · Gallery PDP"}
+            </h2>
+            <p className="mb-3 text-xs text-muted">
+              {form.offeringProfile === "INFRASTRUCTURE"
+                ? "Một ảnh cho thẻ kệ và khi chia sẻ link. Trang chi tiết dùng bảng gói. Có thể bỏ trống khi xuất bản."
+                : "Ảnh đầu là ảnh chính trên trang sản phẩm."}
+            </p>
             <GalleryEditor
               urls={form.galleryUrls}
               onChange={(galleryUrls) => setForm({ ...form, galleryUrls })}
@@ -857,33 +914,10 @@ export function ProductCreateForm({
               <label className="block text-sm">
                 <span className="font-medium">Specs</span>
                 <p className="mt-0.5 text-xs text-muted">
-                  `Label|Value` · yêu cầu HT: `system|CPU|…`
+                  {form.offeringProfile === "INFRASTRUCTURE"
+                    ? "Thông số chung của cả dòng. Cấu hình từng gói nhập ở bước Gói và giá."
+                    : "`Label|Value` · yêu cầu HT: `system|CPU|…`"}
                 </p>
-                {form.offeringProfile === "INFRASTRUCTURE" ? (
-                  <div className="mt-1 flex flex-wrap gap-1">
-                    {(
-                      [
-                        ["cloud", "Cloud"],
-                        ["hosting", "Hosting"],
-                        ["backup", "Backup"],
-                      ] as const
-                    ).map(([key, label]) => (
-                      <button
-                        key={key}
-                        type="button"
-                        className="rounded-md border border-border px-2 py-0.5 text-xs font-medium text-navy"
-                        onClick={() =>
-                          setForm({
-                            ...form,
-                            specsText: INFRA_SPEC_TEMPLATES[key],
-                          })
-                        }
-                      >
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                ) : null}
                 <textarea
                   rows={5}
                   className="mt-1 w-full rounded-lg border border-border px-3 py-2 font-mono text-xs"

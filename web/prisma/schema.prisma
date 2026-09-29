@@ -411,6 +411,8 @@ model ProductVariant {
   seatsLabel           String?
   regionCode           String?
   activationMethod     String?
+  /// Plan-board rows for infrastructure packages. JSON { label, value }[].
+  planSpecs            Json                 @default("[]")
   active               Boolean              @default(true)
   createdAt            DateTime             @default(now())
   updatedAt            DateTime             @updatedAt

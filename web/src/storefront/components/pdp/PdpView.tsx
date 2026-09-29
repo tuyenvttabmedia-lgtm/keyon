@@ -48,7 +48,12 @@ import {
   systemSpecsTitle,
   type OfferingProfile,
 } from "@/storefront/lib/offering-profile";
-import { resolveLicensePresentation } from "@/storefront/lib/license-catalog";
+import {
+  LICENSE_TERM_LABELS,
+  LICENSE_TERMS,
+  resolveLicensePresentation,
+  type LicenseTermCode,
+} from "@/storefront/lib/license-catalog";
 import { StaticPageHtml } from "@/storefront/components/StaticPageHtml";
 import { stripHtml } from "@/server/cms/blog-utils";
 import {
@@ -265,19 +270,29 @@ export function PdpView({ data }: { data: PdpProductData }) {
   const compare = variant.compareAtPriceVnd;
   const disc = variant.discountPercent;
 
+  const planLayout = data.offeringProfile === "INFRASTRUCTURE";
+
   return (
     <div className="bg-white pb-28">
       <div className="home-container home-section">
         <Breadcrumb data={data} variant={variant} />
 
-        <div className="mt-6 grid items-start gap-8 lg:grid-cols-2 lg:gap-10">
-          <Gallery
-            data={data}
-            variant={variant}
-            thumb={thumb}
-            onThumb={setThumb}
-            discount={disc}
-          />
+        <div
+          className={
+            planLayout
+              ? "mt-6"
+              : "mt-6 grid items-start gap-8 lg:grid-cols-2 lg:gap-10"
+          }
+        >
+          {planLayout ? null : (
+            <Gallery
+              data={data}
+              variant={variant}
+              thumb={thumb}
+              onThumb={setThumb}
+              discount={disc}
+            />
+          )}
           <PurchaseColumn
             data={data}
             variant={variant}
@@ -293,6 +308,7 @@ export function PdpView({ data }: { data: PdpProductData }) {
             compare={compare}
             disc={disc}
             soldCount={soldCount}
+            planLayout={planLayout}
           />
         </div>
 
@@ -674,6 +690,95 @@ function GalleryImages({
   );
 }
 
+function planTermLabel(code: string | null | undefined): string | null {
+  if (!code || !(LICENSE_TERMS as readonly string[]).includes(code)) return null;
+  return LICENSE_TERM_LABELS[code as LicenseTermCode];
+}
+
+function PlanBoard({
+  variants,
+  selectedId,
+  onSelect,
+}: {
+  variants: PdpVariantOption[];
+  selectedId: string;
+  onSelect: (id: string) => void;
+}) {
+  const columns =
+    variants.length >= 4
+      ? "lg:grid-cols-4"
+      : variants.length === 3
+        ? "lg:grid-cols-3"
+        : "lg:grid-cols-2";
+
+  return (
+    <div className="mt-6">
+      <p className={`${OVERLINE_CLASS} text-muted-soft`}>Chọn cấu hình</p>
+      <div
+        className={`mt-2 flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory lg:grid ${columns} lg:overflow-visible`}
+      >
+        {variants.map((item) => {
+          const selected = item.id === selectedId;
+          const term = planTermLabel(item.licenseTerm);
+          return (
+            <article
+              key={item.id}
+              className={`flex w-[17rem] shrink-0 snap-start flex-col rounded-xl border-2 px-4 py-4 lg:w-auto ${
+                selected
+                  ? "border-accent bg-accent-soft"
+                  : "border-border bg-white"
+              }`}
+            >
+              <p className={CARD_TITLE_CLASS}>{item.name}</p>
+              <p className={`mt-2 ${INLINE_PRICE_CLASS} !text-navy`}>
+                {formatVnd(item.priceVnd)}
+              </p>
+              {item.compareAtPriceVnd &&
+              item.compareAtPriceVnd > item.priceVnd ? (
+                <p className={COMPARE_PRICE_CLASS}>
+                  {formatVnd(item.compareAtPriceVnd)}
+                </p>
+              ) : null}
+              {term ? <p className={`mt-0.5 ${CARD_META_CLASS}`}>{term}</p> : null}
+              {item.planSpecs.length ? (
+                <dl className="mt-3 space-y-1.5 border-t border-border pt-3">
+                  {item.planSpecs.map((row) => (
+                    <div
+                      key={row.label}
+                      className="flex items-baseline justify-between gap-3"
+                    >
+                      <dt className={CARD_META_CLASS}>{row.label}</dt>
+                      <dd
+                        className={`text-right font-semibold text-navy ${CARD_META_CLASS}`}
+                      >
+                        {row.value}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              ) : null}
+              <button
+                type="button"
+                onClick={() => onSelect(item.id)}
+                className={`mt-4 inline-flex h-10 items-center justify-center rounded-xl px-3 ${CTA_COMPACT_CLASS} ${
+                  selected
+                    ? "bg-accent text-white"
+                    : "border border-border bg-white text-navy"
+                }`}
+              >
+                {selected ? "Đã chọn" : "Chọn gói"}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+      <p className={`mt-2 lg:hidden ${CARD_META_CLASS}`}>
+        Trên điện thoại, vuốt ngang để xem hết các gói.
+      </p>
+    </div>
+  );
+}
+
 function PurchaseColumn({
   data,
   variant,
@@ -689,6 +794,7 @@ function PurchaseColumn({
   compare,
   disc,
   soldCount,
+  planLayout,
 }: {
   data: PdpProductData;
   variant: PdpVariantOption;
@@ -704,6 +810,7 @@ function PurchaseColumn({
   compare?: number;
   disc?: number;
   soldCount: number | null;
+  planLayout: boolean;
 }) {
   const hasReviews =
     typeof data.rating === "number" &&
@@ -724,7 +831,7 @@ function PurchaseColumn({
         <p className={`mt-1 ${CARD_TITLE_CLASS} text-muted`}>{variant.name}</p>
       ) : null}
 
-      {summaryParts.length ? (
+      {summaryParts.length && !planLayout ? (
         <p className={`mt-2 ${CARD_META_CLASS} font-medium text-navy`}>
           {summaryParts.join(" · ")}
         </p>
@@ -780,10 +887,19 @@ function PurchaseColumn({
         <p className={`mt-4 line-clamp-3 ${SECTION_LEAD_CLASS}`}>{shortPlain}</p>
       ) : null}
 
-      {summaryParts.length ||
+      {planLayout ? (
+        <PlanBoard
+          variants={data.variants}
+          selectedId={variant.id}
+          onSelect={onSelectVariant}
+        />
+      ) : null}
+
+      {!planLayout &&
+      (summaryParts.length ||
       license.activationLabel ||
       license.platformLabels.length ||
-      license.regionLabel ? (
+      license.regionLabel) ? (
         <ul className="mt-4 flex flex-wrap gap-1.5" aria-label="Tóm tắt license">
           {[
             license.channelLabel,
@@ -806,6 +922,7 @@ function PurchaseColumn({
         </ul>
       ) : null}
 
+      {planLayout ? null : (
       <div className="mt-6">
         <p className={`${OVERLINE_CLASS} text-muted-soft`}>Chọn gói</p>
         <div className="mt-2 grid gap-2 sm:grid-cols-2">
@@ -841,6 +958,7 @@ function PurchaseColumn({
           })}
         </div>
       </div>
+      )}
 
       <div className="mt-5 flex flex-wrap items-center gap-3">
         <div className="inline-flex h-11 items-center overflow-hidden rounded-xl border border-border bg-white">
@@ -877,10 +995,13 @@ function PurchaseColumn({
         <InfoIcon />
         <div>
           <p>
-            {variant.fulfillmentInstant
-              ? "Sản phẩm được giao / kích hoạt tự động sau khi thanh toán thành công."
-              : "Đơn sẽ do KEYON xử lý sau thanh toán — theo dõi trong Đơn hàng / Tài sản."}
+            {planLayout
+              ? "KEYON cấp phát sau thanh toán. Theo dõi trong Đơn hàng và Tài sản."
+              : variant.fulfillmentInstant
+                ? "Sản phẩm được giao / kích hoạt tự động sau khi thanh toán thành công."
+                : "Đơn sẽ do KEYON xử lý sau thanh toán — theo dõi trong Đơn hàng / Tài sản."}
           </p>
+          {planLayout ? null : (
           <p className={`mt-1 ${CARD_META_CLASS} !text-sky-800/80`}>
             Loại nhận:{" "}
             <span className="font-semibold">{variant.receiveLabel}</span>
@@ -890,21 +1011,26 @@ function PurchaseColumn({
               ? ` · SLA: ${variant.slaPromise.trim()}`
               : ""}
           </p>
+          )}
         </div>
       </div>
 
       {!data.loggedIn ? (
         <label className="mt-4 block">
-          <span className="sr-only">Email nhận license</span>
+          <span className="sr-only">
+            {planLayout ? "Email nhận tài khoản" : "Email nhận license"}
+          </span>
           <input
             type="email"
             required
             value={email}
             onChange={(e) => onEmail(e.target.value)}
             placeholder={
-              variant.receiveKind === "activation" && !variant.fulfillmentInstant
-                ? "Email nhận bàn giao"
-                : "Email nhận license"
+              planLayout
+                ? "Email nhận tài khoản"
+                : variant.receiveKind === "activation" && !variant.fulfillmentInstant
+                  ? "Email nhận bàn giao"
+                  : "Email nhận license"
             }
             className={`w-full rounded-xl border border-border bg-white px-3.5 py-2.5 ${INPUT_TEXT_CLASS} outline-none transition focus:border-accent`}
           />
@@ -925,9 +1051,11 @@ function PurchaseColumn({
             <span>{loading ? "Đang tạo đơn…" : "Thanh toán ngay"}</span>
             {!loading ? (
               <span className={`${CTA_COMPACT_CLASS} font-medium text-white/85`}>
-                {variant.fulfillmentInstant
-                  ? "Kích hoạt tự động — Nhận key ngay"
-                  : "KEYON xử lý sau thanh toán"}
+                {planLayout
+                  ? "KEYON cấp phát sau thanh toán"
+                  : variant.fulfillmentInstant
+                    ? "Kích hoạt tự động — Nhận key ngay"
+                    : "KEYON xử lý sau thanh toán"}
               </span>
             ) : null}
           </span>

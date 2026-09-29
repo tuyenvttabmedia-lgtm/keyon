@@ -95,6 +95,7 @@ export async function POST(req: Request) {
       supplierId: body.supplierId,
       categoryKey: body.categoryKey,
       galleryUrls: body.galleryUrls ?? [],
+      offeringProfile: body.offeringProfile ?? null,
       publishing,
     });
     if (issues.length) throw new AppError(formatIssues(issues), 400);

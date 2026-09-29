@@ -202,6 +202,7 @@ export default async function AdminProductEditPage({
         ogDescription={p.ogDescription ?? ""}
         licenseDefaults={licenseDefaults}
         variantLicense={variantLicense}
+        planSpecs={parseSpecRows(variant.planSpecs)}
         offeringProfile={parseOfferingProfile(p.offeringProfile)}
         suppliers={suppliers}
         relatedProductIds={parseStringList(p.relatedProductIds)}

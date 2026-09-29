@@ -65,6 +65,15 @@ export const variantLicenseFieldsSchema = z.object({
   seatsLabel: z.preprocess(emptyToNull, z.string().nullable().optional()),
   regionCode: optionalEnumSchema(LICENSE_REGIONS),
   activationMethod: optionalEnumSchema(ACTIVATION_METHODS),
+  planSpecs: z
+    .array(
+      z.object({
+        label: z.string().min(1),
+        value: z.string().min(1),
+      }),
+    )
+    .max(12)
+    .optional(),
 });
 
 export function normalizeProductCatalogWrite(
@@ -163,6 +172,7 @@ export function normalizeVariantLicenseWrite(
             body.activationMethod,
         }
       : {}),
+    ...(body.planSpecs !== undefined ? { planSpecs: body.planSpecs } : {}),
   };
 }
 

@@ -119,8 +119,9 @@ export async function POST(req: Request) {
             licenseTerm: v.licenseTerm,
             seatsLabel: v.seatsLabel,
             regionCode: v.regionCode,
-            activationMethod: v.activationMethod,
-            active: v.active,
+      activationMethod: v.activationMethod,
+      planSpecs: v.planSpecs ?? [],
+      active: v.active,
           },
         });
         variants.push(createdV);

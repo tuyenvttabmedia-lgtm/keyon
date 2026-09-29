@@ -118,6 +118,7 @@ export async function POST(req: Request) {
       fulfillmentStrategy: body.fulfillmentStrategy,
       deliverableType: body.deliverableType,
       supplierId: body.supplierId,
+      offeringProfile: product.offeringProfile,
       publishing: false,
     });
     if (issues.length) throw new AppError(formatIssues(issues), 400);
@@ -215,6 +216,8 @@ export async function PATCH(req: Request) {
         body.supplierId !== undefined ? body.supplierId : variant.supplierId,
       categoryKey: nextCategory,
       galleryUrls: Array.isArray(nextGallery) ? nextGallery : [],
+      offeringProfile:
+        body.offeringProfile ?? variant.product.offeringProfile,
       publishing: nextProductActive === true,
     });
     if (issues.length) throw new AppError(formatIssues(issues), 400);
@@ -240,6 +243,7 @@ export async function PATCH(req: Request) {
       fulfillmentStrategy?: FulfillmentStrategy;
       deliverableType?: DeliverableType;
       supplierId?: string | null;
+      planSpecs?: Prisma.InputJsonValue;
     } = { ...licenseWrite };
     if (typeof body.active === "boolean") variantData.active = body.active;
     if (typeof body.priceVnd === "number") variantData.priceVnd = body.priceVnd;
