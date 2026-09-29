@@ -430,8 +430,12 @@ function Breadcrumb({ data }: { data: PdpProductData }) {
         {data.categoryLabel}
       </Link>
       <Sep />
-      <span className="text-muted">{data.brandName}</span>
-      <Sep />
+      {data.brandName.trim().toLowerCase() === data.categoryLabel.trim().toLowerCase() ? null : (
+        <>
+          <span className="text-muted">{data.brandName}</span>
+          <Sep />
+        </>
+      )}
       <span className={BREADCRUMB_CURRENT_CLASS}>{data.name}</span>
     </nav>
   );
@@ -2711,7 +2715,12 @@ function SoftwareBuyBox({
 
 function specGroup(label: string): "system" | "platform" | "license" | "product" {
   const text = label.toLowerCase();
-  if (/cpu|ram|gpu|vga|ổ|storage|dung lượng|màn hình|display|\.net|card đồ họa|đĩa/.test(text)) {
+  if (/cloud storage|onedrive/.test(text)) return "product";
+  if (
+    /cpu|ram|gpu|vga|ổ|storage|dung lượng|màn hình|display|độ phân giải|\.net|card đồ họa|đĩa|firmware|tpm|secure boot|internet|\bmạng\b|network/.test(
+      text,
+    )
+  ) {
     return "system";
   }
   if (/hệ điều hành|kiến trúc|nền tảng|ngôn ngữ|\bbit\b/.test(text)) return "platform";
