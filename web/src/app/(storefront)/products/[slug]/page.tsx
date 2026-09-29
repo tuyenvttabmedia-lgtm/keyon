@@ -159,7 +159,11 @@ export default async function ProductPage({
   if (!variantsRaw.length) notFound();
 
   const initial =
-    variantsRaw.find((v) => v.id === sp.variant) ?? variantsRaw[0]!;
+    variantsRaw.find((v) => v.id === sp.variant) ??
+    (product.offeringProfile === "INFRASTRUCTURE"
+      ? variantsRaw.find((v) => /standard/i.test(v.name))
+      : undefined) ??
+    variantsRaw[0]!;
 
   const session = await readSession();
   const inferredCat = inferCategory(product.brand.name, product.name);

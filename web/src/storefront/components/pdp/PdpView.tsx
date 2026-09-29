@@ -551,7 +551,7 @@ function GalleryImages({
         }}
         className={`relative w-full overflow-hidden rounded-2xl border border-border/80 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
           frame === "wide"
-            ? `aspect-video ${ELEVATION_HAIRLINE}`
+            ? `h-[280px] sm:h-[360px] lg:h-[440px] ${ELEVATION_HAIRLINE}`
             : `aspect-square ${ELEVATION_FLOAT} ${TRANSITION_UI} hover:shadow-[0_16px_44px_rgba(15,23,42,0.12)]`
         }`}
         aria-label={`Xem ảnh lớn: ${imageAlt}`}
@@ -776,17 +776,52 @@ function packageHighlights(rows: { label: string; value: string }[]) {
   };
 }
 
+function packageBenefitCards(variant: PdpVariantOption) {
+  const cards = packageHighlights(variant.planSpecs).cards;
+  const cpu = cards.find((card) => card.id === "cpu")?.value;
+  const ram = cards.find((card) => card.id === "ram")?.value;
+  const storage = cards.find((card) => card.id === "storage")?.value;
+  const fit = variant.planFit?.trim().replace(/\.$/, "");
+  const audience = fit
+    ? fit.charAt(0).toLowerCase() + fit.slice(1)
+    : "nhu cầu đã chọn";
+  return [
+    {
+      title: "Hiệu năng ổn định",
+      desc:
+        cpu && ram
+          ? `${cpu} và ${ram} cho ${audience}.`
+          : "Tài nguyên CPU và RAM theo cấu hình đã chọn.",
+    },
+    {
+      title: "NVMe tốc độ cao",
+      desc: storage
+        ? `${storage} cho website và ứng dụng cần đọc ghi ổn định.`
+        : "Lưu trữ nhanh cho website và ứng dụng.",
+    },
+    {
+      title: "Public IPv4 riêng",
+      desc: "Dễ cấu hình tên miền, SSL và dịch vụ cần địa chỉ IP public.",
+    },
+    {
+      title: "Linux và môi trường linh hoạt",
+      desc: "Chủ động triển khai và cấu hình hệ thống trên Linux.",
+    },
+    {
+      title: "Dễ dàng nâng cấp",
+      desc: "Có thể chuyển lên cấu hình cao hơn khi nhu cầu tăng.",
+    },
+    {
+      title: "Hỗ trợ kỹ thuật",
+      desc: "KEYON hỗ trợ khởi tạo và vận hành theo phạm vi gói đã đăng ký.",
+    },
+  ];
+}
+
 function priceCycleSuffix(code: string | null | undefined) {
   if (code === "1_MONTH") return "/tháng";
   if (code === "1_YEAR") return "/năm";
   return "";
-}
-
-function featureParts(feature: string) {
-  const parts = feature.split(/\s*[|]\s*/);
-  const title = (parts[0] ?? feature).trim();
-  const desc = parts.slice(1).join(" | ").trim();
-  return { title, desc };
 }
 
 function guideSteps(html: string) {
@@ -816,6 +851,9 @@ function selectedPackageRows(variant: PdpVariantOption): { label: string; value:
   if (region && !has(/khu vực/i)) rows.push({ label: "Khu vực", value: region });
   if (variant.slaPromise?.trim() && !has(/hỗ trợ|sla/i)) {
     rows.push({ label: "Hỗ trợ", value: variant.slaPromise.trim() });
+  }
+  if (!has(/provisioning|khởi tạo/i)) {
+    rows.push({ label: "Provisioning", value: "KEYON" });
   }
   return rows;
 }
@@ -876,14 +914,17 @@ function PlanBoard({
 
   return (
     <div className="mt-6">
-      <p className={`${OVERLINE_CLASS} text-muted-soft`}>Chọn cấu hình</p>
+      <p className={`${OVERLINE_CLASS} text-muted-soft`}>Chọn cấu hình phù hợp</p>
       <div
         className={`mt-2 flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory lg:grid ${columns} lg:overflow-visible`}
       >
         {variants.map((item) => {
           const selected = item.id === selectedId;
           const term = planTermLabel(item.licenseTerm);
-          const highlight = item.planSpecs.slice(0, 5);
+          const highlight = packageHighlights(item.planSpecs).cards.filter(
+            (card) => card.id !== "network",
+          );
+          const popular = /standard/i.test(item.name);
           return (
             <article
               key={item.id}
@@ -893,7 +934,14 @@ function PlanBoard({
                   : "border-border bg-white"
               }`}
             >
-              <p className={CARD_TITLE_CLASS}>{item.name}</p>
+              <div className="flex items-start justify-between gap-2">
+                <p className={CARD_TITLE_CLASS}>{item.name}</p>
+                {popular ? (
+                  <span className={`shrink-0 rounded-md bg-accent px-2 py-0.5 ${BADGE_CLASS} text-white`}>
+                    Phổ biến
+                  </span>
+                ) : null}
+              </div>
               <p className={`mt-2 ${INLINE_PRICE_CLASS} !text-navy`}>
                 {formatVnd(item.priceVnd)}
                 {priceCycleSuffix(item.licenseTerm)}
@@ -913,27 +961,16 @@ function PlanBoard({
                 </p>
               ) : null}
               {highlight.length ? (
-                <dl className="mt-3 space-y-1.5 border-t border-border pt-3">
-                  {highlight.map((row) =>
-                    isBareSpec(row) ? (
-                      <div key={row.label} className={`font-semibold text-navy ${CARD_META_CLASS}`}>
-                        {row.label}
-                      </div>
-                    ) : (
-                    <div
-                      key={row.label}
-                      className="flex items-baseline justify-between gap-3"
+                <ul className="mt-3 space-y-1 border-t border-border pt-3">
+                  {highlight.map((card) => (
+                    <li
+                      key={card.id}
+                      className={`font-semibold text-navy ${CARD_META_CLASS}`}
                     >
-                      <dt className={CARD_META_CLASS}>{row.label}</dt>
-                      <dd
-                        className={`text-right font-semibold text-navy ${CARD_META_CLASS}`}
-                      >
-                        {row.value}
-                      </dd>
-                    </div>
-                    ),
-                  )}
-                </dl>
+                      {card.value}
+                    </li>
+                  ))}
+                </ul>
               ) : null}
               {item.planFit?.trim() ? (
                 <p className={`mt-3 ${CARD_META_CLASS}`}>
@@ -1115,7 +1152,7 @@ function PurchaseColumn({
       <p className={`${OVERLINE_CLASS} text-accent`}>{data.brandName}</p>
 
       <h1 className={`mt-2 ${PDP_TITLE_CLASS}`}>{data.name}</h1>
-      {variant.name ? (
+      {variant.name && !planLayout ? (
         <p className={`mt-1 ${CARD_TITLE_CLASS} text-muted`}>{variant.name}</p>
       ) : null}
 
@@ -1252,10 +1289,98 @@ function PurchaseColumn({
       </div>
       )}
 
+      {planLayout ? (
+        <div className={`mt-5 rounded-2xl border border-border bg-surface px-4 py-4 sm:px-5 ${ELEVATION_HAIRLINE}`}>
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className={CARD_TITLE_CLASS}>{variant.name}</p>
+              <p className={`mt-1 ${INLINE_PRICE_CLASS} !text-navy`}>
+                {formatVnd(variant.priceVnd * qty)}
+                {priceCycleSuffix(variant.licenseTerm)}
+              </p>
+              <p className={`mt-1 ${CARD_META_CLASS}`}>Đã bao gồm VAT.</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className={CARD_META_CLASS}>Số lượng máy chủ</span>
+              <div className="inline-flex h-11 items-center overflow-hidden rounded-xl border border-border bg-white">
+                <button
+                  type="button"
+                  className="flex h-full w-10 items-center justify-center text-navy transition hover:bg-surface disabled:opacity-40"
+                  disabled={qty <= 1}
+                  onClick={() => onQty(Math.max(1, qty - 1))}
+                  aria-label="Giảm số lượng"
+                >
+                  −
+                </button>
+                <span className={`min-w-10 text-center ${FIELD_VALUE_NUM_CLASS}`}>
+                  {qty}
+                </span>
+                <button
+                  type="button"
+                  className="flex h-full w-10 items-center justify-center text-navy transition hover:bg-surface disabled:opacity-40"
+                  disabled={qty >= 5}
+                  onClick={() => onQty(Math.min(5, qty + 1))}
+                  aria-label="Tăng số lượng"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          </div>
+          {packageHighlights(variant.planSpecs).cards.length ? (
+            <dl className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {packageHighlights(variant.planSpecs).cards.map((card) => (
+                <div key={card.id}>
+                  <dt className={CARD_META_CLASS}>{card.title}</dt>
+                  <dd className={`mt-0.5 font-semibold text-navy ${BODY_CLASS}`}>
+                    {card.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          ) : null}
+          {!data.loggedIn ? (
+            <label className="mt-4 block">
+              <span className="sr-only">Email nhận tài khoản</span>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => onEmail(e.target.value)}
+                placeholder="Email nhận tài khoản"
+                className={`w-full rounded-xl border border-border bg-white px-3.5 py-2.5 ${INPUT_TEXT_CLASS} outline-none transition focus:border-accent`}
+              />
+            </label>
+          ) : null}
+          {error ? <p className={`mt-3 ${FORM_ERROR_CLASS}`}>{error}</p> : null}
+          {variant.canBuy ? (
+            <button
+              type="button"
+              disabled={loading || !email}
+              onClick={onBuy}
+              className={`mt-4 inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER} disabled:opacity-50`}
+            >
+              <BoltIcon />
+              {loading ? "Đang tạo đơn…" : `Đăng ký ${data.name}`}
+            </button>
+          ) : (
+            <div className="mt-4 rounded-xl bg-accent-soft p-4 text-sm text-accent">
+              Gói này hiện cần báo giá. Dùng tư vấn cấu hình bên dưới.
+            </div>
+          )}
+          <p className={`mt-3 ${CARD_META_CLASS}`}>
+            KEYON khởi tạo máy chủ sau khi thanh toán thành công.
+          </p>
+          <Link
+            href={quoteHref}
+            className={`mt-3 inline-flex h-11 w-full items-center justify-center rounded-xl border border-border bg-white px-5 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+          >
+            Tư vấn cấu hình
+          </Link>
+        </div>
+      ) : (
+      <>
       <div className="mt-5 flex flex-wrap items-center gap-3">
-        {planLayout ? (
-          <span className={CARD_META_CLASS}>Số lượng máy chủ</span>
-        ) : null}
         <div className="inline-flex h-11 items-center overflow-hidden rounded-xl border border-border bg-white">
           <button
             type="button"
@@ -1378,10 +1503,10 @@ function PurchaseColumn({
       </Link>
 
       <p className={`mt-4 border-t border-border pt-4 text-center ${CARD_META_CLASS} sm:text-left`}>
-        {planLayout
-          ? "Thanh toán an toàn · KEYON xác nhận cấu hình sau thanh toán"
-          : "Thanh toán an toàn · Giao hàng kỹ thuật số · Hỗ trợ sau bán hàng"}
+        Thanh toán an toàn · Giao hàng kỹ thuật số · Hỗ trợ sau bán hàng
       </p>
+      </>
+      )}
     </div>
   );
 }
@@ -1687,12 +1812,14 @@ function LicenseWarningBlock() {
 function CollapsibleDescription({
   body,
   contentId = "pdp-full-description",
+  collapsedMaxPx = 280,
+  expandLabel = "Xem thêm",
 }: {
   body: string;
   contentId?: string;
+  collapsedMaxPx?: number;
+  expandLabel?: string;
 }) {
-  /** ~8–10 dòng prose — đủ scan, không đẩy Features xuống đáy trang. */
-  const COLLAPSED_MAX_PX = 280;
   const [expanded, setExpanded] = useState(false);
   const [needsClamp, setNeedsClamp] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -1702,13 +1829,13 @@ function CollapsibleDescription({
     if (!el) return;
     function measure() {
       if (!contentRef.current) return;
-      setNeedsClamp(contentRef.current.scrollHeight > COLLAPSED_MAX_PX + 12);
+      setNeedsClamp(contentRef.current.scrollHeight > collapsedMaxPx + 12);
     }
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [body]);
+  }, [body, collapsedMaxPx]);
 
   const clamped = needsClamp && !expanded;
 
@@ -1718,7 +1845,8 @@ function CollapsibleDescription({
         <div
           ref={contentRef}
           id={contentId}
-          className={clamped ? "max-h-[280px] overflow-hidden" : undefined}
+          className={clamped ? "overflow-hidden" : undefined}
+          style={clamped ? { maxHeight: collapsedMaxPx } : undefined}
         >
           <StaticPageHtml
             body={body}
@@ -1741,7 +1869,7 @@ function CollapsibleDescription({
             aria-expanded={expanded}
             aria-controls={contentId}
           >
-            {expanded ? "Thu gọn" : "Xem thêm"}
+            {expanded ? "Thu gọn" : expandLabel}
             <span aria-hidden className="text-base leading-none">
               {expanded ? "↑" : "↓"}
             </span>
@@ -1929,19 +2057,21 @@ function InfraProductStory({
                           key={card.id}
                           className={`rounded-2xl border border-border bg-white px-4 py-4 ${ELEVATION_HAIRLINE}`}
                         >
-                          <p className={`${OVERLINE_CLASS} text-muted-soft`}>
-                            {card.title}
-                          </p>
-                          <p className={`mt-2 text-navy ${CARD_TITLE_CLASS}`}>
+                          <p className={`text-navy ${CARD_TITLE_CLASS}`}>
                             {card.value}
+                          </p>
+                          <p className={`mt-1 ${OVERLINE_CLASS} text-muted-soft`}>
+                            {card.title}
                           </p>
                         </div>
                       ))}
                     </div>
                   ) : null}
                   {detail.length ? (
+                    <div className={summary.cards.length ? "mt-4" : ""}>
+                      <h3 className={CARD_TITLE_CLASS}>Thông tin dịch vụ</h3>
                     <dl
-                      className={`${summary.cards.length ? "mt-4" : ""} overflow-x-auto rounded-2xl border border-border/80 bg-surface px-4 sm:px-5`}
+                      className="mt-3 overflow-x-auto rounded-2xl border border-border/80 bg-surface px-4 sm:px-5"
                     >
                       {detail.map((row) => (
                         <div
@@ -1961,6 +2091,7 @@ function InfraProductStory({
                         </div>
                       ))}
                     </dl>
+                    </div>
                   ) : null}
                 </>
               );
@@ -1972,17 +2103,15 @@ function InfraProductStory({
       {data.features.length ? (
         <section>
           <h2 className={SUBSECTION_TITLE_CLASS}>
-            Quyền lợi khi sử dụng {data.name}
+            Bạn nhận được gì với {variant.name}?
           </h2>
           <p className={`mt-2 ${CARD_META_CLASS}`}>
-            Áp dụng chung cho mọi gói của dòng này.
+            Theo đúng cấu hình đang chọn.
           </p>
           <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {data.features.slice(0, 6).map((feature) => {
-              const item = featureParts(feature);
-              return (
+            {packageBenefitCards(variant).map((item) => (
               <li
-                key={feature}
+                key={item.title}
                 className={`rounded-2xl border border-border bg-white px-4 py-4 ${ELEVATION_HAIRLINE}`}
               >
                 <div className="flex items-start gap-2.5">
@@ -1991,14 +2120,11 @@ function InfraProductStory({
                   </span>
                   <div className="min-w-0">
                     <p className={`text-navy ${CARD_TITLE_CLASS}`}>{item.title}</p>
-                    {item.desc ? (
-                      <p className={`mt-1 ${CARD_META_CLASS}`}>{item.desc}</p>
-                    ) : null}
+                    <p className={`mt-1 ${CARD_META_CLASS}`}>{item.desc}</p>
                   </div>
                 </div>
               </li>
-              );
-            })}
+            ))}
           </ul>
         </section>
       ) : null}
@@ -2007,14 +2133,20 @@ function InfraProductStory({
         <section>
           <h2 className={SUBSECTION_TITLE_CLASS}>Mô tả sản phẩm</h2>
           <div className="mt-4">
-            <CollapsibleDescription body={data.description} />
+            <CollapsibleDescription
+              body={data.description}
+              collapsedMaxPx={160}
+              expandLabel="Xem chi tiết"
+            />
           </div>
         </section>
       ) : null}
 
       {data.galleryUrls.length ? (
         <section>
-          <h2 className={`mb-4 ${SUBSECTION_TITLE_CLASS}`}>Hình ảnh</h2>
+          <h2 className={`mb-4 ${SUBSECTION_TITLE_CLASS}`}>
+            Hình ảnh {data.name}
+          </h2>
           <Gallery
             data={data}
             variant={variant}
@@ -2027,8 +2159,11 @@ function InfraProductStory({
 
       <section>
         <h2 className={SUBSECTION_TITLE_CLASS}>
-          {guidePdpHeading(data.offeringProfile)}
+          Quy trình triển khai {data.name}
         </h2>
+        <p className={`mt-2 ${CARD_META_CLASS}`}>
+          Từ lúc đặt hàng đến khi nhận thông tin truy cập.
+        </p>
         {stripHtml(data.usageGuideHtml).trim() ? (
           <InfraGuide body={data.usageGuideHtml} />
         ) : (
@@ -2160,7 +2295,7 @@ function StickyBar({
             className={`inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover disabled:opacity-50`}
           >
             <BoltIcon />
-            {loading ? "Đang tạo đơn…" : planLayout ? "Đăng ký ngay" : "Thanh toán ngay"}
+            {loading ? "Đang tạo đơn…" : planLayout ? `Đăng ký ${data.name}` : "Thanh toán ngay"}
           </button>
         </div>
       </div>
