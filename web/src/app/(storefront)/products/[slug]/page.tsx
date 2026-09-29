@@ -209,6 +209,8 @@ export default async function ProductPage({
         label: row.label,
         value: row.value,
       })),
+      planSummary: v.planSummary,
+      planFit: v.planFit,
     };
   });
 

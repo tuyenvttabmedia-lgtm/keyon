@@ -244,6 +244,8 @@ export async function PATCH(req: Request) {
       deliverableType?: DeliverableType;
       supplierId?: string | null;
       planSpecs?: Prisma.InputJsonValue;
+      planSummary?: string | null;
+      planFit?: string | null;
     } = { ...licenseWrite };
     if (typeof body.active === "boolean") variantData.active = body.active;
     if (typeof body.priceVnd === "number") variantData.priceVnd = body.priceVnd;

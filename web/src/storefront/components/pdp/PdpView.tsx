@@ -49,9 +49,12 @@ import {
   type OfferingProfile,
 } from "@/storefront/lib/offering-profile";
 import {
+  LICENSE_REGION_LABELS,
+  LICENSE_REGIONS,
   LICENSE_TERM_LABELS,
   LICENSE_TERMS,
   resolveLicensePresentation,
+  type LicenseRegion,
   type LicenseTermCode,
 } from "@/storefront/lib/license-catalog";
 import { StaticPageHtml } from "@/storefront/components/StaticPageHtml";
@@ -312,22 +315,27 @@ export function PdpView({ data }: { data: PdpProductData }) {
           />
         </div>
 
-        <FeatureBar
-          features={data.features}
-          instant={variant.fulfillmentInstant}
-          brandName={data.brandName}
-          receiveLabel={variant.receiveLabel}
-          profile={data.offeringProfile}
-        />
-
-        <TabsSection
-          data={data}
-          variant={variant}
-          license={license}
-          tab={tab}
-          tabs={tabLabels}
-          onTab={setTab}
-        />
+        {planLayout ? (
+          <InfraProductStory data={data} variant={variant} />
+        ) : (
+          <>
+            <FeatureBar
+              features={data.features}
+              instant={variant.fulfillmentInstant}
+              brandName={data.brandName}
+              receiveLabel={variant.receiveLabel}
+              profile={data.offeringProfile}
+            />
+            <TabsSection
+              data={data}
+              variant={variant}
+              license={license}
+              tab={tab}
+              tabs={tabLabels}
+              onTab={setTab}
+            />
+          </>
+        )}
 
         {data.related.length ? (
           <section className="mt-10 md:mt-12">
@@ -359,6 +367,7 @@ export function PdpView({ data }: { data: PdpProductData }) {
         onBuy={checkout}
         compare={compare}
         disc={disc}
+        planLayout={planLayout}
       />
     </div>
   );
@@ -695,6 +704,24 @@ function planTermLabel(code: string | null | undefined): string | null {
   return LICENSE_TERM_LABELS[code as LicenseTermCode];
 }
 
+function regionLabel(code: string | null | undefined): string | null {
+  if (!code || !(LICENSE_REGIONS as readonly string[]).includes(code)) return null;
+  return LICENSE_REGION_LABELS[code as LicenseRegion];
+}
+
+function selectedPackageRows(variant: PdpVariantOption): { label: string; value: string }[] {
+  const rows = variant.planSpecs.map((row) => ({ ...row }));
+  const term = planTermLabel(variant.licenseTerm);
+  const region = regionLabel(variant.regionCode);
+  const has = (pattern: RegExp) => rows.some((row) => pattern.test(row.label));
+  if (term && !has(/thời hạn|chu kỳ/i)) rows.push({ label: "Thời hạn", value: term });
+  if (region && !has(/khu vực/i)) rows.push({ label: "Khu vực", value: region });
+  if (variant.slaPromise?.trim() && !has(/hỗ trợ|sla/i)) {
+    rows.push({ label: "Hỗ trợ", value: variant.slaPromise.trim() });
+  }
+  return rows;
+}
+
 function PlanBoard({
   variants,
   selectedId,
@@ -704,12 +731,19 @@ function PlanBoard({
   selectedId: string;
   onSelect: (id: string) => void;
 }) {
+  const [compareOpen, setCompareOpen] = useState(false);
   const columns =
     variants.length >= 4
       ? "lg:grid-cols-4"
       : variants.length === 3
         ? "lg:grid-cols-3"
         : "lg:grid-cols-2";
+  const compareLabels = variants.reduce<string[]>((labels, item) => {
+    for (const row of item.planSpecs) {
+      if (!labels.includes(row.label)) labels.push(row.label);
+    }
+    return labels;
+  }, []);
 
   return (
     <div className="mt-6">
@@ -720,6 +754,7 @@ function PlanBoard({
         {variants.map((item) => {
           const selected = item.id === selectedId;
           const term = planTermLabel(item.licenseTerm);
+          const highlight = item.planSpecs.slice(0, 5);
           return (
             <article
               key={item.id}
@@ -733,16 +768,23 @@ function PlanBoard({
               <p className={`mt-2 ${INLINE_PRICE_CLASS} !text-navy`}>
                 {formatVnd(item.priceVnd)}
               </p>
+              {term ? <p className={`mt-0.5 ${CARD_META_CLASS}`}>{term}</p> : null}
               {item.compareAtPriceVnd &&
               item.compareAtPriceVnd > item.priceVnd ? (
-                <p className={COMPARE_PRICE_CLASS}>
-                  {formatVnd(item.compareAtPriceVnd)}
+                <p className={`mt-1 ${CARD_META_CLASS}`}>
+                  <span className={COMPARE_PRICE_CLASS}>
+                    {formatVnd(item.compareAtPriceVnd)}
+                  </span>
+                  {item.discountPercent ? (
+                    <span className="ml-2 font-semibold text-emerald-700">
+                      Tiết kiệm {item.discountPercent}%
+                    </span>
+                  ) : null}
                 </p>
               ) : null}
-              {term ? <p className={`mt-0.5 ${CARD_META_CLASS}`}>{term}</p> : null}
-              {item.planSpecs.length ? (
+              {highlight.length ? (
                 <dl className="mt-3 space-y-1.5 border-t border-border pt-3">
-                  {item.planSpecs.map((row) => (
+                  {highlight.map((row) => (
                     <div
                       key={row.label}
                       className="flex items-baseline justify-between gap-3"
@@ -756,6 +798,12 @@ function PlanBoard({
                     </div>
                   ))}
                 </dl>
+              ) : null}
+              {item.planFit?.trim() ? (
+                <p className={`mt-3 ${CARD_META_CLASS}`}>
+                  <span className="font-semibold text-navy">Phù hợp với </span>
+                  {item.planFit.trim()}
+                </p>
               ) : null}
               <button
                 type="button"
@@ -772,9 +820,80 @@ function PlanBoard({
           );
         })}
       </div>
-      <p className={`mt-2 lg:hidden ${CARD_META_CLASS}`}>
+      <p className={`mt-2 ${CARD_META_CLASS}`}>Giá đã bao gồm VAT.</p>
+      <p className={`mt-1 lg:hidden ${CARD_META_CLASS}`}>
         Trên điện thoại, vuốt ngang để xem hết các gói.
       </p>
+      {variants.length > 1 && compareLabels.length ? (
+        <div className="mt-3">
+          <button
+            type="button"
+            onClick={() => setCompareOpen((open) => !open)}
+            className={`${LINK_ACCENT_CLASS} ${CTA_COMPACT_CLASS}`}
+          >
+            {compareOpen ? "Ẩn bảng so sánh" : "So sánh cấu hình"}
+          </button>
+          {compareOpen ? (
+            <div className="mt-3 overflow-x-auto rounded-xl border border-border">
+              <table className="min-w-full border-collapse text-left">
+                <thead>
+                  <tr className="border-b border-border bg-surface">
+                    <th className={`px-3 py-2 ${CARD_META_CLASS}`}>Thông số</th>
+                    {variants.map((item) => (
+                      <th key={item.id} className="px-3 py-2">
+                        <button
+                          type="button"
+                          onClick={() => onSelect(item.id)}
+                          className={`${CARD_TITLE_CLASS} ${
+                            item.id === selectedId ? "text-accent" : "text-navy"
+                          }`}
+                        >
+                          {item.name}
+                        </button>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {compareLabels.map((label) => (
+                    <tr key={label} className="border-b border-border/70">
+                      <th className={`px-3 py-2 font-medium ${CARD_META_CLASS}`}>
+                        {label}
+                      </th>
+                      {variants.map((item) => (
+                        <td
+                          key={item.id}
+                          className={`px-3 py-2 ${BODY_CLASS} ${
+                            item.id === selectedId ? "bg-accent-soft" : ""
+                          }`}
+                        >
+                          {item.planSpecs.find((row) => row.label === label)
+                            ?.value ?? "—"}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                  <tr>
+                    <th className={`px-3 py-2 font-medium ${CARD_META_CLASS}`}>
+                      Giá
+                    </th>
+                    {variants.map((item) => (
+                      <td
+                        key={item.id}
+                        className={`px-3 py-2 font-semibold text-navy ${BODY_CLASS} ${
+                          item.id === selectedId ? "bg-accent-soft" : ""
+                        }`}
+                      >
+                        {formatVnd(item.priceVnd)}
+                      </td>
+                    ))}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -868,6 +987,7 @@ function PurchaseColumn({
         </div>
       ) : null}
 
+      {planLayout ? null : (
       <div className="mt-5 flex flex-wrap items-end gap-3">
         <p className={PDP_PRICE_CLASS}>{formatVnd(variant.priceVnd)}</p>
         {compare && compare > variant.priceVnd ? (
@@ -881,7 +1001,10 @@ function PurchaseColumn({
           </span>
         ) : null}
       </div>
+      )}
+      {planLayout ? null : (
       <p className={`mt-1 ${CARD_META_CLASS}`}>Đã bao gồm VAT</p>
+      )}
 
       {shortPlain ? (
         <p className={`mt-4 line-clamp-3 ${SECTION_LEAD_CLASS}`}>{shortPlain}</p>
@@ -1048,7 +1171,13 @@ function PurchaseColumn({
         >
           <BoltIcon />
           <span className="flex flex-col items-start leading-tight sm:flex-row sm:items-center sm:gap-2">
-            <span>{loading ? "Đang tạo đơn…" : "Thanh toán ngay"}</span>
+            <span>
+              {loading
+                ? "Đang tạo đơn…"
+                : planLayout
+                  ? `Thanh toán ${variant.name}`
+                  : "Thanh toán ngay"}
+            </span>
             {!loading ? (
               <span className={`${CTA_COMPACT_CLASS} font-medium text-white/85`}>
                 {planLayout
@@ -1066,11 +1195,16 @@ function PurchaseColumn({
         </div>
       )}
 
+      {planLayout ? (
+        <p className={`mt-4 text-center ${CARD_META_CLASS} sm:text-left`}>
+          Cần cấu hình riêng?
+        </p>
+      ) : null}
       <Link
         href={quoteHref}
         className={`mt-3 inline-flex h-11 w-full items-center justify-center rounded-xl border border-border bg-white px-5 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
       >
-        {PDP_QUOTE_LABEL}
+        {planLayout ? "Tư vấn cấu hình" : PDP_QUOTE_LABEL}
       </Link>
 
       <p className={`mt-4 border-t border-border pt-4 text-center ${CARD_META_CLASS} sm:text-left`}>
@@ -1554,6 +1688,140 @@ function SpecsCard({
   );
 }
 
+function InfraProductStory({
+  data,
+  variant,
+}: {
+  data: PdpProductData;
+  variant: PdpVariantOption;
+}) {
+  const [thumb, setThumb] = useState(0);
+  const rows = selectedPackageRows(variant);
+  const quoteHref = `${QUOTE_HREF}?product=${encodeURIComponent(data.slug)}&variant=${encodeURIComponent(variant.id)}`;
+  const guideHelp =
+    data.offeringProfile === "INFRASTRUCTURE"
+      ? "Cần hỗ trợ triển khai?"
+      : "Cần hỗ trợ kích hoạt?";
+
+  return (
+    <div className="mt-10 space-y-10 md:mt-12 md:space-y-12">
+      {rows.length ? (
+        <section>
+          <h2 className={SUBSECTION_TITLE_CLASS}>
+            Cấu hình {variant.name}
+          </h2>
+          {variant.planSummary?.trim() ? (
+            <p className={`mt-3 max-w-3xl ${SECTION_LEAD_CLASS}`}>
+              {variant.planSummary.trim()}
+            </p>
+          ) : null}
+          <div className="mt-4 overflow-x-auto rounded-2xl border border-border/80 bg-surface p-4 sm:p-5">
+            <dl>
+              {rows.map((row) => (
+                <div
+                  key={row.label}
+                  className={`flex items-baseline justify-between gap-3 border-b border-border/70 py-2.5 last:border-b-0 ${BODY_CLASS}`}
+                >
+                  <dt className="shrink-0 text-muted-soft">{row.label}</dt>
+                  <dd className="min-w-0 text-right font-semibold text-navy">
+                    {row.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
+      ) : null}
+
+      {data.features.length ? (
+        <section>
+          <h2 className={SUBSECTION_TITLE_CLASS}>
+            Quyền lợi khi sử dụng {data.name}
+          </h2>
+          <p className={`mt-2 ${CARD_META_CLASS}`}>
+            Áp dụng chung cho mọi gói của dòng này.
+          </p>
+          <ul className="mt-4 grid gap-x-8 gap-y-2.5 sm:grid-cols-2">
+            {data.features.map((feature) => (
+              <li
+                key={feature}
+                className={`flex items-start gap-2.5 ${BODY_CLASS}`}
+              >
+                <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+                  <CheckIcon small />
+                </span>
+                <span className="min-w-0 leading-snug">{feature}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {stripHtml(data.description).trim() ? (
+        <section>
+          <h2 className={SUBSECTION_TITLE_CLASS}>Mô tả sản phẩm</h2>
+          <div className="mt-4">
+            <CollapsibleDescription body={data.description} />
+          </div>
+        </section>
+      ) : null}
+
+      {data.galleryUrls.length ? (
+        <section>
+          <h2 className={`mb-4 ${SUBSECTION_TITLE_CLASS}`}>Hình ảnh</h2>
+          <Gallery
+            data={data}
+            variant={variant}
+            thumb={thumb}
+            onThumb={setThumb}
+          />
+        </section>
+      ) : null}
+
+      <section>
+        <h2 className={SUBSECTION_TITLE_CLASS}>
+          {guidePdpHeading(data.offeringProfile)}
+        </h2>
+        {stripHtml(data.usageGuideHtml).trim() ? (
+          <div className="mt-4">
+            <StaticPageHtml
+              body={data.usageGuideHtml}
+              className="blog-prose pdp-prose max-w-none"
+            />
+          </div>
+        ) : (
+          <p className={`mt-4 ${BODY_MUTED_CLASS}`}>
+            {guideEmptyCopy(data.offeringProfile)}
+          </p>
+        )}
+        <p className={`mt-3 ${BODY_MUTED_CLASS}`}>
+          {guideHelp}{" "}
+          <Link href={quoteHref} className={LINK_ACCENT_CLASS}>
+            Liên hệ KEYON
+          </Link>
+          .
+        </p>
+      </section>
+
+      {data.faqs.length ? (
+        <section>
+          <h2 className={`mb-4 ${SUBSECTION_TITLE_CLASS}`}>
+            Câu hỏi thường gặp
+          </h2>
+          <div className="grid gap-4 lg:grid-cols-2 lg:gap-5">
+            <FaqAccordion
+              items={data.faqs.slice(0, Math.ceil(data.faqs.length / 2))}
+            />
+            <FaqAccordion
+              items={data.faqs.slice(Math.ceil(data.faqs.length / 2))}
+            />
+          </div>
+        </section>
+      ) : null}
+    </div>
+  );
+}
+
 function StickyBar({
   data,
   variant,
@@ -1564,6 +1832,7 @@ function StickyBar({
   onBuy,
   compare,
   disc,
+  planLayout,
 }: {
   data: PdpProductData;
   variant: PdpVariantOption;
@@ -1574,11 +1843,18 @@ function StickyBar({
   onBuy: () => void;
   compare?: number;
   disc?: number;
+  planLayout?: boolean;
 }) {
   if (!canBuy) return null;
-  const summary = licenseSummaryParts(license).join(" · ");
+  const summary = planLayout
+    ? variant.planSpecs
+        .slice(0, 3)
+        .map((row) => row.value)
+        .join(" · ")
+    : licenseSummaryParts(license).join(" · ");
   const thumbSrc = data.imageUrl || data.galleryUrls[0] || null;
   const thumbAlt = `${data.name}${variant.name ? ` — ${variant.name}` : ""}`;
+  const term = planLayout ? planTermLabel(variant.licenseTerm) : null;
 
   return (
     <div
@@ -1602,9 +1878,12 @@ function StickyBar({
             )}
           </div>
           <div className="min-w-0">
-            <p className={`truncate ${CARD_TITLE_CLASS}`}>{data.name}</p>
+            <p className={`truncate ${CARD_TITLE_CLASS}`}>
+              {planLayout ? variant.name : data.name}
+            </p>
             <p className={`mt-0.5 truncate ${CARD_META_CLASS}`}>
               {summary || variant.name || `Số lượng: ${qty}`}
+              {term ? ` · ${term}` : ""}
             </p>
           </div>
         </div>
@@ -1621,7 +1900,9 @@ function StickyBar({
                 </span>
               ) : null}
               {disc ? (
-                <span className={`${BADGE_CLASS} text-rose-500`}>-{disc}%</span>
+                <span className={`${BADGE_CLASS} text-emerald-700`}>
+                  {planLayout ? `Tiết kiệm ${disc}%` : `-${disc}%`}
+                </span>
               ) : null}
             </div>
           </div>

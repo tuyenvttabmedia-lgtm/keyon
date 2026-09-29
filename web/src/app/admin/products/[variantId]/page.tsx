@@ -203,6 +203,8 @@ export default async function AdminProductEditPage({
         licenseDefaults={licenseDefaults}
         variantLicense={variantLicense}
         planSpecs={parseSpecRows(variant.planSpecs)}
+        planSummary={variant.planSummary ?? ""}
+        planFit={variant.planFit ?? ""}
         offeringProfile={parseOfferingProfile(p.offeringProfile)}
         suppliers={suppliers}
         relatedProductIds={parseStringList(p.relatedProductIds)}

@@ -121,6 +121,8 @@ export async function POST(req: Request) {
             regionCode: v.regionCode,
       activationMethod: v.activationMethod,
       planSpecs: v.planSpecs ?? [],
+      planSummary: v.planSummary,
+      planFit: v.planFit,
       active: v.active,
           },
         });

@@ -74,6 +74,11 @@ export const variantLicenseFieldsSchema = z.object({
     )
     .max(12)
     .optional(),
+  planSummary: z.preprocess(
+    emptyToNull,
+    z.string().max(400).nullable().optional(),
+  ),
+  planFit: z.preprocess(emptyToNull, z.string().max(200).nullable().optional()),
 });
 
 export function normalizeProductCatalogWrite(
@@ -173,6 +178,10 @@ export function normalizeVariantLicenseWrite(
         }
       : {}),
     ...(body.planSpecs !== undefined ? { planSpecs: body.planSpecs } : {}),
+    ...(body.planSummary !== undefined
+      ? { planSummary: body.planSummary }
+      : {}),
+    ...(body.planFit !== undefined ? { planFit: body.planFit } : {}),
   };
 }
 

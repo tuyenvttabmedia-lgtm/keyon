@@ -22,6 +22,8 @@ export type PdpVariantOption = {
   regionCode?: string | null;
   activationMethod?: string | null;
   planSpecs: { label: string; value: string }[];
+  planSummary?: string | null;
+  planFit?: string | null;
 };
 
 export type PdpLicenseDefaults = {

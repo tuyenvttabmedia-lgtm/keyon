@@ -413,6 +413,10 @@ model ProductVariant {
   activationMethod     String?
   /// Plan-board rows for infrastructure packages. JSON { label, value }[].
   planSpecs            Json                 @default("[]")
+  /// One or two sentences about the selected package.
+  planSummary          String?
+  /// Who the package fits. Shown on the plan card.
+  planFit              String?
   active               Boolean              @default(true)
   createdAt            DateTime             @default(now())
   updatedAt            DateTime             @updatedAt

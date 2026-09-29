@@ -114,6 +114,8 @@ export function ProductCreateForm({
     featuresText: "",
     specsText: "",
     planSpecsText: "",
+    planSummary: "",
+    planFit: "",
     faqsText: "",
     usageGuideHtml: "",
     variantName: "License Retail",
@@ -292,6 +294,14 @@ export function ProductCreateForm({
             form.offeringProfile === "INFRASTRUCTURE"
               ? linesToPlanSpecs(form.planSpecsText)
               : [],
+          planSummary:
+            form.offeringProfile === "INFRASTRUCTURE"
+              ? form.planSummary.trim() || null
+              : null,
+          planFit:
+            form.offeringProfile === "INFRASTRUCTURE"
+              ? form.planFit.trim() || null
+              : null,
           faqs: linesToFaqs(form.faqsText),
           usageGuideHtml: form.usageGuideHtml || null,
           variantName: form.variantName,
@@ -795,6 +805,32 @@ export function ProductCreateForm({
                 </select>
               </label>
             </div>
+            <label className="block text-sm">
+              <span className="font-medium">Phù hợp với</span>
+              <p className="mt-0.5 text-xs text-muted">
+                Một câu trên thẻ gói, để khách chọn theo nhu cầu.
+              </p>
+              <input
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                placeholder="Website doanh nghiệp, API, hệ thống quản trị"
+                value={form.planFit}
+                onChange={(e) => setForm({ ...form, planFit: e.target.value })}
+              />
+            </label>
+            <label className="block text-sm">
+              <span className="font-medium">Mô tả gói</span>
+              <p className="mt-0.5 text-xs text-muted">
+                Một đến hai câu hiện ngay dưới bảng, đúng gói đang chọn.
+              </p>
+              <textarea
+                rows={2}
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                value={form.planSummary}
+                onChange={(e) =>
+                  setForm({ ...form, planSummary: e.target.value })
+                }
+              />
+            </label>
             <label className="block text-sm">
               <span className="font-medium">Cấu hình gói này</span>
               <p className="mt-0.5 text-xs text-muted">

@@ -75,6 +75,8 @@ export function AddVariantForm({
     } as VariantLicenseFields,
     planSpecsText:
       offeringProfile === "INFRASTRUCTURE" ? INFRA_SPEC_TEMPLATES.cloud : "",
+    planSummary: "",
+    planFit: "",
   });
   const licenseMerchandising = showsLicenseMerchandising(offeringProfile);
   const fulfillmentChoices = fulfillmentOptionsFor(offeringProfile);
@@ -131,6 +133,14 @@ export function AddVariantForm({
             offeringProfile === "INFRASTRUCTURE"
               ? linesToPlanSpecs(form.planSpecsText)
               : [],
+          planSummary:
+            offeringProfile === "INFRASTRUCTURE"
+              ? form.planSummary.trim() || null
+              : null,
+          planFit:
+            offeringProfile === "INFRASTRUCTURE"
+              ? form.planFit.trim() || null
+              : null,
         }),
       });
       const data = await res.json();
@@ -361,6 +371,24 @@ export function AddVariantForm({
             </select>
           </label>
         </div>
+        <label className="block text-sm">
+          <span className="font-medium">Phù hợp với</span>
+          <input
+            className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+            placeholder="Website doanh nghiệp, API, hệ thống quản trị"
+            value={form.planFit}
+            onChange={(e) => setForm({ ...form, planFit: e.target.value })}
+          />
+        </label>
+        <label className="block text-sm">
+          <span className="font-medium">Mô tả gói</span>
+          <textarea
+            rows={2}
+            className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+            value={form.planSummary}
+            onChange={(e) => setForm({ ...form, planSummary: e.target.value })}
+          />
+        </label>
         <label className="block text-sm">
           <span className="font-medium">Cấu hình gói này</span>
           <p className="mt-0.5 text-xs text-muted">
