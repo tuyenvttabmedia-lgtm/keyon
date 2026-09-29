@@ -373,7 +373,9 @@ export default async function ProductPage({
     initialVariantId: activeVariant.id,
     features: cmsFeatures.length
       ? cmsFeatures
-      : [catalogFeatureFallback(offeringProfile, product.name)],
+      : offeringProfile === "INFRASTRUCTURE"
+        ? []
+        : [catalogFeatureFallback(offeringProfile, product.name)],
     specs: cmsSpecs.length
       ? cmsSpecs
       : [

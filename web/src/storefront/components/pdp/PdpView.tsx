@@ -786,44 +786,15 @@ function packageHighlights(rows: { label: string; value: string }[]) {
   };
 }
 
-function packageBenefitCards(variant: PdpVariantOption) {
-  const cards = packageHighlights(variant.planSpecs).cards;
-  const cpu = cards.find((card) => card.id === "cpu")?.value;
-  const ram = cards.find((card) => card.id === "ram")?.value;
-  const storage = cards.find((card) => card.id === "storage")?.value;
-  const audience = planAudience(variant).replace(/\.$/, "");
-  const audiencePhrase = audience.charAt(0).toLowerCase() + audience.slice(1);
-  return [
-    {
-      title: "Hiệu năng ổn định",
-      desc:
-        cpu && ram
-          ? `${cpu} và ${ram} cho ${audiencePhrase}.`
-          : "Tài nguyên CPU và RAM theo cấu hình đã chọn.",
-    },
-    {
-      title: "NVMe tốc độ cao",
-      desc: storage
-        ? `${storage} cho website và ứng dụng cần đọc ghi ổn định.`
-        : "Lưu trữ nhanh cho website và ứng dụng.",
-    },
-    {
-      title: "Public IPv4 riêng",
-      desc: "Dễ cấu hình tên miền, SSL và dịch vụ cần địa chỉ IP public.",
-    },
-    {
-      title: "Linux và môi trường linh hoạt",
-      desc: "Chủ động triển khai và cấu hình hệ thống trên Linux.",
-    },
-    {
-      title: "Dễ dàng nâng cấp",
-      desc: "Có thể chuyển lên cấu hình cao hơn khi nhu cầu tăng.",
-    },
-    {
-      title: "Hỗ trợ kỹ thuật",
-      desc: "KEYON hỗ trợ khởi tạo và vận hành theo phạm vi gói đã đăng ký.",
-    },
-  ];
+function benefitItems(features: string[]) {
+  return features
+    .map((feature) => {
+      const parts = feature.split(/\s*[|]\s*/);
+      const title = (parts[0] ?? "").trim();
+      const desc = parts.slice(1).join(" | ").trim();
+      return { title, desc };
+    })
+    .filter((item) => item.title);
 }
 
 function priceCycleSuffix(code: string | null | undefined) {
@@ -875,12 +846,14 @@ function planShortName(name: string) {
 }
 
 function planAudience(variant: PdpVariantOption) {
+  const written = variant.planFit?.trim().replace(/\.$/, "");
+  if (written) return written;
   const base = planDisplayName(variant.name);
   if (/basic/i.test(base)) return "Website và ứng dụng nhỏ";
   if (/standard/i.test(base)) return "Website doanh nghiệp và API";
   if (/business/i.test(base)) return "Ứng dụng và hệ thống doanh nghiệp";
   if (/\bpro\b/i.test(base)) return "Workload chuyên sâu và production";
-  return variant.planFit?.trim().replace(/\.$/, "") || "Nhu cầu đã chọn";
+  return "Nhu cầu đã chọn";
 }
 
 function metricPresentation(card: { id: string; value: string }) {
@@ -898,6 +871,8 @@ function termMonths(code: string | null | undefined) {
   if (code === "3_MONTHS") return 3;
   if (code === "6_MONTHS") return 6;
   if (code === "1_YEAR") return 12;
+  if (code === "2_YEARS") return 24;
+  if (code === "3_YEARS") return 36;
   return 1;
 }
 
@@ -2050,7 +2025,13 @@ function CollapsibleDescription({
   );
 }
 
-function PackageStoryLead({ variant }: { variant: PdpVariantOption }) {
+function PackageStoryLead({
+  productName,
+  variant,
+}: {
+  productName: string;
+  variant: PdpVariantOption;
+}) {
   const name = planDisplayName(variant.name);
   const short = planShortName(variant.name);
   const audience = planAudience(variant);
@@ -2065,9 +2046,7 @@ function PackageStoryLead({ variant }: { variant: PdpVariantOption }) {
   const specs = [cpu, ram ? `${ram} RAM` : "", storage].filter(Boolean).join(", ");
   return (
     <div className="mt-4 max-w-3xl">
-      <p className={`text-navy ${CARD_TITLE_CLASS}`}>
-        KEYON Cloud Server – Hạ tầng máy chủ linh hoạt
-      </p>
+      <p className={`text-navy ${CARD_TITLE_CLASS}`}>{productName}</p>
       <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>
         {name} phù hợp cho {phrase}.
       </p>
@@ -2318,10 +2297,10 @@ function InfraProductStory({
             Bạn nhận được gì với {planDisplayName(variant.name)}?
           </h2>
           <p className={`mt-2 ${CARD_META_CLASS}`}>
-            Theo đúng cấu hình đang chọn.
+            Áp dụng cho mọi cấu hình của sản phẩm này.
           </p>
           <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {packageBenefitCards(variant).map((item) => (
+            {benefitItems(data.features).map((item) => (
               <li
                 key={item.title}
                 className={`rounded-2xl border border-border bg-white px-4 py-4 ${ELEVATION_HAIRLINE}`}
@@ -2332,7 +2311,9 @@ function InfraProductStory({
                   </span>
                   <div className="min-w-0">
                     <p className={`text-navy ${CARD_TITLE_CLASS}`}>{item.title}</p>
-                    <p className={`mt-1 ${CARD_META_CLASS}`}>{item.desc}</p>
+                    {item.desc ? (
+                      <p className={`mt-1 ${CARD_META_CLASS}`}>{item.desc}</p>
+                    ) : null}
                   </div>
                 </div>
               </li>
@@ -2344,7 +2325,7 @@ function InfraProductStory({
       {stripHtml(data.description).trim() ? (
         <section>
           <h2 className={SUBSECTION_TITLE_CLASS}>Mô tả sản phẩm</h2>
-          <PackageStoryLead variant={variant} />
+          <PackageStoryLead productName={data.name} variant={variant} />
           <CollapsibleDescription
             body={data.description}
             collapsedMaxPx={160}

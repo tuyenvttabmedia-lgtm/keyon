@@ -163,6 +163,7 @@ export const INFRA_SPEC_TEMPLATES = {
 export function guideAdminTitle(profile: OfferingProfile): string {
   if (profile === "SOFTWARE") return "Hướng dẫn kích hoạt (tab PDP)";
   if (profile === "SERVICE") return "Phạm vi bàn giao (tab PDP)";
+  if (profile === "INFRASTRUCTURE") return "Quy trình triển khai";
   return "Hướng dẫn sử dụng (tab PDP)";
 }
 
@@ -172,6 +173,9 @@ export function guideAdminHint(profile: OfferingProfile): string {
   }
   if (profile === "SERVICE") {
     return "Hiển thị ở tab «Phạm vi bàn giao» trên trang sản phẩm.";
+  }
+  if (profile === "INFRASTRUCTURE") {
+    return "Các tiêu đề cấp 2 hoặc 3 thành các bước trong mục Quy trình triển khai trên trang sản phẩm.";
   }
   return "Hiển thị ở tab «Hướng dẫn sử dụng» trên trang sản phẩm.";
 }
@@ -246,7 +250,7 @@ export function catalogDescriptionFallback(
 
 export function packageStepHint(profile: OfferingProfile): string {
   if (profile === "INFRASTRUCTURE") {
-    return "Sau khi tạo có thể thêm cấu hình khác (vCPU, dung lượng) trên trang sửa.";
+    return "Mỗi cấu hình và mỗi chu kỳ thanh toán là một biến thể. Cùng CPU, RAM và ổ thì trang gom một thẻ gói và một hàng chu kỳ. Giá của chu kỳ dài là tổng tiền khách trả, không phải giá theo tháng.";
   }
   if (profile === "SERVICE") {
     return "Mỗi gói là một phạm vi bàn giao. Thêm gói khác trên trang sửa.";
@@ -256,3 +260,30 @@ export function packageStepHint(profile: OfferingProfile): string {
   }
   return "Sau khi tạo có thể thêm Home / Pro / OEM trên trang sửa.";
 }
+
+export const INFRA_PLAN_FIT_HINT =
+  "Hiện trên thẻ gói, sau «Phù hợp với». Cũng dùng trong đoạn tóm tắt ở mục Mô tả sản phẩm. Để trống thì trang suy theo tên gói.";
+
+export const INFRA_PLAN_SUMMARY_HINT =
+  "Hiện ngay dưới tiêu đề «Cấu hình {tên gói}», trước bốn thẻ thông số.";
+
+export const INFRA_PLAN_SPECS_HINT =
+  "Mỗi dòng Nhãn|Giá trị. vCPU, RAM, SSD/NVMe và băng thông thành bốn thẻ. Các dòng còn lại vào bảng Thông tin dịch vụ. Các chu kỳ của cùng một cấu hình phải giống nhau ở các dòng này.";
+
+export const INFRA_PRICE_HINT =
+  "Tổng tiền khách trả cho đúng chu kỳ của gói này. Gói 6 tháng, 12 tháng, 2 năm hoặc 3 năm nhập tổng cả chu kỳ, không nhập giá theo tháng.";
+
+export const INFRA_TERM_HINT =
+  "Mỗi chu kỳ là một biến thể riêng: cùng cấu hình, khác tổng tiền. Trang gom các biến thể đó thành một thẻ gói và một hàng chọn chu kỳ.";
+
+export const INFRA_SLA_HINT =
+  "Hiện ở dòng Hỗ trợ trong Thông tin dịch vụ khi cấu hình gói chưa có dòng Hỗ trợ.";
+
+export const INFRA_REGION_HINT =
+  "Chỉ dùng khi cấu hình gói chưa có dòng Khu vực. Nếu đã có dòng Khu vực|… thì trang hiển thị dòng đó.";
+
+export const INFRA_FEATURES_HINT =
+  "Mỗi dòng Tiêu đề|Mô tả. Hiện thành các thẻ «Bạn nhận được gì». Cùng một bộ cho mọi gói. Để trống thì không hiện mục này.";
+
+export const INFRA_GALLERY_HINT =
+  "Hiện ở mục Hình ảnh trên trang chi tiết. Ảnh đầu là ảnh chính; thêm ảnh thì có hàng thumbnail. Có thể bỏ trống khi xuất bản.";

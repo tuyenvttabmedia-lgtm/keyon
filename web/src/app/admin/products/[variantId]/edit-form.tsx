@@ -35,7 +35,16 @@ import {
   SALES_MOTION_OPTIONS,
 } from "@/storefront/lib/catalog-admin-labels";
 import {
+  INFRA_FEATURES_HINT,
+  INFRA_GALLERY_HINT,
+  INFRA_PLAN_FIT_HINT,
+  INFRA_PLAN_SPECS_HINT,
+  INFRA_PLAN_SUMMARY_HINT,
+  INFRA_PRICE_HINT,
+  INFRA_REGION_HINT,
+  INFRA_SLA_HINT,
   INFRA_SPEC_TEMPLATES,
+  INFRA_TERM_HINT,
   OFFERING_PROFILE_HINTS,
   OFFERING_PROFILE_LABELS,
   OFFERING_PROFILES,
@@ -625,8 +634,16 @@ export function ProductEditForm(props: Props) {
 
       {tab === "description" ? (
         <Panel
-          title="Mô tả đầy đủ (tab PDP)"
-          hint="Tiêu đề, đoạn, danh sách, bảng, ảnh. Dán Word/Docs được làm sạch."
+          title={
+            form.offeringProfile === "INFRASTRUCTURE"
+              ? "Mô tả đầy đủ"
+              : "Mô tả đầy đủ (tab PDP)"
+          }
+          hint={
+            form.offeringProfile === "INFRASTRUCTURE"
+              ? "Trang hạ tầng hiện đoạn tóm tắt trước. Nội dung này nằm sau «Xem chi tiết»."
+              : "Tiêu đề, đoạn, danh sách, bảng, ảnh. Dán Word/Docs được làm sạch."
+          }
         >
           <RichTextEditor
             value={form.productDescription || "<p></p>"}
@@ -663,7 +680,7 @@ export function ProductEditForm(props: Props) {
             }
             hint={
               form.offeringProfile === "INFRASTRUCTURE"
-                ? "Một ảnh cho thẻ kệ và khi chia sẻ link. Trang chi tiết dùng bảng gói. Có thể bỏ trống khi xuất bản."
+                ? INFRA_GALLERY_HINT
                 : "Chọn / tải nhiều ảnh một lần · ảnh đầu = ảnh chính."
             }
           >
@@ -693,6 +710,9 @@ export function ProductEditForm(props: Props) {
           <div className="grid gap-4 lg:grid-cols-3">
             <label className="block text-sm">
               <span className="font-medium">Features (bullets)</span>
+              {form.offeringProfile === "INFRASTRUCTURE" ? (
+                <p className="mt-0.5 text-xs text-muted">{INFRA_FEATURES_HINT}</p>
+              ) : null}
               <textarea
                 rows={10}
                 className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm"
@@ -879,6 +899,9 @@ export function ProductEditForm(props: Props) {
           <div className="grid gap-4 sm:grid-cols-3">
             <label className="block text-sm">
               <span className="font-medium">Giá bán (đ)</span>
+              {form.offeringProfile === "INFRASTRUCTURE" ? (
+                <p className="mt-0.5 text-xs text-muted">{INFRA_PRICE_HINT}</p>
+              ) : null}
               <input
                 type="number"
                 className="mt-1 w-full rounded-lg border border-border px-3 py-2"
@@ -914,6 +937,9 @@ export function ProductEditForm(props: Props) {
           </div>
           <label className="block text-sm">
             <span className="font-medium">SLA / thời gian giao (text khách)</span>
+            {form.offeringProfile === "INFRASTRUCTURE" ? (
+              <p className="mt-0.5 text-xs text-muted">{INFRA_SLA_HINT}</p>
+            ) : null}
             <input
               className="mt-1 w-full rounded-lg border border-border px-3 py-2"
               value={form.slaPromise}
@@ -1069,6 +1095,7 @@ export function ProductEditForm(props: Props) {
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="block text-sm">
                 <span className="font-medium">Chu kỳ gói</span>
+                <p className="mt-0.5 text-xs text-muted">{INFRA_TERM_HINT}</p>
                 <select
                   className="mt-1 w-full rounded-lg border border-border px-3 py-2"
                   value={form.variantLicense.licenseTerm}
@@ -1092,6 +1119,7 @@ export function ProductEditForm(props: Props) {
               </label>
               <label className="block text-sm">
                 <span className="font-medium">Khu vực</span>
+                <p className="mt-0.5 text-xs text-muted">{INFRA_REGION_HINT}</p>
                 <select
                   className="mt-1 w-full rounded-lg border border-border px-3 py-2"
                   value={form.variantLicense.regionCode}
@@ -1117,7 +1145,7 @@ export function ProductEditForm(props: Props) {
             <label className="block text-sm">
               <span className="font-medium">Phù hợp với</span>
               <p className="mt-0.5 text-xs text-muted">
-                Một câu trên thẻ gói, để khách chọn theo nhu cầu.
+                {INFRA_PLAN_FIT_HINT}
               </p>
               <input
                 className="mt-1 w-full rounded-lg border border-border px-3 py-2"
@@ -1129,7 +1157,7 @@ export function ProductEditForm(props: Props) {
             <label className="block text-sm">
               <span className="font-medium">Mô tả gói</span>
               <p className="mt-0.5 text-xs text-muted">
-                Một đến hai câu hiện ngay dưới bảng, đúng gói đang chọn.
+                {INFRA_PLAN_SUMMARY_HINT}
               </p>
               <textarea
                 rows={2}
@@ -1143,7 +1171,7 @@ export function ProductEditForm(props: Props) {
             <label className="block text-sm">
               <span className="font-medium">Cấu hình gói này</span>
               <p className="mt-0.5 text-xs text-muted">
-                Mỗi dòng `Nhãn|Giá trị`. Hiện trên bảng chọn gói, riêng cho gói đang sửa.
+                {INFRA_PLAN_SPECS_HINT}
               </p>
               <div className="mt-1 flex flex-wrap gap-1">
                 {(

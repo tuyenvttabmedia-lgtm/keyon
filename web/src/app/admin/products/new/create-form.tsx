@@ -27,7 +27,16 @@ import {
   SALES_MOTION_OPTIONS,
 } from "@/storefront/lib/catalog-admin-labels";
 import {
+  INFRA_FEATURES_HINT,
+  INFRA_GALLERY_HINT,
+  INFRA_PLAN_FIT_HINT,
+  INFRA_PLAN_SPECS_HINT,
+  INFRA_PLAN_SUMMARY_HINT,
+  INFRA_PRICE_HINT,
+  INFRA_REGION_HINT,
+  INFRA_SLA_HINT,
   INFRA_SPEC_TEMPLATES,
+  INFRA_TERM_HINT,
   commerceDefaults,
   deliverableOptionsFor,
   fulfillmentOptionsFor,
@@ -613,6 +622,9 @@ export function ProductCreateForm({
           <div className="grid gap-3 sm:grid-cols-3">
             <label className="block text-sm">
               <span className="font-medium">Giá bán</span>
+              {form.offeringProfile === "INFRASTRUCTURE" ? (
+                <p className="mt-0.5 text-xs text-muted">{INFRA_PRICE_HINT}</p>
+              ) : null}
               <input
                 type="number"
                 className="mt-1 w-full rounded-lg border border-border px-3 py-2"
@@ -743,6 +755,9 @@ export function ProductCreateForm({
           )}
           <label className="block text-sm">
             <span className="font-medium">SLA text</span>
+            {form.offeringProfile === "INFRASTRUCTURE" ? (
+              <p className="mt-0.5 text-xs text-muted">{INFRA_SLA_HINT}</p>
+            ) : null}
             <input
               className="mt-1 w-full rounded-lg border border-border px-3 py-2"
               value={form.slaPromise}
@@ -760,6 +775,7 @@ export function ProductCreateForm({
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="block text-sm">
                 <span className="font-medium">Chu kỳ gói</span>
+                <p className="mt-0.5 text-xs text-muted">{INFRA_TERM_HINT}</p>
                 <select
                   className="mt-1 w-full rounded-lg border border-border px-3 py-2"
                   value={form.variantLicense.licenseTerm}
@@ -783,6 +799,7 @@ export function ProductCreateForm({
               </label>
               <label className="block text-sm">
                 <span className="font-medium">Khu vực</span>
+                <p className="mt-0.5 text-xs text-muted">{INFRA_REGION_HINT}</p>
                 <select
                   className="mt-1 w-full rounded-lg border border-border px-3 py-2"
                   value={form.variantLicense.regionCode}
@@ -808,7 +825,7 @@ export function ProductCreateForm({
             <label className="block text-sm">
               <span className="font-medium">Phù hợp với</span>
               <p className="mt-0.5 text-xs text-muted">
-                Một câu trên thẻ gói, để khách chọn theo nhu cầu.
+                {INFRA_PLAN_FIT_HINT}
               </p>
               <input
                 className="mt-1 w-full rounded-lg border border-border px-3 py-2"
@@ -820,7 +837,7 @@ export function ProductCreateForm({
             <label className="block text-sm">
               <span className="font-medium">Mô tả gói</span>
               <p className="mt-0.5 text-xs text-muted">
-                Một đến hai câu hiện ngay dưới bảng, đúng gói đang chọn.
+                {INFRA_PLAN_SUMMARY_HINT}
               </p>
               <textarea
                 rows={2}
@@ -834,7 +851,7 @@ export function ProductCreateForm({
             <label className="block text-sm">
               <span className="font-medium">Cấu hình gói này</span>
               <p className="mt-0.5 text-xs text-muted">
-                Mỗi dòng `Nhãn|Giá trị`. Hiện trên bảng chọn gói, riêng cho gói này.
+                {INFRA_PLAN_SPECS_HINT}
               </p>
               <div className="mt-1 flex flex-wrap gap-1">
                 {(
@@ -884,7 +901,7 @@ export function ProductCreateForm({
             </h2>
             <p className="mb-3 text-xs text-muted">
               {form.offeringProfile === "INFRASTRUCTURE"
-                ? "Một ảnh cho thẻ kệ và khi chia sẻ link. Trang chi tiết dùng bảng gói. Có thể bỏ trống khi xuất bản."
+                ? INFRA_GALLERY_HINT
                 : "Ảnh đầu là ảnh chính trên trang sản phẩm."}
             </p>
             <GalleryEditor
@@ -912,6 +929,9 @@ export function ProductCreateForm({
             <p className="mb-3 text-xs text-muted">
               Soạn như bài viết: tiêu đề, đoạn, danh sách, bảng. Dán từ Word/Docs
               sẽ được làm sạch định dạng.
+              {form.offeringProfile === "INFRASTRUCTURE"
+                ? " Trang hạ tầng hiện đoạn tóm tắt trước. Nội dung này nằm sau «Xem chi tiết»."
+                : ""}
             </p>
             <RichTextEditor
               value={form.description || "<p></p>"}
@@ -940,6 +960,9 @@ export function ProductCreateForm({
             <div className="grid gap-4 lg:grid-cols-3">
               <label className="block text-sm">
                 <span className="font-medium">Features</span>
+                {form.offeringProfile === "INFRASTRUCTURE" ? (
+                  <p className="mt-0.5 text-xs text-muted">{INFRA_FEATURES_HINT}</p>
+                ) : null}
                 <textarea
                   rows={5}
                   className="mt-1 w-full rounded-lg border border-border px-3 py-2"

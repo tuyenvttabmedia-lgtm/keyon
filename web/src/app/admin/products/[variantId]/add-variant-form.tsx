@@ -7,7 +7,15 @@ import {
   validateCatalogDraft,
 } from "@/storefront/lib/catalog-validation";
 import { linesToPlanSpecs } from "@/storefront/lib/product-cms";
-import { INFRA_SPEC_TEMPLATES } from "@/storefront/lib/offering-profile";
+import {
+  INFRA_PLAN_FIT_HINT,
+  INFRA_PLAN_SPECS_HINT,
+  INFRA_PLAN_SUMMARY_HINT,
+  INFRA_PRICE_HINT,
+  INFRA_REGION_HINT,
+  INFRA_SPEC_TEMPLATES,
+  INFRA_TERM_HINT,
+} from "@/storefront/lib/offering-profile";
 import {
   DELIVERABLE_ADMIN_LABELS,
   FULFILLMENT_ADMIN_LABELS,
@@ -201,6 +209,9 @@ export function AddVariantForm({
         </label>
         <label className="block text-sm">
           <span className="font-medium">Giá bán</span>
+          {offeringProfile === "INFRASTRUCTURE" ? (
+            <p className="mt-0.5 text-xs text-muted">{INFRA_PRICE_HINT}</p>
+          ) : null}
           <input
             type="number"
             className="mt-1 w-full rounded-lg border border-border px-3 py-2"
@@ -326,6 +337,7 @@ export function AddVariantForm({
         <div className="grid gap-3 sm:grid-cols-2">
           <label className="block text-sm">
             <span className="font-medium">Chu kỳ gói</span>
+            <p className="mt-0.5 text-xs text-muted">{INFRA_TERM_HINT}</p>
             <select
               className="mt-1 w-full rounded-lg border border-border px-3 py-2"
               value={form.variantLicense.licenseTerm}
@@ -349,6 +361,7 @@ export function AddVariantForm({
           </label>
           <label className="block text-sm">
             <span className="font-medium">Khu vực</span>
+            <p className="mt-0.5 text-xs text-muted">{INFRA_REGION_HINT}</p>
             <select
               className="mt-1 w-full rounded-lg border border-border px-3 py-2"
               value={form.variantLicense.regionCode}
@@ -373,6 +386,7 @@ export function AddVariantForm({
         </div>
         <label className="block text-sm">
           <span className="font-medium">Phù hợp với</span>
+          <p className="mt-0.5 text-xs text-muted">{INFRA_PLAN_FIT_HINT}</p>
           <input
             className="mt-1 w-full rounded-lg border border-border px-3 py-2"
             placeholder="Website doanh nghiệp, API, hệ thống quản trị"
@@ -382,6 +396,7 @@ export function AddVariantForm({
         </label>
         <label className="block text-sm">
           <span className="font-medium">Mô tả gói</span>
+          <p className="mt-0.5 text-xs text-muted">{INFRA_PLAN_SUMMARY_HINT}</p>
           <textarea
             rows={2}
             className="mt-1 w-full rounded-lg border border-border px-3 py-2"
@@ -392,7 +407,7 @@ export function AddVariantForm({
         <label className="block text-sm">
           <span className="font-medium">Cấu hình gói này</span>
           <p className="mt-0.5 text-xs text-muted">
-            Mỗi dòng `Nhãn|Giá trị`. Hiện trên bảng chọn gói.
+            {INFRA_PLAN_SPECS_HINT}
           </p>
           <div className="mt-1 flex flex-wrap gap-1">
             {(
