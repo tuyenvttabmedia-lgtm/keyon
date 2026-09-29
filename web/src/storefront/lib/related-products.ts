@@ -84,11 +84,14 @@ export function infraCrossSellRank(
   categoryKey: string | null,
 ): number {
   const n = name.toLowerCase();
-  if (categoryKey === "cloud") return 0;
-  if (categoryKey === "backup") return 1;
-  if (categoryKey === "security") return 2;
-  if (/windows server|\bserver\b/.test(n) && !n.includes("cloud server")) return 3;
-  if (/365/.test(n)) return 4;
-  if (/backup|ssl|endpoint|bảo mật|security/.test(n)) return 5;
+  if (n.includes("cloud server")) return 99;
+  if (/365/.test(n) && /personal|home|cá nhân/.test(n)) return 99;
+  if (categoryKey === "backup" || /backup|sao lưu/.test(n)) return 1;
+  if (categoryKey === "security" || /security|bảo mật|endpoint/.test(n)) return 2;
+  if (/ssl|chứng thư/.test(n)) return 3;
+  if (/domain|tên miền/.test(n)) return 4;
+  if (/email|mail doanh/.test(n)) return 5;
+  if (/windows server/.test(n)) return 6;
+  if (/365/.test(n) && /business|doanh nghiệp/.test(n)) return 7;
   return 99;
 }

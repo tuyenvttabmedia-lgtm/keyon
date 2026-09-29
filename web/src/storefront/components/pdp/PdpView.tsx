@@ -33,6 +33,7 @@ import {
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
   SUBSECTION_TITLE_CLASS,
+  SUMMARY_TOTAL_CLASS,
   TAB_ACTIVE_CLASS,
   TAB_CLASS,
 } from "@/storefront/typography";
@@ -245,8 +246,17 @@ export function PdpView({ data }: { data: PdpProductData }) {
   function selectVariant(id: string) {
     setVariantId(id);
     const url = `/products/${data.slug}?variant=${id}`;
-    router.replace(url, { scroll: false });
+    window.history.replaceState(window.history.state, "", url);
   }
+
+  useEffect(() => {
+    function onPop() {
+      const id = new URLSearchParams(window.location.search).get("variant");
+      if (id && data.variants.some((item) => item.id === id)) setVariantId(id);
+    }
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [data.variants]);
 
   async function checkout() {
     setLoading(true);
@@ -551,7 +561,7 @@ function GalleryImages({
         }}
         className={`relative w-full overflow-hidden rounded-2xl border border-border/80 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
           frame === "wide"
-            ? `h-[280px] sm:h-[360px] lg:h-[440px] ${ELEVATION_HAIRLINE}`
+            ? `h-[240px] sm:h-[320px] lg:h-[380px] ${ELEVATION_HAIRLINE}`
             : `aspect-square ${ELEVATION_FLOAT} ${TRANSITION_UI} hover:shadow-[0_16px_44px_rgba(15,23,42,0.12)]`
         }`}
         aria-label={`Xem ảnh lớn: ${imageAlt}`}
@@ -781,16 +791,14 @@ function packageBenefitCards(variant: PdpVariantOption) {
   const cpu = cards.find((card) => card.id === "cpu")?.value;
   const ram = cards.find((card) => card.id === "ram")?.value;
   const storage = cards.find((card) => card.id === "storage")?.value;
-  const fit = variant.planFit?.trim().replace(/\.$/, "");
-  const audience = fit
-    ? fit.charAt(0).toLowerCase() + fit.slice(1)
-    : "nhu cầu đã chọn";
+  const audience = planAudience(variant).replace(/\.$/, "");
+  const audiencePhrase = audience.charAt(0).toLowerCase() + audience.slice(1);
   return [
     {
       title: "Hiệu năng ổn định",
       desc:
         cpu && ram
-          ? `${cpu} và ${ram} cho ${audience}.`
+          ? `${cpu} và ${ram} cho ${audiencePhrase}.`
           : "Tài nguyên CPU và RAM theo cấu hình đã chọn.",
     },
     {
@@ -860,6 +868,30 @@ function selectedPackageRows(variant: PdpVariantOption): { label: string; value:
 
 function planDisplayName(name: string) {
   return name.replace(/\s*·\s*.+$/u, "").trim() || name;
+}
+
+function planShortName(name: string) {
+  return planDisplayName(name).replace(/^cloud server\s+/i, "").trim() || planDisplayName(name);
+}
+
+function planAudience(variant: PdpVariantOption) {
+  const base = planDisplayName(variant.name);
+  if (/basic/i.test(base)) return "Website và ứng dụng nhỏ";
+  if (/standard/i.test(base)) return "Website doanh nghiệp và API";
+  if (/business/i.test(base)) return "Ứng dụng và hệ thống doanh nghiệp";
+  if (/\bpro\b/i.test(base)) return "Workload chuyên sâu và production";
+  return variant.planFit?.trim().replace(/\.$/, "") || "Nhu cầu đã chọn";
+}
+
+function metricPresentation(card: { id: string; value: string }) {
+  if (card.id === "ram") {
+    return { primary: card.value.replace(/\s*ram$/i, "").trim(), secondary: "" };
+  }
+  if (card.id === "storage") {
+    const match = card.value.match(/^([\d.,]+\s*GB)\s*(.*)$/i);
+    if (match) return { primary: match[1]!.trim(), secondary: match[2]!.trim() };
+  }
+  return { primary: card.value, secondary: "" };
 }
 
 function termMonths(code: string | null | undefined) {
@@ -1029,12 +1061,10 @@ function PlanBoard({
                   ))}
                 </ul>
               ) : null}
-              {item.planFit?.trim() ? (
-                <p className={`mt-3 ${CARD_META_CLASS}`}>
-                  <span className="font-semibold text-navy">Phù hợp với </span>
-                  {item.planFit.trim()}
-                </p>
-              ) : null}
+              <p className={`mt-3 ${CARD_META_CLASS}`}>
+                <span className="font-semibold text-navy">Phù hợp với </span>
+                {planAudience(item)}
+              </p>
               <button
                 type="button"
                 onClick={() => choosePlan(item)}
@@ -1410,7 +1440,8 @@ function PurchaseColumn({
                 (a, b) =>
                   termMonths(a.licenseTerm) - termMonths(b.licenseTerm),
               );
-            if (choices.length < 2) return null;
+            if (choices.length < 2 || !group) return null;
+            const monthlyPrice = group.monthly.priceVnd;
             return (
               <div className="mt-4">
                 <p className={CARD_META_CLASS}>Chu kỳ thanh toán</p>
@@ -1423,6 +1454,9 @@ function PurchaseColumn({
                     const active = choice.id === variant.id;
                     const months = termMonths(choice.licenseTerm);
                     const perMonth = Math.round(choice.priceVnd / months / 1000) * 1000;
+                    const save = (monthlyPrice * months - choice.priceVnd) * qty;
+                    const base = monthlyPrice * months * qty;
+                    const savePct = base > 0 && save > 0 ? Math.round((save / base) * 100) : 0;
                     return (
                       <button
                         key={choice.id}
@@ -1441,6 +1475,12 @@ function PurchaseColumn({
                         <span className={`mt-1 block font-semibold text-navy ${BODY_CLASS}`}>
                           {formatVnd(perMonth)}
                           <span className={`font-medium ${CARD_META_CLASS}`}>/tháng</span>
+                        </span>
+                        <span className={`mt-1 block ${CARD_META_CLASS}`}>
+                          Tổng {formatVnd(choice.priceVnd * qty)}
+                        </span>
+                        <span className={`mt-0.5 block min-h-4 font-semibold text-emerald-700 ${CARD_META_CLASS}`}>
+                          {save > 0 ? `Tiết kiệm ${formatVnd(save)} · ${savePct}%` : ""}
                         </span>
                       </button>
                     );
@@ -1490,7 +1530,11 @@ function PurchaseColumn({
               Gói này hiện cần báo giá. Dùng tư vấn cấu hình bên dưới.
             </div>
           )}
-          <p className={`mt-3 ${CARD_META_CLASS}`}>
+          <p className={`mt-2 text-center ${CARD_META_CLASS}`}>
+            {planShortName(variant.name)} · {qty} máy · {cloudTermLabel(variant.licenseTerm)} ·{" "}
+            {formatVnd(variant.priceVnd * qty)}
+          </p>
+          <p className={`mt-2 ${CARD_META_CLASS}`}>
             KEYON khởi tạo máy chủ sau khi thanh toán thành công.
           </p>
           <Link
@@ -1936,11 +1980,13 @@ function CollapsibleDescription({
   contentId = "pdp-full-description",
   collapsedMaxPx = 280,
   expandLabel = "Xem thêm",
+  hiddenUntilOpen = false,
 }: {
   body: string;
   contentId?: string;
   collapsedMaxPx?: number;
   expandLabel?: string;
+  hiddenUntilOpen?: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [needsClamp, setNeedsClamp] = useState(false);
@@ -1959,7 +2005,9 @@ function CollapsibleDescription({
     return () => ro.disconnect();
   }, [body, collapsedMaxPx]);
 
-  const clamped = needsClamp && !expanded;
+  const clamped = !hiddenUntilOpen && needsClamp && !expanded;
+  const folded = hiddenUntilOpen && !expanded;
+  const showToggle = hiddenUntilOpen ? Boolean(stripHtml(body).trim()) : needsClamp;
 
   return (
     <div className="mt-4">
@@ -1967,7 +2015,7 @@ function CollapsibleDescription({
         <div
           ref={contentRef}
           id={contentId}
-          className={clamped ? "overflow-hidden" : undefined}
+          className={folded ? "hidden" : clamped ? "overflow-hidden" : undefined}
           style={clamped ? { maxHeight: collapsedMaxPx } : undefined}
         >
           <StaticPageHtml
@@ -1982,7 +2030,7 @@ function CollapsibleDescription({
           />
         ) : null}
       </div>
-      {needsClamp ? (
+      {showToggle ? (
         <div className="mt-4 flex justify-center">
           <button
             type="button"
@@ -1997,6 +2045,36 @@ function CollapsibleDescription({
             </span>
           </button>
         </div>
+      ) : null}
+    </div>
+  );
+}
+
+function PackageStoryLead({ variant }: { variant: PdpVariantOption }) {
+  const name = planDisplayName(variant.name);
+  const short = planShortName(variant.name);
+  const audience = planAudience(variant);
+  const phrase = audience.charAt(0).toLowerCase() + audience.slice(1);
+  const cards = packageHighlights(variant.planSpecs).cards;
+  const cpu = cards.find((card) => card.id === "cpu")?.value;
+  const ram = cards
+    .find((card) => card.id === "ram")
+    ?.value.replace(/\s*ram$/i, "")
+    .trim();
+  const storage = cards.find((card) => card.id === "storage")?.value;
+  const specs = [cpu, ram ? `${ram} RAM` : "", storage].filter(Boolean).join(", ");
+  return (
+    <div className="mt-4 max-w-3xl">
+      <p className={`text-navy ${CARD_TITLE_CLASS}`}>
+        KEYON Cloud Server – Hạ tầng máy chủ linh hoạt
+      </p>
+      <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>
+        {name} phù hợp cho {phrase}.
+      </p>
+      {specs ? (
+        <p className={`mt-2 ${BODY_MUTED_CLASS}`}>
+          Với {specs}, gói {short} đáp ứng nhu cầu của cấu hình này và có thể nâng cấp khi hệ thống phát triển.
+        </p>
       ) : null}
     </div>
   );
@@ -2179,12 +2257,24 @@ function InfraProductStory({
                           key={card.id}
                           className={`rounded-2xl border border-border bg-white px-4 py-4 ${ELEVATION_HAIRLINE}`}
                         >
-                          <p className={`text-navy ${CARD_TITLE_CLASS}`}>
-                            {card.value}
-                          </p>
-                          <p className={`mt-1 ${OVERLINE_CLASS} text-muted-soft`}>
+                          <p className={`${OVERLINE_CLASS} text-muted-soft`}>
                             {card.title}
                           </p>
+                          {(() => {
+                            const lines = metricPresentation(card);
+                            return (
+                              <>
+                                <p className={`mt-2 ${SUMMARY_TOTAL_CLASS} !text-navy`}>
+                                  {lines.primary}
+                                </p>
+                                {lines.secondary ? (
+                                  <p className={`mt-0.5 ${CARD_META_CLASS}`}>{lines.secondary}</p>
+                                ) : (
+                                  <p className="mt-0.5 min-h-4" aria-hidden />
+                                )}
+                              </>
+                            );
+                          })()}
                         </div>
                       ))}
                     </div>
@@ -2254,13 +2344,13 @@ function InfraProductStory({
       {stripHtml(data.description).trim() ? (
         <section>
           <h2 className={SUBSECTION_TITLE_CLASS}>Mô tả sản phẩm</h2>
-          <div className="mt-4">
-            <CollapsibleDescription
-              body={data.description}
-              collapsedMaxPx={160}
-              expandLabel="Xem chi tiết"
-            />
-          </div>
+          <PackageStoryLead variant={variant} />
+          <CollapsibleDescription
+            body={data.description}
+            collapsedMaxPx={160}
+            expandLabel="Xem chi tiết"
+            hiddenUntilOpen
+          />
         </section>
       ) : null}
 
@@ -2386,8 +2476,12 @@ function StickyBar({
             </p>
             <p className={`mt-0.5 truncate ${CARD_META_CLASS}`}>
               {summary || variant.name || `Số lượng: ${qty}`}
-              {term ? ` · ${term}` : ""}
             </p>
+            {planLayout && term ? (
+              <p className={`truncate ${CARD_META_CLASS}`}>
+                {qty} máy · {term}
+              </p>
+            ) : null}
           </div>
         </div>
 
@@ -2395,10 +2489,15 @@ function StickyBar({
           <div className="text-left sm:text-right">
             <p className={CARD_PRICE_CLASS}>
               {formatVnd(variant.priceVnd * qty)}
-              {planLayout && termMonths(variant.licenseTerm) === 1
+              {planLayout && termMonths(variant.licenseTerm) === 1 && qty === 1
                 ? priceCycleSuffix(variant.licenseTerm)
                 : ""}
             </p>
+            {planLayout && term ? (
+              <p className={`sm:hidden ${CARD_META_CLASS}`}>
+                {qty} máy · {term}
+              </p>
+            ) : null}
             <div className="mt-0.5 flex items-center gap-2 sm:justify-end">
               {compare && compare > variant.priceVnd ? (
                 <span className={COMPARE_PRICE_CLASS}>
