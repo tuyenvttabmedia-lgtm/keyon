@@ -103,16 +103,17 @@ function featureBarItems(
   brandName: string,
   receiveLabel: string,
   profile: OfferingProfile,
+  activationLabel?: string | null,
 ): { title: string; desc: string }[] {
   if (profile === "SOFTWARE") {
     return [
       { title: "License chính hãng", desc: `Bản quyền ${brandName}` },
       {
-        title: "Kích hoạt rõ",
-        desc: receiveLabel || "Theo hướng dẫn kèm license",
+        title: "Kích hoạt dễ",
+        desc: activationLabel || receiveLabel || "Theo hướng dẫn kèm license",
       },
-      { title: "Hỗ trợ từ KEYON", desc: "Trong lúc kích hoạt và sử dụng" },
-      { title: "Giá đã gồm VAT", desc: "Thanh toán trên KEYON" },
+      { title: "Hỗ trợ từ KEYON", desc: "Trong quá trình sử dụng" },
+      { title: "Đã gồm VAT", desc: "Giá hiển thị đã bao gồm VAT" },
     ];
   }
   if (features.length >= 4) {
@@ -349,6 +350,7 @@ export function PdpView({ data }: { data: PdpProductData }) {
               instant={variant.fulfillmentInstant}
               brandName={data.brandName}
               receiveLabel={variant.receiveLabel}
+              activationLabel={license.activationLabel}
               profile={data.offeringProfile}
             />
             <SoftwareProductStory data={data} variant={variant} license={license} />
@@ -586,10 +588,10 @@ function GalleryImages({
           if (Math.abs(dx) > 48) stepImage(dx < 0 ? 1 : -1);
           setTouchX(null);
         }}
-        className={`relative w-full overflow-hidden rounded-2xl border border-border/80 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+        className={`relative w-full overflow-hidden rounded-2xl border border-border/80 bg-white text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
           frame === "wide"
             ? `h-[240px] sm:h-[320px] lg:h-[380px] ${ELEVATION_HAIRLINE}`
-            : `aspect-square ${ELEVATION_FLOAT} ${TRANSITION_UI} hover:shadow-[0_16px_44px_rgba(15,23,42,0.12)]`
+            : `aspect-square ${ELEVATION_HAIRLINE}`
         }`}
         aria-label={`Xem ảnh lớn: ${imageAlt}`}
       >
@@ -598,7 +600,7 @@ function GalleryImages({
             src={activeUrl}
             alt={imageAlt}
             fill
-            className="object-cover"
+            className={frame === "wide" ? "object-cover" : "object-contain scale-[1.18]"}
             sizes="(max-width: 1024px) 100vw, 50vw"
             priority
           />
@@ -616,8 +618,8 @@ function GalleryImages({
       </button>
 
       {thumbs.length > 1 ? (
-      <div className="mt-3 flex items-center gap-1.5">
-        {canSlide ? (
+      <div className={`flex items-center ${frame === "square" ? "mt-3 gap-3" : "mt-3 gap-1.5"}`}>
+        {canSlide && frame !== "square" ? (
           <button
             type="button"
             onClick={() => goThumbs(-1)}
@@ -630,15 +632,19 @@ function GalleryImages({
         ) : null}
 
         <div
-          className={`grid min-w-0 flex-1 gap-2.5 ${
-            windowThumbs.length >= 5
-              ? "grid-cols-5"
-              : windowThumbs.length === 3
-                ? "grid-cols-3"
-                : windowThumbs.length === 2
-                  ? "grid-cols-2"
-                  : "grid-cols-4"
-          }`}
+          className={
+            frame === "square"
+              ? "flex gap-3"
+              : `grid min-w-0 flex-1 gap-2.5 ${
+                  windowThumbs.length >= 5
+                    ? "grid-cols-5"
+                    : windowThumbs.length === 3
+                      ? "grid-cols-3"
+                      : windowThumbs.length === 2
+                        ? "grid-cols-2"
+                        : "grid-cols-4"
+                }`
+          }
         >
           {windowThumbs.map((item, localIdx) => {
             const i = start + localIdx;
@@ -648,11 +654,15 @@ function GalleryImages({
                 key={url ?? i}
                 type="button"
                 onClick={() => onThumb(i)}
-                className={`overflow-hidden rounded-xl border-2 ${MOTION_NORMAL} transition-[border-color,box-shadow,transform] ${HOVER_LIFT_CARD} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+                className={`overflow-hidden border-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+                  frame === "square"
+                    ? "h-16 w-16 shrink-0 rounded-lg"
+                    : `rounded-xl ${MOTION_NORMAL} transition-[border-color,box-shadow,transform] ${HOVER_LIFT_CARD}`
+                } ${
                   activeIndex === i
-                    ? "border-accent shadow-[0_6px_16px_rgba(14,165,164,0.2)]"
+                    ? "border-accent"
                     : "border-border hover:border-accent/40"
-                }`}
+                } ${frame === "square" || activeIndex !== i ? "" : "shadow-[0_6px_16px_rgba(14,165,164,0.2)]"}`}
                 aria-label={`${imageAlt} — ảnh ${i + 1}`}
                 aria-current={activeIndex === i}
               >
@@ -1261,7 +1271,7 @@ function PurchaseColumn({
       ) : null}
 
       {softwareLayout && shortPlain ? (
-        <p className={`mt-3 ${SECTION_LEAD_CLASS}`}>{shortPlain}</p>
+        <p className={`mt-3 line-clamp-2 ${SECTION_LEAD_CLASS}`}>{shortPlain}</p>
       ) : null}
 
       {hasReviews || soldCount != null ? (
@@ -1577,7 +1587,6 @@ function PurchaseColumn({
         <SoftwareBuyBox
           data={data}
           variant={variant}
-          license={license}
           qty={qty}
           onQty={onQty}
           onSelectVariant={onSelectVariant}
@@ -1729,12 +1738,14 @@ function FeatureBar({
   brandName,
   receiveLabel,
   profile,
+  activationLabel,
 }: {
   features: string[];
   instant: boolean;
   brandName: string;
   receiveLabel: string;
   profile: OfferingProfile;
+  activationLabel?: string | null;
 }) {
   const items = featureBarItems(
     features,
@@ -1742,10 +1753,15 @@ function FeatureBar({
     brandName,
     receiveLabel,
     profile,
+    activationLabel,
   );
 
   return (
-    <section className="mt-10 overflow-hidden rounded-2xl border border-border/80 bg-surface md:mt-12">
+    <section
+      className={`overflow-hidden rounded-2xl border border-border/80 bg-surface ${
+        profile === "SOFTWARE" ? "mt-6 md:mt-8" : "mt-10 md:mt-12"
+      }`}
+    >
       <ul className="grid grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-border">
         {items.map((item, i) => (
           <li
@@ -2480,20 +2496,9 @@ function licensePriceSuffix(code: string | null | undefined) {
   return "";
 }
 
-function includedWithLicense(license: LicensePresentation) {
-  const items = ["License chính hãng"];
-  const termLine = [license.channelLabel, license.termLabel].filter(Boolean).join(" · ");
-  if (termLine) items.push(termLine);
-  if (license.seats) items.push(license.seats);
-  if (license.activationLabel) items.push(`Kích hoạt: ${license.activationLabel}`);
-  items.push("Hỗ trợ kích hoạt từ KEYON");
-  return items;
-}
-
 function SoftwareBuyBox({
   data,
   variant,
-  license,
   qty,
   onQty,
   onSelectVariant,
@@ -2508,7 +2513,6 @@ function SoftwareBuyBox({
 }: {
   data: PdpProductData;
   variant: PdpVariantOption;
-  license: LicensePresentation;
   qty: number;
   onQty: (n: number) => void;
   onSelectVariant: (id: string) => void;
@@ -2522,7 +2526,7 @@ function SoftwareBuyBox({
   quoteHref: string;
 }) {
   return (
-    <div className={`mt-5 rounded-2xl border border-border bg-surface px-4 py-4 sm:px-5 ${ELEVATION_HAIRLINE}`}>
+    <div className="mt-4">
       <div className="flex flex-wrap items-end gap-3">
         <p className={PDP_PRICE_CLASS}>{formatVnd(variant.priceVnd * qty)}</p>
         {compare && compare > variant.priceVnd ? (
@@ -2536,9 +2540,9 @@ function SoftwareBuyBox({
       </div>
       <p className={`mt-1 ${CARD_META_CLASS}`}>Đã bao gồm VAT</p>
 
-      <div className="mt-4 border-t border-border pt-4">
-        <p className={`${OVERLINE_CLASS} text-muted-soft`}>Chọn loại license</p>
-        <div className="mt-2 grid gap-2 sm:grid-cols-2">
+      <div className="mt-4">
+        <p className={`${OVERLINE_CLASS} text-muted-soft`}>Chọn gói license</p>
+        <div className={`mt-2 grid gap-2 ${data.variants.length > 1 ? "sm:grid-cols-2" : ""}`}>
           {data.variants.map((choice) => {
             const active = choice.id === variant.id;
             const presented = resolveLicensePresentation({
@@ -2550,10 +2554,8 @@ function SoftwareBuyBox({
                 key={choice.id}
                 type="button"
                 onClick={() => onSelectVariant(choice.id)}
-                className={`rounded-xl border-2 px-3.5 py-3 text-left ${TRANSITION_UI} ${
-                  active
-                    ? "border-accent bg-white"
-                    : "border-border bg-white hover:border-accent/50"
+                className={`rounded-xl border-2 bg-white px-3.5 py-3 text-left ${TRANSITION_UI} ${
+                  active ? "border-accent" : "border-border hover:border-accent/50"
                 }`}
               >
                 <p className={`${CARD_TITLE_CLASS} ${active ? "text-accent" : "text-navy"}`}>
@@ -2568,9 +2570,7 @@ function SoftwareBuyBox({
                   <p className={`mt-1 ${CARD_META_CLASS}`}>{presented.seats}</p>
                 ) : null}
                 {presented.activationLabel ? (
-                  <p className={`mt-1 ${CARD_META_CLASS}`}>
-                    ✓ Kích hoạt: {presented.activationLabel}
-                  </p>
+                  <p className={`mt-1 ${CARD_META_CLASS}`}>{presented.activationLabel}</p>
                 ) : null}
               </button>
             );
@@ -2578,36 +2578,22 @@ function SoftwareBuyBox({
         </div>
       </div>
 
-      <div className="mt-4 border-t border-border pt-4">
-        <p className={CARD_TITLE_CLASS}>Khi mua {data.name} tại KEYON</p>
-        <ul className="mt-2 space-y-1.5">
-          {includedWithLicense(license).map((item) => (
-            <li key={item} className={`flex items-start gap-2 ${BODY_CLASS}`}>
-              <span className="mt-0.5 text-emerald-600" aria-hidden>
-                ✓
-              </span>
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-border pt-4">
+      <div className="mt-3 flex items-center gap-3">
         <span className={CARD_META_CLASS}>Số lượng</span>
-        <div className="inline-flex h-11 items-center overflow-hidden rounded-xl border border-border bg-white">
+        <div className="inline-flex h-9 items-center overflow-hidden rounded-lg border border-border bg-white">
           <button
             type="button"
-            className="flex h-full w-10 items-center justify-center text-navy transition hover:bg-surface disabled:opacity-40"
+            className="flex h-full w-8 items-center justify-center text-navy transition hover:bg-surface disabled:opacity-40"
             disabled={qty <= 1}
             onClick={() => onQty(Math.max(1, qty - 1))}
             aria-label="Giảm số lượng"
           >
             −
           </button>
-          <span className={`min-w-10 text-center ${FIELD_VALUE_NUM_CLASS}`}>{qty}</span>
+          <span className={`min-w-8 text-center ${FIELD_VALUE_NUM_CLASS}`}>{qty}</span>
           <button
             type="button"
-            className="flex h-full w-10 items-center justify-center text-navy transition hover:bg-surface disabled:opacity-40"
+            className="flex h-full w-8 items-center justify-center text-navy transition hover:bg-surface disabled:opacity-40"
             disabled={qty >= 5}
             onClick={() => onQty(Math.min(5, qty + 1))}
             aria-label="Tăng số lượng"
@@ -2618,7 +2604,7 @@ function SoftwareBuyBox({
       </div>
 
       {!data.loggedIn ? (
-        <label className="mt-4 block">
+        <label className="mt-3 block">
           <span className="sr-only">Email nhận license</span>
           <input
             type="email"
@@ -2671,6 +2657,28 @@ function specGroup(label: string): "system" | "platform" | "license" | "product"
   return "product";
 }
 
+function sellingFeatures(features: string[]) {
+  const items = benefitItems(features);
+  const product = items.filter(
+    (item) =>
+      !/subscription|thuê bao|thời hạn|vĩnh viễn|desktop|web|mobile|nền tảng|người dùng|license|kích hoạt|\bvat\b/i.test(
+        item.title,
+      ),
+  );
+  return (product.length ? product : items).slice(0, 6);
+}
+
+function purchaseFaqFirst(faqs: PdpProductData["faqs"]) {
+  function rank(question: string) {
+    const text = question.toLowerCase();
+    if (/nhận (license|key|bản quyền)|sau khi (mua|thanh toán)/.test(text)) return 0;
+    if (/tài khoản|kích hoạt/.test(text)) return 1;
+    if (/hỗ trợ/.test(text) && /cài|kích hoạt/.test(text)) return 2;
+    return 3;
+  }
+  return [...faqs].sort((a, b) => rank(a.question) - rank(b.question));
+}
+
 function softwareReceiveSteps(
   variant: PdpVariantOption,
   license: LicensePresentation,
@@ -2714,6 +2722,18 @@ function SoftwareProductStory({
     ...data.systemSpecs,
     ...hardwareRows.filter((row) => !seen.has(row.label.toLowerCase())),
   ];
+  const osIndex = systemRows.findIndex((row) => /hệ điều hành|operating system/i.test(row.label));
+  if (osIndex > 0) {
+    const [os] = systemRows.splice(osIndex, 1);
+    if (os) systemRows.unshift(os);
+  } else if (osIndex < 0 && license.platformLabels.length) {
+    systemRows.unshift({
+      label: "Hệ điều hành",
+      value: license.platformLabels.join(", "),
+    });
+  }
+  const featureCards = sellingFeatures(data.features);
+  const faqs = purchaseFaqFirst(data.faqs);
   const hasLicense = Boolean(
     license.channelLabel ||
       license.termLabel ||
@@ -2728,10 +2748,10 @@ function SoftwareProductStory({
   );
   const anchors = [
     { id: "tong-quan", label: "Tổng quan", show: Boolean(stripHtml(data.description).trim()) },
-    { id: "tinh-nang", label: "Tính năng", show: data.features.length > 0 },
-    { id: "license", label: "License", show: hasLicense },
+    { id: "tinh-nang", label: "Tính năng", show: featureCards.length > 0 },
+    { id: "license", label: "Bản quyền", show: hasLicense },
     { id: "thong-so", label: "Thông số", show: productRows.length > 0 || systemRows.length > 0 },
-    { id: "kich-hoat", label: "Hướng dẫn", show: true },
+    { id: "kich-hoat", label: "Kích hoạt", show: true },
     { id: "faq", label: "FAQ", show: data.faqs.length > 0 },
   ].filter((item) => item.show);
 
@@ -2766,11 +2786,11 @@ function SoftwareProductStory({
           </section>
         ) : null}
 
-        {data.features.length ? (
+        {featureCards.length ? (
           <section id="tinh-nang" className="scroll-mt-32">
             <h2 className={SUBSECTION_TITLE_CLASS}>Vì sao chọn {data.name}?</h2>
             <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {benefitItems(data.features).map((item) => (
+              {featureCards.map((item) => (
                 <li
                   key={item.title}
                   className={`rounded-2xl border border-border bg-white px-4 py-4 ${ELEVATION_HAIRLINE}`}
@@ -2830,20 +2850,17 @@ function SoftwareProductStory({
           ) : null}
         </section>
 
-        {data.faqs.length ? (
+        {faqs.length ? (
           <section id="faq" className="scroll-mt-32">
             <h2 className={`mb-4 ${SUBSECTION_TITLE_CLASS}`}>Câu hỏi thường gặp</h2>
             <div className="grid gap-4 lg:grid-cols-2 lg:gap-5">
-              <FaqAccordion items={data.faqs.slice(0, Math.ceil(data.faqs.length / 2))} />
-              <FaqAccordion items={data.faqs.slice(Math.ceil(data.faqs.length / 2))} />
+              <FaqAccordion items={faqs.slice(0, Math.ceil(faqs.length / 2))} />
+              <FaqAccordion items={faqs.slice(Math.ceil(faqs.length / 2))} />
             </div>
           </section>
         ) : null}
 
         <LicenseNotes license={license} />
-        <p className={CARD_META_CLASS}>
-          Gói đang chọn: <span className="font-semibold text-navy">{variant.name}</span>
-        </p>
       </div>
     </div>
   );
