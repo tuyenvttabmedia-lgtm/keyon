@@ -902,7 +902,7 @@ function PlanBoard({
                   <ul className="mt-2 space-y-1">
                     {item.planSpecs.map((row) => (
                       <li key={row.label} className={CARD_META_CLASS}>
-                        {specFact(row)}
+                        {isBareSpec(row) ? row.label : `${row.label}: ${row.value}`}
                       </li>
                     ))}
                   </ul>
