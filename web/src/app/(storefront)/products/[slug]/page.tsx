@@ -161,7 +161,9 @@ export default async function ProductPage({
   const initial =
     variantsRaw.find((v) => v.id === sp.variant) ??
     (product.offeringProfile === "INFRASTRUCTURE"
-      ? variantsRaw.find((v) => /standard/i.test(v.name))
+      ? variantsRaw.find(
+          (v) => /standard/i.test(v.name) && v.licenseTerm === "1_MONTH",
+        ) ?? variantsRaw.find((v) => /standard/i.test(v.name))
       : undefined) ??
     variantsRaw[0]!;
 

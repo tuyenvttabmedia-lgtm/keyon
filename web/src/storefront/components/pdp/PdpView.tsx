@@ -844,10 +844,10 @@ function regionLabel(code: string | null | undefined): string | null {
 
 function selectedPackageRows(variant: PdpVariantOption): { label: string; value: string }[] {
   const rows = variant.planSpecs.map((row) => ({ ...row }));
-  const term = planTermLabel(variant.licenseTerm);
   const region = regionLabel(variant.regionCode);
   const has = (pattern: RegExp) => rows.some((row) => pattern.test(row.label));
-  if (term && !has(/thời hạn|chu kỳ/i)) rows.push({ label: "Thời hạn", value: term });
+  const cloudTerm = cloudTermLabel(variant.licenseTerm);
+  if (cloudTerm && !has(/thời hạn|chu kỳ/i)) rows.push({ label: "Thời hạn", value: cloudTerm });
   if (region && !has(/khu vực/i)) rows.push({ label: "Khu vực", value: region });
   if (variant.slaPromise?.trim() && !has(/hỗ trợ|sla/i)) {
     rows.push({ label: "Hỗ trợ", value: variant.slaPromise.trim() });
@@ -856,6 +856,52 @@ function selectedPackageRows(variant: PdpVariantOption): { label: string; value:
     rows.push({ label: "Provisioning", value: "KEYON" });
   }
   return rows;
+}
+
+function planDisplayName(name: string) {
+  return name.replace(/\s*·\s*.+$/u, "").trim() || name;
+}
+
+function termMonths(code: string | null | undefined) {
+  if (code === "3_MONTHS") return 3;
+  if (code === "6_MONTHS") return 6;
+  if (code === "1_YEAR") return 12;
+  return 1;
+}
+
+function cloudTermLabel(code: string | null | undefined) {
+  if (code === "1_YEAR") return "12 tháng";
+  return planTermLabel(code);
+}
+
+function planIdentity(variant: PdpVariantOption) {
+  const cards = packageHighlights(variant.planSpecs).cards;
+  const bits = (["cpu", "ram", "storage"] as const).map(
+    (id) => cards.find((card) => card.id === id)?.value ?? "",
+  );
+  if (bits.every(Boolean)) return bits.join("|");
+  return planDisplayName(variant.name);
+}
+
+function planGroups(variants: PdpVariantOption[]) {
+  const order: string[] = [];
+  const map = new Map<string, PdpVariantOption[]>();
+  for (const variant of variants) {
+    const key = planIdentity(variant);
+    const list = map.get(key);
+    if (list) list.push(variant);
+    else {
+      map.set(key, [variant]);
+      order.push(key);
+    }
+  }
+  return order.map((key) => {
+    const items = map.get(key)!;
+    const monthly =
+      items.find((item) => item.licenseTerm === "1_MONTH") ??
+      items.slice().sort((a, b) => a.priceVnd - b.priceVnd)[0]!;
+    return { key, monthly, items };
+  });
 }
 
 function PlanBoard({
@@ -868,13 +914,24 @@ function PlanBoard({
   onSelect: (id: string) => void;
 }) {
   const [compareOpen, setCompareOpen] = useState(false);
+  const groups = planGroups(variants);
+  const cards = groups.map((group) => group.monthly);
+  const selectedVariant = variants.find((item) => item.id === selectedId);
+  const selectedKey = selectedVariant ? planIdentity(selectedVariant) : "";
+  function choosePlan(monthly: PdpVariantOption) {
+    const group = groups.find((item) => item.monthly.id === monthly.id);
+    const next =
+      group?.items.find((item) => item.licenseTerm === selectedVariant?.licenseTerm) ??
+      monthly;
+    onSelect(next.id);
+  }
   const columns =
-    variants.length >= 4
+    cards.length >= 4
       ? "lg:grid-cols-4"
-      : variants.length === 3
+      : cards.length === 3
         ? "lg:grid-cols-3"
         : "lg:grid-cols-2";
-  const compareLabels = variants.reduce<string[]>((labels, item) => {
+  const compareLabels = cards.reduce<string[]>((labels, item) => {
     for (const row of item.planSpecs) {
       if (!labels.includes(row.label)) labels.push(row.label);
     }
@@ -882,30 +939,30 @@ function PlanBoard({
   }, []);
   const sharedLabelCount = compareLabels.filter(
     (label) =>
-      variants.filter((item) =>
+      cards.filter((item) =>
         item.planSpecs.some((row) => row.label === label),
       ).length > 1,
   ).length;
   const compareByLabel =
     compareLabels.length > 0 && sharedLabelCount * 2 >= compareLabels.length;
-  const maxSpecs = Math.max(0, ...variants.map((item) => item.planSpecs.length));
+  const maxSpecs = Math.max(0, ...cards.map((item) => item.planSpecs.length));
   const compareRows = compareByLabel
     ? compareLabels.map((label) => ({
         key: label,
         heading: label,
-        cells: variants.map((item) => {
+        cells: cards.map((item) => {
           const found = item.planSpecs.find((row) => row.label === label);
           return found ? specFact(found) : "—";
         }),
       }))
     : Array.from({ length: maxSpecs }, (_, index) => {
-        const named = variants
+        const named = cards
           .map((item) => item.planSpecs[index])
           .find((row) => row && !isBareSpec(row));
         return {
           key: `row-${index}`,
           heading: named?.label ?? "",
-          cells: variants.map((item) => {
+          cells: cards.map((item) => {
             const row = item.planSpecs[index];
             return row ? specFact(row) : "—";
           }),
@@ -918,8 +975,8 @@ function PlanBoard({
       <div
         className={`mt-2 flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory lg:grid ${columns} lg:overflow-visible`}
       >
-        {variants.map((item) => {
-          const selected = item.id === selectedId;
+        {cards.map((item) => {
+          const selected = planIdentity(item) === selectedKey;
           const term = planTermLabel(item.licenseTerm);
           const highlight = packageHighlights(item.planSpecs).cards.filter(
             (card) => card.id !== "network",
@@ -935,7 +992,7 @@ function PlanBoard({
               }`}
             >
               <div className="flex items-start justify-between gap-2">
-                <p className={CARD_TITLE_CLASS}>{item.name}</p>
+                <p className={CARD_TITLE_CLASS}>{planDisplayName(item.name)}</p>
                 {popular ? (
                   <span className={`shrink-0 rounded-md bg-accent px-2 py-0.5 ${BADGE_CLASS} text-white`}>
                     Phổ biến
@@ -980,7 +1037,7 @@ function PlanBoard({
               ) : null}
               <button
                 type="button"
-                onClick={() => onSelect(item.id)}
+                onClick={() => choosePlan(item)}
                 className={`mt-4 inline-flex h-10 items-center justify-center rounded-xl px-3 ${CTA_COMPACT_CLASS} ${
                   selected
                     ? "bg-accent text-white"
@@ -997,7 +1054,7 @@ function PlanBoard({
       <p className={`mt-1 lg:hidden ${CARD_META_CLASS}`}>
         Trên điện thoại, vuốt ngang để xem hết các gói.
       </p>
-      {variants.length > 1 && compareRows.length ? (
+      {cards.length > 1 && compareRows.length ? (
         <div className="mt-3">
           <button
             type="button"
@@ -1008,23 +1065,25 @@ function PlanBoard({
           </button>
           {compareOpen && !compareByLabel ? (
             <div className={`mt-3 grid gap-3 ${columns}`}>
-              {variants.map((item) => (
+              {cards.map((item) => {
+                const selected = planIdentity(item) === selectedKey;
+                return (
                 <div
                   key={item.id}
                   className={`rounded-xl border px-3 py-3 ${
-                    item.id === selectedId
+                    selected
                       ? "border-accent bg-accent-soft"
                       : "border-border bg-white"
                   }`}
                 >
                   <button
                     type="button"
-                    onClick={() => onSelect(item.id)}
+                    onClick={() => choosePlan(item)}
                     className={`${CARD_TITLE_CLASS} ${
-                      item.id === selectedId ? "text-accent" : "text-navy"
+                      selected ? "text-accent" : "text-navy"
                     }`}
                   >
-                    {item.name}
+                    {planDisplayName(item.name)}
                   </button>
                   <ul className="mt-2 space-y-1">
                     {item.planSpecs.map((row) => (
@@ -1035,9 +1094,11 @@ function PlanBoard({
                   </ul>
                   <p className={`mt-2 font-semibold text-navy ${BODY_CLASS}`}>
                     {formatVnd(item.priceVnd)}
+                    {priceCycleSuffix(item.licenseTerm)}
                   </p>
                 </div>
-              ))}
+                );
+              })}
             </div>
           ) : null}
           {compareOpen && compareByLabel ? (
@@ -1046,19 +1107,22 @@ function PlanBoard({
                 <thead>
                   <tr className="border-b border-border bg-surface">
                     <th className={`px-3 py-2 ${CARD_META_CLASS}`}>Thông số</th>
-                    {variants.map((item) => (
+                    {cards.map((item) => {
+                      const selected = planIdentity(item) === selectedKey;
+                      return (
                       <th key={item.id} className="px-3 py-2">
                         <button
                           type="button"
-                          onClick={() => onSelect(item.id)}
+                          onClick={() => choosePlan(item)}
                           className={`${CARD_TITLE_CLASS} ${
-                            item.id === selectedId ? "text-accent" : "text-navy"
+                            selected ? "text-accent" : "text-navy"
                           }`}
                         >
-                          {item.name}
+                          {planDisplayName(item.name)}
                         </button>
                       </th>
-                    ))}
+                      );
+                    })}
                   </tr>
                 </thead>
                 <tbody>
@@ -1067,11 +1131,11 @@ function PlanBoard({
                       <th className={`px-3 py-2 font-medium ${CARD_META_CLASS}`}>
                         {row.heading}
                       </th>
-                      {variants.map((item, index) => (
+                      {cards.map((item, index) => (
                         <td
                           key={item.id}
                           className={`px-3 py-2 ${BODY_CLASS} ${
-                            item.id === selectedId ? "bg-accent-soft" : ""
+                            planIdentity(item) === selectedKey ? "bg-accent-soft" : ""
                           }`}
                         >
                           {row.cells[index]}
@@ -1081,13 +1145,13 @@ function PlanBoard({
                   ))}
                   <tr>
                     <th className={`px-3 py-2 font-medium ${CARD_META_CLASS}`}>
-                      Giá
+                      Giá / tháng
                     </th>
-                    {variants.map((item) => (
+                    {cards.map((item) => (
                       <td
                         key={item.id}
                         className={`px-3 py-2 font-semibold text-navy ${BODY_CLASS} ${
-                          item.id === selectedId ? "bg-accent-soft" : ""
+                          planIdentity(item) === selectedKey ? "bg-accent-soft" : ""
                         }`}
                       >
                         {formatVnd(item.priceVnd)}
@@ -1293,11 +1357,20 @@ function PurchaseColumn({
         <div className={`mt-5 rounded-2xl border border-border bg-surface px-4 py-4 sm:px-5 ${ELEVATION_HAIRLINE}`}>
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
-              <p className={CARD_TITLE_CLASS}>{variant.name}</p>
+              <p className={CARD_TITLE_CLASS}>{planDisplayName(variant.name)}</p>
               <p className={`mt-1 ${INLINE_PRICE_CLASS} !text-navy`}>
                 {formatVnd(variant.priceVnd * qty)}
-                {priceCycleSuffix(variant.licenseTerm)}
+                {termMonths(variant.licenseTerm) === 1
+                  ? priceCycleSuffix(variant.licenseTerm)
+                  : ""}
               </p>
+              {termMonths(variant.licenseTerm) > 1 ? (
+                <p className={`mt-1 ${CARD_META_CLASS}`}>
+                  Thanh toán một lần cho {cloudTermLabel(variant.licenseTerm)}. Tương đương{" "}
+                  {formatVnd(Math.round((variant.priceVnd * qty) / termMonths(variant.licenseTerm)))}
+                  /tháng.
+                </p>
+              ) : null}
               <p className={`mt-1 ${CARD_META_CLASS}`}>Đã bao gồm VAT.</p>
             </div>
             <div className="flex items-center gap-2">
@@ -1327,6 +1400,54 @@ function PurchaseColumn({
               </div>
             </div>
           </div>
+          {(() => {
+            const group = planGroups(data.variants).find((item) =>
+              item.items.some((choice) => choice.id === variant.id),
+            );
+            const choices = (group?.items ?? [])
+              .slice()
+              .sort(
+                (a, b) =>
+                  termMonths(a.licenseTerm) - termMonths(b.licenseTerm),
+              );
+            if (choices.length < 2) return null;
+            const monthly = group?.monthly.priceVnd ?? variant.priceVnd;
+            return (
+              <div className="mt-4">
+                <p className={CARD_META_CLASS}>Chu kỳ thanh toán</p>
+                <div className="mt-2 flex flex-wrap gap-2" role="group" aria-label="Chu kỳ thanh toán">
+                  {choices.map((choice) => {
+                    const active = choice.id === variant.id;
+                    const months = termMonths(choice.licenseTerm);
+                    const full = monthly * months;
+                    const save =
+                      choice.priceVnd < full
+                        ? Math.round((1 - choice.priceVnd / full) * 100)
+                        : 0;
+                    return (
+                      <button
+                        key={choice.id}
+                        type="button"
+                        onClick={() => onSelectVariant(choice.id)}
+                        className={`inline-flex h-10 items-center gap-1.5 rounded-xl px-3 ${CTA_COMPACT_CLASS} ${
+                          active
+                            ? "bg-accent text-white"
+                            : "border border-border bg-white text-navy"
+                        }`}
+                      >
+                        {cloudTermLabel(choice.licenseTerm)}
+                        {save > 0 ? (
+                          <span className={active ? "text-white/90" : "text-emerald-700"}>
+                            −{save}%
+                          </span>
+                        ) : null}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
           {packageHighlights(variant.planSpecs).cards.length ? (
             <dl className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
               {packageHighlights(variant.planSpecs).cards.map((card) => (
@@ -2037,7 +2158,7 @@ function InfraProductStory({
       {rows.length ? (
         <section>
           <h2 className={SUBSECTION_TITLE_CLASS}>
-            Cấu hình {variant.name}
+            Cấu hình {planDisplayName(variant.name)}
           </h2>
           {variant.planSummary?.trim() ? (
             <p className={`mt-3 max-w-3xl ${SECTION_LEAD_CLASS}`}>
@@ -2103,7 +2224,7 @@ function InfraProductStory({
       {data.features.length ? (
         <section>
           <h2 className={SUBSECTION_TITLE_CLASS}>
-            Bạn nhận được gì với {variant.name}?
+            Bạn nhận được gì với {planDisplayName(variant.name)}?
           </h2>
           <p className={`mt-2 ${CARD_META_CLASS}`}>
             Theo đúng cấu hình đang chọn.
@@ -2235,7 +2356,7 @@ function StickyBar({
     : licenseSummaryParts(license).join(" · ");
   const thumbSrc = data.imageUrl || data.galleryUrls[0] || null;
   const thumbAlt = `${data.name}${variant.name ? ` — ${variant.name}` : ""}`;
-  const term = planLayout ? planTermLabel(variant.licenseTerm) : null;
+  const term = planLayout ? cloudTermLabel(variant.licenseTerm) : null;
 
   return (
     <div
@@ -2260,7 +2381,7 @@ function StickyBar({
           </div>
           <div className="min-w-0">
             <p className={`truncate ${CARD_TITLE_CLASS}`}>
-              {planLayout ? variant.name : data.name}
+              {planLayout ? planDisplayName(variant.name) : data.name}
             </p>
             <p className={`mt-0.5 truncate ${CARD_META_CLASS}`}>
               {summary || variant.name || `Số lượng: ${qty}`}
@@ -2273,7 +2394,9 @@ function StickyBar({
           <div className="text-left sm:text-right">
             <p className={CARD_PRICE_CLASS}>
               {formatVnd(variant.priceVnd * qty)}
-              {planLayout ? priceCycleSuffix(variant.licenseTerm) : ""}
+              {planLayout && termMonths(variant.licenseTerm) === 1
+                ? priceCycleSuffix(variant.licenseTerm)
+                : ""}
             </p>
             <div className="mt-0.5 flex items-center gap-2 sm:justify-end">
               {compare && compare > variant.priceVnd ? (
