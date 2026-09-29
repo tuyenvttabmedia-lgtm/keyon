@@ -302,7 +302,7 @@ export function PdpView({ data }: { data: PdpProductData }) {
   return (
     <div className="bg-white pb-28">
       <div className="home-container home-section">
-        <Breadcrumb data={data} variant={variant} />
+        <Breadcrumb data={data} />
 
         <div
           className={
@@ -412,13 +412,7 @@ export function PdpView({ data }: { data: PdpProductData }) {
   );
 }
 
-function Breadcrumb({
-  data,
-  variant,
-}: {
-  data: PdpProductData;
-  variant: PdpVariantOption;
-}) {
+function Breadcrumb({ data }: { data: PdpProductData }) {
   return (
     <nav className={`flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`} aria-label="Breadcrumb">
       <Link href="/" className="transition hover:text-accent" aria-label="Trang chủ">
@@ -438,10 +432,7 @@ function Breadcrumb({
       <Sep />
       <span className="text-muted">{data.brandName}</span>
       <Sep />
-      <span className={BREADCRUMB_CURRENT_CLASS}>
-        {data.name}
-        {variant.name ? ` — ${variant.name}` : ""}
-      </span>
+      <span className={BREADCRUMB_CURRENT_CLASS}>{data.name}</span>
     </nav>
   );
 }
@@ -2227,6 +2218,80 @@ function LicenseInfoBlock({
   );
 }
 
+function isLeadSystemSpec(label: string) {
+  const text = label.toLowerCase();
+  const lead =
+    /hệ điều hành|operating system|(^|[\s(])os($|[\s)])|cpu|bộ xử lý|processor|ram|bộ nhớ|ổ đĩa|ổ cứng|storage|dung lượng|ssd|\bdisk\b|gpu|vga|card đồ họa/;
+  const extra =
+    /khuyến nghị|recommended|tối đa|maximum|độ phân giải|display|màn hình|firmware|tpm|\.net|internet|mạng|network|secure boot/;
+  if (!lead.test(text)) return false;
+  if (extra.test(text) && !/tối thiểu|minimum/.test(text)) return false;
+  return true;
+}
+
+function partitionSpecRows(
+  rows: { label: string; value: string }[],
+  mode: "system" | "product",
+) {
+  if (mode === "product") {
+    return { visible: rows.slice(0, 6), rest: rows.slice(6) };
+  }
+  const visible = rows.filter((row) => isLeadSystemSpec(row.label)).slice(0, 6);
+  if (!visible.length) {
+    return { visible: rows.slice(0, 4), rest: rows.slice(4) };
+  }
+  const shown = new Set(visible.map((row) => row.label));
+  return {
+    visible,
+    rest: rows.filter((row) => !shown.has(row.label)),
+  };
+}
+
+function SoftwareSpecsCard({
+  title,
+  specs,
+  mode,
+  moreLabel,
+}: {
+  title: string;
+  specs: { label: string; value: string }[];
+  mode: "system" | "product";
+  moreLabel: string;
+}) {
+  const [open, setOpen] = useState(false);
+  if (!specs.length) return null;
+  const { visible, rest } = partitionSpecRows(specs, mode);
+  const rows = open ? specs : visible;
+  return (
+    <div className="rounded-2xl border border-border/80 bg-surface p-4 sm:p-5">
+      <p className={CARD_TITLE_CLASS}>{title}</p>
+      <dl className="mt-3 space-y-0">
+        {rows.map((row) => (
+          <div
+            key={row.label}
+            className={`flex items-baseline justify-between gap-3 border-b border-border/70 py-2.5 ${BODY_CLASS} last:border-b-0`}
+          >
+            <dt className="shrink-0 text-muted-soft">{row.label}</dt>
+            <dd className="min-w-0 break-words text-right font-semibold text-navy">
+              {row.value}
+            </dd>
+          </div>
+        ))}
+      </dl>
+      {rest.length ? (
+        <button
+          type="button"
+          className={`mt-3 ${TAB_CLASS} text-accent`}
+          aria-expanded={open}
+          onClick={() => setOpen((value) => !value)}
+        >
+          {open ? "Thu gọn" : moreLabel}
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
 function SpecsCard({
   title = "Thông số",
   specs,
@@ -2725,11 +2790,19 @@ function SoftwareProductStory({
   if (osIndex > 0) {
     const [os] = systemRows.splice(osIndex, 1);
     if (os) systemRows.unshift(os);
-  } else if (osIndex < 0 && license.platformLabels.length) {
-    systemRows.unshift({
-      label: "Hệ điều hành",
-      value: license.platformLabels.join(", "),
-    });
+  } else if (osIndex < 0) {
+    const osFromProduct = productRows.findIndex((row) =>
+      /hệ điều hành|operating system/i.test(row.label),
+    );
+    if (osFromProduct >= 0) {
+      const [os] = productRows.splice(osFromProduct, 1);
+      if (os) systemRows.unshift(os);
+    } else if (license.platformLabels.length) {
+      systemRows.unshift({
+        label: "Hệ điều hành",
+        value: license.platformLabels.join(", "),
+      });
+    }
   }
   const featureCards = sellingFeatures(data.features);
   const faqs = purchaseFaqFirst(data.faqs);
@@ -2814,10 +2887,20 @@ function SoftwareProductStory({
           <section id="thong-so" className="scroll-mt-32 space-y-4">
             <h2 className={SUBSECTION_TITLE_CLASS}>Thông số</h2>
             {productRows.length ? (
-              <SpecsCard title="Thông tin sản phẩm" specs={productRows} />
+              <SoftwareSpecsCard
+                title="Thông tin sản phẩm"
+                specs={productRows}
+                mode="product"
+                moreLabel="Xem thêm thông tin"
+              />
             ) : null}
             {systemRows.length ? (
-              <SpecsCard title="Yêu cầu hệ thống" specs={systemRows} />
+              <SoftwareSpecsCard
+                title="Yêu cầu hệ thống"
+                specs={systemRows}
+                mode="system"
+                moreLabel="Xem thêm yêu cầu"
+              />
             ) : null}
           </section>
         ) : null}

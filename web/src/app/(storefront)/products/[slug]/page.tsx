@@ -13,11 +13,9 @@ import {
   computeSocialReviews,
   computeSocialSold,
 } from "@/storefront/lib/social-proof";
-import {
-  PDP_CATEGORY_BADGE,
-} from "@/storefront/components/pdp/pdp-utils";
 import type { ShopCategoryId, ShopProduct } from "@/storefront/components/shop/types";
 import {
+  CATEGORY_LABELS,
   discountPercent,
   inferCategory,
   inferMark,
@@ -35,7 +33,11 @@ import {
   catalogFeatureFallback,
   parseOfferingProfile,
 } from "@/storefront/lib/offering-profile";
-import { infraCrossSellRank, mapProductsToShopCards } from "@/storefront/lib/related-products";
+import {
+  infraCrossSellRank,
+  mapProductsToShopCards,
+  softwareCrossSellRank,
+} from "@/storefront/lib/related-products";
 import { variantAllowsCheckout, variantShowsQuoteCta } from "@/lib/variant-checkout";
 import {
   resolveWithGlobalFallback,
@@ -175,8 +177,7 @@ export default async function ProductPage({
       ? (product.categoryKey as ShopCategoryId)
       : inferredCat;
   const mark = inferMark(categoryId, product.name);
-  const categoryLabel =
-    product.badgeLabel?.trim() || PDP_CATEGORY_BADGE[categoryId];
+  const categoryLabel = CATEGORY_LABELS[categoryId];
 
   const cmsGallery = parseStringList(product.galleryUrls);
   const cmsFeatures = parseStringList(product.features);
@@ -292,36 +293,7 @@ export default async function ProductPage({
     }
   } else if (related.length < 4) {
     const excludeIds = [product.id, ...related.map((x) => x.id)];
-    const relatedDb = await prisma.product.findMany({
-      where: {
-        active: true,
-        id: { notIn: excludeIds },
-        OR: [
-          { brandId: product.brandId },
-          ...(product.categoryKey
-            ? [{ categoryKey: product.categoryKey }]
-            : [{ name: { contains: product.brand.name } }]),
-        ],
-      },
-      include: {
-        brand: true,
-        variants: {
-          where: { active: true },
-          orderBy: { priceVnd: "asc" },
-          take: 1,
-        },
-      },
-      take: 8,
-    });
-    related = [
-      ...related,
-      ...mapProductsToShopCards(relatedDb, related.length),
-    ].slice(0, 4);
-  }
-
-  if (product.offeringProfile !== "INFRASTRUCTURE" && related.length < 4) {
-    const excludeIds = [product.id, ...related.map((x) => x.id)];
-    const more = await prisma.product.findMany({
+    const pool = await prisma.product.findMany({
       where: { active: true, id: { notIn: excludeIds } },
       include: {
         brand: true,
@@ -331,23 +303,32 @@ export default async function ProductPage({
           take: 1,
         },
       },
-      take: 12,
     });
-    const need = 4 - related.length;
-    const picked: typeof more = [];
-    for (const p of more) {
-      if (picked.length >= need) break;
-      const cat =
-        p.categoryKey &&
-        (PRODUCT_CATEGORY_KEYS as readonly string[]).includes(p.categoryKey)
-          ? (p.categoryKey as ShopCategoryId)
-          : inferCategory(p.brand.name, p.name);
-      if (cat !== categoryId && related.length + picked.length >= 2) continue;
-      picked.push(p);
-    }
+    const source = {
+      name: product.name,
+      categoryKey: product.categoryKey,
+      brand: product.brand.name,
+    };
+    const ranked = pool
+      .map((item) => ({
+        item,
+        rank: softwareCrossSellRank(source, {
+          name: item.name,
+          categoryKey: item.categoryKey,
+          brand: item.brand.name,
+        }),
+      }))
+      .filter((entry) => entry.rank < 99)
+      .sort(
+        (a, b) =>
+          a.rank - b.rank || a.item.name.localeCompare(b.item.name, "vi"),
+      );
     related = [
       ...related,
-      ...mapProductsToShopCards(picked, related.length),
+      ...mapProductsToShopCards(
+        ranked.map((entry) => entry.item),
+        related.length,
+      ),
     ].slice(0, 4);
   }
 

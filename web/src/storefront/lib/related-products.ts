@@ -78,6 +78,126 @@ export function mapProductsToShopCards(
   return out;
 }
 
+export type SoftwareCrossSellRef = {
+  name: string;
+  categoryKey: string | null;
+  brand: string;
+};
+
+function crossSellText(item: SoftwareCrossSellRef) {
+  return `${item.brand} ${item.name}`.toLowerCase();
+}
+
+function isDesignSoftware(item: SoftwareCrossSellRef) {
+  return (
+    item.categoryKey === "autodesk" ||
+    item.categoryKey === "adobe" ||
+    /autodesk|autocad|adobe|revit|photoshop|illustrator/.test(crossSellText(item))
+  );
+}
+
+function isWindowsHome(name: string) {
+  return /windows/.test(name) && /home/.test(name) && !/server/.test(name);
+}
+
+function isWindowsPro(name: string) {
+  return (
+    /windows/.test(name) && /\bpro\b/.test(name) && !/workstation|server/.test(name)
+  );
+}
+
+function isWorkstationOs(name: string) {
+  return /windows/.test(name) && /workstation/.test(name);
+}
+
+function isWindowsServerOs(name: string) {
+  return /windows server/.test(name);
+}
+
+function isPersonalProductivity(name: string) {
+  return /office|365/.test(name) && /personal|home|cá nhân/.test(name);
+}
+
+/**
+ * Lower rank is a better software cross-sell. 99 = skip.
+ * Curated related IDs still win. This only ranks the fallback pool.
+ */
+export function softwareCrossSellRank(
+  source: SoftwareCrossSellRef,
+  candidate: SoftwareCrossSellRef,
+): number {
+  const src = crossSellText(source);
+  const name = candidate.name.toLowerCase();
+  if (name === source.name.toLowerCase()) return 99;
+
+  if (isDesignSoftware(source)) {
+    if (isWorkstationOs(name)) return 1;
+    if (isWindowsPro(name)) return 2;
+    if (
+      candidate.brand.toLowerCase() === source.brand.toLowerCase() &&
+      candidate.categoryKey === source.categoryKey
+    ) {
+      return 3;
+    }
+    if (isWindowsServerOs(name)) return 4;
+    return 99;
+  }
+
+  if (isWindowsServerOs(source.name.toLowerCase())) {
+    if (isWorkstationOs(name)) return 1;
+    if (isWindowsPro(name)) return 2;
+    return 99;
+  }
+
+  if (/windows/.test(src) && /workstation/.test(src)) {
+    if (isWindowsPro(name)) return 1;
+    if (isWindowsServerOs(name)) return 2;
+    if (isDesignSoftware(candidate)) return 3;
+    return 99;
+  }
+
+  if (/windows/.test(src) && /\bpro\b/.test(src) && !/server/.test(src)) {
+    if (isWorkstationOs(name)) return 1;
+    if (isWindowsServerOs(name)) return 2;
+    if (isDesignSoftware(candidate)) return 3;
+    return 99;
+  }
+
+  if (isWindowsHome(src)) {
+    if (isPersonalProductivity(name)) return 1;
+    if (isWindowsPro(name)) return 3;
+    return 99;
+  }
+
+  if (source.categoryKey === "office" || /office|365/.test(src)) {
+    if (/personal|home|cá nhân/.test(src)) {
+      if (isWindowsHome(name)) return 1;
+      if (isPersonalProductivity(name)) return 2;
+      return 99;
+    }
+    if (isWindowsPro(name)) return 1;
+    if (isWorkstationOs(name)) return 2;
+    if (isWindowsServerOs(name)) return 3;
+    return 99;
+  }
+
+  if (source.categoryKey === "security" || /kaspersky|eset|antivirus|bảo mật/.test(src)) {
+    if (candidate.categoryKey === "security") return 1;
+    if (isWindowsPro(name)) return 2;
+    return 99;
+  }
+
+  if (
+    candidate.brand.toLowerCase() === source.brand.toLowerCase() &&
+    candidate.categoryKey &&
+    candidate.categoryKey === source.categoryKey &&
+    candidate.categoryKey !== "other"
+  ) {
+    return 8;
+  }
+  return 99;
+}
+
 /** Lower rank is a better cross-sell for an infrastructure package. 99 = skip. */
 export function infraCrossSellRank(
   name: string,
