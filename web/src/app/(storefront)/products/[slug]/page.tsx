@@ -35,7 +35,7 @@ import {
   catalogFeatureFallback,
   parseOfferingProfile,
 } from "@/storefront/lib/offering-profile";
-import { mapProductsToShopCards } from "@/storefront/lib/related-products";
+import { infraCrossSellRank, mapProductsToShopCards } from "@/storefront/lib/related-products";
 import { variantAllowsCheckout, variantShowsQuoteCta } from "@/lib/variant-checkout";
 import {
   resolveWithGlobalFallback,
@@ -252,7 +252,39 @@ export default async function ProductPage({
     related = mapProductsToShopCards(ordered).slice(0, 4);
   }
 
-  if (related.length < 4) {
+  if (product.offeringProfile === "INFRASTRUCTURE") {
+    if (related.length < 4) {
+      const excludeIds = [product.id, ...related.map((x) => x.id)];
+      const pool = await prisma.product.findMany({
+        where: { active: true, id: { notIn: excludeIds } },
+        include: {
+          brand: true,
+          variants: {
+            where: { active: true },
+            orderBy: { priceVnd: "asc" },
+            take: 1,
+          },
+        },
+      });
+      const ranked = pool
+        .map((item) => ({
+          item,
+          rank: infraCrossSellRank(item.name, item.categoryKey),
+        }))
+        .filter((entry) => entry.rank < 99)
+        .sort(
+          (a, b) =>
+            a.rank - b.rank || a.item.name.localeCompare(b.item.name, "vi"),
+        );
+      related = [
+        ...related,
+        ...mapProductsToShopCards(
+          ranked.map((entry) => entry.item),
+          related.length,
+        ),
+      ].slice(0, 4);
+    }
+  } else if (related.length < 4) {
     const excludeIds = [product.id, ...related.map((x) => x.id)];
     const relatedDb = await prisma.product.findMany({
       where: {
@@ -281,7 +313,7 @@ export default async function ProductPage({
     ].slice(0, 4);
   }
 
-  if (related.length < 4) {
+  if (product.offeringProfile !== "INFRASTRUCTURE" && related.length < 4) {
     const excludeIds = [product.id, ...related.map((x) => x.id)];
     const more = await prisma.product.findMany({
       where: { active: true, id: { notIn: excludeIds } },

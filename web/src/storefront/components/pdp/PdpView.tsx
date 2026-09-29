@@ -62,6 +62,7 @@ import { stripHtml } from "@/server/cms/blog-utils";
 import {
   ELEVATION_CTA_HOVER,
   ELEVATION_FLOAT,
+  ELEVATION_HAIRLINE,
   ELEVATION_MODAL,
   ELEVATION_STICKY_UP,
   HOVER_LIFT_CARD,
@@ -413,12 +414,14 @@ function Gallery({
   thumb,
   onThumb,
   discount,
+  frame = "square",
 }: {
   data: PdpProductData;
   variant: PdpVariantOption;
   thumb: number;
   onThumb: (n: number) => void;
   discount?: number;
+  frame?: "square" | "wide";
 }) {
   const gallery = data.galleryUrls?.length ? data.galleryUrls : null;
 
@@ -455,6 +458,7 @@ function Gallery({
       thumb={thumb}
       onThumb={onThumb}
       discount={discount}
+      frame={frame}
     />
   );
 }
@@ -466,6 +470,7 @@ function GalleryImages({
   thumb,
   onThumb,
   discount,
+  frame = "square",
 }: {
   data: PdpProductData;
   variant: PdpVariantOption;
@@ -473,9 +478,10 @@ function GalleryImages({
   thumb: number;
   onThumb: (n: number) => void;
   discount?: number;
+  frame?: "square" | "wide";
 }) {
   const thumbs = gallery;
-  const visible = 4;
+  const visible = frame === "wide" ? Math.min(5, thumbs.length) : 4;
   const canSlide = thumbs.length > visible;
   const maxStart = Math.max(0, thumbs.length - visible);
   const [start, setStart] = useState(0);
@@ -543,7 +549,11 @@ function GalleryImages({
           if (Math.abs(dx) > 48) stepImage(dx < 0 ? 1 : -1);
           setTouchX(null);
         }}
-        className={`relative aspect-square w-full overflow-hidden rounded-2xl border border-border/80 text-left ${ELEVATION_FLOAT} ${TRANSITION_UI} hover:shadow-[0_16px_44px_rgba(15,23,42,0.12)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent`}
+        className={`relative w-full overflow-hidden rounded-2xl border border-border/80 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+          frame === "wide"
+            ? `aspect-video ${ELEVATION_HAIRLINE}`
+            : `aspect-square ${ELEVATION_FLOAT} ${TRANSITION_UI} hover:shadow-[0_16px_44px_rgba(15,23,42,0.12)]`
+        }`}
         aria-label={`Xem ảnh lớn: ${imageAlt}`}
       >
         {gallery && activeUrl ? (
@@ -568,6 +578,7 @@ function GalleryImages({
         ) : null}
       </button>
 
+      {thumbs.length > 1 ? (
       <div className="mt-3 flex items-center gap-1.5">
         {canSlide ? (
           <button
@@ -581,7 +592,17 @@ function GalleryImages({
           </button>
         ) : null}
 
-        <div className="grid min-w-0 flex-1 grid-cols-4 gap-2.5">
+        <div
+          className={`grid min-w-0 flex-1 gap-2.5 ${
+            windowThumbs.length >= 5
+              ? "grid-cols-5"
+              : windowThumbs.length === 3
+                ? "grid-cols-3"
+                : windowThumbs.length === 2
+                  ? "grid-cols-2"
+                  : "grid-cols-4"
+          }`}
+        >
           {windowThumbs.map((item, localIdx) => {
             const i = start + localIdx;
             const url = typeof item === "string" ? item : null;
@@ -634,6 +655,7 @@ function GalleryImages({
           </button>
         ) : null}
       </div>
+      ) : null}
 
       {lightbox ? (
         <div
@@ -711,6 +733,73 @@ function isBareSpec(row: { label: string; value: string }) {
 
 function specFact(row: { label: string; value: string }) {
   return isBareSpec(row) ? row.label.trim() : row.value.trim();
+}
+
+const PACKAGE_HIGHLIGHTS = [
+  { id: "cpu", title: "CPU", test: /cpu|vcpu/i },
+  { id: "ram", title: "RAM", test: /\bram\b|bộ nhớ/i },
+  { id: "storage", title: "Lưu trữ", test: /ssd|nvme|storage|ổ/i },
+  { id: "network", title: "Mạng", test: /băng thông|network|mbps|mạng/i },
+] as const;
+
+function highlightFact(
+  row: { label: string; value: string },
+  slotId: (typeof PACKAGE_HIGHLIGHTS)[number]["id"],
+) {
+  const fact = specFact(row);
+  if (slotId === "cpu" && /^\d+$/.test(fact)) return `${fact} vCPU`;
+  if (slotId === "ram" && !/ram/i.test(fact)) return `${fact} RAM`;
+  return fact;
+}
+
+function packageHighlights(rows: { label: string; value: string }[]) {
+  const used = new Set<number>();
+  const cards: { id: string; title: string; value: string }[] = [];
+  for (const slot of PACKAGE_HIGHLIGHTS) {
+    const index = rows.findIndex(
+      (row, i) =>
+        !used.has(i) &&
+        (slot.test.test(row.label) ||
+          (isBareSpec(row) && slot.test.test(specFact(row)))),
+    );
+    if (index < 0) continue;
+    used.add(index);
+    cards.push({
+      id: slot.id,
+      title: slot.title,
+      value: highlightFact(rows[index]!, slot.id),
+    });
+  }
+  return {
+    cards,
+    rest: rows.filter((_, index) => !used.has(index)),
+  };
+}
+
+function priceCycleSuffix(code: string | null | undefined) {
+  if (code === "1_MONTH") return "/tháng";
+  if (code === "1_YEAR") return "/năm";
+  return "";
+}
+
+function featureParts(feature: string) {
+  const parts = feature.split(/\s*[|]\s*/);
+  const title = (parts[0] ?? feature).trim();
+  const desc = parts.slice(1).join(" | ").trim();
+  return { title, desc };
+}
+
+function guideSteps(html: string) {
+  const steps: { title: string; body: string }[] = [];
+  const re = /<h[23][^>]*>([\s\S]*?)<\/h[23]>([\s\S]*?)(?=<h[23][^>]*>|$)/gi;
+  for (const match of html.matchAll(re)) {
+    const title = stripHtml(match[1] ?? "")
+      .replace(/^bước\s*\d+\s*[–—-]\s*/i, "")
+      .trim();
+    const body = stripHtml(match[2] ?? "").trim();
+    if (title) steps.push({ title, body });
+  }
+  return steps;
 }
 
 function regionLabel(code: string | null | undefined): string | null {
@@ -807,6 +896,7 @@ function PlanBoard({
               <p className={CARD_TITLE_CLASS}>{item.name}</p>
               <p className={`mt-2 ${INLINE_PRICE_CLASS} !text-navy`}>
                 {formatVnd(item.priceVnd)}
+                {priceCycleSuffix(item.licenseTerm)}
               </p>
               {term ? <p className={`mt-0.5 ${CARD_META_CLASS}`}>{term}</p> : null}
               {item.compareAtPriceVnd &&
@@ -1163,6 +1253,9 @@ function PurchaseColumn({
       )}
 
       <div className="mt-5 flex flex-wrap items-center gap-3">
+        {planLayout ? (
+          <span className={CARD_META_CLASS}>Số lượng máy chủ</span>
+        ) : null}
         <div className="inline-flex h-11 items-center overflow-hidden rounded-xl border border-border bg-white">
           <button
             type="button"
@@ -1186,24 +1279,24 @@ function PurchaseColumn({
             +
           </button>
         </div>
+        {planLayout ? null : (
         <p className={`sm:max-w-[16rem] ${CARD_META_CLASS}`}>
           Tối đa 5 sản phẩm cùng gói mỗi lần thanh toán.
         </p>
+        )}
       </div>
 
+      {planLayout ? null : (
       <div
         className={`mt-4 flex items-start gap-2.5 rounded-xl border border-sky-100 bg-sky-50/80 px-3.5 py-3 ${BODY_CLASS} !text-sky-900`}
       >
         <InfoIcon />
         <div>
           <p>
-            {planLayout
-              ? "KEYON cấp phát sau thanh toán. Theo dõi trong Đơn hàng và Tài sản."
-              : variant.fulfillmentInstant
+            {variant.fulfillmentInstant
                 ? "Sản phẩm được giao / kích hoạt tự động sau khi thanh toán thành công."
                 : "Đơn sẽ do KEYON xử lý sau thanh toán — theo dõi trong Đơn hàng / Tài sản."}
           </p>
-          {planLayout ? null : (
           <p className={`mt-1 ${CARD_META_CLASS} !text-sky-800/80`}>
             Loại nhận:{" "}
             <span className="font-semibold">{variant.receiveLabel}</span>
@@ -1213,9 +1306,9 @@ function PurchaseColumn({
               ? ` · SLA: ${variant.slaPromise.trim()}`
               : ""}
           </p>
-          )}
         </div>
       </div>
+      )}
 
       {!data.loggedIn ? (
         <label className="mt-4 block">
@@ -1254,14 +1347,12 @@ function PurchaseColumn({
               {loading
                 ? "Đang tạo đơn…"
                 : planLayout
-                  ? `Thanh toán ${variant.name}`
+                  ? `Đăng ký ${variant.name}`
                   : "Thanh toán ngay"}
             </span>
-            {!loading ? (
+            {!loading && !planLayout ? (
               <span className={`${CTA_COMPACT_CLASS} font-medium text-white/85`}>
-                {planLayout
-                  ? "KEYON cấp phát sau thanh toán"
-                  : variant.fulfillmentInstant
+                {variant.fulfillmentInstant
                     ? "Kích hoạt tự động — Nhận key ngay"
                     : "KEYON xử lý sau thanh toán"}
               </span>
@@ -1287,7 +1378,9 @@ function PurchaseColumn({
       </Link>
 
       <p className={`mt-4 border-t border-border pt-4 text-center ${CARD_META_CLASS} sm:text-left`}>
-        Thanh toán an toàn · Giao hàng kỹ thuật số · Hỗ trợ sau bán hàng
+        {planLayout
+          ? "Thanh toán an toàn · KEYON xác nhận cấu hình sau thanh toán"
+          : "Thanh toán an toàn · Giao hàng kỹ thuật số · Hỗ trợ sau bán hàng"}
       </p>
     </div>
   );
@@ -1767,6 +1860,35 @@ function SpecsCard({
   );
 }
 
+function InfraGuide({ body }: { body: string }) {
+  const steps = guideSteps(body);
+  if (steps.length < 3) {
+    return (
+      <div className="mt-4">
+        <StaticPageHtml body={body} className="blog-prose pdp-prose max-w-none" />
+      </div>
+    );
+  }
+  return (
+    <ol className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-5">
+      {steps.map((step, index) => (
+        <li
+          key={step.title}
+          className={`rounded-2xl border border-border bg-white px-4 py-4 ${ELEVATION_HAIRLINE}`}
+        >
+          <p className={`${OVERLINE_CLASS} text-accent`}>
+            {String(index + 1).padStart(2, "0")}
+          </p>
+          <p className={`mt-2 text-navy ${CARD_TITLE_CLASS}`}>{step.title}</p>
+          {step.body ? (
+            <p className={`mt-1 ${CARD_META_CLASS}`}>{step.body}</p>
+          ) : null}
+        </li>
+      ))}
+    </ol>
+  );
+}
+
 function InfraProductStory({
   data,
   variant,
@@ -1794,26 +1916,55 @@ function InfraProductStory({
               {variant.planSummary.trim()}
             </p>
           ) : null}
-          <div className="mt-4 overflow-x-auto rounded-2xl border border-border/80 bg-surface p-4 sm:p-5">
-            <dl>
-              {rows.map((row) => (
-                <div
-                  key={row.label}
-                  className={`flex items-baseline justify-between gap-3 border-b border-border/70 py-2.5 last:border-b-0 ${BODY_CLASS}`}
-                >
-                {isBareSpec(row) ? (
-                  <dd className="font-semibold text-navy">{row.label}</dd>
-                ) : (
-                  <>
-                    <dt className="shrink-0 text-muted-soft">{row.label}</dt>
-                    <dd className="min-w-0 text-right font-semibold text-navy">
-                      {row.value}
-                    </dd>
-                  </>
-                )}
-                </div>
-              ))}
-            </dl>
+          <div className="mt-4">
+            {(() => {
+              const summary = packageHighlights(rows);
+              const detail = summary.cards.length ? summary.rest : rows;
+              return (
+                <>
+                  {summary.cards.length ? (
+                    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+                      {summary.cards.map((card) => (
+                        <div
+                          key={card.id}
+                          className={`rounded-2xl border border-border bg-white px-4 py-4 ${ELEVATION_HAIRLINE}`}
+                        >
+                          <p className={`${OVERLINE_CLASS} text-muted-soft`}>
+                            {card.title}
+                          </p>
+                          <p className={`mt-2 text-navy ${CARD_TITLE_CLASS}`}>
+                            {card.value}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                  {detail.length ? (
+                    <dl
+                      className={`${summary.cards.length ? "mt-4" : ""} overflow-x-auto rounded-2xl border border-border/80 bg-surface px-4 sm:px-5`}
+                    >
+                      {detail.map((row) => (
+                        <div
+                          key={`${row.label}-${row.value}`}
+                          className={`flex items-baseline justify-between gap-3 border-b border-border/70 py-2.5 last:border-b-0 ${BODY_CLASS}`}
+                        >
+                          {isBareSpec(row) ? (
+                            <dd className="font-semibold text-navy">{row.label}</dd>
+                          ) : (
+                            <>
+                              <dt className="shrink-0 text-muted-soft">{row.label}</dt>
+                              <dd className="min-w-0 text-right font-semibold text-navy">
+                                {row.value}
+                              </dd>
+                            </>
+                          )}
+                        </div>
+                      ))}
+                    </dl>
+                  ) : null}
+                </>
+              );
+            })()}
           </div>
         </section>
       ) : null}
@@ -1826,18 +1977,28 @@ function InfraProductStory({
           <p className={`mt-2 ${CARD_META_CLASS}`}>
             Áp dụng chung cho mọi gói của dòng này.
           </p>
-          <ul className="mt-4 grid gap-x-8 gap-y-2.5 sm:grid-cols-2">
-            {data.features.map((feature) => (
+          <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {data.features.slice(0, 6).map((feature) => {
+              const item = featureParts(feature);
+              return (
               <li
                 key={feature}
-                className={`flex items-start gap-2.5 ${BODY_CLASS}`}
+                className={`rounded-2xl border border-border bg-white px-4 py-4 ${ELEVATION_HAIRLINE}`}
               >
-                <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
-                  <CheckIcon small />
-                </span>
-                <span className="min-w-0 leading-snug">{feature}</span>
+                <div className="flex items-start gap-2.5">
+                  <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+                    <CheckIcon small />
+                  </span>
+                  <div className="min-w-0">
+                    <p className={`text-navy ${CARD_TITLE_CLASS}`}>{item.title}</p>
+                    {item.desc ? (
+                      <p className={`mt-1 ${CARD_META_CLASS}`}>{item.desc}</p>
+                    ) : null}
+                  </div>
+                </div>
               </li>
-            ))}
+              );
+            })}
           </ul>
         </section>
       ) : null}
@@ -1859,6 +2020,7 @@ function InfraProductStory({
             variant={variant}
             thumb={thumb}
             onThumb={setThumb}
+            frame="wide"
           />
         </section>
       ) : null}
@@ -1868,12 +2030,7 @@ function InfraProductStory({
           {guidePdpHeading(data.offeringProfile)}
         </h2>
         {stripHtml(data.usageGuideHtml).trim() ? (
-          <div className="mt-4">
-            <StaticPageHtml
-              body={data.usageGuideHtml}
-              className="blog-prose pdp-prose max-w-none"
-            />
-          </div>
+          <InfraGuide body={data.usageGuideHtml} />
         ) : (
           <p className={`mt-4 ${BODY_MUTED_CLASS}`}>
             {guideEmptyCopy(data.offeringProfile)}
@@ -1931,12 +2088,15 @@ function StickyBar({
   planLayout?: boolean;
 }) {
   if (!canBuy) return null;
+  const highlights = packageHighlights(variant.planSpecs).cards;
   const summary = planLayout
-    ? variant.planSpecs
-        .slice(0, 3)
-        .map((row) => specFact(row))
-        .filter((value) => value && value !== "—")
-        .join(" · ")
+    ? (highlights.length
+        ? highlights.slice(0, 3).map((card) => card.value)
+        : variant.planSpecs
+            .slice(0, 3)
+            .map((row) => specFact(row))
+            .filter((value) => value && value !== "—")
+      ).join(" · ")
     : licenseSummaryParts(license).join(" · ");
   const thumbSrc = data.imageUrl || data.galleryUrls[0] || null;
   const thumbAlt = `${data.name}${variant.name ? ` — ${variant.name}` : ""}`;
@@ -1978,6 +2138,7 @@ function StickyBar({
           <div className="text-left sm:text-right">
             <p className={CARD_PRICE_CLASS}>
               {formatVnd(variant.priceVnd * qty)}
+              {planLayout ? priceCycleSuffix(variant.licenseTerm) : ""}
             </p>
             <div className="mt-0.5 flex items-center gap-2 sm:justify-end">
               {compare && compare > variant.priceVnd ? (
@@ -1999,7 +2160,7 @@ function StickyBar({
             className={`inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover disabled:opacity-50`}
           >
             <BoltIcon />
-            {loading ? "Đang tạo đơn…" : "Thanh toán ngay"}
+            {loading ? "Đang tạo đơn…" : planLayout ? "Đăng ký ngay" : "Thanh toán ngay"}
           </button>
         </div>
       </div>

@@ -77,3 +77,18 @@ export function mapProductsToShopCards(
   }
   return out;
 }
+
+/** Lower rank is a better cross-sell for an infrastructure package. 99 = skip. */
+export function infraCrossSellRank(
+  name: string,
+  categoryKey: string | null,
+): number {
+  const n = name.toLowerCase();
+  if (categoryKey === "cloud") return 0;
+  if (categoryKey === "backup") return 1;
+  if (categoryKey === "security") return 2;
+  if (/windows server|\bserver\b/.test(n) && !n.includes("cloud server")) return 3;
+  if (/365/.test(n)) return 4;
+  if (/backup|ssl|endpoint|bảo mật|security/.test(n)) return 5;
+  return 99;
+}
