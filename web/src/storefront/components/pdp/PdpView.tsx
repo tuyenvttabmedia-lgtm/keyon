@@ -1411,36 +1411,37 @@ function PurchaseColumn({
                   termMonths(a.licenseTerm) - termMonths(b.licenseTerm),
               );
             if (choices.length < 2) return null;
-            const monthly = group?.monthly.priceVnd ?? variant.priceVnd;
             return (
               <div className="mt-4">
                 <p className={CARD_META_CLASS}>Chu kỳ thanh toán</p>
-                <div className="mt-2 flex flex-wrap gap-2" role="group" aria-label="Chu kỳ thanh toán">
+                <div
+                  className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4"
+                  role="group"
+                  aria-label="Chu kỳ thanh toán"
+                >
                   {choices.map((choice) => {
                     const active = choice.id === variant.id;
                     const months = termMonths(choice.licenseTerm);
-                    const full = monthly * months;
-                    const save =
-                      choice.priceVnd < full
-                        ? Math.round((1 - choice.priceVnd / full) * 100)
-                        : 0;
+                    const perMonth = Math.round(choice.priceVnd / months / 1000) * 1000;
                     return (
                       <button
                         key={choice.id}
                         type="button"
+                        aria-pressed={active}
                         onClick={() => onSelectVariant(choice.id)}
-                        className={`inline-flex h-10 items-center gap-1.5 rounded-xl px-3 ${CTA_COMPACT_CLASS} ${
+                        className={`rounded-xl border-2 px-3 py-3 text-left ${TRANSITION_UI} ${
                           active
-                            ? "bg-accent text-white"
-                            : "border border-border bg-white text-navy"
+                            ? "border-accent bg-accent-soft"
+                            : "border-border bg-white hover:border-accent/50"
                         }`}
                       >
-                        {cloudTermLabel(choice.licenseTerm)}
-                        {save > 0 ? (
-                          <span className={active ? "text-white/90" : "text-emerald-700"}>
-                            −{save}%
-                          </span>
-                        ) : null}
+                        <span className={`block ${CARD_META_CLASS} ${active ? "text-accent" : ""}`}>
+                          {cloudTermLabel(choice.licenseTerm)}
+                        </span>
+                        <span className={`mt-1 block font-semibold text-navy ${BODY_CLASS}`}>
+                          {formatVnd(perMonth)}
+                          <span className={`font-medium ${CARD_META_CLASS}`}>/tháng</span>
+                        </span>
                       </button>
                     );
                   })}
