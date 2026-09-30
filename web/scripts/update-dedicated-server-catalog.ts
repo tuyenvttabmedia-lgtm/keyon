@@ -112,13 +112,13 @@ const DESCRIPTION = `
 <p>Phù hợp website, ứng dụng, database và hệ thống doanh nghiệp cần tài nguyên phần cứng riêng. Mức tài nguyên nằm trên từng gói: Basic, Standard, Business và Pro.</p>
 <h2>Thông số phần cứng</h2>
 <h3>CPU</h3>
-<p>Số core và thread theo gói đang chọn. Trang không ghi model CPU cho đến khi có SKU máy từ nhà cung cấp.</p>
+<p>Số core và thread theo gói đang chọn.</p>
 <h3>RAM</h3>
 <p>Dung lượng RAM theo gói đang chọn.</p>
 <h3>Storage</h3>
-<p>Số lượng và dung lượng ổ theo gói. Loại ổ và mức RAID theo cấu hình nhà cung cấp, chưa ghi thành SSD, NVMe hay RAID 1.</p>
+<p>Số lượng và dung lượng ổ theo gói. Loại ổ và mức RAID theo cấu hình nhà cung cấp.</p>
 <h3>Network</h3>
-<p>Băng thông theo chính sách nhà cung cấp. Trang không ghi tốc độ cổng, số IPv4, IPv6, vị trí máy hay chống DDoS.</p>
+<p>Băng thông theo chính sách nhà cung cấp.</p>
 <h2>Điểm nổi bật</h2>
 <ul>
 <li>Máy chủ vật lý riêng.</li>
@@ -132,7 +132,7 @@ const DESCRIPTION = `
 <h2>Quản trị máy chủ</h2>
 <p>Self-managed. Khách tự quản trị hệ điều hành, ứng dụng, database và cấu hình. KEYON hỗ trợ kỹ thuật trong phạm vi gói, không gồm quản trị hệ thống chuyên sâu.</p>
 <h2>Quy trình đăng ký Dedicated Server</h2>
-<p>Chọn cấu hình, chọn thời hạn 1, 3, 6 hoặc 12 tháng, đặt hàng và thanh toán. KEYON xử lý provisioning sau khi thanh toán được xác nhận, rồi gửi thông tin truy cập. Trang không nêu số giờ cố định.</p>
+<p>Chọn cấu hình, chọn thời hạn 1, 3, 6 hoặc 12 tháng, đặt hàng và thanh toán. KEYON xử lý provisioning sau khi thanh toán được xác nhận, rồi gửi thông tin truy cập.</p>
 <h2>Câu hỏi thường gặp</h2>
 <p>Các câu trả lời nằm ở mục câu hỏi thường gặp trên trang này.</p>
 <p>Cần cấu hình riêng? <a href="/contact/quote">Yêu cầu báo giá</a>. Xem thêm <a href="/products">sản phẩm</a> và <a href="/solutions">giải pháp</a>.</p>
