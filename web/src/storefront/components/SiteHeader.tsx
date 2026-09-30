@@ -18,6 +18,7 @@ import {
   type MegaNavItem,
   type PrimaryNavItem,
 } from "@/storefront/nav/ia";
+import { OVERLINE_CLASS } from "@/storefront/typography";
 
 export type HeaderBrand = {
   logoUrl?: string;
@@ -297,7 +298,11 @@ function MegaPanel({
       role="region"
       aria-label={item.label}
       className={`absolute left-1/2 top-full z-50 -translate-x-1/2 pt-2 ${
-        colCount <= 1 ? "w-[min(92vw,380px)]" : "w-[min(92vw,720px)]"
+        colCount >= 3
+          ? "w-[min(92vw,960px)]"
+          : colCount <= 1
+            ? "w-[min(92vw,380px)]"
+            : "w-[min(92vw,720px)]"
       }`}
     >
       <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-lg shadow-slate-900/8">
@@ -397,10 +402,6 @@ function MobileNav({
     <nav className="flex flex-col gap-1 text-[15px] font-medium" aria-label="Menu mobile">
       {IA_PRIMARY_NAV.map((item) => {
         const open = expanded === item.id;
-        const links =
-          item.kind === "mega"
-            ? item.columns.flatMap((c) => c.links)
-            : item.links;
         return (
           <div key={item.id} className="border-b border-border/70 last:border-0">
             <button
@@ -423,17 +424,38 @@ function MobileNav({
                     Tổng quan {item.label}
                   </Link>
                 </li>
-                {links.map((link) => (
-                  <li key={link.href + link.label}>
-                    <Link
-                      href={link.href}
-                      className={`block rounded-lg px-2 py-2 text-sm text-navy ${linkEase} hover:bg-surface`}
-                      onClick={onNavigate}
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
+                {item.kind === "mega"
+                  ? item.columns.map((col) => (
+                      <li key={col.title}>
+                        <p className={`px-2 pt-3 ${OVERLINE_CLASS} text-muted-soft`}>
+                          {col.title}
+                        </p>
+                        <ul>
+                          {col.links.map((link) => (
+                            <li key={link.href + link.label}>
+                              <Link
+                                href={link.href}
+                                className={`block rounded-lg px-2 py-2 text-sm text-navy ${linkEase} hover:bg-surface`}
+                                onClick={onNavigate}
+                              >
+                                {link.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </li>
+                    ))
+                  : item.links.map((link) => (
+                      <li key={link.href + link.label}>
+                        <Link
+                          href={link.href}
+                          className={`block rounded-lg px-2 py-2 text-sm text-navy ${linkEase} hover:bg-surface`}
+                          onClick={onNavigate}
+                        >
+                          {link.label}
+                        </Link>
+                      </li>
+                    ))}
                 {item.kind === "mega" && item.promo ? (
                   <li>
                     <Link

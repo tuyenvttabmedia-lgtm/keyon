@@ -46,8 +46,8 @@ export type DropdownNavItem = {
 
 export type PrimaryNavItem = MegaNavItem | DropdownNavItem;
 
-/** Shop collections — category / query filters, not brand names (NAV-01). */
-export const SHOP_COLLECTIONS: NavLink[] = [
+/** License shelves in the products menu. */
+export const LICENSE_COLLECTIONS: NavLink[] = [
   {
     label: "Hệ điều hành",
     href: "/categories/windows",
@@ -59,9 +59,14 @@ export const SHOP_COLLECTIONS: NavLink[] = [
     description: "Word, Excel, PowerPoint, Teams, OneDrive",
   },
   {
-    label: "Cloud & Hạ tầng",
-    href: "/categories/cloud",
-    description: "Gói cloud / server trên catalog",
+    label: "Adobe Creative",
+    href: "/categories/adobe",
+    description: "Creative Cloud, Acrobat",
+  },
+  {
+    label: "Autodesk",
+    href: "/categories/autodesk",
+    description: "AutoCAD, kỹ thuật",
   },
   {
     label: "Bảo mật",
@@ -73,16 +78,21 @@ export const SHOP_COLLECTIONS: NavLink[] = [
     href: "/categories/backup",
     description: "Bảo vệ và phục hồi dữ liệu",
   },
+];
+
+/** Rented infrastructure shelves. Professional services stay off this menu until a service SKU exists. */
+export const INFRA_COLLECTIONS: NavLink[] = [
   {
-    label: "Adobe Creative",
-    href: "/categories/adobe",
-    description: "Creative Cloud, Acrobat",
+    label: "Cloud & Hạ tầng",
+    href: "/categories/cloud",
+    description: "Cloud Server, thuê theo tháng",
   },
-  {
-    label: "Autodesk",
-    href: "/categories/autodesk",
-    description: "AutoCAD, kỹ thuật",
-  },
+];
+
+/** Shop collections — category filters, not brand names (NAV-01). */
+export const SHOP_COLLECTIONS: NavLink[] = [
+  ...LICENSE_COLLECTIONS,
+  ...INFRA_COLLECTIONS,
 ];
 
 /** Featured brands — only brands with catalog coverage (Wave 5). */
@@ -300,7 +310,8 @@ export const IA_PRIMARY_NAV: PrimaryNavItem[] = [
     href: "/products",
     kind: "mega",
     columns: [
-      { title: "Theo danh mục", links: SHOP_COLLECTIONS },
+      { title: "Bản quyền", links: LICENSE_COLLECTIONS },
+      { title: "Hạ tầng thuê", links: INFRA_COLLECTIONS },
       { title: "Thương hiệu nổi bật", links: FEATURED_BRANDS },
     ],
     footerCta: { label: "Xem tất cả sản phẩm →", href: "/products" },
