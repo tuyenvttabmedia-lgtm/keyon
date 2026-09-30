@@ -2274,7 +2274,11 @@ function PackageStoryLead({
   const name = planDisplayName(variant.name);
   const short = planShortName(variant.name);
   const audience = planAudience(variant);
-  const phrase = audience.charAt(0).toLowerCase() + audience.slice(1);
+  const firstWord = audience.split(/[\s,]/)[0] ?? "";
+  const phrase =
+    firstWord.length > 1 && firstWord === firstWord.toLocaleUpperCase("en")
+      ? audience
+      : audience.charAt(0).toLocaleLowerCase("vi") + audience.slice(1);
   const cards = packageHighlights(variant.planSpecs).cards;
   const cpu = cards.find((card) => card.id === "cpu")?.value;
   const ram = cards
