@@ -2,6 +2,10 @@ import "server-only";
 
 import { prisma } from "@/lib/db";
 import {
+  variantAllowsCheckout,
+  variantShowsQuoteCta,
+} from "@/lib/variant-checkout";
+import {
   CATEGORY_LABELS,
   countByCategory,
   discountPercent,
@@ -9,6 +13,7 @@ import {
   inferLicenseTypes,
   inferMark,
   inferPlatforms,
+  shopPackageLabel,
 } from "@/storefront/components/shop/shop-utils";
 import type { ShopCategoryId, ShopProduct } from "@/storefront/components/shop/types";
 import {
@@ -85,11 +90,26 @@ export async function loadShopCatalog(): Promise<ShopCatalogPayload> {
         : undefined;
     const disc = discountPercent(variant.priceVnd, compareAtPriceVnd);
     const gallery = parseStringList(p.galleryUrls);
+    const quoteOnly =
+      p.variants.length > 0 &&
+      p.variants.every((row) => variantShowsQuoteCta(row));
+    const ctaLabel = quoteOnly
+      ? "Nhận báo giá"
+      : p.variants.length > 1 || !variantAllowsCheckout(variant)
+        ? "Xem sản phẩm"
+        : "Mua ngay";
     items.push({
       id: p.id,
       brandName: p.brand.name,
       productName: p.name,
-      packageName: variant.name,
+      packageName: shopPackageLabel({
+        productName: p.name,
+        variantName: variant.name,
+        licenseChannel: variant.licenseChannel,
+        licenseTerm: variant.licenseTerm,
+        seatsLabel: variant.seatsLabel,
+      }),
+      ctaLabel,
       priceVnd: variant.priceVnd,
       receiveLabel: receive.label,
       receiveKind: receive.kind,

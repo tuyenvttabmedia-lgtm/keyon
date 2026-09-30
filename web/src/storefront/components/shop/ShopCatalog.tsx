@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 import { ShopSidebar } from "./ShopSidebar";
-import { ShopProductCard, ShopProductListItem } from "./ShopProductCard";
+import { ShopProductCard } from "./ShopProductCard";
 import {
   SHOP_PAGE_SIZE,
   filterProducts,
@@ -16,7 +16,6 @@ import type {
   ShopLicenseType,
   ShopPlatform,
   ShopSort,
-  ShopViewMode,
 } from "./types";
 import {
   BADGE_CLASS,
@@ -53,7 +52,6 @@ export function ShopCatalog({
   const [priceMin, setPriceMin] = useState(boundMin);
   const [priceMax, setPriceMax] = useState(boundMax);
   const [sort, setSort] = useState<ShopSort>("newest");
-  const [view, setView] = useState<ShopViewMode>("grid");
   const [page, setPage] = useState(1);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -237,19 +235,11 @@ export function ShopCatalog({
                   className="bg-transparent font-semibold outline-none"
                 >
                   <option value="newest">Mới nhất</option>
-                  <option value="price_asc">Giá tăng dần</option>
-                  <option value="price_desc">Giá giảm dần</option>
-                  <option value="name">Tên A–Z</option>
+                  <option value="price_asc">Giá thấp → cao</option>
+                  <option value="price_desc">Giá cao → thấp</option>
+                  <option value="name">Tên A → Z</option>
                 </select>
               </label>
-              <div className="inline-flex rounded-xl border border-border bg-white p-1">
-                <ViewBtn active={view === "grid"} onClick={() => setView("grid")} label="Lưới">
-                  <GridIcon />
-                </ViewBtn>
-                <ViewBtn active={view === "list"} onClick={() => setView("list")} label="Danh sách">
-                  <ListIcon />
-                </ViewBtn>
-              </div>
             </div>
           </div>
 
@@ -285,16 +275,10 @@ export function ShopCatalog({
                 </Link>
               </div>
             </div>
-          ) : view === "grid" ? (
-            <div className="grid grid-cols-2 gap-3 sm:gap-3.5 md:grid-cols-3 lg:grid-cols-4">
+          ) : (
+            <div className="grid grid-cols-2 items-stretch gap-3 sm:gap-3.5 md:grid-cols-3 lg:grid-cols-4">
               {pageItems.map((p) => (
                 <ShopProductCard key={p.id} item={p} />
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col gap-3">
-              {pageItems.map((p) => (
-                <ShopProductListItem key={p.id} item={p} />
               ))}
             </div>
           )}
@@ -351,32 +335,6 @@ function isCategory(v: string): v is ShopCategoryId | "all" {
     "autodesk",
     "other",
   ].includes(v);
-}
-
-function ViewBtn({
-  active,
-  onClick,
-  label,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      aria-pressed={active}
-      onClick={onClick}
-      className={`inline-flex h-8 w-8 items-center justify-center rounded-lg transition ${
-        active ? "bg-accent text-white" : "text-muted hover:bg-surface hover:text-navy"
-      }`}
-    >
-      {children}
-    </button>
-  );
 }
 
 function Pagination({
@@ -455,21 +413,3 @@ function paginationWindow(page: number, total: number): (number | "…")[] {
   return out;
 }
 
-function GridIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <rect x="3" y="3" width="8" height="8" rx="1.5" />
-      <rect x="13" y="3" width="8" height="8" rx="1.5" />
-      <rect x="3" y="13" width="8" height="8" rx="1.5" />
-      <rect x="13" y="13" width="8" height="8" rx="1.5" />
-    </svg>
-  );
-}
-
-function ListIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-      <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
-    </svg>
-  );
-}

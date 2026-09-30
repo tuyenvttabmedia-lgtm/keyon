@@ -8,7 +8,6 @@ import {
   resolveCategorySlug,
 } from "@/storefront/lib/shop-catalog";
 import {
-  buildMainPageMetadata,
   resolveWithGlobalFallback,
   toNextMetadata,
 } from "@/server/seo/metadata";
@@ -41,7 +40,20 @@ export async function generateMetadata({
 
   // ?cat= redirects to /categories/{slug}; keep catalog metadata here.
   void resolveCategorySlug(sp.cat);
-  return buildMainPageMetadata("/products");
+  const seo = resolveWithGlobalFallback(settings, {
+    path: "/products",
+    title: "Cửa hàng bản quyền phần mềm chính hãng | KEYON",
+    description:
+      "Mua bản quyền phần mềm, Microsoft 365, Windows, bảo mật, backup và dịch vụ cloud tại KEYON. Giá minh bạch, giao license và hỗ trợ kích hoạt.",
+  });
+  return {
+    ...toNextMetadata(seo, {
+      faviconUrl: settings.faviconUrl,
+      appleTouchIconUrl: settings.appleTouchIconUrl,
+      googleSiteVerification: settings.googleSiteVerification,
+    }),
+    keywords: ["cửa hàng bản quyền phần mềm"],
+  };
 }
 
 export default async function ProductsPage({

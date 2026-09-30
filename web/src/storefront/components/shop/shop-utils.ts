@@ -6,7 +6,7 @@ import type {
   ShopSort,
 } from "./types";
 
-export const SHOP_PAGE_SIZE = 12;
+export const SHOP_PAGE_SIZE = 24;
 
 export const CATEGORY_LABELS: Record<ShopCategoryId, string> = {
   windows: "Windows & OS",
@@ -121,8 +121,87 @@ export function discountPercent(price: number, compareAt?: number): number | und
   return Math.round(((compareAt - price) / compareAt) * 100);
 }
 
+/** Catalog money: 1.999.000 ₫ — grouping does not depend on server locale. */
 export function formatVnd(n: number): string {
-  return `${n.toLocaleString("vi-VN")} ₫`;
+  const sign = n < 0 ? "-" : "";
+  const digits = Math.abs(Math.round(n)).toString();
+  const grouped = digits.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return `${sign}${grouped} ₫`;
+}
+
+const CARD_CHANNEL: Record<string, string> = {
+  RETAIL: "Retail",
+  OEM: "OEM",
+  VOLUME: "Volume",
+  PER_USER: "Personal",
+  PER_DEVICE: "Per Device",
+  EDUCATION: "Education",
+  ENTERPRISE: "Enterprise",
+};
+
+const CARD_TERM: Record<string, string> = {
+  "1_MONTH": "1 tháng",
+  "3_MONTHS": "3 tháng",
+  "6_MONTHS": "6 tháng",
+  "1_YEAR": "1 năm",
+  "2_YEARS": "2 năm",
+  "3_YEARS": "3 năm",
+};
+
+function sameText(a: string, b: string) {
+  return a.trim().toLowerCase() === b.trim().toLowerCase();
+}
+
+function isDurationToken(value: string) {
+  return /^\d+\s*(year|years|năm|month|months|tháng)$/i.test(value.trim());
+}
+
+function looksLikeSeats(value: string) {
+  return /^\d+\s*(pc|device|devices|user|users|thiết bị|người)/i.test(value.trim());
+}
+
+/** One short license line for a catalog card. Never the full variant title. */
+export function shopPackageLabel(input: {
+  productName: string;
+  variantName: string;
+  licenseChannel?: string | null;
+  licenseTerm?: string | null;
+  seatsLabel?: string | null;
+}): string {
+  const productName = input.productName.trim();
+  let name = input.variantName.replace(/\s*·\s*.+$/u, "").trim();
+  name = name.replace(
+    /^(?:vps linux|vps windows|dedicated server|cloud server)\s+/i,
+    "",
+  );
+  const pieces = name
+    .split(/\s+[–—]\s+|\s+-\s+/u)
+    .map((part) => part.trim())
+    .filter(Boolean);
+  const body = (pieces.length > 1 ? pieces : [name]).filter((part) => {
+    if (!part) return false;
+    if (productName && sameText(part, productName)) return false;
+    if (isDurationToken(part)) return false;
+    return true;
+  });
+  const seats = input.seatsLabel?.trim() ?? "";
+  let plan =
+    body.find((part) => !looksLikeSeats(part) && !sameText(part, seats)) ??
+    "";
+  if (plan.length > 22) plan = "";
+  if (!plan) {
+    const channel = input.licenseChannel
+      ? CARD_CHANNEL[input.licenseChannel] ?? ""
+      : "";
+    plan = channel;
+  }
+  const term = input.licenseTerm ? CARD_TERM[input.licenseTerm] ?? "" : "";
+  const parts = [plan, seats, term].filter((part, index, all) => {
+    if (!part) return false;
+    return all.findIndex((item) => item && sameText(item, part)) === index;
+  });
+  const line = parts.join(" · ");
+  return line || plan || "Theo gói";
 }
 
 export function sortProducts(items: ShopProduct[], sort: ShopSort): ShopProduct[] {

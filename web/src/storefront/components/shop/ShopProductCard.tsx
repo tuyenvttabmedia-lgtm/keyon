@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { StarRating } from "../StarRating";
 import { formatVnd } from "./shop-utils";
 import type { ShopProduct } from "./types";
 import {
@@ -61,16 +60,17 @@ function ProductArt({ item }: { item: ShopProduct }) {
   );
 }
 
-/** Grid card — mockup Cửa hàng. */
+/** Grid card — catalog: name, package, price, CTA. Same height in a row. */
 export function ShopProductCard({ item }: { item: ShopProduct }) {
   const discount = item.discountPercent;
   const compare = item.compareAtPriceVnd;
+  const cta = item.ctaLabel?.trim() || "Mua ngay";
 
   return (
     <article className={`group flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-white ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-border ${ELEVATION_CARD_HOVER}`}>
-      <Link href={item.href} className="relative flex aspect-[4/3] items-center justify-center bg-gradient-to-b from-slate-50 to-white p-4">
+      <Link href={item.href} className="relative block aspect-[4/3] overflow-hidden bg-white">
         {discount ? (
-          <span className={`absolute left-3 top-3 z-[1] inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose-500 ${BADGE_CLASS} text-white shadow-sm`}>
+          <span className={`absolute left-3 top-3 z-[1] inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose-500 ${BADGE_CLASS} text-white`}>
             -{discount}%
           </span>
         ) : null}
@@ -78,46 +78,36 @@ export function ShopProductCard({ item }: { item: ShopProduct }) {
           <Image
             src={item.imageUrl}
             alt={item.productName}
-            width={180}
-            height={140}
-            className="h-full max-h-[140px] w-auto object-contain"
-            sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 180px"
+            fill
+            className="object-contain p-2"
+            sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 220px"
           />
         ) : (
-          <ProductArt item={item} />
+          <span className="absolute inset-0 flex items-center justify-center">
+            <ProductArt item={item} />
+          </span>
         )}
       </Link>
 
       <div className="flex flex-1 flex-col px-3.5 pb-3.5 pt-1">
         <Link href={item.href}>
-          <h3 className={`line-clamp-2 ${CARD_TITLE_CLASS} transition-colors group-hover:text-accent`}>
+          <h3 className={`line-clamp-2 min-h-10 ${CARD_TITLE_CLASS} transition-colors group-hover:text-accent`}>
             {item.productName}
           </h3>
         </Link>
-        <p className={`mt-1 line-clamp-1 ${CARD_META_CLASS}`}>{item.packageName}</p>
-        {typeof item.rating === "number" &&
-        typeof item.reviewCount === "number" &&
-        item.reviewCount > 0 ? (
-          <div className="mt-2">
-            <StarRating
-              rating={item.rating}
-              reviewCount={item.reviewCount}
-              size="sm"
-            />
-          </div>
-        ) : null}
-        <div className="mt-2.5 flex flex-wrap items-baseline gap-2">
+        <p className={`mt-1 line-clamp-1 min-h-4 ${CARD_META_CLASS}`}>{item.packageName}</p>
+        <div className="mt-auto pt-2.5">
           <p className={CARD_PRICE_CLASS}>{formatVnd(item.priceVnd)}</p>
-          {compare && compare > item.priceVnd ? (
-            <p className={COMPARE_PRICE_CLASS}>{formatVnd(compare)}</p>
-          ) : null}
+          <p className={`min-h-4 ${compare && compare > item.priceVnd ? COMPARE_PRICE_CLASS : ""}`}>
+            {compare && compare > item.priceVnd ? formatVnd(compare) : "\u00a0"}
+          </p>
+          <Link
+            href={item.href}
+            className={`mt-3 inline-flex h-10 w-full items-center justify-center rounded-xl bg-accent-soft ${CTA_COMPACT_CLASS} text-accent ${TRANSITION_UI} hover:bg-accent hover:text-white`}
+          >
+            {cta}
+          </Link>
         </div>
-        <Link
-          href={item.href}
-          className={`mt-3 inline-flex h-10 w-full items-center justify-center rounded-xl bg-accent-soft ${CTA_COMPACT_CLASS} text-accent ${TRANSITION_UI} hover:bg-accent hover:text-white`}
-        >
-          Thanh toán ngay
-        </Link>
       </div>
     </article>
   );
@@ -161,17 +151,6 @@ export function ShopProductListItem({ item }: { item: ShopProduct }) {
           </h3>
         </Link>
         <p className={`mt-1 line-clamp-1 ${CARD_META_CLASS}`}>{item.packageName}</p>
-        {typeof item.rating === "number" &&
-        typeof item.reviewCount === "number" &&
-        item.reviewCount > 0 ? (
-          <div className="mt-2">
-            <StarRating
-              rating={item.rating}
-              reviewCount={item.reviewCount}
-              size="sm"
-            />
-          </div>
-        ) : null}
         <div className="mt-auto flex flex-wrap items-end justify-between gap-3 pt-3">
           <div className="flex flex-wrap items-baseline gap-2">
             <p className={CARD_PRICE_CLASS}>{formatVnd(item.priceVnd)}</p>
@@ -183,7 +162,7 @@ export function ShopProductListItem({ item }: { item: ShopProduct }) {
             href={item.href}
             className={`inline-flex h-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft px-4 ${CTA_COMPACT_CLASS} text-accent ${TRANSITION_UI} hover:bg-accent hover:text-white`}
           >
-            Thanh toán ngay
+            {item.ctaLabel?.trim() || "Mua ngay"}
           </Link>
         </div>
       </div>

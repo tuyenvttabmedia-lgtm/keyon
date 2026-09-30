@@ -13,17 +13,17 @@ import {
 } from "@/storefront/typography";
 
 const TRUST = [
-  { title: "Giao license", desc: "Theo ghi chú từng gói", icon: "bolt" as const },
-  { title: "Chính hãng", desc: "Nguồn cung rõ", icon: "check" as const },
-  { title: "Thanh toán an toàn", desc: "QR / chuyển khoản", icon: "lock" as const },
-  { title: "Hỗ trợ kích hoạt", desc: "Ticket trong Tài khoản", icon: "support" as const },
+  { title: "Giao license nhanh", desc: "Giao theo hình thức của từng gói.", icon: "bolt" as const },
+  { title: "Bản quyền chính hãng", desc: "Nguồn cung rõ ràng, thông tin license minh bạch.", icon: "check" as const },
+  { title: "Thanh toán an toàn", desc: "QR / chuyển khoản thuận tiện.", icon: "lock" as const },
+  { title: "Hỗ trợ kích hoạt", desc: "Ticket hỗ trợ ngay trong Tài khoản.", icon: "support" as const },
 ];
 
 const STATS = [
-  { value: "Instant", label: "Giao key tự động khi còn tồn", icon: "grid" as const },
-  { value: "Manual", label: "Ops xử lý khi cần kiểm tra", icon: "shield" as const },
-  { value: "Portal", label: "License lưu trong Tài khoản", icon: "clock" as const },
-  { value: "Ticket", label: "Hỗ trợ kích hoạt có lịch sử", icon: "headset" as const },
+  { value: "Giao tự động", label: "Giao key tự động khi còn tồn", icon: "grid" as const },
+  { value: "Xử lý thủ công", label: "Ops xử lý khi cần kiểm tra", icon: "shield" as const },
+  { value: "Quản lý trên Portal", label: "License lưu trong Tài khoản", icon: "clock" as const },
+  { value: "Hỗ trợ qua Ticket", label: "Hỗ trợ kích hoạt có lịch sử", icon: "headset" as const },
 ];
 
 export function ShopView(props: ShopCatalogProps) {
@@ -47,7 +47,7 @@ export function ShopView(props: ShopCatalogProps) {
             <div>
               <h1 className={PAGE_TITLE_CLASS}>Cửa hàng</h1>
               <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>
-                Bản quyền chính hãng — Giao theo ghi chú gói — Giá niêm yết rõ trên từng SKU
+                Bản quyền phần mềm chính hãng, giá minh bạch và giao license theo từng sản phẩm.
               </p>
             </div>
             {/* Mockup shop-desktop: khung xám · grid-cols-2 · gạch dọc/ngang giữa các ô */}
