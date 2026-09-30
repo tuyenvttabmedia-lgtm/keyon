@@ -60,54 +60,60 @@ function ProductArt({ item }: { item: ShopProduct }) {
   );
 }
 
-/** Grid card — catalog: name, package, price, CTA. Same height in a row. */
+/** Grid card — same stack as Home featured: art, title, package, price, CTA. */
 export function ShopProductCard({ item }: { item: ShopProduct }) {
   const discount = item.discountPercent;
   const compare = item.compareAtPriceVnd;
   const cta = item.ctaLabel?.trim() || "Mua ngay";
+  const showCompare = Boolean(compare && compare > item.priceVnd);
 
   return (
     <article className={`group flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-white ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-border ${ELEVATION_CARD_HOVER}`}>
-      <Link href={item.href} className="relative block aspect-[4/3] overflow-hidden bg-white">
-        {discount ? (
-          <span className={`absolute left-3 top-3 z-[1] inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose-500 ${BADGE_CLASS} text-white`}>
-            -{discount}%
-          </span>
-        ) : null}
-        {item.imageUrl ? (
-          <Image
-            src={item.imageUrl}
-            alt={item.productName}
-            fill
-            className="object-contain p-2"
-            sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 220px"
-          />
-        ) : (
-          <span className="absolute inset-0 flex items-center justify-center">
-            <ProductArt item={item} />
-          </span>
-        )}
-      </Link>
+      <Link href={item.href} className="flex flex-1 flex-col">
+        <div className="relative aspect-[4/3] overflow-hidden bg-white">
+          {discount ? (
+            <span className={`absolute left-3 top-3 z-[1] inline-flex h-9 w-9 items-center justify-center rounded-full bg-rose-500 ${BADGE_CLASS} text-white`}>
+              -{discount}%
+            </span>
+          ) : null}
+          {item.imageUrl ? (
+            <Image
+              src={item.imageUrl}
+              alt={item.productName}
+              fill
+              className="object-contain p-1.5"
+              sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 220px"
+            />
+          ) : (
+            <span className="absolute inset-0 flex items-center justify-center">
+              <ProductArt item={item} />
+            </span>
+          )}
+        </div>
 
-      <div className="flex flex-1 flex-col px-3.5 pb-3.5 pt-1">
-        <Link href={item.href}>
-          <h3 className={`line-clamp-2 min-h-10 ${CARD_TITLE_CLASS} transition-colors group-hover:text-accent`}>
+        <div className="flex flex-1 flex-col px-3.5 pb-3 pt-1">
+          <h3 className={`line-clamp-2 min-h-[2.45rem] ${CARD_TITLE_CLASS} transition-colors group-hover:text-accent`}>
             {item.productName}
           </h3>
-        </Link>
-        <p className={`mt-1 line-clamp-1 min-h-4 ${CARD_META_CLASS}`}>{item.packageName}</p>
-        <div className="mt-auto pt-2.5">
-          <p className={CARD_PRICE_CLASS}>{formatVnd(item.priceVnd)}</p>
-          <p className={`min-h-4 ${compare && compare > item.priceVnd ? COMPARE_PRICE_CLASS : ""}`}>
-            {compare && compare > item.priceVnd ? formatVnd(compare) : "\u00a0"}
+          <p className={`mt-1 line-clamp-1 min-h-[1.125rem] leading-snug ${CARD_META_CLASS}`}>
+            {item.packageName}
           </p>
-          <Link
-            href={item.href}
-            className={`mt-3 inline-flex h-10 w-full items-center justify-center rounded-xl bg-accent-soft ${CTA_COMPACT_CLASS} text-accent ${TRANSITION_UI} hover:bg-accent hover:text-white`}
-          >
-            {cta}
-          </Link>
+          <div className="mt-2.5">
+            <p className={CARD_PRICE_CLASS}>{formatVnd(item.priceVnd)}</p>
+            <p className={`mt-0.5 h-4 leading-none ${showCompare ? COMPARE_PRICE_CLASS : ""}`}>
+              {showCompare ? formatVnd(compare!) : "\u00a0"}
+            </p>
+          </div>
         </div>
+      </Link>
+
+      <div className="px-3.5 pb-3.5">
+        <Link
+          href={item.href}
+          className={`inline-flex h-10 w-full items-center justify-center rounded-xl bg-accent ${CTA_COMPACT_CLASS} text-white hover:bg-accent-hover`}
+        >
+          {cta}
+        </Link>
       </div>
     </article>
   );

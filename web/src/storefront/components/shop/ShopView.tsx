@@ -43,10 +43,10 @@ export function ShopView(props: ShopCatalogProps) {
             </ol>
           </nav>
 
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-            <div>
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
+            <div className="min-w-0 lg:max-w-[22rem] xl:max-w-md">
               <h1 className={PAGE_TITLE_CLASS}>Cửa hàng</h1>
-              <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>
+              <p className={`mt-3 ${SECTION_LEAD_CLASS}`}>
                 Bản quyền phần mềm chính hãng, giá minh bạch và giao license theo từng sản phẩm.
               </p>
             </div>
@@ -62,8 +62,8 @@ export function ShopView(props: ShopCatalogProps) {
                       <TrustIcon name={t.icon} />
                     </span>
                     <span className="min-w-0">
-                      <span className={`block leading-snug ${CARD_TITLE_CLASS}`}>{t.title}</span>
-                      <span className={`mt-0.5 block leading-snug ${CARD_META_CLASS}`}>
+                      <span className={`block min-h-[2.45rem] leading-snug ${CARD_TITLE_CLASS}`}>{t.title}</span>
+                      <span className={`mt-0.5 block min-h-[3.1rem] leading-snug ${CARD_META_CLASS}`}>
                         {t.desc}
                       </span>
                     </span>
@@ -91,8 +91,8 @@ export function ShopView(props: ShopCatalogProps) {
                     <StatIcon name={s.icon} />
                   </span>
                   <div>
-                    <p className={`${STAT_VALUE_CLASS} !text-white`}>{s.value}</p>
-                    <p className="mt-0.5 text-sm leading-relaxed text-slate-300">{s.label}</p>
+                    <p className={`leading-snug ${STAT_VALUE_CLASS} !text-white`}>{s.value}</p>
+                    <p className="mt-1 min-h-[2.45rem] text-sm leading-snug text-slate-300">{s.label}</p>
                   </div>
                 </div>
               ))}
