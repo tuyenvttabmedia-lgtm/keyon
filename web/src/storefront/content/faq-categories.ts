@@ -145,6 +145,12 @@ export const FAQ_CATEGORIES: FaqCategoryMeta[] = [
       "Sự cố VPS Windows đã bàn giao. KEYON hỗ trợ theo phạm vi gói, không gồm quản trị hệ thống.",
   },
   {
+    id: "dedicated-server-su-co",
+    label: "Dedicated Server (sự cố)",
+    description:
+      "Sự cố Dedicated Server đã bàn giao. KEYON hỗ trợ theo phạm vi gói, không gồm quản trị hệ thống.",
+  },
+  {
     id: "email-server-su-co",
     label: "Email Server (sự cố)",
     description:

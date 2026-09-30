@@ -75,7 +75,7 @@ const SERVICES: {
 }[] = [
   {
     title: "Cloud Infrastructure",
-    description: "VPS Linux và VPS Windows trên catalog KEYON. Khách tự quản trị.",
+    description: "VPS Linux, VPS Windows và Dedicated Server trên catalog KEYON. Khách tự quản trị.",
     href: "/categories/cloud",
     Icon: Cloud,
     tone: "bg-sky-100 text-sky-700",
@@ -118,7 +118,7 @@ const SEGMENTS: {
     title: "Doanh nghiệp vừa & nhỏ",
     description: "Chọn gói catalog theo ngân sách — mua ngay hoặc gửi báo giá.",
     items: [
-      "VPS Linux và VPS Windows theo cấu hình trên catalog",
+      "VPS Linux, VPS Windows và Dedicated Server theo cấu hình trên catalog",
       "Thời hạn rõ trước khi đăng ký",
       "Hỗ trợ kỹ thuật từ KEYON",
     ],
@@ -166,7 +166,7 @@ const STEPS: { title: string; body: string; Icon: LucideIcon }[] = [
 const HERO_VALUES: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Gói trên catalog",
-    body: "Đăng ký VPS Linux hoặc VPS Windows đang được KEYON cung cấp.",
+    body: "Đăng ký VPS hoặc thuê Dedicated Server đang được KEYON cung cấp.",
     Icon: ShoppingCart,
   },
   {
@@ -223,7 +223,7 @@ export function CloudSolutionLanding({ featured }: Props) {
                 Cloud & Hạ tầng cho doanh nghiệp
               </h1>
               <p className={`mt-4 max-w-lg ${PAGE_LEAD_CLASS}`}>
-                VPS Linux và VPS Windows trên KEYON. Khách tự quản trị. Cấu hình và thời hạn rõ
+                VPS Linux, VPS Windows và Dedicated Server trên KEYON. Khách tự quản trị. Cấu hình và thời hạn rõ
                 trước khi đăng ký.
               </p>
 
@@ -245,7 +245,7 @@ export function CloudSolutionLanding({ featured }: Props) {
               </ul>
 
               <p className={`mt-5 max-w-lg ${BODY_MUTED_CLASS}`}>
-                Lưu ý: VPS Linux và VPS Windows là self-managed. KEYON không quản trị hệ điều hành, ứng dụng
+                Lưu ý: VPS và Dedicated Server trên catalog là self-managed. KEYON không quản trị hệ điều hành, ứng dụng
                 hay hạ tầng Cloud thuê ngoài của doanh nghiệp.
               </p>
 

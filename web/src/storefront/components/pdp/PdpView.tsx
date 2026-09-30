@@ -420,9 +420,10 @@ function Breadcrumb({
   variant: PdpVariantOption;
 }) {
   const vpsFamily = vpsFamilyLabel(data);
+  const dedicated = isDedicatedFamily(data);
   const hideBrand =
     data.brandName.trim().toLowerCase() === data.categoryLabel.trim().toLowerCase();
-  const current = vpsFamily ? planDisplayName(variant.name) : data.name;
+  const current = vpsFamily || dedicated ? planDisplayName(variant.name) : data.name;
   return (
     <nav className={`flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`} aria-label="Breadcrumb">
       <Link href="/" className="transition hover:text-accent" aria-label="Trang chủ">
@@ -445,6 +446,11 @@ function Breadcrumb({
           <span className="text-muted">VPS</span>
           <Sep />
           <span className="text-muted">{vpsFamily}</span>
+          <Sep />
+        </>
+      ) : dedicated ? (
+        <>
+          <span className="text-muted">Dedicated Server</span>
           <Sep />
         </>
       ) : hideBrand ? null : (
@@ -891,7 +897,7 @@ function planDisplayName(name: string) {
 
 function planShortName(name: string) {
   return (
-    planDisplayName(name).replace(/^(?:cloud server|vps linux|vps windows)\s+/i, "").trim() ||
+    planDisplayName(name).replace(/^(?:cloud server|vps linux|vps windows|dedicated server)\s+/i, "").trim() ||
     planDisplayName(name)
   );
 }
@@ -900,6 +906,10 @@ function vpsFamilyLabel(data: PdpProductData): string | null {
   if (data.slug === "cloud-server" || /^vps linux\b/i.test(data.name)) return "VPS Linux";
   if (data.slug === "vps-windows" || /^vps windows\b/i.test(data.name)) return "VPS Windows";
   return null;
+}
+
+function isDedicatedFamily(data: PdpProductData) {
+  return data.slug === "dedicated-server" || /^dedicated server\b/i.test(data.name);
 }
 
 function specValue(
@@ -911,6 +921,17 @@ function specValue(
 
 function planHeroLine(variant: PdpVariantOption) {
   const rows = variant.planSpecs;
+  const service = specValue(rows, /loại dịch vụ/i);
+  if (/dedicated/i.test(service)) {
+    return [
+      specValue(rows, /hạ tầng/i),
+      specValue(rows, /^cpu$/i),
+      specValue(rows, /^ram$/i),
+      specValue(rows, /^storage$/i),
+    ]
+      .filter(Boolean)
+      .join(" · ");
+  }
   const os = specValue(rows, /hệ điều hành|operating system/i);
   const parts = [
     specValue(rows, /loại máy chủ/i),
@@ -925,20 +946,39 @@ function planHeroLine(variant: PdpVariantOption) {
 
 function planHeroChips(variant: PdpVariantOption) {
   const rows = variant.planSpecs;
+  const service = specValue(rows, /loại dịch vụ/i);
   const os = specValue(rows, /hệ điều hành|operating system/i);
   const virt = specValue(rows, /virtualization/i);
-  const chips = [
-    specValue(rows, /loại dịch vụ/i),
-    virt || (/windows/i.test(os) ? os : ""),
-    specValue(rows, /quản trị/i),
-    cloudTermLabel(variant.licenseTerm) ?? "",
-  ].filter(Boolean);
-  return [...new Set(chips)];
+  const chips = /dedicated/i.test(service)
+    ? [
+        service,
+        specValue(rows, /hạ tầng/i),
+        specValue(rows, /quản trị/i),
+        cloudTermLabel(variant.licenseTerm) ?? "",
+      ]
+    : [
+        service,
+        virt || (/windows/i.test(os) ? os : ""),
+        specValue(rows, /quản trị/i),
+        cloudTermLabel(variant.licenseTerm) ?? "",
+      ];
+  return [...new Set(chips.filter(Boolean))];
 }
 
 function infraBuyLabel(productName: string) {
+  if (/^dedicated server\b/i.test(productName)) return "Thuê máy chủ";
   if (/^vps\b/i.test(productName)) return "Đăng ký VPS";
   return `Đăng ký ${productName}`;
+}
+
+function infraQuoteLabel(productName: string) {
+  if (/^dedicated server\b/i.test(productName)) return "Yêu cầu báo giá";
+  return "Tư vấn cấu hình";
+}
+
+function infraUnitLabel(productName: string) {
+  if (/^dedicated server\b/i.test(productName)) return "máy chủ";
+  return "máy";
 }
 
 function planAudience(variant: PdpVariantOption) {
@@ -1317,7 +1357,7 @@ function PurchaseColumn({
   return (
     <div className="min-w-0">
       <p className={`${OVERLINE_CLASS} text-accent`}>
-        {vpsFamilyLabel(data) ?? data.brandName}
+        {vpsFamilyLabel(data) ?? (isDedicatedFamily(data) ? "Dedicated Server" : data.brandName)}
       </p>
 
       <h1 className={`mt-2 ${PDP_TITLE_CLASS}`}>
@@ -1655,7 +1695,7 @@ function PurchaseColumn({
             </div>
           )}
           <p className={`mt-2 text-center ${CARD_META_CLASS}`}>
-            {planShortName(variant.name)} · {qty} máy · {cloudTermLabel(variant.licenseTerm)} ·{" "}
+            {planShortName(variant.name)} · {qty} {infraUnitLabel(data.name)} · {cloudTermLabel(variant.licenseTerm)} ·{" "}
             {formatVnd(variant.priceVnd * qty)}
           </p>
           <p className={`mt-2 ${CARD_META_CLASS}`}>
@@ -1665,7 +1705,7 @@ function PurchaseColumn({
             href={quoteHref}
             className={`mt-3 inline-flex h-11 w-full items-center justify-center rounded-xl border border-border bg-white px-5 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
           >
-            Tư vấn cấu hình
+            {infraQuoteLabel(data.name)}
           </Link>
         </div>
       ) : softwareLayout ? (
@@ -1805,7 +1845,7 @@ function PurchaseColumn({
         href={quoteHref}
         className={`mt-3 inline-flex h-11 w-full items-center justify-center rounded-xl border border-border bg-white px-5 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
       >
-        {planLayout ? "Tư vấn cấu hình" : PDP_QUOTE_LABEL}
+        {planLayout ? infraQuoteLabel(data.name) : PDP_QUOTE_LABEL}
       </Link>
 
       <p className={`mt-4 border-t border-border pt-4 text-center ${CARD_META_CLASS} sm:text-left`}>
@@ -3163,7 +3203,7 @@ function StickyBar({
             </p>
             {planLayout && term ? (
               <p className={`truncate ${CARD_META_CLASS}`}>
-                {qty} máy · {term}
+                {qty} {infraUnitLabel(data.name)} · {term}
               </p>
             ) : null}
           </div>
@@ -3179,7 +3219,7 @@ function StickyBar({
             </p>
             {planLayout && term ? (
               <p className={`sm:hidden ${CARD_META_CLASS}`}>
-                {qty} máy · {term}
+                {qty} {infraUnitLabel(data.name)} · {term}
               </p>
             ) : null}
             <div className="mt-0.5 flex items-center gap-2 sm:justify-end">

@@ -75,7 +75,7 @@ export const HOME_SOLUTION_SHOWCASE: Record<
     tabLabel: "Cloud & Hạ tầng",
     panelKicker: "Cloud & Hạ tầng",
     headline: "Chọn gói VPS trên catalog",
-    lead: "VPS Linux và VPS Windows. Khách tự quản trị hệ điều hành và ứng dụng.",
+    lead: "VPS Linux, VPS Windows và Dedicated Server. Khách tự quản trị hệ điều hành và ứng dụng.",
     checks: [
       "Cấu hình và thời hạn trên catalog",
       "Tư vấn chọn gói theo nhu cầu",

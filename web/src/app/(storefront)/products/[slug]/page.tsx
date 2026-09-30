@@ -273,7 +273,7 @@ export default async function ProductPage({
           },
         },
       });
-      const hideWindowsLicense = /^vps windows\b/i.test(product.name);
+      const hideWindowsLicense = /^(vps windows|dedicated server)\b/i.test(product.name);
       const ranked = pool
         .map((item) => ({
           item,

@@ -69,9 +69,9 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
     kicker: "Giải pháp",
     title: "Cloud & Hạ tầng cho doanh nghiệp",
     subtitle:
-      "VPS Linux và VPS Windows trên KEYON. Khách tự quản trị. Cấu hình và thời hạn rõ trước khi đăng ký.",
+      "VPS Linux, VPS Windows và Dedicated Server trên KEYON. Khách tự quản trị. Cấu hình và thời hạn rõ trước khi đăng ký.",
     bullets: [
-      "VPS Linux và VPS Windows theo cấu hình trên catalog",
+      "VPS Linux, VPS Windows và Dedicated Server theo cấu hình trên catalog",
       "Thời hạn 1, 3, 6 hoặc 12 tháng",
       "Hỗ trợ kỹ thuật từ KEYON, không gồm quản trị hệ thống",
     ],
