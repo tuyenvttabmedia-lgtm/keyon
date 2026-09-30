@@ -134,9 +134,9 @@ export const FAQ_CATEGORIES: FaqCategoryMeta[] = [
   },
   {
     id: "cloud-server-su-co",
-    label: "Cloud Server (sự cố)",
+    label: "VPS Linux (sự cố)",
     description:
-      "Troubleshooting máy chủ cloud của nhà cung cấp — không phải console IaaS trong KEYON.",
+      "Sự cố VPS Linux đã bàn giao. KEYON hỗ trợ theo phạm vi gói, không gồm quản trị hệ thống.",
   },
   {
     id: "email-server-su-co",

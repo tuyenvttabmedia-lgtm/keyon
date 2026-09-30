@@ -265,10 +265,10 @@ export const INFRA_PLAN_FIT_HINT =
   "Hiện trên thẻ gói, sau «Phù hợp với». Cũng dùng trong đoạn tóm tắt ở mục Mô tả sản phẩm. Để trống thì trang suy theo tên gói.";
 
 export const INFRA_PLAN_SUMMARY_HINT =
-  "Hiện ngay dưới tiêu đề «Cấu hình {tên gói}», trước bốn thẻ thông số.";
+  "Hiện dưới tên gói ở cột mua. Mỗi chu kỳ của cùng một cấu hình nên dùng cùng một đoạn.";
 
 export const INFRA_PLAN_SPECS_HINT =
-  "Mỗi dòng Nhãn|Giá trị. vCPU, RAM, SSD/NVMe và băng thông thành bốn thẻ. Các dòng còn lại vào bảng Thông tin dịch vụ. Các chu kỳ của cùng một cấu hình phải giống nhau ở các dòng này.";
+  "Mỗi dòng Nhãn|Giá trị. vCPU, RAM, dung lượng lưu trữ và băng thông thành bốn thẻ. Không ghi NVMe nếu nhà cung cấp chưa xác nhận; có thể ghi SSD / NVMe. Các dòng còn lại vào bảng Thông tin dịch vụ. Các chu kỳ của cùng một cấu hình phải giống nhau ở các dòng này.";
 
 export const INFRA_PRICE_HINT =
   "Tổng tiền khách trả cho đúng chu kỳ của gói này. Gói 6 tháng, 12 tháng, 2 năm hoặc 3 năm nhập tổng cả chu kỳ, không nhập giá theo tháng.";

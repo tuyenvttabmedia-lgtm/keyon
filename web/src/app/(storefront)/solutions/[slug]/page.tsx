@@ -60,7 +60,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ...(await buildMainPageMetadata("/solutions/cloud")),
       title: absoluteTitle("Cloud & Hạ tầng cho doanh nghiệp | KEYON"),
       description:
-        "Khám phá license Cloud, gói hạ tầng và các sản phẩm liên quan trên KEYON, với thông tin rõ ràng, bàn giao minh bạch và hỗ trợ tiếng Việt.",
+        "VPS Linux trên KEYON: máy ảo KVM, khách tự quản trị, cấu hình và thời hạn rõ trước khi đăng ký.",
     };
   }
   if (slug === "microsoft-365-office") {

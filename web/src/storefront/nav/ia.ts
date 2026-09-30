@@ -85,7 +85,7 @@ export const INFRA_COLLECTIONS: NavLink[] = [
   {
     label: "Cloud & Hạ tầng",
     href: "/categories/cloud",
-    description: "Cloud Server, thuê theo tháng",
+    description: "VPS Linux, thuê theo tháng",
   },
 ];
 

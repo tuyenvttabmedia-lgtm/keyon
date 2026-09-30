@@ -75,7 +75,7 @@ const SERVICES: {
 }[] = [
   {
     title: "Cloud Infrastructure",
-    description: "License và gói hạ tầng, máy chủ trên catalog KEYON.",
+    description: "VPS Linux trên catalog KEYON: máy ảo KVM, khách tự quản trị.",
     href: "/categories/cloud",
     Icon: Cloud,
     tone: "bg-sky-100 text-sky-700",
@@ -118,12 +118,12 @@ const SEGMENTS: {
     title: "Doanh nghiệp vừa & nhỏ",
     description: "Chọn gói catalog theo ngân sách — mua ngay hoặc gửi báo giá.",
     items: [
-      "License và gói Cloud trên catalog",
-      "Loại nhận rõ trước mua",
-      "Hỗ trợ kích hoạt tiếng Việt",
+      "VPS Linux theo cấu hình trên catalog",
+      "Thời hạn rõ trước khi đăng ký",
+      "Hỗ trợ kỹ thuật từ KEYON",
     ],
     href: "/categories/cloud",
-    cta: "Xem sản phẩm cloud →",
+    cta: "Xem VPS Linux →",
     highlight: false,
     Icon: Store,
   },
@@ -133,7 +133,7 @@ const SEGMENTS: {
     items: [
       "Báo giá theo số người dùng",
       "Gói liên quan trên catalog",
-      "Theo dõi license trong Tài khoản",
+      "Theo dõi đơn trong Tài khoản",
     ],
     href: "/business",
     cta: "Xem dành cho DN →",
@@ -159,24 +159,24 @@ const SEGMENTS: {
 const STEPS: { title: string; body: string; Icon: LucideIcon }[] = [
   { title: "Chọn gói", body: "Chọn sản phẩm Cloud hoặc hạ tầng phù hợp.", Icon: ShoppingCart },
   { title: "Thanh toán", body: "Thanh toán theo phương thức được hỗ trợ trên KEYON.", Icon: CreditCard },
-  { title: "Nhận bàn giao", body: "Nhận license, thông tin kích hoạt hoặc thông tin truy cập theo sản phẩm.", Icon: CloudUpload },
+  { title: "Nhận bàn giao", body: "Nhận thông tin truy cập VPS sau khi KEYON xử lý provisioning.", Icon: CloudUpload },
   { title: "Theo dõi", body: "Theo dõi thông tin sản phẩm và hỗ trợ trong Tài khoản KEYON.", Icon: Monitor },
 ];
 
 const HERO_VALUES: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Gói trên catalog",
-    body: "Mua các license và gói Cloud đang được KEYON cung cấp.",
+    body: "Đăng ký VPS Linux đang được KEYON cung cấp.",
     Icon: ShoppingCart,
   },
   {
     title: "Loại nhận rõ ràng",
-    body: "Biết trước sản phẩm, license và thông tin bàn giao.",
+    body: "Biết trước cấu hình, thời hạn và thông tin bàn giao.",
     Icon: ShieldCheck,
   },
   {
     title: "Hỗ trợ tiếng Việt",
-    body: "Được hướng dẫn kích hoạt và sử dụng theo từng sản phẩm.",
+    body: "Hỗ trợ kỹ thuật từ KEYON trong phạm vi gói.",
     Icon: Headphones,
   },
 ];
@@ -223,8 +223,8 @@ export function CloudSolutionLanding({ featured }: Props) {
                 Cloud & Hạ tầng cho doanh nghiệp
               </h1>
               <p className={`mt-4 max-w-lg ${PAGE_LEAD_CLASS}`}>
-                Khám phá license Cloud, gói hạ tầng và các sản phẩm liên quan trên KEYON, với
-                thông tin rõ ràng, bàn giao minh bạch và hỗ trợ tiếng Việt.
+                VPS Linux trên KEYON: máy ảo KVM, khách tự quản trị, cấu hình và thời hạn rõ
+                trước khi đăng ký.
               </p>
 
               <ul className="mt-7 grid gap-5 sm:grid-cols-3">
@@ -245,8 +245,8 @@ export function CloudSolutionLanding({ featured }: Props) {
               </ul>
 
               <p className={`mt-5 max-w-lg ${BODY_MUTED_CLASS}`}>
-                Lưu ý: KEYON cung cấp license và gói Cloud theo catalog, không thay thế MSP
-                trong việc vận hành Azure, AWS hoặc hạ tầng Cloud của doanh nghiệp.
+                Lưu ý: VPS Linux là self-managed. KEYON không quản trị hệ điều hành, ứng dụng
+                hay hạ tầng Cloud thuê ngoài của doanh nghiệp.
               </p>
 
               <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -254,7 +254,7 @@ export function CloudSolutionLanding({ featured }: Props) {
                   href="/categories/cloud"
                   className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
-                  Xem sản phẩm cloud →
+                  Xem VPS Linux →
                 </Link>
                 <Link
                   href="/contact/quote"
@@ -680,7 +680,7 @@ function CloudHeroArt() {
               <Zap size={14} strokeWidth={2} />
             </span>
             <div>
-              <p className={`${BADGE_CLASS} font-semibold text-navy`}>License trên catalog</p>
+              <p className={`${BADGE_CLASS} font-semibold text-navy`}>VPS Linux</p>
               <p className={`mt-0.5 ${CARD_META_CLASS}`}>Cloud · hạ tầng</p>
             </div>
           </div>

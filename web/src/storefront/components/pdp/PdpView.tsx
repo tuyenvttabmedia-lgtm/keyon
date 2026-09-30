@@ -302,7 +302,7 @@ export function PdpView({ data }: { data: PdpProductData }) {
   return (
     <div className="bg-white pb-28">
       <div className="home-container home-section">
-        <Breadcrumb data={data} />
+        <Breadcrumb data={data} variant={variant} />
 
         <div
           className={
@@ -412,7 +412,17 @@ export function PdpView({ data }: { data: PdpProductData }) {
   );
 }
 
-function Breadcrumb({ data }: { data: PdpProductData }) {
+function Breadcrumb({
+  data,
+  variant,
+}: {
+  data: PdpProductData;
+  variant: PdpVariantOption;
+}) {
+  const vps = isVpsLinuxFamily(data);
+  const hideBrand =
+    data.brandName.trim().toLowerCase() === data.categoryLabel.trim().toLowerCase();
+  const current = vps ? planDisplayName(variant.name) : data.name;
   return (
     <nav className={`flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`} aria-label="Breadcrumb">
       <Link href="/" className="transition hover:text-accent" aria-label="Trang chủ">
@@ -430,13 +440,20 @@ function Breadcrumb({ data }: { data: PdpProductData }) {
         {data.categoryLabel}
       </Link>
       <Sep />
-      {data.brandName.trim().toLowerCase() === data.categoryLabel.trim().toLowerCase() ? null : (
+      {vps ? (
+        <>
+          <span className="text-muted">VPS</span>
+          <Sep />
+          <span className="text-muted">VPS Linux</span>
+          <Sep />
+        </>
+      ) : hideBrand ? null : (
         <>
           <span className="text-muted">{data.brandName}</span>
           <Sep />
         </>
       )}
-      <span className={BREADCRUMB_CURRENT_CLASS}>{data.name}</span>
+      <span className={BREADCRUMB_CURRENT_CLASS}>{current}</span>
     </nav>
   );
 }
@@ -873,7 +890,50 @@ function planDisplayName(name: string) {
 }
 
 function planShortName(name: string) {
-  return planDisplayName(name).replace(/^cloud server\s+/i, "").trim() || planDisplayName(name);
+  return (
+    planDisplayName(name).replace(/^(?:cloud server|vps linux)\s+/i, "").trim() ||
+    planDisplayName(name)
+  );
+}
+
+function isVpsLinuxFamily(data: PdpProductData) {
+  return data.slug === "cloud-server" || /^vps linux\b/i.test(data.name);
+}
+
+function specValue(
+  rows: { label: string; value: string }[],
+  test: RegExp,
+) {
+  return rows.find((row) => test.test(row.label))?.value.trim() ?? "";
+}
+
+function planHeroLine(variant: PdpVariantOption) {
+  const rows = variant.planSpecs;
+  return [
+    specValue(rows, /loại máy chủ/i),
+    specValue(rows, /virtualization/i),
+    specValue(rows, /cpu|vcpu/i),
+    specValue(rows, /^ram$/i),
+    specValue(rows, /^storage$/i),
+  ]
+    .filter(Boolean)
+    .join(" · ");
+}
+
+function planHeroChips(variant: PdpVariantOption) {
+  const rows = variant.planSpecs;
+  const chips = [
+    specValue(rows, /loại dịch vụ/i),
+    specValue(rows, /virtualization/i),
+    specValue(rows, /quản trị/i),
+    cloudTermLabel(variant.licenseTerm) ?? "",
+  ].filter(Boolean);
+  return [...new Set(chips)];
+}
+
+function infraBuyLabel(productName: string) {
+  if (/^vps\b/i.test(productName)) return "Đăng ký VPS";
+  return `Đăng ký ${productName}`;
 }
 
 function planAudience(variant: PdpVariantOption) {
@@ -1251,9 +1311,18 @@ function PurchaseColumn({
 
   return (
     <div className="min-w-0">
-      <p className={`${OVERLINE_CLASS} text-accent`}>{data.brandName}</p>
+      <p className={`${OVERLINE_CLASS} text-accent`}>
+        {isVpsLinuxFamily(data) ? "VPS Linux" : data.brandName}
+      </p>
 
-      <h1 className={`mt-2 ${PDP_TITLE_CLASS}`}>{data.name}</h1>
+      <h1 className={`mt-2 ${PDP_TITLE_CLASS}`}>
+        {planLayout ? planDisplayName(variant.name) : data.name}
+      </h1>
+      {planLayout && planHeroLine(variant) ? (
+        <p className={`mt-2 ${CARD_META_CLASS} font-medium text-navy`}>
+          {planHeroLine(variant)}
+        </p>
+      ) : null}
       {variant.name && !planLayout && !softwareLayout ? (
         <p className={`mt-1 ${CARD_TITLE_CLASS} text-muted`}>{variant.name}</p>
       ) : null}
@@ -1318,8 +1387,25 @@ function PurchaseColumn({
       <p className={`mt-1 ${CARD_META_CLASS}`}>Đã bao gồm VAT</p>
       )}
 
-      {shortPlain && !softwareLayout ? (
+      {planLayout && variant.planSummary?.trim() ? (
+        <p className={`mt-4 line-clamp-3 ${SECTION_LEAD_CLASS}`}>
+          {variant.planSummary.trim()}
+        </p>
+      ) : shortPlain && !softwareLayout ? (
         <p className={`mt-4 line-clamp-3 ${SECTION_LEAD_CLASS}`}>{shortPlain}</p>
+      ) : null}
+
+      {planLayout && planHeroChips(variant).length ? (
+        <ul className="mt-4 flex flex-wrap gap-1.5" aria-label="Tóm tắt gói">
+          {planHeroChips(variant).map((chip) => (
+            <li
+              key={chip}
+              className={`inline-flex items-center rounded-md border border-border bg-surface px-2 py-1 ${BADGE_CLASS} text-navy`}
+            >
+              {chip}
+            </li>
+          ))}
+        </ul>
       ) : null}
 
       {softwareLayout ? (
@@ -1437,7 +1523,7 @@ function PurchaseColumn({
               <p className={`mt-1 ${CARD_META_CLASS}`}>Đã bao gồm VAT.</p>
             </div>
             <div className="flex items-center gap-2">
-              <span className={CARD_META_CLASS}>Số lượng máy chủ</span>
+              <span className={CARD_META_CLASS}>Số lượng</span>
               <div className="inline-flex h-11 items-center overflow-hidden rounded-xl border border-border bg-white">
                 <button
                   type="button"
@@ -1477,11 +1563,11 @@ function PurchaseColumn({
             const monthlyPrice = group.monthly.priceVnd;
             return (
               <div className="mt-4">
-                <p className={CARD_META_CLASS}>Chu kỳ thanh toán</p>
+                <p className={CARD_META_CLASS}>Thời hạn</p>
                 <div
                   className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4"
                   role="group"
-                  aria-label="Chu kỳ thanh toán"
+                  aria-label="Thời hạn"
                 >
                   {choices.map((choice) => {
                     const active = choice.id === variant.id;
@@ -1556,7 +1642,7 @@ function PurchaseColumn({
               className={`mt-4 inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER} disabled:opacity-50`}
             >
               <BoltIcon />
-              {loading ? "Đang tạo đơn…" : `Đăng ký ${data.name}`}
+              {loading ? "Đang tạo đơn…" : infraBuyLabel(data.name)}
             </button>
           ) : (
             <div className="mt-4 rounded-xl bg-accent-soft p-4 text-sm text-accent">
@@ -1568,7 +1654,7 @@ function PurchaseColumn({
             {formatVnd(variant.priceVnd * qty)}
           </p>
           <p className={`mt-2 ${CARD_META_CLASS}`}>
-            KEYON khởi tạo máy chủ sau khi thanh toán thành công.
+            KEYON xử lý provisioning sau khi thanh toán được xác nhận.
           </p>
           <Link
             href={quoteHref}
@@ -1687,7 +1773,7 @@ function PurchaseColumn({
               {loading
                 ? "Đang tạo đơn…"
                 : planLayout
-                  ? `Đăng ký ${variant.name}`
+                  ? infraBuyLabel(data.name)
                   : "Thanh toán ngay"}
             </span>
             {!loading && !planLayout ? (
@@ -2133,7 +2219,7 @@ function PackageStoryLead({
       </p>
       {specs ? (
         <p className={`mt-2 ${BODY_MUTED_CLASS}`}>
-          Với {specs}, gói {short} đáp ứng nhu cầu của cấu hình này và có thể nâng cấp khi hệ thống phát triển.
+          Với {specs}, gói {short} dành cho nhu cầu của cấu hình này.
         </p>
       ) : null}
     </div>
@@ -2375,11 +2461,6 @@ function InfraProductStory({
           <h2 className={SUBSECTION_TITLE_CLASS}>
             Cấu hình {planDisplayName(variant.name)}
           </h2>
-          {variant.planSummary?.trim() ? (
-            <p className={`mt-3 max-w-3xl ${SECTION_LEAD_CLASS}`}>
-              {variant.planSummary.trim()}
-            </p>
-          ) : null}
           <div className="mt-4">
             {(() => {
               const summary = packageHighlights(rows);
@@ -3140,7 +3221,7 @@ function StickyBar({
             className={`inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover disabled:opacity-50`}
           >
             <BoltIcon />
-            {loading ? "Đang tạo đơn…" : planLayout ? `Đăng ký ${data.name}` : "Thanh toán ngay"}
+            {loading ? "Đang tạo đơn…" : planLayout ? infraBuyLabel(data.name) : "Thanh toán ngay"}
           </button>
         </div>
       </div>

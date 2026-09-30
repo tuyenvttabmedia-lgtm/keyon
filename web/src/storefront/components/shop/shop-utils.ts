@@ -12,7 +12,7 @@ export const CATEGORY_LABELS: Record<ShopCategoryId, string> = {
   windows: "Windows & OS",
   office: "Microsoft 365 & Office",
   adobe: "Adobe",
-  cloud: "Cloud & hạ tầng",
+  cloud: "Cloud & Hạ tầng",
   security: "Bảo mật",
   backup: "Backup & Storage",
   autodesk: "Autodesk",

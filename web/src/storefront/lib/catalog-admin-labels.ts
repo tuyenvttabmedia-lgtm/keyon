@@ -14,7 +14,7 @@ export const CATEGORY_ADMIN_LABELS: Record<ProductCategoryKey, string> = {
   adobe: "Adobe",
   security: "Bảo mật",
   backup: "Backup & Storage",
-  cloud: "Cloud & hạ tầng",
+  cloud: "Cloud & Hạ tầng",
   autodesk: "Autodesk",
   other: "Khác",
 };
