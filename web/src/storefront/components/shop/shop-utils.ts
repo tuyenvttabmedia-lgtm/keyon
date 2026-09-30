@@ -189,6 +189,7 @@ export function shopPackageLabel(input: {
     body.find((part) => !looksLikeSeats(part) && !sameText(part, seats)) ??
     "";
   if (plan.length > 22) plan = "";
+  plan = plan.replace(/^license\s+/i, "");
   if (!plan) {
     const channel = input.licenseChannel
       ? CARD_CHANNEL[input.licenseChannel] ?? ""
