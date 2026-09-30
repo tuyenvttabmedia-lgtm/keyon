@@ -617,7 +617,7 @@ function GalleryImages({
             src={activeUrl}
             alt={imageAlt}
             fill
-            className={frame === "wide" ? "object-cover" : "object-contain scale-[1.18]"}
+            className={frame === "wide" ? "object-cover" : "object-contain"}
             sizes="(max-width: 1024px) 100vw, 50vw"
             priority
           />
