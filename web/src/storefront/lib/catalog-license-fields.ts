@@ -72,7 +72,7 @@ export const variantLicenseFieldsSchema = z.object({
         value: z.string().min(1),
       }),
     )
-    .max(12)
+    .max(40, "Tối đa 40 dòng thông số gói")
     .optional(),
   planSummary: z.preprocess(
     emptyToNull,
