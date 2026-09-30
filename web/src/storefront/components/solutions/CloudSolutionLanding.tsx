@@ -75,7 +75,7 @@ const SERVICES: {
 }[] = [
   {
     title: "Cloud Infrastructure",
-    description: "VPS Linux trên catalog KEYON: máy ảo KVM, khách tự quản trị.",
+    description: "VPS Linux và VPS Windows trên catalog KEYON. Khách tự quản trị.",
     href: "/categories/cloud",
     Icon: Cloud,
     tone: "bg-sky-100 text-sky-700",
@@ -118,12 +118,12 @@ const SEGMENTS: {
     title: "Doanh nghiệp vừa & nhỏ",
     description: "Chọn gói catalog theo ngân sách — mua ngay hoặc gửi báo giá.",
     items: [
-      "VPS Linux theo cấu hình trên catalog",
+      "VPS Linux và VPS Windows theo cấu hình trên catalog",
       "Thời hạn rõ trước khi đăng ký",
       "Hỗ trợ kỹ thuật từ KEYON",
     ],
     href: "/categories/cloud",
-    cta: "Xem VPS Linux →",
+    cta: "Xem VPS →",
     highlight: false,
     Icon: Store,
   },
@@ -166,7 +166,7 @@ const STEPS: { title: string; body: string; Icon: LucideIcon }[] = [
 const HERO_VALUES: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Gói trên catalog",
-    body: "Đăng ký VPS Linux đang được KEYON cung cấp.",
+    body: "Đăng ký VPS Linux hoặc VPS Windows đang được KEYON cung cấp.",
     Icon: ShoppingCart,
   },
   {
@@ -223,7 +223,7 @@ export function CloudSolutionLanding({ featured }: Props) {
                 Cloud & Hạ tầng cho doanh nghiệp
               </h1>
               <p className={`mt-4 max-w-lg ${PAGE_LEAD_CLASS}`}>
-                VPS Linux trên KEYON: máy ảo KVM, khách tự quản trị, cấu hình và thời hạn rõ
+                VPS Linux và VPS Windows trên KEYON. Khách tự quản trị. Cấu hình và thời hạn rõ
                 trước khi đăng ký.
               </p>
 
@@ -245,7 +245,7 @@ export function CloudSolutionLanding({ featured }: Props) {
               </ul>
 
               <p className={`mt-5 max-w-lg ${BODY_MUTED_CLASS}`}>
-                Lưu ý: VPS Linux là self-managed. KEYON không quản trị hệ điều hành, ứng dụng
+                Lưu ý: VPS Linux và VPS Windows là self-managed. KEYON không quản trị hệ điều hành, ứng dụng
                 hay hạ tầng Cloud thuê ngoài của doanh nghiệp.
               </p>
 
@@ -254,7 +254,7 @@ export function CloudSolutionLanding({ featured }: Props) {
                   href="/categories/cloud"
                   className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
-                  Xem VPS Linux →
+                  Xem VPS →
                 </Link>
                 <Link
                   href="/contact/quote"
@@ -680,7 +680,7 @@ function CloudHeroArt() {
               <Zap size={14} strokeWidth={2} />
             </span>
             <div>
-              <p className={`${BADGE_CLASS} font-semibold text-navy`}>VPS Linux</p>
+              <p className={`${BADGE_CLASS} font-semibold text-navy`}>VPS</p>
               <p className={`mt-0.5 ${CARD_META_CLASS}`}>Cloud · hạ tầng</p>
             </div>
           </div>

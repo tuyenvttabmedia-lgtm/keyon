@@ -419,10 +419,10 @@ function Breadcrumb({
   data: PdpProductData;
   variant: PdpVariantOption;
 }) {
-  const vps = isVpsLinuxFamily(data);
+  const vpsFamily = vpsFamilyLabel(data);
   const hideBrand =
     data.brandName.trim().toLowerCase() === data.categoryLabel.trim().toLowerCase();
-  const current = vps ? planDisplayName(variant.name) : data.name;
+  const current = vpsFamily ? planDisplayName(variant.name) : data.name;
   return (
     <nav className={`flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`} aria-label="Breadcrumb">
       <Link href="/" className="transition hover:text-accent" aria-label="Trang chủ">
@@ -440,11 +440,11 @@ function Breadcrumb({
         {data.categoryLabel}
       </Link>
       <Sep />
-      {vps ? (
+      {vpsFamily ? (
         <>
           <span className="text-muted">VPS</span>
           <Sep />
-          <span className="text-muted">VPS Linux</span>
+          <span className="text-muted">{vpsFamily}</span>
           <Sep />
         </>
       ) : hideBrand ? null : (
@@ -891,13 +891,15 @@ function planDisplayName(name: string) {
 
 function planShortName(name: string) {
   return (
-    planDisplayName(name).replace(/^(?:cloud server|vps linux)\s+/i, "").trim() ||
+    planDisplayName(name).replace(/^(?:cloud server|vps linux|vps windows)\s+/i, "").trim() ||
     planDisplayName(name)
   );
 }
 
-function isVpsLinuxFamily(data: PdpProductData) {
-  return data.slug === "cloud-server" || /^vps linux\b/i.test(data.name);
+function vpsFamilyLabel(data: PdpProductData): string | null {
+  if (data.slug === "cloud-server" || /^vps linux\b/i.test(data.name)) return "VPS Linux";
+  if (data.slug === "vps-windows" || /^vps windows\b/i.test(data.name)) return "VPS Windows";
+  return null;
 }
 
 function specValue(
@@ -909,22 +911,25 @@ function specValue(
 
 function planHeroLine(variant: PdpVariantOption) {
   const rows = variant.planSpecs;
-  return [
+  const os = specValue(rows, /hệ điều hành|operating system/i);
+  const parts = [
     specValue(rows, /loại máy chủ/i),
     specValue(rows, /virtualization/i),
     specValue(rows, /cpu|vcpu/i),
     specValue(rows, /^ram$/i),
     specValue(rows, /^storage$/i),
-  ]
-    .filter(Boolean)
-    .join(" · ");
+  ].filter(Boolean);
+  if (/windows/i.test(os)) return [os, ...parts].join(" · ");
+  return parts.join(" · ");
 }
 
 function planHeroChips(variant: PdpVariantOption) {
   const rows = variant.planSpecs;
+  const os = specValue(rows, /hệ điều hành|operating system/i);
+  const virt = specValue(rows, /virtualization/i);
   const chips = [
     specValue(rows, /loại dịch vụ/i),
-    specValue(rows, /virtualization/i),
+    virt || (/windows/i.test(os) ? os : ""),
     specValue(rows, /quản trị/i),
     cloudTermLabel(variant.licenseTerm) ?? "",
   ].filter(Boolean);
@@ -1312,7 +1317,7 @@ function PurchaseColumn({
   return (
     <div className="min-w-0">
       <p className={`${OVERLINE_CLASS} text-accent`}>
-        {isVpsLinuxFamily(data) ? "VPS Linux" : data.brandName}
+        {vpsFamilyLabel(data) ?? data.brandName}
       </p>
 
       <h1 className={`mt-2 ${PDP_TITLE_CLASS}`}>
@@ -2420,7 +2425,9 @@ function InfraGuide({ body }: { body: string }) {
     );
   }
   return (
-    <ol className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-5">
+    <ol
+      className={`mt-4 grid gap-3 md:grid-cols-2 ${steps.length > 5 ? "lg:grid-cols-3" : "lg:grid-cols-5"}`}
+    >
       {steps.map((step, index) => (
         <li
           key={step.title}

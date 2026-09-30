@@ -74,8 +74,8 @@ export const HOME_SOLUTION_SHOWCASE: Record<
   cloud: {
     tabLabel: "Cloud & Hạ tầng",
     panelKicker: "Cloud & Hạ tầng",
-    headline: "Chọn gói VPS Linux trên catalog",
-    lead: "VPS Linux dạng máy ảo KVM. Khách tự quản trị hệ điều hành và ứng dụng.",
+    headline: "Chọn gói VPS trên catalog",
+    lead: "VPS Linux và VPS Windows. Khách tự quản trị hệ điều hành và ứng dụng.",
     checks: [
       "Cấu hình và thời hạn trên catalog",
       "Tư vấn chọn gói theo nhu cầu",
@@ -83,7 +83,7 @@ export const HOME_SOLUTION_SHOWCASE: Record<
       "Không gồm quản trị hệ thống",
     ],
     chips: [
-      { id: "cloud", label: "VPS Linux", slot: "tl", tone: "sky" },
+      { id: "cloud", label: "VPS", slot: "tl", tone: "sky" },
       { id: "scale", label: "Theo cấu hình", slot: "tr", tone: "violet" },
       { id: "sku", label: "Tư vấn gói", slot: "br", tone: "teal" },
       { id: "handoff", label: "Self-managed", slot: "bl", tone: "amber" },

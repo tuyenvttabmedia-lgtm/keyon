@@ -69,13 +69,13 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
     kicker: "Giải pháp",
     title: "Cloud & Hạ tầng cho doanh nghiệp",
     subtitle:
-      "VPS Linux trên KEYON: máy ảo KVM, khách tự quản trị, cấu hình và thời hạn rõ trước khi đăng ký.",
+      "VPS Linux và VPS Windows trên KEYON. Khách tự quản trị. Cấu hình và thời hạn rõ trước khi đăng ký.",
     bullets: [
-      "VPS Linux theo cấu hình trên catalog",
+      "VPS Linux và VPS Windows theo cấu hình trên catalog",
       "Thời hạn 1, 3, 6 hoặc 12 tháng",
       "Hỗ trợ kỹ thuật từ KEYON, không gồm quản trị hệ thống",
     ],
-    primaryCta: { label: "Xem VPS Linux", href: "/categories/cloud" },
+    primaryCta: { label: "Xem VPS", href: "/categories/cloud" },
     secondaryCta: { label: "Gửi yêu cầu tư vấn", href: "/contact/quote" },
   },
   security: {

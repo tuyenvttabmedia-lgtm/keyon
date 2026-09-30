@@ -139,6 +139,12 @@ export const FAQ_CATEGORIES: FaqCategoryMeta[] = [
       "Sự cố VPS Linux đã bàn giao. KEYON hỗ trợ theo phạm vi gói, không gồm quản trị hệ thống.",
   },
   {
+    id: "vps-windows-su-co",
+    label: "VPS Windows (sự cố)",
+    description:
+      "Sự cố VPS Windows đã bàn giao. KEYON hỗ trợ theo phạm vi gói, không gồm quản trị hệ thống.",
+  },
+  {
     id: "email-server-su-co",
     label: "Email Server (sự cố)",
     description:
