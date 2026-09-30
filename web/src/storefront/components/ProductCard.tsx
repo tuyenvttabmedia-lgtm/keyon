@@ -42,18 +42,21 @@ export function ProductCard({
     >
       <Link href={item.href} className="flex flex-1 flex-col">
         <div
-          className={`relative flex items-center justify-center bg-gradient-to-b from-slate-50 to-white ${
-            compact ? "aspect-[5/4] p-2.5" : "aspect-[4/3] p-4"
+          className={`relative flex items-center justify-center overflow-hidden bg-white ${
+            compact ? "aspect-[5/4]" : "aspect-[4/3]"
           }`}
         >
           {item.imageUrl ? (
             <Image
               src={item.imageUrl}
               alt={item.productName}
-              width={180}
-              height={140}
-              className={`h-full w-auto object-contain ${compact ? "max-h-[88px]" : "max-h-[140px]"}`}
-              sizes={compact ? "120px" : "(max-width: 640px) 45vw, 180px"}
+              fill
+              className={`object-contain ${compact ? "p-1" : "p-1.5"}`}
+              sizes={
+                compact
+                  ? "(max-width: 768px) 45vw, 210px"
+                  : "(max-width: 1280px) 20vw, 240px"
+              }
               priority={priority}
             />
           ) : (
