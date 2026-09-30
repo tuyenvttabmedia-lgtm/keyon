@@ -800,6 +800,8 @@ function specFact(row: { label: string; value: string }) {
 }
 
 const PACKAGE_HIGHLIGHTS = [
+  { id: "workload", title: "Workload", test: /workload/i },
+  { id: "backup", title: "Backup Storage", test: /backup storage|dung lượng backup/i },
   { id: "cpu", title: "CPU", test: /cpu|vcpu/i },
   { id: "ram", title: "RAM", test: /\bram\b|bộ nhớ/i },
   { id: "storage", title: "Lưu trữ", test: /ssd|nvme|storage|ổ/i },
@@ -892,7 +894,10 @@ function selectedPackageRows(variant: PdpVariantOption): { label: string; value:
 }
 
 function planDisplayName(name: string) {
-  return name.replace(/\s*·\s*.+$/u, "").trim() || name;
+  const withoutTerm = name.replace(/\s*·\s*.+$/u, "").trim() || name;
+  const pieces = withoutTerm.split(/\s+–\s+/u);
+  const tail = pieces.length > 1 ? pieces[pieces.length - 1]!.trim() : "";
+  return tail || withoutTerm;
 }
 
 function planShortName(name: string) {
@@ -968,17 +973,19 @@ function planHeroChips(variant: PdpVariantOption) {
 function infraBuyLabel(productName: string) {
   if (/^dedicated server\b/i.test(productName)) return "Thuê máy chủ";
   if (/^vps\b/i.test(productName)) return "Đăng ký VPS";
-  return `Đăng ký ${productName}`;
+  return "Đăng ký dịch vụ";
 }
 
 function infraQuoteLabel(productName: string) {
   if (/^dedicated server\b/i.test(productName)) return "Yêu cầu báo giá";
-  return "Tư vấn cấu hình";
+  if (/^vps\b/i.test(productName)) return "Tư vấn cấu hình";
+  return "Tư vấn gói";
 }
 
 function infraUnitLabel(productName: string) {
   if (/^dedicated server\b/i.test(productName)) return "máy chủ";
-  return "máy";
+  if (/^vps\b/i.test(productName)) return "máy";
+  return "gói";
 }
 
 function planAudience(variant: PdpVariantOption) {
@@ -1124,7 +1131,10 @@ function PlanBoard({
           const highlight = packageHighlights(item.planSpecs).cards.filter(
             (card) => card.id !== "network",
           );
-          const popular = /standard/i.test(item.name);
+          const popular = /\bstandard\b|\bprofessional\b/i.test(item.name);
+          const featureNotes = item.planSpecs
+            .filter((row) => row.value.trim().toLowerCase() === "có")
+            .slice(0, 4);
           return (
             <article
               key={item.id}
@@ -1167,7 +1177,22 @@ function PlanBoard({
                       key={card.id}
                       className={`font-semibold text-navy ${CARD_META_CLASS}`}
                     >
-                      {card.value}
+                      {card.id === "workload" || card.id === "backup"
+                        ? `${card.title}: ${card.value}`
+                        : card.value}
+                    </li>
+                  ))}
+                  {featureNotes.map((row) => (
+                    <li key={row.label} className={CARD_META_CLASS}>
+                      {row.label}
+                    </li>
+                  ))}
+                </ul>
+              ) : featureNotes.length ? (
+                <ul className="mt-3 space-y-1 border-t border-border pt-3">
+                  {featureNotes.map((row) => (
+                    <li key={row.label} className={CARD_META_CLASS}>
+                      {row.label}
                     </li>
                   ))}
                 </ul>
@@ -1361,12 +1386,14 @@ function PurchaseColumn({
       </p>
 
       <h1 className={`mt-2 ${PDP_TITLE_CLASS}`}>
-        {planLayout ? planDisplayName(variant.name) : data.name}
+        {planLayout && planHeroLine(variant) ? planDisplayName(variant.name) : data.name}
       </h1>
       {planLayout && planHeroLine(variant) ? (
         <p className={`mt-2 ${CARD_META_CLASS} font-medium text-navy`}>
           {planHeroLine(variant)}
         </p>
+      ) : planLayout && shortPlain ? (
+        <p className={`mt-2 ${CARD_META_CLASS} font-medium text-navy`}>{shortPlain}</p>
       ) : null}
       {variant.name && !planLayout && !softwareLayout ? (
         <p className={`mt-1 ${CARD_TITLE_CLASS} text-muted`}>{variant.name}</p>
@@ -2255,7 +2282,11 @@ function PackageStoryLead({
     ?.value.replace(/\s*ram$/i, "")
     .trim();
   const storage = cards.find((card) => card.id === "storage")?.value;
-  const specs = [cpu, ram ? `${ram} RAM` : "", storage].filter(Boolean).join(", ");
+  const workload = cards.find((card) => card.id === "workload")?.value;
+  const backup = cards.find((card) => card.id === "backup")?.value;
+  const specs = [cpu, ram ? `${ram} RAM` : "", storage, workload, backup]
+    .filter(Boolean)
+    .join(", ");
   return (
     <div className="mt-4 max-w-3xl">
       <p className={`text-navy ${CARD_TITLE_CLASS}`}>{productName}</p>
@@ -2264,7 +2295,9 @@ function PackageStoryLead({
       </p>
       {specs ? (
         <p className={`mt-2 ${BODY_MUTED_CLASS}`}>
-          Với {specs}, gói {short} dành cho nhu cầu của cấu hình này.
+          {cpu || ram || storage
+            ? `Với ${specs}, gói ${short} dành cho nhu cầu của cấu hình này.`
+            : `Với ${specs}, gói ${short} dành cho nhu cầu này.`}
         </p>
       ) : null}
     </div>
