@@ -273,12 +273,17 @@ export default async function ProductPage({
           },
         },
       });
+      const hideWindowsLicense = /^vps windows\b/i.test(product.name);
       const ranked = pool
         .map((item) => ({
           item,
           rank: infraCrossSellRank(item.name, item.categoryKey),
         }))
         .filter((entry) => entry.rank < 99)
+        .filter(
+          (entry) =>
+            !(hideWindowsLicense && /windows server/i.test(entry.item.name)),
+        )
         .sort(
           (a, b) =>
             a.rank - b.rank || a.item.name.localeCompare(b.item.name, "vi"),
