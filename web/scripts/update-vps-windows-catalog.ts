@@ -6,7 +6,6 @@
  *
  * npx tsx scripts/update-vps-windows-catalog.ts
  */
-import { Prisma } from "@prisma/client";
 import { prisma } from "../src/lib/db";
 
 const SLUG = "vps-windows";
@@ -207,7 +206,6 @@ async function main() {
     shortDescription:
       "Máy ảo chạy Windows Server, khách tự quản trị. Chọn cấu hình và thời hạn 1, 3, 6 hoặc 12 tháng.",
     description: DESCRIPTION,
-    galleryUrls: linux.galleryUrls as Prisma.InputJsonValue,
     features: [
       "VPS Windows sẵn sàng triển khai|Máy ảo Windows Server theo cấu hình đã chọn",
       "Môi trường Windows Server|Khách tự quản trị hệ điều hành",
@@ -246,7 +244,12 @@ async function main() {
 
   const product = await prisma.product.upsert({
     where: { slug: SLUG },
-    create: { slug: SLUG, ...productData, relatedProductIds: [linux.id] },
+    create: {
+      slug: SLUG,
+      ...productData,
+      galleryUrls: linux.galleryUrls ?? [],
+      relatedProductIds: [linux.id],
+    },
     update: { ...productData, relatedProductIds: [linux.id] },
   });
 

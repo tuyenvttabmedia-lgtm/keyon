@@ -6,7 +6,6 @@
  *
  * npx tsx scripts/update-dedicated-server-catalog.ts
  */
-import { Prisma } from "@prisma/client";
 import { prisma } from "../src/lib/db";
 
 const SLUG = "dedicated-server";
@@ -249,7 +248,6 @@ async function main() {
     shortDescription:
       "Máy chủ vật lý riêng, khách tự quản trị. Chọn cấu hình và thời hạn 1, 3, 6 hoặc 12 tháng.",
     description: DESCRIPTION,
-    galleryUrls: linux.galleryUrls as Prisma.InputJsonValue,
     features: [
       "Máy chủ vật lý riêng|Dành cho một khách hàng",
       "Tài nguyên phần cứng độc lập|Không chia sẻ CPU và RAM ở tầng máy vật lý",
@@ -291,6 +289,7 @@ async function main() {
     create: {
       slug: SLUG,
       ...productData,
+      galleryUrls: linux.galleryUrls ?? [],
       relatedProductIds: [linux.id, windows.id],
     },
     update: { ...productData, relatedProductIds: [linux.id, windows.id] },
