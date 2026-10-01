@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import https from "node:https";
 import { resolvePayment } from "@/server/payment/config";
 import { resetPaymentCache } from "@/server/payment/service";
 import {
@@ -50,16 +51,13 @@ export async function POST() {
         cancelUrl: "https://keyon.vn/checkout/test/cancel",
       });
 
-      const probe = await fetch(checkoutUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(sampleFields),
-        redirect: "manual",
-      });
-      const location = probe.headers.get("location") ?? "";
+      const probe = await postCheckoutInit(
+        checkoutUrl,
+        new URLSearchParams(sampleFields).toString(),
+      );
       const accepted =
         (probe.status === 302 || probe.status === 303) &&
-        location.includes("/v1/checkout");
+        probe.location.includes("/v1/checkout");
       if (!accepted) {
         return NextResponse.json(
           {
@@ -137,4 +135,36 @@ export async function POST() {
       { status: 400 },
     );
   }
+}
+
+/** Raw POST so a 302 is visible. Next's fetch follows it and the checkout page looks like HTTP 200. */
+function postCheckoutInit(
+  url: string,
+  body: string,
+): Promise<{ status: number; location: string }> {
+  return new Promise((resolve, reject) => {
+    const target = new URL(url);
+    const req = https.request(
+      {
+        hostname: target.hostname,
+        path: `${target.pathname}${target.search}`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Length": Buffer.byteLength(body),
+        },
+      },
+      (res) => {
+        res.resume();
+        const location = res.headers.location;
+        resolve({
+          status: res.statusCode ?? 0,
+          location: Array.isArray(location) ? location[0] ?? "" : location ?? "",
+        });
+      },
+    );
+    req.on("error", reject);
+    req.write(body);
+    req.end();
+  });
 }
