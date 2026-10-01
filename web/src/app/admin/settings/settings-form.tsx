@@ -1123,7 +1123,7 @@ export function SettingsForm({
                 </option>
               </select>
               <span className="mt-1 block text-xs text-muted">
-                Production là chuyển khoản + webhook HMAC. Nội dung CK là mã DH và 8 số, đúng bộ lọc webhook SePay. Sandbox là cổng thanh toán PG, không tách VA.
+                Sandbox và Production lưu riêng. Sandbox chỉ dùng Merchant và IPN của cổng thanh toán. Production chỉ dùng số VA và HMAC. Lưu chế độ đang chọn không xóa cấu hình chế độ kia.
               </span>
             </label>
 

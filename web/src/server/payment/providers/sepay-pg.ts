@@ -8,16 +8,20 @@ const CHECKOUT_URLS: Record<SepayPgEnvironment, string> = {
   production: "https://pay.sepay.vn/v1/checkout/init",
 };
 
-/** Field order must match SePay PG docs / CardOn — do not reorder. */
+/**
+ * SePay signs only these fields, in this order.
+ * https://developer.sepay.vn/vi/cong-thanh-toan/API/don-hang/form-thanh-toan
+ * Do not sort or reorder — a different order is an invalid signature.
+ */
 const SIGNED_FIELD_ORDER = [
-  "merchant",
-  "operation",
-  "payment_method",
   "order_amount",
+  "merchant",
   "currency",
-  "order_invoice_number",
+  "operation",
   "order_description",
+  "order_invoice_number",
   "customer_id",
+  "payment_method",
   "success_url",
   "error_url",
   "cancel_url",

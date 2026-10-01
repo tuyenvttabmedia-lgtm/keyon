@@ -42,13 +42,33 @@ export async function POST() {
         merchantId: sepay.merchantId,
         merchantSecretKey: sepay.merchantSecretKey,
         paymentMethod: sepay.paymentMethod,
-        orderInvoiceNumber: "KEYON_TEST_REF",
+        orderInvoiceNumber: `KEYON_CFG_${Date.now()}`,
         orderAmount: 10000,
         orderDescription: "KEYON SePay PG config test",
         successUrl: "https://keyon.vn/checkout/test/success",
         errorUrl: "https://keyon.vn/checkout/test/error",
         cancelUrl: "https://keyon.vn/checkout/test/cancel",
       });
+
+      const probe = await fetch(checkoutUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(sampleFields),
+        redirect: "manual",
+      });
+      const location = probe.headers.get("location") ?? "";
+      const accepted =
+        (probe.status === 302 || probe.status === 303) &&
+        location.includes("/v1/checkout");
+      if (!accepted) {
+        return NextResponse.json(
+          {
+            ok: false,
+            error: `SePay sandbox từ chối form checkout (HTTP ${probe.status}). Kiểm tra Merchant ID và Secret Key của Test mode.`,
+          },
+          { status: 400 },
+        );
+      }
 
       return NextResponse.json({
         ok: true,
@@ -60,9 +80,8 @@ export async function POST() {
         merchantId: sepay.merchantId,
         ipnSecretConfigured: Boolean(sepay.ipnSecretKey),
         checkoutUrl,
-        sampleSignaturePreview: sampleFields.signature?.slice(0, 12) + "…",
         message:
-          "Cổng thanh toán PG (sandbox) OK — Merchant + chữ ký form hợp lệ. IPN dùng X-Secret-Key.",
+          "Sandbox OK — SePay nhận form checkout. IPN dùng X-Secret-Key, tách với HMAC production.",
       });
     }
 

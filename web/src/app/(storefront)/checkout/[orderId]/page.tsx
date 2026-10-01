@@ -1,5 +1,6 @@
 import { CheckoutView } from "@/storefront/components/checkout/CheckoutView";
 import { loadCheckoutContext } from "@/storefront/lib/checkout-load";
+import { resolvePayment } from "@/server/payment/config";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +12,7 @@ export default async function CheckoutPage({
 }) {
   const { orderId } = await params;
   const ctx = await loadCheckoutContext(orderId);
+  const payment = await resolvePayment();
 
   return (
     <CheckoutView
@@ -18,6 +20,9 @@ export default async function CheckoutPage({
       supportEmail={ctx.supportEmail}
       order={ctx.order}
       item={ctx.item}
+      sepayMode={
+        payment.provider === "sepay" ? payment.sepay.mode : "bank_webhook"
+      }
     />
   );
 }

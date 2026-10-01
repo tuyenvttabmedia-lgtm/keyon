@@ -269,22 +269,28 @@ export async function savePaymentSettings(input: {
   };
 }): Promise<PaymentSettings> {
   const current = await getPaymentSettings();
+  const environment =
+    input.sepay.environment === "production" ? "production" : "sandbox";
+
+  // Each environment keeps its own credentials. Saving sandbox must not
+  // rewrite the production VA/HMAC, and saving production must not rewrite
+  // the sandbox merchant/IPN.
   let apiKeyEnc = current.sepay.apiKeyEnc;
   let webhookSecretEnc = current.sepay.webhookSecretEnc;
   let merchantSecretEnc = current.sepay.merchantSecretEnc ?? "";
   let ipnSecretEnc = current.sepay.ipnSecretEnc ?? "";
 
-  const apiPlain = input.sepay.apiKey?.trim();
-  if (apiPlain) apiKeyEnc = encryptPayload(apiPlain);
-  const whPlain = input.sepay.webhookSecret?.trim();
-  if (whPlain) webhookSecretEnc = encryptPayload(whPlain);
-  const msPlain = input.sepay.merchantSecret?.trim();
-  if (msPlain) merchantSecretEnc = encryptPayload(msPlain);
-  const ipnPlain = input.sepay.ipnSecret?.trim();
-  if (ipnPlain) ipnSecretEnc = encryptPayload(ipnPlain);
-
-  const environment =
-    input.sepay.environment === "production" ? "production" : "sandbox";
+  if (environment === "sandbox") {
+    const msPlain = input.sepay.merchantSecret?.trim();
+    if (msPlain) merchantSecretEnc = encryptPayload(msPlain);
+    const ipnPlain = input.sepay.ipnSecret?.trim();
+    if (ipnPlain) ipnSecretEnc = encryptPayload(ipnPlain);
+  } else {
+    const apiPlain = input.sepay.apiKey?.trim();
+    if (apiPlain) apiKeyEnc = encryptPayload(apiPlain);
+    const whPlain = input.sepay.webhookSecret?.trim();
+    if (whPlain) webhookSecretEnc = encryptPayload(whPlain);
+  }
 
   if (environment === "sandbox" && process.env.NODE_ENV === "production") {
     // Allowed for PG testing, but Admin + health must scream — do not silently treat as live bank.
@@ -317,24 +323,35 @@ export async function savePaymentSettings(input: {
 
   const next: PaymentSettings = {
     provider: input.provider,
-    sepay: {
-      environment,
-      accountNumber: input.sepay.accountNumber.trim(),
-      bankBin: input.sepay.bankBin.trim(),
-      bankName: (input.sepay.bankName ?? "").trim(),
-      bankDisplayName: (input.sepay.bankDisplayName ?? "").trim(),
-      accountName: (input.sepay.accountName ?? "").trim(),
-      qrTemplate: (input.sepay.qrTemplate ?? "compact2").trim() || "compact2",
-      merchantId: (input.sepay.merchantId ?? "").trim(),
-      paymentMethod:
-        input.sepay.paymentMethod === "NAPAS_BANK_TRANSFER"
-          ? "NAPAS_BANK_TRANSFER"
-          : "BANK_TRANSFER",
-      apiKeyEnc,
-      webhookSecretEnc,
-      merchantSecretEnc,
-      ipnSecretEnc,
-    },
+    sepay:
+      environment === "sandbox"
+        ? {
+            ...current.sepay,
+            environment,
+            merchantId: (input.sepay.merchantId ?? current.sepay.merchantId ?? "").trim(),
+            paymentMethod:
+              input.sepay.paymentMethod === "NAPAS_BANK_TRANSFER"
+                ? "NAPAS_BANK_TRANSFER"
+                : "BANK_TRANSFER",
+            merchantSecretEnc,
+            ipnSecretEnc,
+          }
+        : {
+            ...current.sepay,
+            environment,
+            accountNumber: input.sepay.accountNumber.trim(),
+            bankBin: input.sepay.bankBin.trim(),
+            bankName: (input.sepay.bankName ?? current.sepay.bankName).trim(),
+            bankDisplayName: (
+              input.sepay.bankDisplayName ?? current.sepay.bankDisplayName
+            ).trim(),
+            accountName: (input.sepay.accountName ?? current.sepay.accountName).trim(),
+            qrTemplate:
+              (input.sepay.qrTemplate ?? current.sepay.qrTemplate ?? "compact2").trim() ||
+              "compact2",
+            apiKeyEnc,
+            webhookSecretEnc,
+          },
   };
   await writeJsonFile("payment.json", next);
   return next;

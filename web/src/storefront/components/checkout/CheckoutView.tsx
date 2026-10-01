@@ -62,6 +62,8 @@ export type CheckoutViewProps = {
   order: CheckoutOrderInfo;
   item: CheckoutItemInfo | null;
   supportEmail: string;
+  /** Active SePay mode. Sandbox is the hosted PG; production is VietQR. */
+  sepayMode?: "payment_gateway" | "bank_webhook";
 };
 
 const STEPS = [
@@ -318,6 +320,7 @@ export function CheckoutView({
   order,
   item,
   supportEmail,
+  sepayMode = "bank_webhook",
 }: CheckoutViewProps) {
   const router = useRouter();
   const enabledMethods = useMemo(
@@ -448,8 +451,10 @@ export function CheckoutView({
                           </span>
                         ) : null}
                         <p className={`pr-14 ${CARD_TITLE_CLASS}`}>
-                          {m.title}
-                          {m.provider === "sepay_qr" ? (
+                          {sepayMode === "payment_gateway" && m.provider === "sepay_qr"
+                            ? "Cổng SePay sandbox"
+                            : m.title}
+                          {m.provider === "sepay_qr" && sepayMode !== "payment_gateway" ? (
                             <span className={`ml-2 font-semibold text-emerald-700 ${BADGE_CLASS}`}>
                               Miễn phí
                             </span>
@@ -457,7 +462,9 @@ export function CheckoutView({
                         </p>
                         <p className={`mt-1 ${CARD_META_CLASS}`}>
                           {m.provider === "sepay_qr"
-                            ? "Quét mã QR bằng ứng dụng ngân hàng hoặc ví điện tử hỗ trợ VietQR."
+                            ? sepayMode === "payment_gateway"
+                              ? "Thanh toán thử trên cổng SePay. KEYON chuyển bạn sang trang sandbox."
+                              : "Quét mã QR bằng ứng dụng ngân hàng hoặc ví điện tử hỗ trợ VietQR."
                             : m.subtitle}
                         </p>
                         {active ? (
@@ -475,7 +482,9 @@ export function CheckoutView({
                 <p
                   className={`mt-3 rounded-xl border border-sky-100 bg-sky-50/80 px-3 py-2 ${SECTION_LEAD_CLASS} !text-sky-900`}
                 >
-                  Thanh toán qua VietQR. KEYON không lưu thông tin thanh toán của bạn.
+                  {sepayMode === "payment_gateway"
+                    ? "Sandbox đang bật. Bước tiếp theo mở cổng SePay để thanh toán thử, không tạo QR chuyển khoản production."
+                    : "Thanh toán qua VietQR. KEYON không lưu thông tin thanh toán của bạn."}
                 </p>
               ) : null}
 
@@ -494,7 +503,9 @@ export function CheckoutView({
                 Tiếp tục →
               </button>
               <p className={`mt-2 text-center ${CARD_META_CLASS}`}>
-                {cms.continueCtaHint}
+                {sepayMode === "payment_gateway"
+                  ? "Bước tiếp theo: cổng thanh toán SePay sandbox"
+                  : cms.continueCtaHint}
               </p>
             </section>
 

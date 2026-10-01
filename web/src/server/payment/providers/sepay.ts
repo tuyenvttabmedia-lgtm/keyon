@@ -53,13 +53,7 @@ export const sepayPaymentProvider: PaymentProvider = {
         : JSON.stringify(body);
 
     if (sepay.mode === "payment_gateway") {
-      const hmacHeader =
-        input.headers["x-sepay-signature"] ??
-        input.headers["X-SePay-Signature"] ??
-        input.headers["X-Sepay-Signature"];
-      if (!hmacHeader) {
-        return verifyPgIpn(input.headers, body, sepay.ipnSecretKey);
-      }
+      return verifyPgIpn(input.headers, body, sepay.ipnSecretKey);
     }
     return verifyBankWebhook(input.headers, body, rawBody, sepay);
   },
@@ -202,8 +196,7 @@ async function verifyBankWebhook(
 ): Promise<VerifyWebhookResult> {
   const hmacSecret = sepay.webhookSecret;
   const apiKey = sepay.apiKey;
-  const productionBank =
-    sepay.environment === "production" || process.env.NODE_ENV === "production";
+  const productionBank = sepay.environment === "production";
 
   if (productionBank) {
     if (!hmacSecret) {
