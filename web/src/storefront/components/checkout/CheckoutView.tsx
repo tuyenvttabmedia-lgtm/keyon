@@ -86,7 +86,7 @@ export function formatCheckoutVnd(n: number) {
   return `${n.toLocaleString("vi-VN")}đ`;
 }
 
-function planHeading(item: CheckoutItemInfo) {
+export function planHeading(item: CheckoutItemInfo) {
   return item.variantName.replace(/\s*·\s*.+$/u, "").trim() || item.productName;
 }
 
@@ -109,7 +109,7 @@ export function termLabel(item: CheckoutItemInfo) {
   return null;
 }
 
-function termQtyLine(item: CheckoutItemInfo) {
+export function termQtyLine(item: CheckoutItemInfo) {
   return [termLabel(item), `×${item.quantity}`].filter(Boolean).join(" · ");
 }
 
