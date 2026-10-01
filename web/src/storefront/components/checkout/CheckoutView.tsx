@@ -22,7 +22,6 @@ import {
   INPUT_TEXT_CLASS,
   LINK_ACCENT_CLASS,
   MONO_VALUE_CLASS,
-  PDP_TITLE_CLASS,
   SECTION_LEAD_CLASS,
   SUBSECTION_TITLE_CLASS,
   SUMMARY_TOTAL_CLASS,
@@ -33,7 +32,7 @@ import {
   OPACITY_DISABLED,
   TRANSITION_UI,
 } from "@/storefront/effects";
-import { isPlaceholderHotline } from "@/storefront/components/support/shared";
+import { LICENSE_TERM_LABELS, type LicenseTermCode } from "@/storefront/lib/license-catalog";
 
 export type CheckoutOrderInfo = {
   id: string;
@@ -55,6 +54,7 @@ export type CheckoutItemInfo = {
   receiveLabel: string;
   deliveryLabel: string;
   fulfillmentInstant: boolean;
+  licenseTerm: string | null;
 };
 
 export type CheckoutViewProps = {
@@ -65,7 +65,7 @@ export type CheckoutViewProps = {
 };
 
 const STEPS = [
-  { id: 1, label: "Xác nhận đơn hàng" },
+  { id: 1, label: "Đơn hàng" },
   { id: 2, label: "Thanh toán" },
   { id: 3, label: "Xác nhận" },
   { id: 4, label: "Hoàn tất" },
@@ -84,6 +84,33 @@ const TRUST_ICONS = [
 
 export function formatCheckoutVnd(n: number) {
   return `${n.toLocaleString("vi-VN")}đ`;
+}
+
+function planHeading(item: CheckoutItemInfo) {
+  return item.variantName.replace(/\s*·\s*.+$/u, "").trim() || item.productName;
+}
+
+function planCaption(item: CheckoutItemInfo) {
+  const heading = planHeading(item);
+  const product = item.productName.trim();
+  if (heading.toLowerCase().startsWith(product.toLowerCase())) {
+    const rest = heading.slice(product.length).trim();
+    return rest ? `${product} · ${rest}` : product;
+  }
+  return product ? `${product} · ${heading}` : heading;
+}
+
+export function termLabel(item: CheckoutItemInfo) {
+  const code = item.licenseTerm;
+  if (code === "PERPETUAL") return "Vĩnh viễn";
+  if (code && code in LICENSE_TERM_LABELS) {
+    return LICENSE_TERM_LABELS[code as LicenseTermCode];
+  }
+  return null;
+}
+
+function termQtyLine(item: CheckoutItemInfo) {
+  return [termLabel(item), `×${item.quantity}`].filter(Boolean).join(" · ");
 }
 
 export function checkoutMoney(
@@ -121,12 +148,14 @@ export function CheckoutStepper({ current }: { current: number }) {
               )}
               <span
                 className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${BADGE_CLASS} ${
-                  done || active
-                    ? "bg-accent text-white"
-                    : "bg-border text-muted"
+                  active
+                    ? "bg-accent text-white ring-2 ring-accent/30 ring-offset-2"
+                    : done
+                      ? "bg-accent text-white"
+                      : "bg-border text-muted"
                 }`}
               >
-                {done ? "✓" : s.id}
+                {done ? "✓" : String(s.id).padStart(2, "0")}
               </span>
               {i < STEPS.length - 1 ? (
                 <span
@@ -138,7 +167,7 @@ export function CheckoutStepper({ current }: { current: number }) {
             </div>
             <span
               className={`text-center leading-tight ${BADGE_CLASS} ${
-                active || done ? "text-navy" : "text-muted"
+                active ? "font-semibold text-navy" : done ? "text-navy" : "text-muted"
               }`}
             >
               {s.label}
@@ -174,20 +203,14 @@ export function CheckoutSummaryAside({
                   src={item.imageUrl}
                   alt=""
                   fill
-                  className="object-cover"
+                  className="object-contain p-0.5"
                   sizes="56px"
                 />
               ) : null}
             </div>
             <div className="min-w-0">
-              <p className={`truncate ${CARD_TITLE_CLASS}`}>{item.productName}</p>
-              <p className={CARD_META_CLASS}>
-                {item.variantName} · x{item.quantity}
-              </p>
-              <p className={`mt-0.5 ${CARD_META_CLASS}`}>
-                {item.deliveryLabel}
-                {item.fulfillmentInstant ? " · 1–5 phút" : ""}
-              </p>
+              <p className={`truncate ${CARD_TITLE_CLASS}`}>{planHeading(item)}</p>
+              <p className={CARD_META_CLASS}>{termQtyLine(item)}</p>
             </div>
           </div>
         ) : null}
@@ -208,11 +231,11 @@ export function CheckoutSummaryAside({
             </div>
           ) : null}
           <div className="flex justify-between gap-3">
-            <dt>{cms.vatLabel}</dt>
-            <dd className={`${INLINE_PRICE_CLASS} !text-navy`}>0đ</dd>
+            <dt>VAT</dt>
+            <dd className={CARD_META_CLASS}>Đã bao gồm</dd>
           </div>
           <div className="flex justify-between gap-3">
-            <dt>{cms.feeLabel}</dt>
+            <dt>Phí thanh toán</dt>
             <dd className={INLINE_PRICE_CLASS}>{cms.feeValue}</dd>
           </div>
           <div className="flex items-end justify-between gap-3 border-t border-border pt-3">
@@ -230,45 +253,44 @@ export function CheckoutSummaryAside({
       </section>
 
       <section className={CARD}>
-        <h2 className={SUBSECTION_TITLE_CLASS}>{cms.whyTitle}</h2>
-        <ul className="mt-3 grid grid-cols-2 gap-3">
-          {cms.whyItems.map((w) => (
-            <li key={w.id} className="rounded-xl bg-surface/80 px-3 py-2.5">
-              <p className={CARD_TITLE_CLASS}>{w.title}</p>
-              <p className={`mt-0.5 ${CARD_META_CLASS}`}>{w.description}</p>
-            </li>
-          ))}
+        <h2 className={SUBSECTION_TITLE_CLASS}>Thanh toán an tâm</h2>
+        <ul className={`mt-3 space-y-1.5 ${CARD_META_CLASS}`}>
+          <li>✓ Bản quyền chính hãng</li>
+          <li>✓ Thanh toán an toàn</li>
+          <li>✓ Hỗ trợ tiếng Việt</li>
         </ul>
       </section>
 
       <section className={CARD}>
         <h2 className={SUBSECTION_TITLE_CLASS}>{cms.supportTitle}</h2>
-        <div className={`mt-3 flex flex-col gap-2 ${SECTION_LEAD_CLASS}`}>
+        <p className={`mt-2 ${CARD_META_CLASS}`}>
+          Cần hỗ trợ về đơn hàng hoặc thanh toán?
+        </p>
+        <div className={`mt-2 flex flex-col gap-1.5 ${SECTION_LEAD_CLASS}`}>
           <Link href={cms.supportLiveChatHref} className={LINK_ACCENT_CLASS}>
             {cms.supportLiveChatLabel}
           </Link>
           <a href={`mailto:${supportEmail}`} className={LINK_ACCENT_CLASS}>
-            {cms.supportEmailLabel}: {supportEmail}
+            {supportEmail}
           </a>
-          {cms.supportPhone.trim() && !isPlaceholderHotline(cms.supportPhone) ? (
-            <a
-              href={`tel:${cms.supportPhone.replace(/\s/g, "")}`}
-              className={CTA_PRIMARY}
-            >
-              {cms.supportPhone}
-            </a>
-          ) : null}
         </div>
       </section>
     </aside>
   );
 }
 
-export function CheckoutTrustBar({ cms }: { cms: CmsCheckout }) {
+const CHECKOUT_TRUST = [
+  { id: "t1", label: "Bản quyền chính hãng", sub: "Nguồn cung rõ ràng" },
+  { id: "t2", label: "Giao license đúng gói", sub: "Sau khi thanh toán" },
+  { id: "t3", label: "Thanh toán an toàn", sub: "VietQR" },
+  { id: "t4", label: "Hỗ trợ tiếng Việt", sub: "Trong giờ làm việc" },
+] as const;
+
+export function CheckoutTrustBar() {
   return (
     <div className="mt-4 border-t border-border bg-white">
       <ul className="home-container grid grid-cols-2 gap-5 py-6 md:grid-cols-4 md:gap-6">
-        {cms.trustBar.map((t, i) => {
+        {CHECKOUT_TRUST.map((t, i) => {
           const Icon = TRUST_ICONS[i] ?? IconShieldCheck;
           return (
             <li
@@ -348,15 +370,15 @@ export function CheckoutView({
           <div className="space-y-5">
             {item ? (
               <section className={CARD}>
-                <div className="flex gap-4">
-                  <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-surface sm:h-24 sm:w-24">
+                <div className="flex gap-3">
+                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-white">
                     {item.imageUrl ? (
                       <Image
                         src={item.imageUrl}
                         alt=""
                         fill
-                        className="object-cover"
-                        sizes="96px"
+                        className="object-contain p-1"
+                        sizes="64px"
                       />
                     ) : (
                       <div
@@ -367,43 +389,23 @@ export function CheckoutView({
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-start justify-between gap-2">
-                      <div>
-                        <h1 className={PDP_TITLE_CLASS}>
-                          {item.productName}
-                          {item.variantName ? ` – ${item.variantName}` : ""}
-                        </h1>
-                        <p className={`mt-1 ${CARD_META_CLASS}`}>
-                          Hình thức: {item.variantName} · Loại nhận:{" "}
-                          {item.receiveLabel}
-                        </p>
-                      </div>
-                      <span
-                        className={`inline-flex rounded-full bg-emerald-50 px-2.5 py-1 ${BADGE_CLASS} font-semibold text-emerald-700`}
-                      >
-                        {cms.warrantyBadge}
-                      </span>
-                    </div>
-                    <div className="mt-3 flex flex-wrap items-end gap-3">
-                      <p className={INLINE_PRICE_CLASS}>
-                        {formatCheckoutVnd(item.unitPriceVnd)}
-                      </p>
-                      <p className={CARD_META_CLASS}>Số lượng: {item.quantity}</p>
-                      <p className={`ml-auto ${CARD_META_CLASS}`}>
-                        Đơn{" "}
-                        <span className={MONO_VALUE_CLASS}>{order.code}</span>
-                      </p>
-                    </div>
+                    <h1 className={CARD_TITLE_CLASS}>{planHeading(item)}</h1>
+                    <p className={`mt-0.5 ${CARD_META_CLASS}`}>{termQtyLine(item)}</p>
+                    <p className={`mt-1 ${INLINE_PRICE_CLASS}`}>
+                      {formatCheckoutVnd(item.unitPriceVnd)}
+                    </p>
                   </div>
                 </div>
+                <p className={`mt-3 ${CARD_META_CLASS}`}>{planCaption(item)}</p>
+                <p className={`mt-0.5 ${CARD_META_CLASS}`}>Giao license sau khi thanh toán</p>
+                <p className={`mt-2 ${CARD_META_CLASS}`}>
+                  Mã đơn: <span className={MONO_VALUE_CLASS}>{order.code}</span>
+                </p>
               </section>
             ) : null}
 
             <section className={CARD}>
-              <div className="flex flex-wrap items-end justify-between gap-2">
-                <h2 className={SUBSECTION_TITLE_CLASS}>Thông tin nhận license</h2>
-                <span className={CARD_META_CLASS}>{cms.emailHelp}</span>
-              </div>
+              <h2 className={SUBSECTION_TITLE_CLASS}>Email nhận license</h2>
               <input
                 type="email"
                 readOnly
@@ -411,6 +413,9 @@ export function CheckoutView({
                 className={`mt-3 w-full rounded-xl border border-border bg-surface/60 px-3.5 py-2.5 ${INPUT_TEXT_CLASS} outline-none ${TRANSITION_UI} focus:border-accent`}
                 aria-label="Email nhận license"
               />
+              <p className={`mt-2 ${CARD_META_CLASS}`}>
+                Thông tin kích hoạt sẽ được gửi đến email này sau khi thanh toán.
+              </p>
             </section>
 
             <section className={CARD}>
@@ -442,8 +447,19 @@ export function CheckoutView({
                             {m.badge}
                           </span>
                         ) : null}
-                        <p className={`pr-14 ${CARD_TITLE_CLASS}`}>{m.title}</p>
-                        <p className={`mt-1 ${CARD_META_CLASS}`}>{m.subtitle}</p>
+                        <p className={`pr-14 ${CARD_TITLE_CLASS}`}>
+                          {m.title}
+                          {m.provider === "sepay_qr" ? (
+                            <span className={`ml-2 font-semibold text-emerald-700 ${BADGE_CLASS}`}>
+                              Miễn phí
+                            </span>
+                          ) : null}
+                        </p>
+                        <p className={`mt-1 ${CARD_META_CLASS}`}>
+                          {m.provider === "sepay_qr"
+                            ? "Quét mã QR bằng ứng dụng ngân hàng hoặc ví điện tử hỗ trợ VietQR."
+                            : m.subtitle}
+                        </p>
                         {active ? (
                           <span className="absolute bottom-2 right-2 text-accent" aria-hidden>
                             ✓
@@ -455,12 +471,13 @@ export function CheckoutView({
                 </div>
               )}
 
-              <p
-                className={`mt-3 rounded-xl border border-sky-100 bg-sky-50/80 px-3 py-2 ${SECTION_LEAD_CLASS} !text-sky-900`}
-              >
-                KEYON không lưu thông tin thẻ. Thanh toán qua cổng đối tác / chuyển khoản được cấu
-                hình.
-              </p>
+              {method?.provider === "sepay_qr" ? (
+                <p
+                  className={`mt-3 rounded-xl border border-sky-100 bg-sky-50/80 px-3 py-2 ${SECTION_LEAD_CLASS} !text-sky-900`}
+                >
+                  Thanh toán qua VietQR. KEYON không lưu thông tin thanh toán của bạn.
+                </p>
+              ) : null}
 
               {method && method.provider === "coming_soon" ? (
                 <p className="mt-3 rounded-xl border border-amber-100 bg-amber-50 px-3 py-2.5 text-sm text-amber-900">
@@ -474,7 +491,7 @@ export function CheckoutView({
                 onClick={continuePay}
                 className={`mt-5 ${CTA_PRIMARY}`}
               >
-                {cms.continueCtaLabel}
+                Tiếp tục →
               </button>
               <p className={`mt-2 text-center ${CARD_META_CLASS}`}>
                 {cms.continueCtaHint}
@@ -497,7 +514,7 @@ export function CheckoutView({
         </div>
       </div>
 
-      <CheckoutTrustBar cms={cms} />
+      <CheckoutTrustBar />
     </div>
   );
 }

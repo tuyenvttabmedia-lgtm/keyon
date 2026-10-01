@@ -154,6 +154,7 @@ export default async function CheckoutSuccessPage({
               receiveLabel: receive?.label ?? "—",
               deliveryLabel: delivery ?? "—",
               fulfillmentInstant: line.variant.fulfillmentStrategy === "INSTANT",
+              licenseTerm: line.variant.licenseTerm,
             }
           : null
       }

@@ -121,6 +121,7 @@ export async function loadCheckoutContext(orderId: string): Promise<LoadedChecko
             receiveLabel: receive?.label ?? "—",
             deliveryLabel: delivery ?? "—",
             fulfillmentInstant: line.variant.fulfillmentStrategy === "INSTANT",
+            licenseTerm: line.variant.licenseTerm,
           }
         : null,
   };

@@ -37,6 +37,7 @@ import {
   CheckoutStepper,
   checkoutMoney,
   formatCheckoutVnd,
+  termLabel,
   type CheckoutItemInfo,
   type CheckoutOrderInfo,
 } from "./CheckoutView";
@@ -185,7 +186,7 @@ export function CheckoutConfirmView({
                     <span
                       className={`rounded-lg bg-surface px-2.5 py-1 ${BADGE_CLASS} font-semibold text-navy`}
                     >
-                      {cms.warrantyBadge}
+                      {termLabel(item) ? `Thời hạn: ${termLabel(item)}` : `×${item.quantity}`}
                     </span>
                   </div>
                 </div>
@@ -217,8 +218,8 @@ export function CheckoutConfirmView({
                 </div>
               ) : null}
               <div className="flex justify-between gap-3">
-                <dt>{cms.vatLabel}</dt>
-                <dd className={`${INLINE_PRICE_CLASS} !text-navy`}>0đ</dd>
+                <dt>VAT</dt>
+                <dd className={CARD_META_CLASS}>Đã bao gồm</dd>
               </div>
               <div className="flex items-end justify-between gap-3 border-t border-border pt-3">
                 <div>
@@ -251,7 +252,7 @@ export function CheckoutConfirmView({
                 <dd className={SUMMARY_TOTAL_CLASS}>{payLabel}</dd>
               </div>
               <div className="flex justify-between gap-3">
-                <dt className={SECTION_LEAD_CLASS}>{cms.feeLabel}</dt>
+                <dt className={SECTION_LEAD_CLASS}>Phí thanh toán</dt>
                 <dd className={INLINE_PRICE_CLASS}>{cms.feeValue}</dd>
               </div>
               {payment.expiresAt ? (

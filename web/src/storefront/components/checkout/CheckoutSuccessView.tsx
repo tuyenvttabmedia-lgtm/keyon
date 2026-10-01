@@ -43,6 +43,7 @@ import {
   CheckoutStepper,
   checkoutMoney,
   formatCheckoutVnd,
+  termLabel,
   type CheckoutItemInfo,
   type CheckoutOrderInfo,
 } from "./CheckoutView";
@@ -192,7 +193,7 @@ export function CheckoutSuccessView({
                       <li>Phiên bản: {item.productName}</li>
                       <li>Hình thức: {item.variantName}</li>
                       <li>Số lượng: {item.quantity}</li>
-                      <li>{cms.warrantyBadge}</li>
+                      {termLabel(item) ? <li>Thời hạn: {termLabel(item)}</li> : null}
                     </ul>
                   </div>
                 </div>
@@ -295,8 +296,8 @@ export function CheckoutSuccessView({
                   </div>
                 ) : null}
                 <div className="flex justify-between gap-3">
-                  <dt>{cms.vatLabel}</dt>
-                  <dd className={`${INLINE_PRICE_CLASS} !text-navy`}>0đ</dd>
+                  <dt>VAT</dt>
+                  <dd className={CARD_META_CLASS}>Đã bao gồm</dd>
                 </div>
                 <div className="flex items-end justify-between gap-3 border-t border-border pt-3">
                   <dt className={CARD_TITLE_CLASS}>Tổng thanh toán</dt>
