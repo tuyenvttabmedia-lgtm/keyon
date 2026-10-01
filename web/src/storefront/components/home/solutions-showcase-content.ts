@@ -126,8 +126,8 @@ export const HOME_SOLUTION_SHOWCASE: Record<
     ],
   },
   "license-management": {
-    tabLabel: "License Management",
-    panelKicker: "License Management",
+    tabLabel: "Quản lý license",
+    panelKicker: "Quản lý license",
     headline: "Theo dõi license đã mua trên Tài khoản",
     lead: "License đã mua nằm trong Tài khoản KEYON — thời hạn sử dụng, nhắc gia hạn và hỗ trợ tiếng Việt.",
     checks: [

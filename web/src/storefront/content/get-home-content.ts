@@ -63,7 +63,20 @@ const RETIRED_HERO_TITLES = [
 const RETIRED_HERO_SUBTITLES = [
   "Mua license chính hãng, nhận đúng loại (key / tài khoản / kích hoạt) và theo dõi trong Tài khoản. Hỗ trợ tiếng Việt — báo giá khi cần quy mô lớn.",
   "Mua, triển khai và quản lý bản quyền phần mềm, cloud và dịch vụ số trên một nền tảng duy nhất. Dành cho cá nhân, đội nhóm và doanh nghiệp.",
+  "Mua, triển khai và quản lý software license, subscription, cloud và hạ tầng số trên một nền tảng — từ giao license đến gia hạn và hỗ trợ.",
 ];
+
+const RETIRED_WHY_SUBTITLES = [
+  "Bàn giao số, quản lý license tập trung và hỗ trợ doanh nghiệp trên cùng một nền tảng.",
+];
+
+const RETIRED_CTA_SUBTITLES = [
+  "KEYON hỗ trợ doanh nghiệp lựa chọn, mua, triển khai và quản lý software license, subscription, cloud và hạ tầng số.",
+];
+
+const RETIRED_CTA_LABELS = ["Gửi yêu cầu tư vấn →"];
+
+const RETIRED_BANNER_TITLES = ["Mua bản quyền chính hãng"];
 
 /**
  * Home content: fixture + overlay CMS (hero, nav, footer, news, categories, ratings, why banner).
@@ -200,9 +213,7 @@ async function loadHomeContent(): Promise<HomeContent> {
       return rest;
     });
 
-  const shopCards = mapProductsToShopCards(
-    catalogRows.filter((p) => p.variants.length > 0).slice(0, 8),
-  );
+  const shopCards = mapProductsToShopCards(pickFeaturedRows(catalogRows));
   const rowById = new Map(catalogRows.map((row) => [row.id, row]));
   const featuredFromCatalog: FeaturedProduct[] = shopCards.map((c) => {
     const gal = c.imageUrl;
@@ -258,9 +269,17 @@ async function loadHomeContent(): Promise<HomeContent> {
   const why = {
     ...homeFixture.why,
     title: cmsHome.whyTitle || homeFixture.why.title,
-    subtitle: cmsHome.whySubtitle || homeFixture.why.subtitle,
+    subtitle: cmsTextOrFallback(
+      cmsHome.whySubtitle,
+      homeFixture.why.subtitle,
+      RETIRED_WHY_SUBTITLES,
+    ),
     sideBanner: {
-      title: banner.title,
+      title: cmsTextOrFallback(
+        banner.title,
+        "Mua và quản lý bản quyền",
+        RETIRED_BANNER_TITLES,
+      ),
       ctaLabel: banner.ctaLabel,
       ctaHref: banner.ctaHref,
       imageUrl: banner.imageUrl,
@@ -280,8 +299,13 @@ async function loadHomeContent(): Promise<HomeContent> {
     subtitle: cmsTextOrFallback(
       cmsHome.ctaSubtitle,
       homeFixture.ctaBanner.subtitle,
+      RETIRED_CTA_SUBTITLES,
     ),
-    ctaLabel: cmsHome.ctaLabel || homeFixture.ctaBanner.ctaLabel,
+    ctaLabel: cmsTextOrFallback(
+      cmsHome.ctaLabel,
+      homeFixture.ctaBanner.ctaLabel,
+      RETIRED_CTA_LABELS,
+    ),
     ctaHref: cmsHome.ctaHref || homeFixture.ctaBanner.ctaHref,
   };
 
@@ -447,7 +471,7 @@ async function loadHomeContent(): Promise<HomeContent> {
   };
 }
 
-const getHomeContentCached = unstable_cache(loadHomeContent, ["storefront-home-content-v4"], {
+const getHomeContentCached = unstable_cache(loadHomeContent, ["storefront-home-content-v5"], {
   revalidate: 60,
 });
 
@@ -620,6 +644,89 @@ function sanitizeFooterColumns(
       };
     })
     .filter((col) => col.links.length > 0 || col.title.trim().length > 0);
+}
+
+const FEATURED_BUCKETS = [
+  "office",
+  "windows",
+  "security",
+  "backup",
+  "cloud",
+  "adobe",
+  "autodesk",
+] as const;
+
+function featuredBucket(row: {
+  categoryKey: string | null;
+  name: string;
+  brand: { name: string };
+}): string {
+  if (
+    row.categoryKey &&
+    (FEATURED_BUCKETS as readonly string[]).includes(row.categoryKey)
+  ) {
+    return row.categoryKey;
+  }
+  return inferCategory(row.brand.name, row.name);
+}
+
+function featuredTieBreak(bucket: string, name: string): number {
+  const n = name.toLowerCase();
+  if (bucket === "office") return /365/.test(n) ? 0 : 1;
+  if (bucket === "windows") {
+    if (n === "windows 11 pro") return 0;
+    if (n.includes("windows 11 pro") && !n.includes("workstation")) return 1;
+    if (n.includes("home")) return 2;
+    return 3;
+  }
+  if (bucket === "cloud") {
+    if (n.includes("vps linux")) return 0;
+    if (n.includes("vps windows")) return 1;
+    if (n.includes("dedicated")) return 2;
+    return 3;
+  }
+  return 0;
+}
+
+/** One product per ecosystem bucket, Microsoft first, then security, backup, cloud. */
+function pickFeaturedRows<
+  T extends {
+    categoryKey: string | null;
+    name: string;
+    brand: { name: string };
+    variants: unknown[];
+  },
+>(rows: T[]): T[] {
+  const eligible = rows.filter((p) => p.variants.length > 0);
+  const buckets = new Map<string, T[]>();
+  for (const row of eligible) {
+    const key = featuredBucket(row);
+    const list = buckets.get(key) ?? [];
+    list.push(row);
+    buckets.set(key, list);
+  }
+  const picked: T[] = [];
+  const used = new Set<T>();
+  for (const bucket of FEATURED_BUCKETS) {
+    const list = (buckets.get(bucket) ?? [])
+      .slice()
+      .sort(
+        (a, b) =>
+          featuredTieBreak(bucket, a.name) - featuredTieBreak(bucket, b.name) ||
+          a.name.localeCompare(b.name, "vi"),
+      );
+    const first = list[0];
+    if (!first) continue;
+    picked.push(first);
+    used.add(first);
+    if (picked.length >= 5) return picked;
+  }
+  for (const row of eligible) {
+    if (picked.length >= 5) break;
+    if (used.has(row)) continue;
+    picked.push(row);
+  }
+  return picked;
 }
 
 const HOME_CATEGORY_RANK: Record<string, number> = {

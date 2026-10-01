@@ -21,23 +21,23 @@ export const homeFixture: HomeContent = {
     badge: "DIGITAL LICENSE PLATFORM",
     title: "Nền tảng phân phối bản quyền số cho phần mềm và cloud",
     subtitle:
-      "Mua, triển khai và quản lý software license, subscription, cloud và hạ tầng số trên một nền tảng — từ giao license đến gia hạn và hỗ trợ.",
+      "Mua, triển khai và quản lý license, subscription, cloud và hạ tầng số trên một nền tảng — dành cho cá nhân, doanh nghiệp và đội ngũ IT.",
     ctaLabel: "Khám phá sản phẩm →",
     ctaHref: "/products",
-    secondaryCtaLabel: "Dành cho doanh nghiệp →",
+    secondaryCtaLabel: "Giải pháp doanh nghiệp →",
     secondaryCtaHref: "/business",
     trustItems: [
       {
-        title: "Bản quyền chính hãng",
-        description: "Nguồn cung rõ ràng, hóa đơn đầy đủ.",
+        title: "Nguồn cung rõ ràng",
+        description: "License từ nhà cung cấp hoặc đối tác phân phối phù hợp.",
       },
       {
-        title: "Giao theo từng gói",
-        description: "Key / tài khoản / kích hoạt sau khi nhận tiền — xem ghi chú SKU.",
+        title: "Giao license đúng gói",
+        description: "Nội dung bàn giao rõ theo từng sản phẩm.",
       },
       {
         title: "Hỗ trợ kích hoạt",
-        description: "Ticket trong Tài khoản khi gặp sự cố.",
+        description: "Hỗ trợ tiếng Việt trong quá trình sử dụng.",
       },
     ],
   },
@@ -122,26 +122,24 @@ export const homeFixture: HomeContent = {
       {
         id: "h1",
         title: "Chọn sản phẩm",
-        description:
-          "Chọn license, subscription hoặc dịch vụ phù hợp nhu cầu.",
+        description: "Chọn license, subscription hoặc dịch vụ phù hợp.",
       },
       {
         id: "h2",
         title: "Đặt hàng & thanh toán",
         description:
-          "Thanh toán trực tuyến hoặc yêu cầu báo giá cho nhu cầu doanh nghiệp.",
+          "Thanh toán trực tuyến hoặc gửi yêu cầu dành cho doanh nghiệp.",
       },
       {
         id: "h3",
         title: "Nhận & kích hoạt",
-        description:
-          "License hoặc thông tin dịch vụ được bàn giao theo từng sản phẩm.",
+        description: "Nhận license hoặc thông tin dịch vụ và thực hiện kích hoạt.",
       },
       {
         id: "h4",
         title: "Quản lý & gia hạn",
         description:
-          "Theo dõi license, đơn hàng, subscription và gia hạn trong Tài khoản.",
+          "Theo dõi license, đơn hàng, subscription và thời hạn trong Tài khoản.",
       },
     ],
   },
@@ -157,7 +155,7 @@ export const homeFixture: HomeContent = {
     visible: true,
     title: "Vì sao chọn KEYON?",
     subtitle:
-      "Bàn giao số, quản lý license tập trung và hỗ trợ doanh nghiệp trên cùng một nền tảng.",
+      "Từ mua license đến quản lý, gia hạn và hỗ trợ — KEYON giúp doanh nghiệp kiểm soát toàn bộ vòng đời bản quyền trên một nền tảng.",
     ctaLabel: "Tìm hiểu thêm →",
     ctaHref: "/about",
     items: [
@@ -308,8 +306,8 @@ export const homeFixture: HomeContent = {
     visible: true,
     title: "Cần giải pháp license cho doanh nghiệp?",
     subtitle:
-      "KEYON hỗ trợ doanh nghiệp lựa chọn, mua, triển khai và quản lý software license, subscription, cloud và hạ tầng số.",
-    ctaLabel: "Gửi yêu cầu tư vấn →",
+      "KEYON hỗ trợ doanh nghiệp lựa chọn, triển khai và quản lý license, subscription, cloud và hạ tầng số theo nhu cầu.",
+    ctaLabel: "Nhận tư vấn doanh nghiệp →",
     ctaHref: "/contact/quote",
   },
   footer: {

@@ -1,7 +1,7 @@
 import type { HomeContent } from "@/storefront/content/types";
 import { HowItWorksJourney } from "@/storefront/components/support/HowItWorksJourney";
 
-/** Home — 3-step journey (owner mockup: header + stepper + equal cards). */
+/** Home — four-step license lifecycle. */
 export function HowItWorksSection({ data }: { data: HomeContent["howItWorks"] }) {
   if (!data.visible) return null;
 

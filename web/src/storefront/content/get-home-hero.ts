@@ -4,10 +4,20 @@ import { defaultCmsHome, readJsonFile } from "@/server/cms/store";
 import { homeFixture } from "./home.fixture";
 import type { HomeHero } from "./types";
 
-function cmsTextOrFallback(value: string | undefined, fallback: string): string {
+function cmsTextOrFallback(
+  value: string | undefined,
+  fallback: string,
+  stale: readonly string[] = [],
+): string {
   const v = value?.trim() ?? "";
-  return v || fallback;
+  if (!v || stale.includes(v)) return fallback;
+  return v;
 }
+
+const RETIRED_HERO_SUBTITLES = [
+  "Mua, triển khai và quản lý software license, subscription, cloud và hạ tầng số trên một nền tảng — từ giao license đến gia hạn và hỗ trợ.",
+  "Mua, triển khai và quản lý bản quyền phần mềm, cloud và dịch vụ số trên một nền tảng duy nhất. Dành cho cá nhân, đội nhóm và doanh nghiệp.",
+];
 
 async function loadHomeHero(): Promise<HomeHero> {
   const cmsHome = await readJsonFile("home.json", defaultCmsHome);
@@ -15,14 +25,18 @@ async function loadHomeHero(): Promise<HomeHero> {
     ...homeFixture.hero,
     title: cmsTextOrFallback(cmsHome.heroTitle, homeFixture.hero.title),
     titleAccent: cmsHome.heroTitleAccent?.trim() || undefined,
-    subtitle: cmsTextOrFallback(cmsHome.heroSubtitle, homeFixture.hero.subtitle),
+    subtitle: cmsTextOrFallback(
+      cmsHome.heroSubtitle,
+      homeFixture.hero.subtitle,
+      RETIRED_HERO_SUBTITLES,
+    ),
     ctaLabel: cmsHome.heroCta || homeFixture.hero.ctaLabel,
     ctaHref: cmsHome.heroCtaHref || homeFixture.hero.ctaHref,
     visible: cmsHome.published,
   };
 }
 
-const getHomeHeroCached = unstable_cache(loadHomeHero, ["storefront-home-hero-v1"], {
+const getHomeHeroCached = unstable_cache(loadHomeHero, ["storefront-home-hero-v2"], {
   revalidate: 60,
 });
 

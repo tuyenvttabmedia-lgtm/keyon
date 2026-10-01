@@ -19,21 +19,21 @@ const FAQ_NEXT: Record<string, { href: string; label: string }> = {
     href: "/how-it-works",
     label: "Cách KEYON hoạt động",
   },
-  "Bao lâu sau khi thanh toán tôi nhận được license?": {
-    href: "/how-it-works",
-    label: "Cách nhận bàn giao",
-  },
-  "License của tôi không hoạt động thì phải làm gì?": {
-    href: "/support",
-    label: "Trung tâm hỗ trợ",
-  },
-  "Doanh nghiệp có thể mua license số lượng lớn không?": {
-    href: "/contact/quote",
-    label: "Yêu cầu báo giá",
+  "Tôi có thể quản lý license của doanh nghiệp tập trung không?": {
+    href: "/solutions/license-management",
+    label: "Quản lý license",
   },
   "Tôi có thể gia hạn license trước khi hết hạn không?": {
     href: "/business/subscriptions",
     label: "Subscription và gia hạn",
+  },
+  "Doanh nghiệp có thể mua license số lượng lớn không?": {
+    href: "/business/volume-licensing",
+    label: "Volume Licensing",
+  },
+  "KEYON có hỗ trợ triển khai license cho nhiều nhân viên không?": {
+    href: "/business/implementation",
+    label: "Dịch vụ triển khai",
   },
 };
 

@@ -409,7 +409,7 @@ export type CmsCategories = {
 };
 
 export const defaultCmsBanner: CmsBanner = {
-  title: "Mua bản quyền chính hãng",
+  title: "Mua và quản lý bản quyền",
   ctaLabel: "Xem sản phẩm",
   ctaHref: "/products",
   imageUrl: "",
@@ -1281,7 +1281,7 @@ export const defaultCmsHome: CmsHome = {
   heroTitle: "Nền tảng phân phối bản quyền số cho phần mềm và cloud",
   heroTitleAccent: "",
   heroSubtitle:
-    "Mua, triển khai và quản lý software license, subscription, cloud và hạ tầng số trên một nền tảng — từ giao license đến gia hạn và hỗ trợ.",
+    "Mua, triển khai và quản lý license, subscription, cloud và hạ tầng số trên một nền tảng — dành cho cá nhân, doanh nghiệp và đội ngũ IT.",
   heroCta: "Khám phá sản phẩm →",
   heroCtaHref: "/products",
   whyTitle: "",

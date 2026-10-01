@@ -167,7 +167,7 @@ export const SOLUTION_TOPICS: {
   },
   {
     id: "license-management",
-    label: "License Management",
+    label: "Quản lý license",
     href: "/solutions/license-management",
     description: "Theo dõi license đã mua, thời hạn sử dụng và gia hạn trong Tài khoản KEYON.",
     art: "stack",
