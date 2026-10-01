@@ -89,7 +89,7 @@ export function TrustPartnersSection({
     <section className={`bg-white pb-5 pt-4 md:pb-6 md:pt-5 lg:pt-6 ${className}`}>
       <div className="home-container">
         <HomeSectionHeading
-          title={data.title || "Nền tảng & thương hiệu phần mềm"}
+          title={data.title || "Hệ sinh thái sản phẩm & thương hiệu"}
           variant="centered"
         />
 

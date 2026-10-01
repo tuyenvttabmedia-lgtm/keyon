@@ -42,7 +42,7 @@ export const homeFixture: HomeContent = {
     ],
   },
   partners: {
-    title: "Nền tảng & thương hiệu phần mềm",
+    title: "Hệ sinh thái sản phẩm & thương hiệu",
     subtitle:
       "Các nền tảng phần mềm, bảo mật, cloud và hạ tầng KEYON hỗ trợ phân phối và triển khai.",
     badges: ["Bản quyền chính hãng", "Thanh toán rõ ràng"],

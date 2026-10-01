@@ -85,6 +85,11 @@ const RETIRED_CTA_LABELS = ["Gửi yêu cầu tư vấn →"];
 
 const RETIRED_BANNER_TITLES = ["Mua bản quyền chính hãng"];
 
+const RETIRED_PARTNER_TITLES = [
+  "Hệ sinh thái công nghệ",
+  "Nền tảng & thương hiệu phần mềm",
+];
+
 /**
  * Home content: fixture + overlay CMS (hero, nav, footer, news, partners, categories, ratings, why banner).
  * Partner logos are unique catalog brands, in sort order — the carousel does not clone them.
@@ -374,8 +379,8 @@ async function loadHomeContent(): Promise<HomeContent> {
     partners: {
       title: cmsTextOrFallback(
         partners.title,
-        "Nền tảng & thương hiệu phần mềm",
-        ["Hệ sinh thái công nghệ"],
+        homeFixture.partners.title,
+        RETIRED_PARTNER_TITLES,
       ),
       badges: [],
       items: partnerItems,
@@ -507,7 +512,7 @@ async function loadHomeContent(): Promise<HomeContent> {
   };
 }
 
-const getHomeContentCached = unstable_cache(loadHomeContent, ["storefront-home-content-v7"], {
+const getHomeContentCached = unstable_cache(loadHomeContent, ["storefront-home-content-v8"], {
   revalidate: 60,
 });
 

@@ -13,12 +13,12 @@ import { TrustPartnersLazy } from "./TrustPartnersLazy";
 export function HomeBelowFold({ content }: { content: HomeContent }) {
   return (
     <>
-      <TrustPartnersLazy data={content.partners} className="hidden lg:block" />
       <CategoriesSection data={content.categories} />
       <SolutionsSection data={content.solutions} />
       <FeaturedSection data={content.featured} />
       <HowItWorksSection data={content.howItWorks} />
       <WhyKeyonSection data={content.why} />
+      <TrustPartnersLazy data={content.partners} />
       <NewsSection data={content.news} />
       {content.faqHome ? <FaqHomeSection data={content.faqHome} /> : null}
       <CtaBannerSection data={content.ctaBanner} />

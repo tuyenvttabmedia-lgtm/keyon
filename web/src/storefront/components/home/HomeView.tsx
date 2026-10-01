@@ -21,12 +21,12 @@ export function HomeView({
   return (
     <>
       <HeroSection hero={content.hero} stats={heroStats} />
-      <TrustPartnersSection data={content.partners} />
       <CategoriesSection data={content.categories} />
       <SolutionsSection data={content.solutions} />
       <FeaturedSection data={content.featured} />
       <HowItWorksSection data={content.howItWorks} />
       <WhyKeyonSection data={content.why} />
+      <TrustPartnersSection data={content.partners} />
       <NewsSection data={content.news} />
       {content.faqHome ? <FaqHomeSection data={content.faqHome} /> : null}
       <CtaBannerSection data={content.ctaBanner} />

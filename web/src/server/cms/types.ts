@@ -621,7 +621,7 @@ export const defaultCmsNav: CmsNav = {
 };
 
 export const defaultCmsPartners: CmsPartners = {
-  title: "Nền tảng & thương hiệu phần mềm",
+  title: "Hệ sinh thái sản phẩm & thương hiệu",
   badges: ["Bản quyền chính hãng", "Thanh toán rõ ràng"],
   /** Empty by default — admin picks Catalog brands. Legacy name-only rows still resolve by name. */
   items: [],
