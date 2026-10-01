@@ -1198,7 +1198,7 @@ export function SettingsForm({
             ) : (
               <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block text-sm">
-                  <span className="font-medium text-navy">Số tài khoản</span>
+                  <span className="font-medium text-navy">Số tài khoản / VA</span>
                   <input
                     className="mt-1 w-full rounded-lg border border-border px-3 py-2"
                     value={payment.sepay.accountNumber}
@@ -1211,33 +1211,24 @@ export function SettingsForm({
                   />
                 </label>
                 <label className="block text-sm">
-                  <span className="font-medium text-navy">Bank BIN</span>
+                  <span className="font-medium text-navy">Mã ngân hàng</span>
                   <input
                     className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-                    placeholder="970436"
-                    value={payment.sepay.bankBin}
-                    onChange={(e) =>
-                      setPayment({
-                        ...payment,
-                        sepay: { ...payment.sepay, bankBin: e.target.value },
-                      })
-                    }
-                  />
-                </label>
-                <label className="block text-sm">
-                  <span className="font-medium text-navy">Tên ngân hàng (hiển thị)</span>
-                  <input
-                    className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+                    placeholder="MB"
                     value={payment.sepay.bankDisplayName}
                     onChange={(e) =>
                       setPayment({
                         ...payment,
-                        sepay: { ...payment.sepay, bankDisplayName: e.target.value },
+                        sepay: {
+                          ...payment.sepay,
+                          bankDisplayName: e.target.value,
+                          bankName: e.target.value,
+                        },
                       })
                     }
                   />
                 </label>
-                <label className="block text-sm">
+                <label className="block text-sm sm:col-span-2">
                   <span className="font-medium text-navy">Tên chủ TK</span>
                   <input
                     className="mt-1 w-full rounded-lg border border-border px-3 py-2"
@@ -1250,8 +1241,8 @@ export function SettingsForm({
                     }
                   />
                 </label>
-                <label className="block text-sm">
-                  <span className="font-medium text-navy">HMAC webhook secret (whsec_…)</span>
+                <label className="block text-sm sm:col-span-2">
+                  <span className="font-medium text-navy">HMAC webhook secret</span>
                   <input
                     type="password"
                     autoComplete="new-password"
@@ -1265,19 +1256,6 @@ export function SettingsForm({
                     onChange={(e) => setWebhookSecret(e.target.value)}
                   />
                 </label>
-                <label className="block text-sm">
-                  <span className="font-medium text-navy">API key (fallback)</span>
-                  <input
-                    type="password"
-                    autoComplete="new-password"
-                    className="mt-1 w-full rounded-lg border border-border px-3 py-2"
-                    placeholder={
-                      payment.sepay.apiKeyConfigured ? "Đã lưu — nhập để thay" : "Tuỳ chọn"
-                    }
-                    value={apiKey}
-                    onChange={(e) => setApiKey(e.target.value)}
-                  />
-                </label>
                 <div className="sm:col-span-2 space-y-2 rounded-xl border border-accent/30 bg-accent-soft/40 p-4 text-sm">
                   <p className="font-semibold text-navy">Webhook bank (production)</p>
                   <p className="break-all rounded-md border border-border bg-white px-2 py-1.5 font-mono text-xs text-navy">
@@ -1286,7 +1264,7 @@ export function SettingsForm({
                   <ul className="list-inside list-disc text-xs text-navy">
                     <li>SePay → Webhooks → Bảo mật: HMAC-SHA256</li>
                     <li>Loại sự kiện: Tiền vào</li>
-                    <li>Secret whsec_… khớp field HMAC bên trên</li>
+                    <li>Secret Key HMAC khớp ô phía trên</li>
                   </ul>
                 </div>
               </div>

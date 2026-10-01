@@ -75,9 +75,18 @@ export async function PUT(req: Request) {
             { status: 400 },
           );
         }
-      } else if (!parsed.sepay.accountNumber.trim() || !parsed.sepay.bankBin.trim()) {
+      } else if (!parsed.sepay.accountNumber.trim()) {
         return NextResponse.json(
-          { error: "Production bank webhook cần số tài khoản và bank BIN" },
+          { error: "Production cần số tài khoản hoặc số VA" },
+          { status: 400 },
+        );
+      } else if (
+        !parsed.sepay.bankDisplayName?.trim() &&
+        !parsed.sepay.bankName?.trim() &&
+        !parsed.sepay.bankBin.trim()
+      ) {
+        return NextResponse.json(
+          { error: "Production cần mã ngân hàng để tạo QR, ví dụ MB" },
           { status: 400 },
         );
       }

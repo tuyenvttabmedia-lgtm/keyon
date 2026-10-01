@@ -115,17 +115,16 @@ async function createBankQr(
   sepay: Awaited<ReturnType<typeof resolvePayment>>["sepay"],
 ): Promise<CreatePaymentResult> {
   const account = sepay.accountNumber;
-  const bankBin = sepay.bankBin;
-  if (!account || !bankBin) {
+  const bank = sepay.bankBin || sepay.bankName || sepay.bankDisplayName;
+  if (!account || !bank) {
     throw new AppError(
-      "SePay production chưa cấu hình (cần số TK + bank BIN — Admin → Cài đặt → SePay)",
+      "SePay production chưa cấu hình (cần số VA và mã ngân hàng — Admin → Cài đặt → SePay)",
       501,
       "PAYMENT_NOT_CONFIGURED",
     );
   }
 
   const template = sepay.qrTemplate || "compact2";
-  const bank = bankBin || sepay.bankName;
   const qrImageUrl = `https://qr.sepay.vn/img?${new URLSearchParams({
     acc: account,
     bank,
@@ -144,7 +143,7 @@ async function createBankQr(
     raw: {
       integrationMode: "bank_webhook",
       accountNumber: account,
-      bankBin,
+      bankBin: sepay.bankBin || bank,
       accountName: sepay.accountName,
       bankDisplayName: sepay.bankDisplayName,
       content: input.paymentReference,

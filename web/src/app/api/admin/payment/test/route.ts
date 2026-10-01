@@ -67,23 +67,33 @@ export async function POST() {
     }
 
     // production bank webhook
-    if (!sepay.accountNumber || !sepay.bankBin) {
+    const bank = sepay.bankBin || sepay.bankName || sepay.bankDisplayName;
+    if (!sepay.accountNumber || !bank) {
       return NextResponse.json(
         {
           ok: false,
-          error: "Production bank thiếu số TK hoặc bank BIN (Admin hoặc ENV)",
+          error: "Production bank thiếu số VA hoặc mã ngân hàng (ví dụ MB)",
+        },
+        { status: 400 },
+      );
+    }
+    if (!sepay.webhookSecret) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: "Production cần HMAC webhook secret",
         },
         { status: 400 },
       );
     }
 
-    const authMode = sepay.webhookSecret
-      ? "hmac"
-      : sepay.apiKey
-        ? "api_key"
-        : "none";
-
-    const sampleQr = `https://img.vietqr.io/image/${sepay.bankBin}-${sepay.accountNumber}-${sepay.qrTemplate || "compact2"}.png?amount=1000&addInfo=KEYONTEST`;
+    const sampleQr = `https://qr.sepay.vn/img?${new URLSearchParams({
+      acc: sepay.accountNumber,
+      bank,
+      amount: "1000",
+      des: "DH00000000",
+      template: sepay.qrTemplate || "compact",
+    }).toString()}`;
 
     return NextResponse.json({
       ok: true,
@@ -92,15 +102,12 @@ export async function POST() {
       sepaySource: sepay.source,
       environment: sepay.environment,
       mode: sepay.mode,
-      authMode,
+      authMode: "hmac",
       accountNumber: sepay.accountNumber,
-      bankBin: sepay.bankBin,
+      bank,
       accountName: sepay.accountName,
       sampleQrUrl: sampleQr,
-      message:
-        authMode === "none"
-          ? "STK/BIN OK — chưa có HMAC webhook secret; production nên cấu hình whsec_…"
-          : `Bank webhook OK (auth: ${authMode})`,
+      message: "Bank webhook OK (HMAC-SHA256)",
     });
   } catch (e) {
     if (e && typeof e === "object" && "status" in e) {
