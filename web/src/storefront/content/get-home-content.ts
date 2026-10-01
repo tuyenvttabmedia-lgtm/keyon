@@ -9,6 +9,7 @@ import {
   defaultCmsFooter,
   defaultCmsHome,
   defaultCmsNav,
+  defaultCmsPartners,
   defaultCmsFaq,
   readJsonFile,
   type BlogPost,
@@ -17,6 +18,7 @@ import {
   type CmsCategoryIconKey,
   type CmsFooter,
   type CmsNav,
+  type CmsPartners,
 } from "@/server/cms/store";
 import { normalizeFaqDocument } from "@/server/cms/faq";
 import { normalizeCmsCategories } from "@/server/cms/home-categories";
@@ -42,6 +44,7 @@ import type {
   FeaturedProduct,
   FaqItem,
   FooterColumn,
+  PartnerItem,
 } from "./types";
 
 /** Prefer CMS text; empty or a retired Home positioning line → fixture. */
@@ -83,8 +86,8 @@ const RETIRED_CTA_LABELS = ["Gửi yêu cầu tư vấn →"];
 const RETIRED_BANNER_TITLES = ["Mua bản quyền chính hãng"];
 
 /**
- * Home content: fixture + overlay CMS (hero, nav, footer, news, categories, ratings, why banner).
- * Ecosystem row is a fixed label set — vendor logos are not looped on Home.
+ * Home content: fixture + overlay CMS (hero, nav, footer, news, partners, categories, ratings, why banner).
+ * Partner logos are unique catalog brands, in sort order — the carousel does not clone them.
  * React cache() = per-request dedupe; unstable_cache = cross-request ISR (60s).
  */
 async function loadHomeContent(): Promise<HomeContent> {
@@ -98,6 +101,8 @@ async function loadHomeContent(): Promise<HomeContent> {
     banner,
     catalogRows,
     faqRaw,
+    partners,
+    catalogBrands,
   ] = await Promise.all([
     readJsonFile("home.json", defaultCmsHome),
     readJsonFile<BlogPost[]>("blog.json", defaultBlog),
@@ -138,6 +143,19 @@ async function loadHomeContent(): Promise<HomeContent> {
       take: 16,
     }),
     readJsonFile("faq.json", defaultCmsFaq),
+    readJsonFile<CmsPartners>("partners.json", defaultCmsPartners),
+    prisma.brand.findMany({
+      where: { active: true },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        logoUrl: true,
+        featured: true,
+        sortOrder: true,
+      },
+      orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+    }),
   ]);
 
   const faqDoc = normalizeFaqDocument(faqRaw);
@@ -159,6 +177,13 @@ async function loadHomeContent(): Promise<HomeContent> {
       ? storage.wasabi.publicBaseUrl ||
         `${storage.wasabi.endpoint.replace(/\/$/, "")}/${storage.wasabi.bucket}`
       : "";
+
+  const partnerItems = resolvePartnerItems({
+    partners,
+    catalogBrands,
+    catalogRows,
+    mediaBase,
+  });
 
   const shopCounts: Record<ShopCategoryId, number> = {
     windows: 0,
@@ -347,11 +372,13 @@ async function loadHomeContent(): Promise<HomeContent> {
       visible: cmsHome.published,
     },
     partners: {
-      title: "Hệ sinh thái công nghệ",
-      subtitle:
-        "Các nền tảng phần mềm, bảo mật, cloud và hạ tầng KEYON hỗ trợ phân phối và triển khai.",
+      title: cmsTextOrFallback(
+        partners.title,
+        "Nền tảng & thương hiệu phần mềm",
+        ["Hệ sinh thái công nghệ"],
+      ),
       badges: [],
-      items: [],
+      items: partnerItems,
     },
     categories: {
       ...homeFixture.categories,
@@ -480,7 +507,7 @@ async function loadHomeContent(): Promise<HomeContent> {
   };
 }
 
-const getHomeContentCached = unstable_cache(loadHomeContent, ["storefront-home-content-v6"], {
+const getHomeContentCached = unstable_cache(loadHomeContent, ["storefront-home-content-v7"], {
   revalidate: 60,
 });
 
@@ -736,6 +763,94 @@ function pickFeaturedRows<
     picked.push(row);
   }
   return picked;
+}
+
+function resolvePartnerItems(input: {
+  partners: CmsPartners;
+  catalogBrands: Array<{
+    id: string;
+    name: string;
+    slug: string;
+    logoUrl: string | null;
+    featured: boolean;
+  }>;
+  catalogRows: Array<{ brand: { name: string } | null; variants: unknown[] }>;
+  mediaBase: string;
+}): PartnerItem[] {
+  const { partners, catalogBrands, catalogRows, mediaBase } = input;
+  const brandById = new Map(catalogBrands.map((b) => [b.id, b]));
+  const brandByName = new Map(
+    catalogBrands.map((b) => [b.name.trim().toLowerCase(), b] as const),
+  );
+  const resolvePartnerLogo = (url?: string | null) =>
+    url ? resolveMediaUrl(url, mediaBase) || url : undefined;
+  const cmsPartnerSource =
+    partners.items?.length > 0 ? partners.items : defaultCmsPartners.items;
+
+  let partnerItems: PartnerItem[] = cmsPartnerSource
+    .filter((p) => p.visible !== false)
+    .map((p): PartnerItem | null => {
+      const brand =
+        (p.brandId ? brandById.get(p.brandId) : undefined) ||
+        (p.name ? brandByName.get(p.name.trim().toLowerCase()) : undefined);
+      if (brand) {
+        return {
+          id: p.id,
+          name: brand.name,
+          logoUrl: resolvePartnerLogo(brand.logoUrl),
+          href: p.href?.trim() || `/brands/${brand.slug}`,
+          visible: true,
+        };
+      }
+      if (p.name) {
+        return {
+          id: p.id,
+          name: p.name,
+          logoUrl: resolvePartnerLogo(p.logoUrl),
+          brandColor: p.brandColor,
+          href: p.href,
+          visible: true,
+        };
+      }
+      return null;
+    })
+    .filter((p): p is PartnerItem => p !== null);
+
+  const sellableBrandNames = new Set<string>();
+  for (const row of catalogRows) {
+    const name = row.brand?.name?.trim().toLowerCase();
+    if (row.variants.length > 0 && name) sellableBrandNames.add(name);
+  }
+  partnerItems = partnerItems.filter((p) =>
+    sellableBrandNames.has(p.name.trim().toLowerCase()),
+  );
+
+  if (partnerItems.length === 0) {
+    partnerItems = catalogBrands
+      .filter((b) => b.featured && sellableBrandNames.has(b.name.trim().toLowerCase()))
+      .map((b) => ({
+        id: `brand_${b.id}`,
+        name: b.name,
+        logoUrl: resolvePartnerLogo(b.logoUrl),
+        href: `/brands/${b.slug}`,
+        visible: true,
+      }));
+  }
+
+  if (partnerItems.length === 0) {
+    partnerItems = homeFixture.partners.items.filter(
+      (p) =>
+        p.visible !== false && sellableBrandNames.has(p.name.trim().toLowerCase()),
+    );
+  }
+
+  const seen = new Set<string>();
+  return partnerItems.filter((p) => {
+    const key = p.name.trim().toLowerCase();
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 const HOME_CATEGORY_RANK: Record<string, number> = {
