@@ -492,9 +492,11 @@ function licenseTitleParts(item: CheckoutItemInfo): { title: string; sub: string
   const term = termLabel(item);
   if (variant.toLowerCase().startsWith(product.toLowerCase())) {
     const rest = variant.slice(product.length).replace(/^[\s–—-]+/u, "").trim();
+    const termAlreadyInName =
+      Boolean(term) && rest.toLowerCase().includes(term!.toLowerCase());
     return {
       title: product,
-      sub: [rest, term].filter(Boolean).join(" · "),
+      sub: [rest, termAlreadyInName ? "" : term].filter(Boolean).join(" · "),
     };
   }
   return {
