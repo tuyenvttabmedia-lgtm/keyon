@@ -9,6 +9,13 @@ import {
 } from "@/server/cms/store";
 import { CheckoutSuccessView } from "@/storefront/components/checkout/CheckoutSuccessView";
 import type { ShopProduct } from "@/storefront/components/shop/types";
+import {
+  activationGuide,
+  licenseModelLabel,
+  quantityLabel,
+  successPhase,
+} from "@/storefront/lib/checkout-success-state";
+import { parseOfferingProfile } from "@/storefront/lib/offering-profile";
 import { mergeCheckoutCms } from "@/storefront/lib/checkout-cms";
 import {
   deliveryPromiseLabel,
@@ -34,7 +41,7 @@ export default async function CheckoutSuccessPage({
           include: {
             variant: { include: { product: { include: { brand: true } } } },
             deliveries: { orderBy: { createdAt: "desc" }, take: 1 },
-            fulfillmentJobs: { take: 1 },
+            fulfillmentJobs: { orderBy: { createdAt: "desc" }, take: 1 },
           },
         },
         payments: { orderBy: { createdAt: "desc" }, take: 1 },
@@ -121,6 +128,29 @@ export default async function CheckoutSuccessPage({
   const orderDetailHref = isLoggedIn
     ? `/account/orders/${order.id}`
     : `/login?next=${encodeURIComponent(`/account/orders/${order.id}`)}`;
+  const successReturnHref = `/login?next=${encodeURIComponent(`/checkout/${order.id}/success`)}`;
+  const profile = parseOfferingProfile(product?.offeringProfile);
+  const phase = successPhase({
+    hasDelivery: Boolean(deliveryRow),
+    strategy: line?.variant.fulfillmentStrategy ?? null,
+    jobStatus: line?.fulfillmentJobs[0]?.status ?? null,
+  });
+  const guide = line && product
+    ? activationGuide({
+        productName: product.name,
+        brandName: product.brand.name,
+        variantName: line.variant.name,
+        categoryKey: product.categoryKey,
+        offeringProfile: product.offeringProfile,
+        usageGuideHtml: product.usageGuideHtml,
+      })
+    : { title: "Hướng dẫn sử dụng", steps: [] as string[] };
+  const licenseHref =
+    phase === "ready"
+      ? licenseAccess === "ok"
+        ? "#license-cua-ban"
+        : successReturnHref
+      : orderDetailHref;
 
   return (
     <CheckoutSuccessView
@@ -133,6 +163,15 @@ export default async function CheckoutSuccessPage({
       licensePlain={licensePlain}
       licenseAccess={licenseAccess}
       recommended={recommended}
+      fulfillment={{
+        phase,
+        modelLabel: licenseModelLabel(line?.variant.licenseModel ?? null),
+        qtyLabel: line ? quantityLabel(line.quantity, profile) : "1 gói",
+        guideTitle: guide.title,
+        guideSteps: guide.steps,
+        guideHref: product ? `/products/${product.slug}` : "/products",
+        licenseHref,
+      }}
       order={{
         id: order.id,
         code: order.code,

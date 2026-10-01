@@ -43,11 +43,17 @@ import {
   CheckoutStepper,
   checkoutMoney,
   formatCheckoutVnd,
+  planHeading,
   termLabel,
   type CheckoutItemInfo,
   type CheckoutOrderInfo,
 } from "./CheckoutView";
 import { LicenseKeyReveal } from "./LicenseKeyReveal";
+import {
+  successLead,
+  successStatus,
+  type SuccessPhase,
+} from "@/storefront/lib/checkout-success-state";
 
 const CARD = `rounded-2xl border border-border bg-white p-5 ${ELEVATION_NONE} sm:p-6`;
 
@@ -62,6 +68,30 @@ const BTN_PRIMARY = `inline-flex h-11 items-center justify-center rounded-xl bg-
 
 const BTN_SECONDARY = `inline-flex h-11 items-center justify-center rounded-xl border border-border bg-white px-5 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} ${HOVER_OUTLINE_FILL}`;
 
+const SUCCESS_TRUST = [
+  { id: "t1", label: "Bản quyền chính hãng", sub: "Nguồn cung rõ ràng" },
+  { id: "t2", label: "Giao license rõ ràng", sub: "Xem ghi chú giao hàng trên từng sản phẩm." },
+  { id: "t3", label: "Thanh toán rõ ràng", sub: "VietQR / chuyển khoản" },
+  { id: "t4", label: "Hỗ trợ tiếng Việt", sub: "Trong giờ làm việc" },
+] as const;
+
+const STATUS_TONE = {
+  ready: "border-emerald-100 bg-emerald-50 text-emerald-900",
+  wait: "border-sky-100 bg-sky-50 text-sky-900",
+  hold: "border-amber-100 bg-amber-50 text-amber-900",
+  fail: "border-amber-100 bg-amber-50 text-amber-900",
+} as const;
+
+export type CheckoutSuccessFulfillment = {
+  phase: SuccessPhase;
+  modelLabel: string;
+  qtyLabel: string;
+  guideTitle: string;
+  guideSteps: string[];
+  guideHref: string;
+  licenseHref: string;
+};
+
 export type CheckoutSuccessViewProps = {
   cms: CmsCheckout;
   order: CheckoutOrderInfo;
@@ -73,6 +103,7 @@ export type CheckoutSuccessViewProps = {
   orderDetailHref: string;
   licensePlain: string | null;
   licenseAccess?: "ok" | "login" | "pending";
+  fulfillment: CheckoutSuccessFulfillment;
   recommended: ShopProduct[];
 };
 
@@ -87,9 +118,14 @@ export function CheckoutSuccessView({
   orderDetailHref,
   licensePlain,
   licenseAccess = "pending",
+  fulfillment,
   recommended,
 }: CheckoutSuccessViewProps) {
   const money = checkoutMoney(item, order.totalVnd);
+  const lead = successLead(order.code, fulfillment.phase, paid);
+  const status = successStatus(fulfillment.phase, paid);
+  const licenseReady = paid && fulfillment.phase === "ready";
+  const licenseTitle = item ? licenseTitleParts(item) : null;
   const discountPct =
     money.listTotal && money.discount > 0
       ? Math.round((money.discount / money.listTotal) * 100)
@@ -129,34 +165,52 @@ export function CheckoutSuccessView({
                   </span>
                 </div>
                 <div className="min-w-0 flex-1 text-center sm:text-left">
-                  <h1 className={SECTION_TITLE_CLASS}>{cms.successTitle}</h1>
-                  <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>{cms.successLead}</p>
+                  <h1 className={SECTION_TITLE_CLASS}>
+                    {paid ? "Thanh toán thành công!" : "Đơn hàng chưa thanh toán"}
+                  </h1>
+                  <p className={`mt-2 ${SECTION_LEAD_CLASS}`}>{lead}</p>
                 </div>
               </div>
 
               <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                <MetaCell
-                  label={cms.successOrderCodeLabel}
-                  value={`#${order.code}`}
-                />
-                <MetaCell label={cms.successTimeLabel} value={paidAtLabel} />
-                <MetaCell label={cms.successMethodLabel} value={methodTitle} />
+                <MetaCell label="Mã đơn hàng" value={`#${order.code}`} />
+                <MetaCell label="Thời gian" value={paidAtLabel} />
+                <MetaCell label="Thanh toán" value={methodTitle} />
               </div>
 
               <div className="mt-6 flex flex-col gap-2.5 sm:flex-row">
-                <Link href={orderDetailHref} className={BTN_PRIMARY}>
-                  {cms.successViewOrderCta}
-                </Link>
-                <Link href="/" className={BTN_SECONDARY}>
-                  {cms.successHomeCta}
-                </Link>
+                {licenseReady ? (
+                  <a href={fulfillment.licenseHref} className={BTN_PRIMARY}>
+                    Xem license & kích hoạt →
+                  </a>
+                ) : (
+                  <Link href={orderDetailHref} className={BTN_PRIMARY}>
+                    Theo dõi đơn hàng →
+                  </Link>
+                )}
+                {licenseReady ? (
+                  <Link href={orderDetailHref} className={BTN_SECONDARY}>
+                    Xem chi tiết đơn hàng
+                  </Link>
+                ) : (
+                  <Link href="/products" className={BTN_SECONDARY}>
+                    Tiếp tục mua sắm
+                  </Link>
+                )}
               </div>
+              {licenseReady ? (
+                <p className="mt-3 text-center sm:text-left">
+                  <Link href="/products" className={LINK_ACCENT_CLASS}>
+                    Tiếp tục mua sắm →
+                  </Link>
+                </p>
+              ) : null}
             </section>
 
             {/* License */}
-            <section className={CARD}>
-              <h2 className={SUBSECTION_TITLE_CLASS}>{cms.licenseSectionTitle}</h2>
-              {item ? (
+            <section id="license-cua-ban" className={CARD}>
+              <h2 className={SUBSECTION_TITLE_CLASS}>License của bạn</h2>
+              {item && licenseTitle ? (
                 <div className="mt-4 flex gap-3">
                   <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-surface">
                     {item.imageUrl ? (
@@ -164,7 +218,7 @@ export function CheckoutSuccessView({
                         src={item.imageUrl}
                         alt=""
                         fill
-                        className="object-cover"
+                        className="object-contain p-1"
                         sizes="64px"
                       />
                     ) : (
@@ -176,28 +230,35 @@ export function CheckoutSuccessView({
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-start gap-2">
-                      <p className={CARD_TITLE_CLASS}>
-                        {item.productName}
-                        {item.variantName ? ` – ${item.variantName}` : ""}
-                      </p>
-                      {licensePlain && licenseAccess === "ok" ? (
-                        <span
-                          className={`rounded-full bg-accent-soft px-2.5 py-0.5 ${BADGE_CLASS} text-accent`}
-                        >
-                          {cms.licenseReadyBadge}
-                        </span>
-                      ) : null}
-                    </div>
-                    <ul className={`mt-2 space-y-0.5 ${CARD_META_CLASS}`}>
-                      <li>Phiên bản: {item.productName}</li>
-                      <li>Hình thức: {item.variantName}</li>
-                      <li>Số lượng: {item.quantity}</li>
-                      {termLabel(item) ? <li>Thời hạn: {termLabel(item)}</li> : null}
+                    <p className={CARD_TITLE_CLASS}>{licenseTitle.title}</p>
+                    {licenseTitle.sub ? (
+                      <p className={`mt-0.5 ${CARD_META_CLASS}`}>{licenseTitle.sub}</p>
+                    ) : null}
+                    <ul className={`mt-2 flex flex-wrap gap-x-3 gap-y-1 ${CARD_META_CLASS}`}>
+                      <li>{fulfillment.modelLabel}</li>
+                      <li>{fulfillment.qtyLabel}</li>
+                      {termLabel(item) ? <li>{termLabel(item)}</li> : null}
                     </ul>
                   </div>
                 </div>
               ) : null}
+
+              <div className={`mt-5 rounded-xl border px-3.5 py-3 ${STATUS_TONE[status.tone]}`}>
+                <p className={CARD_TITLE_CLASS}>
+                  {status.tone === "ready" ? "✓ " : ""}
+                  {status.badge}
+                </p>
+                <p className="mt-1 text-sm leading-relaxed">{status.detail}</p>
+                {!licenseReady ? (
+                  <Link href={orderDetailHref} className={`mt-3 inline-flex ${LINK_ACCENT_CLASS}`}>
+                    Theo dõi đơn hàng →
+                  </Link>
+                ) : licenseAccess !== "ok" ? (
+                  <a href={fulfillment.licenseHref} className={`mt-3 inline-flex ${LINK_ACCENT_CLASS}`}>
+                    Xem license →
+                  </a>
+                ) : null}
+              </div>
 
               <div className="mt-5">
                 {licensePlain && licenseAccess === "ok" ? (
@@ -208,41 +269,38 @@ export function CheckoutSuccessView({
                     hideLabel={cms.licenseHideLabel}
                     copyLabel={cms.licenseCopyLabel}
                   />
-                ) : licenseAccess === "login" ? (
+                ) : licenseAccess === "login" && licenseReady ? (
                   <p className={`rounded-xl border border-border bg-surface px-3.5 py-3 ${BODY_MUTED_CLASS}`}>
-                    License không hiện trên trang này khi chưa đăng nhập.{" "}
-                    <Link href={orderDetailHref} className={LINK_ACCENT_CLASS}>
-                      Đăng nhập bằng email trên đơn
-                    </Link>{" "}
-                    để lấy key trong Tài khoản / Tài sản.
+                    Đăng nhập bằng email trên đơn để xem license.{" "}
+                    <a href={fulfillment.licenseHref} className={LINK_ACCENT_CLASS}>
+                      Đăng nhập
+                    </a>
                   </p>
-                ) : (
-                  <p className="rounded-xl border border-amber-100 bg-amber-50 px-3.5 py-3 text-sm text-amber-900">
-                    {cms.licensePendingNote}
-                  </p>
-                )}
+                ) : null}
               </div>
 
-              <div className="mt-5 border-t border-border pt-4">
-                <h3 className={CARD_TITLE_CLASS}>{cms.activationStepsTitle}</h3>
-                <ol className={`mt-3 space-y-2 ${SECTION_LEAD_CLASS}`}>
-                  {cms.activationSteps.map((s, i) => (
-                    <li key={s.id} className="flex gap-2.5">
-                      <span
-                        className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-soft ${FONT_DISPLAY} ${BADGE_CLASS} text-accent`}
-                      >
-                        {i + 1}
-                      </span>
-                      <span>{s.text}</span>
-                    </li>
-                  ))}
-                </ol>
-                <div className="mt-4 flex justify-end">
-                  <Link href={cms.activationGuideHref} className={BTN_SECONDARY}>
-                    {cms.activationGuideCta} →
-                  </Link>
+              {fulfillment.guideSteps.length > 0 ? (
+                <div className="mt-5 border-t border-border pt-4">
+                  <h3 className={CARD_TITLE_CLASS}>{fulfillment.guideTitle}</h3>
+                  <ol className={`mt-3 space-y-2 ${SECTION_LEAD_CLASS}`}>
+                    {fulfillment.guideSteps.map((step, i) => (
+                      <li key={`${i}-${step.slice(0, 24)}`} className="flex gap-2.5">
+                        <span
+                          className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-soft ${FONT_DISPLAY} ${BADGE_CLASS} text-accent`}
+                        >
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span>{step}</span>
+                      </li>
+                    ))}
+                  </ol>
+                  <div className="mt-4 flex justify-end">
+                    <Link href={fulfillment.guideHref} className={LINK_ACCENT_CLASS}>
+                      Xem hướng dẫn chi tiết →
+                    </Link>
+                  </div>
                 </div>
-              </div>
+              ) : null}
             </section>
           </div>
 
@@ -305,22 +363,33 @@ export function CheckoutSuccessView({
                 </div>
               </dl>
 
-              <p
-                className={`mt-4 flex items-center justify-center gap-2 rounded-xl bg-emerald-50 px-3 py-2.5 ${BADGE_CLASS} font-semibold text-emerald-800`}
-              >
-                <span aria-hidden>✓</span>
-                {cms.summaryPaidBanner}
-              </p>
+              {paid ? (
+                <p
+                  className={`mt-4 flex items-center justify-center gap-2 rounded-xl bg-emerald-50 px-3 py-2.5 ${BADGE_CLASS} font-semibold text-emerald-800`}
+                >
+                  <span aria-hidden>✓</span>
+                  Đã thanh toán
+                </p>
+              ) : null}
             </section>
 
             <section className={CARD}>
               <h2 className={SUBSECTION_TITLE_CLASS}>{cms.successSupportTitle}</h2>
               <ul className="mt-3 grid grid-cols-2 gap-2.5">
-                {cms.successSupportLinks.map((l) => (
+                {[
+                  { id: "h1", title: "Hướng dẫn kích hoạt", href: fulfillment.guideHref, primary: true },
+                  { id: "h2", title: "Liên hệ hỗ trợ", href: "/contact", primary: true },
+                  { id: "h3", title: "Gửi yêu cầu", href: "/account/tickets", primary: false },
+                  { id: "h4", title: "Trung tâm trợ giúp", href: "/faq", primary: false },
+                ].map((l) => (
                   <li key={l.id}>
                     <Link
                       href={l.href}
-                      className={`flex h-full min-h-[4.5rem] flex-col items-center justify-center rounded-xl border border-border bg-surface/60 px-2 py-3 text-center ${TRANSITION_UI} ${HOVER_OUTLINE_FILL}`}
+                      className={`flex h-full min-h-[4.5rem] flex-col items-center justify-center rounded-xl border px-2 py-3 text-center ${TRANSITION_UI} ${
+                        l.primary
+                          ? `border-accent/40 bg-accent-soft/50 ${HOVER_OUTLINE_FILL}`
+                          : `border-border bg-surface/60 ${HOVER_OUTLINE_FILL}`
+                      }`}
                     >
                       <span className={`${CTA_COMPACT_CLASS} leading-snug`}>
                         {l.title}
@@ -353,7 +422,7 @@ export function CheckoutSuccessView({
                   Xem lại, gửi lại và quản lý giấy phép đã nhận.
                 </p>
                 <Link href="/account/assets" className={`mt-4 ${BTN_PRIMARY} w-full`}>
-                  Vào License của tôi
+                  Quản lý license →
                 </Link>
               </section>
             )}
@@ -364,7 +433,7 @@ export function CheckoutSuccessView({
         {recommended.length > 0 ? (
           <section className="mt-10">
             <div className="flex flex-wrap items-end justify-between gap-3">
-              <h2 className={SUBSECTION_TITLE_CLASS}>{cms.recommendedTitle}</h2>
+              <h2 className={SUBSECTION_TITLE_CLASS}>Có thể bạn cũng quan tâm</h2>
               <Link href="/products" className={LINK_ACCENT_CLASS}>
                 {cms.recommendedViewAllLabel} →
               </Link>
@@ -382,7 +451,7 @@ export function CheckoutSuccessView({
 
       <div className="mt-6 border-t border-border bg-white">
         <ul className="home-container grid grid-cols-2 gap-5 py-6 md:grid-cols-4 md:gap-6">
-          {cms.trustBar.map((t, i) => {
+          {SUCCESS_TRUST.map((t, i) => {
             const Icon = SUCCESS_TRUST_ICONS[i] ?? IconShieldCheck;
             return (
               <li
@@ -403,6 +472,23 @@ export function CheckoutSuccessView({
       </div>
     </div>
   );
+}
+
+function licenseTitleParts(item: CheckoutItemInfo): { title: string; sub: string } {
+  const product = item.productName.trim();
+  const variant = item.variantName.trim();
+  const term = termLabel(item);
+  if (variant.toLowerCase().startsWith(product.toLowerCase())) {
+    const rest = variant.slice(product.length).replace(/^[\s–—-]+/u, "").trim();
+    return {
+      title: product,
+      sub: [rest, term].filter(Boolean).join(" · "),
+    };
+  }
+  return {
+    title: planHeading(item),
+    sub: [term].filter(Boolean).join(" · "),
+  };
 }
 
 function MetaCell({ label, value }: { label: string; value: string }) {
@@ -458,9 +544,9 @@ function SuccessRecoCard({ item }: { item: ShopProduct }) {
       </div>
       <Link
         href={item.href}
-        className={`mt-3 inline-flex h-10 w-full items-center justify-center rounded-xl bg-accent-soft ${CTA_COMPACT_CLASS} text-accent ${TRANSITION_UI} hover:bg-accent hover:text-white`}
+        className={`mt-3 inline-flex ${LINK_ACCENT_CLASS}`}
       >
-        Xem sản phẩm
+        Xem sản phẩm →
       </Link>
     </article>
   );
