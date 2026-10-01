@@ -21,6 +21,7 @@ import {
   CARD_META_CLASS,
   CARD_TITLE_CLASS,
   FIELD_CAPTION_CLASS,
+  FIELD_VALUE_CLASS,
   FONT_DISPLAY,
   INLINE_PRICE_CLASS,
   LINK_ACCENT_CLASS,
@@ -196,7 +197,7 @@ export function CheckoutConfirmView({
 
         <div className="mt-8 grid items-stretch gap-4 lg:grid-cols-2 lg:gap-5">
           {/* A — Order info */}
-          <section className={CARD}>
+          <section className={`${CARD} flex h-full flex-col`}>
             <h2 className={SUBSECTION_TITLE_CLASS}>{cms.orderInfoTitle}</h2>
             {item ? (
               <div className="mt-4 flex gap-3">
@@ -252,11 +253,46 @@ export function CheckoutConfirmView({
                 <dt>VAT</dt>
                 <dd className={CARD_META_CLASS}>Đã bao gồm</dd>
               </div>
+              <div className="flex justify-between gap-3">
+                <dt>Phí thanh toán</dt>
+                <dd className={INLINE_PRICE_CLASS}>{cms.feeValue}</dd>
+              </div>
               <div className="flex items-end justify-between gap-3 border-t border-border pt-3">
                 <dt className={CARD_TITLE_CLASS}>Tổng thanh toán</dt>
                 <dd className={SUMMARY_TOTAL_CLASS}>{payLabel}</dd>
               </div>
             </dl>
+
+            <div className="mt-5 border-t border-border pt-4">
+              <p className={FIELD_CAPTION_CLASS}>Nhận thông tin</p>
+              <dl className="mt-3 space-y-3">
+                <div>
+                  <dt className={FIELD_CAPTION_CLASS}>Mã đơn</dt>
+                  <dd className={`mt-0.5 ${MONO_VALUE_CLASS}`}>{order.code}</dd>
+                </div>
+                <div>
+                  <dt className={FIELD_CAPTION_CLASS}>Email nhận</dt>
+                  <dd className={`mt-0.5 break-all ${FIELD_VALUE_CLASS}`}>{order.email}</dd>
+                </div>
+                <div>
+                  <dt className={FIELD_CAPTION_CLASS}>Nội dung gửi</dt>
+                  <dd className={`mt-0.5 ${FIELD_VALUE_CLASS}`}>
+                    {item ? receiveLine(item) : "Thông tin kích hoạt"}
+                  </dd>
+                </div>
+                <div>
+                  <dt className={FIELD_CAPTION_CLASS}>Thời điểm</dt>
+                  <dd className={`mt-0.5 ${FIELD_VALUE_CLASS}`}>
+                    {item?.fulfillmentInstant
+                      ? "Ngay sau khi thanh toán được xác nhận"
+                      : "Sau khi KEYON xác nhận thanh toán"}
+                  </dd>
+                </div>
+              </dl>
+              <p className={`mt-3 ${CARD_META_CLASS}`}>
+                Thông tin được gửi tới email này và lưu trong đơn hàng của bạn.
+              </p>
+            </div>
           </section>
 
           {/* QR — focal point */}
@@ -423,6 +459,21 @@ export function CheckoutConfirmView({
       </div>
     </div>
   );
+}
+
+function receiveLine(item: CheckoutItemInfo): string {
+  switch (item.receiveLabel) {
+    case "Tài khoản":
+      return "Thông tin tài khoản";
+    case "Hồ sơ bàn giao":
+      return "Hồ sơ bàn giao";
+    case "Kích hoạt":
+      return "Thông tin kích hoạt";
+    case "Key":
+      return "Mã kích hoạt";
+    default:
+      return "Thông tin kích hoạt";
+  }
 }
 
 function ShieldMini() {
