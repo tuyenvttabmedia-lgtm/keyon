@@ -16,7 +16,12 @@ import {
   verifySepayHmacSignature,
   verifySepayPgIpnSecret,
 } from "./sepay-auth";
-import { isSepayPgIpnPayload, mapSepayPgIpn, parseVndAmount } from "./sepay-types";
+import {
+  extractSepayPaymentCode,
+  isSepayPgIpnPayload,
+  mapSepayPgIpn,
+  parseVndAmount,
+} from "./sepay-types";
 
 function appBaseUrl(): string {
   return (process.env.NEXT_PUBLIC_APP_URL ?? "https://keyon.vn").replace(/\/$/, "");
@@ -120,8 +125,14 @@ async function createBankQr(
   }
 
   const template = sepay.qrTemplate || "compact2";
-  const addInfo = encodeURIComponent(input.paymentReference);
-  const qrImageUrl = `https://img.vietqr.io/image/${bankBin}-${account}-${template}.png?amount=${input.amountVnd}&addInfo=${addInfo}`;
+  const bank = bankBin || sepay.bankName;
+  const qrImageUrl = `https://qr.sepay.vn/img?${new URLSearchParams({
+    acc: account,
+    bank,
+    amount: String(input.amountVnd),
+    des: input.paymentReference,
+    template,
+  }).toString()}`;
   const amount = input.amountVnd.toLocaleString("vi-VN");
 
   return {
@@ -226,9 +237,10 @@ async function verifyBankWebhook(
   delete data._rawBody;
 
   const transferType = String(data.transferType ?? data.transfer_type ?? "in");
-  const code = String(data.code ?? data.content ?? "").trim();
-  const paymentReference =
-    code || String(data.referenceCode ?? data.reference_code ?? "").trim();
+  const paymentReference = extractSepayPaymentCode({
+    code: data.code,
+    content: data.content,
+  });
 
   if (!paymentReference) {
     throw new AppError("SePay payload missing payment code", 400, "SEPAY_PAYLOAD");

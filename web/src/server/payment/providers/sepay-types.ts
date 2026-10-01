@@ -1,4 +1,29 @@
+import { randomInt } from "crypto";
 import { parseVndAmount } from "../amount";
+
+/**
+ * Company payment-code pattern on SePay (prefix DH, suffix 6–8 digits).
+ * The Keyon webhook only delivers transfers whose `code` starts with DH.
+ * @see https://developer.sepay.vn/vi/sepay-webhooks/cau-hinh-ma-thanh-toan
+ */
+export function generateSepayPaymentCode(): string {
+  const suffix = String(randomInt(0, 100_000_000)).padStart(8, "0");
+  return `DH${suffix}`;
+}
+
+/** SePay field `code`, or the same token inside raw transfer content. */
+export function extractSepayPaymentCode(input: {
+  code?: unknown;
+  content?: unknown;
+}): string {
+  const code = String(input.code ?? "").trim();
+  if (/^DH\d{6,8}$/i.test(code)) return code.toUpperCase();
+  const content = String(input.content ?? "");
+  const found = content.match(/\b(DH\d{6,8})\b/i);
+  if (found) return found[1]!.toUpperCase();
+  if (code && !/\s/.test(code)) return code;
+  return "";
+}
 
 export { parseVndAmount };
 

@@ -1123,7 +1123,7 @@ export function SettingsForm({
                 </option>
               </select>
               <span className="mt-1 block text-xs text-muted">
-                KEYON chỉ dùng một phương thức theo môi trường (giống CardOn tách mode).
+                Production là chuyển khoản + webhook HMAC. Nội dung CK là mã DH và 8 số, đúng bộ lọc webhook SePay. Sandbox là cổng thanh toán PG, không tách VA.
               </span>
             </label>
 
@@ -1259,7 +1259,7 @@ export function SettingsForm({
                     placeholder={
                       payment.sepay.webhookSecretConfigured
                         ? "Đã lưu — nhập để thay"
-                        : "whsec_…"
+                        : "Secret Key HMAC trên SePay"
                     }
                     value={webhookSecret}
                     onChange={(e) => setWebhookSecret(e.target.value)}

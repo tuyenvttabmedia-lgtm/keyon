@@ -123,7 +123,10 @@ async function p1() {
     amountVnd: 50_000,
     paymentReference: "pay_TEST_QR",
   });
-  if (r.qrImageUrl?.includes("vietqr") && r.qrImageUrl.includes("pay_TEST_QR")) {
+  if (
+    r.qrImageUrl?.includes("pay_TEST_QR") &&
+    (r.qrImageUrl.includes("qr.sepay.vn") || r.qrImageUrl.includes("vietqr"))
+  ) {
     pass("1", `QR created — ${r.qrImageUrl.slice(0, 60)}…`);
   } else if (r.integrationMode === "payment_gateway" && r.checkoutUrl) {
     pass("1", "Sandbox PG checkout (QR when environment=production)");

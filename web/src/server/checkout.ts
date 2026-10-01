@@ -8,11 +8,30 @@ import { childLogger } from "@/lib/logger";
 import { randomBytes } from "crypto";
 import { variantAllowsCheckout } from "@/lib/variant-checkout";
 import { resolveSupplierApi } from "@/server/supplier/config";
+import { resolvePayment } from "@/server/payment/config";
+import { generateSepayPaymentCode } from "@/server/payment/providers/sepay-types";
 
 const log = childLogger("checkout");
 
 function eid() {
   return randomBytes(12).toString("base64url");
+}
+
+/** Bank webhook path uses a SePay DH code. PG sandbox keeps the legacy pay_ ref. */
+async function allocatePaymentReference(orderCode: string): Promise<string> {
+  const resolved = await resolvePayment();
+  if (resolved.provider !== "sepay" || resolved.sepay.mode !== "bank_webhook") {
+    return `pay_${orderCode}_${Date.now()}`;
+  }
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const candidate = generateSepayPaymentCode();
+    const existing = await prisma.payment.findUnique({
+      where: { paymentReference: candidate },
+      select: { id: true },
+    });
+    if (!existing) return candidate;
+  }
+  throw new AppError("Không tạo được mã thanh toán", 500, "PAYMENT_CODE");
 }
 
 export async function createCheckoutOrder(input: {
@@ -62,7 +81,7 @@ export async function createCheckoutOrder(input: {
 
   const totalVnd = variant.priceVnd * qty;
   const code = await nextOrderCode();
-  const paymentReference = `pay_${code}_${Date.now()}`;
+  const paymentReference = await allocatePaymentReference(code);
   const ttlMs = Number(process.env.PAYMENT_EXPIRE_MS ?? 15 * 60 * 1000);
   const expiresAt = new Date(Date.now() + ttlMs);
 

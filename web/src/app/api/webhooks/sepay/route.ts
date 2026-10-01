@@ -71,7 +71,7 @@ export async function POST(req: Request) {
       { ref: verified.paymentReference, duplicate: result.duplicateWebhook },
       "sepay webhook accepted",
     );
-    return NextResponse.json({ success: true, duplicate: result.duplicateWebhook });
+    return NextResponse.json({ success: true });
   } catch (e) {
     log.warn({ err: e }, "sepay webhook error");
     return toErrorResponse(e, "webhook.sepay");
