@@ -20,7 +20,7 @@ const securityHeaders = [
     value: [
       "default-src 'self'",
       "base-uri 'self'",
-      "form-action 'self'",
+      "form-action 'self' https://pay-sandbox.sepay.vn https://pay.sepay.vn",
       "frame-ancestors 'self'",
       "object-src 'none'",
       "img-src 'self' data: blob: https:",
