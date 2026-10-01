@@ -42,6 +42,7 @@ export async function POST() {
       const sampleFields = buildSepayPgCheckoutFields({
         merchantId: sepay.merchantId,
         merchantSecretKey: sepay.merchantSecretKey,
+        paymentMethod: sepay.paymentMethod,
         orderInvoiceNumber: `KEYON_CFG_${Date.now()}`,
         orderAmount: 10000,
         orderDescription: "KEYON SePay PG config test",
@@ -56,12 +57,13 @@ export async function POST() {
       );
       const accepted =
         (probe.status === 302 || probe.status === 303) &&
-        probe.location.includes("/v1/checkout");
+        probe.location.includes("/v1/checkout") &&
+        probe.location.includes("order_id=");
       if (!accepted) {
         return NextResponse.json(
           {
             ok: false,
-            error: `SePay sandbox từ chối form checkout (HTTP ${probe.status}). Kiểm tra Merchant ID và Secret Key của Test mode.`,
+            error: `SePay sandbox từ chối form checkout (HTTP ${probe.status}). Kiểm tra Merchant ID, Secret Key và thứ tự chữ ký của Test mode.`,
           },
           { status: 400 },
         );
@@ -78,7 +80,7 @@ export async function POST() {
         ipnSecretConfigured: Boolean(sepay.ipnSecretKey),
         checkoutUrl,
         message:
-          "Sandbox OK — SePay nhận form checkout. IPN dùng X-Secret-Key, tách với HMAC production.",
+          "Sandbox đã tạo đơn trên SePay. Có thể thanh toán thử ở cửa hàng.",
       });
     }
 

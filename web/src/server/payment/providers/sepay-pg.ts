@@ -9,19 +9,20 @@ const CHECKOUT_URLS: Record<SepayPgEnvironment, string> = {
 };
 
 /**
- * SePay signs only these fields, in this order.
- * https://developer.sepay.vn/vi/cong-thanh-toan/API/don-hang/form-thanh-toan
- * Do not sort or reorder — a different order is an invalid signature.
+ * SePay checks the signature against fields in the order they are submitted.
+ * That order is the Node SDK field list. A different order stays on
+ * /checkout/init with "Yêu cầu không hợp lệ".
+ * https://developer.sepay.vn/vi/cong-thanh-toan/sdk/nodejs
  */
-const SIGNED_FIELD_ORDER = [
-  "order_amount",
+const FIELD_ORDER = [
   "merchant",
-  "currency",
   "operation",
-  "order_description",
-  "order_invoice_number",
-  "customer_id",
   "payment_method",
+  "order_invoice_number",
+  "order_amount",
+  "currency",
+  "order_description",
+  "customer_id",
   "success_url",
   "error_url",
   "cancel_url",
@@ -30,7 +31,7 @@ const SIGNED_FIELD_ORDER = [
 export type SepayPgCheckoutParams = {
   merchantId: string;
   merchantSecretKey: string;
-  paymentMethod?: SepayPgPaymentMethod;
+  paymentMethod: SepayPgPaymentMethod;
   orderInvoiceNumber: string;
   orderAmount: number;
   orderDescription: string;
@@ -49,10 +50,10 @@ export function signSepayPgFields(
   secretKey: string,
 ): string {
   const signed: string[] = [];
-  for (const field of SIGNED_FIELD_ORDER) {
+  for (const field of FIELD_ORDER) {
     if (!(field in fields)) continue;
     const value = fields[field];
-    if (value === undefined || value === null) continue;
+    if (value === undefined || value === null || value === "") continue;
     signed.push(`${field}=${String(value)}`);
   }
   return createHmac("sha256", secretKey)
@@ -63,25 +64,26 @@ export function signSepayPgFields(
 export function buildSepayPgCheckoutFields(
   params: SepayPgCheckoutParams,
 ): Record<string, string> {
-  const baseFields: Record<string, string | number> = {
+  const values: Record<string, string | number> = {
     merchant: params.merchantId,
     operation: "PURCHASE",
+    payment_method: params.paymentMethod,
+    order_invoice_number: params.orderInvoiceNumber,
     order_amount: Math.round(params.orderAmount),
     currency: "VND",
-    order_invoice_number: params.orderInvoiceNumber,
     order_description: params.orderDescription,
     success_url: params.successUrl,
     error_url: params.errorUrl,
     cancel_url: params.cancelUrl,
   };
-  // SePay test mode rejects an explicit BANK_TRANSFER or CARD when that method
-  // is not enabled on the merchant, and stays on /checkout/init. Leaving the
-  // field out lets the checkout page offer the methods that are enabled.
-  if (params.paymentMethod) {
-    baseFields.payment_method = params.paymentMethod;
-  }
   if (params.customerId?.trim()) {
-    baseFields.customer_id = params.customerId.trim();
+    values.customer_id = params.customerId.trim();
+  }
+  const baseFields: Record<string, string | number> = {};
+  for (const field of FIELD_ORDER) {
+    const value = values[field];
+    if (value === undefined || value === "") continue;
+    baseFields[field] = value;
   }
 
   const signature = signSepayPgFields(baseFields, params.merchantSecretKey);
