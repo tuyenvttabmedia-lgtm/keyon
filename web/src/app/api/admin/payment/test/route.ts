@@ -42,7 +42,6 @@ export async function POST() {
       const sampleFields = buildSepayPgCheckoutFields({
         merchantId: sepay.merchantId,
         merchantSecretKey: sepay.merchantSecretKey,
-        paymentMethod: sepay.paymentMethod,
         orderInvoiceNumber: `KEYON_CFG_${Date.now()}`,
         orderAmount: 10000,
         orderDescription: "KEYON SePay PG config test",

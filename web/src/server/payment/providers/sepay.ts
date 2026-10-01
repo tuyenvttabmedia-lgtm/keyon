@@ -77,7 +77,6 @@ async function createPgCheckout(
   const checkoutFormFields = buildSepayPgCheckoutFields({
     merchantId: sepay.merchantId,
     merchantSecretKey: sepay.merchantSecretKey,
-    paymentMethod: sepay.paymentMethod,
     orderInvoiceNumber: input.paymentReference,
     orderAmount: input.amountVnd,
     orderDescription: input.description?.trim() || `KEYON ${input.paymentReference}`,

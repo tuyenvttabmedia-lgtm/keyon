@@ -30,7 +30,7 @@ const SIGNED_FIELD_ORDER = [
 export type SepayPgCheckoutParams = {
   merchantId: string;
   merchantSecretKey: string;
-  paymentMethod: SepayPgPaymentMethod;
+  paymentMethod?: SepayPgPaymentMethod;
   orderInvoiceNumber: string;
   orderAmount: number;
   orderDescription: string;
@@ -66,7 +66,6 @@ export function buildSepayPgCheckoutFields(
   const baseFields: Record<string, string | number> = {
     merchant: params.merchantId,
     operation: "PURCHASE",
-    payment_method: params.paymentMethod,
     order_amount: Math.round(params.orderAmount),
     currency: "VND",
     order_invoice_number: params.orderInvoiceNumber,
@@ -75,6 +74,12 @@ export function buildSepayPgCheckoutFields(
     error_url: params.errorUrl,
     cancel_url: params.cancelUrl,
   };
+  // SePay test mode rejects an explicit BANK_TRANSFER or CARD when that method
+  // is not enabled on the merchant, and stays on /checkout/init. Leaving the
+  // field out lets the checkout page offer the methods that are enabled.
+  if (params.paymentMethod) {
+    baseFields.payment_method = params.paymentMethod;
+  }
   if (params.customerId?.trim()) {
     baseFields.customer_id = params.customerId.trim();
   }
