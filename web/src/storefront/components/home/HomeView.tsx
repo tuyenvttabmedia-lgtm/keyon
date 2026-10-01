@@ -21,7 +21,7 @@ export function HomeView({
   return (
     <>
       <HeroSection hero={content.hero} stats={heroStats} />
-      <TrustPartnersSection data={content.partners} className="hidden lg:block" />
+      <TrustPartnersSection data={content.partners} />
       <CategoriesSection data={content.categories} />
       <SolutionsSection data={content.solutions} />
       <FeaturedSection data={content.featured} />

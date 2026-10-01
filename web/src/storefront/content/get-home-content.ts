@@ -10,7 +10,6 @@ import {
   defaultCmsHome,
   defaultCmsNav,
   defaultCmsFaq,
-  defaultCmsPartners,
   readJsonFile,
   type BlogPost,
   type CmsBanner,
@@ -18,7 +17,6 @@ import {
   type CmsCategoryIconKey,
   type CmsFooter,
   type CmsNav,
-  type CmsPartners,
 } from "@/server/cms/store";
 import { normalizeFaqDocument } from "@/server/cms/faq";
 import { normalizeCmsCategories } from "@/server/cms/home-categories";
@@ -31,32 +29,45 @@ import { resolveStorage } from "@/server/storage/config";
 import { resourcePostHref } from "@/storefront/lib/resources";
 import { solutionTopicCards } from "@/storefront/nav/ia";
 import { isBlogPostLive } from "@/server/cms/blog-utils";
-import {
-  inferCategory,
-  shopCatFromCmsIcon,
-} from "@/storefront/components/shop/shop-utils";
+import { CATEGORY_LABELS, inferCategory, shopCatFromCmsIcon } from "@/storefront/components/shop/shop-utils";
 import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
 import type { ShopCategoryId } from "@/storefront/components/shop/types";
 import { mapProductsToShopCards } from "@/storefront/lib/related-products";
+import { parseOfferingProfile } from "@/storefront/lib/offering-profile";
+import {
+  LICENSE_TERM_LABELS,
+  type LicenseTermCode,
+} from "@/storefront/lib/license-catalog";
 import type {
   FeaturedProduct,
   FaqItem,
   FooterColumn,
-  PartnerItem,
 } from "./types";
 
-/** Prefer CMS text; empty → fixture. Do not silently rewrite saved CMS copy. */
+/** Prefer CMS text; empty or a retired Home positioning line → fixture. */
 function cmsTextOrFallback(
   value: string | undefined,
   fallback: string,
+  stale: readonly string[] = [],
 ): string {
   const v = value?.trim() ?? "";
-  return v || fallback;
+  if (!v || stale.includes(v)) return fallback;
+  return v;
 }
 
+const RETIRED_HERO_TITLES = [
+  "Mua & quản lý bản quyền số trên KEYON",
+  "Nền tảng phân phối bản quyền số",
+];
+
+const RETIRED_HERO_SUBTITLES = [
+  "Mua license chính hãng, nhận đúng loại (key / tài khoản / kích hoạt) và theo dõi trong Tài khoản. Hỗ trợ tiếng Việt — báo giá khi cần quy mô lớn.",
+  "Mua, triển khai và quản lý bản quyền phần mềm, cloud và dịch vụ số trên một nền tảng duy nhất. Dành cho cá nhân, đội nhóm và doanh nghiệp.",
+];
+
 /**
- * Home content: fixture + overlay CMS (hero, nav, footer, news, partners, categories, ratings, why banner).
- * Partners on Home resolve from Catalog Brand (CMS only stores brandId + order/visibility).
+ * Home content: fixture + overlay CMS (hero, nav, footer, news, categories, ratings, why banner).
+ * Ecosystem row is a fixed label set — vendor logos are not looped on Home.
  * React cache() = per-request dedupe; unstable_cache = cross-request ISR (60s).
  */
 async function loadHomeContent(): Promise<HomeContent> {
@@ -65,19 +76,16 @@ async function loadHomeContent(): Promise<HomeContent> {
     posts,
     footer,
     nav,
-    partners,
     categories,
     ratingMap,
     banner,
     catalogRows,
     faqRaw,
-    catalogBrands,
   ] = await Promise.all([
     readJsonFile("home.json", defaultCmsHome),
     readJsonFile<BlogPost[]>("blog.json", defaultBlog),
     readJsonFile<CmsFooter>("footer.json", defaultCmsFooter),
     readJsonFile<CmsNav>("nav.json", defaultCmsNav),
-    readJsonFile<CmsPartners>("partners.json", defaultCmsPartners),
     readJsonFile<CmsCategories>("categories.json", defaultCmsCategories).then(
       (raw) => normalizeCmsCategories(raw),
     ),
@@ -90,6 +98,7 @@ async function loadHomeContent(): Promise<HomeContent> {
         name: true,
         slug: true,
         categoryKey: true,
+        offeringProfile: true,
         galleryUrls: true,
         brand: { select: { name: true } },
         variants: {
@@ -102,6 +111,8 @@ async function loadHomeContent(): Promise<HomeContent> {
             compareAtPriceVnd: true,
             deliverableType: true,
             fulfillmentStrategy: true,
+            licenseModel: true,
+            licenseTerm: true,
           },
           take: 1,
         },
@@ -110,11 +121,6 @@ async function loadHomeContent(): Promise<HomeContent> {
       take: 16,
     }),
     readJsonFile("faq.json", defaultCmsFaq),
-    prisma.brand.findMany({
-      where: { active: true },
-      select: { id: true, name: true, slug: true, logoUrl: true, featured: true, sortOrder: true },
-      orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
-    }),
   ]);
 
   const faqDoc = normalizeFaqDocument(faqRaw);
@@ -136,86 +142,6 @@ async function loadHomeContent(): Promise<HomeContent> {
       ? storage.wasabi.publicBaseUrl ||
         `${storage.wasabi.endpoint.replace(/\/$/, "")}/${storage.wasabi.bucket}`
       : "";
-
-  const brandById = new Map(catalogBrands.map((b) => [b.id, b]));
-  const brandByName = new Map(
-    catalogBrands.map((b) => [b.name.trim().toLowerCase(), b] as const),
-  );
-
-  const resolvePartnerLogo = (url?: string | null) =>
-    url ? resolveMediaUrl(url, mediaBase) || url : undefined;
-
-  const cmsPartnerSource =
-    partners.items?.length > 0 ? partners.items : defaultCmsPartners.items;
-
-  let partnerItems: PartnerItem[] = cmsPartnerSource
-    .filter((p) => p.visible !== false)
-    .map((p): PartnerItem | null => {
-      const brand =
-        (p.brandId ? brandById.get(p.brandId) : undefined) ||
-        (p.name ? brandByName.get(p.name.trim().toLowerCase()) : undefined);
-
-      if (brand) {
-        return {
-          id: p.id,
-          name: brand.name,
-          logoUrl: resolvePartnerLogo(brand.logoUrl),
-          href: p.href?.trim() || `/brands/${brand.slug}`,
-          visible: true,
-        };
-      }
-
-      // Legacy CMS row without catalog match — keep until admin re-links
-      if (p.name) {
-        return {
-          id: p.id,
-          name: p.name,
-          logoUrl: resolvePartnerLogo(p.logoUrl),
-          brandColor: p.brandColor,
-          href: p.href,
-          visible: true,
-        };
-      }
-
-      return null;
-    })
-    .filter((p): p is PartnerItem => p !== null);
-
-  // Wave 5: only brands with ≥1 active sellable product (avoid empty /products?q=…)
-  const sellableBrandNames = new Set(
-    catalogRows
-      .filter((p) => p.variants.length > 0 && p.brand?.name)
-      .map((p) => p.brand!.name.trim().toLowerCase()),
-  );
-  partnerItems = partnerItems.filter((p) =>
-    sellableBrandNames.has(p.name.trim().toLowerCase()),
-  );
-
-  // Soft default: featured catalog brands when CMS list empty after resolve
-  if (partnerItems.length === 0) {
-    partnerItems = catalogBrands
-      .filter(
-        (b) =>
-          b.featured && sellableBrandNames.has(b.name.trim().toLowerCase()),
-      )
-      .slice(0, 8)
-      .map((b) => ({
-        id: `brand_${b.id}`,
-        name: b.name,
-        logoUrl: resolvePartnerLogo(b.logoUrl),
-        href: `/brands/${b.slug}`,
-        visible: true,
-      }));
-  }
-
-  // Fixture fallback only if still empty (e.g. empty catalog)
-  if (partnerItems.length === 0) {
-    partnerItems = homeFixture.partners.items.filter(
-      (p) =>
-        p.visible !== false &&
-        sellableBrandNames.has(p.name.trim().toLowerCase()),
-    );
-  }
 
   const shopCounts: Record<ShopCategoryId, number> = {
     windows: 0,
@@ -254,7 +180,9 @@ async function loadHomeContent(): Promise<HomeContent> {
       const liveCount = shopCounts[shopCat] ?? 0;
       return {
         id: c.id,
-        title: c.title,
+        title: c.title.trim() && CATEGORY_LABELS[shopCat]
+        ? CATEGORY_LABELS[shopCat]
+        : c.title,
         countLabel: `${liveCount} sản phẩm`,
         href: `/categories/${shopCat}`,
         icon: toCategoryIcon(c.iconKey ?? shopCat),
@@ -265,6 +193,7 @@ async function loadHomeContent(): Promise<HomeContent> {
     })
     .filter((c): c is NonNullable<typeof c> => c != null)
     .filter((c) => c.liveCount > 0)
+    .sort((a, b) => homeCategoryRank(a.href) - homeCategoryRank(b.href))
     .slice(0, 8)
     .map(({ liveCount, ...rest }) => {
       void liveCount;
@@ -274,13 +203,15 @@ async function loadHomeContent(): Promise<HomeContent> {
   const shopCards = mapProductsToShopCards(
     catalogRows.filter((p) => p.variants.length > 0).slice(0, 8),
   );
+  const rowById = new Map(catalogRows.map((row) => [row.id, row]));
   const featuredFromCatalog: FeaturedProduct[] = shopCards.map((c) => {
     const gal = c.imageUrl;
+    const line = featuredPackageLine(rowById.get(c.id));
     return {
       id: c.id,
       brandName: c.brandName,
       productName: c.productName,
-      packageName: c.packageName,
+      packageName: line ?? c.packageName,
       priceVnd: c.priceVnd,
       receiveLabel: c.receiveLabel,
       receiveKind: c.receiveKind,
@@ -288,7 +219,7 @@ async function loadHomeContent(): Promise<HomeContent> {
       mark: c.mark,
       imageUrl: gal,
       href: c.href,
-      ctaLabel: "Thanh toán ngay",
+      ctaLabel: "Xem sản phẩm",
       rating: undefined,
       reviewCount: undefined,
     };
@@ -367,20 +298,27 @@ async function loadHomeContent(): Promise<HomeContent> {
     },
     hero: {
       ...homeFixture.hero,
-      title: cmsTextOrFallback(cmsHome.heroTitle, homeFixture.hero.title),
+      title: cmsTextOrFallback(
+        cmsHome.heroTitle,
+        homeFixture.hero.title,
+        RETIRED_HERO_TITLES,
+      ),
       titleAccent: cmsHome.heroTitleAccent?.trim() || undefined,
       subtitle: cmsTextOrFallback(
         cmsHome.heroSubtitle,
         homeFixture.hero.subtitle,
+        RETIRED_HERO_SUBTITLES,
       ),
       ctaLabel: cmsHome.heroCta || homeFixture.hero.ctaLabel,
       ctaHref: cmsHome.heroCtaHref || homeFixture.hero.ctaHref,
       visible: cmsHome.published,
     },
     partners: {
-      title: partners.title || homeFixture.partners.title,
-      badges: partners.badges?.length ? partners.badges : homeFixture.partners.badges,
-      items: partnerItems,
+      title: "Hệ sinh thái công nghệ",
+      subtitle:
+        "Các nền tảng phần mềm, bảo mật, cloud và hạ tầng KEYON hỗ trợ phân phối và triển khai.",
+      badges: [],
+      items: [],
     },
     categories: {
       ...homeFixture.categories,
@@ -509,7 +447,7 @@ async function loadHomeContent(): Promise<HomeContent> {
   };
 }
 
-const getHomeContentCached = unstable_cache(loadHomeContent, ["storefront-home-content-v2"], {
+const getHomeContentCached = unstable_cache(loadHomeContent, ["storefront-home-content-v3"], {
   revalidate: 60,
 });
 
@@ -682,6 +620,51 @@ function sanitizeFooterColumns(
       };
     })
     .filter((col) => col.links.length > 0 || col.title.trim().length > 0);
+}
+
+const HOME_CATEGORY_RANK: Record<string, number> = {
+  windows: 0,
+  office: 1,
+  adobe: 2,
+  autodesk: 3,
+  security: 4,
+  backup: 5,
+  cloud: 6,
+};
+
+function homeCategoryRank(href: string) {
+  const key = href.split("/").filter(Boolean).pop() ?? "";
+  return HOME_CATEGORY_RANK[key] ?? 50;
+}
+
+function termShort(code: string | null | undefined): string | null {
+  if (!code) return null;
+  if (code === "PERPETUAL") return "Vĩnh viễn";
+  if (code in LICENSE_TERM_LABELS) {
+    return LICENSE_TERM_LABELS[code as LicenseTermCode];
+  }
+  return null;
+}
+
+function featuredPackageLine(row: {
+  offeringProfile: string | null;
+  variants: Array<{
+    name: string;
+    licenseModel: string | null;
+    licenseTerm: string | null;
+  }>;
+} | undefined): string | null {
+  const variant = row?.variants[0];
+  if (!row || !variant) return null;
+  const profile = parseOfferingProfile(row.offeringProfile);
+  const term = termShort(variant.licenseTerm);
+  if (profile === "SERVICE") return "Theo nhu cầu doanh nghiệp";
+  if (profile === "INFRASTRUCTURE") return variant.name;
+  if (variant.licenseModel === "SUBSCRIPTION") {
+    return term ? `Subscription · ${term}` : "Subscription";
+  }
+  if (profile === "SOFTWARE") return term ? `License · ${term}` : "License";
+  return null;
 }
 
 function toCategoryIcon(key?: CmsCategoryIconKey): CategoryIconKey {

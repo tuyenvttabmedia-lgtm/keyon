@@ -49,7 +49,7 @@ export type PrimaryNavItem = MegaNavItem | DropdownNavItem;
 /** License shelves in the products menu. */
 export const LICENSE_COLLECTIONS: NavLink[] = [
   {
-    label: "Hệ điều hành",
+    label: "Windows & OS",
     href: "/categories/windows",
     description: "Windows, Windows Server",
   },
@@ -74,9 +74,9 @@ export const LICENSE_COLLECTIONS: NavLink[] = [
     description: "Antivirus & endpoint",
   },
   {
-    label: "Backup & Khôi phục",
+    label: "Backup & Storage",
     href: "/categories/backup",
-    description: "Bảo vệ và phục hồi dữ liệu",
+    description: "Acronis và các gói backup trên catalog",
   },
 ];
 
@@ -136,10 +136,10 @@ export const SOLUTION_TOPICS: {
 }[] = [
   {
     id: "microsoft-365-office",
-    label: "Microsoft 365 & Office",
+    label: "Microsoft & Productivity",
     href: "/solutions/microsoft-365-office",
     description:
-      "Khám phá Microsoft 365 và Office bản quyền cho cá nhân, doanh nghiệp với Word, Excel, PowerPoint, Teams, OneDrive và nhiều công cụ khác.",
+      "Microsoft 365, Windows và Office — license và subscription cho cá nhân, đội nhóm và doanh nghiệp.",
     art: "trend",
   },
   {
@@ -151,7 +151,7 @@ export const SOLUTION_TOPICS: {
   },
   {
     id: "security",
-    label: "Bảo mật",
+    label: "Security",
     href: "/solutions/security",
     description:
       "Khám phá các sản phẩm và license bảo mật cho thiết bị, email, dữ liệu, danh tính và mạng trên KEYON.",
@@ -167,7 +167,7 @@ export const SOLUTION_TOPICS: {
   },
   {
     id: "license-management",
-    label: "Quản lý bản quyền",
+    label: "License Management",
     href: "/solutions/license-management",
     description: "Theo dõi license đã mua, thời hạn sử dụng và gia hạn trong Tài khoản KEYON.",
     art: "stack",
@@ -284,7 +284,7 @@ export const SUPPORT_LINKS: NavLink[] = [
   {
     label: "Cách KEYON hoạt động",
     href: "/how-it-works",
-    description: "Chọn gói → thanh toán → nhận trong Tài khoản",
+    description: "Chọn sản phẩm → thanh toán hoặc báo giá → nhận bàn giao → quản lý trong Tài khoản",
   },
   {
     label: "Tra cứu đơn hàng",

@@ -7,7 +7,7 @@ export function HowItWorksSection({ data }: { data: HomeContent["howItWorks"] })
 
   const subtitle =
     data.subtitle ??
-    "Ba bước: chọn gói → thanh toán → nhận deliverable trong Tài khoản.";
+    "Chọn sản phẩm, thanh toán hoặc báo giá, nhận bàn giao, rồi quản lý và gia hạn trong Tài khoản.";
 
   return (
     <section id="how-it-works" className="scroll-mt-20 bg-white home-section">

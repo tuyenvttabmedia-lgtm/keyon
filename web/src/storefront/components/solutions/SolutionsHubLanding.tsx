@@ -64,10 +64,10 @@ const HERO_CHIP_ICON: Record<string, LucideIcon> = {
 };
 
 const HERO_CHIP_LABEL: Record<string, string> = {
-  security: "Bảo mật",
-  "microsoft-365-office": "Microsoft 365 & Office",
+  security: "Security",
+  "microsoft-365-office": "Microsoft & Productivity",
   cloud: "Cloud & Hạ tầng",
-  "license-management": "Quản lý bản quyền",
+  "license-management": "License Management",
   backup: "Backup & Khôi phục",
   "by-need": "Theo nhu cầu",
 };

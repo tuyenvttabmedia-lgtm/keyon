@@ -220,11 +220,11 @@ export function findGroupIdForCategory(categoryId: string): FaqGroupId | null {
  */
 export const HOME_FAQ_QUESTIONS = [
   "KEYON là gì?",
-  "KEYON hỗ trợ những phương thức thanh toán nào?",
   "Sau khi thanh toán tôi nhận license ở đâu?",
-  "Tôi có cần tạo tài khoản để mua hàng không?",
-  "KEYON có hoàn tiền không?",
-  "Tôi đã thanh toán nhưng đơn hàng vẫn chưa được cập nhật?",
+  "Bao lâu sau khi thanh toán tôi nhận được license?",
+  "License của tôi không hoạt động thì phải làm gì?",
+  "Doanh nghiệp có thể mua license số lượng lớn không?",
+  "Tôi có thể gia hạn license trước khi hết hạn không?",
 ] as const;
 
 export function pickHomeFaqs<T extends { question: string; showOnHome?: boolean }>(

@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import type { HomeContent, WhyItem } from "@/storefront/content/types";
 import {
-  BADGE_CLASS,
   CARD_META_CLASS,
   CARD_TITLE_CLASS,
   CTA_COMPACT_CLASS,
@@ -101,15 +100,7 @@ function WhySideBanner({ banner }: { banner: Why["sideBanner"] }) {
       className="relative mx-auto flex aspect-square w-full max-w-[280px] items-center justify-center overflow-hidden rounded-[18px] border border-border bg-gradient-to-br from-accent-soft via-sky-50 to-surface lg:mx-0 lg:h-[280px] lg:w-[280px] lg:max-w-none lg:shrink-0"
       aria-hidden
     >
-      <span className={`absolute left-4 top-6 rounded-full border border-border bg-white px-2.5 py-1 ${BADGE_CLASS} text-muted-soft shadow-sm`}>
-        API
-      </span>
-      <span className={`absolute right-5 top-14 rounded-full border border-border bg-white px-2.5 py-1 ${BADGE_CLASS} text-muted-soft shadow-sm`}>
-        SSL
-      </span>
-      <span className={`absolute bottom-10 left-8 rounded-full border border-border bg-white px-2.5 py-1 ${BADGE_CLASS} text-muted-soft shadow-sm`}>
-        ISO
-      </span>
+      <span className="absolute left-1/2 top-1/2 h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/10" aria-hidden />
       <svg className="h-[120px] w-auto drop-shadow-[0_12px_24px_rgba(14,165,164,0.25)]" viewBox="0 0 120 140" fill="none">
         <path d="M60 8 12 28v36c0 36 26 58 48 66 22-8 48-30 48-66V28L60 8Z" fill="#0EA5A4" />
         <path d="M60 22 28 36v26c0 26 18 42 32 48 14-6 32-22 32-48V36L60 22Z" fill="#14B8A6" />

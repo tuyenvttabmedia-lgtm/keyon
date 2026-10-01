@@ -151,6 +151,7 @@ export type HomeContent = {
   hero: HomeHero;
   partners: {
     title: string;
+    subtitle?: string;
     badges: string[];
     items: PartnerItem[];
   };

@@ -621,7 +621,7 @@ export const defaultCmsNav: CmsNav = {
 };
 
 export const defaultCmsPartners: CmsPartners = {
-  title: "Thương hiệu phần mềm trên KEYON",
+  title: "Hệ sinh thái công nghệ",
   badges: ["Bản quyền chính hãng", "Thanh toán rõ ràng"],
   /** Empty by default — admin picks Catalog brands. Legacy name-only rows still resolve by name. */
   items: [],
@@ -667,6 +667,17 @@ export const defaultCmsCategories: CmsCategories = {
     },
     {
       id: "c4",
+      categoryKey: "autodesk",
+      title: "Autodesk",
+      countLabel: "0 sản phẩm",
+      href: "/categories/autodesk",
+      iconKey: "autodesk",
+      accentColor: "#0696D7",
+      visible: true,
+      sortOrder: 3,
+    },
+    {
+      id: "c5",
       categoryKey: "security",
       title: "Bảo mật",
       countLabel: "0 sản phẩm",
@@ -674,10 +685,10 @@ export const defaultCmsCategories: CmsCategories = {
       iconKey: "security",
       accentColor: "#0EA5A4",
       visible: true,
-      sortOrder: 3,
+      sortOrder: 4,
     },
     {
-      id: "c5",
+      id: "c6",
       categoryKey: "backup",
       title: "Backup & Storage",
       countLabel: "0 sản phẩm",
@@ -685,27 +696,16 @@ export const defaultCmsCategories: CmsCategories = {
       iconKey: "backup",
       accentColor: "#1A73E8",
       visible: true,
-      sortOrder: 4,
-    },
-    {
-      id: "c6",
-      categoryKey: "cloud",
-      title: "Cloud & hạ tầng",
-      countLabel: "0 sản phẩm",
-      href: "/categories/cloud",
-      iconKey: "cloud",
-      accentColor: "#0284C7",
-      visible: true,
       sortOrder: 5,
     },
     {
       id: "c7",
-      categoryKey: "autodesk",
-      title: "Autodesk",
+      categoryKey: "cloud",
+      title: "Cloud & Hạ tầng",
       countLabel: "0 sản phẩm",
-      href: "/categories/autodesk",
-      iconKey: "autodesk",
-      accentColor: "#0696D7",
+      href: "/categories/cloud",
+      iconKey: "cloud",
+      accentColor: "#0284C7",
       visible: true,
       sortOrder: 6,
     },
@@ -823,7 +823,7 @@ export const defaultSettings: SiteSettings = {
     "/how-it-works": {
       title: "Cách KEYON hoạt động",
       description:
-        "Ba bước: chọn gói, thanh toán VietQR, nhận deliverable trong Tài khoản KEYON.",
+        "Bốn bước: chọn sản phẩm, thanh toán hoặc báo giá, nhận bàn giao, quản lý và gia hạn trong Tài khoản KEYON.",
     },
   },
 };
@@ -1278,10 +1278,10 @@ export const defaultCmsCheckout: CmsCheckout = {
 };
 
 export const defaultCmsHome: CmsHome = {
-  heroTitle: "Mua & quản lý bản quyền số trên KEYON",
+  heroTitle: "Nền tảng phân phối bản quyền số cho phần mềm và cloud",
   heroTitleAccent: "",
   heroSubtitle:
-    "Mua license chính hãng, nhận đúng loại (key / tài khoản / kích hoạt) và theo dõi trong Tài khoản. Hỗ trợ tiếng Việt — báo giá khi cần quy mô lớn.",
+    "Mua, triển khai và quản lý software license, subscription, cloud và hạ tầng số trên một nền tảng — từ giao license đến gia hạn và hỗ trợ.",
   heroCta: "Khám phá sản phẩm →",
   heroCtaHref: "/products",
   whyTitle: "",

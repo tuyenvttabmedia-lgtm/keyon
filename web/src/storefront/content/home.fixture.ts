@@ -19,12 +19,12 @@ export const homeFixture: HomeContent = {
   hero: {
     visible: true,
     badge: "DIGITAL LICENSE PLATFORM",
-    title: "Mua & quản lý bản quyền số trên KEYON",
+    title: "Nền tảng phân phối bản quyền số cho phần mềm và cloud",
     subtitle:
-      "Mua license chính hãng, nhận đúng loại (key / tài khoản / kích hoạt) và theo dõi trong Tài khoản. Hỗ trợ tiếng Việt — báo giá khi cần quy mô lớn.",
+      "Mua, triển khai và quản lý software license, subscription, cloud và hạ tầng số trên một nền tảng — từ giao license đến gia hạn và hỗ trợ.",
     ctaLabel: "Khám phá sản phẩm →",
     ctaHref: "/products",
-    secondaryCtaLabel: "Dành cho doanh nghiệp",
+    secondaryCtaLabel: "Dành cho doanh nghiệp →",
     secondaryCtaHref: "/business",
     trustItems: [
       {
@@ -42,7 +42,9 @@ export const homeFixture: HomeContent = {
     ],
   },
   partners: {
-    title: "Thương hiệu phần mềm trên KEYON",
+    title: "Hệ sinh thái công nghệ",
+    subtitle:
+      "Các nền tảng phần mềm, bảo mật, cloud và hạ tầng KEYON hỗ trợ phân phối và triển khai.",
     badges: ["Bản quyền chính hãng", "Thanh toán rõ ràng"],
     items: [
       { id: "p1", name: "Microsoft", brandColor: "#00A4EF", visible: true },
@@ -115,35 +117,37 @@ export const homeFixture: HomeContent = {
     visible: true,
     title: "Cách KEYON hoạt động",
     subtitle:
-      "Ba bước: chọn gói → thanh toán → nhận deliverable trong Tài khoản.",
+      "Chọn sản phẩm, thanh toán hoặc báo giá, nhận bàn giao, rồi quản lý và gia hạn trong Tài khoản.",
     steps: [
       {
         id: "h1",
-        title: "Chọn gói",
-        description: "Xem loại nhận (key / tài khoản) và giá trước khi đặt.",
+        title: "Chọn sản phẩm",
+        description:
+          "Chọn license, subscription hoặc dịch vụ phù hợp nhu cầu.",
       },
       {
         id: "h2",
-        title: "Thanh toán",
-        description: "Chuyển khoản / VietQR theo hướng dẫn trên trang thanh toán.",
+        title: "Đặt hàng & thanh toán",
+        description:
+          "Thanh toán trực tuyến hoặc yêu cầu báo giá cho nhu cầu doanh nghiệp.",
       },
       {
         id: "h3",
-        title: "Nhận trong Tài khoản",
+        title: "Nhận & kích hoạt",
         description:
-          "Sau khi xác nhận thanh toán, mở Đơn hàng / Tài sản để lấy deliverable.",
+          "License hoặc thông tin dịch vụ được bàn giao theo từng sản phẩm.",
       },
       {
         id: "h4",
-        title: "Quản lý & hỗ trợ",
+        title: "Quản lý & gia hạn",
         description:
-          "Mở lại license khi cần; tạo ticket trong Tài khoản nếu cần hỗ trợ kích hoạt.",
+          "Theo dõi license, đơn hàng, subscription và gia hạn trong Tài khoản.",
       },
     ],
   },
   featured: {
     visible: true,
-    title: "Sản phẩm nổi bật",
+    title: "Sản phẩm & dịch vụ nổi bật",
     viewAllHref: "/products",
     viewAllLabel: "Xem tất cả",
     /** Unused at runtime — Home featured comes from live catalog only (Wave 5). */
@@ -153,47 +157,50 @@ export const homeFixture: HomeContent = {
     visible: true,
     title: "Vì sao chọn KEYON?",
     subtitle:
-      "Minh bạch trước khi mua, lưu license trong Tài khoản, hỗ trợ tiếng Việt.",
+      "Bàn giao số, quản lý license tập trung và hỗ trợ doanh nghiệp trên cùng một nền tảng.",
     ctaLabel: "Tìm hiểu thêm →",
     ctaHref: "/about",
     items: [
       {
         id: "w1",
-        title: "Nguồn gốc & thông tin license minh bạch",
+        title: "Bàn giao số theo sản phẩm",
         description:
-          "Thông tin loại license và hình thức nhận được hiển thị rõ trước khi mua.",
-        icon: "shield",
+          "License và thông tin dịch vụ được bàn giao trực tuyến theo từng sản phẩm.",
+        icon: "bolt",
       },
       {
         id: "w2",
-        title: "Quản lý tập trung",
-        description: "Đơn hàng và license được lưu trong Tài khoản KEYON.",
+        title: "Quản lý license tập trung",
+        description:
+          "Theo dõi license, đơn hàng và thời hạn tập trung trong Tài khoản.",
         icon: "card",
       },
       {
         id: "w3",
-        title: "Hóa đơn doanh nghiệp",
-        description: "Hỗ trợ chứng từ/hóa đơn theo điều kiện áp dụng.",
-        icon: "price",
-      },
-      {
-        id: "w4",
-        title: "Hỗ trợ tiếng Việt",
-        description: "Hỗ trợ trước và sau khi mua qua ticket trong Tài khoản.",
+        title: "Hỗ trợ doanh nghiệp",
+        description:
+          "Tư vấn, báo giá, triển khai và hỗ trợ nhu cầu doanh nghiệp.",
         icon: "support",
       },
       {
-        id: "w5",
-        title: "Thanh toán rõ ràng",
+        id: "w4",
+        title: "Nguồn gốc & thông tin license rõ ràng",
         description:
-          "VietQR / chuyển khoản theo hướng dẫn trên trang thanh toán — theo dõi trạng thái trong đơn hàng.",
-        icon: "bolt",
+          "Loại license và hình thức nhận được hiển thị trước khi mua.",
+        icon: "shield",
+      },
+      {
+        id: "w5",
+        title: "Thanh toán minh bạch",
+        description:
+          "VietQR và chuyển khoản theo hướng dẫn trên trang thanh toán.",
+        icon: "price",
       },
       {
         id: "w6",
-        title: "Chính sách hoàn tiền rõ",
+        title: "Gia hạn & subscription rõ ràng",
         description:
-          "Điều kiện hoàn tiền được ghi trong chính sách / điều khoản — không ẩn sau khi mua.",
+          "Theo dõi thời hạn và gia hạn subscription trong Tài khoản hoặc qua báo giá.",
         icon: "refund",
       },
     ],
@@ -301,7 +308,7 @@ export const homeFixture: HomeContent = {
     visible: true,
     title: "Cần giải pháp license cho doanh nghiệp?",
     subtitle:
-      "KEYON hỗ trợ mua license, bàn giao / kích hoạt theo phạm vi gói, và báo giá khi tổ chức cần quy mô lớn — trải nghiệm mua lẻ vẫn rõ ràng.",
+      "KEYON hỗ trợ doanh nghiệp lựa chọn, mua, triển khai và quản lý software license, subscription, cloud và hạ tầng số.",
     ctaLabel: "Gửi yêu cầu tư vấn →",
     ctaHref: "/contact/quote",
   },
