@@ -41,14 +41,14 @@ export function FaqHomeSection({ data }: { data: FaqHome }) {
   if (!data.visible || !data.items.length) return null;
 
   return (
-    <section className="bg-[#f8fafc] home-section">
+    <section className="bg-[#f8fafc] home-section-tight">
       <div className="home-container">
         <HomeSectionHeading
           title={data.title}
           viewAllHref="/faq"
           viewAllLabel="Xem tất cả FAQ →"
         />
-        <ul className="mt-6 grid gap-3 md:grid-cols-2">
+        <ul className="mt-5 grid gap-3 md:grid-cols-2">
           {data.items.map((item) => {
             const next = FAQ_NEXT[item.question];
             return (

@@ -58,6 +58,7 @@ function cmsTextOrFallback(
 const RETIRED_HERO_TITLES = [
   "Mua & quản lý bản quyền số trên KEYON",
   "Nền tảng phân phối bản quyền số",
+  "Nền tảng phân phối bản quyền số cho phần mềm và cloud",
 ];
 
 const RETIRED_HERO_SUBTITLES = [
@@ -70,8 +71,11 @@ const RETIRED_WHY_SUBTITLES = [
   "Bàn giao số, quản lý license tập trung và hỗ trợ doanh nghiệp trên cùng một nền tảng.",
 ];
 
+const RETIRED_CTA_TITLES = ["Cần giải pháp license cho doanh nghiệp?"];
+
 const RETIRED_CTA_SUBTITLES = [
   "KEYON hỗ trợ doanh nghiệp lựa chọn, mua, triển khai và quản lý software license, subscription, cloud và hạ tầng số.",
+  "KEYON hỗ trợ doanh nghiệp lựa chọn, triển khai và quản lý license, subscription, cloud và hạ tầng số theo nhu cầu.",
 ];
 
 const RETIRED_CTA_LABELS = ["Gửi yêu cầu tư vấn →"];
@@ -230,7 +234,7 @@ async function loadHomeContent(): Promise<HomeContent> {
       mark: c.mark,
       imageUrl: gal,
       href: c.href,
-      ctaLabel: "Xem sản phẩm",
+      ctaLabel: "Xem sản phẩm →",
       rating: undefined,
       reviewCount: undefined,
     };
@@ -255,7 +259,8 @@ async function loadHomeContent(): Promise<HomeContent> {
     title:
       cmsSolutionsTitle &&
       cmsSolutionsTitle !== "Doanh nghiệp" &&
-      cmsSolutionsTitle !== "Giải pháp doanh nghiệp"
+      cmsSolutionsTitle !== "Giải pháp doanh nghiệp" &&
+      cmsSolutionsTitle !== "Giải pháp số cho mọi nhu cầu vận hành"
         ? cmsSolutionsTitle
         : homeFixture.solutions.title,
     subtitle: homeFixture.solutions.subtitle,
@@ -295,7 +300,11 @@ async function loadHomeContent(): Promise<HomeContent> {
 
   const ctaBanner = {
     ...homeFixture.ctaBanner,
-    title: cmsHome.ctaTitle || homeFixture.ctaBanner.title,
+    title: cmsTextOrFallback(
+      cmsHome.ctaTitle,
+      homeFixture.ctaBanner.title,
+      RETIRED_CTA_TITLES,
+    ),
     subtitle: cmsTextOrFallback(
       cmsHome.ctaSubtitle,
       homeFixture.ctaBanner.subtitle,
@@ -471,7 +480,7 @@ async function loadHomeContent(): Promise<HomeContent> {
   };
 }
 
-const getHomeContentCached = unstable_cache(loadHomeContent, ["storefront-home-content-v5"], {
+const getHomeContentCached = unstable_cache(loadHomeContent, ["storefront-home-content-v6"], {
   revalidate: 60,
 });
 

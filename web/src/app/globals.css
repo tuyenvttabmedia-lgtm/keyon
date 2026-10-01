@@ -122,6 +122,26 @@ html {
   }
 }
 
+/* Home-only: about 15% tighter than .home-section. Do not use on checkout or shop. */
+.home-section-tight {
+  padding-top: 1.05rem;
+  padding-bottom: 1.05rem;
+}
+
+@media (min-width: 768px) {
+  .home-section-tight {
+    padding-top: 0.85rem;
+    padding-bottom: 0.85rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-section-tight {
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+  }
+}
+
 /* Home motion — PRODUCTION-UI-SPEC §2.11 (fast/normal/slow + standard easing) */
 :root {
   --motion-fast: 120ms;

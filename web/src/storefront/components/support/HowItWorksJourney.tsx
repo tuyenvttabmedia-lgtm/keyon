@@ -23,7 +23,7 @@ const STEPS = [
     hint: "License, subscription hoặc dịch vụ",
     eyebrow: "01",
     title: "Chọn sản phẩm",
-    desc: "Chọn license, subscription hoặc dịch vụ phù hợp.",
+    desc: "License, subscription hoặc dịch vụ phù hợp nhu cầu.",
   },
   {
     tab: "Đặt hàng & thanh toán",
@@ -34,17 +34,17 @@ const STEPS = [
   },
   {
     tab: "Nhận & kích hoạt",
-    hint: "License và kích hoạt",
+    hint: "License và hướng dẫn kích hoạt",
     eyebrow: "03",
     title: "Nhận & kích hoạt",
-    desc: "Nhận license hoặc thông tin dịch vụ và thực hiện kích hoạt.",
+    desc: "Nhận license và hướng dẫn kích hoạt theo từng sản phẩm.",
   },
   {
     tab: "Quản lý & gia hạn",
     hint: "Trong Tài khoản",
     eyebrow: "04",
     title: "Quản lý & gia hạn",
-    desc: "Theo dõi license, đơn hàng, subscription và thời hạn trong Tài khoản.",
+    desc: "Theo dõi license, thời hạn và subscription trong tài khoản.",
   },
 ] as const;
 

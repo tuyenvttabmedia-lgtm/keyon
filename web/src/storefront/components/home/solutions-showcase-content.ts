@@ -90,8 +90,8 @@ export const HOME_SOLUTION_SHOWCASE: Record<
     ],
   },
   security: {
-    tabLabel: "Security",
-    panelKicker: "Security",
+    tabLabel: "Bảo mật",
+    panelKicker: "Bảo mật",
     headline: "Bảo vệ endpoint bằng gói chính hãng",
     lead: "Antivirus / internet security trên KEYON — xem rõ loại nhận trước khi mua, hỗ trợ kích hoạt tiếng Việt.",
     checks: [
@@ -126,28 +126,28 @@ export const HOME_SOLUTION_SHOWCASE: Record<
     ],
   },
   "license-management": {
-    tabLabel: "Quản lý license",
-    panelKicker: "Quản lý license",
-    headline: "Theo dõi license đã mua trên Tài khoản",
-    lead: "License đã mua nằm trong Tài khoản KEYON — thời hạn sử dụng, nhắc gia hạn và hỗ trợ tiếng Việt.",
+    tabLabel: "License Management",
+    panelKicker: "License Management",
+    headline: "Quản lý bản quyền tập trung",
+    lead: "Theo dõi license, thời hạn, subscription và trạng thái kích hoạt trên một tài khoản KEYON.",
     checks: [
-      "License vào Tài khoản sau bàn giao",
-      "Nhắc trước khi đến hạn",
+      "License sau bàn giao nằm trong Tài khoản",
+      "Thời hạn và subscription",
+      "Trạng thái kích hoạt",
       "Gia hạn qua mua thêm hoặc báo giá",
-      "Hỗ trợ tiếng Việt",
     ],
     chips: [
       { id: "account", label: "Trong Tài khoản", slot: "tl", tone: "sky" },
-      { id: "renew", label: "Nhắc gia hạn", slot: "tr", tone: "violet" },
-      { id: "track", label: "Theo dõi hạn dùng", slot: "br", tone: "teal" },
-      { id: "order", label: "Đơn & giao nhận", slot: "bl", tone: "amber" },
+      { id: "renew", label: "Thời hạn", slot: "tr", tone: "violet" },
+      { id: "track", label: "Subscription", slot: "br", tone: "teal" },
+      { id: "order", label: "Kích hoạt", slot: "bl", tone: "amber" },
     ],
   },
 };
 
 export const HOME_SOLUTIONS_SECTION_COPY = {
   overline: "Giải pháp",
-  title: "Giải pháp số cho mọi nhu cầu vận hành",
+  title: "Giải pháp theo nhu cầu vận hành",
   subtitle:
     "Từ năng suất, cloud, bảo mật đến backup và quản lý bản quyền — KEYON giúp doanh nghiệp lựa chọn, triển khai và quản lý các giải pháp số phù hợp.",
   viewAllLabel: "Xem tất cả giải pháp",

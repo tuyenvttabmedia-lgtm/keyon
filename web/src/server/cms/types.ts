@@ -1278,7 +1278,7 @@ export const defaultCmsCheckout: CmsCheckout = {
 };
 
 export const defaultCmsHome: CmsHome = {
-  heroTitle: "Nền tảng phân phối bản quyền số cho phần mềm và cloud",
+  heroTitle: "Nền tảng phân phối và quản lý bản quyền số",
   heroTitleAccent: "",
   heroSubtitle:
     "Mua, triển khai và quản lý license, subscription, cloud và hạ tầng số trên một nền tảng — dành cho cá nhân, doanh nghiệp và đội ngũ IT.",

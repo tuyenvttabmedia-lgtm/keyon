@@ -19,12 +19,12 @@ export const homeFixture: HomeContent = {
   hero: {
     visible: true,
     badge: "DIGITAL LICENSE PLATFORM",
-    title: "Nền tảng phân phối bản quyền số cho phần mềm và cloud",
+    title: "Nền tảng phân phối và quản lý bản quyền số",
     subtitle:
       "Mua, triển khai và quản lý license, subscription, cloud và hạ tầng số trên một nền tảng — dành cho cá nhân, doanh nghiệp và đội ngũ IT.",
     ctaLabel: "Khám phá sản phẩm →",
     ctaHref: "/products",
-    secondaryCtaLabel: "Giải pháp doanh nghiệp →",
+    secondaryCtaLabel: "Dành cho doanh nghiệp →",
     secondaryCtaHref: "/business",
     trustItems: [
       {
@@ -122,7 +122,7 @@ export const homeFixture: HomeContent = {
       {
         id: "h1",
         title: "Chọn sản phẩm",
-        description: "Chọn license, subscription hoặc dịch vụ phù hợp.",
+        description: "License, subscription hoặc dịch vụ phù hợp nhu cầu.",
       },
       {
         id: "h2",
@@ -133,13 +133,13 @@ export const homeFixture: HomeContent = {
       {
         id: "h3",
         title: "Nhận & kích hoạt",
-        description: "Nhận license hoặc thông tin dịch vụ và thực hiện kích hoạt.",
+        description: "Nhận license và hướng dẫn kích hoạt theo từng sản phẩm.",
       },
       {
         id: "h4",
         title: "Quản lý & gia hạn",
         description:
-          "Theo dõi license, đơn hàng, subscription và thời hạn trong Tài khoản.",
+          "Theo dõi license, thời hạn và subscription trong tài khoản.",
       },
     ],
   },
@@ -161,9 +161,9 @@ export const homeFixture: HomeContent = {
     items: [
       {
         id: "w1",
-        title: "Bàn giao số theo sản phẩm",
+        title: "Bàn giao đúng theo sản phẩm",
         description:
-          "License và thông tin dịch vụ được bàn giao trực tuyến theo từng sản phẩm.",
+          "License, subscription hoặc nội dung bàn giao được gửi đúng hình thức của từng sản phẩm.",
         icon: "bolt",
       },
       {
@@ -182,7 +182,7 @@ export const homeFixture: HomeContent = {
       },
       {
         id: "w4",
-        title: "Nguồn gốc & thông tin license rõ ràng",
+        title: "Thông tin license minh bạch",
         description:
           "Loại license và hình thức nhận được hiển thị trước khi mua.",
         icon: "shield",
@@ -205,7 +205,7 @@ export const homeFixture: HomeContent = {
   },
   solutions: {
     visible: true,
-    title: "Giải pháp số cho mọi nhu cầu vận hành",
+    title: "Giải pháp theo nhu cầu vận hành",
     subtitle:
       "Từ năng suất, cloud, bảo mật đến backup và quản lý bản quyền — KEYON giúp doanh nghiệp lựa chọn, triển khai và quản lý các giải pháp số phù hợp.",
     ctaLabel: "Khám phá giải pháp →",
@@ -304,9 +304,9 @@ export const homeFixture: HomeContent = {
   },
   ctaBanner: {
     visible: true,
-    title: "Cần giải pháp license cho doanh nghiệp?",
+    title: "Cần giải pháp bản quyền cho doanh nghiệp?",
     subtitle:
-      "KEYON hỗ trợ doanh nghiệp lựa chọn, triển khai và quản lý license, subscription, cloud và hạ tầng số theo nhu cầu.",
+      "KEYON hỗ trợ license, subscription, cloud và hạ tầng số — từ lựa chọn sản phẩm đến triển khai và quản lý.",
     ctaLabel: "Nhận tư vấn doanh nghiệp →",
     ctaHref: "/contact/quote",
   },

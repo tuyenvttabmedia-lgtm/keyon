@@ -151,7 +151,7 @@ export const SOLUTION_TOPICS: {
   },
   {
     id: "security",
-    label: "Security",
+    label: "Bảo mật",
     href: "/solutions/security",
     description:
       "Khám phá các sản phẩm và license bảo mật cho thiết bị, email, dữ liệu, danh tính và mạng trên KEYON.",
@@ -167,9 +167,10 @@ export const SOLUTION_TOPICS: {
   },
   {
     id: "license-management",
-    label: "Quản lý license",
+    label: "License Management",
     href: "/solutions/license-management",
-    description: "Theo dõi license đã mua, thời hạn sử dụng và gia hạn trong Tài khoản KEYON.",
+    description:
+      "Theo dõi license, thời hạn, subscription và trạng thái kích hoạt trên tài khoản KEYON.",
     art: "stack",
   },
   {

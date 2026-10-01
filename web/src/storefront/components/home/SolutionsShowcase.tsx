@@ -134,10 +134,10 @@ export function SolutionsShowcase({ items, title, subtitle }: Props) {
   return (
     <section
       id="solutions"
-      className="home-solutions scroll-mt-24 border-t border-border bg-white home-section"
+      className="home-solutions scroll-mt-24 border-t border-border bg-white home-section-tight"
     >
       <div className="home-container">
-        <div className="mb-5 flex flex-col gap-2.5 md:mb-6 md:flex-row md:items-end md:justify-between md:gap-8">
+        <div className="mb-4 flex flex-col gap-2.5 md:mb-5 md:flex-row md:items-end md:justify-between md:gap-8">
           <div className="max-w-2xl">
             <h2 className={SECTION_TITLE_CLASS}>{sectionTitle}</h2>
             <p className={`mt-2 max-w-xl ${SECTION_LEAD_CLASS}`}>{sectionLead}</p>

@@ -113,7 +113,7 @@ export function CategoriesSection({ data }: { data: Categories }) {
   const desktopItems = data.items.slice(0, 7);
 
   return (
-    <section className="bg-white home-section">
+    <section className="bg-white home-section-tight">
       <div className="home-container">
         <HomeSectionHeading
           title={data.title}

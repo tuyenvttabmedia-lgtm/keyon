@@ -2,22 +2,15 @@ import Link from "next/link";
 import type { HomeContent } from "@/storefront/content/types";
 import { HomeSectionHeading } from "../HomeSectionHeading";
 import { CARD_TITLE_CLASS, SECTION_LEAD_CLASS } from "@/storefront/typography";
-import {
-  ELEVATION_HAIRLINE,
-  HOVER_OUTLINE_FILL,
-  TRANSITION_UI,
-} from "@/storefront/effects";
+import { TRANSITION_UI } from "@/storefront/effects";
 
 type Partners = HomeContent["partners"];
 
-/** Text labels only — do not draw vendor logo lockups or imply a partner badge. */
+/** Brand names only. Categories stay in the catalog row below. */
 const ECOSYSTEM = [
   { id: "microsoft", label: "Microsoft", href: "/brands/microsoft" },
   { id: "adobe", label: "Adobe", href: "/brands/adobe" },
   { id: "autodesk", label: "Autodesk", href: "/brands/autodesk" },
-  { id: "security", label: "Security", href: "/categories/security" },
-  { id: "cloud", label: "Cloud", href: "/categories/cloud" },
-  { id: "backup", label: "Backup", href: "/categories/backup" },
 ] as const;
 
 /**
@@ -36,24 +29,29 @@ export function TrustPartnersSection({
     "Các nền tảng phần mềm, bảo mật, cloud và hạ tầng KEYON hỗ trợ phân phối và triển khai.";
 
   return (
-    <section className={`bg-white pb-5 pt-4 md:pb-6 md:pt-5 lg:pt-6 ${className}`}>
+    <section className={`bg-white pb-4 pt-3 md:pb-5 md:pt-4 lg:pt-5 ${className}`}>
       <div className="home-container">
         <HomeSectionHeading title={title} variant="centered" className="mb-2" />
-        <p className={`mx-auto mb-4 max-w-[46rem] text-center ${SECTION_LEAD_CLASS}`}>
+        <p className={`mx-auto mb-3 max-w-[46rem] text-center ${SECTION_LEAD_CLASS}`}>
           {subtitle}
         </p>
-        <ul className="flex flex-wrap items-center justify-center gap-2.5">
-          {ECOSYSTEM.map((item) => (
-            <li key={item.id}>
+        <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+          {ECOSYSTEM.map((item, index) => (
+            <span key={item.id} className="inline-flex items-center gap-2">
+              {index > 0 ? (
+                <span aria-hidden="true" className="text-muted">
+                  ·
+                </span>
+              ) : null}
               <Link
                 href={item.href}
-                className={`inline-flex h-11 items-center rounded-full border border-border bg-white px-4 ${CARD_TITLE_CLASS} ${ELEVATION_HAIRLINE} ${TRANSITION_UI} ${HOVER_OUTLINE_FILL}`}
+                className={`${CARD_TITLE_CLASS} ${TRANSITION_UI} hover:text-accent`}
               >
                 {item.label}
               </Link>
-            </li>
+            </span>
           ))}
-        </ul>
+        </p>
       </div>
     </section>
   );

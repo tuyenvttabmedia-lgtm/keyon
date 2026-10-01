@@ -14,7 +14,7 @@ export function FeaturedSection({ data }: { data: Featured }) {
   const items = data.items.slice(0, 5);
 
   return (
-    <section className="bg-white home-section">
+    <section className="bg-white home-section-tight">
       <div className="home-container">
         <HomeSectionHeading
           title={data.title}

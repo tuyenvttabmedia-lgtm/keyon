@@ -14,6 +14,11 @@ function cmsTextOrFallback(
   return v;
 }
 
+const RETIRED_HERO_TITLES = [
+  "Nền tảng phân phối bản quyền số",
+  "Nền tảng phân phối bản quyền số cho phần mềm và cloud",
+];
+
 const RETIRED_HERO_SUBTITLES = [
   "Mua, triển khai và quản lý software license, subscription, cloud và hạ tầng số trên một nền tảng — từ giao license đến gia hạn và hỗ trợ.",
   "Mua, triển khai và quản lý bản quyền phần mềm, cloud và dịch vụ số trên một nền tảng duy nhất. Dành cho cá nhân, đội nhóm và doanh nghiệp.",
@@ -23,7 +28,11 @@ async function loadHomeHero(): Promise<HomeHero> {
   const cmsHome = await readJsonFile("home.json", defaultCmsHome);
   return {
     ...homeFixture.hero,
-    title: cmsTextOrFallback(cmsHome.heroTitle, homeFixture.hero.title),
+    title: cmsTextOrFallback(
+      cmsHome.heroTitle,
+      homeFixture.hero.title,
+      RETIRED_HERO_TITLES,
+    ),
     titleAccent: cmsHome.heroTitleAccent?.trim() || undefined,
     subtitle: cmsTextOrFallback(
       cmsHome.heroSubtitle,
@@ -36,7 +45,7 @@ async function loadHomeHero(): Promise<HomeHero> {
   };
 }
 
-const getHomeHeroCached = unstable_cache(loadHomeHero, ["storefront-home-hero-v2"], {
+const getHomeHeroCached = unstable_cache(loadHomeHero, ["storefront-home-hero-v3"], {
   revalidate: 60,
 });
 
