@@ -98,6 +98,11 @@ export function quantityLabel(quantity: number, profile: OfferingProfile): strin
   return `${quantity} gói`;
 }
 
+function isCheckoutChecklist(steps: string[]): boolean {
+  const blob = steps.join(" ").toLowerCase();
+  return /thanh toán|chọn gói/.test(blob);
+}
+
 function stripTags(html: string): string {
   return html
     .replace(/<[^>]+>/g, " ")
@@ -175,8 +180,10 @@ export function activationGuide(input: {
 }): { title: string; steps: string[] } {
   const profile = parseOfferingProfile(input.offeringProfile);
   const fromProduct = guideStepsFromHtml(input.usageGuideHtml);
-  if (fromProduct.length >= 2) {
-    return { title: guidePdpLabel(profile), steps: fromProduct };
+  const productSteps =
+    fromProduct.length >= 2 && !isCheckoutChecklist(fromProduct) ? fromProduct : [];
+  if (productSteps.length >= 2) {
+    return { title: guidePdpLabel(profile), steps: productSteps };
   }
 
   const blob = `${input.brandName} ${input.productName} ${input.variantName} ${input.categoryKey ?? ""}`.toLowerCase();
