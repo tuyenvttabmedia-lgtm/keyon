@@ -237,11 +237,11 @@ async function loadRecommended(
       const ordered = curatedIds
         .map((id) => byId.get(id))
         .filter((p): p is NonNullable<typeof p> => Boolean(p));
-      related = mapProductsToShopCards(ordered).slice(0, 4);
+      related = mapProductsToShopCards(ordered).slice(0, 5);
     }
   }
 
-  if (related.length < 4) {
+  if (related.length < 5) {
     const excludeIds = [
       ...(productId ? [productId] : []),
       ...related.map((x) => x.id),
@@ -273,10 +273,10 @@ async function loadRecommended(
     related = [
       ...related,
       ...mapProductsToShopCards(relatedDb, related.length),
-    ].slice(0, 4);
+    ].slice(0, 5);
   }
 
-  if (related.length < 4) {
+  if (related.length < 5) {
     const excludeIds = [
       ...(productId ? [productId] : []),
       ...related.map((x) => x.id),
@@ -296,7 +296,7 @@ async function loadRecommended(
     related = [
       ...related,
       ...mapProductsToShopCards(more, related.length),
-    ].slice(0, 4);
+    ].slice(0, 5);
   }
 
   return related;

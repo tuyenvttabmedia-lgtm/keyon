@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect } from "react";
 import type { CmsCheckout } from "@/server/cms/types";
 import type { ShopProduct } from "@/storefront/components/shop/types";
-import { formatVnd } from "@/storefront/components/shop/shop-utils";
+import { ProductCard } from "@/storefront/components/ProductCard";
 import { trackPurchase } from "@/storefront/lib/analytics";
 import {
   IconBadgeCheck,
@@ -17,9 +17,7 @@ import {
   BADGE_CLASS,
   BODY_MUTED_CLASS,
   CARD_META_CLASS,
-  CARD_PRICE_CLASS,
   CARD_TITLE_CLASS,
-  COMPARE_PRICE_CLASS,
   CTA_COMPACT_CLASS,
   CTA_LABEL_CLASS,
   FIELD_CAPTION_CLASS,
@@ -33,9 +31,7 @@ import {
 } from "@/storefront/typography";
 import {
   CTA_PRIMARY_EFFECT,
-  ELEVATION_HAIRLINE,
   ELEVATION_NONE,
-  HOVER_LINK_ACCENT,
   HOVER_OUTLINE_FILL,
   TRANSITION_UI,
 } from "@/storefront/effects";
@@ -234,11 +230,11 @@ export function CheckoutSuccessView({
                     {licenseTitle.sub ? (
                       <p className={`mt-0.5 ${CARD_META_CLASS}`}>{licenseTitle.sub}</p>
                     ) : null}
-                    <ul className={`mt-2 flex flex-wrap gap-x-3 gap-y-1 ${CARD_META_CLASS}`}>
-                      <li>{fulfillment.modelLabel}</li>
-                      <li>{fulfillment.qtyLabel}</li>
-                      {termLabel(item) ? <li>{termLabel(item)}</li> : null}
-                    </ul>
+                    <p className={`mt-1 ${CARD_META_CLASS}`}>
+                      {[fulfillment.modelLabel, fulfillment.qtyLabel]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </p>
                   </div>
                 </div>
               ) : null}
@@ -438,10 +434,26 @@ export function CheckoutSuccessView({
                 {cms.recommendedViewAllLabel} →
               </Link>
             </div>
-            <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {recommended.map((p) => (
-                <li key={p.id}>
-                  <SuccessRecoCard item={p} />
+            <div className="-mx-4 mt-4 px-4 lg:hidden">
+              <div className="home-snap-x gap-2.5 pb-1">
+                {recommended.map((item, i) => (
+                  <div
+                    key={item.id}
+                    className="w-[calc(50vw-1.35rem)] max-w-[200px] md:w-[calc(38vw-1rem)] md:max-w-[210px]"
+                  >
+                    <ProductCard
+                      item={{ ...item, ctaLabel: "Xem sản phẩm" }}
+                      compact
+                      priority={i < 2}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <ul className="mt-4 hidden list-none lg:grid lg:grid-cols-5 lg:gap-3.5">
+              {recommended.map((item) => (
+                <li key={item.id}>
+                  <ProductCard item={{ ...item, ctaLabel: "Xem sản phẩm" }} />
                 </li>
               ))}
             </ul>
@@ -500,54 +512,3 @@ function MetaCell({ label, value }: { label: string; value: string }) {
   );
 }
 
-function SuccessRecoCard({ item }: { item: ShopProduct }) {
-  const compare = item.compareAtPriceVnd;
-  const discount = item.discountPercent;
-  return (
-    <article className={`flex h-full flex-col rounded-2xl border border-border bg-white p-3 ${ELEVATION_HAIRLINE}`}>
-      <Link
-        href={item.href}
-        className="relative flex aspect-[4/3] items-center justify-center rounded-xl bg-surface"
-      >
-        {discount ? (
-          <span
-            className={`absolute left-2 top-2 rounded-full bg-rose-500 px-2 py-0.5 ${BADGE_CLASS} text-white`}
-          >
-            −{discount}%
-          </span>
-        ) : null}
-        {item.imageUrl ? (
-          <Image
-            src={item.imageUrl}
-            alt=""
-            width={120}
-            height={90}
-            className="max-h-[90px] w-auto object-contain"
-          />
-        ) : (
-          <span className={`${BADGE_CLASS} text-navy`}>
-            {item.brandName.slice(0, 3)}
-          </span>
-        )}
-      </Link>
-      <Link href={item.href} className="mt-2.5">
-        <h3 className={`line-clamp-2 ${CARD_TITLE_CLASS} ${HOVER_LINK_ACCENT}`}>
-          {item.productName}
-        </h3>
-      </Link>
-      <p className={`mt-0.5 line-clamp-1 ${CARD_META_CLASS}`}>{item.packageName}</p>
-      <div className="mt-2 flex flex-wrap items-baseline gap-2">
-        <p className={CARD_PRICE_CLASS}>{formatVnd(item.priceVnd)}</p>
-        {compare && compare > item.priceVnd ? (
-          <p className={COMPARE_PRICE_CLASS}>{formatVnd(compare)}</p>
-        ) : null}
-      </div>
-      <Link
-        href={item.href}
-        className={`mt-3 inline-flex ${LINK_ACCENT_CLASS}`}
-      >
-        Xem sản phẩm →
-      </Link>
-    </article>
-  );
-}
