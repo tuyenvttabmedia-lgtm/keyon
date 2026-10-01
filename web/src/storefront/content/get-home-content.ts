@@ -447,7 +447,7 @@ async function loadHomeContent(): Promise<HomeContent> {
   };
 }
 
-const getHomeContentCached = unstable_cache(loadHomeContent, ["storefront-home-content-v3"], {
+const getHomeContentCached = unstable_cache(loadHomeContent, ["storefront-home-content-v4"], {
   revalidate: 60,
 });
 

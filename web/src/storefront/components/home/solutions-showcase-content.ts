@@ -74,11 +74,11 @@ export const HOME_SOLUTION_SHOWCASE: Record<
   cloud: {
     tabLabel: "Cloud & Hạ tầng",
     panelKicker: "Cloud & Hạ tầng",
-    headline: "VPS, Cloud Server và Dedicated Server",
-    lead: "VPS Linux, VPS Windows, Cloud Server và Dedicated Server trên catalog KEYON. Khách tự quản trị hệ điều hành và ứng dụng.",
+    headline: "VPS Linux, VPS Windows và Dedicated Server",
+    lead: "Ba dòng hạ tầng đang có trên catalog KEYON. Khách tự quản trị hệ điều hành và ứng dụng.",
     checks: [
       "VPS Linux và VPS Windows",
-      "Cloud Server và Dedicated Server",
+      "Dedicated Server",
       "Cấu hình và thời hạn trên catalog",
       "Provisioning sau khi đơn được xác nhận",
     ],
@@ -86,7 +86,7 @@ export const HOME_SOLUTION_SHOWCASE: Record<
       { id: "vps-linux", label: "VPS Linux", slot: "tl", tone: "sky" },
       { id: "vps-win", label: "VPS Windows", slot: "tr", tone: "violet" },
       { id: "dedicated", label: "Dedicated Server", slot: "br", tone: "teal" },
-      { id: "cloud", label: "Cloud Server", slot: "bl", tone: "amber" },
+      { id: "term", label: "Theo thời hạn", slot: "bl", tone: "amber" },
     ],
   },
   security: {

@@ -231,9 +231,7 @@ export function pickHomeFaqs<T extends { question: string; showOnHome?: boolean 
   items: T[],
   limit = 6,
 ): T[] {
-  const marked = items.filter((i) => i.showOnHome);
-  const pool = marked.length > 0 ? marked : items;
-  const byQuestion = new Map(pool.map((i) => [i.question, i]));
+  const byQuestion = new Map(items.map((i) => [i.question, i]));
   const picked: T[] = [];
   const seen = new Set<T>();
   for (const q of HOME_FAQ_QUESTIONS) {
@@ -244,6 +242,8 @@ export function pickHomeFaqs<T extends { question: string; showOnHome?: boolean 
     }
     if (picked.length >= limit) return picked;
   }
+  const marked = items.filter((i) => i.showOnHome);
+  const pool = marked.length > 0 ? marked : items;
   for (const item of pool) {
     if (picked.length >= limit) break;
     if (seen.has(item)) continue;
