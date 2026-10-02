@@ -115,15 +115,11 @@ export function BrandDetailView({ brand }: { brand: BrandDetailData }) {
       {brand.description ? (
         <section className="border-b border-border bg-white">
           <div className="home-container py-8 md:py-10">
-            <div className="grid items-start gap-3 lg:grid-cols-12 lg:gap-x-10">
-              <h2 className={`${SECTION_TITLE_CLASS} lg:col-span-4`}>
-                Giới thiệu
-              </h2>
-              <div
-                className={`whitespace-pre-wrap lg:col-span-8 ${BODY_CLASS} text-navy/90`}
-              >
-                {brand.description}
-              </div>
+            <h2 className={SECTION_TITLE_CLASS}>Giới thiệu</h2>
+            <div
+              className={`mt-4 whitespace-pre-wrap ${BODY_CLASS} text-navy/90`}
+            >
+              {brand.description}
             </div>
           </div>
         </section>
