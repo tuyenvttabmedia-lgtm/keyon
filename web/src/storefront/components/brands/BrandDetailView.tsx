@@ -1,7 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Reveal } from "@/storefront/components/home/Reveal";
-import { LANDING_CRUMB_GAP } from "@/storefront/components/marketing/hero-shell";
+import {
+  LANDING_CRUMB_GAP,
+  LANDING_HERO_PAD,
+} from "@/storefront/components/marketing/hero-shell";
 import { ProductCard } from "@/storefront/components/ProductCard";
 import type { FeaturedProduct } from "@/storefront/content/types";
 import {
@@ -103,19 +106,21 @@ export function BrandDetailView({ brand }: { brand: BrandDetailData }) {
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_86%_16%,rgba(14,165,164,0.09),transparent_42%),radial-gradient(ellipse_at_10%_90%,rgba(14,165,233,0.05),transparent_48%)]"
             aria-hidden
           />
-          <div className="home-container relative home-section">
+          <div className={`home-container relative ${LANDING_HERO_PAD}`}>
             <BrandIdentity brand={brand} countLabel={countLabel} />
           </div>
         </section>
       )}
 
       {brand.description ? (
-        <section className="border-b border-border bg-white home-section">
-          <div className="home-container">
-            <div className="mx-auto max-w-3xl">
-              <h2 className={SECTION_TITLE_CLASS}>Giới thiệu</h2>
+        <section className="border-b border-border bg-white">
+          <div className="home-container py-8 md:py-10">
+            <div className="grid items-start gap-3 lg:grid-cols-12 lg:gap-x-10">
+              <h2 className={`${SECTION_TITLE_CLASS} lg:col-span-4`}>
+                Giới thiệu
+              </h2>
               <div
-                className={`mt-4 whitespace-pre-wrap ${BODY_CLASS} leading-relaxed text-navy/90`}
+                className={`whitespace-pre-wrap lg:col-span-8 ${BODY_CLASS} text-navy/90`}
               >
                 {brand.description}
               </div>
@@ -126,7 +131,7 @@ export function BrandDetailView({ brand }: { brand: BrandDetailData }) {
 
       <section
         id="san-pham"
-        className="scroll-mt-24 bg-white home-section"
+        className="scroll-mt-24 bg-[#F7FAFC] py-8 md:py-10"
       >
         <div className="home-container">
           <header className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -143,7 +148,7 @@ export function BrandDetailView({ brand }: { brand: BrandDetailData }) {
           </header>
 
           {count === 0 ? (
-            <div className="rounded-2xl border border-dashed border-border bg-[#F7FAFC] px-6 py-12 text-center">
+            <div className="rounded-2xl border border-dashed border-border bg-white px-6 py-12 text-center">
               <p className={CARD_TITLE_CLASS}>
                 Chưa có sản phẩm đang bán
               </p>
@@ -193,7 +198,7 @@ export function BrandDetailView({ brand }: { brand: BrandDetailData }) {
         </div>
       </section>
 
-      <section className="pb-8 pt-2 md:pb-10 md:pt-3">
+      <section className="bg-[#F7FAFC] pb-10 pt-1 md:pb-14">
         <div className="home-container">
           <div className="flex flex-col items-stretch gap-4 rounded-2xl bg-footer px-5 py-6 text-white sm:px-6 md:flex-row md:items-center md:justify-between md:px-8">
             <div>
@@ -209,7 +214,7 @@ export function BrandDetailView({ brand }: { brand: BrandDetailData }) {
             </div>
             <Link
               href="/contact/quote?intent=business"
-              className={`inline-flex h-12 w-full shrink-0 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover md:w-auto`}
+              className={`inline-flex h-12 w-full shrink-0 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER} md:w-auto`}
             >
               Yêu cầu báo giá
             </Link>
@@ -312,27 +317,26 @@ function BrandIdentity({
           </div>
           {brand.shortDescription ? (
             <p
-              className={`mt-3 max-w-2xl ${PAGE_LEAD_CLASS} ${
+              className={`mt-3 max-w-3xl ${PAGE_LEAD_CLASS} ${
                 onDark ? "!text-slate-200" : ""
               }`}
             >
               {brand.shortDescription}
             </p>
-          ) : (
-            <p
-              className={`mt-3 ${CARD_META_CLASS} ${
-                onDark ? "!text-white/70" : ""
-              }`}
-            >
-              {countLabel}
-            </p>
-          )}
+          ) : null}
+          <p
+            className={`mt-2 ${CARD_META_CLASS} ${
+              onDark ? "!text-white/70" : ""
+            }`}
+          >
+            {countLabel}
+          </p>
 
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             {brand.products.length > 0 ? (
               <a
                 href="#san-pham"
-                className={`inline-flex h-11 items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white shadow-sm ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                className={`inline-flex h-11 items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
               >
                 Xem sản phẩm →
               </a>
