@@ -145,7 +145,6 @@ async function loadHomeContent(): Promise<HomeContent> {
         },
       },
       orderBy: { updatedAt: "desc" },
-      take: 16,
     }),
     readJsonFile("faq.json", defaultCmsFaq),
     readJsonFile<CmsPartners>("partners.json", defaultCmsPartners),
@@ -512,7 +511,7 @@ async function loadHomeContent(): Promise<HomeContent> {
   };
 }
 
-const getHomeContentCached = unstable_cache(loadHomeContent, ["storefront-home-content-v8"], {
+const getHomeContentCached = unstable_cache(loadHomeContent, ["storefront-home-content-v9"], {
   revalidate: 60,
 });
 
@@ -711,60 +710,56 @@ function featuredBucket(row: {
   return inferCategory(row.brand.name, row.name);
 }
 
-function featuredTieBreak(bucket: string, name: string): number {
-  const n = name.toLowerCase();
-  if (bucket === "office") return /365/.test(n) ? 0 : 1;
-  if (bucket === "windows") {
-    if (n === "windows 11 pro") return 0;
-    if (n.includes("windows 11 pro") && !n.includes("workstation")) return 1;
-    if (n.includes("home")) return 2;
-    return 3;
-  }
-  if (bucket === "cloud") {
-    if (n.includes("vps linux")) return 0;
-    if (n.includes("vps windows")) return 1;
-    if (n.includes("dedicated")) return 2;
-    return 3;
-  }
-  return 0;
+/** Rotate the home row every 3 hours (Asia/Ho_Chi_Minh) so a refresh stays stable. */
+const FEATURED_ROTATION_MS = 3 * 60 * 60 * 1000;
+const FEATURED_VN_OFFSET_MS = 7 * 60 * 60 * 1000;
+
+function featuredRotationSlot(now = Date.now()): number {
+  return Math.floor((now + FEATURED_VN_OFFSET_MS) / FEATURED_ROTATION_MS);
 }
 
-/** One product per ecosystem bucket, Microsoft first, then security, backup, cloud. */
+function featuredMix(slot: number, id: string): number {
+  let h = 2166136261 ^ slot;
+  for (let i = 0; i < id.length; i++) {
+    h ^= id.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+/**
+ * Five sellable products, one per category when the catalog allows it.
+ * The set changes with the rotation slot instead of a fixed name ranking.
+ */
 function pickFeaturedRows<
   T extends {
+    id: string;
     categoryKey: string | null;
     name: string;
     brand: { name: string };
     variants: unknown[];
   },
->(rows: T[]): T[] {
-  const eligible = rows.filter((p) => p.variants.length > 0);
-  const buckets = new Map<string, T[]>();
-  for (const row of eligible) {
-    const key = featuredBucket(row);
-    const list = buckets.get(key) ?? [];
-    list.push(row);
-    buckets.set(key, list);
-  }
+>(rows: T[], now = Date.now()): T[] {
+  const slot = featuredRotationSlot(now);
+  const ranked = rows
+    .filter((p) => p.variants.length > 0)
+    .slice()
+    .sort(
+      (a, b) => featuredMix(slot, a.id) - featuredMix(slot, b.id) || a.id.localeCompare(b.id),
+    );
+
   const picked: T[] = [];
-  const used = new Set<T>();
-  for (const bucket of FEATURED_BUCKETS) {
-    const list = (buckets.get(bucket) ?? [])
-      .slice()
-      .sort(
-        (a, b) =>
-          featuredTieBreak(bucket, a.name) - featuredTieBreak(bucket, b.name) ||
-          a.name.localeCompare(b.name, "vi"),
-      );
-    const first = list[0];
-    if (!first) continue;
-    picked.push(first);
-    used.add(first);
+  const usedBuckets = new Set<string>();
+  for (const row of ranked) {
+    const bucket = featuredBucket(row);
+    if (usedBuckets.has(bucket)) continue;
+    usedBuckets.add(bucket);
+    picked.push(row);
     if (picked.length >= 5) return picked;
   }
-  for (const row of eligible) {
+  for (const row of ranked) {
     if (picked.length >= 5) break;
-    if (used.has(row)) continue;
+    if (picked.includes(row)) continue;
     picked.push(row);
   }
   return picked;
