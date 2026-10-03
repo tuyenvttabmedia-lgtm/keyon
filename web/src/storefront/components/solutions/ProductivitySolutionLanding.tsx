@@ -67,6 +67,7 @@ export type ProductivityFeaturedProduct = {
   description: string;
   priceLabel: string;
   priceHint?: string;
+  imageUrl?: string;
   brand: ProductivityBrand;
 };
 
@@ -81,7 +82,6 @@ type Props = {
 };
 
 const ICON_SM = { size: 18, strokeWidth: 1.85, "aria-hidden": true as const };
-const ICON_MD = { size: 20, strokeWidth: 1.75, "aria-hidden": true as const };
 
 const HERO_CHECKS = [
   "License Microsoft 365 / Office chính hãng",
@@ -293,19 +293,19 @@ export function ProductivitySolutionLanding({
       {/* ── Value pillars ────────────────────────────────────── */}
       <section className="home-section">
         <div className="home-container">
-          <ul className="grid grid-cols-2 gap-4 rounded-2xl bg-navy px-4 py-6 sm:gap-6 sm:px-8 sm:py-8 lg:grid-cols-4 lg:gap-5 lg:px-9 lg:py-9">
+          <ul className="grid grid-cols-2 gap-3 rounded-2xl bg-navy px-4 py-6 sm:gap-6 sm:px-8 sm:py-8 lg:grid-cols-4 lg:gap-5 lg:px-9 lg:py-9">
             {VALUE_PILLARS.map((v) => (
-              <li key={v.title} className="flex flex-col gap-3 sm:flex-row sm:items-start lg:flex-col xl:flex-row">
-                <span
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent/15 text-accent"
-                  aria-hidden
-                >
-                  <v.Icon {...ICON_MD} />
-                </span>
-                <div>
-                  <p className={`${CARD_TITLE_CLASS} text-white`}>{v.title}</p>
-                  <p className="mt-1.5 text-sm leading-relaxed text-slate-300/90">{v.body}</p>
+              <li key={v.title} className="flex flex-col gap-2">
+                <div className="flex items-center gap-2.5">
+                  <span
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent/15 text-accent sm:h-11 sm:w-11"
+                    aria-hidden
+                  >
+                    <v.Icon {...ICON_SM} />
+                  </span>
+                  <p className={`min-w-0 ${CARD_TITLE_CLASS} text-white`}>{v.title}</p>
                 </div>
+                <p className="text-sm leading-relaxed text-slate-300/90">{v.body}</p>
               </li>
             ))}
           </ul>
@@ -350,22 +350,36 @@ export function ProductivitySolutionLanding({
                   {products.map((p) => (
                     <li key={p.id} className="flex h-full min-h-0 items-stretch">
                       <article
-                        className={`flex h-full w-full flex-col rounded-xl bg-white p-3 sm:rounded-2xl sm:p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                        className={`flex h-full w-full flex-col overflow-hidden rounded-xl bg-white sm:rounded-2xl ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                       >
-                        <span className="shrink-0" aria-hidden>
-                          <ProductBrandMark brand={p.brand} size={36} />
-                        </span>
-                        <h3 className={`mt-3 ${CARD_TITLE_CLASS} line-clamp-2`}>{p.title}</h3>
-                        <p className={`mt-2 ${CARD_PRICE_CLASS} text-accent`}>{p.priceLabel}</p>
+                        <Link href={p.href} className="relative block aspect-[5/4] bg-white">
+                          {p.imageUrl ? (
+                            <Image
+                              src={p.imageUrl}
+                              alt={p.title}
+                              fill
+                              className="object-contain p-1.5"
+                              sizes="(max-width: 1024px) 45vw, 220px"
+                            />
+                          ) : (
+                            <span className="flex h-full items-center justify-center" aria-hidden>
+                              <ProductBrandMark brand={p.brand} size={40} />
+                            </span>
+                          )}
+                        </Link>
+                        <div className="flex flex-1 flex-col px-2.5 pb-2.5 pt-2 sm:px-3.5 sm:pb-3.5 sm:pt-2.5">
+                        <h3 className={`line-clamp-2 ${CARD_TITLE_CLASS}`}>{p.title}</h3>
+                        <p className={`mt-1.5 ${CARD_PRICE_CLASS} text-accent`}>{p.priceLabel}</p>
                         {p.priceHint ? (
                           <p className={`mt-1 ${CARD_META_CLASS}`}>{p.priceHint}</p>
                         ) : null}
                         <Link
                           href={p.href}
-                          className={`mt-auto pt-3 inline-flex items-center gap-1 ${LINK_ACCENT_CLASS}`}
+                          className={`mt-auto inline-flex items-center gap-1 pt-2 ${LINK_ACCENT_CLASS}`}
                         >
                           Mua ngay →
                         </Link>
+                        </div>
                       </article>
                     </li>
                   ))}
@@ -535,7 +549,7 @@ function WorkModesPanel({ workSceneImageUrl }: { workSceneImageUrl?: string }) {
 
           <div className="border-t border-border bg-white p-5 sm:p-6 lg:border-l lg:border-t-0">
             <p className={`${OVERLINE_CLASS} tracking-wide text-muted`}>Công cụ nổi bật</p>
-            <ul className="mt-3.5 space-y-2">
+            <ul className="mt-3.5 grid grid-cols-2 gap-2 lg:grid-cols-1">
               {mode.tools.map((t) => (
                 <li
                   key={t.name}
@@ -900,14 +914,14 @@ function ProductivityHeroArt({ imageUrl }: { imageUrl?: string }) {
           {apps.map((a) => (
             <li
               key={a.label}
-              className="rounded-xl border border-border/80 bg-[#F7FAFC] px-3 py-3"
+              className="flex items-center gap-2.5 rounded-xl border border-border/80 bg-[#F7FAFC] px-2.5 py-2.5"
             >
               <span
-                className={`inline-flex h-8 w-8 items-center justify-center rounded-lg ${a.tone}`}
+                className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${a.tone}`}
               >
                 <a.Icon size={15} strokeWidth={1.85} />
               </span>
-              <p className={`mt-2 ${CARD_TITLE_CLASS}`}>{a.label}</p>
+              <p className={`min-w-0 ${CARD_TITLE_CLASS}`}>{a.label}</p>
             </li>
           ))}
         </ul>

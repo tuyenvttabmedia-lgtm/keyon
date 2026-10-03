@@ -217,6 +217,7 @@ async function loadProductivityFeatured(): Promise<{
         href: `/products/${p.slug}`,
         description: `${p.brand.name} · License / gói số trên KEYON`,
         priceLabel: `Từ ${variant.priceVnd.toLocaleString("vi-VN")}đ`,
+        imageUrl: parseStringList(p.galleryUrls)[0],
         brand: inferProductivityBrand(p.name),
       },
     });
