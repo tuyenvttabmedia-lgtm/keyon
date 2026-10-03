@@ -293,7 +293,7 @@ export function ProductivitySolutionLanding({
       {/* ── Value pillars ────────────────────────────────────── */}
       <section className="home-section">
         <div className="home-container">
-          <ul className="grid grid-cols-2 gap-3 rounded-2xl bg-navy px-4 py-6 sm:gap-6 sm:px-8 sm:py-8 lg:grid-cols-4 lg:gap-5 lg:px-9 lg:py-9">
+          <ul className="grid grid-cols-1 gap-4 rounded-2xl bg-navy px-4 py-6 sm:grid-cols-2 sm:gap-6 sm:px-8 sm:py-8 lg:grid-cols-4 lg:gap-5 lg:px-9 lg:py-9">
             {VALUE_PILLARS.map((v) => (
               <li key={v.title} className="flex flex-col gap-2">
                 <div className="flex items-center gap-2.5">
@@ -553,12 +553,12 @@ function WorkModesPanel({ workSceneImageUrl }: { workSceneImageUrl?: string }) {
               {mode.tools.map((t) => (
                 <li
                   key={t.name}
-                  className={`flex items-center gap-3 rounded-xl px-2.5 py-2 ${TRANSITION_UI} hover:bg-surface`}
+                  className={`flex min-w-0 items-center gap-2 rounded-xl border border-border/70 bg-surface/50 px-2 py-2 ${TRANSITION_UI} hover:bg-surface`}
                 >
                   <span className="shrink-0" aria-hidden>
                     <ProductBrandMark brand={t.brand} size={28} />
                   </span>
-                  <span className={CARD_TITLE_CLASS}>{t.name}</span>
+                  <span className={`min-w-0 ${CARD_TITLE_CLASS}`}>{t.name}</span>
                 </li>
               ))}
             </ul>
@@ -910,18 +910,18 @@ function ProductivityHeroArt({ imageUrl }: { imageUrl?: string }) {
           </span>
         </div>
 
-        <ul className="mt-4 grid grid-cols-2 gap-2.5">
+        <ul className="mt-4 flex flex-wrap gap-2">
           {apps.map((a) => (
             <li
               key={a.label}
-              className="flex items-center gap-2.5 rounded-xl border border-border/80 bg-[#F7FAFC] px-2.5 py-2.5"
+              className="inline-flex items-center gap-2 rounded-xl border border-border/80 bg-[#F7FAFC] px-2.5 py-2"
             >
               <span
-                className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${a.tone}`}
+                className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${a.tone}`}
               >
-                <a.Icon size={15} strokeWidth={1.85} />
+                <a.Icon size={14} strokeWidth={1.85} />
               </span>
-              <p className={`min-w-0 ${CARD_TITLE_CLASS}`}>{a.label}</p>
+              <p className={`whitespace-nowrap ${CARD_TITLE_CLASS}`}>{a.label}</p>
             </li>
           ))}
         </ul>
