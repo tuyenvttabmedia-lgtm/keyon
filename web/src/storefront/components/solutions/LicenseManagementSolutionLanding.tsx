@@ -10,7 +10,10 @@ import {
   Package,
   ShieldCheck,
 } from "lucide-react";
-import { LANDING_CRUMB_GAP } from "@/storefront/components/marketing/hero-shell";
+import {
+  LANDING_CRUMB_GAP,
+  LANDING_HERO_PAD,
+} from "@/storefront/components/marketing/hero-shell";
 import {
   BADGE_CLASS,
   BODY_MUTED_CLASS,
@@ -173,7 +176,7 @@ export function LicenseManagementSolutionLanding({
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(14,165,164,0.07),transparent_55%)]"
           aria-hidden
         />
-        <div className="home-container relative home-section">
+        <div className={`home-container relative ${LANDING_HERO_PAD}`}>
           <nav
             className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}
           >
@@ -192,9 +195,9 @@ export function LicenseManagementSolutionLanding({
             <span className={BREADCRUMB_CURRENT_CLASS}>Quản lý bản quyền</span>
           </nav>
 
-          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-10">
-            <div className="min-w-0">
-              <h1 className={`max-w-[20ch] ${HERO_TITLE_CLASS}`}>
+          <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-10">
+            <div className="flex min-w-0 flex-col">
+              <h1 className={`max-w-xl ${HERO_TITLE_CLASS}`}>
                 License đã mua — xem rõ trong Tài khoản KEYON
               </h1>
               <p className={`mt-4 max-w-xl ${PAGE_LEAD_CLASS}`}>
@@ -202,11 +205,11 @@ export function LicenseManagementSolutionLanding({
                 (sau xác minh email). Không phải SAM phòng ban hay gia hạn tự động trừ tiền.
               </p>
 
-              <ul className="mt-6 grid gap-3.5 sm:grid-cols-2">
+              <ul className="mt-6 grid gap-4 lg:grid-cols-2 lg:gap-x-5 lg:gap-y-4">
                 {HERO_POINTS.map((p) => (
-                  <li key={p.title} className="flex gap-3">
+                  <li key={p.title} className="flex items-center gap-3">
                     <span
-                      className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent"
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent"
                       aria-hidden
                     >
                       <p.Icon {...ICON_SM} />
@@ -380,9 +383,9 @@ function AssetsHeroArt({
   if (loggedIn) {
     if (assets.length === 0) {
       return (
-        <div className="relative mx-auto w-full max-w-[480px] lg:max-w-none">
+        <div className="relative mx-auto flex h-full w-full max-w-[480px] flex-col lg:max-w-none">
           <div
-            className={`relative rounded-2xl border border-border bg-white p-5 sm:p-6 ${ELEVATION_HAIRLINE}`}
+            className={`relative flex h-full flex-col rounded-2xl border border-border bg-white p-5 sm:p-6 ${ELEVATION_HAIRLINE}`}
           >
             <p
               className={`${BADGE_CLASS} inline-flex rounded-md bg-accent-soft px-2 py-1 font-semibold text-accent`}
@@ -396,9 +399,10 @@ function AssetsHeroArt({
               Sau thanh toán, bản quyền đã giao sẽ hiện tại đây — kèm trạng thái và
               hạn dùng.
             </p>
+            <div className="mt-auto pt-5">
             <Link
               href="/products"
-              className={`mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+              className={`inline-flex h-11 w-full items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
             >
               Duyệt sản phẩm →
             </Link>
@@ -409,15 +413,16 @@ function AssetsHeroArt({
               </Link>{" "}
               để xem toàn bộ sau khi mua.
             </p>
+            </div>
           </div>
         </div>
       );
     }
 
     return (
-      <div className="relative mx-auto w-full max-w-[480px] lg:max-w-none">
+      <div className="relative mx-auto flex h-full w-full max-w-[480px] flex-col lg:max-w-none">
         <div
-          className={`relative rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_HAIRLINE}`}
+          className={`relative flex h-full flex-col rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_HAIRLINE}`}
         >
           <div className="flex items-center justify-between gap-3">
             <div>
@@ -457,7 +462,7 @@ function AssetsHeroArt({
 
           <Link
             href="/account/assets"
-            className={`mt-4 inline-flex w-full items-center justify-center ${LINK_ACCENT_CLASS}`}
+            className={`mt-auto inline-flex w-full items-center justify-center pt-4 ${LINK_ACCENT_CLASS}`}
           >
             Xem tất cả trong Tài sản →
           </Link>
@@ -467,9 +472,9 @@ function AssetsHeroArt({
   }
 
   return (
-    <div className="relative mx-auto hidden w-full max-w-[480px] lg:block lg:max-w-none">
+    <div className="relative mx-auto hidden h-full w-full max-w-[480px] flex-col lg:flex lg:max-w-none">
       <div
-        className={`relative rounded-2xl border border-border bg-white p-5 sm:p-6 ${ELEVATION_HAIRLINE}`}
+        className={`relative flex h-full flex-col rounded-2xl border border-border bg-white p-5 sm:p-6 ${ELEVATION_HAIRLINE}`}
       >
         <p
           className={`${BADGE_CLASS} inline-flex rounded-md bg-accent-soft px-2 py-1 font-semibold text-accent`}
@@ -510,9 +515,10 @@ function AssetsHeroArt({
           </p>
         </div>
 
+        <div className="mt-auto pt-5">
         <Link
           href="/login"
-          className={`mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+          className={`inline-flex h-11 w-full items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
         >
           Đăng nhập để xem Tài sản →
         </Link>
@@ -522,6 +528,7 @@ function AssetsHeroArt({
             Đăng ký
           </Link>
         </p>
+        </div>
       </div>
     </div>
   );
