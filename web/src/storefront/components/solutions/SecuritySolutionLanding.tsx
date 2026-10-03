@@ -1,8 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
   BadgeCheck,
-  Check,
   ChevronRight,
   Cloud,
   CreditCard,
@@ -64,6 +64,7 @@ export type SecurityFeaturedProduct = {
   meta: string;
   priceLabel: string;
   priceHint?: string;
+  imageUrl?: string;
   features: string[];
   brand: SecurityBrand;
 };
@@ -266,7 +267,7 @@ export function SecuritySolutionLanding({ featured }: Props) {
               </div>
             </div>
 
-            <div className="relative mx-auto w-full max-w-[460px] lg:max-w-none">
+            <div className="relative mx-auto hidden w-full max-w-[460px] lg:block lg:max-w-none">
               <SecurityHeroArt />
             </div>
           </div>
@@ -307,20 +308,25 @@ export function SecuritySolutionLanding({ featured }: Props) {
             <div className="mx-auto mt-2.5 h-1 w-14 rounded-full bg-accent" aria-hidden />
           </header>
 
-          <ul className="mt-7 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3.5">
-            {PILLARS.map((p) => (
-              <li key={p.title}>
+          <ul className="mt-7 grid grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-5 lg:gap-3.5">
+            {PILLARS.map((p, i) => (
+              <li
+                key={p.title}
+                className={i === PILLARS.length - 1 ? "col-span-2 lg:col-span-1" : undefined}
+              >
                 <article
-                  className={`flex h-full flex-col items-start rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                  className={`flex h-full flex-col rounded-2xl border border-border bg-white p-3 sm:p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                 >
-                  <span
-                    className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent"
-                    aria-hidden
-                  >
-                    <p.Icon size={22} strokeWidth={1.7} />
-                  </span>
-                  <h3 className={`mt-3.5 ${CARD_TITLE_CLASS}`}>{p.title}</h3>
-                  <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{p.body}</p>
+                  <div className="flex items-center gap-2.5">
+                    <span
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent"
+                      aria-hidden
+                    >
+                      <p.Icon size={18} strokeWidth={1.75} />
+                    </span>
+                    <h3 className={`min-w-0 ${CARD_TITLE_CLASS}`}>{p.title}</h3>
+                  </div>
+                  <p className={`mt-2 ${BODY_MUTED_CLASS}`}>{p.body}</p>
                 </article>
               </li>
             ))}
@@ -332,63 +338,49 @@ export function SecuritySolutionLanding({ featured }: Props) {
       {showFeatured ? (
       <section className="home-section">
         <div className="home-container">
-          <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <h2 className={SECTION_TITLE_CLASS}>Giải pháp bảo mật phù hợp với bạn</h2>
-            </div>
-            <Link href="/categories/security" className={LINK_ACCENT_CLASS}>
+          <div className="mb-5 flex flex-col gap-2.5 sm:flex-row sm:items-end sm:justify-between">
+            <h2 className={SECTION_TITLE_CLASS}>Giải pháp bảo mật phù hợp với bạn</h2>
+            <Link href="/categories/security" className={`shrink-0 ${LINK_ACCENT_CLASS}`}>
               Xem tất cả sản phẩm →
             </Link>
           </div>
 
           <div className="relative pr-0 lg:pr-12">
-            <ul className="grid auto-rows-fr grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3">
+            <ul className="grid grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-5 lg:gap-3">
               {products.map((p) => (
                 <li key={p.id} className="flex min-h-0 min-w-0">
                   <article
-                    className={`flex h-full w-full flex-col rounded-2xl border border-border bg-white p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                    className={`flex h-full w-full flex-col overflow-hidden rounded-xl border border-border bg-white sm:rounded-2xl ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                   >
-                    <div className="flex min-h-[52px] items-start gap-2.5">
-                      <span className="mt-0.5 shrink-0" aria-hidden>
-                        <SecurityBrandMark brand={p.brand} size={36} />
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <p className={`${BADGE_CLASS} font-semibold text-muted`}>
-                          {p.brandLabel}
-                        </p>
-                        <h3 className={`${CARD_TITLE_CLASS} mt-0.5 line-clamp-2 min-h-[2.5rem]`}>
-                          {p.title}
-                        </h3>
-                      </div>
-                    </div>
-                    <p className={`mt-2 ${CARD_META_CLASS} line-clamp-1`}>{p.meta}</p>
-                    <p className={`mt-2 ${CARD_PRICE_CLASS} min-h-[1.5rem] text-navy`}>
-                      {p.priceLabel}
-                    </p>
-                    {p.priceHint ? (
-                      <p className={`mt-0.5 ${CARD_META_CLASS}`}>{p.priceHint}</p>
-                    ) : (
-                      <p className="mt-0.5 h-4" aria-hidden />
-                    )}
-                    <ul className="mt-3 flex min-h-[4.5rem] flex-col gap-1.5">
-                      {p.features.slice(0, 3).map((f) => (
-                        <li key={f} className="flex gap-2">
-                          <span
-                            className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-accent text-white"
-                            aria-hidden
-                          >
-                            <Check size={10} strokeWidth={3} />
-                          </span>
-                          <span className="line-clamp-2 text-xs leading-snug text-muted">{f}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <Link
-                      href={p.href}
-                      className={`mt-auto inline-flex h-9 w-full items-center justify-center rounded-xl bg-accent px-3 ${CTA_COMPACT_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover`}
-                    >
-                      Mua ngay →
+                    <Link href={p.href} className="relative block aspect-[5/4] bg-white">
+                      {p.imageUrl ? (
+                        <Image
+                          src={p.imageUrl}
+                          alt={p.title}
+                          fill
+                          className="object-contain p-1.5"
+                          sizes="(max-width: 1024px) 45vw, 220px"
+                        />
+                      ) : (
+                        <span className="flex h-full items-center justify-center" aria-hidden>
+                          <SecurityBrandMark brand={p.brand} size={40} />
+                        </span>
+                      )}
                     </Link>
+                    <div className="flex flex-1 flex-col px-2.5 pb-2.5 pt-2 sm:px-3.5 sm:pb-3.5 sm:pt-2.5">
+                      <p className={`${BADGE_CLASS} font-semibold text-muted`}>{p.brandLabel}</p>
+                      <h3 className={`mt-0.5 line-clamp-2 ${CARD_TITLE_CLASS}`}>{p.title}</h3>
+                      <p className={`mt-1.5 ${CARD_PRICE_CLASS}`}>{p.priceLabel}</p>
+                      {p.priceHint ? (
+                        <p className={`mt-1 ${CARD_META_CLASS}`}>{p.priceHint}</p>
+                      ) : null}
+                      <Link
+                        href={p.href}
+                        className={`mt-auto inline-flex h-9 w-full items-center justify-center rounded-lg bg-accent px-2 ${CTA_COMPACT_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover`}
+                      >
+                        Mua ngay →
+                      </Link>
+                    </div>
                   </article>
                 </li>
               ))}
@@ -413,26 +405,26 @@ export function SecuritySolutionLanding({ featured }: Props) {
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_80%_20%,rgba(14,165,164,0.18),transparent_45%),radial-gradient(circle_at_12%_80%,rgba(14,165,233,0.1),transparent_40%)]"
               aria-hidden
             />
-            <div className="relative grid items-center gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-10">
-              <div>
-                <h2 className={`${SECTION_TITLE_CLASS} text-white`}>
-                  Vì sao chọn giải pháp bảo mật từ KEYON?
-                </h2>
-                <p className="mt-3 max-w-md text-sm leading-relaxed text-slate-300">
-                  Không chỉ bán key — KEYON giúp bạn chọn đúng gói, nhận đúng loại và
-                  quản lý trong Tài khoản sau khi mua.
-                </p>
-              </div>
-              <ul className="grid gap-4 sm:grid-cols-2">
+            <div className="relative">
+              <h2 className={`${SECTION_TITLE_CLASS} text-white`}>
+                Vì sao chọn giải pháp bảo mật từ KEYON?
+              </h2>
+              <p className="mt-2.5 max-w-2xl text-sm leading-relaxed text-slate-300">
+                KEYON giúp bạn chọn đúng gói, nhận đúng loại license và quản lý trong Tài khoản sau khi mua.
+              </p>
+              <ul className="mt-5 grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3">
                 {WHY.map((w) => (
-                  <li key={w.title} className="flex gap-3">
+                  <li
+                    key={w.title}
+                    className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-3"
+                  >
                     <span
-                      className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-accent/40 text-accent"
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent/15 text-accent"
                       aria-hidden
                     >
                       <w.Icon size={18} strokeWidth={1.85} />
                     </span>
-                    <div>
+                    <div className="min-w-0">
                       <p className={`${CARD_TITLE_CLASS} text-white`}>{w.title}</p>
                       <p className="mt-1 text-sm leading-relaxed text-slate-300">{w.body}</p>
                     </div>
@@ -449,35 +441,35 @@ export function SecuritySolutionLanding({ featured }: Props) {
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>4 bước mua và kích hoạt gói bảo mật</h2>
-            <div className="mx-auto mt-2.5 h-1 w-14 rounded-full bg-accent" aria-hidden />
+            <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
+              Từ chọn gói đến kích hoạt — mỗi bước có thông tin rõ trên KEYON.
+            </p>
           </header>
-          <ol className="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-3">
-            {STEPS.map((s, i) => (
-              <li key={s.n} className="relative flex items-start gap-3">
-                {i < STEPS.length - 1 ? (
-                  <span
-                    className="pointer-events-none absolute left-[5.25rem] top-5 hidden h-px w-[calc(100%-4.25rem)] border-t border-dashed border-border lg:block"
-                    aria-hidden
-                  />
-                ) : null}
-                <div className="relative z-[1] flex shrink-0 items-center gap-2">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-accent font-display text-sm font-bold text-white">
-                    {s.n}
-                  </span>
-                  <span
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-accent/30 bg-accent-soft text-accent"
-                    aria-hidden
-                  >
-                    <s.Icon size={18} strokeWidth={1.85} />
-                  </span>
-                </div>
-                <div className="min-w-0 pt-1">
-                  <p className={CARD_TITLE_CLASS}>{s.title}</p>
-                  <p className={`mt-1 ${BODY_MUTED_CLASS}`}>{s.body}</p>
+          <div className="relative mt-6 lg:mt-8">
+            <div
+              className="pointer-events-none absolute left-[12%] right-[12%] top-8 z-0 hidden border-t border-dashed border-accent/40 lg:block"
+              aria-hidden
+            />
+            <ol className="relative z-[1] grid gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+            {STEPS.map((s) => (
+              <li
+                key={s.n}
+                className={`relative z-[1] flex items-start gap-3.5 rounded-2xl border border-border bg-white p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+              >
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent font-display text-lg font-bold text-white">
+                  {s.n}
+                </span>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <s.Icon size={16} strokeWidth={1.85} className="shrink-0 text-accent" aria-hidden />
+                    <p className={CARD_TITLE_CLASS}>{s.title}</p>
+                  </div>
+                  <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{s.body}</p>
                 </div>
               </li>
             ))}
-          </ol>
+            </ol>
+          </div>
         </div>
       </section>
 

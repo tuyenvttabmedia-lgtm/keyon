@@ -303,6 +303,7 @@ async function loadSecurityFeatured(): Promise<{
         brandLabel: p.brand.name,
         meta: "License · theo gói",
         priceLabel: `Từ ${variant.priceVnd.toLocaleString("vi-VN")}đ`,
+        imageUrl: parseStringList(p.galleryUrls)[0],
         features: [p.brand.name, "License chính hãng", "Hỗ trợ tiếng Việt"],
         brand: inferSecurityBrand(p.name, p.brand.name),
       },
