@@ -25,7 +25,7 @@ import {
 } from "@/storefront/components/solutions/LicenseManagementSolutionLanding";
 import { ByNeedSolutionLanding } from "@/storefront/components/solutions/ByNeedSolutionLanding";
 import { SOLUTION_PAGES } from "@/storefront/nav/ia-pages";
-import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
+import { parseStringList, PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
 import { inferCategory } from "@/storefront/components/shop/shop-utils";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
 import { absoluteTitle } from "@/server/seo/title";
@@ -141,6 +141,7 @@ async function loadCloudFeatured(): Promise<{
         variant.sku ? `SKU ${variant.sku}` : "License / dịch vụ số",
       ].filter(Boolean),
       priceLabel: `Từ ${variant.priceVnd.toLocaleString("vi-VN")}đ`,
+      imageUrl: parseStringList(p.galleryUrls)[0],
       icon: "server",
     });
     if (cloudish.length >= 5) break;

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
@@ -55,6 +56,7 @@ export type CloudFeaturedProduct = {
   specs: string[];
   priceLabel: string;
   priceHint?: string;
+  imageUrl?: string;
   icon?: "server" | "storage" | "backup" | "database" | "pro";
 };
 
@@ -64,7 +66,6 @@ type Props = {
 
 const ICON_SM = { size: 18, strokeWidth: 1.85, "aria-hidden": true as const };
 const ICON_MD = { size: 22, strokeWidth: 1.75, "aria-hidden": true as const };
-const ICON_LG = { size: 28, strokeWidth: 1.65, "aria-hidden": true as const };
 
 const SERVICES: {
   title: string;
@@ -218,25 +219,25 @@ export function CloudSolutionLanding({ featured }: Props) {
           </nav>
 
           <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-10 xl:gap-12">
-            <div className="min-w-0">
+            <div className="flex min-w-0 flex-col">
               <h1 className={`max-w-xl ${HERO_TITLE_CLASS}`}>
                 Cloud & Hạ tầng cho doanh nghiệp
               </h1>
-              <p className={`mt-4 max-w-lg ${PAGE_LEAD_CLASS}`}>
+              <p className={`mt-3 max-w-lg sm:mt-4 ${PAGE_LEAD_CLASS}`}>
                 VPS Linux, VPS Windows và Dedicated Server trên KEYON. Khách tự quản trị. Cấu hình và thời hạn rõ
                 trước khi đăng ký.
               </p>
 
-              <ul className="mt-7 grid gap-5 sm:grid-cols-3">
+              <ul className="order-3 mt-5 grid gap-3 sm:order-none sm:mt-7 sm:grid-cols-3 sm:gap-5">
                 {HERO_VALUES.map((item) => (
-                  <li key={item.title} className="flex gap-3 sm:flex-col sm:gap-2">
+                  <li key={item.title} className="flex items-start gap-3 sm:flex-col sm:gap-2">
                     <span
                       className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-accent/20 bg-accent-soft text-accent"
                       aria-hidden
                     >
                       <item.Icon {...ICON_SM} />
                     </span>
-                    <span>
+                    <span className="min-w-0">
                       <span className={`block ${CARD_TITLE_CLASS}`}>{item.title}</span>
                       <span className={`mt-0.5 block ${CARD_META_CLASS}`}>{item.body}</span>
                     </span>
@@ -244,12 +245,12 @@ export function CloudSolutionLanding({ featured }: Props) {
                 ))}
               </ul>
 
-              <p className={`mt-5 max-w-lg ${BODY_MUTED_CLASS}`}>
+              <p className={`order-4 mt-4 max-w-lg sm:order-none sm:mt-5 ${BODY_MUTED_CLASS}`}>
                 Lưu ý: VPS và Dedicated Server trên catalog là self-managed. KEYON không quản trị hệ điều hành, ứng dụng
                 hay hạ tầng Cloud thuê ngoài của doanh nghiệp.
               </p>
 
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <div className="order-2 mt-5 flex flex-col gap-3 sm:order-none sm:mt-7 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/categories/cloud"
                   className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
@@ -266,7 +267,7 @@ export function CloudSolutionLanding({ featured }: Props) {
               </div>
             </div>
 
-            <div className="relative mx-auto w-full max-w-md lg:max-w-none">
+            <div className="relative mx-auto hidden w-full max-w-md lg:block lg:max-w-none">
               <CloudHeroArt />
             </div>
           </div>
@@ -282,23 +283,25 @@ export function CloudSolutionLanding({ featured }: Props) {
               Khám phá các nhóm sản phẩm Cloud và hạ tầng đang được cung cấp trên KEYON.
             </p>
           </header>
-          <ul className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {SERVICES.map((s) => (
-              <li key={s.title}>
+          <ul className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
+            {SERVICES.map((s, index) => (
+              <li key={s.title} className={index === SERVICES.length - 1 ? "col-span-2 lg:col-span-1" : undefined}>
                 <article
-                  className={`group flex h-full flex-col rounded-2xl border border-border bg-white p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                  className={`group flex h-full flex-col rounded-2xl border border-border bg-white p-3.5 sm:p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                 >
-                  <span
-                    className={`flex h-11 w-11 items-center justify-center rounded-2xl ${s.tone}`}
-                    aria-hidden
-                  >
-                    <s.Icon {...ICON_MD} />
-                  </span>
-                  <h3 className={`mt-4 ${CARD_TITLE_CLASS}`}>{s.title}</h3>
+                  <div className="flex items-center gap-2.5">
+                    <span
+                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl sm:h-11 sm:w-11 sm:rounded-2xl ${s.tone}`}
+                      aria-hidden
+                    >
+                      <s.Icon {...ICON_SM} />
+                    </span>
+                    <h3 className={`min-w-0 ${CARD_TITLE_CLASS}`}>{s.title}</h3>
+                  </div>
                   <p className={`mt-2 flex-1 ${BODY_MUTED_CLASS}`}>{s.description}</p>
                   <Link
                     href={s.href}
-                    className={`mt-4 inline-flex items-center gap-1 ${LINK_ACCENT_CLASS} group-hover:gap-1.5 ${TRANSITION_UI}`}
+                    className={`mt-3 inline-flex items-center gap-1 sm:mt-4 ${LINK_ACCENT_CLASS} group-hover:gap-1.5 ${TRANSITION_UI}`}
                   >
                     Tìm hiểu thêm
                     <span aria-hidden>→</span>
@@ -320,11 +323,11 @@ export function CloudSolutionLanding({ featured }: Props) {
             </p>
           </header>
 
-          <ul className="mt-6 flex flex-wrap items-center justify-center gap-2.5 md:gap-3">
+          <ul className="mt-6 grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap sm:items-center sm:justify-center md:gap-3">
             {PLATFORMS.map((p) => (
               <li
                 key={p.name}
-                className={`flex min-w-[7.5rem] items-center gap-2.5 rounded-xl border border-border bg-white px-3.5 py-2.5 ${ELEVATION_HAIRLINE} ${TRANSITION_UI} hover:border-accent/40`}
+                className={`flex min-w-0 items-center gap-2.5 rounded-xl border border-border bg-white px-3 py-2.5 sm:min-w-[7.5rem] sm:px-3.5 ${ELEVATION_HAIRLINE} ${TRANSITION_UI} hover:border-accent/40`}
               >
                 <span
                   className={`flex h-8 w-8 items-center justify-center rounded-lg ${p.tint}`}
@@ -332,7 +335,7 @@ export function CloudSolutionLanding({ featured }: Props) {
                 >
                   <p.Logo />
                 </span>
-                <span className={`${CARD_TITLE_CLASS} text-muted`}>{p.name}</span>
+                <span className={`min-w-0 ${CARD_TITLE_CLASS} text-muted`}>{p.name}</span>
               </li>
             ))}
           </ul>
@@ -363,15 +366,17 @@ export function CloudSolutionLanding({ featured }: Props) {
                       : `border-border bg-white ${ELEVATION_HAIRLINE}`
                   }`}
                 >
-                  <span
-                    className={`flex h-11 w-11 items-center justify-center rounded-2xl ${
-                      seg.highlight ? "bg-accent text-white" : "bg-navy text-white"
-                    }`}
-                    aria-hidden
-                  >
-                    <seg.Icon {...ICON_MD} />
-                  </span>
-                  <h3 className={`mt-4 ${SUBSECTION_TITLE_CLASS}`}>{seg.title}</h3>
+                  <div className="flex items-center gap-3">
+                    <span
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl sm:h-11 sm:w-11 sm:rounded-2xl ${
+                        seg.highlight ? "bg-accent text-white" : "bg-navy text-white"
+                      }`}
+                      aria-hidden
+                    >
+                      <seg.Icon {...ICON_SM} />
+                    </span>
+                    <h3 className={`min-w-0 ${SUBSECTION_TITLE_CLASS}`}>{seg.title}</h3>
+                  </div>
                   <p className={`mt-2 ${BODY_MUTED_CLASS}`}>{seg.description}</p>
                   <ul className="mt-5 flex-1 space-y-2.5">
                     {seg.items.map((item) => (
@@ -418,29 +423,39 @@ export function CloudSolutionLanding({ featured }: Props) {
               Xem sản phẩm Cloud →
             </Link>
           </div>
-          <ul className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-4">
+          <ul className="grid grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-3 xl:grid-cols-5 xl:gap-4">
             {featured.map((p) => {
               const Glyph = PRODUCT_ICONS[p.icon ?? "server"];
+              const brand = p.specs[0];
               return (
                 <li key={p.id}>
                   <article
-                    className={`flex h-full flex-col rounded-2xl border border-border bg-white p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                    className={`flex h-full flex-col overflow-hidden rounded-xl border border-border bg-white sm:rounded-2xl ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                   >
-                    <span
-                      className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-navy to-slate-700 text-white"
-                      aria-hidden
-                    >
-                      <Glyph {...ICON_SM} />
-                    </span>
-                    <h3 className={`mt-3.5 ${CARD_TITLE_CLASS}`}>{p.title}</h3>
-                    <ul className="mt-2 space-y-1 border-b border-border/70 pb-3">
-                      {p.specs.map((spec) => (
-                        <li key={spec} className={CARD_META_CLASS}>
-                          {spec}
-                        </li>
-                      ))}
-                    </ul>
-                    <p className={`mt-3 ${CARD_PRICE_CLASS} !text-navy`}>
+                    <Link href={p.href} className="relative block aspect-[5/4] bg-white">
+                      {p.imageUrl ? (
+                        <Image
+                          src={p.imageUrl}
+                          alt={p.title}
+                          fill
+                          className="object-contain p-1.5"
+                          sizes="(max-width: 640px) 45vw, 220px"
+                        />
+                      ) : (
+                        <span
+                          className="flex h-full items-center justify-center text-accent"
+                          aria-hidden
+                        >
+                          <Glyph {...ICON_MD} />
+                        </span>
+                      )}
+                    </Link>
+                    <div className="flex flex-1 flex-col gap-1.5 px-2.5 pb-2.5 pt-2 sm:px-4 sm:pb-4 sm:pt-3">
+                    <h3 className={`line-clamp-2 ${CARD_TITLE_CLASS}`}>{p.title}</h3>
+                    {brand ? (
+                      <p className={`mt-0.5 line-clamp-1 ${CARD_META_CLASS}`}>{brand}</p>
+                    ) : null}
+                    <p className={`mt-1.5 ${CARD_PRICE_CLASS}`}>
                       {p.priceLabel}
                     </p>
                     {p.priceHint ? (
@@ -448,10 +463,11 @@ export function CloudSolutionLanding({ featured }: Props) {
                     ) : null}
                     <Link
                       href={p.href}
-                      className={`mt-auto pt-4 inline-flex h-9 w-full items-center justify-center rounded-lg bg-accent px-3 ${CTA_COMPACT_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover`}
+                      className={`mt-auto inline-flex h-9 w-full items-center justify-center rounded-lg bg-accent px-2 ${CTA_COMPACT_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover`}
                     >
                       Xem chi tiết
                     </Link>
+                    </div>
                   </article>
                 </li>
               );
@@ -470,27 +486,32 @@ export function CloudSolutionLanding({ featured }: Props) {
               Bốn bước rõ ràng từ lựa chọn sản phẩm đến nhận thông tin bàn giao.
             </p>
           </header>
-          <ol className="relative mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+          <ol className="relative mt-6 grid gap-3 lg:mt-8 lg:grid-cols-4 lg:gap-5">
             <div
               className="pointer-events-none absolute left-[12%] right-[12%] top-9 z-0 hidden border-t border-dashed border-accent/35 lg:block"
               aria-hidden
             />
             {STEPS.map((step, i) => (
-              <li key={step.title} className="relative z-[1] text-center">
-                <div className="relative mx-auto w-fit">
+              <li
+                key={step.title}
+                className="relative z-[1] flex items-center gap-3 rounded-2xl border border-border bg-white px-3.5 py-3 text-left lg:flex-col lg:border-0 lg:bg-transparent lg:px-0 lg:py-0 lg:text-center"
+              >
+                <div className="relative shrink-0 lg:mx-auto">
                   <span
-                    className={`flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full border-2 border-accent/25 bg-white text-accent ${ELEVATION_HAIRLINE}`}
+                    className={`flex h-11 w-11 items-center justify-center rounded-full border border-accent/25 bg-accent-soft text-accent lg:h-[4.5rem] lg:w-[4.5rem] lg:border-2 lg:bg-white ${ELEVATION_HAIRLINE}`}
                   >
-                    <step.Icon {...ICON_LG} />
+                    <step.Icon size={20} strokeWidth={1.75} aria-hidden />
                   </span>
                   <span
-                    className={`absolute -right-1 -top-1 flex h-7 w-7 items-center justify-center rounded-full bg-accent font-bold text-white ${CARD_META_CLASS} !text-white ${ELEVATION_HAIRLINE}`}
+                    className={`absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent text-white lg:h-7 lg:w-7 ${BADGE_CLASS} ${ELEVATION_HAIRLINE}`}
                   >
                     {i + 1}
                   </span>
                 </div>
-                <p className={`mt-4 ${CARD_TITLE_CLASS}`}>{step.title}</p>
-                <p className={`mt-1 px-2 ${CARD_META_CLASS}`}>{step.body}</p>
+                <div className="min-w-0 lg:mt-4">
+                  <p className={CARD_TITLE_CLASS}>{step.title}</p>
+                  <p className={`mt-0.5 ${CARD_META_CLASS}`}>{step.body}</p>
+                </div>
               </li>
             ))}
           </ol>
