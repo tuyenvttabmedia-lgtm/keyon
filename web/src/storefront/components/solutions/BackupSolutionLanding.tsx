@@ -273,25 +273,25 @@ export function BackupSolutionLanding({ featured }: Props) {
             <h2 className={SECTION_TITLE_CLASS}>Mọi dữ liệu đều đáng được bảo vệ</h2>
             <div className="mx-auto mt-2.5 h-1 w-14 rounded-full bg-accent" aria-hidden />
           </header>
-          <ul className="mt-7 grid grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-5 lg:gap-3.5">
+          <ul className="mt-7 grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3.5 lg:grid-cols-5 lg:gap-3.5">
             {DATA_PILLARS.map((p, i) => (
               <li
                 key={p.title}
-                className={i === DATA_PILLARS.length - 1 ? "col-span-2 lg:col-span-1" : undefined}
+                className={i === DATA_PILLARS.length - 1 ? "sm:col-span-2 lg:col-span-1" : undefined}
               >
                 <article
-                  className={`flex h-full flex-col rounded-2xl border border-border bg-white p-3 sm:p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                  className={`flex h-full items-start gap-3 rounded-2xl border border-border bg-white p-3.5 lg:flex-col lg:p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                 >
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"
-                      aria-hidden
-                    >
-                      <p.Icon size={16} strokeWidth={1.75} />
-                    </span>
-                    <h3 className={`min-w-0 ${CARD_TITLE_CLASS}`}>{p.title}</h3>
+                  <span
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"
+                    aria-hidden
+                  >
+                    <p.Icon size={18} strokeWidth={1.75} />
+                  </span>
+                  <div className="min-w-0">
+                    <h3 className={CARD_TITLE_CLASS}>{p.title}</h3>
+                    <p className={`mt-1 ${BODY_MUTED_CLASS}`}>{p.body}</p>
                   </div>
-                  <p className={`mt-2 ${BODY_MUTED_CLASS}`}>{p.body}</p>
                 </article>
               </li>
             ))}
