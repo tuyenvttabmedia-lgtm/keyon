@@ -233,16 +233,16 @@ function ByNeedHeroArt() {
         aria-hidden
       >
         <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-navy text-accent">
+          <div className="flex min-w-0 flex-1 items-center gap-2.5">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-navy text-accent">
               <Layers size={18} strokeWidth={1.8} />
             </span>
-            <div>
+            <div className="min-w-0">
               <p className={CARD_TITLE_CLASS}>Ghép giải pháp theo nhu cầu</p>
               <p className={CARD_META_CLASS}>Chọn theo nhu cầu</p>
             </div>
           </div>
-          <span className={`rounded-md bg-accent-soft px-2 py-1 text-accent ${BADGE_CLASS}`}>
+          <span className={`shrink-0 rounded-md bg-accent-soft px-2 py-1 text-accent ${BADGE_CLASS}`}>
             KEYON
           </span>
         </div>

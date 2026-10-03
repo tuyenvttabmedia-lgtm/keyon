@@ -130,7 +130,7 @@ export function SubscriptionProcess() {
 
           <div className="min-w-0 lg:col-span-7">
             <div
-              className={`relative sticky top-24 overflow-hidden rounded-2xl bg-navy p-6 text-white sm:p-8 ${ELEVATION_FLOAT}`}
+              className={`relative overflow-hidden rounded-2xl bg-navy p-6 text-white sm:p-8 lg:sticky lg:top-24 ${ELEVATION_FLOAT}`}
             >
               <div
                 className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-accent/25 blur-3xl"

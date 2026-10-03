@@ -91,20 +91,22 @@ export function HowItWorksJourney({
           <p className={`mt-3 max-w-[46ch] ${SECTION_LEAD_CLASS}`}>{lead}</p>
         </header>
 
-        <ol className="relative grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <ol className="relative grid grid-cols-1 gap-3 sm:grid-cols-4">
           <span
             className="pointer-events-none absolute left-[12%] right-[12%] top-5 hidden border-t border-dashed border-border sm:block"
             aria-hidden
           />
           {STEPS.map((s) => (
-            <li key={s.tab} className="relative z-[1] flex flex-col items-center text-center">
+            <li key={s.tab} className="relative z-[1] flex items-center gap-3 text-left sm:flex-col sm:items-center sm:gap-0 sm:text-center">
               <span
-                className={`inline-flex h-10 w-10 items-center justify-center rounded-full bg-accent text-white ${CTA_COMPACT_CLASS}`}
+                className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent text-white ${CTA_COMPACT_CLASS}`}
               >
                 {s.eyebrow}
               </span>
-              <p className={`mt-3 ${CARD_TITLE_CLASS}`}>{s.tab}</p>
-              <p className={`mt-0.5 max-w-[18ch] ${CARD_META_CLASS}`}>{s.hint}</p>
+              <div className="min-w-0 sm:mt-3">
+                <p className={CARD_TITLE_CLASS}>{s.tab}</p>
+                <p className={`mt-0.5 sm:max-w-[18ch] ${CARD_META_CLASS}`}>{s.hint}</p>
+              </div>
             </li>
           ))}
         </ol>

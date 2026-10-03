@@ -346,9 +346,9 @@ export function ProductivitySolutionLanding({
               </div>
 
               <div className="relative min-w-0 self-stretch pr-0 lg:pr-10 xl:pr-12">
-                <ul className="grid h-full grid-cols-2 items-stretch gap-3 lg:grid-cols-4 lg:gap-3">
+                <ul className="grid h-full grid-cols-1 items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-3">
                   {products.map((p) => (
-                    <li key={p.id} className="flex h-full min-h-[180px] items-center">
+                    <li key={p.id} className="flex h-full min-h-0 items-center sm:min-h-[180px]">
                       <article
                         className={`flex h-full w-full flex-col rounded-2xl bg-white p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                       >
@@ -882,16 +882,16 @@ function ProductivityHeroArt({ imageUrl }: { imageUrl?: string }) {
         aria-hidden
       >
         <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-navy text-accent">
+          <div className="flex min-w-0 flex-1 items-center gap-2.5">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-navy text-accent">
               <Users size={18} strokeWidth={1.8} />
             </span>
-            <div>
+            <div className="min-w-0">
               <p className={CARD_TITLE_CLASS}>Không gian làm việc</p>
               <p className={CARD_META_CLASS}>License năng suất trên KEYON</p>
             </div>
           </div>
-          <span className="rounded-md bg-accent-soft px-2 py-1 text-[11px] font-semibold text-accent">
+          <span className={`${BADGE_CLASS} shrink-0 rounded-md bg-accent-soft px-2 py-1 font-semibold text-accent`}>
             KEYON
           </span>
         </div>

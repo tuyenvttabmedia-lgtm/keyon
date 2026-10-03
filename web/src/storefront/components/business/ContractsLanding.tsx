@@ -293,16 +293,16 @@ function ContractsHeroArt() {
         aria-hidden
       >
         <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-navy text-accent">
+          <div className="flex min-w-0 flex-1 items-center gap-2.5">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-navy text-accent">
               <ClipboardList size={18} strokeWidth={1.8} />
             </span>
-            <div>
+            <div className="min-w-0">
               <p className={CARD_TITLE_CLASS}>Tài khoản doanh nghiệp</p>
               <p className={CARD_META_CLASS}>Sau đăng nhập tài khoản</p>
             </div>
           </div>
-          <span className={`rounded-md bg-accent-soft px-2 py-1 ${BADGE_CLASS} text-accent`}>
+          <span className={`shrink-0 rounded-md bg-accent-soft px-2 py-1 ${BADGE_CLASS} text-accent`}>
             KEYON
           </span>
         </div>

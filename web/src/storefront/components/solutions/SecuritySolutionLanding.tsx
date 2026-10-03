@@ -502,7 +502,7 @@ function SecurityHeroArt() {
   ];
 
   return (
-    <div className="relative mx-auto aspect-square w-full max-w-[420px]">
+    <div className="relative mx-auto aspect-square w-full max-w-[260px] sm:max-w-[420px]">
       <div
         className="pointer-events-none absolute inset-[18%] rounded-full bg-accent/15 blur-2xl"
         aria-hidden

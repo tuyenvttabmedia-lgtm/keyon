@@ -583,7 +583,7 @@ function CloudHeroArt() {
         aria-hidden
       />
 
-      <div className="relative mx-auto aspect-[5/4] w-full max-w-[460px]">
+      <div className="cloud-hero-stage relative mx-auto aspect-[5/4] w-full max-w-[460px]">
         <svg
           viewBox="0 0 460 368"
           className="h-full w-full"
@@ -670,7 +670,7 @@ function CloudHeroArt() {
         </svg>
 
         <div
-          className={`absolute left-0 top-[10%] max-w-[10rem] rounded-xl border border-border bg-white/95 px-3 py-2 backdrop-blur-sm ${ELEVATION_HAIRLINE} sm:left-1 sm:max-w-[11rem]`}
+          className={`cloud-hero-chip absolute left-0 top-[10%] max-w-[10rem] rounded-xl border border-border bg-white/95 px-3 py-2 backdrop-blur-sm ${ELEVATION_HAIRLINE} sm:left-1 sm:max-w-[11rem]`}
         >
           <div className="flex items-center gap-2">
             <span
@@ -686,7 +686,7 @@ function CloudHeroArt() {
           </div>
         </div>
         <div
-          className={`absolute right-0 top-[6%] max-w-[10rem] rounded-xl border border-border bg-white/95 px-3 py-2 backdrop-blur-sm ${ELEVATION_HAIRLINE} sm:right-1 sm:max-w-[11rem]`}
+          className={`cloud-hero-chip absolute right-0 top-[6%] max-w-[10rem] rounded-xl border border-border bg-white/95 px-3 py-2 backdrop-blur-sm ${ELEVATION_HAIRLINE} sm:right-1 sm:max-w-[11rem]`}
         >
           <div className="flex items-center gap-2">
             <span
@@ -702,7 +702,7 @@ function CloudHeroArt() {
           </div>
         </div>
         <div
-          className={`absolute bottom-[4%] left-1/2 max-w-[12rem] -translate-x-1/2 rounded-xl border border-border bg-white/95 px-3 py-2 backdrop-blur-sm ${ELEVATION_HAIRLINE}`}
+          className={`cloud-hero-chip absolute bottom-[4%] left-1/2 max-w-[12rem] -translate-x-1/2 rounded-xl border border-border bg-white/95 px-3 py-2 backdrop-blur-sm ${ELEVATION_HAIRLINE}`}
         >
           <div className="flex items-center gap-2">
             <span

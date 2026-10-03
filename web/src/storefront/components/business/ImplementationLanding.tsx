@@ -362,16 +362,16 @@ function ImplementationHeroArt() {
         className={`rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
       >
         <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-navy text-accent">
+          <div className="flex min-w-0 flex-1 items-center gap-2.5">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-navy text-accent">
               <Handshake size={18} strokeWidth={1.8} />
             </span>
-            <div>
+            <div className="min-w-0">
               <p className={CARD_TITLE_CLASS}>Onboarding bản quyền</p>
               <p className={CARD_META_CLASS}>Bàn giao và kích hoạt sau khi mua</p>
             </div>
           </div>
-          <span className={`rounded-md bg-accent-soft px-2 py-1 ${BADGE_CLASS} text-accent`}>
+          <span className={`shrink-0 rounded-md bg-accent-soft px-2 py-1 ${BADGE_CLASS} text-accent`}>
             KEYON
           </span>
         </div>

@@ -530,21 +530,21 @@ function VolumeHeroArt() {
         className={`relative rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
       >
         <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-navy text-accent">
+          <div className="flex min-w-0 flex-1 items-center gap-2.5">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-navy text-accent">
               <Building2 size={18} strokeWidth={1.8} aria-hidden />
             </span>
-            <div>
+            <div className="min-w-0">
               <p className={`${CARD_TITLE_CLASS}`}>Quản lý license doanh nghiệp</p>
               <p className={`${CARD_META_CLASS}`}>Theo dõi trong Tài khoản</p>
             </div>
           </div>
-          <span className={`${BADGE_CLASS} rounded-md bg-accent-soft px-2 py-1 font-semibold text-accent`}>
+          <span className={`${BADGE_CLASS} shrink-0 rounded-md bg-accent-soft px-2 py-1 font-semibold text-accent`}>
             KEYON
           </span>
         </div>
 
-        <ul className="mt-4 grid grid-cols-2 gap-2.5">
+        <ul className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
           {rows.map((r) => (
             <li
               key={r.label}
