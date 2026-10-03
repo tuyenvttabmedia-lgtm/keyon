@@ -15,12 +15,7 @@ import {
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
 } from "@/storefront/typography";
-import {
-  ELEVATION_CARD_HOVER,
-  ELEVATION_HAIRLINE,
-  HOVER_LIFT_CARD,
-  TRANSITION_PANEL,
-} from "@/storefront/effects";
+import { ELEVATION_HAIRLINE, TRANSITION_UI } from "@/storefront/effects";
 import { SECTION_PAD, SURFACE_MUTED } from "./shared";
 
 const TOPICS: {
@@ -84,14 +79,17 @@ export function SupportTopics() {
           </p>
         </header>
 
-        <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 md:mt-9 md:gap-4">
-          {TOPICS.map(({ title, hints, href, Icon }) => (
-            <li key={title}>
+        <ul className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 md:mt-9 lg:grid-cols-12 lg:gap-4">
+          {TOPICS.map(({ title, hints, href, Icon }, index) => (
+            <li
+              key={title}
+              className={index < 4 ? "lg:col-span-3" : "lg:col-span-4"}
+            >
               <Link
                 href={href}
-                className={`flex min-h-[88px] items-start gap-3.5 p-4 md:min-h-0 md:flex-col md:p-5 ${SURFACE_MUTED} ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
+                className={`flex h-full items-center gap-3.5 p-4 ${SURFACE_MUTED} ${ELEVATION_HAIRLINE} ${TRANSITION_UI} hover:border-accent/40 hover:bg-white`}
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-accent shadow-sm md:h-11 md:w-11">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent">
                   <Icon size={18} strokeWidth={1.85} aria-hidden />
                 </span>
                 <span className="min-w-0">
