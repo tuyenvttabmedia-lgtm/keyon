@@ -29,7 +29,6 @@ import {
   ELEVATION_CARD_HOVER,
   ELEVATION_CTA_HOVER,
   ELEVATION_HAIRLINE,
-  ELEVATION_NONE,
   HOVER_LIFT_CARD,
   HOVER_LINK_ACCENT,
   TRANSITION_PANEL,
@@ -85,26 +84,30 @@ const FEATURES: { title: string; body: string; Icon: LucideIcon }[] = [
   },
 ];
 
-const STEPS: { n: string; title: string; body: string }[] = [
+const STEPS: { n: string; title: string; body: string; Icon: LucideIcon }[] = [
   {
-    n: "01",
+    n: "1",
     title: "Mua & nhận license",
     body: "Sau thanh toán, deliverable vào Tài khoản (Đơn hàng / Tài sản).",
+    Icon: Package,
   },
   {
-    n: "02",
+    n: "2",
     title: "Theo dõi trong Tài sản",
     body: "Xem sản phẩm, trạng thái và hạn dùng đã ghi nhận.",
+    Icon: LayoutGrid,
   },
   {
-    n: "03",
+    n: "3",
     title: "Chủ động trước hạn",
     body: "Dựa vào hạn dùng trên Tài khoản để quyết định gia hạn kịp thời.",
+    Icon: Bell,
   },
   {
-    n: "04",
+    n: "4",
     title: "Gia hạn hoặc báo giá",
     body: "Mua lại đúng SKU trên catalog, hoặc gửi yêu cầu khi cần số lượng lớn.",
+    Icon: KeyRound,
   },
 ];
 
@@ -247,20 +250,22 @@ export function LicenseManagementSolutionLanding({
             </p>
           </header>
 
-          <ul className="mt-7 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mt-7 grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3.5 lg:grid-cols-4">
             {FEATURES.map((f) => (
               <li key={f.title}>
                 <article
-                  className={`flex h-full flex-col rounded-2xl border border-border bg-white p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                  className={`flex h-full items-start gap-3 rounded-2xl border border-border bg-white p-3.5 lg:flex-col lg:p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                 >
                   <span
-                    className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"
                     aria-hidden
                   >
-                    <f.Icon size={20} strokeWidth={1.8} />
+                    <f.Icon size={18} strokeWidth={1.8} />
                   </span>
-                  <h3 className={`mt-3 ${CARD_TITLE_CLASS}`}>{f.title}</h3>
-                  <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{f.body}</p>
+                  <div className="min-w-0">
+                    <h3 className={CARD_TITLE_CLASS}>{f.title}</h3>
+                    <p className={`mt-1 ${BODY_MUTED_CLASS}`}>{f.body}</p>
+                  </div>
                 </article>
               </li>
             ))}
@@ -277,15 +282,22 @@ export function LicenseManagementSolutionLanding({
             </p>
           </header>
 
-          <ol className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <ol className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
             {STEPS.map((s) => (
               <li
                 key={s.n}
-                className={`rounded-2xl border border-border bg-white p-5 ${ELEVATION_NONE}`}
+                className={`flex items-start gap-3.5 rounded-2xl border border-border bg-white p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
               >
-                <p className={`${BADGE_CLASS} text-accent`}>{s.n}</p>
-                <h3 className={`mt-2 ${CARD_TITLE_CLASS}`}>{s.title}</h3>
-                <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{s.body}</p>
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent font-display text-lg font-bold text-white">
+                  {s.n}
+                </span>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <s.Icon size={16} strokeWidth={1.85} className="shrink-0 text-accent" aria-hidden />
+                    <h3 className={CARD_TITLE_CLASS}>{s.title}</h3>
+                  </div>
+                  <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{s.body}</p>
+                </div>
               </li>
             ))}
           </ol>
@@ -301,37 +313,37 @@ export function LicenseManagementSolutionLanding({
             </p>
           </header>
 
-          <ul className="mt-7 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          <ul className="mt-7 grid grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-3 xl:grid-cols-6">
             {BRANDS.map((b) => (
               <li key={b.id}>
                 <Link
                   href={b.href}
-                  className={`flex h-full flex-col rounded-2xl border border-border bg-white p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                  className={`flex h-full flex-col rounded-2xl border border-border bg-white p-3 sm:p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                 >
-                  <BrandMark brand={b.id} size={40} />
-                  <h3 className={`mt-3 ${CARD_TITLE_CLASS}`}>{b.name}</h3>
-                  <p className={`mt-1 ${BODY_MUTED_CLASS}`}>{b.body}</p>
+                  <span className="flex items-center gap-2">
+                    <BrandMark brand={b.id} size={28} />
+                    <h3 className={`min-w-0 ${CARD_TITLE_CLASS}`}>{b.name}</h3>
+                  </span>
+                  <p className={`mt-2 ${BODY_MUTED_CLASS}`}>{b.body}</p>
                 </Link>
               </li>
             ))}
             <li>
               <Link
                 href="/products"
-                className={`flex h-full flex-col items-start justify-between rounded-2xl border border-dashed border-accent/40 bg-accent-soft/40 p-4 ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                className={`flex h-full flex-col rounded-2xl border border-dashed border-accent/40 bg-accent-soft/40 p-3 sm:p-4 ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
               >
-                <span
-                  className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-accent"
-                  aria-hidden
-                >
-                  <LayoutGrid size={20} strokeWidth={1.8} />
-                </span>
-                <div className="mt-3">
+                <span className="flex items-center gap-2">
+                  <span
+                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white text-accent"
+                    aria-hidden
+                  >
+                    <LayoutGrid size={16} strokeWidth={1.8} />
+                  </span>
                   <p className={`${CARD_TITLE_CLASS} text-accent`}>Xem tất cả</p>
-                  <p className={`mt-1 ${CARD_META_CLASS}`}>
-                    Toàn bộ catalog bản quyền
-                  </p>
-                </div>
-                <span className={`mt-3 ${LINK_ACCENT_CLASS}`}>Duyệt sản phẩm →</span>
+                </span>
+                <p className={`mt-2 ${CARD_META_CLASS}`}>Toàn bộ catalog bản quyền</p>
+                <span className={`mt-auto pt-3 ${LINK_ACCENT_CLASS}`}>Duyệt sản phẩm →</span>
               </Link>
             </li>
           </ul>
@@ -455,7 +467,7 @@ function AssetsHeroArt({
   }
 
   return (
-    <div className="relative mx-auto w-full max-w-[480px] lg:max-w-none">
+    <div className="relative mx-auto hidden w-full max-w-[480px] lg:block lg:max-w-none">
       <div
         className={`relative rounded-2xl border border-border bg-white p-5 sm:p-6 ${ELEVATION_HAIRLINE}`}
       >
