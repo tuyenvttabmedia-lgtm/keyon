@@ -1,14 +1,17 @@
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
+  BadgeCheck,
   Cloud,
   Database,
   HardDrive,
+  Headphones,
   KeyRound,
   Layers,
   Settings2,
   ShieldCheck,
   TrendingUp,
+  Users,
   Wallet,
 } from "lucide-react";
 import { SolutionPageChrome } from "@/storefront/components/solutions/SolutionPageChrome";
@@ -82,14 +85,27 @@ const HERO_ORBIT: { id: string; seat: string }[] = [
   { id: "by-need", seat: "br" },
 ];
 
-const TRUST: { title: string; body: string }[] = [
-  { title: "Chính hãng", body: "License đúng nguồn, ghi rõ loại license trên từng gói." },
+const TRUST: { title: string; body: string; Icon: LucideIcon }[] = [
+  {
+    title: "Chính hãng",
+    body: "License đúng nguồn, ghi rõ loại license trên từng gói.",
+    Icon: BadgeCheck,
+  },
   {
     title: "Bàn giao rõ ràng",
     body: "Key, tài khoản hoặc thông tin license được bàn giao theo từng sản phẩm.",
+    Icon: KeyRound,
   },
-  { title: "Hỗ trợ tiếng Việt", body: "Tư vấn chọn gói trước và sau khi mua." },
-  { title: "Cá nhân & tổ chức", body: "Mua lẻ trên Sản phẩm, số lượng lớn ở Doanh nghiệp." },
+  {
+    title: "Hỗ trợ tiếng Việt",
+    body: "Tư vấn chọn gói trước và sau khi mua.",
+    Icon: Headphones,
+  },
+  {
+    title: "Cá nhân & tổ chức",
+    body: "Mua lẻ trên Sản phẩm, số lượng lớn ở Doanh nghiệp.",
+    Icon: Users,
+  },
 ];
 
 const TECH_TOPIC_IDS = ["microsoft-365-office", "cloud", "security", "backup"] as const;
@@ -145,14 +161,22 @@ export function SolutionsHubLanding({ introEmbedUrl }: Props) {
 
       <section className="border-b border-border bg-white home-section">
         <div className="home-container">
-          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4">
             {TRUST.map((t) => (
               <li
                 key={t.title}
-                className={`rounded-2xl border border-border bg-[#F7FAFC] px-4 py-3.5 ${ELEVATION_HAIRLINE}`}
+                className={`flex h-full flex-col rounded-2xl border border-border bg-[#F7FAFC] px-3.5 py-3.5 sm:px-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
               >
-                <p className={CARD_TITLE_CLASS}>{t.title}</p>
-                <p className={`mt-1 ${BODY_MUTED_CLASS}`}>{t.body}</p>
+                <div className="flex items-center gap-2.5">
+                  <span
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent"
+                    aria-hidden
+                  >
+                    <t.Icon size={18} strokeWidth={1.85} />
+                  </span>
+                  <p className={`min-w-0 ${CARD_TITLE_CLASS}`}>{t.title}</p>
+                </div>
+                <p className={`mt-2 ${BODY_MUTED_CLASS}`}>{t.body}</p>
               </li>
             ))}
           </ul>
@@ -209,7 +233,7 @@ function TopicGroup({
   return (
     <div className={className}>
       <h3 className={SUBSECTION_TITLE_CLASS}>{title}</h3>
-      <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-2 lg:gap-4">
+      <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         {topics.map((topic) => {
           const page = SOLUTION_PAGES[topic.id];
           const bullets = (page?.bullets ?? [topic.description]).slice(0, 3);
@@ -218,25 +242,27 @@ function TopicGroup({
             <li key={topic.id}>
               <Link
                 href={topic.href}
-                className={`group flex h-full flex-col rounded-2xl border border-border bg-white p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
+                className={`group flex h-full flex-col rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
               >
-                <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent">
-                  <Icon size={20} strokeWidth={1.85} aria-hidden />
-                </span>
-                <h4 className={`mt-4 ${CARD_TITLE_CLASS}`}>{topic.label}</h4>
-                <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>
+                <div className="flex items-center gap-3">
+                  <span className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent ${TRANSITION_UI} group-hover:bg-accent group-hover:text-white`}>
+                    <Icon size={20} strokeWidth={1.85} aria-hidden />
+                  </span>
+                  <h4 className={`min-w-0 ${CARD_TITLE_CLASS}`}>{topic.label}</h4>
+                </div>
+                <p className={`mt-3 ${BODY_MUTED_CLASS}`}>
                   {page?.subtitle ?? topic.description}
                 </p>
                 <ul className={`mt-3 flex-1 space-y-1.5 ${BODY_MUTED_CLASS}`}>
                   {bullets.map((b) => (
                     <li key={b} className="flex gap-2">
-                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent" />
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
                       <span>{b}</span>
                     </li>
                   ))}
                 </ul>
                 <span
-                  className={`mt-4 ${CTA_COMPACT_CLASS} text-accent ${TRANSITION_UI} group-hover:underline`}
+                  className={`mt-4 inline-flex items-center gap-1 ${CTA_COMPACT_CLASS} text-accent ${TRANSITION_UI} group-hover:gap-1.5`}
                 >
                   Tìm hiểu →
                 </span>

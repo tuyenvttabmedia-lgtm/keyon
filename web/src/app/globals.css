@@ -944,13 +944,13 @@ html {
   }
 
   .solutions-hero-cards-mobile {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 0.5rem;
   }
 
   .solutions-hero-cards-mobile .solutions-hero-card {
     min-height: 3.25rem;
-    padding: 0.55rem 0.85rem 0.55rem 0.45rem;
+    padding: 0.65rem 0.7rem;
   }
 
   .solutions-hero-cards-mobile .solutions-hero-card-label {
