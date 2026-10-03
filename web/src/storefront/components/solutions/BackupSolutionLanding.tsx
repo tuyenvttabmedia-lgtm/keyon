@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -61,6 +62,7 @@ export type BackupFeaturedProduct = {
   meta: string;
   priceLabel: string;
   priceHint?: string;
+  imageUrl?: string;
   features: string[];
   brand: BackupBrand;
   /** Which selector tabs this SKU belongs to */
@@ -249,8 +251,10 @@ export function BackupSolutionLanding({ featured }: Props) {
             </div>
 
             <div className="relative w-full min-w-0 lg:justify-self-end">
-              <BackupHeroArt />
-              <div className={`mt-3 rounded-2xl border border-border bg-white px-4 py-3 ${ELEVATION_HAIRLINE}`}>
+              <div className="hidden lg:block">
+                <BackupHeroArt />
+              </div>
+              <div className={`rounded-2xl border border-border bg-white px-4 py-3 lg:mt-3 ${ELEVATION_HAIRLINE}`}>
                 <p className={CARD_TITLE_CLASS}>License trên KEYON, dữ liệu trên hệ thống của bạn</p>
                 <p className={`mt-1 ${CARD_META_CLASS}`}>
                   KEYON bàn giao license phần mềm backup. Bản sao lưu nằm trên hạ tầng của bạn hoặc nhà
@@ -269,20 +273,25 @@ export function BackupSolutionLanding({ featured }: Props) {
             <h2 className={SECTION_TITLE_CLASS}>Mọi dữ liệu đều đáng được bảo vệ</h2>
             <div className="mx-auto mt-2.5 h-1 w-14 rounded-full bg-accent" aria-hidden />
           </header>
-          <ul className="mt-7 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3.5">
-            {DATA_PILLARS.map((p) => (
-              <li key={p.title}>
+          <ul className="mt-7 grid grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-5 lg:gap-3.5">
+            {DATA_PILLARS.map((p, i) => (
+              <li
+                key={p.title}
+                className={i === DATA_PILLARS.length - 1 ? "col-span-2 lg:col-span-1" : undefined}
+              >
                 <article
-                  className={`flex h-full flex-col rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                  className={`flex h-full flex-col rounded-2xl border border-border bg-white p-3 sm:p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                 >
-                  <span
-                    className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent"
-                    aria-hidden
-                  >
-                    <p.Icon size={22} strokeWidth={1.7} />
-                  </span>
-                  <h3 className={`mt-3.5 ${CARD_TITLE_CLASS}`}>{p.title}</h3>
-                  <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{p.body}</p>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"
+                      aria-hidden
+                    >
+                      <p.Icon size={16} strokeWidth={1.75} />
+                    </span>
+                    <h3 className={`min-w-0 ${CARD_TITLE_CLASS}`}>{p.title}</h3>
+                  </div>
+                  <p className={`mt-2 ${BODY_MUTED_CLASS}`}>{p.body}</p>
                 </article>
               </li>
             ))}
@@ -298,11 +307,9 @@ export function BackupSolutionLanding({ featured }: Props) {
       {showFeatured ? (
       <section className="home-section">
         <div className="home-container">
-          <header className="mb-5 flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <h2 className={SECTION_TITLE_CLASS}>Giải pháp Backup phù hợp với bạn</h2>
-            </div>
-            <Link href="/categories/backup" className={LINK_ACCENT_CLASS}>
+          <header className="mb-5 flex flex-col gap-2.5 sm:flex-row sm:items-end sm:justify-between">
+            <h2 className={SECTION_TITLE_CLASS}>Giải pháp Backup phù hợp với bạn</h2>
+            <Link href="/categories/backup" className={`shrink-0 ${LINK_ACCENT_CLASS}`}>
               Xem tất cả sản phẩm →
             </Link>
           </header>
@@ -323,9 +330,9 @@ export function BackupSolutionLanding({ featured }: Props) {
                       role="tab"
                       aria-selected={selected}
                       onClick={() => setTab(t.id)}
-                      className={`inline-flex w-full shrink-0 items-center rounded-xl px-3.5 py-3 text-left ${CTA_COMPACT_CLASS} ${TRANSITION_UI} ${
+                      className={`inline-flex w-auto shrink-0 items-center whitespace-nowrap rounded-xl px-3.5 py-2.5 text-left lg:w-full lg:py-3 ${CTA_COMPACT_CLASS} ${TRANSITION_UI} ${
                         selected
-                          ? "bg-white text-navy shadow-sm"
+                          ? "bg-white text-navy"
                           : "bg-transparent text-white/85 hover:bg-white/10"
                       }`}
                     >
@@ -336,55 +343,41 @@ export function BackupSolutionLanding({ featured }: Props) {
               </div>
 
               <div role="tabpanel" className="p-4 sm:p-5 lg:p-6">
-                <ul className="grid auto-rows-fr grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4 xl:gap-3.5">
+                <ul className="grid grid-cols-2 gap-2.5 sm:gap-3.5 xl:grid-cols-4 xl:gap-3.5">
                   {products.map((p) => (
                     <li key={p.id} className="flex min-h-0 min-w-0">
                       <article
-                        className={`flex h-full w-full flex-col rounded-2xl bg-white p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                        className={`flex h-full w-full flex-col overflow-hidden rounded-xl bg-white sm:rounded-2xl ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                       >
-                        <div className="flex min-h-[52px] items-start gap-2.5">
-                          <span className="mt-0.5 shrink-0" aria-hidden>
-                            <BackupBrandMark brand={p.brand} size={36} />
-                          </span>
-                          <div className="min-w-0 flex-1">
-                            <p className={`${BADGE_CLASS} font-semibold text-muted`}>
-                              {p.brandLabel}
-                            </p>
-                            <h3 className={`${CARD_TITLE_CLASS} mt-0.5 line-clamp-2 min-h-[2.5rem]`}>
-                              {p.title}
-                            </h3>
-                          </div>
-                        </div>
-                        <p className={`mt-2 ${CARD_META_CLASS} line-clamp-1`}>{p.meta}</p>
-                        <p className={`mt-2 ${CARD_PRICE_CLASS} min-h-[1.5rem] text-navy`}>
-                          {p.priceLabel}
-                        </p>
-                        {p.priceHint ? (
-                          <p className={`mt-0.5 ${CARD_META_CLASS}`}>{p.priceHint}</p>
-                        ) : (
-                          <p className="mt-0.5 h-4" aria-hidden />
-                        )}
-                        <ul className="mt-3 flex min-h-[4.5rem] flex-col gap-1.5">
-                          {p.features.slice(0, 3).map((f) => (
-                            <li key={f} className="flex gap-2">
-                              <span
-                                className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-accent text-white"
-                                aria-hidden
-                              >
-                                <Check size={10} strokeWidth={3} />
-                              </span>
-                              <span className="line-clamp-2 text-xs leading-snug text-muted">
-                                {f}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                        <Link
-                          href={p.href}
-                          className={`mt-auto inline-flex h-9 w-full items-center justify-center rounded-xl bg-accent px-3 ${CTA_COMPACT_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover`}
-                        >
-                          Mua ngay →
+                        <Link href={p.href} className="relative block aspect-[5/4] bg-white">
+                          {p.imageUrl ? (
+                            <Image
+                              src={p.imageUrl}
+                              alt={p.title}
+                              fill
+                              className="object-contain p-1.5"
+                              sizes="(max-width: 1280px) 45vw, 200px"
+                            />
+                          ) : (
+                            <span className="flex h-full items-center justify-center" aria-hidden>
+                              <BackupBrandMark brand={p.brand} size={40} />
+                            </span>
+                          )}
                         </Link>
+                        <div className="flex flex-1 flex-col px-2.5 pb-2.5 pt-2 sm:px-3.5 sm:pb-3.5 sm:pt-2.5">
+                          <p className={`${BADGE_CLASS} font-semibold text-muted`}>{p.brandLabel}</p>
+                          <h3 className={`mt-0.5 line-clamp-2 ${CARD_TITLE_CLASS}`}>{p.title}</h3>
+                          <p className={`mt-1.5 ${CARD_PRICE_CLASS}`}>{p.priceLabel}</p>
+                          {p.priceHint ? (
+                            <p className={`mt-1 ${CARD_META_CLASS}`}>{p.priceHint}</p>
+                          ) : null}
+                          <Link
+                            href={p.href}
+                            className={`mt-auto inline-flex h-9 w-full items-center justify-center rounded-lg bg-accent px-2 ${CTA_COMPACT_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover`}
+                          >
+                            Mua ngay →
+                          </Link>
+                        </div>
                       </article>
                     </li>
                   ))}
@@ -392,7 +385,7 @@ export function BackupSolutionLanding({ featured }: Props) {
               </div>
             </div>
 
-            <ul className="grid gap-3 border-t border-white/10 bg-accent px-4 py-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4 lg:px-6">
+            <ul className="grid grid-cols-2 gap-2.5 border-t border-white/10 bg-accent px-3.5 py-3.5 sm:gap-3 lg:grid-cols-4 lg:gap-4 lg:px-6">
               {TRUST_STRIP.map((t) => (
                 <li key={t.title} className="flex items-center gap-2.5">
                   <span
@@ -411,47 +404,42 @@ export function BackupSolutionLanding({ featured }: Props) {
       ) : null}
 
       {/* ── Recovery flow ────────────────────────────────────── */}
-      <section className="relative overflow-hidden home-section">
-        <div
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(15,23,42,0.06)_1px,transparent_0)] bg-[length:18px_18px]"
-          aria-hidden
-        />
-        <div className="home-container relative">
+      <section className="home-section">
+        <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>
               Khi sự cố xảy ra, bạn chỉ cần khôi phục
             </h2>
-            <div className="mx-auto mt-2.5 h-1 w-14 rounded-full bg-accent" aria-hidden />
+            <p className={`mt-2.5 ${BODY_MUTED_CLASS}`}>
+              Năm bước trong phần mềm đã kích hoạt — KEYON không lưu bản sao của bạn.
+            </p>
           </header>
 
-          <ol className="relative mt-10 grid items-start gap-8 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3 lg:pt-2">
-            <span
-              className="pointer-events-none absolute left-[8%] right-[8%] top-[2.75rem] hidden border-t border-dashed border-slate-300 lg:block"
-              aria-hidden
-            />
-            {FLOW.map((s) => (
+          <ol className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3">
+            {FLOW.map((s, i) => (
               <li
                 key={s.title}
-                className={`relative z-[1] flex flex-col items-center text-center ${
-                  s.highlight ? "lg:-mt-2" : ""
+                className={`flex items-start gap-3 rounded-2xl border bg-white p-3.5 sm:flex-col sm:p-4 ${
+                  s.highlight ? "border-accent bg-accent-soft/40" : "border-border"
+                } ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} ${
+                  i === FLOW.length - 1 ? "sm:col-span-2 lg:col-span-1" : ""
                 }`}
               >
                 <span
-                  className={`flex items-center justify-center rounded-full border-2 ${
-                    s.highlight
-                      ? `h-[4.5rem] w-[4.5rem] border-accent bg-accent text-white shadow-[0_0_0_8px_rgba(14,165,164,0.12)] ${ELEVATION_FLOAT}`
-                      : "h-14 w-14 border-accent/40 bg-white text-accent"
+                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl font-display text-base font-bold ${
+                    s.highlight ? "bg-accent text-white" : "bg-navy text-white"
                   }`}
                   aria-hidden
                 >
-                  <s.Icon size={s.highlight ? 28 : 20} strokeWidth={1.8} />
+                  {i + 1}
                 </span>
-                <p
-                  className={`mt-3 max-w-[16ch] ${CARD_TITLE_CLASS}`}
-                >
-                  {s.title}
-                </p>
-                <p className={`mt-1.5 max-w-[18ch] ${BODY_MUTED_CLASS}`}>{s.body}</p>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <s.Icon size={16} strokeWidth={1.85} className="shrink-0 text-accent" aria-hidden />
+                    <p className={CARD_TITLE_CLASS}>{s.title}</p>
+                  </div>
+                  <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{s.body}</p>
+                </div>
               </li>
             ))}
           </ol>

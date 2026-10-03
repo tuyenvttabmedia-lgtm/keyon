@@ -354,6 +354,20 @@ function inferBackupTabs(name: string): BackupFeaturedProduct["tabs"] {
   return Array.from(new Set(tabs));
 }
 
+/** Same 3-hour Asia/Ho_Chi_Minh slot as the home featured row. */
+function backupRotationSlot(now = Date.now()): number {
+  return Math.floor((now + 7 * 60 * 60 * 1000) / (3 * 60 * 60 * 1000));
+}
+
+function backupMix(slot: number, id: string): number {
+  let h = 2166136261 ^ slot;
+  for (let i = 0; i < id.length; i++) {
+    h ^= id.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
 async function loadBackupFeatured(): Promise<{
   featured: BackupFeaturedProduct[];
   usingFallback: boolean;
@@ -365,10 +379,9 @@ async function loadBackupFeatured(): Promise<{
       variants: { where: { active: true }, orderBy: { priceVnd: "asc" }, take: 1 },
     },
     orderBy: { name: "asc" },
-    take: 80,
   });
 
-  const scored: { score: number; item: BackupFeaturedProduct }[] = [];
+  const scored: BackupFeaturedProduct[] = [];
   for (const p of products) {
     const variant = p.variants[0];
     if (!variant) continue;
@@ -393,32 +406,25 @@ async function loadBackupFeatured(): Promise<{
       brandL.includes("aomei");
     if (!isBackup) continue;
 
-    let score = 0;
-    if (nameL.includes("acronis")) score += 50;
-    else if (nameL.includes("veeam")) score += 48;
-    else if (nameL.includes("aomei")) score += 45;
-    else if (nameL.includes("365") && nameL.includes("backup")) score += 42;
-    else if (nameL.includes("backup")) score += 30;
-    if (cat === "backup") score += 10;
-
     scored.push({
-      score,
-      item: {
-        id: p.id,
-        title: p.name,
-        href: `/products/${p.slug}`,
-        brandLabel: p.brand.name,
-        meta: "License · theo gói",
-        priceLabel: `Từ ${variant.priceVnd.toLocaleString("vi-VN")}đ`,
-        features: [p.brand.name, "License chính hãng", "Hỗ trợ tiếng Việt"],
-        brand: inferBackupBrand(p.name, p.brand.name),
-        tabs: inferBackupTabs(p.name),
-      },
+      id: p.id,
+      title: p.name,
+      href: `/products/${p.slug}`,
+      brandLabel: p.brand.name,
+      meta: "License · theo gói",
+      priceLabel: `Từ ${variant.priceVnd.toLocaleString("vi-VN")}đ`,
+      imageUrl: parseStringList(p.galleryUrls)[0],
+      features: [p.brand.name, "Hỗ trợ tiếng Việt"],
+      brand: inferBackupBrand(p.name, p.brand.name),
+      tabs: inferBackupTabs(p.name),
     });
   }
 
-  scored.sort((a, b) => b.score - a.score);
-  const featured = scored.slice(0, 8).map((s) => s.item);
+  const slot = backupRotationSlot();
+  scored.sort(
+    (a, b) => backupMix(slot, a.id) - backupMix(slot, b.id) || a.id.localeCompare(b.id),
+  );
+  const featured = scored;
   if (featured.length > 0) {
     return { featured, usingFallback: false };
   }
