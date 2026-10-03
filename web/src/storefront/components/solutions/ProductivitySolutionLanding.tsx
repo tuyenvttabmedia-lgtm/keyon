@@ -293,7 +293,7 @@ export function ProductivitySolutionLanding({
       {/* ── Value pillars ────────────────────────────────────── */}
       <section className="home-section">
         <div className="home-container">
-          <ul className="grid gap-6 rounded-2xl bg-navy px-6 py-7 sm:grid-cols-2 sm:px-8 sm:py-8 lg:grid-cols-4 lg:gap-5 lg:px-9 lg:py-9">
+          <ul className="grid grid-cols-2 gap-4 rounded-2xl bg-navy px-4 py-6 sm:gap-6 sm:px-8 sm:py-8 lg:grid-cols-4 lg:gap-5 lg:px-9 lg:py-9">
             {VALUE_PILLARS.map((v) => (
               <li key={v.title} className="flex flex-col gap-3 sm:flex-row sm:items-start lg:flex-col xl:flex-row">
                 <span
@@ -346,11 +346,11 @@ export function ProductivitySolutionLanding({
               </div>
 
               <div className="relative min-w-0 self-stretch pr-0 lg:pr-10 xl:pr-12">
-                <ul className="grid h-full grid-cols-1 items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-3">
+                <ul className="grid h-full grid-cols-2 items-stretch gap-2.5 sm:gap-3 lg:grid-cols-4 lg:gap-3">
                   {products.map((p) => (
-                    <li key={p.id} className="flex h-full min-h-0 items-center sm:min-h-[180px]">
+                    <li key={p.id} className="flex h-full min-h-0 items-stretch">
                       <article
-                        className={`flex h-full w-full flex-col rounded-2xl bg-white p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                        className={`flex h-full w-full flex-col rounded-xl bg-white p-3 sm:rounded-2xl sm:p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                       >
                         <span className="shrink-0" aria-hidden>
                           <ProductBrandMark brand={p.brand} size={36} />
@@ -404,7 +404,7 @@ export function ProductivitySolutionLanding({
                 <EcoMark kind="chrome" />
                 <EcoMark kind="slack" />
                 <span
-                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-border bg-white text-sm font-semibold text-muted ${ELEVATION_HAIRLINE}`}
+                  className={`hidden h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-border bg-white text-sm font-semibold text-muted sm:flex ${ELEVATION_HAIRLINE}`}
                   aria-hidden
                 >
                   …
