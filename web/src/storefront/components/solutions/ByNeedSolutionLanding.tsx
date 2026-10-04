@@ -37,7 +37,13 @@ import {
 } from "@/storefront/effects";
 import { SolutionFinalCta } from "./SolutionFinalCta";
 
-const ICON_MD = { size: 22, strokeWidth: 1.75, "aria-hidden": true as const };
+const TOPIC_MARK: Record<string, { Icon: LucideIcon; tone: string }> = {
+  "microsoft-365-office": { Icon: TrendingUp, tone: "bg-sky-100 text-sky-800" },
+  cloud: { Icon: Cloud, tone: "bg-violet-100 text-violet-800" },
+  security: { Icon: Shield, tone: "bg-emerald-100 text-emerald-800" },
+  backup: { Icon: HardDrive, tone: "bg-amber-100 text-amber-800" },
+  "license-management": { Icon: Layers, tone: "bg-accent-soft text-accent" },
+};
 
 const SCALES: { title: string; body: string; Icon: LucideIcon }[] = [
   {
@@ -112,45 +118,45 @@ export function ByNeedSolutionLanding() {
             <span className={BREADCRUMB_CURRENT_CLASS}>Giải pháp theo nhu cầu</span>
           </nav>
 
-          <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10 xl:gap-12">
-            <div className="flex h-full min-w-0 max-w-[540px] flex-col">
-              <h1 className={HERO_TITLE_CLASS}>
+          <div className="grid w-full min-w-0 items-stretch gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10 xl:gap-12">
+            <div className="flex min-w-0 max-w-full flex-col lg:h-full lg:max-w-[540px]">
+              <h1 className={`max-w-full break-words ${HERO_TITLE_CLASS}`}>
                 Kết hợp đúng sản phẩm với quy mô sử dụng
               </h1>
-              <p className={`mt-4 ${PAGE_LEAD_CLASS}`}>
+              <p className={`mt-4 max-w-full break-words ${PAGE_LEAD_CLASS}`}>
                 Kết hợp nhiều sản phẩm theo nhu cầu thực tế của cá nhân, đội nhóm hoặc
                 doanh nghiệp. KEYON hỗ trợ chọn theo số người dùng, nhu cầu và ngân sách.
               </p>
-              <ul className="mt-6 space-y-3">
+              <ul className="mt-6 grid min-w-0 gap-3">
                 {SCALES.map((s) => (
-                  <li key={s.title} className="flex items-start gap-2.5">
-                    <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
+                  <li key={s.title} className="flex min-w-0 items-center gap-3">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
                       <s.Icon size={16} strokeWidth={1.8} aria-hidden />
                     </span>
-                    <span>
-                      <span className={`block ${CARD_TITLE_CLASS}`}>{s.title}</span>
-                      <span className={`mt-0.5 block ${BODY_MUTED_CLASS}`}>{s.body}</span>
+                    <span className="min-w-0">
+                      <span className={`block break-words ${CARD_TITLE_CLASS}`}>{s.title}</span>
+                      <span className={`mt-0.5 block break-words ${BODY_MUTED_CLASS}`}>{s.body}</span>
                     </span>
                   </li>
                 ))}
               </ul>
-              <div className="mt-auto flex flex-col gap-3 pt-8 sm:flex-row">
+              <div className="mt-8 flex w-full min-w-0 flex-col gap-3 sm:flex-row lg:mt-auto">
                 <Link
                   href="/business/licensing-consulting"
-                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                  className={`inline-flex h-12 w-full min-w-0 items-center justify-center rounded-xl bg-accent px-6 sm:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
                   Liên hệ tư vấn →
                 </Link>
                 <Link
                   href="/solutions"
-                  className={`inline-flex h-12 items-center justify-center rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+                  className={`inline-flex h-12 w-full min-w-0 items-center justify-center rounded-xl border border-border bg-white px-6 sm:w-auto ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
                   Tất cả giải pháp
                 </Link>
               </div>
             </div>
 
-            <div className="flex h-full min-w-0 flex-col">
+            <div className="hidden h-full min-w-0 lg:flex lg:flex-col">
               <ByNeedHeroArt />
             </div>
           </div>
@@ -165,20 +171,26 @@ export function ByNeedSolutionLanding() {
               Cùng một bộ giải pháp KEYON — khác số người dùng và cách ghép.
             </p>
           </header>
-          <ul className="mt-8 grid gap-4 md:grid-cols-3">
-            {SCALES.map((s) => (
+          <ul className="mt-7 grid min-w-0 grid-cols-2 gap-2.5 sm:gap-3.5 md:grid-cols-3">
+            {SCALES.map((s, index) => (
               <li
                 key={s.title}
-                className={`rounded-2xl border border-border bg-white p-5 ${ELEVATION_HAIRLINE}`}
+                className={`min-w-0 ${index === SCALES.length - 1 ? "col-span-2 md:col-span-1" : ""}`}
               >
-                <span
-                  className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent"
-                  aria-hidden
+                <article
+                  className={`flex h-full min-w-0 items-start gap-3 overflow-hidden rounded-2xl border border-border bg-white p-3.5 sm:p-4 ${ELEVATION_HAIRLINE}`}
                 >
-                  <s.Icon {...ICON_MD} />
-                </span>
-                <h3 className={`mt-3.5 ${CARD_TITLE_CLASS}`}>{s.title}</h3>
-                <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{s.body}</p>
+                  <span
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"
+                    aria-hidden
+                  >
+                    <s.Icon size={18} strokeWidth={1.8} />
+                  </span>
+                  <div className="min-w-0">
+                    <h3 className={`break-words ${CARD_TITLE_CLASS}`}>{s.title}</h3>
+                    <p className={`mt-1 break-words ${BODY_MUTED_CLASS}`}>{s.body}</p>
+                  </div>
+                </article>
               </li>
             ))}
           </ul>
@@ -193,21 +205,33 @@ export function ByNeedSolutionLanding() {
               Chọn một hướng, rồi bổ sung sản phẩm khác khi cần — hoặc nhờ KEYON tư vấn.
             </p>
           </header>
-          <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {others.map((t) => (
-              <li key={t.id}>
-                <Link
-                  href={t.href}
-                  className={`flex h-full flex-col rounded-2xl border border-border bg-white p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
-                >
-                  <h3 className={CARD_TITLE_CLASS}>{t.label}</h3>
-                  <p className={`mt-1.5 flex-1 ${BODY_MUTED_CLASS}`}>{t.description}</p>
-                  <span className={`mt-3 text-sm font-semibold text-accent ${HOVER_LINK_ACCENT}`}>
-                    Xem giải pháp →
-                  </span>
-                </Link>
-              </li>
-            ))}
+          <ul className="mt-7 grid min-w-0 grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-3">
+            {others.map((t) => {
+              const topic = TOPIC_MARK[t.id];
+              const TopicIcon = topic?.Icon ?? Layers;
+              return (
+                <li key={t.id} className="min-w-0 last:col-span-2 lg:last:col-span-1">
+                  <Link
+                    href={t.href}
+                    className={`flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-white p-3 sm:p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                  >
+                    <span className="flex min-w-0 items-center gap-2">
+                      <span
+                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${topic?.tone ?? "bg-accent-soft text-accent"}`}
+                        aria-hidden
+                      >
+                        <TopicIcon size={16} strokeWidth={1.8} />
+                      </span>
+                      <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{t.label}</h3>
+                    </span>
+                    <p className={`mt-2 flex-1 break-words ${BODY_MUTED_CLASS}`}>{t.description}</p>
+                    <span className={`mt-3 text-sm font-semibold text-accent ${HOVER_LINK_ACCENT}`}>
+                      Xem giải pháp →
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </section>
