@@ -48,9 +48,6 @@ import {
   LANDING_HERO_PAD,
 } from "@/storefront/components/marketing/hero-shell";
 
-const ICON_SM = { size: 16, strokeWidth: 1.85 } as const;
-const ICON_MD = { size: 20, strokeWidth: 1.75 } as const;
-
 const HERO_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Bàn giao đúng phạm vi",
@@ -133,7 +130,7 @@ const PROCESS: { title: string; body: string; Icon: LucideIcon }[] = [
 
 export function ImplementationLanding() {
   return (
-    <div className="bg-white">
+    <div className="overflow-x-hidden bg-white">
       <section className="relative overflow-x-clip border-b border-border bg-[#F7FAFC]">
         <div
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_88%_20%,rgba(14,165,164,0.08),transparent_42%),radial-gradient(ellipse_at_10%_90%,rgba(14,165,233,0.05),transparent_48%)]"
@@ -157,49 +154,49 @@ export function ImplementationLanding() {
           </nav>
 
           <div className={LANDING_HERO_GRID}>
-            <div className="min-w-0 max-w-[540px]">
-              <h1 className={`max-w-xl ${HERO_TITLE_CLASS}`}>
+            <div className="min-w-0 max-w-full lg:max-w-[540px]">
+              <h1 className={`max-w-full break-words ${HERO_TITLE_CLASS}`}>
                 Triển khai và bàn giao bản quyền cho doanh nghiệp
               </h1>
-              <p className={`mt-4 max-w-[540px] ${PAGE_LEAD_CLASS}`}>
+              <p className={`mt-4 max-w-full break-words ${PAGE_LEAD_CLASS}`}>
                 KEYON hỗ trợ bàn giao, kích hoạt và hướng dẫn sử dụng bản quyền sau khi mua —
                 phù hợp theo số lượng người dùng, loại license và quy mô tổ chức.
               </p>
 
-              <ul className="mt-6 grid gap-4 sm:grid-cols-2">
+              <ul className="mt-6 grid min-w-0 grid-cols-2 gap-2.5 sm:gap-4">
                 {HERO_POINTS.map((p) => (
-                  <li key={p.title} className="flex items-start gap-2.5">
-                    <span
-                      className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"
-                      aria-hidden
-                    >
-                      <p.Icon {...ICON_SM} />
+                  <li key={p.title} className="flex min-w-0 flex-col">
+                    <span className="flex min-w-0 items-center gap-2">
+                      <span
+                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"
+                        aria-hidden
+                      >
+                        <p.Icon size={16} strokeWidth={1.85} />
+                      </span>
+                      <span className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{p.title}</span>
                     </span>
-                    <span className="min-w-0">
-                      <span className={`block ${CARD_TITLE_CLASS}`}>{p.title}</span>
-                      <span className={`mt-0.5 block ${BODY_MUTED_CLASS}`}>{p.body}</span>
-                    </span>
+                    <span className={`mt-2 break-words ${BODY_MUTED_CLASS}`}>{p.body}</span>
                   </li>
                 ))}
               </ul>
 
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <div className="mt-8 flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   href={SERVICE_HANDOVER_HREF}
-                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                  className={`inline-flex h-12 w-full min-w-0 items-center justify-center rounded-xl bg-accent px-6 sm:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
                   Mua gói bàn giao →
                 </Link>
                 <Link
                   href={IMPLEMENTATION_QUOTE_HREF}
-                  className={`inline-flex h-12 items-center justify-center rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+                  className={`inline-flex h-12 w-full min-w-0 items-center justify-center rounded-xl border border-border bg-white px-6 sm:w-auto ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
                   Gửi yêu cầu tùy chỉnh
                 </Link>
               </div>
             </div>
 
-            <div className="min-w-0">
+            <div className="hidden min-w-0 lg:block">
               <ImplementationHeroArt />
             </div>
           </div>
@@ -215,22 +212,22 @@ export function ImplementationLanding() {
               hoàn tất đơn hàng.
             </p>
           </header>
-          <ul className="mt-9 grid gap-4 sm:grid-cols-2">
+          <ul className="mt-7 grid min-w-0 grid-cols-2 gap-2.5 sm:gap-3.5">
             {IN_SCOPE.map((item) => (
-              <li key={item.title}>
+              <li key={item.title} className="min-w-0">
                 <article
-                  className={`flex h-full gap-3.5 rounded-2xl border border-border bg-white p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                  className={`flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-white p-3.5 sm:p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                 >
-                  <span
-                    className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent"
-                    aria-hidden
-                  >
-                    <item.Icon {...ICON_MD} />
+                  <span className="flex min-w-0 items-center gap-2">
+                    <span
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"
+                      aria-hidden
+                    >
+                      <item.Icon size={16} strokeWidth={1.8} />
+                    </span>
+                    <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{item.title}</h3>
                   </span>
-                  <div className="min-w-0">
-                    <h3 className={CARD_TITLE_CLASS}>{item.title}</h3>
-                    <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{item.body}</p>
-                  </div>
+                  <p className={`mt-2 break-words ${BODY_MUTED_CLASS}`}>{item.body}</p>
                 </article>
               </li>
             ))}
@@ -239,38 +236,45 @@ export function ImplementationLanding() {
       </section>
 
       <section className="bg-[#F4F8FB] home-section">
-        <div className="home-container grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-start">
-          <div>
+        <div className="home-container">
+          <header className="max-w-2xl">
             <h2 className={SECTION_TITLE_CLASS}>Không nằm trong phạm vi này</h2>
-            <p className={`mt-2.5 max-w-xl ${SECTION_LEAD_CLASS}`}>
+            <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
               KEYON tập trung vào bản quyền, bàn giao và hỗ trợ kích hoạt; không thay thế đội ngũ
               IT hoặc đơn vị vận hành hệ thống của doanh nghiệp.
             </p>
-            <ul className="mt-6 space-y-3">
-              {OUT_OF_SCOPE.map((line) => (
-                <li key={line} className="flex items-start gap-2.5">
+          </header>
+          <ul className="mt-7 grid min-w-0 grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-3">
+            {OUT_OF_SCOPE.map((line, index) => (
+              <li
+                key={line}
+                className={`min-w-0 ${index === OUT_OF_SCOPE.length - 1 ? "col-span-2 lg:col-span-1" : ""}`}
+              >
+                <article
+                  className={`flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-white p-3.5 sm:p-5 ${ELEVATION_HAIRLINE}`}
+                >
                   <span
-                    className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-rose-50 text-rose-600"
+                    className="flex h-7 w-7 items-center justify-center rounded-full bg-rose-50 text-rose-600"
                     aria-hidden
                   >
-                    <X size={12} strokeWidth={2.5} />
+                    <X size={13} strokeWidth={2.5} />
                   </span>
-                  <span className={BODY_CLASS}>{line}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+                  <p className={`mt-2 break-words ${BODY_CLASS}`}>{line}</p>
+                </article>
+              </li>
+            ))}
+          </ul>
           <aside
-            className={`rounded-2xl border border-border bg-white p-5 sm:p-6 ${ELEVATION_HAIRLINE}`}
+            className={`mt-6 min-w-0 overflow-hidden rounded-2xl border border-border bg-white p-4 sm:p-6 ${ELEVATION_HAIRLINE}`}
           >
             <p className={`${OVERLINE_CLASS} text-accent`}>Cần tư vấn trước khi mua?</p>
-            <p className={`mt-3 ${BODY_CLASS}`}>
+            <p className={`mt-3 break-words ${BODY_CLASS}`}>
               Chưa có license hoặc chưa chắc nên chọn gói nào? KEYON có thể tư vấn theo số lượng
               người dùng, nhu cầu và ngân sách trước khi triển khai.
             </p>
             <Link
               href="/business/licensing-consulting"
-              className={`mt-4 inline-flex font-semibold text-accent ${HOVER_LINK_ACCENT}`}
+              className={`mt-4 inline-flex h-11 w-full items-center justify-center rounded-xl bg-accent px-5 sm:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
             >
               Tư vấn chọn bản quyền →
             </Link>
@@ -286,20 +290,27 @@ export function ImplementationLanding() {
               Năm bước rõ ràng từ tiếp nhận thông tin đến bàn giao và hỗ trợ kích hoạt.
             </p>
           </header>
-          <ol className="relative mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
+          <ol className="mt-7 grid min-w-0 grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-5">
             {PROCESS.map((step, i) => {
               const n = String(i + 1).padStart(2, "0");
               return (
-                <li key={step.title} className="flex flex-col items-center text-center">
-                  <span className={`${BADGE_CLASS} mb-2 font-semibold text-muted`}>{n}</span>
-                  <span
-                    className={`flex h-12 w-12 items-center justify-center rounded-full border-2 border-accent/40 bg-white text-accent ${ELEVATION_HAIRLINE}`}
-                    aria-hidden
+                <li
+                  key={step.title}
+                  className={`min-w-0 ${i === PROCESS.length - 1 ? "col-span-2 lg:col-span-1" : ""}`}
+                >
+                  <article
+                    className={`flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-[#F7FAFC] p-3.5 sm:p-4 ${ELEVATION_HAIRLINE}`}
                   >
-                    <step.Icon {...ICON_MD} />
-                  </span>
-                  <h3 className={`mt-3.5 ${CARD_TITLE_CLASS}`}>{step.title}</h3>
-                  <p className={`mt-1.5 max-w-[16rem] ${BODY_MUTED_CLASS}`}>{step.body}</p>
+                    <span className="flex min-w-0 items-center gap-2">
+                      <span
+                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-white ${BADGE_CLASS}`}
+                      >
+                        {n}
+                      </span>
+                      <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{step.title}</h3>
+                    </span>
+                    <p className={`mt-2 break-words ${BODY_MUTED_CLASS}`}>{step.body}</p>
+                  </article>
                 </li>
               );
             })}
@@ -321,7 +332,7 @@ export function ImplementationLanding() {
             </div>
             <Link
               href={IMPLEMENTATION_QUOTE_HREF}
-              className={`inline-flex h-12 shrink-0 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+              className={`inline-flex h-12 w-full shrink-0 items-center justify-center rounded-xl bg-accent px-6 md:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
             >
               Gửi yêu cầu →
             </Link>
