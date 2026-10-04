@@ -24,7 +24,7 @@ export function ConsultingFinalCTA() {
           className={`relative overflow-hidden px-6 py-8 sm:px-8 sm:py-9 md:flex md:items-center md:justify-between md:gap-8 md:px-10 md:py-10 ${SURFACE} ${ELEVATION_HAIRLINE}`}
         >
           <div
-            className="pointer-events-none absolute -right-4 top-2 text-accent/12 md:right-6 md:top-1/2 md:-translate-y-1/2"
+            className="pointer-events-none absolute -right-4 top-2 hidden text-accent/12 sm:block md:right-6 md:top-1/2 md:-translate-y-1/2"
             aria-hidden
           >
             <ArrowUpRight size={120} strokeWidth={1.15} />
@@ -43,7 +43,7 @@ export function ConsultingFinalCTA() {
           <button
             type="button"
             onClick={() => goToConsultation()}
-            className={`relative mt-6 inline-flex h-12 shrink-0 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white md:mt-0 ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+            className={`relative mt-6 inline-flex h-12 w-full shrink-0 items-center justify-center rounded-xl bg-accent px-6 sm:w-auto ${CTA_LABEL_CLASS} text-white md:mt-0 ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
           >
             Bắt đầu tư vấn
           </button>

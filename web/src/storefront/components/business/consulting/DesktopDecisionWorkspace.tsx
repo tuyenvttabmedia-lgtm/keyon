@@ -30,7 +30,7 @@ const PRODUCTS: {
 /** Desktop decision workspace — CSS grid, not absolute floating cards. */
 export function DesktopDecisionWorkspace() {
   return (
-    <div className="hidden md:block">
+    <div className="hidden lg:block">
       <div className={`overflow-hidden ${SURFACE} p-4 sm:p-5 ${ELEVATION_FLOAT}`}>
         <div className="grid grid-cols-2 gap-3">
           {PRODUCTS.map(({ id, label, Icon }) => (

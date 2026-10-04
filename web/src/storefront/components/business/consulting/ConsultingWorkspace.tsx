@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import {
+  BADGE_CLASS,
   BODY_MUTED_CLASS,
   CARD_META_CLASS,
+  CARD_TITLE_CLASS,
   CTA_LABEL_CLASS,
   OVERLINE_CLASS,
   SECTION_LEAD_CLASS,
@@ -104,16 +106,21 @@ export function ConsultingWorkspace() {
               KEYON tập trung vào nhu cầu sử dụng, quy mô và hình thức cấp phép trước khi đề xuất
               sản phẩm.
             </p>
-            <ul className="mt-6 space-y-2.5">
-              {CHECKS.map((item) => (
-                <li key={item} className="flex items-start gap-2.5">
+            <ul className="mt-6 grid min-w-0 grid-cols-2 gap-2.5 lg:grid-cols-1">
+              {CHECKS.map((item, index) => (
+                <li
+                  key={item}
+                  className={`flex min-w-0 items-center gap-2 ${
+                    index === CHECKS.length - 1 ? "col-span-2 lg:col-span-1" : ""
+                  }`}
+                >
                   <span
-                    className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent text-[11px] font-bold text-white"
+                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent text-white ${BADGE_CLASS}`}
                     aria-hidden
                   >
                     ✓
                   </span>
-                  <span className="text-[14px] font-medium text-navy">{item}</span>
+                  <span className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{item}</span>
                 </li>
               ))}
             </ul>
@@ -177,7 +184,7 @@ export function ConsultingWorkspace() {
                 <button
                   type="button"
                   onClick={() => goToConsultation()}
-                  className={`mt-4 inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                  className={`mt-4 inline-flex h-12 w-full items-center justify-center rounded-xl bg-accent px-6 sm:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
                   Nhận tư vấn →
                 </button>

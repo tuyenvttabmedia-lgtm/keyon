@@ -44,25 +44,25 @@ export function ConsultingQuestionBoard() {
           </p>
         </header>
 
-        <div className="mt-8 grid gap-3 sm:grid-cols-2 md:mt-9 md:gap-4">
+        <div className="mt-8 grid min-w-0 grid-cols-2 gap-2.5 sm:gap-3.5 md:mt-9">
           {QUESTIONS.map((q) => (
             <button
               key={q.id}
               type="button"
               onClick={() => goToConsultation(q.id)}
-              className={`group flex items-center justify-between gap-3 p-4 text-left sm:p-5 ${SURFACE_MUTED} ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35 ${
-                q.span ? "sm:col-span-2" : ""
+              className={`group flex h-full min-w-0 flex-col overflow-hidden p-3.5 text-left sm:p-5 ${SURFACE_MUTED} ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35 ${
+                q.span ? "col-span-2" : ""
               }`}
             >
-              <span className="min-w-0">
-                <span className={`block ${CARD_TITLE_CLASS}`}>{q.topic}</span>
-                <span className={`mt-1 block ${BODY_MUTED_CLASS}`}>{q.question}</span>
+              <span className="flex min-w-0 items-center gap-2">
+                <span className={`min-w-0 flex-1 break-words ${CARD_TITLE_CLASS}`}>{q.topic}</span>
+                <ArrowRight
+                  size={16}
+                  className="shrink-0 text-muted transition-colors group-hover:text-accent"
+                  aria-hidden
+                />
               </span>
-              <ArrowRight
-                size={18}
-                className="shrink-0 text-muted transition-colors group-hover:text-accent"
-                aria-hidden
-              />
+              <span className={`mt-2 break-words ${BODY_MUTED_CLASS}`}>{q.question}</span>
             </button>
           ))}
         </div>

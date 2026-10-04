@@ -62,19 +62,21 @@ export function ConsultingAreas() {
           </p>
         </header>
 
-        <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 md:mt-9">
+        <ul className="mt-8 grid min-w-0 grid-cols-2 gap-2.5 sm:gap-3.5 md:mt-9 lg:grid-cols-4">
           {AREAS.map(({ title, body, href, cta, Icon }) => (
-            <li key={title}>
+            <li key={title} className="min-w-0">
               <Link
                 href={href}
-                className={`flex h-full flex-col p-5 ${SURFACE_MUTED} ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
+                className={`flex h-full min-w-0 flex-col overflow-hidden p-3.5 sm:p-5 ${SURFACE_MUTED} ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
               >
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-accent">
-                  <Icon size={20} strokeWidth={1.75} aria-hidden />
+                <span className="flex min-w-0 items-center gap-2">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-accent">
+                    <Icon size={16} strokeWidth={1.75} aria-hidden />
+                  </span>
+                  <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{title}</h3>
                 </span>
-                <h3 className={`mt-4 ${CARD_TITLE_CLASS}`}>{title}</h3>
-                <p className={`mt-2 flex-1 ${BODY_MUTED_CLASS}`}>{body}</p>
-                <span className={`mt-4 ${CARD_TITLE_CLASS} text-accent`}>
+                <p className={`mt-2 flex-1 break-words ${BODY_MUTED_CLASS}`}>{body}</p>
+                <span className={`mt-3 ${CARD_TITLE_CLASS} text-accent`}>
                   {cta} →
                 </span>
               </Link>

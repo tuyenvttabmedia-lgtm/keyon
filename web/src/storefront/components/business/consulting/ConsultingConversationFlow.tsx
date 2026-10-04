@@ -1,4 +1,5 @@
 import {
+  BADGE_CLASS,
   BODY_MUTED_CLASS,
   CARD_META_CLASS,
   CARD_TITLE_CLASS,
@@ -48,40 +49,37 @@ export function ConsultingConversationFlow() {
           </p>
         </header>
 
-        <ol className="relative mt-8 space-y-0 md:mt-9">
-          <div
-            className="pointer-events-none absolute bottom-4 left-[15px] top-4 w-px bg-border"
-            aria-hidden
-          />
+        <ol className="mt-8 grid min-w-0 grid-cols-2 gap-2.5 sm:gap-3.5 md:mt-9 lg:grid-cols-5">
           {STEPS.map((step, i) => {
             const n = String(i + 1).padStart(2, "0");
             const keyonSide = step.who.startsWith("KEYON") && !step.who.includes("Bạn");
             return (
-              <li key={step.title} className="relative z-[1] flex gap-3 pb-3 last:pb-0 sm:gap-4 sm:pb-4">
-                <span
-                  className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[11px] font-bold ${
-                    keyonSide
-                      ? "bg-accent text-white"
-                      : "border border-border bg-white text-navy"
-                  }`}
+              <li
+                key={step.title}
+                className={`min-w-0 ${i === STEPS.length - 1 ? "col-span-2 lg:col-span-1" : ""}`}
+              >
+                <article
+                  className={`flex h-full min-w-0 flex-col overflow-hidden p-3.5 sm:p-4 ${SURFACE} ${ELEVATION_HAIRLINE}`}
                 >
-                  {n}
-                </span>
-                <div
-                  className={`min-w-0 flex-1 p-4 sm:flex sm:items-start sm:justify-between sm:gap-6 sm:p-5 ${SURFACE} ${ELEVATION_HAIRLINE}`}
-                >
-                  <div className="min-w-0">
-                    <p
-                      className={`${CARD_META_CLASS} font-semibold uppercase tracking-wide text-accent`}
+                  <span className="flex min-w-0 items-center gap-2">
+                    <span
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${BADGE_CLASS} ${
+                        keyonSide
+                          ? "bg-accent text-white"
+                          : "border border-border bg-white text-navy"
+                      }`}
                     >
-                      {step.who}
-                    </p>
-                    <h3 className={`mt-1 ${CARD_TITLE_CLASS}`}>{step.title}</h3>
-                  </div>
-                  <p className={`mt-1.5 sm:mt-0 sm:max-w-md sm:text-right ${BODY_MUTED_CLASS}`}>
-                    {step.body}
+                      {n}
+                    </span>
+                    <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{step.title}</h3>
+                  </span>
+                  <p
+                    className={`mt-2 ${CARD_META_CLASS} font-semibold uppercase tracking-wide text-accent`}
+                  >
+                    {step.who}
                   </p>
-                </div>
+                  <p className={`mt-1 break-words ${BODY_MUTED_CLASS}`}>{step.body}</p>
+                </article>
               </li>
             );
           })}

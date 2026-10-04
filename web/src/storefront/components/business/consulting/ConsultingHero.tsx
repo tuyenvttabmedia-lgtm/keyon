@@ -23,7 +23,6 @@ import {
 } from "@/storefront/effects";
 import { AREAS_HREF, goToConsultation } from "./shared";
 import { DesktopDecisionWorkspace } from "./DesktopDecisionWorkspace";
-import { MobileDecisionCard } from "./MobileDecisionCard";
 
 const BENEFITS = [
   {
@@ -68,47 +67,51 @@ export function ConsultingHero() {
         </nav>
 
         <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] lg:gap-10 xl:gap-12">
-          <div className="min-w-0">
-            <h1 className={`max-w-xl ${HERO_TITLE_CLASS}`}>
+          <div className="min-w-0 max-w-full">
+            <h1 className={`max-w-full break-words lg:max-w-xl ${HERO_TITLE_CLASS}`}>
               Tư vấn chọn bản quyền phần mềm phù hợp
             </h1>
-            <p className={`mt-3.5 max-w-xl ${PAGE_LEAD_CLASS}`}>
+            <p className={`mt-3.5 max-w-full break-words lg:max-w-xl ${PAGE_LEAD_CLASS}`}>
               Chưa biết nên chọn license nào? KEYON giúp phân tích nhu cầu sử dụng, quy mô người
               dùng và hình thức cấp phép trước khi bạn mua.
             </p>
 
-            <ul className="mt-6 grid gap-3 sm:grid-cols-3 sm:gap-4">
-              {BENEFITS.map(({ title, body, Icon }) => (
-                <li key={title} className="min-w-0">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-soft text-accent">
-                    <Icon size={17} strokeWidth={1.85} aria-hidden />
+            <ul className="mt-6 grid min-w-0 grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-3">
+              {BENEFITS.map(({ title, body, Icon }, index) => (
+                <li
+                  key={title}
+                  className={`min-w-0 ${index === BENEFITS.length - 1 ? "col-span-2 lg:col-span-1" : ""}`}
+                >
+                  <span className="flex min-w-0 items-center gap-2">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
+                      <Icon size={16} strokeWidth={1.85} aria-hidden />
+                    </span>
+                    <p className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{title}</p>
                   </span>
-                  <p className={`mt-2.5 ${CARD_TITLE_CLASS}`}>{title}</p>
-                  <p className={`mt-1 ${BODY_MUTED_CLASS}`}>{body}</p>
+                  <p className={`mt-2 break-words ${BODY_MUTED_CLASS}`}>{body}</p>
                 </li>
               ))}
             </ul>
 
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="mt-7 flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:items-center">
               <button
                 type="button"
                 onClick={() => goToConsultation()}
-                className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                className={`inline-flex h-12 w-full min-w-0 items-center justify-center rounded-xl bg-accent px-6 sm:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
               >
                 Nhận tư vấn →
               </button>
               <a
                 href={AREAS_HREF}
-                className={`inline-flex h-12 items-center justify-center rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+                className={`inline-flex h-12 w-full min-w-0 items-center justify-center rounded-xl border border-border bg-white px-6 sm:w-auto ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
               >
                 Xem KEYON tư vấn gì
               </a>
             </div>
           </div>
 
-          <div className="min-w-0">
+          <div className="hidden min-w-0 lg:block">
             <DesktopDecisionWorkspace />
-            <MobileDecisionCard />
           </div>
         </div>
       </div>

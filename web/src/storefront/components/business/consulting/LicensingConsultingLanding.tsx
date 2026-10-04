@@ -8,7 +8,7 @@ import { ConsultingFinalCTA } from "./ConsultingFinalCTA";
 
 export function LicensingConsultingLanding() {
   return (
-    <div className="bg-white">
+    <div className="overflow-x-hidden bg-white">
       <ConsultingHero />
       <ConsultingQuestionBoard />
       <ConsultingWorkspace />
