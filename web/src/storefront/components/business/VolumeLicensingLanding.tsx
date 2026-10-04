@@ -384,18 +384,18 @@ export function VolumeLicensingLanding() {
             {WHY.map((w) => (
               <li key={w.title} className="min-w-0">
                 <article
-                  className={`flex h-full min-w-0 items-start gap-2.5 overflow-hidden rounded-2xl border border-border bg-white p-3 sm:gap-3.5 sm:p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                  className={`flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-white p-3 sm:p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                 >
-                  <span
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-accent/40 text-accent"
-                    aria-hidden
-                  >
-                    <w.Icon size={16} strokeWidth={1.8} />
+                  <span className="flex min-w-0 items-center gap-2">
+                    <span
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-accent/40 text-accent"
+                      aria-hidden
+                    >
+                      <w.Icon size={16} strokeWidth={1.8} />
+                    </span>
+                    <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{w.title}</h3>
                   </span>
-                  <div className="min-w-0">
-                    <h3 className={`break-words ${CARD_TITLE_CLASS}`}>{w.title}</h3>
-                    <p className={`mt-1 break-words ${BODY_MUTED_CLASS}`}>{w.body}</p>
-                  </div>
+                  <p className={`mt-2 break-words ${BODY_MUTED_CLASS}`}>{w.body}</p>
                 </article>
               </li>
             ))}
@@ -419,18 +419,16 @@ export function VolumeLicensingLanding() {
               return (
                 <li
                   key={step.title}
-                  className={`flex min-w-0 items-start gap-3 overflow-hidden rounded-2xl border border-border bg-white p-3 sm:p-4 last:col-span-2 lg:last:col-span-1 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                  className={`flex min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-white p-3 sm:p-4 last:col-span-2 lg:last:col-span-1 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                 >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent font-display text-base font-bold text-white">
-                    {n}
+                  <span className="flex min-w-0 items-center gap-2">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent font-display text-base font-bold text-white">
+                      {n}
+                    </span>
+                    <step.Icon size={16} strokeWidth={1.85} className="shrink-0 text-accent" aria-hidden />
+                    <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{step.title}</h3>
                   </span>
-                  <div className="min-w-0">
-                    <div className="flex min-w-0 items-center gap-2">
-                      <step.Icon size={16} strokeWidth={1.85} className="shrink-0 text-accent" aria-hidden />
-                      <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{step.title}</h3>
-                    </div>
-                    <p className={`mt-1.5 break-words ${BODY_MUTED_CLASS}`}>{step.body}</p>
-                  </div>
+                  <p className={`mt-2 break-words ${BODY_MUTED_CLASS}`}>{step.body}</p>
                 </li>
               );
             })}
