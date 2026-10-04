@@ -12,7 +12,7 @@ export function AccountShell({
 }) {
   const pathname = usePathname();
   return (
-    <div className="home-container flex flex-col gap-5 py-8 md:flex-row md:items-start md:gap-5 md:py-10 lg:gap-6">
+    <div className="home-container flex min-w-0 flex-col gap-5 overflow-x-hidden py-5 md:flex-row md:items-start md:gap-5 md:overflow-visible md:py-10 lg:gap-6">
       <AccountNav pathname={pathname} unreadNotifications={unreadNotifications} />
       <div className="min-w-0 flex-1 md:min-h-[60vh]">{children}</div>
     </div>

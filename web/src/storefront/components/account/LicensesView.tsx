@@ -144,7 +144,7 @@ export function LicensesView({
   }
 
   return (
-    <div className="space-y-5">
+    <div className="min-w-0 space-y-5">
       <nav className={`flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
         <Link href="/" className={HOVER_LINK_ACCENT}>
           Trang chủ
@@ -182,7 +182,7 @@ export function LicensesView({
 
       {/* Tabs + search */}
       <div className="flex flex-col gap-3 border-b border-border pb-3 lg:flex-row lg:items-end lg:justify-between">
-        <div className="flex gap-1 overflow-x-auto">
+        <div className="grid grid-cols-2 gap-1 sm:flex sm:gap-1 sm:overflow-x-auto">
           {tabs.map((t) => {
             const active = tab === t.id;
             return (
@@ -193,7 +193,7 @@ export function LicensesView({
                   setTab(t.id);
                   setPage(1);
                 }}
-                className={`shrink-0 border-b-2 px-3 py-2 ${TRANSITION_UI} ${
+                className={`min-w-0 border-b-2 px-2 py-2 sm:shrink-0 sm:px-3 ${TRANSITION_UI} ${
                   active
                     ? `${TAB_ACTIVE_CLASS} border-navy`
                     : `${TAB_CLASS} border-transparent hover:text-navy`
@@ -204,7 +204,7 @@ export function LicensesView({
             );
           })}
         </div>
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center">
           <label className="relative min-w-0 flex-1 sm:w-64">
             <span className="sr-only">{cms.licensesSearchPlaceholder}</span>
             <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted">
@@ -222,7 +222,7 @@ export function LicensesView({
           </label>
           <button
             type="button"
-            className={BTN_OUTLINE}
+            className={`${BTN_OUTLINE} w-full sm:w-auto`}
             title="Bộ lọc nâng cao sẽ bổ sung sau"
           >
             <FilterIcon />
@@ -317,7 +317,7 @@ export function LicensesView({
                 </div>
 
                 {/* Dates */}
-                <div className="flex shrink-0 gap-4 sm:gap-6 lg:w-[7.25rem] lg:flex-col lg:gap-2 lg:text-right">
+                <div className="grid min-w-0 grid-cols-2 gap-3 lg:flex lg:w-[7.25rem] lg:shrink-0 lg:flex-col lg:gap-2 lg:text-right">
                   <div>
                     <p className={FORM_LABEL_CLASS}>{cms.licensesPurchasedLabel}</p>
                     <p className={`mt-0.5 ${FIELD_VALUE_CLASS}`}>
@@ -370,21 +370,21 @@ export function LicensesView({
       ) : null}
 
       {/* Trust bar */}
-      <div className={`grid gap-4 rounded-2xl border border-border bg-white p-5 sm:grid-cols-2 lg:grid-cols-4 sm:p-6 ${ELEVATION_NONE}`}>
+      <div className={`grid min-w-0 grid-cols-2 gap-2.5 rounded-2xl border border-border bg-white p-3.5 sm:gap-4 sm:p-6 lg:grid-cols-4 ${ELEVATION_NONE}`}>
         {[
           { t: cms.licensesTrust1Title, b: cms.licensesTrust1Body },
           { t: cms.licensesTrust2Title, b: cms.licensesTrust2Body },
           { t: cms.licensesTrust3Title, b: cms.licensesTrust3Body },
           { t: cms.licensesTrust4Title, b: cms.licensesTrust4Body },
         ].map((x) => (
-          <div key={x.t} className="flex gap-3">
-            <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
-              <IconShieldCheck size={16} />
+          <div key={x.t} className="flex min-w-0 flex-col">
+            <span className="flex min-w-0 items-center gap-2">
+              <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
+                <IconShieldCheck size={16} />
+              </span>
+              <p className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{x.t}</p>
             </span>
-            <div>
-              <p className={CARD_TITLE_CLASS}>{x.t}</p>
-              <p className={`mt-0.5 ${CARD_META_CLASS}`}>{x.b}</p>
-            </div>
+            <p className={`mt-2 break-words ${CARD_META_CLASS}`}>{x.b}</p>
           </div>
         ))}
       </div>

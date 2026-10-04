@@ -183,7 +183,7 @@ export function OrdersView({
         : "Trong 12 tháng qua";
 
   return (
-    <div className="space-y-5">
+    <div className="min-w-0 space-y-5">
       <nav className={`flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
         <Link href="/" className={HOVER_LINK_ACCENT}>
           Trang chủ
@@ -213,8 +213,8 @@ export function OrdersView({
                 : cms.ordersPageLead}
           </p>
         </div>
-        <section className={`${CARD} w-fit max-w-full shrink-0 !px-4 !py-3`}>
-          <div className="flex items-center gap-3 sm:gap-3.5">
+        <section className={`${CARD} w-full max-w-full shrink-0 !px-4 !py-3 sm:w-fit`}>
+          <div className="flex flex-wrap items-center gap-3 sm:gap-3.5">
             <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
               <BagIcon />
             </span>
@@ -251,7 +251,7 @@ export function OrdersView({
 
       {/* Tabs full row so all 4 visible; filters on next row. */}
       <div className="space-y-3 border-b border-border pb-3">
-        <div className="flex gap-1 overflow-x-auto">
+        <div className="grid grid-cols-2 gap-1 sm:flex sm:gap-1 sm:overflow-x-auto">
           {tabs.map((t) => {
             const active = tab === t.id;
             return (
@@ -262,7 +262,7 @@ export function OrdersView({
                   setTab(t.id);
                   setPage(1);
                 }}
-                className={`shrink-0 border-b-2 px-3 py-2 ${TRANSITION_UI} ${
+                className={`min-w-0 border-b-2 px-2 py-2 sm:shrink-0 sm:px-3 ${TRANSITION_UI} ${
                   active
                     ? `${TAB_ACTIVE_CLASS} border-navy`
                     : `${TAB_CLASS} border-transparent hover:text-navy`
@@ -273,9 +273,9 @@ export function OrdersView({
             );
           })}
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
           <form
-            className="flex w-full max-w-md flex-wrap items-center gap-2 sm:flex-nowrap"
+            className="flex w-full min-w-0 max-w-md flex-col gap-2 sm:flex-row sm:items-center"
             onSubmit={(e) => {
               e.preventDefault();
               runLookup();
@@ -301,15 +301,15 @@ export function OrdersView({
             </label>
             <button
               type="submit"
-              className={`${BTN_OUTLINE} !h-9 shrink-0`}
+              className={`${BTN_OUTLINE} !h-9 w-full shrink-0 sm:w-auto`}
               title="Tra cứu theo mã đơn, sản phẩm hoặc mã thanh toán"
             >
               <SearchIcon />
               {cms.ordersFilterCta}
             </button>
           </form>
-          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5 sm:justify-end">
-            <div className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-border bg-white px-2">
+          <div className="grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-1.5 sm:flex sm:w-auto sm:justify-end">
+            <div className="inline-flex h-9 min-w-0 items-center gap-1.5 rounded-xl border border-border bg-white px-2">
               <CalendarIcon />
               <input
                 type="date"
@@ -318,12 +318,12 @@ export function OrdersView({
                   setDateFrom(e.target.value);
                   setPage(1);
                 }}
-                className={`w-[7.25rem] bg-transparent ${CARD_META_CLASS} !text-navy outline-none`}
+                className={`w-0 min-w-0 flex-1 bg-transparent sm:w-[7.25rem] sm:flex-none ${CARD_META_CLASS} !text-navy outline-none`}
                 aria-label="Từ ngày"
               />
             </div>
             <span className={CARD_META_CLASS}>–</span>
-            <div className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-border bg-white px-2">
+            <div className="inline-flex h-9 min-w-0 items-center gap-1.5 rounded-xl border border-border bg-white px-2">
               <CalendarIcon />
               <input
                 type="date"
@@ -332,7 +332,7 @@ export function OrdersView({
                   setDateTo(e.target.value);
                   setPage(1);
                 }}
-                className={`w-[7.25rem] bg-transparent ${CARD_META_CLASS} !text-navy outline-none`}
+                className={`w-0 min-w-0 flex-1 bg-transparent sm:w-[7.25rem] sm:flex-none ${CARD_META_CLASS} !text-navy outline-none`}
                 aria-label="Đến ngày"
               />
             </div>
@@ -379,7 +379,7 @@ export function OrdersView({
           </p>
         </div>
       ) : (
-        <div className={`overflow-x-auto rounded-2xl border border-border bg-white ${ELEVATION_NONE}`}>
+        <div className={`overflow-hidden rounded-2xl border border-border bg-white lg:overflow-x-auto ${ELEVATION_NONE}`}>
           <div
             className={`hidden min-w-[52rem] gap-x-2 border-b border-border bg-surface px-3 py-3 lg:grid lg:grid-cols-[7.75rem_minmax(0,1.35fr)_5rem_minmax(0,0.95fr)_6.25rem_7.5rem_2rem] ${TABLE_HEADER_CLASS}`}
           >
@@ -391,7 +391,7 @@ export function OrdersView({
             <span className="text-right">{cms.ordersColTotal}</span>
             <span />
           </div>
-          <ul className="min-w-[52rem] divide-y divide-border">
+          <ul className="divide-y divide-border lg:min-w-[52rem]">
             {slice.map((it) => (
               <OrderRow
                 key={it.id}
@@ -505,10 +505,10 @@ function OrderRow({
 
   return (
     <li className={`relative px-3 py-4 ${TRANSITION_UI} ${HOVER_ROW}`}>
-      <div className="grid gap-x-2 gap-y-3 lg:grid-cols-[7.75rem_minmax(0,1.35fr)_5rem_minmax(0,0.95fr)_6.25rem_7.5rem_2rem] lg:items-center">
-        <div className="min-w-0">
+      <div className="grid grid-cols-2 gap-x-3 gap-y-2 lg:grid-cols-[7.75rem_minmax(0,1.35fr)_5rem_minmax(0,0.95fr)_6.25rem_7.5rem_2rem] lg:items-center lg:gap-x-2 lg:gap-y-3">
+        <div className="col-span-2 min-w-0 lg:col-span-1">
           <div className="flex items-center gap-1">
-            <p className={`truncate ${CARD_TITLE_CLASS}`}>#{item.code}</p>
+            <p className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>#{item.code}</p>
             <CopyIconButton value={item.code} />
           </div>
           <Link
@@ -519,7 +519,7 @@ function OrderRow({
           </Link>
         </div>
 
-        <div className="flex min-w-0 items-center gap-2">
+        <div className="col-span-2 flex min-w-0 items-center gap-2 lg:col-span-1">
           <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-surface">
             {item.productImageUrl ? (
               <Image
@@ -551,11 +551,11 @@ function OrderRow({
         </div>
 
         <div className="min-w-0">
-          <p className={`truncate ${CARD_TITLE_CLASS}`}>
+          <p className={`break-words ${CARD_TITLE_CLASS}`}>
             {item.paymentMethodLabel}
           </p>
           {item.paymentReference ? (
-            <p className={`mt-0.5 truncate ${CARD_META_CLASS}`}>
+            <p className={`mt-0.5 break-all ${CARD_META_CLASS}`}>
               {cms.ordersTxnPrefix}: {item.paymentReference}
             </p>
           ) : (
@@ -565,11 +565,11 @@ function OrderRow({
 
         <div className="min-w-0">
           <span
-            className={`inline-flex max-w-full truncate rounded-full px-2 py-0.5 ${BADGE_CLASS} ${toneClass(item.statusTone)}`}
+            className={`inline-flex max-w-full break-words rounded-full px-2 py-0.5 ${BADGE_CLASS} ${toneClass(item.statusTone)}`}
           >
             {item.statusLabel}
           </span>
-          <p className={`mt-1 truncate ${CARD_META_CLASS}`}>{item.statusSub}</p>
+          <p className={`mt-1 break-words ${CARD_META_CLASS}`}>{item.statusSub}</p>
           {item.sharedOrg ? (
             <p className={`mt-0.5 truncate ${CARD_META_CLASS}`}>Tổ chức</p>
           ) : null}
@@ -581,7 +581,7 @@ function OrderRow({
           </p>
         </div>
 
-        <div className="relative flex justify-end">
+        <div className="relative col-span-2 flex justify-end lg:col-span-1">
           <button
             ref={btnRef}
             type="button"

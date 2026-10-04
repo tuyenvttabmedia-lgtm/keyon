@@ -74,7 +74,7 @@ const NAV: NavItem[] = [
 ];
 
 /** Shared base — border-l always reserved so active state doesn't shift width */
-const NAV_BASE = `inline-flex w-full items-center gap-2.5 border-l-2 px-2.5 py-2.5 transition ${MOTION_FAST}`;
+const NAV_BASE = `inline-flex min-w-0 w-full items-center gap-2 border-l-2 px-2.5 py-2 md:gap-2.5 md:py-2.5 transition ${MOTION_FAST}`;
 
 export function AccountNav({
   pathname,
@@ -84,10 +84,10 @@ export function AccountNav({
   unreadNotifications?: number;
 }) {
   return (
-    <aside className="w-full shrink-0 md:sticky md:top-24 md:w-[12rem] md:self-start lg:w-[12.5rem]">
-      <p className={`mb-3 ${SIDEBAR_SECTION_CLASS}`}>Tài khoản</p>
-      <nav className="flex gap-1 overflow-x-auto pb-1 md:flex-col md:gap-0.5 md:overflow-visible md:pb-0">
-        {NAV.map((item) => {
+    <aside className="w-full min-w-0 shrink-0 md:sticky md:top-24 md:w-[12rem] md:self-start lg:w-[12.5rem]">
+      <p className={`mb-2 md:mb-3 ${SIDEBAR_SECTION_CLASS}`}>Tài khoản</p>
+      <nav className="grid grid-cols-2 gap-1.5 md:flex md:flex-col md:gap-0.5">
+        {NAV.map((item, index) => {
           const active =
             item.match === "exact"
               ? pathname === item.href
@@ -97,16 +97,18 @@ export function AccountNav({
               key={item.href}
               href={item.href}
               prefetch
-              className={
+              className={`${
+                index === NAV.length - 1 ? "col-span-2 md:col-span-1" : ""
+              } ${
                 active
-                  ? `${NAV_BASE} ${NAV_ITEM_ACTIVE_CLASS} rounded-r-lg border-accent bg-accent-soft`
-                  : `${NAV_BASE} ${NAV_ITEM_CLASS} rounded-r-lg border-transparent !text-muted hover:bg-navy-soft hover:!text-navy`
-              }
+                  ? `${NAV_BASE} ${NAV_ITEM_ACTIVE_CLASS} rounded-xl border-accent bg-accent-soft ring-1 ring-accent md:rounded-r-lg md:ring-0`
+                  : `${NAV_BASE} ${NAV_ITEM_CLASS} rounded-xl border-transparent bg-white !text-muted ring-1 ring-border hover:bg-navy-soft hover:!text-navy md:rounded-r-lg md:bg-transparent md:ring-0`
+              }`}
             >
               <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center">
                 <NavIcon name={item.icon} />
               </span>
-              <span className="min-w-0 flex-1 leading-snug">{item.label}</span>
+              <span className="min-w-0 flex-1 break-words leading-snug">{item.label}</span>
               {item.href === "/account/notifications" ? (
                 <span
                   className={`ml-1 inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full px-1 ${BADGE_CLASS} ${
