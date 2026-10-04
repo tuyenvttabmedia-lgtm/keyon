@@ -195,7 +195,7 @@ const STEPS: { n: string; title: string; body: string; Icon: LucideIcon }[] = [
 ];
 
 export function SecuritySolutionLanding({ featured }: Props) {
-  const products = featured.slice(0, 5);
+  const products = featured.slice(0, 4);
   const showFeatured = products.length > 0;
 
   return (
@@ -340,15 +340,18 @@ export function SecuritySolutionLanding({ featured }: Props) {
         <div className="home-container">
           <div className="mb-5 flex flex-col gap-2.5 sm:flex-row sm:items-end sm:justify-between">
             <h2 className={SECTION_TITLE_CLASS}>Giải pháp bảo mật phù hợp với bạn</h2>
-            <Link href="/categories/security" className={`shrink-0 ${LINK_ACCENT_CLASS}`}>
+            <Link href="/categories/security" className={`hidden shrink-0 lg:inline ${LINK_ACCENT_CLASS}`}>
               Xem tất cả sản phẩm →
             </Link>
           </div>
 
           <div className="relative pr-0 lg:pr-12">
-            <ul className="grid grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-5 lg:gap-3">
+            <ul className="grid grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-4 lg:gap-3">
               {products.map((p) => (
-                <li key={p.id} className="flex min-h-0 min-w-0">
+                <li
+                  key={p.id}
+                  className={`flex min-h-0 min-w-0 ${products.length % 2 === 1 ? "last:col-span-2 lg:last:col-span-1" : ""}`}
+                >
                   <article
                     className={`flex h-full w-full flex-col overflow-hidden rounded-xl border border-border bg-white sm:rounded-2xl ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                   >
@@ -385,6 +388,12 @@ export function SecuritySolutionLanding({ featured }: Props) {
                 </li>
               ))}
             </ul>
+            <Link
+              href="/categories/security"
+              className={`mt-4 inline-flex h-11 w-full items-center justify-center rounded-xl border border-border bg-white px-4 lg:hidden ${CTA_COMPACT_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+            >
+              Xem tất cả sản phẩm
+            </Link>
             <Link
               href="/categories/security"
               className={`absolute -right-0.5 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-white text-navy lg:flex ${ELEVATION_HAIRLINE} ${TRANSITION_UI} hover:border-accent hover:text-accent`}

@@ -309,7 +309,7 @@ export function BackupSolutionLanding({ featured }: Props) {
         <div className="home-container">
           <header className="mb-5 flex flex-col gap-2.5 sm:flex-row sm:items-end sm:justify-between">
             <h2 className={SECTION_TITLE_CLASS}>Giải pháp Backup phù hợp với bạn</h2>
-            <Link href="/categories/backup" className={`shrink-0 ${LINK_ACCENT_CLASS}`}>
+            <Link href="/categories/backup" className={`hidden shrink-0 lg:inline ${LINK_ACCENT_CLASS}`}>
               Xem tất cả sản phẩm →
             </Link>
           </header>
@@ -343,9 +343,12 @@ export function BackupSolutionLanding({ featured }: Props) {
               </div>
 
               <div role="tabpanel" className="p-4 sm:p-5 lg:p-6">
-                <ul className="grid grid-cols-2 gap-2.5 sm:gap-3.5 xl:grid-cols-4 xl:gap-3.5">
+                <ul className="grid grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-4 lg:gap-3.5">
                   {products.map((p) => (
-                    <li key={p.id} className="flex min-h-0 min-w-0">
+                    <li
+                      key={p.id}
+                      className={`flex min-h-0 min-w-0 ${products.length % 2 === 1 ? "last:col-span-2 lg:last:col-span-1" : ""}`}
+                    >
                       <article
                         className={`flex h-full w-full flex-col overflow-hidden rounded-xl bg-white sm:rounded-2xl ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                       >
@@ -382,6 +385,12 @@ export function BackupSolutionLanding({ featured }: Props) {
                     </li>
                   ))}
                 </ul>
+                <Link
+                  href="/categories/backup"
+                  className={`mt-4 inline-flex h-11 w-full items-center justify-center rounded-xl border border-white/30 px-4 lg:hidden ${CTA_COMPACT_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+                >
+                  Xem tất cả sản phẩm
+                </Link>
               </div>
             </div>
 

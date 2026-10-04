@@ -144,7 +144,7 @@ async function loadCloudFeatured(): Promise<{
       imageUrl: parseStringList(p.galleryUrls)[0],
       icon: "server",
     });
-    if (cloudish.length >= 5) break;
+    if (cloudish.length >= 4) break;
   }
 
   if (cloudish.length > 0) {
@@ -311,7 +311,7 @@ async function loadSecurityFeatured(): Promise<{
   }
 
   scored.sort((a, b) => b.score - a.score);
-  const featured = scored.slice(0, 5).map((s) => s.item);
+  const featured = scored.slice(0, 4).map((s) => s.item);
   if (featured.length > 0) {
     return { featured, usingFallback: false };
   }

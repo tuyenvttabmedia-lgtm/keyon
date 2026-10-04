@@ -339,7 +339,7 @@ export function ProductivitySolutionLanding({
                 </p>
                 <Link
                   href="/categories/office"
-                  className={`mt-4 inline-flex h-10 items-center justify-center rounded-xl border border-white/35 bg-transparent px-3.5 ${CTA_COMPACT_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+                  className={`mt-4 inline-flex h-11 w-full items-center justify-center rounded-xl border border-white/35 bg-transparent px-3.5 sm:h-10 sm:w-auto ${CTA_COMPACT_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
                   Xem tất cả →
                 </Link>
@@ -348,7 +348,10 @@ export function ProductivitySolutionLanding({
               <div className="relative min-w-0 self-stretch pr-0 lg:pr-10 xl:pr-12">
                 <ul className="grid h-full grid-cols-2 items-stretch gap-2.5 sm:gap-3 lg:grid-cols-4 lg:gap-3">
                   {products.map((p) => (
-                    <li key={p.id} className="flex h-full min-h-0 items-stretch">
+                    <li
+                      key={p.id}
+                      className={`flex h-full min-h-0 items-stretch ${products.length % 2 === 1 ? "last:col-span-2 lg:last:col-span-1" : ""}`}
+                    >
                       <article
                         className={`flex h-full w-full flex-col overflow-hidden rounded-xl bg-white sm:rounded-2xl ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                       >

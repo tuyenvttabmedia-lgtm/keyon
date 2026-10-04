@@ -191,7 +191,8 @@ const PRODUCT_ICONS: Record<NonNullable<CloudFeaturedProduct["icon"]>, LucideIco
 };
 
 export function CloudSolutionLanding({ featured }: Props) {
-  const showFeatured = featured.length > 0;
+  const products = featured.slice(0, 4);
+  const showFeatured = products.length > 0;
 
   return (
     <div className="bg-white">
@@ -419,16 +420,19 @@ export function CloudSolutionLanding({ featured }: Props) {
                 Sản phẩm Cloud đang được cung cấp trên KEYON — xem chi tiết trước khi mua.
               </p>
             </div>
-            <Link href="/categories/cloud" className={`shrink-0 ${LINK_ACCENT_CLASS}`}>
+            <Link href="/categories/cloud" className={`hidden shrink-0 lg:inline ${LINK_ACCENT_CLASS}`}>
               Xem sản phẩm Cloud →
             </Link>
           </div>
-          <ul className="grid grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-3 xl:grid-cols-5 xl:gap-4">
-            {featured.map((p) => {
+          <ul className="grid grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-4 lg:gap-4">
+            {products.map((p) => {
               const Glyph = PRODUCT_ICONS[p.icon ?? "server"];
               const brand = p.specs[0];
               return (
-                <li key={p.id}>
+                <li
+                  key={p.id}
+                  className={products.length % 2 === 1 ? "last:col-span-2 lg:last:col-span-1" : undefined}
+                >
                   <article
                     className={`flex h-full flex-col overflow-hidden rounded-xl border border-border bg-white sm:rounded-2xl ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                   >
@@ -473,6 +477,12 @@ export function CloudSolutionLanding({ featured }: Props) {
               );
             })}
           </ul>
+          <Link
+            href="/categories/cloud"
+            className={`mt-4 inline-flex h-11 w-full items-center justify-center rounded-xl border border-border bg-white px-4 lg:hidden ${CTA_COMPACT_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+          >
+            Xem tất cả sản phẩm
+          </Link>
         </div>
       </section>
       ) : null}
