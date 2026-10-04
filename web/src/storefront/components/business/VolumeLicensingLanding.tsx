@@ -43,7 +43,6 @@ import {
 } from "@/storefront/effects";
 
 const ICON_SM = { size: 16, strokeWidth: 1.85 } as const;
-const ICON_MD = { size: 20, strokeWidth: 1.75 } as const;
 
 type VolumeId = "5" | "10" | "50" | "100" | "100+";
 
@@ -227,50 +226,50 @@ export function VolumeLicensingLanding() {
             <span className={BREADCRUMB_CURRENT_CLASS}>Mua bản quyền số lượng lớn</span>
           </nav>
 
-          <div className="grid items-start gap-8 md:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] md:gap-10 lg:gap-12">
-            <div className="min-w-0 max-w-[540px]">
-              <h1 className={HERO_TITLE_CLASS}>
+          <div className="grid w-full min-w-0 items-start gap-8 lg:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] lg:gap-12">
+            <div className="min-w-0 max-w-full lg:max-w-[540px]">
+              <h1 className={`max-w-full break-words ${HERO_TITLE_CLASS}`}>
                 Mua bản quyền phần mềm số lượng lớn cho doanh nghiệp
               </h1>
-              <p className={`mt-4 max-w-[520px] ${PAGE_LEAD_CLASS}`}>
+              <p className={`mt-4 max-w-full break-words lg:max-w-[520px] ${PAGE_LEAD_CLASS}`}>
                 Từ nhóm nhỏ đến doanh nghiệp 100+ người dùng — KEYON tư vấn sản phẩm, hình thức cấp
                 phép, báo giá và bàn giao theo nhu cầu thực tế.
               </p>
 
-              <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+              <ul className="mt-6 grid min-w-0 grid-cols-2 gap-3">
                 {HERO_POINTS.map((p) => (
-                  <li key={p.title} className="flex items-start gap-2.5">
+                  <li key={p.title} className="flex min-w-0 items-start gap-2">
                     <span
-                      className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"
                       aria-hidden
                     >
                       <p.Icon {...ICON_SM} />
                     </span>
                     <span className="min-w-0">
-                      <span className={`block ${CARD_TITLE_CLASS}`}>{p.title}</span>
-                      <span className={`mt-0.5 block ${CARD_META_CLASS}`}>{p.body}</span>
+                      <span className={`block break-words ${CARD_TITLE_CLASS}`}>{p.title}</span>
+                      <span className={`mt-0.5 block break-words ${CARD_META_CLASS}`}>{p.body}</span>
                     </span>
                   </li>
                 ))}
               </ul>
 
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+              <div className="mt-8 flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <Link
                   href={quoteHref(volume)}
-                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                  className={`inline-flex h-12 w-full min-w-0 items-center justify-center rounded-xl bg-accent px-6 sm:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
                   Nhận báo giá doanh nghiệp →
                 </Link>
                 <Link
                   href="/business/licensing-consulting"
-                  className={`inline-flex h-12 items-center justify-center rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+                  className={`inline-flex h-12 w-full min-w-0 items-center justify-center rounded-xl border border-border bg-white px-6 sm:w-auto ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
                   Tư vấn giải pháp
                 </Link>
               </div>
             </div>
 
-            <div className="min-w-0 w-full">
+            <div className="hidden min-w-0 w-full lg:block">
               <VolumeHeroArt />
             </div>
           </div>
@@ -290,13 +289,13 @@ export function VolumeLicensingLanding() {
             </p>
           </header>
 
-          <ul className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3">
+          <ul className="mt-7 grid min-w-0 grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-5 lg:gap-3">
             {VOLUMES.map((v) => {
               const active = v.id === volume;
               return (
-                <li key={v.id}>
+                <li key={v.id} className="min-w-0 last:col-span-2 lg:last:col-span-1">
                   <article
-                    className={`flex h-full flex-col items-center rounded-2xl border bg-white px-4 py-5 text-center sm:px-5 sm:py-6 ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} ${
+                    className={`flex h-full min-w-0 flex-col items-center overflow-hidden rounded-2xl border bg-white px-3 py-4 text-center sm:px-4 sm:py-5 ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} ${
                       active
                         ? `border-accent bg-accent-soft/30 ring-1 ring-accent/20 ${ELEVATION_HAIRLINE}`
                         : `border-border ${ELEVATION_HAIRLINE} hover:border-accent/35`
@@ -313,7 +312,7 @@ export function VolumeLicensingLanding() {
                       <div className="flex justify-center">
                         <PeopleGlyph count={v.people} infinity={v.showInfinity} />
                       </div>
-                      <p className={`mt-3 ${BODY_MUTED_CLASS}`}>{v.body}</p>
+                      <p className={`mt-3 break-words ${BODY_MUTED_CLASS}`}>{v.body}</p>
                     </button>
 
                     <Link
@@ -349,7 +348,7 @@ export function VolumeLicensingLanding() {
             </div>
             <Link
               href={quoteHref(volume)}
-              className={`inline-flex h-10 shrink-0 items-center justify-center rounded-xl border border-accent/40 bg-white px-4 ${CTA_COMPACT_CLASS} text-accent ${TRANSITION_UI} hover:bg-accent-soft`}
+              className={`inline-flex h-10 w-full shrink-0 items-center justify-center rounded-xl border border-accent/40 bg-white px-4 sm:w-auto ${CTA_COMPACT_CLASS} text-accent ${TRANSITION_UI} hover:bg-accent-soft`}
             >
               Liên hệ kinh doanh →
             </Link>
@@ -367,38 +366,35 @@ export function VolumeLicensingLanding() {
             </p>
             <nav
               aria-label="Giải pháp liên quan"
-              className={`mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 ${BODY_MUTED_CLASS}`}
+              className="mt-4 grid grid-cols-2 gap-2 lg:flex lg:flex-wrap lg:justify-center"
             >
-              {RELATED_LINKS.map((link, i) => (
-                <span key={link.href} className="inline-flex items-center gap-3">
-                  {i > 0 ? (
-                    <span aria-hidden className="text-muted-soft">
-                      ·
-                    </span>
-                  ) : null}
-                  <Link href={link.href} className={HOVER_LINK_ACCENT}>
-                    {link.label}
-                  </Link>
-                </span>
+              {RELATED_LINKS.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`inline-flex min-w-0 items-center justify-center break-words rounded-xl border border-border bg-white px-3 py-2 text-center last:col-span-2 lg:last:col-span-1 ${CARD_META_CLASS} font-medium text-navy ${TRANSITION_UI} ${HOVER_LINK_ACCENT}`}
+                >
+                  {link.label}
+                </Link>
               ))}
             </nav>
           </header>
 
-          <ul className="mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+          <ul className="mt-7 grid min-w-0 grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-3 lg:gap-6">
             {WHY.map((w) => (
-              <li key={w.title}>
+              <li key={w.title} className="min-w-0">
                 <article
-                  className={`flex h-full gap-3.5 rounded-2xl border border-border bg-white p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                  className={`flex h-full min-w-0 items-start gap-2.5 overflow-hidden rounded-2xl border border-border bg-white p-3 sm:gap-3.5 sm:p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                 >
                   <span
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-accent/40 text-accent"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-accent/40 text-accent"
                     aria-hidden
                   >
-                    <w.Icon {...ICON_MD} />
+                    <w.Icon size={16} strokeWidth={1.8} />
                   </span>
                   <div className="min-w-0">
-                    <h3 className={CARD_TITLE_CLASS}>{w.title}</h3>
-                    <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{w.body}</p>
+                    <h3 className={`break-words ${CARD_TITLE_CLASS}`}>{w.title}</h3>
+                    <p className={`mt-1 break-words ${BODY_MUTED_CLASS}`}>{w.body}</p>
                   </div>
                 </article>
               </li>
@@ -417,41 +413,28 @@ export function VolumeLicensingLanding() {
             </p>
           </header>
 
-          <div className="relative mt-10">
-            <div
-              className="pointer-events-none absolute left-[10%] right-[10%] top-[1.85rem] z-0 hidden h-px border-t border-dashed border-border lg:block"
-              aria-hidden
-            />
-            <ol className="relative z-[1] grid gap-6 sm:grid-cols-2 lg:grid-cols-5 lg:gap-4">
-              {PROCESS.map((step, i) => {
-                const n = String(i + 1).padStart(2, "0");
-                return (
-                  <li
-                    key={step.title}
-                    className={`group flex flex-col items-center rounded-2xl px-2 py-3 text-center ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:bg-accent-soft/50`}
-                  >
-                    <span
-                      className={`${BADGE_CLASS} mb-2 font-semibold text-muted ${TRANSITION_UI} group-hover:text-accent`}
-                    >
-                      {n}
-                    </span>
-                    <span
-                      className={`flex h-12 w-12 items-center justify-center rounded-full border-2 border-accent/40 bg-white text-accent ${ELEVATION_HAIRLINE} ${TRANSITION_UI} ${ELEVATION_CARD_HOVER} group-hover:border-accent group-hover:bg-accent group-hover:text-white`}
-                      aria-hidden
-                    >
-                      <step.Icon {...ICON_MD} />
-                    </span>
-                    <h3
-                      className={`mt-3.5 ${CARD_TITLE_CLASS} ${TRANSITION_UI} group-hover:text-accent`}
-                    >
-                      {step.title}
-                    </h3>
-                    <p className={`mt-1.5 max-w-[16rem] ${BODY_MUTED_CLASS}`}>{step.body}</p>
-                  </li>
-                );
-              })}
-            </ol>
-          </div>
+          <ol className="mt-7 grid min-w-0 grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-5 lg:gap-4">
+            {PROCESS.map((step, i) => {
+              const n = String(i + 1);
+              return (
+                <li
+                  key={step.title}
+                  className={`flex min-w-0 items-start gap-3 overflow-hidden rounded-2xl border border-border bg-white p-3 sm:p-4 last:col-span-2 lg:last:col-span-1 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent font-display text-base font-bold text-white">
+                    {n}
+                  </span>
+                  <div className="min-w-0">
+                    <div className="flex min-w-0 items-center gap-2">
+                      <step.Icon size={16} strokeWidth={1.85} className="shrink-0 text-accent" aria-hidden />
+                      <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{step.title}</h3>
+                    </div>
+                    <p className={`mt-1.5 break-words ${BODY_MUTED_CLASS}`}>{step.body}</p>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
         </div>
       </section>
 
@@ -467,16 +450,16 @@ export function VolumeLicensingLanding() {
                 Chọn quy mô và sản phẩm bạn cần — KEYON tư vấn phương án cấp phép và báo giá phù hợp.
               </p>
             </div>
-            <div className="flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="flex w-full min-w-0 shrink-0 flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
               <Link
                 href={quoteHref(volume)}
-                className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                className={`inline-flex h-12 w-full min-w-0 items-center justify-center rounded-xl bg-accent px-6 sm:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
               >
                 Nhận báo giá doanh nghiệp →
               </Link>
               <Link
                 href="/business/licensing-consulting"
-                className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-white/30 bg-transparent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+                className={`inline-flex h-12 w-full min-w-0 items-center justify-center gap-2 rounded-xl border border-white/30 bg-transparent px-5 sm:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:text-accent`}
               >
                 Tư vấn giải pháp
               </Link>
