@@ -345,10 +345,7 @@ export function BackupSolutionLanding({ featured }: Props) {
               <div role="tabpanel" className="p-4 sm:p-5 lg:p-6">
                 <ul className="grid grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-4 lg:gap-3.5">
                   {products.map((p) => (
-                    <li
-                      key={p.id}
-                      className={`flex min-h-0 min-w-0 ${products.length % 2 === 1 ? "last:col-span-2 lg:last:col-span-1" : ""}`}
-                    >
+                    <li key={p.id} className="flex min-h-0 min-w-0">
                       <article
                         className={`flex h-full w-full flex-col overflow-hidden rounded-xl bg-white sm:rounded-2xl ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                       >
