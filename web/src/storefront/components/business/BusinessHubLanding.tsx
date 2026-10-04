@@ -16,7 +16,6 @@ import {
   Wallet,
 } from "lucide-react";
 import {
-  BADGE_CLASS,
   BODY_CLASS,
   BODY_MUTED_CLASS,
   CARD_META_CLASS,
@@ -42,7 +41,6 @@ import {
 } from "@/storefront/effects";
 import { LANDING_HERO_PAD } from "@/storefront/components/marketing/hero-shell";
 
-const ICON_MD = { size: 22, strokeWidth: 1.75 } as const;
 const ICON_SM = { size: 16, strokeWidth: 1.85 } as const;
 
 type BizCard = {
@@ -241,53 +239,52 @@ export function BusinessHubLanding() {
           aria-hidden
         />
         <div className="home-container relative">
-          <div className="grid items-center gap-8 md:grid-cols-[minmax(0,0.46fr)_minmax(0,0.54fr)] md:gap-10 lg:gap-12">
-            <div className="min-w-0 w-full max-w-[540px]">
-              <h1 className={`${HERO_TITLE_CLASS} !text-white`}>
+          <div className="grid w-full min-w-0 items-center gap-8 lg:grid-cols-[minmax(0,0.46fr)_minmax(0,0.54fr)] lg:gap-12">
+            <div className="min-w-0 w-full max-w-full lg:max-w-[540px]">
+              <h1 className={`max-w-full break-words ${HERO_TITLE_CLASS} !text-white`}>
                 <span className="block">Giải pháp</span>
                 <span className="block bg-gradient-to-r from-accent to-teal-100 bg-clip-text text-transparent">
                   bản quyền phần mềm
                 </span>
                 <span className="block">cho doanh nghiệp</span>
               </h1>
-              <p className={`mt-4 max-w-[520px] ${PAGE_LEAD_CLASS} !text-slate-300`}>
+              <p className={`mt-4 max-w-full break-words lg:max-w-[520px] ${PAGE_LEAD_CLASS} !text-slate-300`}>
                 KEYON hỗ trợ doanh nghiệp mua, bàn giao, quản lý và gia hạn bản quyền phần mềm
                 theo quy mô sử dụng — từ nhóm nhỏ đến tổ chức nhiều người dùng.
               </p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+              <div className="mt-8 flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <Link
                   href="/contact/quote"
-                  className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                  className={`inline-flex h-12 w-full min-w-0 items-center justify-center rounded-xl bg-accent px-6 sm:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
                   Gửi yêu cầu tư vấn →
                 </Link>
                 <Link
                   href="/contact"
-                  className={`inline-flex h-12 items-center justify-center rounded-xl border border-white/30 bg-transparent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+                  className={`inline-flex h-12 w-full min-w-0 items-center justify-center rounded-xl border border-white/30 bg-transparent px-6 sm:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                 >
                   Trao đổi với KEYON
                 </Link>
               </div>
             </div>
 
-            <div className="relative flex w-full min-w-0 justify-center md:justify-start">
+            <div className="relative hidden w-full min-w-0 lg:flex lg:justify-start">
               <BusinessHeroArt />
             </div>
           </div>
 
-          {/* Trust strip inside hero */}
-          <ul className="mt-6 grid gap-5 border-t border-white/10 pt-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+          <ul className="mt-6 grid min-w-0 grid-cols-2 gap-3 border-t border-white/10 pt-6 lg:grid-cols-4 lg:gap-4">
             {HERO_TRUST.map((t) => (
-              <li key={t.title} className="flex items-start gap-3">
+              <li key={t.title} className="flex min-w-0 items-start gap-2.5">
                 <span
-                  className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent/15 text-accent"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent/15 text-accent"
                   aria-hidden
                 >
                   <t.Icon {...ICON_SM} />
                 </span>
                 <div className="min-w-0">
-                  <p className={`${CARD_TITLE_CLASS} !text-white`}>{t.title}</p>
-                  <p className={`mt-0.5 ${CARD_META_CLASS} !text-slate-400`}>{t.body}</p>
+                  <p className={`break-words ${CARD_TITLE_CLASS} !text-white`}>{t.title}</p>
+                  <p className={`mt-0.5 break-words ${CARD_META_CLASS} !text-slate-400`}>{t.body}</p>
                 </div>
               </li>
             ))}
@@ -306,35 +303,35 @@ export function BusinessHubLanding() {
             </p>
           </header>
 
-          <ul className="mt-9 grid gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 lg:gap-3.5">
+          <ul className="mt-7 grid min-w-0 grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-3 lg:gap-3.5">
             {BIZ_CARDS.map((card) => (
-              <li key={card.id}>
+              <li key={card.id} className="min-w-0">
                 <article
-                  className={`flex h-full flex-col rounded-2xl border border-border bg-white p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                  className={`flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-white p-3 sm:p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                 >
-                  <span
-                    className={`mx-auto flex h-12 w-12 items-center justify-center rounded-full ${card.tone}`}
-                    aria-hidden
-                  >
-                    <card.Icon {...ICON_MD} />
+                  <span className="flex min-w-0 items-center gap-2">
+                    <span
+                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${card.tone}`}
+                      aria-hidden
+                    >
+                      <card.Icon size={16} strokeWidth={1.8} />
+                    </span>
+                    <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{card.title}</h3>
                   </span>
-                  <h3 className={`mt-4 text-center ${CARD_TITLE_CLASS}`}>
-                    {card.title}
-                  </h3>
-                  <p className={`mt-2 text-center ${BODY_MUTED_CLASS}`}>{card.body}</p>
-                  <ul className="mt-4 space-y-2">
+                  <p className={`mt-2 break-words ${BODY_MUTED_CLASS}`}>{card.body}</p>
+                  <ul className="mt-3 space-y-1.5">
                     {card.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2">
+                      <li key={f} className="flex min-w-0 items-start gap-2">
                         <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
                           <Check size={10} strokeWidth={3} aria-hidden />
                         </span>
-                        <span className={`${BODY_CLASS} leading-snug`}>{f}</span>
+                        <span className={`min-w-0 break-words ${BODY_CLASS} leading-snug`}>{f}</span>
                       </li>
                     ))}
                   </ul>
                   <Link
                     href={card.href}
-                    className={`mt-auto inline-flex items-center justify-center gap-1 pt-5 ${LINK_FIELD_CLASS} ${TRANSITION_UI} ${HOVER_LINK_ACCENT}`}
+                    className={`mt-auto inline-flex items-center gap-1 pt-3 ${LINK_FIELD_CLASS} ${TRANSITION_UI} ${HOVER_LINK_ACCENT}`}
                   >
                     {card.cta}
                     <span aria-hidden>→</span>
@@ -363,25 +360,25 @@ export function BusinessHubLanding() {
             ràng.
           </p>
 
-          <div className="mt-5 grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(180px,0.26fr)] lg:gap-10 xl:gap-12">
-            <ul className="grid grid-cols-1 gap-x-8 gap-y-7 sm:grid-cols-2 sm:gap-y-9 lg:gap-x-10 lg:gap-y-10">
+          <div className="mt-5 grid min-w-0 items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(180px,0.26fr)] lg:gap-10 xl:gap-12">
+            <ul className="grid min-w-0 grid-cols-2 gap-2.5 sm:gap-x-8 sm:gap-y-9 lg:gap-x-10 lg:gap-y-10">
               {BENEFITS.map((b) => (
-                <li key={b.title} className="flex gap-3.5">
+                <li key={b.title} className="flex min-w-0 items-start gap-2.5 sm:gap-3.5">
                   <span
-                    className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-accent/45 text-accent"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-accent/45 text-accent sm:h-11 sm:w-11"
                     aria-hidden
                   >
-                    <b.Icon size={20} strokeWidth={1.7} />
+                    <b.Icon size={18} strokeWidth={1.7} />
                   </span>
-                  <div className="min-w-0 pt-0.5">
-                    <h3 className={`${CARD_TITLE_CLASS} !text-white`}>{b.title}</h3>
-                    <p className={`mt-1.5 ${BODY_MUTED_CLASS} !text-slate-300`}>{b.body}</p>
+                  <div className="min-w-0">
+                    <h3 className={`break-words ${CARD_TITLE_CLASS} !text-white`}>{b.title}</h3>
+                    <p className={`mt-1 break-words ${BODY_MUTED_CLASS} !text-slate-300`}>{b.body}</p>
                   </div>
                 </li>
               ))}
             </ul>
 
-            <div className="relative mx-auto w-full max-w-[200px] lg:mx-0 lg:max-w-[220px]">
+            <div className="relative mx-auto hidden w-full max-w-[200px] lg:mx-0 lg:block lg:max-w-[220px]">
               <BusinessShieldArt />
             </div>
           </div>
@@ -398,30 +395,28 @@ export function BusinessHubLanding() {
             </p>
           </header>
 
-          <div className="relative mt-10">
-            <div
-              className="pointer-events-none absolute left-[10%] right-[10%] top-[1.85rem] z-0 hidden h-px border-t border-dashed border-border lg:block"
-              aria-hidden
-            />
-            <ol className="relative z-[1] grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
-              {PROCESS.map((step, i) => {
-                const n = String(i + 1).padStart(2, "0");
-                return (
-                  <li key={step.title} className="flex flex-col items-center text-center">
-                    <span className={`${BADGE_CLASS} mb-2 font-semibold text-muted`}>{n}</span>
-                    <span
-                      className={`flex h-12 w-12 items-center justify-center rounded-full border-2 border-accent/40 bg-white text-accent ${ELEVATION_HAIRLINE} ${TRANSITION_UI}`}
-                      aria-hidden
-                    >
-                      <step.Icon {...ICON_MD} />
-                    </span>
-                    <h3 className={`mt-3.5 ${CARD_TITLE_CLASS}`}>{step.title}</h3>
-                    <p className={`mt-1.5 max-w-[16rem] ${BODY_MUTED_CLASS}`}>{step.body}</p>
-                  </li>
-                );
-              })}
-            </ol>
-          </div>
+          <ol className="mt-7 grid min-w-0 grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-3 lg:gap-4">
+            {PROCESS.map((step, i) => {
+              const n = String(i + 1);
+              return (
+                <li
+                  key={step.title}
+                  className={`flex min-w-0 items-start gap-3 overflow-hidden rounded-2xl border border-border bg-white p-3 sm:p-4 last:col-span-2 lg:last:col-span-1 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent font-display text-base font-bold text-white sm:h-12 sm:w-12 sm:text-lg">
+                    {n}
+                  </span>
+                  <div className="min-w-0">
+                    <div className="flex min-w-0 items-center gap-2">
+                      <step.Icon size={16} strokeWidth={1.85} className="shrink-0 text-accent" aria-hidden />
+                      <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{step.title}</h3>
+                    </div>
+                    <p className={`mt-1.5 break-words ${BODY_MUTED_CLASS}`}>{step.body}</p>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
         </div>
       </section>
 
@@ -436,16 +431,16 @@ export function BusinessHubLanding() {
                 báo giá theo nhu cầu.
               </p>
             </div>
-            <div className="flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="flex w-full min-w-0 shrink-0 flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
               <Link
                 href="/contact/quote"
-                className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                className={`inline-flex h-12 w-full min-w-0 items-center justify-center rounded-xl bg-accent px-6 sm:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
               >
                 Gửi yêu cầu tư vấn →
               </Link>
               <Link
                 href="/contact"
-                className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-accent/40 bg-white px-5 ${CTA_LABEL_CLASS} text-accent ${TRANSITION_UI} hover:border-accent hover:bg-accent-soft`}
+                className={`inline-flex h-12 w-full min-w-0 items-center justify-center gap-2 rounded-xl border border-accent/40 bg-white px-5 sm:w-auto ${CTA_LABEL_CLASS} text-accent ${TRANSITION_UI} hover:border-accent hover:bg-accent-soft`}
               >
                 Liên hệ KEYON
               </Link>
