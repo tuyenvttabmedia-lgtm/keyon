@@ -510,7 +510,7 @@ export function QuoteRequestLanding({
   }
 
   return (
-    <div className="bg-white">
+    <div className="overflow-x-hidden bg-white">
       {/* Hero */}
       <section className="border-b border-border bg-[#F7FAFC]">
         <div className="home-container home-section">
@@ -532,18 +532,23 @@ export function QuoteRequestLanding({
 
           <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] lg:gap-10 xl:gap-12">
             <div className="flex h-full min-w-0 flex-col">
-              <h1 className={HERO_TITLE_CLASS}>{hero.title}</h1>
-              <p className={`mt-3 max-w-xl ${PAGE_LEAD_CLASS}`}>{hero.lead}</p>
-              <ul className="mt-6 space-y-4">
-                {hero.usps.map((usp) => (
-                  <li key={usp.title} className="flex items-start gap-3">
-                    <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
-                      <UspIcon kind={usp.icon} />
+              <h1 className={`max-w-full break-words ${HERO_TITLE_CLASS}`}>{hero.title}</h1>
+              <p className={`mt-3 max-w-full break-words lg:max-w-xl ${PAGE_LEAD_CLASS}`}>{hero.lead}</p>
+              <ul className="mt-6 grid min-w-0 grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-1">
+                {hero.usps.map((usp, index) => (
+                  <li
+                    key={usp.title}
+                    className={`flex min-w-0 flex-col ${
+                      index === hero.usps.length - 1 ? "col-span-2 lg:col-span-1" : ""
+                    }`}
+                  >
+                    <span className="flex min-w-0 items-center gap-2">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
+                        <UspIcon kind={usp.icon} />
+                      </span>
+                      <span className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{usp.title}</span>
                     </span>
-                    <span>
-                      <span className={`block ${CARD_TITLE_CLASS}`}>{usp.title}</span>
-                      <span className={`mt-0.5 block ${BODY_MUTED_CLASS}`}>{usp.body}</span>
-                    </span>
+                    <span className={`mt-2 break-words ${BODY_MUTED_CLASS}`}>{usp.body}</span>
                   </li>
                 ))}
               </ul>
@@ -690,11 +695,11 @@ export function QuoteRequestLanding({
                       </label>
                     </div>
 
-                    <div className="flex justify-end pt-2">
+                    <div className="flex pt-2 sm:justify-end">
                       <button
                         type="button"
                         onClick={goNext}
-                        className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                        className={`inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 sm:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                       >
                         Tiếp tục
                         <ArrowRight size={16} strokeWidth={2.2} aria-hidden />
@@ -715,19 +720,23 @@ export function QuoteRequestLanding({
                     <div>
                       <span className={FORM_LABEL_CLASS}>Sản phẩm bạn quan tâm</span>
                       <div
-                        className="mt-2 flex flex-wrap gap-2"
+                        className="mt-2 grid grid-cols-2 gap-2"
                         role="group"
                         aria-label="Sản phẩm bạn quan tâm"
                       >
-                        {interestChoices.map((p) => {
+                        {interestChoices.map((p, index) => {
                           const active = form.interestedProducts.some((x) => x.name === p.name);
+                          const spanLast =
+                            interestChoices.length % 2 === 1 && index === interestChoices.length - 1;
                           return (
                             <button
                               key={p.name}
                               type="button"
                               aria-pressed={active}
                               onClick={() => toggleInterest(p)}
-                              className={`inline-flex h-10 items-center justify-center rounded-xl border px-3 text-sm font-semibold ${TRANSITION_UI} ${
+                              className={`inline-flex h-10 min-w-0 items-center justify-center rounded-xl border px-3 text-sm font-semibold ${TRANSITION_UI} ${
+                                spanLast ? "col-span-2" : ""
+                              } ${
                                 active
                                   ? "border-accent bg-accent-soft text-accent"
                                   : "border-border bg-white text-navy hover:border-accent/40"
@@ -752,7 +761,7 @@ export function QuoteRequestLanding({
                         role="group"
                         aria-label="Số lượng người dùng"
                       >
-                        {QUOTE_USER_RANGES.map((v) => {
+                        {QUOTE_USER_RANGES.map((v, index) => {
                           const active = form.estimatedUsers === v;
                           return (
                             <button
@@ -761,6 +770,8 @@ export function QuoteRequestLanding({
                               data-field="estimatedUsers"
                               onClick={() => setField("estimatedUsers", v)}
                               className={`inline-flex h-12 items-center justify-center rounded-xl border text-sm font-semibold ${TRANSITION_UI} ${
+                                index === QUOTE_USER_RANGES.length - 1 ? "col-span-2 sm:col-span-1" : ""
+                              } ${
                                 active
                                   ? "border-accent bg-accent-soft text-accent"
                                   : "border-border bg-white text-navy hover:border-accent/40"
@@ -777,11 +788,11 @@ export function QuoteRequestLanding({
                     <div>
                       <span className={FORM_LABEL_CLASS}>Hình thức nhu cầu</span>
                       <div
-                        className="mt-2 flex flex-wrap gap-2"
+                        className="mt-2 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap"
                         role="group"
                         aria-label="Hình thức nhu cầu"
                       >
-                        {NEED_OPTIONS.map((opt) => {
+                        {NEED_OPTIONS.map((opt, index) => {
                           const active = form.licenseType === opt.id;
                           return (
                             <button
@@ -789,7 +800,9 @@ export function QuoteRequestLanding({
                               type="button"
                               aria-pressed={active}
                               onClick={() => setField("licenseType", opt.id)}
-                              className={`inline-flex h-10 items-center justify-center rounded-xl border px-3 text-sm font-semibold ${TRANSITION_UI} ${
+                              className={`inline-flex h-10 min-w-0 items-center justify-center rounded-xl border px-3 text-sm font-semibold ${TRANSITION_UI} ${
+                                index === NEED_OPTIONS.length - 1 ? "col-span-2 sm:col-span-1" : ""
+                              } ${
                                 active
                                   ? "border-accent bg-accent-soft text-accent"
                                   : "border-border bg-white text-navy hover:border-accent/40"
@@ -823,7 +836,7 @@ export function QuoteRequestLanding({
                       <button
                         type="button"
                         onClick={goBack}
-                        className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-border bg-white px-5 text-sm font-semibold text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+                        className={`inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border bg-white px-5 text-sm font-semibold text-navy sm:w-auto ${TRANSITION_UI} hover:border-accent hover:text-accent`}
                       >
                         <ArrowLeft size={16} strokeWidth={2.2} aria-hidden />
                         Quay lại
@@ -831,7 +844,7 @@ export function QuoteRequestLanding({
                       <button
                         type="button"
                         onClick={goNext}
-                        className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                        className={`inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 sm:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                       >
                         Tiếp tục
                         <ArrowRight size={16} strokeWidth={2.2} aria-hidden />
@@ -927,7 +940,7 @@ export function QuoteRequestLanding({
                         type="button"
                         onClick={goBack}
                         disabled={loading}
-                        className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-border bg-white px-5 text-sm font-semibold text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent ${OPACITY_DISABLED_BUSY}`}
+                        className={`inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border bg-white px-5 text-sm font-semibold text-navy sm:w-auto ${TRANSITION_UI} hover:border-accent hover:text-accent ${OPACITY_DISABLED_BUSY}`}
                       >
                         <ArrowLeft size={16} strokeWidth={2.2} aria-hidden />
                         Quay lại
@@ -936,7 +949,7 @@ export function QuoteRequestLanding({
                         type="button"
                         onClick={onSubmit}
                         disabled={loading}
-                        className={`inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER} ${OPACITY_DISABLED_BUSY}`}
+                        className={`inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 sm:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER} ${OPACITY_DISABLED_BUSY}`}
                       >
                         {loading ? (
                           "Đang gửi…"
@@ -962,13 +975,13 @@ export function QuoteRequestLanding({
           <aside className="min-w-0 space-y-4 lg:col-span-4">
             <div className={`rounded-2xl border border-border bg-white p-5 ${ELEVATION_HAIRLINE}`}>
               <h2 className={CARD_TITLE_CLASS}>{hero.sidebarTitle}</h2>
-              <ul className="mt-4 space-y-3">
+              <ul className="mt-4 grid min-w-0 grid-cols-2 gap-2.5 lg:grid-cols-1 lg:gap-3">
                 {hero.sidebarSteps.map((s) => (
-                  <li key={s} className="flex items-start gap-2.5">
-                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
+                  <li key={s} className="flex min-w-0 items-center gap-2">
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
                       <Check size={11} strokeWidth={3} aria-hidden />
                     </span>
-                    <span className="text-sm leading-snug text-navy">{s}</span>
+                    <span className="min-w-0 break-words text-sm leading-snug text-navy">{s}</span>
                   </li>
                 ))}
               </ul>
@@ -1031,30 +1044,28 @@ export function QuoteRequestLanding({
               Từ khi gửi yêu cầu đến khi nhận báo giá và hỗ trợ kích hoạt — rõ ràng theo từng bước.
             </p>
           </header>
-          <div className="relative mt-10">
-            <div
-              className="pointer-events-none absolute left-[10%] right-[10%] top-6 z-0 hidden h-px border-t border-dashed border-border lg:block"
-              aria-hidden
-            />
-            <ol className="relative z-[1] grid gap-6 sm:grid-cols-2 lg:grid-cols-5 lg:gap-4">
-              {PROCESS.map((p, i) => (
-                <li
-                  key={p.title}
-                  className={`group flex flex-col items-center rounded-2xl px-2 py-3 text-center ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:bg-white`}
+          <ol className="mt-7 grid min-w-0 grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-5">
+            {PROCESS.map((p, i) => (
+              <li
+                key={p.title}
+                className={`min-w-0 ${i === PROCESS.length - 1 ? "col-span-2 lg:col-span-1" : ""}`}
+              >
+                <article
+                  className={`flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-white p-3.5 sm:p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                 >
-                  <span
-                    className={`flex h-12 w-12 items-center justify-center rounded-full border-2 border-accent/40 bg-white text-[13px] font-bold text-accent ${ELEVATION_HAIRLINE} ${TRANSITION_UI} ${ELEVATION_CARD_HOVER} group-hover:border-accent group-hover:bg-accent group-hover:text-white`}
-                  >
-                    {String(i + 1).padStart(2, "0")}
+                  <span className="flex min-w-0 items-center gap-2">
+                    <span
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-white ${BADGE_CLASS}`}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{p.title}</h3>
                   </span>
-                  <h3 className={`mt-3.5 ${CARD_TITLE_CLASS} ${TRANSITION_UI} group-hover:text-accent`}>
-                    {p.title}
-                  </h3>
-                  <p className={`mt-1.5 max-w-[16rem] ${BODY_MUTED_CLASS}`}>{p.body}</p>
-                </li>
-              ))}
-            </ol>
-          </div>
+                  <p className={`mt-2 break-words ${BODY_MUTED_CLASS}`}>{p.body}</p>
+                </article>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
     </div>
@@ -1063,33 +1074,28 @@ export function QuoteRequestLanding({
 
 function Stepper({ step }: { step: number }) {
   return (
-    <ol className="flex items-center gap-2 sm:gap-3" aria-label="Các bước gửi yêu cầu">
-      {STEPS.map((s, i) => {
+    <ol className="grid grid-cols-3 gap-2" aria-label="Các bước gửi yêu cầu">
+      {STEPS.map((s) => {
         const done = step > s.id;
         const active = step === s.id;
         return (
-          <li key={s.id} className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
-            <div className="flex min-w-0 items-center gap-2">
-              <span
-                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[12px] font-bold ${
-                  done || active
-                    ? "bg-accent text-white"
-                    : "border border-border bg-white text-muted"
-                }`}
-              >
-                {done ? <Check size={14} strokeWidth={3} aria-hidden /> : s.id}
-              </span>
-              <span
-                className={`truncate text-[13px] font-semibold ${
-                  active || done ? "text-navy" : "text-muted"
-                }`}
-              >
-                {s.label}
-              </span>
-            </div>
-            {i < STEPS.length - 1 ? (
-              <span className="hidden h-px flex-1 bg-border sm:block" aria-hidden />
-            ) : null}
+          <li key={s.id} className="flex min-w-0 items-center gap-1.5 sm:gap-2">
+            <span
+              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[12px] font-bold ${
+                done || active
+                  ? "bg-accent text-white"
+                  : "border border-border bg-white text-muted"
+              }`}
+            >
+              {done ? <Check size={14} strokeWidth={3} aria-hidden /> : s.id}
+            </span>
+            <span
+              className={`min-w-0 break-words text-[13px] font-semibold leading-snug ${
+                active || done ? "text-navy" : "text-muted"
+              }`}
+            >
+              {s.label}
+            </span>
           </li>
         );
       })}
@@ -1167,16 +1173,16 @@ function SuccessPanel({
           bằng mã QT- và OTP.
         </p>
       ) : null}
-      <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
+      <div className="mt-7 flex w-full flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
         <Link
           href="/"
-          className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+          className={`inline-flex h-12 w-full items-center justify-center rounded-xl bg-accent px-6 sm:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
         >
           Về trang chủ
         </Link>
         <Link
           href="/business/volume-licensing"
-          className={`inline-flex h-12 items-center justify-center rounded-xl border border-border bg-white px-6 text-[14px] font-semibold text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+          className={`inline-flex h-12 w-full items-center justify-center rounded-xl border border-border bg-white px-6 text-[14px] font-semibold text-navy sm:w-auto ${TRANSITION_UI} hover:border-accent hover:text-accent`}
         >
           Quay lại Volume Licensing
         </Link>
