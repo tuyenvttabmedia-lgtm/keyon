@@ -178,18 +178,18 @@ export function ByNeedSolutionLanding() {
                 className={`min-w-0 ${index === SCALES.length - 1 ? "col-span-2 md:col-span-1" : ""}`}
               >
                 <article
-                  className={`flex h-full min-w-0 items-start gap-3 overflow-hidden rounded-2xl border border-border bg-white p-3.5 sm:p-4 ${ELEVATION_HAIRLINE}`}
+                  className={`flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-white p-3.5 sm:p-4 ${ELEVATION_HAIRLINE}`}
                 >
-                  <span
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"
-                    aria-hidden
-                  >
-                    <s.Icon size={18} strokeWidth={1.8} />
+                  <span className="flex min-w-0 items-center gap-2">
+                    <span
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"
+                      aria-hidden
+                    >
+                      <s.Icon size={18} strokeWidth={1.8} />
+                    </span>
+                    <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{s.title}</h3>
                   </span>
-                  <div className="min-w-0">
-                    <h3 className={`break-words ${CARD_TITLE_CLASS}`}>{s.title}</h3>
-                    <p className={`mt-1 break-words ${BODY_MUTED_CLASS}`}>{s.body}</p>
-                  </div>
+                  <p className={`mt-2 break-words ${BODY_MUTED_CLASS}`}>{s.body}</p>
                 </article>
               </li>
             ))}
