@@ -254,10 +254,10 @@ export function LicensesView({
       ) : (
         <ul className="space-y-3">
           {slice.map((it) => (
-            <li key={it.id} className={`${CARD} !p-4 sm:!p-5`}>
+            <li key={it.id} className={`${CARD} relative !p-4 sm:!p-5`}>
               <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
                 {/* Product */}
-                <div className="flex min-w-0 gap-3 lg:w-[17rem] lg:shrink-0">
+                <div className="flex min-w-0 gap-3 pr-11 lg:w-[17rem] lg:shrink-0 lg:pr-0">
                   <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-surface sm:h-16 sm:w-16">
                     {it.imageUrl ? (
                       <Image
@@ -403,7 +403,7 @@ function LicenseRowMenu({
   const btnRef = useRef<HTMLButtonElement>(null);
 
   return (
-    <div className="relative flex shrink-0 justify-end">
+    <div className="absolute right-3 top-3 z-10 lg:static lg:z-auto lg:shrink-0">
       <button
         ref={btnRef}
         type="button"

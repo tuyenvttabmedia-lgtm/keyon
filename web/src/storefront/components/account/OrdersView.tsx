@@ -506,7 +506,7 @@ function OrderRow({
   return (
     <li className={`relative px-3 py-4 ${TRANSITION_UI} ${HOVER_ROW}`}>
       <div className="grid grid-cols-2 gap-x-3 gap-y-2 lg:grid-cols-[7.75rem_minmax(0,1.35fr)_5rem_minmax(0,0.95fr)_6.25rem_7.5rem_2rem] lg:items-center lg:gap-x-2 lg:gap-y-3">
-        <div className="col-span-2 min-w-0 lg:col-span-1">
+        <div className="col-span-2 min-w-0 pr-11 lg:col-span-1 lg:pr-0">
           <div className="flex items-center gap-1">
             <p className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>#{item.code}</p>
             <CopyIconButton value={item.code} />
@@ -581,7 +581,7 @@ function OrderRow({
           </p>
         </div>
 
-        <div className="relative col-span-2 flex justify-end lg:col-span-1">
+        <div className="absolute right-2 top-3 z-10 lg:static lg:z-auto lg:flex lg:justify-end">
           <button
             ref={btnRef}
             type="button"
