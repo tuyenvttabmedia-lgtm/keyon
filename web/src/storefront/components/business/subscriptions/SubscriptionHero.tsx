@@ -21,7 +21,6 @@ import {
 } from "@/storefront/components/marketing/hero-shell";
 import { HOW_IT_WORKS_HREF, SUB_CONSULT_HREF } from "./shared";
 import { SubscriptionDesktopPreview } from "./SubscriptionDesktopPreview";
-import { SubscriptionMobilePreview } from "./SubscriptionMobilePreview";
 
 const BENEFITS = [
   {
@@ -66,48 +65,47 @@ export function SubscriptionHero() {
         </nav>
 
         <div className={LANDING_HERO_GRID}>
-          <div className="min-w-0 max-w-[540px]">
-            <h1 className={HERO_TITLE_CLASS}>
+          <div className="min-w-0 max-w-full lg:max-w-[540px]">
+            <h1 className={`max-w-full break-words ${HERO_TITLE_CLASS}`}>
               Subscription &amp; gia hạn bản quyền phần mềm
             </h1>
-            <p className={`mt-3.5 ${PAGE_LEAD_CLASS}`}>
+            <p className={`mt-3.5 max-w-full break-words ${PAGE_LEAD_CLASS}`}>
               Mua subscription phần mềm theo thời hạn phù hợp, theo dõi thời gian sử dụng và được hỗ
               trợ khi gia hạn hoặc thay đổi nhu cầu.
             </p>
 
             <ul className="mt-5 space-y-2.5">
               {BENEFITS.map(({ title, body, Icon }) => (
-                <li key={title} className="flex items-start gap-3">
-                  <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
+                <li key={title} className="flex min-w-0 items-center gap-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
                     <Icon size={16} strokeWidth={1.85} aria-hidden />
                   </span>
                   <div className="min-w-0">
-                    <p className={CARD_TITLE_CLASS}>{title}</p>
-                    <p className={BODY_MUTED_CLASS}>{body}</p>
+                    <p className={`break-words ${CARD_TITLE_CLASS}`}>{title}</p>
+                    <p className={`break-words ${BODY_MUTED_CLASS}`}>{body}</p>
                   </div>
                 </li>
               ))}
             </ul>
 
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="mt-7 flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:items-center">
               <Link
                 href={SUB_CONSULT_HREF}
-                className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                className={`inline-flex h-12 w-full min-w-0 items-center justify-center rounded-xl bg-accent px-6 sm:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
               >
                 Nhận tư vấn →
               </Link>
               <Link
                 href={HOW_IT_WORKS_HREF}
-                className={`inline-flex h-12 items-center justify-center rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+                className={`inline-flex h-12 w-full min-w-0 items-center justify-center rounded-xl border border-border bg-white px-6 sm:w-auto ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
               >
                 Xem cách KEYON hoạt động →
               </Link>
             </div>
           </div>
 
-          <div className="min-w-0">
+          <div className="hidden min-w-0 lg:block">
             <SubscriptionDesktopPreview />
-            <SubscriptionMobilePreview />
           </div>
         </div>
       </div>

@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import {
+  BADGE_CLASS,
   BODY_MUTED_CLASS,
   CARD_TITLE_CLASS,
   SECTION_LEAD_CLASS,
@@ -16,6 +17,7 @@ import {
 } from "@/storefront/typography";
 import {
   ELEVATION_FLOAT,
+  ELEVATION_HAIRLINE,
   TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
@@ -91,7 +93,27 @@ export function SubscriptionProcess() {
           </p>
         </header>
 
-        <div className="mt-8 grid gap-8 md:mt-9 lg:grid-cols-12 lg:gap-10">
+        <ol className="mt-8 grid min-w-0 grid-cols-2 gap-2.5 lg:hidden">
+          {STEPS.map((step, i) => (
+            <li key={step.title} className="min-w-0">
+              <article
+                className={`flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-white p-3.5 ${ELEVATION_HAIRLINE}`}
+              >
+                <span className="flex min-w-0 items-center gap-2">
+                  <span
+                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-white ${BADGE_CLASS}`}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{step.title}</h3>
+                </span>
+                <p className={`mt-2 break-words ${BODY_MUTED_CLASS}`}>{step.body}</p>
+              </article>
+            </li>
+          ))}
+        </ol>
+
+        <div className="mt-8 hidden gap-8 md:mt-9 lg:grid lg:grid-cols-12 lg:gap-10">
           <ol className="relative space-y-0 lg:col-span-5">
             <div
               className="pointer-events-none absolute bottom-4 left-[15px] top-4 w-px bg-border"

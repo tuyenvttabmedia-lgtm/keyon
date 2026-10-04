@@ -59,25 +59,27 @@ export function RenewalInbox() {
           </header>
           <Link
             href={SUB_CONSULT_HREF}
-            className={`inline-flex h-12 shrink-0 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+            className={`inline-flex h-12 w-full shrink-0 items-center justify-center rounded-xl bg-accent px-6 sm:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
           >
             Nhận tư vấn →
           </Link>
         </div>
 
-        <ul className="mt-8 grid gap-3 sm:grid-cols-2 md:mt-9 lg:grid-cols-4">
+        <ul className="mt-8 grid min-w-0 grid-cols-2 gap-2.5 sm:gap-3.5 md:mt-9 lg:grid-cols-4">
           {WORK_TYPES.map((row) => (
             <li
               key={row.title}
-              className={`flex h-full flex-col p-4 sm:p-5 ${CARD_SURFACE} ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
+              className={`flex h-full min-w-0 flex-col overflow-hidden p-3.5 sm:p-5 ${CARD_SURFACE} ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
             >
-              <span
-                className={`flex h-11 w-11 items-center justify-center rounded-xl ${row.tone}`}
-              >
-                <row.Icon size={18} strokeWidth={1.85} aria-hidden />
+              <span className="flex min-w-0 items-center gap-2">
+                <span
+                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${row.tone}`}
+                >
+                  <row.Icon size={16} strokeWidth={1.85} aria-hidden />
+                </span>
+                <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{row.title}</h3>
               </span>
-              <h3 className={`mt-3.5 ${CARD_TITLE_CLASS}`}>{row.title}</h3>
-              <p className={`mt-1.5 flex-1 ${BODY_MUTED_CLASS}`}>{row.body}</p>
+              <p className={`mt-2 flex-1 break-words ${BODY_MUTED_CLASS}`}>{row.body}</p>
             </li>
           ))}
         </ul>

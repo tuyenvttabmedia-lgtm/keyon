@@ -76,23 +76,25 @@ export function SubscriptionControlCenter() {
         </header>
 
         <div className="mt-8 grid items-stretch gap-4 md:mt-9 lg:grid-cols-2 lg:gap-6">
-          <ul className="grid h-full gap-3 sm:grid-cols-2 sm:grid-rows-2">
+          <ul className="grid h-full min-w-0 grid-cols-2 gap-2.5 sm:gap-3">
             {POINTS.map(({ title, body, Icon }) => (
               <li
                 key={title}
-                className={`flex h-full flex-col rounded-xl border border-border bg-white px-3.5 py-3.5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
+                className={`flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-white p-3.5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-soft text-accent">
-                  <Icon size={16} strokeWidth={1.85} aria-hidden />
+                <span className="flex min-w-0 items-center gap-2">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
+                    <Icon size={16} strokeWidth={1.85} aria-hidden />
+                  </span>
+                  <p className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{title}</p>
                 </span>
-                <p className={`mt-2.5 ${CARD_TITLE_CLASS}`}>{title}</p>
-                <p className={`mt-1 ${BODY_MUTED_CLASS}`}>{body}</p>
+                <p className={`mt-2 break-words ${BODY_MUTED_CLASS}`}>{body}</p>
               </li>
             ))}
           </ul>
 
           <div
-            className={`flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-border bg-white ${ELEVATION_FLOAT}`}
+            className={`flex h-full min-h-0 min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-white ${ELEVATION_FLOAT}`}
           >
             <div className="border-b border-border px-4 py-3 sm:px-5">
               <p className={CARD_TITLE_CLASS}>Trong Tài khoản KEYON</p>

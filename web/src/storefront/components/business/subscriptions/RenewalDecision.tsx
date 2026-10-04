@@ -47,23 +47,25 @@ export function RenewalDecision() {
             </p>
             <Link
               href={SUB_CONSULT_HREF}
-              className={`mt-6 inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+              className={`mt-6 inline-flex h-12 w-full items-center justify-center rounded-xl bg-accent px-6 sm:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
             >
               Nhận tư vấn →
             </Link>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-3 lg:col-span-7">
+          <div className="grid min-w-0 grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 lg:col-span-7">
             {OPTIONS.map(({ title, body, Icon }) => (
               <article
                 key={title}
-                className={`rounded-2xl border border-border bg-white p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
+                className={`flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-white p-3.5 last:col-span-2 sm:p-5 sm:last:col-span-1 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-soft text-accent">
-                  <Icon size={18} strokeWidth={1.85} aria-hidden />
+                <span className="flex min-w-0 items-center gap-2">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
+                    <Icon size={16} strokeWidth={1.85} aria-hidden />
+                  </span>
+                  <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{title}</h3>
                 </span>
-                <h3 className={`mt-3.5 ${CARD_TITLE_CLASS}`}>{title}</h3>
-                <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{body}</p>
+                <p className={`mt-2 break-words ${BODY_MUTED_CLASS}`}>{body}</p>
               </article>
             ))}
           </div>

@@ -17,7 +17,7 @@ const ILLUSTRATION_ROWS = [
 /** Desktop hub for the subscription hero. */
 export function SubscriptionDesktopPreview() {
   return (
-    <div className="relative mx-auto hidden w-full max-w-[440px] md:block lg:max-w-none">
+    <div className="relative mx-auto hidden w-full max-w-[440px] lg:block lg:max-w-none">
       <div
         className={`relative overflow-hidden rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
         aria-hidden

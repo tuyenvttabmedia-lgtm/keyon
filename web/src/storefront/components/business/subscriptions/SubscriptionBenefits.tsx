@@ -1,5 +1,6 @@
 import { Check } from "lucide-react";
 import {
+  BODY_MUTED_CLASS,
   CARD_TITLE_CLASS,
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
@@ -44,19 +45,19 @@ export function SubscriptionBenefits() {
           </p>
         </header>
 
-        <ul className="mt-8 grid items-stretch gap-3 sm:grid-cols-2 md:mt-9 lg:gap-4">
+        <ul className="mt-8 grid min-w-0 grid-cols-2 items-stretch gap-2.5 sm:gap-3.5 md:mt-9 lg:gap-4">
           {BENEFITS.map((b) => (
             <li
               key={b.title}
-              className={`flex h-full items-start gap-3.5 rounded-2xl border border-border bg-[#F7FAFC] p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
+              className={`flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-[#F7FAFC] p-3.5 sm:p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} hover:border-accent/35`}
             >
-              <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
-                <Check size={13} strokeWidth={3} aria-hidden />
+              <span className="flex min-w-0 items-center gap-2">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
+                  <Check size={13} strokeWidth={3} aria-hidden />
+                </span>
+                <p className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{b.title}</p>
               </span>
-              <div className="min-w-0">
-                <p className={CARD_TITLE_CLASS}>{b.title}</p>
-                <p className={`mt-1 ${SECTION_LEAD_CLASS}`}>{b.body}</p>
-              </div>
+              <p className={`mt-2 break-words ${BODY_MUTED_CLASS}`}>{b.body}</p>
             </li>
           ))}
         </ul>

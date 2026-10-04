@@ -68,30 +68,34 @@ export function LifecycleTimeline() {
             className="pointer-events-none absolute left-[8%] right-[8%] top-[1.65rem] z-0 hidden h-0.5 bg-gradient-to-r from-border via-accent/40 to-border lg:block"
             aria-hidden
           />
-          <ol className="relative z-[1] grid gap-4 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3">
+          <ol className="relative z-[1] grid min-w-0 grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-5 lg:gap-3">
             {STEPS.map((step, i) => {
               const isActive = i === active;
               return (
                 <li
                   key={step.title}
-                  className={`flex flex-col items-center rounded-2xl border px-3 py-4 text-center ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} ${
+                  className={`flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border p-3.5 sm:p-4 ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} ${
+                    i === STEPS.length - 1 ? "col-span-2 lg:col-span-1" : ""
+                  } ${
                     isActive
                       ? "border-accent bg-accent-soft/40 ring-1 ring-accent/20"
                       : `border-border bg-white ${ELEVATION_HAIRLINE} hover:border-accent/35`
                   }`}
                 >
-                  <span
-                    className={`flex h-12 w-12 items-center justify-center rounded-full border-2 ${
-                      isActive
-                        ? "border-accent bg-accent text-white"
-                        : "border-accent/35 bg-white text-accent"
-                    }`}
-                    aria-hidden
-                  >
-                    <step.Icon size={20} strokeWidth={1.75} />
+                  <span className="flex min-w-0 items-center gap-2">
+                    <span
+                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 ${
+                        isActive
+                          ? "border-accent bg-accent text-white"
+                          : "border-accent/35 bg-white text-accent"
+                      }`}
+                      aria-hidden
+                    >
+                      <step.Icon size={16} strokeWidth={1.75} />
+                    </span>
+                    <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{step.title}</h3>
                   </span>
-                  <h3 className={`mt-3 ${CARD_TITLE_CLASS}`}>{step.title}</h3>
-                  <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{step.body}</p>
+                  <p className={`mt-2 break-words ${BODY_MUTED_CLASS}`}>{step.body}</p>
                 </li>
               );
             })}

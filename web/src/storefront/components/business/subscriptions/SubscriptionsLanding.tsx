@@ -9,7 +9,7 @@ import { SubscriptionCTA } from "./SubscriptionCTA";
 
 export function SubscriptionsLanding() {
   return (
-    <div className="bg-white">
+    <div className="overflow-x-hidden bg-white">
       <SubscriptionHero />
       <LifecycleTimeline />
       <SubscriptionControlCenter />

@@ -146,7 +146,8 @@ export const SOLUTION_TOPICS: {
     id: "cloud",
     label: "Cloud & Hạ tầng",
     href: "/solutions/cloud",
-    description: "License và gói Cloud, hạ tầng trên KEYON.",
+    description:
+      "License Cloud, máy chủ và lưu trữ — chọn gói hạ tầng phù hợp với quy mô sử dụng trên KEYON.",
     art: "cloud",
   },
   {

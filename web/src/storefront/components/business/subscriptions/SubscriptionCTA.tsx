@@ -30,16 +30,16 @@ export function SubscriptionCTA() {
                 Gửi sản phẩm và số lượng bạn đang sử dụng, KEYON sẽ tư vấn phương án phù hợp.
               </p>
             </div>
-            <div className="flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="flex w-full shrink-0 flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
               <Link
                 href={SUB_CONSULT_HREF}
-                className={`inline-flex h-12 items-center justify-center rounded-xl bg-accent px-6 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                className={`inline-flex h-12 w-full items-center justify-center rounded-xl bg-accent px-6 sm:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
               >
                 Nhận tư vấn →
               </Link>
               <Link
                 href={PRODUCTS_HREF}
-                className={`inline-flex h-12 items-center justify-center rounded-xl border border-border bg-white px-6 ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+                className={`inline-flex h-12 w-full items-center justify-center rounded-xl border border-border bg-white px-6 sm:w-auto ${CTA_LABEL_CLASS} text-navy ${TRANSITION_UI} hover:border-accent hover:text-accent`}
               >
                 Xem sản phẩm →
               </Link>
