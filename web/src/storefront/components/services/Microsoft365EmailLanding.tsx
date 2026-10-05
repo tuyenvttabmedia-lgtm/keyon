@@ -4,6 +4,7 @@ import {
   AtSign,
   Check,
   ChevronDown,
+  ChevronRight,
   Globe,
   Mail,
   ShieldCheck,
@@ -21,8 +22,10 @@ import {
   ELEVATION_CTA_HOVER,
   ELEVATION_FLOAT,
   ELEVATION_HAIRLINE,
+  ELEVATION_HERO_HOVER,
   HOVER_LIFT_CARD,
   HOVER_LINK_ACCENT,
+  MOTION_NORMAL,
   TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
@@ -35,6 +38,7 @@ import {
   BREADCRUMB_CURRENT_CLASS,
   CARD_META_CLASS,
   CARD_TITLE_CLASS,
+  CTA_COMPACT_CLASS,
   CTA_LABEL_CLASS,
   HERO_TITLE_CLASS,
   OVERLINE_CLASS,
@@ -169,6 +173,10 @@ const ADJACENT = [
   },
 ];
 
+const serviceCard = `group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-white ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/40 ${ELEVATION_CARD_HOVER}`;
+
+const iconChip = `flex shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent ${TRANSITION_UI} group-hover:bg-accent group-hover:text-white`;
+
 const PANEL_ROWS = [
   { label: "Domain", value: "Gắn và xác minh" },
   { label: "DNS", value: "MX, SPF, DKIM" },
@@ -218,16 +226,19 @@ export function Microsoft365EmailLanding() {
                 Thiết lập Microsoft 365, email, domain, DNS và tài khoản người dùng. Phạm vi và thời hạn được chốt trước khi triển khai.
               </p>
 
-              <ul className="mt-6 grid min-w-0 grid-cols-2 gap-2.5 sm:gap-4">
+              <ul className="mt-6 space-y-2.5">
                 {HERO_POINTS.map((point) => (
-                  <li key={point.title} className="flex min-w-0 flex-col">
-                    <span className="flex min-w-0 items-center gap-2">
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
-                        <point.Icon size={16} strokeWidth={1.85} aria-hidden />
-                      </span>
-                      <span className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{point.title}</span>
+                  <li
+                    key={point.title}
+                    className={`group flex min-w-0 items-start gap-3 rounded-xl border border-border/80 bg-white px-3 py-3 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} hover:border-accent/40 ${ELEVATION_CARD_HOVER}`}
+                  >
+                    <span className={`${iconChip} h-8 w-8`}>
+                      <point.Icon size={16} strokeWidth={1.85} aria-hidden />
                     </span>
-                    <span className={`mt-2 break-words ${BODY_MUTED_CLASS}`}>{point.body}</span>
+                    <span className="min-w-0">
+                      <span className={`block break-words ${CARD_TITLE_CLASS}`}>{point.title}</span>
+                      <span className={`mt-0.5 block break-words ${BODY_MUTED_CLASS}`}>{point.body}</span>
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -241,14 +252,14 @@ export function Microsoft365EmailLanding() {
                 </Link>
                 <Link
                   href="/solutions/microsoft-365-office"
-                  className={`inline-flex h-12 w-full min-w-0 items-center justify-center rounded-xl border border-border bg-white px-6 text-navy sm:w-auto ${CTA_LABEL_CLASS} ${TRANSITION_UI} hover:border-accent hover:text-accent`}
+                  className={`inline-flex h-12 w-full min-w-0 items-center justify-center rounded-xl border border-border bg-white px-6 text-navy sm:w-auto ${CTA_LABEL_CLASS} ${TRANSITION_UI} hover:border-accent hover:bg-accent-soft hover:text-accent`}
                 >
                   Xem Microsoft 365
                 </Link>
               </div>
             </div>
 
-            <div className="hidden min-w-0 lg:block">
+            <div className="min-w-0">
               <SetupPanel />
             </div>
           </div>
@@ -263,19 +274,17 @@ export function Microsoft365EmailLanding() {
               Bốn hạng mục KEYON thực hiện khi doanh nghiệp cần email và tài khoản trên Microsoft 365.
             </p>
           </header>
-          <ul className="mt-7 grid min-w-0 grid-cols-2 gap-2.5 sm:gap-3.5">
+          <ul className="mt-7 grid min-w-0 gap-3 sm:grid-cols-2 sm:gap-3.5">
             {SCOPE.map((item) => (
               <li key={item.title} className="min-w-0">
-                <article
-                  className={`flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-white p-3.5 sm:p-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
-                >
-                  <span className="flex min-w-0 items-center gap-2">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
+                <article className={`${serviceCard} p-4 sm:p-5`}>
+                  <span className="flex min-w-0 items-center gap-2.5">
+                    <span className={`${iconChip} h-9 w-9`}>
                       <item.Icon size={16} strokeWidth={1.8} aria-hidden />
                     </span>
                     <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{item.title}</h3>
                   </span>
-                  <p className={`mt-2 break-words ${BODY_MUTED_CLASS}`}>{item.body}</p>
+                  <p className={`mt-2.5 break-words ${BODY_MUTED_CLASS}`}>{item.body}</p>
                 </article>
               </li>
             ))}
@@ -291,21 +300,19 @@ export function Microsoft365EmailLanding() {
               Bốn bước từ tiếp nhận thông tin đến bàn giao cho người phụ trách.
             </p>
           </header>
-          <ol className="mt-7 grid min-w-0 grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-4">
+          <ol className="mt-7 grid min-w-0 gap-3 sm:grid-cols-2 sm:gap-3.5 lg:grid-cols-4">
             {STEPS.map((step, index) => (
               <li key={step.title} className="min-w-0">
-                <article
-                  className={`flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-white p-3.5 sm:p-4 ${ELEVATION_HAIRLINE}`}
-                >
-                  <span className="flex min-w-0 items-center gap-2">
+                <article className={`${serviceCard} p-4`}>
+                  <span className="flex min-w-0 items-center gap-2.5">
                     <span
-                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-white ${BADGE_CLASS}`}
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-white ${BADGE_CLASS} ${TRANSITION_UI} group-hover:bg-navy`}
                     >
                       {String(index + 1).padStart(2, "0")}
                     </span>
                     <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{step.title}</h3>
                   </span>
-                  <p className={`mt-2 break-words ${BODY_MUTED_CLASS}`}>{step.body}</p>
+                  <p className={`mt-2.5 break-words ${BODY_MUTED_CLASS}`}>{step.body}</p>
                 </article>
               </li>
             ))}
@@ -320,10 +327,15 @@ export function Microsoft365EmailLanding() {
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
               Sau khi hoàn tất, đầu mối phụ trách có đủ thông tin để người dùng bắt đầu dùng email.
             </p>
-            <ul className="mt-5 space-y-3">
+            <ul className="mt-5 space-y-2">
               {HANDOVER.map((line) => (
-                <li key={line} className={`flex min-w-0 gap-3 ${BODY_CLASS}`}>
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
+                <li
+                  key={line}
+                  className={`group flex min-w-0 items-start gap-3 rounded-xl border border-border bg-white px-3 py-3 ${BODY_CLASS} ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} hover:border-accent/40 ${ELEVATION_CARD_HOVER}`}
+                >
+                  <span
+                    className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent ${TRANSITION_UI} group-hover:bg-accent group-hover:text-white`}
+                  >
                     <Check size={12} strokeWidth={2.5} aria-hidden />
                   </span>
                   <span className="min-w-0 break-words">{line}</span>
@@ -339,12 +351,18 @@ export function Microsoft365EmailLanding() {
             <ul className="mt-5 space-y-3">
               {ADJACENT.map((item) => (
                 <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className={`block rounded-2xl border border-border bg-white p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
-                  >
+                  <Link href={item.href} className={`${serviceCard} p-4`}>
                     <span className={`block ${CARD_TITLE_CLASS}`}>{item.title}</span>
                     <span className={`mt-1 block ${BODY_MUTED_CLASS}`}>{item.body}</span>
+                    <span className={`mt-3 inline-flex items-center gap-1 text-accent ${CTA_COMPACT_CLASS}`}>
+                      Xem dịch vụ
+                      <ChevronRight
+                        size={14}
+                        strokeWidth={2.25}
+                        aria-hidden
+                        className={`motion-safe:transition-transform motion-safe:group-hover:translate-x-0.5 ${MOTION_NORMAL}`}
+                      />
+                    </span>
                   </Link>
                 </li>
               ))}
@@ -365,17 +383,17 @@ export function Microsoft365EmailLanding() {
             {M365_EMAIL_FAQ.map((item) => (
               <details
                 key={item.question}
-                className={`group rounded-2xl border border-border bg-white px-4 py-3 sm:px-5 ${ELEVATION_HAIRLINE}`}
+                className={`group rounded-2xl border border-border bg-white px-4 py-3 open:border-accent/40 sm:px-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} hover:border-accent/40 ${ELEVATION_CARD_HOVER}`}
               >
                 <summary
-                  className={`flex cursor-pointer list-none items-center justify-between gap-3 ${CARD_TITLE_CLASS} [&::-webkit-details-marker]:hidden`}
+                  className={`flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 ${CARD_TITLE_CLASS} [&::-webkit-details-marker]:hidden`}
                 >
                   <span className="min-w-0 break-words">{item.question}</span>
                   <ChevronDown
                     size={16}
                     strokeWidth={2}
                     aria-hidden
-                    className="shrink-0 text-muted motion-safe:transition-transform group-open:rotate-180"
+                    className={`shrink-0 text-muted motion-safe:transition-transform group-open:rotate-180 group-hover:text-accent ${MOTION_NORMAL}`}
                   />
                 </summary>
                 <p className={`mt-2 break-words ${BODY_MUTED_CLASS}`}>{item.answer}</p>
@@ -389,15 +407,21 @@ export function Microsoft365EmailLanding() {
         <section className="home-section border-t border-border bg-white">
           <div className="home-container">
             <h2 className={SECTION_TITLE_CLASS}>Dịch vụ cùng nhóm</h2>
-            <ul className="mt-5 grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="mt-5 grid min-w-0 gap-3 md:grid-cols-3">
               {related.map((topic) => (
                 <li key={topic.slug} className="min-w-0">
-                  <Link
-                    href={`/services/${topic.slug}`}
-                    className={`block h-full rounded-2xl border border-border bg-white p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
-                  >
+                  <Link href={`/services/${topic.slug}`} className={`${serviceCard} p-4`}>
                     <span className={`block ${CARD_TITLE_CLASS}`}>{topic.label}</span>
                     <span className={`mt-1 block ${BODY_MUTED_CLASS}`}>{topic.description}</span>
+                    <span className={`mt-3 inline-flex items-center gap-1 text-accent ${CTA_COMPACT_CLASS}`}>
+                      Xem dịch vụ
+                      <ChevronRight
+                        size={14}
+                        strokeWidth={2.25}
+                        aria-hidden
+                        className={`motion-safe:transition-transform motion-safe:group-hover:translate-x-0.5 ${MOTION_NORMAL}`}
+                      />
+                    </span>
                   </Link>
                 </li>
               ))}
@@ -433,7 +457,9 @@ export function Microsoft365EmailLanding() {
 function SetupPanel() {
   return (
     <div className="mx-auto w-full max-w-[440px] lg:max-w-none">
-      <div className={`rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}>
+      <div
+        className={`rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT} ${TRANSITION_PANEL} ${ELEVATION_HERO_HOVER}`}
+      >
         <div className="flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-2.5">
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-navy text-accent">
@@ -452,7 +478,7 @@ function SetupPanel() {
           {PANEL_ROWS.map((row) => (
             <li
               key={row.label}
-              className="flex items-center justify-between gap-3 rounded-xl border border-border/80 bg-[#F7FAFC] px-3 py-2.5"
+              className={`flex items-center justify-between gap-3 rounded-xl border border-border/80 bg-[#F7FAFC] px-3 py-2.5 ${TRANSITION_UI} hover:border-accent/35 hover:bg-accent-soft/50`}
             >
               <span className={CARD_TITLE_CLASS}>{row.label}</span>
               <span className={`text-right ${CARD_META_CLASS}`}>{row.value}</span>
