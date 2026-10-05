@@ -182,7 +182,7 @@ export function CloudServerLanding() {
           />
           <div aria-hidden className="pointer-events-none absolute inset-0 lg:hidden" style={{ background: "linear-gradient(180deg, #ffffff 0%, #ffffff 40%, rgba(255,255,255,0.82) 58%, rgba(255,255,255,0) 82%)" }} />
           <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block" style={{ background: "linear-gradient(90deg, #ffffff 0%, #ffffff 36%, rgba(255,255,255,0.9) 48%, rgba(255,255,255,0.35) 64%, rgba(255,255,255,0) 78%)" }} />
-          <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 90%, rgba(255,255,255,0.72) 96%, #ffffff 100%)" }} />
+          <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 68%, rgba(255,255,255,0.28) 80%, rgba(255,255,255,0.72) 91%, #ffffff 100%)" }} />
           <div className="relative">
           <nav
             aria-label="Breadcrumb"
@@ -301,7 +301,7 @@ export function CloudServerLanding() {
           />
           <div aria-hidden className="pointer-events-none absolute inset-0 lg:hidden" style={{ background: "linear-gradient(180deg, #ffffff 0%, #ffffff 34%, rgba(255,255,255,0.86) 50%, rgba(255,255,255,0) 72%)" }} />
           <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block" style={{ background: "linear-gradient(90deg, #ffffff 0%, #ffffff 34%, rgba(255,255,255,0.92) 46%, rgba(255,255,255,0.4) 62%, rgba(255,255,255,0) 76%)" }} />
-          <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 90%, rgba(255,255,255,0.72) 96%, #ffffff 100%)" }} />
+          <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 68%, rgba(255,255,255,0.28) 80%, rgba(255,255,255,0.72) 91%, #ffffff 100%)" }} />
           <div className="relative grid items-center gap-8 lg:grid-cols-2">
           <div className="min-w-0">
             <h2 className={SECTION_TITLE_CLASS}>Các dịch vụ triển khai</h2>
