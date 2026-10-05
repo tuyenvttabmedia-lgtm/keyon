@@ -42,14 +42,15 @@ async function loadM365Plans(): Promise<M365PlanCard[]> {
         ? product.categoryKey
         : inferCategory(product.brand.name, product.name);
     const name = product.name.toLowerCase();
-    const brand = product.brand.name.toLowerCase();
-    const isOffice =
-      cat === "office" ||
+    const isM365 =
       name.includes("365") ||
       name.includes("office") ||
-      brand.includes("microsoft");
-    if (!isOffice) continue;
+      name.includes("outlook") ||
+      name.includes("teams") ||
+      name.includes("onedrive");
+    if (!isM365 || name.includes("windows")) continue;
     let score = 0;
+    if (name.includes("business")) score += 30;
     if (name.includes("365")) score += 50;
     else if (name.includes("office")) score += 20;
     if (cat === "office") score += 10;
