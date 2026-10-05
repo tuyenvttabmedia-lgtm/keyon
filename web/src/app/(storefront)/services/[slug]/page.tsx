@@ -2,14 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { resolveMediaUrl } from "@/lib/media-url";
-import {
-  Microsoft365EmailLanding,
-  M365_EMAIL_FAQ,
-  M365_EMAIL_PATH,
-  M365_EMAIL_SEO,
-  type M365BrandChip,
-  type M365PlanCard,
-} from "@/storefront/components/services/Microsoft365EmailLanding";
+import { Microsoft365EmailLanding, M365_EMAIL_FAQ, M365_EMAIL_PATH, M365_EMAIL_SEO } from "@/storefront/components/services/Microsoft365EmailLanding";
 import { ServiceTopicLanding } from "@/storefront/components/services/ServiceTopicLanding";
 import { SERVICE_TOPICS, serviceTopicBySlug } from "@/storefront/nav/ia";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
@@ -19,10 +12,12 @@ import {
   buildServiceJsonLd,
 } from "@/server/seo/structured-data";
 import { absoluteTitle } from "@/server/seo/title";
-import { parseStringList, PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
+import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
 import { inferCategory } from "@/storefront/components/shop/shop-utils";
+import { mapProductsToShopCards } from "@/storefront/lib/related-products";
+import type { FeaturedProduct } from "@/storefront/content/types";
 
-async function loadM365Plans(): Promise<M365PlanCard[]> {
+async function loadM365Plans(): Promise<FeaturedProduct[]> {
   const products = await prisma.product.findMany({
     where: { active: true },
     include: {
@@ -30,12 +25,11 @@ async function loadM365Plans(): Promise<M365PlanCard[]> {
       variants: { where: { active: true }, orderBy: { priceVnd: "asc" }, take: 1 },
     },
     orderBy: { name: "asc" },
-    take: 60,
+    take: 80,
   });
-  const scored: { score: number; item: M365PlanCard }[] = [];
+  const scored: { score: number; product: (typeof products)[number] }[] = [];
   for (const product of products) {
-    const variant = product.variants[0];
-    if (!variant) continue;
+    if (!product.variants[0]) continue;
     const cat =
       product.categoryKey &&
       (PRODUCT_CATEGORY_KEYS as readonly string[]).includes(product.categoryKey)
@@ -54,36 +48,26 @@ async function loadM365Plans(): Promise<M365PlanCard[]> {
     if (name.includes("365")) score += 50;
     else if (name.includes("office")) score += 20;
     if (cat === "office") score += 10;
-    const image = parseStringList(product.galleryUrls)[0];
-    const imageUrl = image ? resolveMediaUrl(image) || image : "";
-    scored.push({
-      score,
-      item: {
-        id: product.id,
-        title: product.name,
-        href: `/products/${product.slug}`,
-        priceLabel: `Từ ${variant.priceVnd.toLocaleString("vi-VN")}đ`,
-        imageUrl: imageUrl || undefined,
-      },
-    });
+    scored.push({ score, product });
   }
-  scored.sort((a, b) => b.score - a.score);
-  return scored.slice(0, 4).map((row) => row.item);
-}
-
-async function loadM365Brands(): Promise<M365BrandChip[]> {
-  const brands = await prisma.brand.findMany({
-    where: { active: true },
-    orderBy: [{ featured: "desc" }, { sortOrder: "asc" }, { name: "asc" }],
-    take: 8,
-    select: { name: true, slug: true, logoUrl: true },
-  });
-  return brands.map((brand) => {
-    const logoUrl = brand.logoUrl ? resolveMediaUrl(brand.logoUrl) || brand.logoUrl : "";
+  scored.sort(
+    (a, b) => b.score - a.score || a.product.name.localeCompare(b.product.name, "vi"),
+  );
+  return mapProductsToShopCards(scored.slice(0, 5).map((row) => row.product)).map((card) => {
+    const imageUrl = card.imageUrl ? resolveMediaUrl(card.imageUrl) || card.imageUrl : "";
     return {
-      name: brand.name,
-      href: `/brands/${brand.slug}`,
-      logoUrl: logoUrl || undefined,
+      id: card.id,
+      brandName: card.brandName,
+      productName: card.productName,
+      packageName: card.packageName,
+      priceVnd: card.priceVnd,
+      receiveLabel: card.receiveLabel,
+      receiveKind: card.receiveKind,
+      deliveryLabel: card.deliveryLabel,
+      mark: card.mark,
+      imageUrl: imageUrl || undefined,
+      href: card.href,
+      ctaLabel: "Xem sản phẩm →",
     };
   });
 }
@@ -142,7 +126,7 @@ export default async function ServiceTopicPage({ params }: Props) {
       { name: "Microsoft 365 & Email doanh nghiệp", path: M365_EMAIL_PATH },
     ]);
     const faqLd = buildFaqPageJsonLd([...M365_EMAIL_FAQ]);
-    const [plans, brands] = await Promise.all([loadM365Plans(), loadM365Brands()]);
+    const plans = await loadM365Plans();
     return (
       <>
         <script
@@ -159,7 +143,7 @@ export default async function ServiceTopicPage({ params }: Props) {
             dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
           />
         ) : null}
-        <Microsoft365EmailLanding plans={plans} brands={brands} />
+        <Microsoft365EmailLanding plans={plans} />
       </>
     );
   }
