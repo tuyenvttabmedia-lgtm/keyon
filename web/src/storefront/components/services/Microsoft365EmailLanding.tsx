@@ -21,6 +21,7 @@ import {
   LANDING_CRUMB_GAP,
   LANDING_HERO_PAD,
 } from "@/storefront/components/marketing/hero-shell";
+import { M365_EMAIL_SERVICE_SLUG } from "@/storefront/nav/ia";
 import { IMPLEMENTATION_QUOTE_HREF } from "@/storefront/lib/cta";
 import {
   ELEVATION_CARD_HOVER,
@@ -50,10 +51,11 @@ import {
   SECTION_TITLE_CLASS,
 } from "@/storefront/typography";
 
-export const M365_EMAIL_PATH = "/services/microsoft-365-email";
+export const M365_EMAIL_LABEL = "Triển khai Microsoft 365 & Email";
+export const M365_EMAIL_PATH = `/services/${M365_EMAIL_SERVICE_SLUG}`;
 
 export const M365_EMAIL_SEO = {
-  title: "Thiết lập Microsoft 365 và email doanh nghiệp | KEYON",
+  title: `${M365_EMAIL_LABEL} | KEYON`,
   description:
     "Thiết lập Microsoft 365, email, domain, DNS và tài khoản người dùng. KEYON chốt phạm vi với doanh nghiệp trước khi triển khai.",
 } as const;
@@ -276,13 +278,13 @@ export function Microsoft365EmailLanding() {
             <span aria-hidden className="text-muted-soft">
               ›
             </span>
-            <span className={BREADCRUMB_CURRENT_CLASS}>Microsoft 365 & Email doanh nghiệp</span>
+            <span className={BREADCRUMB_CURRENT_CLASS}>{M365_EMAIL_LABEL}</span>
           </nav>
 
           <div className="min-w-0 max-w-3xl">
             <p className={`${OVERLINE_CLASS} text-accent`}>Dịch vụ triển khai</p>
             <h1 className={`mt-3 break-words ${HERO_TITLE_CLASS}`}>
-              Microsoft 365 & Email doanh nghiệp
+              {M365_EMAIL_LABEL}
             </h1>
             <p className={`mt-4 ${PAGE_LEAD_CLASS}`}>
               Thiết lập Microsoft 365, email, domain, DNS và tài khoản người dùng. Phạm vi được chốt trước khi triển khai.

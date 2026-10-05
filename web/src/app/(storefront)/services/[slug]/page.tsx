@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Microsoft365EmailLanding, M365_EMAIL_FAQ, M365_EMAIL_PATH, M365_EMAIL_SEO } from "@/storefront/components/services/Microsoft365EmailLanding";
+import { Microsoft365EmailLanding, M365_EMAIL_FAQ, M365_EMAIL_LABEL, M365_EMAIL_PATH, M365_EMAIL_SEO } from "@/storefront/components/services/Microsoft365EmailLanding";
 import { ServiceTopicLanding } from "@/storefront/components/services/ServiceTopicLanding";
-import { SERVICE_TOPICS, serviceTopicBySlug } from "@/storefront/nav/ia";
+import { M365_EMAIL_SERVICE_SLUG, SERVICE_TOPICS, serviceTopicBySlug } from "@/storefront/nav/ia";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
 import {
   buildBreadcrumbJsonLd,
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const topic = serviceTopicBySlug(slug);
   if (!topic) return buildMainPageMetadata("/services");
-  if (slug === "microsoft-365-email") {
+  if (slug === M365_EMAIL_SERVICE_SLUG) {
     const base = await buildMainPageMetadata(M365_EMAIL_PATH);
     return {
       ...base,
@@ -52,17 +52,17 @@ export default async function ServiceTopicPage({ params }: Props) {
   const { slug } = await params;
   const topic = serviceTopicBySlug(slug);
   if (!topic) notFound();
-  if (slug === "microsoft-365-email") {
+  if (slug === M365_EMAIL_SERVICE_SLUG) {
     const serviceLd = buildServiceJsonLd({
-      name: "Thiết lập Microsoft 365 và email doanh nghiệp",
+      name: M365_EMAIL_LABEL,
       description: M365_EMAIL_SEO.description,
       path: M365_EMAIL_PATH,
-      serviceType: "Thiết lập Microsoft 365 và email doanh nghiệp",
+      serviceType: M365_EMAIL_LABEL,
     });
     const breadcrumbLd = buildBreadcrumbJsonLd([
       { name: "Trang chủ", path: "/" },
       { name: "Dịch vụ", path: "/services" },
-      { name: "Microsoft 365 & Email doanh nghiệp", path: M365_EMAIL_PATH },
+      { name: M365_EMAIL_LABEL, path: M365_EMAIL_PATH },
     ]);
     const faqLd = buildFaqPageJsonLd([...M365_EMAIL_FAQ]);
     return (

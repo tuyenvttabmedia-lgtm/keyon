@@ -270,12 +270,15 @@ export const SERVICE_COLUMNS: { id: ServiceColumnId; title: string }[] = [
   { id: "manage", title: "Quản lý & bảo mật" },
 ];
 
+/** Canonical slug for the Microsoft 365 email implementation service. */
+export const M365_EMAIL_SERVICE_SLUG = "microsoft-365-email-deployment" as const;
+
 /** Deployment and managed-IT offerings. Distinct from Giải pháp and Doanh nghiệp. */
 export const SERVICE_TOPICS: ServiceTopic[] = [
   {
-    slug: "microsoft-365-email",
+    slug: M365_EMAIL_SERVICE_SLUG,
     column: "deploy",
-    label: "Microsoft 365 & Email doanh nghiệp",
+    label: "Triển khai Microsoft 365 & Email",
     description:
       "Thiết lập Microsoft 365, email, domain, DNS và tài khoản người dùng.",
     bullets: [

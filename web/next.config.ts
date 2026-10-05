@@ -62,8 +62,18 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/dich-vu/microsoft-365-email",
+        destination: "/services/microsoft-365-email-deployment",
+        permanent: true,
+      },
+      {
         source: "/dich-vu/:slug",
         destination: "/services/:slug",
+        permanent: true,
+      },
+      {
+        source: "/services/microsoft-365-email",
+        destination: "/services/microsoft-365-email-deployment",
         permanent: true,
       },
       // Canonical host: apex only (www → keyon.vn)
