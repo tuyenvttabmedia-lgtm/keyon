@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { prisma } from "@/lib/db";
+import { resolveMediaUrl } from "@/lib/media-url";
 import {
   Microsoft365EmailLanding,
   M365_EMAIL_FAQ,
   M365_EMAIL_PATH,
   M365_EMAIL_SEO,
+  type M365BrandChip,
+  type M365PlanCard,
 } from "@/storefront/components/services/Microsoft365EmailLanding";
 import { ServiceTopicLanding } from "@/storefront/components/services/ServiceTopicLanding";
 import { SERVICE_TOPICS, serviceTopicBySlug } from "@/storefront/nav/ia";
@@ -15,6 +19,73 @@ import {
   buildServiceJsonLd,
 } from "@/server/seo/structured-data";
 import { absoluteTitle } from "@/server/seo/title";
+import { parseStringList, PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
+import { inferCategory } from "@/storefront/components/shop/shop-utils";
+
+async function loadM365Plans(): Promise<M365PlanCard[]> {
+  const products = await prisma.product.findMany({
+    where: { active: true },
+    include: {
+      brand: true,
+      variants: { where: { active: true }, orderBy: { priceVnd: "asc" }, take: 1 },
+    },
+    orderBy: { name: "asc" },
+    take: 60,
+  });
+  const scored: { score: number; item: M365PlanCard }[] = [];
+  for (const product of products) {
+    const variant = product.variants[0];
+    if (!variant) continue;
+    const cat =
+      product.categoryKey &&
+      (PRODUCT_CATEGORY_KEYS as readonly string[]).includes(product.categoryKey)
+        ? product.categoryKey
+        : inferCategory(product.brand.name, product.name);
+    const name = product.name.toLowerCase();
+    const brand = product.brand.name.toLowerCase();
+    const isOffice =
+      cat === "office" ||
+      name.includes("365") ||
+      name.includes("office") ||
+      brand.includes("microsoft");
+    if (!isOffice) continue;
+    let score = 0;
+    if (name.includes("365")) score += 50;
+    else if (name.includes("office")) score += 20;
+    if (cat === "office") score += 10;
+    const image = parseStringList(product.galleryUrls)[0];
+    const imageUrl = image ? resolveMediaUrl(image) || image : "";
+    scored.push({
+      score,
+      item: {
+        id: product.id,
+        title: product.name,
+        href: `/products/${product.slug}`,
+        priceLabel: `Từ ${variant.priceVnd.toLocaleString("vi-VN")}đ`,
+        imageUrl: imageUrl || undefined,
+      },
+    });
+  }
+  scored.sort((a, b) => b.score - a.score);
+  return scored.slice(0, 4).map((row) => row.item);
+}
+
+async function loadM365Brands(): Promise<M365BrandChip[]> {
+  const brands = await prisma.brand.findMany({
+    where: { active: true },
+    orderBy: [{ featured: "desc" }, { sortOrder: "asc" }, { name: "asc" }],
+    take: 8,
+    select: { name: true, slug: true, logoUrl: true },
+  });
+  return brands.map((brand) => {
+    const logoUrl = brand.logoUrl ? resolveMediaUrl(brand.logoUrl) || brand.logoUrl : "";
+    return {
+      name: brand.name,
+      href: `/brands/${brand.slug}`,
+      logoUrl: logoUrl || undefined,
+    };
+  });
+}
 
 export const revalidate = 60;
 
@@ -70,6 +141,7 @@ export default async function ServiceTopicPage({ params }: Props) {
       { name: "Microsoft 365 & Email doanh nghiệp", path: M365_EMAIL_PATH },
     ]);
     const faqLd = buildFaqPageJsonLd([...M365_EMAIL_FAQ]);
+    const [plans, brands] = await Promise.all([loadM365Plans(), loadM365Brands()]);
     return (
       <>
         <script
@@ -86,7 +158,7 @@ export default async function ServiceTopicPage({ params }: Props) {
             dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
           />
         ) : null}
-        <Microsoft365EmailLanding />
+        <Microsoft365EmailLanding plans={plans} brands={brands} />
       </>
     );
   }
