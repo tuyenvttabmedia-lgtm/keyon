@@ -197,7 +197,7 @@ export function CloudSolutionLanding({ featured }: Props) {
       <section className="border-b border-border bg-white">
         <div className={`home-container relative overflow-hidden ${LANDING_HERO_PAD}`}>
           <Image
-            src="/services/cloud-hero.jpg"
+            src="/services/cloud-solution-hero.jpg"
             alt=""
             fill
             priority
