@@ -526,7 +526,17 @@ export function Microsoft365EmailLanding({
                 Xem tất cả các gói Microsoft 365 →
               </Link>
             </header>
-            <ul className="mt-6 grid grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-4">
+            <ul
+              className={`mt-6 grid gap-2.5 sm:gap-3.5 ${
+                plans.length >= 4
+                  ? "grid-cols-2 lg:grid-cols-4"
+                  : plans.length === 3
+                    ? "grid-cols-1 sm:grid-cols-3"
+                    : plans.length === 1
+                      ? "max-w-sm grid-cols-1"
+                      : "grid-cols-2"
+              }`}
+            >
               {plans.map((plan) => (
                 <li key={plan.id} className="min-w-0">
                   <article className={`${card} p-3 sm:p-4`}>
