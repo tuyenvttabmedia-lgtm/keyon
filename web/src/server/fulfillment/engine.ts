@@ -11,46 +11,55 @@ import { childLogger } from "@/lib/logger";
 const log = childLogger("fulfillment.engine");
 
 export async function processFulfillmentForOrder(orderId: string) {
-  const order = await prisma.order.findUnique({
-    where: { id: orderId },
-    include: {
-      items: { include: { variant: true } },
-      fulfillmentJobs: true,
-    },
-  });
-  if (!order) throw new Error("Order not found");
-  if (order.status !== "PAID" && order.status !== "FULFILLING") {
-    return;
-  }
+  const jobIdsToRun: string[] = [];
 
-  await prisma.order.update({
-    where: { id: orderId },
-    data: { status: "FULFILLING" },
-  });
-
-  for (const item of order.items) {
-    const already = order.fulfillmentJobs.find((j) => j.orderItemId === item.id);
-    if (already) {
-      if (
-        already.status === "QUEUED" ||
-        already.status === "PROCESSING" ||
-        already.status === "FAILED" ||
-        already.status === "WAITING_STOCK"
-      ) {
-        await runFulfillmentJob(already.id);
-      }
-      continue;
-    }
-
-    const job = await prisma.fulfillmentJob.create({
-      data: {
-        orderId,
-        orderItemId: item.id,
-        strategy: item.variant.fulfillmentStrategy,
-        status: "QUEUED",
+  await prisma.$transaction(async (tx) => {
+    await tx.$executeRaw`SELECT id FROM "Order" WHERE id = ${orderId} FOR UPDATE`;
+    const order = await tx.order.findUnique({
+      where: { id: orderId },
+      include: {
+        items: { include: { variant: true } },
+        fulfillmentJobs: true,
       },
     });
-    await runFulfillmentJob(job.id);
+    if (!order) throw new AppError("Order not found", 404, "ORDER_NOT_FOUND");
+    if (order.status !== "PAID" && order.status !== "FULFILLING") {
+      return;
+    }
+
+    await tx.order.update({
+      where: { id: orderId },
+      data: { status: "FULFILLING" },
+    });
+
+    for (const item of order.items) {
+      const already = order.fulfillmentJobs.find((j) => j.orderItemId === item.id);
+      if (already) {
+        if (
+          already.status === "QUEUED" ||
+          already.status === "PROCESSING" ||
+          already.status === "FAILED" ||
+          already.status === "WAITING_STOCK"
+        ) {
+          jobIdsToRun.push(already.id);
+        }
+        continue;
+      }
+
+      const job = await tx.fulfillmentJob.create({
+        data: {
+          orderId,
+          orderItemId: item.id,
+          strategy: item.variant.fulfillmentStrategy,
+          status: "QUEUED",
+        },
+      });
+      jobIdsToRun.push(job.id);
+    }
+  });
+
+  for (const jobId of jobIdsToRun) {
+    await runFulfillmentJob(jobId);
   }
 
   await refreshOrderCompletion(orderId);
@@ -147,12 +156,32 @@ export async function completeManualDelivery(input: {
       orderItem: { include: { variant: true, deliveries: true } },
     },
   });
-  if (!job) throw new Error("Job not found");
-  if (job.orderItem.deliveries.length > 0) throw new Error("Already delivered");
+  if (!job) throw new AppError("Không tìm thấy việc giao", 404, "JOB_NOT_FOUND");
+  if (job.orderItem.deliveries.length > 0) {
+    if (job.status !== "SUCCEEDED") {
+      await prisma.fulfillmentJob.update({
+        where: { id: job.id },
+        data: {
+          status: "SUCCEEDED",
+          finishedAt: new Date(),
+          notes: "Đã có bàn giao — đóng job trùng",
+        },
+      });
+      await audit("fulfillment.manual_complete", "FulfillmentJob", job.id, input.actorId, {
+        duplicate: true,
+      });
+    }
+    await refreshOrderCompletion(job.orderId);
+    return;
+  }
   if (
     !["WAITING_HUMAN", "WAITING_STOCK", "QUEUED", "PROCESSING", "FAILED"].includes(job.status)
   ) {
-    throw new Error(`Cannot complete job in status ${job.status}`);
+    throw new AppError(
+      `Không hoàn tất được việc giao ở trạng thái ${job.status}`,
+      400,
+      "JOB_NOT_COMPLETABLE",
+    );
   }
 
   const type = job.orderItem.variant.deliverableType;
