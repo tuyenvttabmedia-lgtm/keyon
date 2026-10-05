@@ -16,9 +16,9 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const topic = serviceTopicBySlug(slug);
-  if (!topic) return buildMainPageMetadata("/dich-vu");
+  if (!topic) return buildMainPageMetadata("/services");
   return {
-    ...(await buildMainPageMetadata(`/dich-vu/${slug}`)),
+    ...(await buildMainPageMetadata(`/services/${slug}`)),
     title: absoluteTitle(`${topic.label} | KEYON`),
     description: topic.description,
   };

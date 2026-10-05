@@ -53,7 +53,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
   for (const topic of SERVICE_TOPICS) {
     entries.push({
-      url: absoluteUrl(`/dich-vu/${topic.slug}`),
+      url: absoluteUrl(`/services/${topic.slug}`),
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.65,

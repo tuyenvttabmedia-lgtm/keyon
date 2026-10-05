@@ -22,7 +22,7 @@ export function ServiceTopicLanding({ topic }: { topic: ServiceTopic }) {
       <section className="border-b border-border pb-8 pt-5 md:pb-10 md:pt-8">
         <div className="home-container">
           <p className={`${OVERLINE_CLASS} text-muted`}>
-            <Link href="/dich-vu" className="hover:text-navy">
+            <Link href="/services" className="hover:text-navy">
               Dịch vụ
             </Link>
           </p>
@@ -36,7 +36,7 @@ export function ServiceTopicLanding({ topic }: { topic: ServiceTopic }) {
               Nhận tư vấn dịch vụ
             </Link>
             <Link
-              href="/dich-vu"
+              href="/services"
               className={`inline-flex h-11 items-center justify-center rounded-xl border border-border bg-white px-5 text-navy ${CTA_LABEL_CLASS}`}
             >
               Tất cả dịch vụ
@@ -65,7 +65,7 @@ export function ServiceTopicLanding({ topic }: { topic: ServiceTopic }) {
               {related.map((item) => (
                 <li key={item.slug}>
                   <Link
-                    href={`/dich-vu/${item.slug}`}
+                    href={`/services/${item.slug}`}
                     className={`block rounded-2xl border border-border bg-white p-4 motion-safe:transition-transform ${HOVER_LIFT_CARD}`}
                   >
                     <span className={`block ${CARD_TITLE_CLASS}`}>{item.label}</span>

@@ -7,7 +7,7 @@ export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    ...(await buildMainPageMetadata("/dich-vu")),
+    ...(await buildMainPageMetadata("/services")),
     title: absoluteTitle("Dịch vụ triển khai và quản lý CNTT | KEYON"),
     description:
       "Triển khai Microsoft 365, email, cloud, backup, bảo mật và quản lý hệ thống CNTT. Phạm vi được chốt trước khi thực hiện.",

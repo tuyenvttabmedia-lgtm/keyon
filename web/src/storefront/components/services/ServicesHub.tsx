@@ -41,7 +41,7 @@ export function ServicesHub() {
                 {topicsIn(column.id).map((topic) => (
                   <li key={topic.slug}>
                     <Link
-                      href={`/dich-vu/${topic.slug}`}
+                      href={`/services/${topic.slug}`}
                       className={`block rounded-2xl border border-border bg-white p-4 motion-safe:transition-transform ${HOVER_LIFT_CARD}`}
                     >
                       <span className={`block ${CARD_TITLE_CLASS}`}>{topic.label}</span>

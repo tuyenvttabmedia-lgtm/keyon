@@ -5,7 +5,7 @@
  * Sản phẩm  = what to buy (`/products`, brands, collections).
  * Giải pháp = what need to solve (`/solutions/*` + hub `/solutions`).
  * Doanh nghiệp = how to buy/renew/consult with KEYON (`/business/*`).
- * Dịch vụ = scoped deployment and managed IT (`/dich-vu/*`).
+ * Dịch vụ = scoped deployment and managed IT (`/services/*`).
  * These megas must not list the same destinations.
  */
 
@@ -358,7 +358,7 @@ export const SERVICE_TOPICS: ServiceTopic[] = [
 function serviceNavLinks(column: ServiceColumnId): NavLink[] {
   return SERVICE_TOPICS.filter((topic) => topic.column === column).map((topic) => ({
     label: topic.label,
-    href: `/dich-vu/${topic.slug}`,
+    href: `/services/${topic.slug}`,
     description: topic.description,
   }));
 }
@@ -462,13 +462,13 @@ export const IA_PRIMARY_NAV: PrimaryNavItem[] = [
   {
     id: "services",
     label: "Dịch vụ",
-    href: "/dich-vu",
+    href: "/services",
     kind: "mega",
     columns: [
       { title: "Triển khai & chuyển đổi", links: SERVICE_DEPLOY_LINKS },
       { title: "Quản lý & bảo mật", links: SERVICE_MANAGE_LINKS },
     ],
-    footerCta: { label: "Xem tất cả dịch vụ →", href: "/dich-vu" },
+    footerCta: { label: "Xem tất cả dịch vụ →", href: "/services" },
   },
   {
     id: "knowledge",

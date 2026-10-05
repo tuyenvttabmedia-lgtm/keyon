@@ -56,6 +56,16 @@ const nextConfig: NextConfig = {
         destination: "/solutions/by-need",
         permanent: true,
       },
+      {
+        source: "/dich-vu",
+        destination: "/services",
+        permanent: true,
+      },
+      {
+        source: "/dich-vu/:slug",
+        destination: "/services/:slug",
+        permanent: true,
+      },
       // Canonical host: apex only (www → keyon.vn)
       {
         source: "/:path*",
