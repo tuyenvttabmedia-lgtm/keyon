@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -75,7 +76,16 @@ const HERO_MENU: { label: string; href: string; Icon: LucideIcon }[] = [
   { label: "Lưu trữ & Backup", href: "/services/backup-disaster-recovery", Icon: HardDrive },
 ];
 
-const PLATFORMS = ["Microsoft", "VMware", "Dell", "HPE", "Lenovo", "Ubuntu", "CentOS", "Acronis"];
+const PLATFORMS = [
+  { name: "Microsoft", mark: "font-semibold tracking-tight" },
+  { name: "VMware", mark: "font-bold tracking-tight" },
+  { name: "DELL", mark: "font-bold tracking-[0.14em]" },
+  { name: "HPE", mark: "font-bold tracking-[0.16em]" },
+  { name: "Lenovo", mark: "font-semibold tracking-tight" },
+  { name: "ubuntu", mark: "font-medium lowercase tracking-tight" },
+  { name: "CentOS", mark: "font-semibold tracking-tight" },
+  { name: "Acronis", mark: "font-semibold tracking-tight" },
+] as const;
 
 const BENEFITS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
@@ -160,7 +170,17 @@ const card = `group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl bor
 export function CloudServerLanding() {
   return (
     <div className="overflow-x-hidden bg-white">
-      <section className="relative overflow-x-clip border-b border-border bg-[#F7FAFC]">
+      <section className="relative overflow-hidden border-b border-border bg-white">
+        <Image
+          src="/services/cloud-hero.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="pointer-events-none object-cover object-[72%_center]"
+        />
+        <div aria-hidden className="pointer-events-none absolute inset-0 lg:hidden" style={{ background: "linear-gradient(180deg, #ffffff 0%, #ffffff 40%, rgba(255,255,255,0.82) 58%, rgba(255,255,255,0) 82%)" }} />
+        <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block" style={{ background: "linear-gradient(90deg, #ffffff 0%, #ffffff 36%, rgba(255,255,255,0.9) 48%, rgba(255,255,255,0.35) 64%, rgba(255,255,255,0) 78%)" }} />
         <div className={`home-container relative ${LANDING_HERO_PAD}`}>
           <nav
             aria-label="Breadcrumb"
@@ -223,14 +243,18 @@ export function CloudServerLanding() {
         </div>
       </section>
 
-      <section className="border-b border-border bg-white">
-        <div className="home-container flex flex-col gap-4 py-5 lg:flex-row lg:items-center lg:gap-8 lg:py-6">
-          <p className={`${OVERLINE_CLASS} shrink-0 text-muted`}>Công nghệ thường triển khai</p>
-          <ul className="flex min-w-0 flex-1 gap-x-6 gap-y-3 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] lg:flex-wrap lg:justify-between lg:overflow-visible lg:pb-0 [&::-webkit-scrollbar]:hidden">
-            {PLATFORMS.map((name) => (
-              <li key={name} className="shrink-0">
-                <span className={`font-display text-sm font-semibold tracking-tight text-muted-soft ${TRANSITION_UI} hover:text-navy`}>
-                  {name}
+      <section aria-label="Công nghệ thường triển khai" className="border-y border-border bg-[#F8FAFC]">
+        <div className="home-container flex flex-col lg:flex-row lg:items-stretch">
+          <div className="flex items-center py-4 lg:w-56 lg:shrink-0 lg:border-r lg:border-border lg:py-0 lg:pr-6">
+            <p className={`${OVERLINE_CLASS} text-muted`}>Công nghệ thường triển khai</p>
+          </div>
+          <ul className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 lg:flex-1">
+            {PLATFORMS.map((item) => (
+              <li key={item.name} className="min-w-0">
+                <span
+                  className={`flex h-12 items-center justify-center px-2 text-center font-display text-sm text-muted-soft ${item.mark} ${TRANSITION_UI} hover:text-navy lg:h-[4.25rem]`}
+                >
+                  {item.name}
                 </span>
               </li>
             ))}
@@ -250,11 +274,13 @@ export function CloudServerLanding() {
             {BENEFITS.map((item) => (
               <li key={item.title} className="min-w-0">
                 <article className={`${card} p-4 sm:p-5`}>
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent transition group-hover:bg-accent group-hover:text-white">
-                    <item.Icon size={20} strokeWidth={1.8} aria-hidden />
-                  </span>
-                  <h3 className={`mt-4 ${CARD_TITLE_CLASS}`}>{item.title}</h3>
-                  <p className={`mt-2 ${BODY_MUTED_CLASS}`}>{item.body}</p>
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent transition group-hover:bg-accent group-hover:text-white">
+                      <item.Icon size={18} strokeWidth={1.8} aria-hidden />
+                    </span>
+                    <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{item.title}</h3>
+                  </div>
+                  <p className={`mt-3 ${BODY_MUTED_CLASS}`}>{item.body}</p>
                 </article>
               </li>
             ))}
@@ -262,9 +288,18 @@ export function CloudServerLanding() {
         </div>
       </section>
 
-      <section className="overflow-hidden bg-white">
-        <div className="grid lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
-          <div className="home-section px-4 sm:px-5 lg:py-14 lg:pl-[max(1.5rem,calc((100vw-1200px)/2+1.5rem))] lg:pr-10">
+      <section className="relative overflow-hidden bg-white">
+        <Image
+          src="/services/cloud-aisle.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          className="pointer-events-none object-cover object-[78%_center]"
+        />
+        <div aria-hidden className="pointer-events-none absolute inset-0 lg:hidden" style={{ background: "linear-gradient(180deg, #ffffff 0%, #ffffff 34%, rgba(255,255,255,0.86) 50%, rgba(255,255,255,0) 72%)" }} />
+        <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block" style={{ background: "linear-gradient(90deg, #ffffff 0%, #ffffff 34%, rgba(255,255,255,0.92) 46%, rgba(255,255,255,0.4) 62%, rgba(255,255,255,0) 76%)" }} />
+        <div className="home-container relative grid items-center gap-8 py-8 lg:grid-cols-2 lg:py-14">
+          <div className="min-w-0">
             <h2 className={SECTION_TITLE_CLASS}>Các dịch vụ triển khai</h2>
             <p className={`mt-2.5 max-w-xl ${SECTION_LEAD_CLASS}`}>
               KEYON thực hiện các hạng mục dưới đây khi doanh nghiệp cần máy chủ hoặc VPS.
@@ -280,9 +315,8 @@ export function CloudServerLanding() {
               ))}
             </ul>
           </div>
-          <div className="relative min-h-[460px] lg:min-h-[560px]">
-            <ServerAisle />
-            <div className="absolute inset-y-6 right-3 flex w-[calc(100%-1.5rem)] max-w-[300px] items-center sm:right-6 lg:right-8">
+          <div className="flex min-h-[380px] items-center justify-end lg:min-h-[460px]">
+            <div className="w-full max-w-[300px]">
               <ScopePanel />
             </div>
           </div>
@@ -331,11 +365,13 @@ export function CloudServerLanding() {
             {OFFERS.map((item) => (
               <li key={item.id} id={item.id} className="min-w-0 scroll-mt-24">
                 <article className={`${card} p-4 sm:p-5`}>
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent transition group-hover:bg-accent group-hover:text-white">
-                    <item.Icon size={20} strokeWidth={1.8} aria-hidden />
-                  </span>
-                  <h3 className={`mt-4 ${CARD_TITLE_CLASS}`}>{item.title}</h3>
-                  <p className={`mt-1.5 flex-1 ${BODY_MUTED_CLASS}`}>{item.body}</p>
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent transition group-hover:bg-accent group-hover:text-white">
+                      <item.Icon size={18} strokeWidth={1.8} aria-hidden />
+                    </span>
+                    <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{item.title}</h3>
+                  </div>
+                  <p className={`mt-3 flex-1 ${BODY_MUTED_CLASS}`}>{item.body}</p>
                   <Link href={IMPLEMENTATION_QUOTE_HREF} className={`mt-4 inline-flex items-center gap-1 ${LINK_ACCENT_CLASS}`}>
                     Tìm hiểu thêm
                     <ArrowRight size={14} aria-hidden />
@@ -372,108 +408,23 @@ export function CloudServerLanding() {
 
 function HeroStage() {
   return (
-    <div className="relative min-h-[300px] sm:min-h-[380px] lg:min-h-[440px]">
-      <HeroScene />
-      <div className="absolute right-0 top-1/2 w-[min(100%,228px)] -translate-y-1/2 sm:w-[240px]">
-        <ul className={`rounded-2xl border border-white/80 bg-white/95 p-2.5 backdrop-blur-sm ${ELEVATION_FLOAT} ${TRANSITION_PANEL} ${ELEVATION_HERO_HOVER}`}>
-          {HERO_MENU.map((item) => (
-            <li key={item.label}>
-              <Link
-                href={item.href}
-                className={`group flex items-center gap-2.5 rounded-xl px-2 py-2 ${TRANSITION_UI} hover:bg-accent-soft`}
-              >
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent transition group-hover:bg-accent group-hover:text-white">
-                  <item.Icon size={15} strokeWidth={1.8} aria-hidden />
-                </span>
-                <span className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{item.label}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+    <div className="flex min-h-[260px] items-end justify-end sm:min-h-[300px] lg:min-h-[420px] lg:items-center">
+      <ul className={`w-full max-w-[240px] rounded-2xl border border-white/80 bg-white/95 p-2.5 backdrop-blur-sm ${ELEVATION_FLOAT} ${TRANSITION_PANEL} ${ELEVATION_HERO_HOVER}`}>
+        {HERO_MENU.map((item) => (
+          <li key={item.label}>
+            <Link
+              href={item.href}
+              className={`group flex items-center gap-2.5 rounded-xl px-2 py-2 ${TRANSITION_UI} hover:bg-accent-soft`}
+            >
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent transition group-hover:bg-accent group-hover:text-white">
+                <item.Icon size={15} strokeWidth={1.8} aria-hidden />
+              </span>
+              <span className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{item.label}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
-  );
-}
-
-function HeroScene() {
-  return (
-    <svg viewBox="0 0 560 460" className="h-full w-full" role="img" aria-label="Máy chủ và điện toán đám mây">
-      <defs>
-        <linearGradient id="cloud-sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#E7F6F8" />
-          <stop offset="100%" stopColor="#F7FAFC" />
-        </linearGradient>
-        <linearGradient id="rack-body" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#1B3A57" />
-          <stop offset="100%" stopColor="#0E2438" />
-        </linearGradient>
-        <linearGradient id="glow" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#2DD4BF" stopOpacity="0.55" />
-          <stop offset="100%" stopColor="#2DD4BF" stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <rect width="560" height="460" fill="url(#cloud-sky)" rx="28" />
-      <ellipse cx="150" cy="118" rx="78" ry="36" fill="#fff" />
-      <ellipse cx="210" cy="104" rx="64" ry="32" fill="#F4FBFC" />
-      <ellipse cx="118" cy="128" rx="48" ry="24" fill="#fff" />
-      <ellipse cx="188" cy="92" rx="22" ry="22" fill="#D7F3F4" />
-      <path d="M168 108h28v16h-8l-6 8-6-8h-8z" fill="#0E7490" opacity="0.85" />
-      <ellipse cx="250" cy="392" rx="150" ry="18" fill="url(#glow)" />
-      {[0, 1, 2].map((index) => {
-        const x = 118 + index * 78;
-        const h = index === 1 ? 210 : 176;
-        const y = 360 - h;
-        return (
-          <g key={index}>
-            <rect x={x} y={y} width="64" height={h} rx="6" fill="url(#rack-body)" />
-            <rect x={x + 6} y={y + 8} width="52" height={h - 16} rx="3" fill="#10283C" />
-            {Array.from({ length: index === 1 ? 8 : 6 }).map((_, row) => (
-              <g key={row}>
-                <rect x={x + 12} y={y + 16 + row * 24} width="40" height="16" rx="2" fill="#17344C" />
-                <circle cx={x + 20} cy={y + 24 + row * 24} r="2" fill="#2DD4BF" />
-                <circle cx={x + 28} cy={y + 24 + row * 24} r="2" fill="#67E8F9" />
-              </g>
-            ))}
-          </g>
-        );
-      })}
-      <rect x="168" y="348" width="150" height="10" rx="3" fill="#14B8A6" opacity="0.85" />
-    </svg>
-  );
-}
-
-function ServerAisle() {
-  const columns = [36, 118, 200, 520, 602, 684];
-  return (
-    <svg viewBox="0 0 800 700" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full" aria-hidden>
-      <defs>
-        <linearGradient id="aisle-bg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#071422" />
-          <stop offset="55%" stopColor="#12304A" />
-          <stop offset="100%" stopColor="#07111C" />
-        </linearGradient>
-        <linearGradient id="aisle-floor" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#16344C" stopOpacity="0.2" />
-          <stop offset="100%" stopColor="#07111C" />
-        </linearGradient>
-      </defs>
-      <rect width="800" height="700" fill="url(#aisle-bg)" />
-      <ellipse cx="400" cy="36" rx="220" ry="18" fill="#7DD3FC" opacity="0.18" />
-      <polygon points="300,250 500,250 640,700 160,700" fill="#0B1C2E" opacity="0.45" />
-      {columns.map((x, index) => (
-        <g key={x}>
-          <rect x={x} y={70} width="72" height="500" rx="4" fill={index < 3 ? "#0C2236" : "#0A1C2E"} />
-          {Array.from({ length: 13 }).map((_, row) => (
-            <g key={row}>
-              <rect x={x + 8} y={86 + row * 36} width="56" height="26" rx="2" fill="#16344F" />
-              <circle cx={x + 18} cy={99 + row * 36} r="2.2" fill={row % 3 === 0 ? "#2DD4BF" : "#38BDF8"} />
-              <circle cx={x + 28} cy={99 + row * 36} r="2.2" fill="#34D399" opacity="0.85" />
-            </g>
-          ))}
-        </g>
-      ))}
-      <rect y="560" width="800" height="140" fill="url(#aisle-floor)" />
-    </svg>
   );
 }
 
