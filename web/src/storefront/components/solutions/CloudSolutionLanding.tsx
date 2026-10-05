@@ -196,14 +196,17 @@ export function CloudSolutionLanding({ featured }: Props) {
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="border-b border-border bg-white">
         <div className={`home-container relative overflow-hidden ${LANDING_HERO_PAD}`}>
-          <Image
-            src="/services/cloud-solution-hero.jpg"
-            alt=""
-            fill
-            priority
-            sizes="(min-width: 1200px) 1200px, 100vw"
-            className="pointer-events-none origin-left scale-[1.22] object-cover object-center"
-          />
+          <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+            <Image
+              src="/services/cloud-solution-hero.jpg"
+              alt=""
+              width={1920}
+              height={1080}
+              priority
+              sizes="(min-width: 1200px) 1400px, 100vw"
+              className="absolute top-1/2 h-[96%] w-auto max-w-none -translate-y-[46%] left-[-8%] sm:left-[6%] sm:h-full lg:left-[16%] lg:h-[118%]"
+            />
+          </div>
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 lg:hidden"
