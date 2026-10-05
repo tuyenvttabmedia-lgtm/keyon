@@ -170,18 +170,19 @@ const card = `group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl bor
 export function CloudServerLanding() {
   return (
     <div className="overflow-x-hidden bg-white">
-      <section className="relative overflow-hidden border-b border-border bg-white">
-        <Image
-          src="/services/cloud-hero.jpg"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="pointer-events-none object-cover object-[72%_center]"
-        />
-        <div aria-hidden className="pointer-events-none absolute inset-0 lg:hidden" style={{ background: "linear-gradient(180deg, #ffffff 0%, #ffffff 40%, rgba(255,255,255,0.82) 58%, rgba(255,255,255,0) 82%)" }} />
-        <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block" style={{ background: "linear-gradient(90deg, #ffffff 0%, #ffffff 36%, rgba(255,255,255,0.9) 48%, rgba(255,255,255,0.35) 64%, rgba(255,255,255,0) 78%)" }} />
-        <div className={`home-container relative ${LANDING_HERO_PAD}`}>
+      <section className="border-b border-border bg-white">
+        <div className={`home-container relative overflow-hidden ${LANDING_HERO_PAD}`}>
+          <Image
+            src="/services/cloud-hero.jpg"
+            alt=""
+            fill
+            priority
+            sizes="(min-width: 1200px) 1200px, 100vw"
+            className="pointer-events-none object-cover object-right"
+          />
+          <div aria-hidden className="pointer-events-none absolute inset-0 lg:hidden" style={{ background: "linear-gradient(180deg, #ffffff 0%, #ffffff 40%, rgba(255,255,255,0.82) 58%, rgba(255,255,255,0) 82%)" }} />
+          <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block" style={{ background: "linear-gradient(90deg, #ffffff 0%, #ffffff 36%, rgba(255,255,255,0.9) 48%, rgba(255,255,255,0.35) 64%, rgba(255,255,255,0) 78%)" }} />
+          <div className="relative">
           <nav
             aria-label="Breadcrumb"
             className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}
@@ -240,6 +241,7 @@ export function CloudServerLanding() {
             </div>
             <HeroStage />
           </div>
+          </div>
         </div>
       </section>
 
@@ -288,17 +290,18 @@ export function CloudServerLanding() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-white">
-        <Image
-          src="/services/cloud-aisle.jpg"
-          alt=""
-          fill
-          sizes="100vw"
-          className="pointer-events-none object-cover object-[78%_center]"
-        />
-        <div aria-hidden className="pointer-events-none absolute inset-0 lg:hidden" style={{ background: "linear-gradient(180deg, #ffffff 0%, #ffffff 34%, rgba(255,255,255,0.86) 50%, rgba(255,255,255,0) 72%)" }} />
-        <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block" style={{ background: "linear-gradient(90deg, #ffffff 0%, #ffffff 34%, rgba(255,255,255,0.92) 46%, rgba(255,255,255,0.4) 62%, rgba(255,255,255,0) 76%)" }} />
-        <div className="home-container relative grid items-center gap-8 py-8 lg:grid-cols-2 lg:py-14">
+      <section className="bg-white py-8 lg:py-14">
+        <div className="home-container relative overflow-hidden">
+          <Image
+            src="/services/cloud-aisle.jpg"
+            alt=""
+            fill
+            sizes="(min-width: 1200px) 1200px, 100vw"
+            className="pointer-events-none object-cover object-right"
+          />
+          <div aria-hidden className="pointer-events-none absolute inset-0 lg:hidden" style={{ background: "linear-gradient(180deg, #ffffff 0%, #ffffff 34%, rgba(255,255,255,0.86) 50%, rgba(255,255,255,0) 72%)" }} />
+          <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block" style={{ background: "linear-gradient(90deg, #ffffff 0%, #ffffff 34%, rgba(255,255,255,0.92) 46%, rgba(255,255,255,0.4) 62%, rgba(255,255,255,0) 76%)" }} />
+          <div className="relative grid items-center gap-8 lg:grid-cols-2">
           <div className="min-w-0">
             <h2 className={SECTION_TITLE_CLASS}>Các dịch vụ triển khai</h2>
             <p className={`mt-2.5 max-w-xl ${SECTION_LEAD_CLASS}`}>
@@ -319,6 +322,7 @@ export function CloudServerLanding() {
             <div className="w-full max-w-[300px]">
               <ScopePanel />
             </div>
+          </div>
           </div>
         </div>
       </section>
