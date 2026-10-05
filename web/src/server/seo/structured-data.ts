@@ -110,3 +110,29 @@ export function buildArticleJsonLd(input: {
     },
   };
 }
+
+export function buildServiceJsonLd(input: {
+  name: string;
+  description: string;
+  path: string;
+  serviceType: string;
+}): Record<string, unknown> {
+  const origin = getSiteOrigin();
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: input.name,
+    serviceType: input.serviceType,
+    description: input.description,
+    url: absoluteUrl(input.path),
+    provider: {
+      "@type": "Organization",
+      name: "KEYON",
+      url: origin,
+    },
+    areaServed: {
+      "@type": "Country",
+      name: "Vietnam",
+    },
+  };
+}
