@@ -25,7 +25,6 @@ import {
   FONT_DISPLAY,
   INLINE_PRICE_CLASS,
   LINK_ACCENT_CLASS,
-  LINK_FIELD_CLASS,
   MONO_VALUE_CLASS,
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
@@ -120,7 +119,6 @@ export function CheckoutConfirmView({
   methodTitle,
 }: CheckoutConfirmViewProps) {
   const router = useRouter();
-  const [reloading, setReloading] = useState(false);
   const [polling, setPolling] = useState(true);
   const money = checkoutMoney(item, order.totalVnd);
   const payLabel = formatCheckoutVnd(money.pay);
@@ -167,11 +165,9 @@ export function CheckoutConfirmView({
     };
   }, [order.id, pollToken, router]);
 
-  async function reloadQr() {
-    setReloading(true);
-    router.refresh();
-    window.setTimeout(() => setReloading(false), 600);
-  }
+  const bankLabel = payField(payment.bankName, ["Ngân hàng"]);
+  const recipientLabel = payField(payment.accountName);
+  const accountLabel = payField(payment.accountNumber, ["—"]);
 
   return (
     <div className="bg-surface/40 pb-10">
@@ -305,13 +301,13 @@ export function CheckoutConfirmView({
           </section>
 
           {/* QR — focal point */}
-          <section className={`${CARD} h-full`}>
+          <section className={`${CARD} flex h-full flex-col`}>
             <h2 className={SUBSECTION_TITLE_CLASS}>Thanh toán bằng VietQR</h2>
             <p className={`mt-1.5 ${CARD_META_CLASS}`}>
               Quét mã QR bằng ứng dụng ngân hàng để thanh toán.
             </p>
 
-            <div className="mx-auto mt-5 flex h-[220px] w-[220px] items-center justify-center rounded-xl border border-border bg-white p-2">
+            <div className="mx-auto mt-5 flex h-[200px] w-[200px] items-center justify-center rounded-xl border border-border bg-white p-2">
               {payment.qrImageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -326,46 +322,42 @@ export function CheckoutConfirmView({
               )}
             </div>
 
-            <dl className="mt-5 space-y-4">
-              {payField(payment.bankName, ["Ngân hàng"]) ? (
-                <div className="flex items-start justify-between gap-3">
-                  <dt className={`shrink-0 ${FIELD_CAPTION_CLASS}`}>Ngân hàng</dt>
-                  <dd className={`min-w-0 text-right break-words ${FIELD_VALUE_CLASS}`}>
-                    {payField(payment.bankName, ["Ngân hàng"])}
-                  </dd>
+            <dl className={`mt-5 space-y-2.5 border-t border-border pt-4 ${SECTION_LEAD_CLASS}`}>
+              {bankLabel ? (
+                <div className="grid grid-cols-[11rem_minmax(0,1fr)] items-center gap-3">
+                  <dt>Ngân hàng</dt>
+                  <dd className={`text-right break-words ${FIELD_VALUE_CLASS}`}>{bankLabel}</dd>
                 </div>
               ) : null}
-              {payField(payment.accountName) ? (
-                <div className="flex items-start justify-between gap-3">
-                  <dt className={`shrink-0 ${FIELD_CAPTION_CLASS}`}>Người nhận</dt>
-                  <dd className={`min-w-0 text-right break-words ${FIELD_VALUE_CLASS}`}>
-                    {payField(payment.accountName)}
-                  </dd>
+              {recipientLabel ? (
+                <div className="grid grid-cols-[11rem_minmax(0,1fr)] items-center gap-3">
+                  <dt>Người nhận</dt>
+                  <dd className={`text-right break-words ${FIELD_VALUE_CLASS}`}>{recipientLabel}</dd>
                 </div>
               ) : null}
-              {payField(payment.accountNumber, ["—"]) ? (
-                <div>
-                  <dt className={FIELD_CAPTION_CLASS}>Số tài khoản</dt>
-                  <dd className="mt-1 flex items-center gap-2 rounded-lg bg-surface px-3 py-2">
-                    <code className={`min-w-0 flex-1 break-all ${MONO_VALUE_CLASS}`}>
-                      {payField(payment.accountNumber, ["—"])}
+              {accountLabel ? (
+                <div className="grid grid-cols-[11rem_minmax(0,1fr)] items-center gap-3">
+                  <dt>Số tài khoản</dt>
+                  <dd className="flex min-w-0 items-center justify-end gap-2">
+                    <code className={`min-w-0 break-all text-right ${MONO_VALUE_CLASS}`}>
+                      {accountLabel}
                     </code>
                     <CopyButton
-                      value={payField(payment.accountNumber, ["—"]) ?? ""}
+                      value={accountLabel}
                       label="Sao chép"
                       copiedLabel="✓ Đã sao chép"
                     />
                   </dd>
                 </div>
               ) : null}
-              <div>
-                <dt className={FIELD_CAPTION_CLASS}>Số tiền</dt>
-                <dd className={`mt-0.5 ${SUMMARY_TOTAL_CLASS}`}>{payLabel}</dd>
+              <div className="grid grid-cols-[11rem_minmax(0,1fr)] items-end gap-3 border-t border-border pt-3">
+                <dt className={CARD_TITLE_CLASS}>Số tiền</dt>
+                <dd className={`text-right ${SUMMARY_TOTAL_CLASS}`}>{payLabel}</dd>
               </div>
-              <div>
-                <dt className={FIELD_CAPTION_CLASS}>Nội dung chuyển khoản</dt>
-                <dd className="mt-1 flex items-center gap-2 rounded-lg bg-surface px-3 py-2">
-                  <code className={`min-w-0 flex-1 ${MONO_VALUE_CLASS}`}>
+              <div className="grid grid-cols-[11rem_minmax(0,1fr)] items-center gap-3">
+                <dt>Nội dung chuyển khoản</dt>
+                <dd className="flex min-w-0 items-center justify-end gap-2">
+                  <code className={`min-w-0 break-all text-right ${MONO_VALUE_CLASS}`}>
                     {payment.paymentReference}
                   </code>
                   <CopyButton
@@ -377,18 +369,8 @@ export function CheckoutConfirmView({
               </div>
             </dl>
 
-            <button
-              type="button"
-              onClick={reloadQr}
-              disabled={reloading}
-              className={`mt-3 inline-flex items-center gap-1.5 ${LINK_FIELD_CLASS} disabled:opacity-50`}
-            >
-              <RefreshMini />
-              {reloading ? "Đang tải…" : "Làm mới mã QR"}
-            </button>
-
             {payment.canConfirm ? (
-              <div className="mt-5 border-t border-border pt-4">
+              <div className="mt-auto border-t border-border pt-4">
                 <ConfirmPayButton
                   paymentReference={payment.paymentReference}
                   orderId={order.id}
@@ -397,7 +379,7 @@ export function CheckoutConfirmView({
                 />
               </div>
             ) : (
-              <div className={`mt-5 border-t border-border pt-4`}>
+              <div className="mt-auto border-t border-border pt-4">
                 <p className={CARD_TITLE_CLASS}>Đang chờ xác nhận thanh toán...</p>
                 <p className={`mt-1 ${CARD_META_CLASS}`}>
                   {polling
@@ -444,7 +426,7 @@ export function CheckoutConfirmView({
           </section>
 
           {/* Hold window */}
-          <section className={CARD}>
+          <section className={`${CARD} flex h-full flex-col`}>
             <h2 className={SUBSECTION_TITLE_CLASS}>{payCardTitle}</h2>
             <dl className="mt-4 space-y-3">
               <div className="flex items-end justify-between gap-3">
@@ -525,20 +507,6 @@ function ShieldMini() {
         strokeWidth="2"
         strokeLinejoin="round"
       />
-    </svg>
-  );
-}
-
-function RefreshMini() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M4 12a8 8 0 0 1 13.5-5.7M20 12a8 8 0 0 1-13.5 5.7"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path d="M17 4v4h4M7 20v-4H3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }
