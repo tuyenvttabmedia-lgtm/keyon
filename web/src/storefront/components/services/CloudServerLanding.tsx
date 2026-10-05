@@ -182,6 +182,7 @@ export function CloudServerLanding() {
           />
           <div aria-hidden className="pointer-events-none absolute inset-0 lg:hidden" style={{ background: "linear-gradient(180deg, #ffffff 0%, #ffffff 40%, rgba(255,255,255,0.82) 58%, rgba(255,255,255,0) 82%)" }} />
           <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block" style={{ background: "linear-gradient(90deg, #ffffff 0%, #ffffff 36%, rgba(255,255,255,0.9) 48%, rgba(255,255,255,0.35) 64%, rgba(255,255,255,0) 78%)" }} />
+          <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 90%, rgba(255,255,255,0.72) 96%, #ffffff 100%)" }} />
           <div className="relative">
           <nav
             aria-label="Breadcrumb"
@@ -204,8 +205,7 @@ export function CloudServerLanding() {
 
           <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-6">
             <div className="min-w-0">
-              <p className={`${OVERLINE_CLASS} text-accent`}>Dịch vụ triển khai & hạ tầng</p>
-              <h1 className={`mt-3 break-words ${HERO_TITLE_CLASS}`}>
+              <h1 className={`break-words ${HERO_TITLE_CLASS}`}>
                 Cloud & Server
                 <span className="block">Deployment</span>
               </h1>
@@ -290,7 +290,7 @@ export function CloudServerLanding() {
         </div>
       </section>
 
-      <section className="bg-white py-8 lg:py-14">
+      <section className="home-section bg-white">
         <div className="home-container relative overflow-hidden">
           <Image
             src="/services/cloud-aisle.jpg"
@@ -301,6 +301,7 @@ export function CloudServerLanding() {
           />
           <div aria-hidden className="pointer-events-none absolute inset-0 lg:hidden" style={{ background: "linear-gradient(180deg, #ffffff 0%, #ffffff 34%, rgba(255,255,255,0.86) 50%, rgba(255,255,255,0) 72%)" }} />
           <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block" style={{ background: "linear-gradient(90deg, #ffffff 0%, #ffffff 34%, rgba(255,255,255,0.92) 46%, rgba(255,255,255,0.4) 62%, rgba(255,255,255,0) 76%)" }} />
+          <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 90%, rgba(255,255,255,0.72) 96%, #ffffff 100%)" }} />
           <div className="relative grid items-center gap-8 lg:grid-cols-2">
           <div className="min-w-0">
             <h2 className={SECTION_TITLE_CLASS}>Các dịch vụ triển khai</h2>
@@ -318,7 +319,7 @@ export function CloudServerLanding() {
               ))}
             </ul>
           </div>
-          <div className="flex min-h-[380px] items-center justify-end lg:min-h-[460px]">
+          <div className="flex min-h-[240px] items-center justify-end lg:min-h-0">
             <div className="w-full max-w-[300px]">
               <ScopePanel />
             </div>
@@ -335,7 +336,7 @@ export function CloudServerLanding() {
               Năm bước, từ tiếp nhận nhu cầu đến bàn giao và hỗ trợ sau triển khai.
             </p>
           </header>
-          <ol className="relative mt-8 grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-5">
+          <ol className="relative mt-7 grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-5">
             <li
               aria-hidden
               className="pointer-events-none absolute left-[8%] right-[8%] top-[3.35rem] hidden h-px bg-border lg:block"
