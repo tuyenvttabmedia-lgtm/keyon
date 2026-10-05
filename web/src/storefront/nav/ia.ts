@@ -276,6 +276,9 @@ export const M365_EMAIL_SERVICE_SLUG = "microsoft-365-email-deployment" as const
 /** Canonical slug for mailbox and data migration. */
 export const EMAIL_MIGRATION_SERVICE_SLUG = "email-data-migration" as const;
 
+/** Canonical slug for cloud and server deployment. */
+export const CLOUD_SERVER_SERVICE_SLUG = "cloud-server" as const;
+
 /** Deployment and managed-IT offerings. Distinct from Giải pháp and Doanh nghiệp. */
 export const SERVICE_TOPICS: ServiceTopic[] = [
   {
@@ -302,7 +305,7 @@ export const SERVICE_TOPICS: ServiceTopic[] = [
     ],
   },
   {
-    slug: "cloud-server",
+    slug: CLOUD_SERVER_SERVICE_SLUG,
     column: "deploy",
     label: "Cloud & Server Deployment",
     description:

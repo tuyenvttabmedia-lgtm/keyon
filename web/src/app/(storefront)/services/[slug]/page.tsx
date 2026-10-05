@@ -8,8 +8,14 @@ import {
   EMAIL_MIGRATION_PATH,
   EMAIL_MIGRATION_SEO,
 } from "@/storefront/components/services/EmailDataMigrationLanding";
+import {
+  CloudServerLanding,
+  CLOUD_SERVER_LABEL,
+  CLOUD_SERVER_PATH,
+  CLOUD_SERVER_SEO,
+} from "@/storefront/components/services/CloudServerLanding";
 import { ServiceTopicLanding } from "@/storefront/components/services/ServiceTopicLanding";
-import { EMAIL_MIGRATION_SERVICE_SLUG, M365_EMAIL_SERVICE_SLUG, SERVICE_TOPICS, serviceTopicBySlug } from "@/storefront/nav/ia";
+import { CLOUD_SERVER_SERVICE_SLUG, EMAIL_MIGRATION_SERVICE_SLUG, M365_EMAIL_SERVICE_SLUG, SERVICE_TOPICS, serviceTopicBySlug } from "@/storefront/nav/ia";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
 import {
   buildBreadcrumbJsonLd,
@@ -63,6 +69,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         ...base.twitter,
         title: EMAIL_MIGRATION_SEO.title,
         description: EMAIL_MIGRATION_SEO.description,
+      },
+    };
+  }
+  if (slug === CLOUD_SERVER_SERVICE_SLUG) {
+    const base = await buildMainPageMetadata(CLOUD_SERVER_PATH);
+    return {
+      ...base,
+      title: absoluteTitle(CLOUD_SERVER_SEO.title),
+      description: CLOUD_SERVER_SEO.description,
+      openGraph: {
+        ...base.openGraph,
+        title: CLOUD_SERVER_SEO.title,
+        description: CLOUD_SERVER_SEO.description,
+      },
+      twitter: {
+        ...base.twitter,
+        title: CLOUD_SERVER_SEO.title,
+        description: CLOUD_SERVER_SEO.description,
       },
     };
   }
@@ -140,6 +164,32 @@ export default async function ServiceTopicPage({ params }: Props) {
           />
         ) : null}
         <EmailDataMigrationLanding />
+      </>
+    );
+  }
+  if (slug === CLOUD_SERVER_SERVICE_SLUG) {
+    const serviceLd = buildServiceJsonLd({
+      name: CLOUD_SERVER_LABEL,
+      description: CLOUD_SERVER_SEO.description,
+      path: CLOUD_SERVER_PATH,
+      serviceType: CLOUD_SERVER_LABEL,
+    });
+    const breadcrumbLd = buildBreadcrumbJsonLd([
+      { name: "Trang chủ", path: "/" },
+      { name: "Dịch vụ", path: "/services" },
+      { name: CLOUD_SERVER_LABEL, path: CLOUD_SERVER_PATH },
+    ]);
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        />
+        <CloudServerLanding />
       </>
     );
   }
