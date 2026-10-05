@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/db";
-import { resolveMediaUrl } from "@/lib/media-url";
 import { Microsoft365EmailLanding, M365_EMAIL_FAQ, M365_EMAIL_PATH, M365_EMAIL_SEO } from "@/storefront/components/services/Microsoft365EmailLanding";
 import { ServiceTopicLanding } from "@/storefront/components/services/ServiceTopicLanding";
 import { SERVICE_TOPICS, serviceTopicBySlug } from "@/storefront/nav/ia";
@@ -12,65 +10,6 @@ import {
   buildServiceJsonLd,
 } from "@/server/seo/structured-data";
 import { absoluteTitle } from "@/server/seo/title";
-import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
-import { inferCategory } from "@/storefront/components/shop/shop-utils";
-import { mapProductsToShopCards } from "@/storefront/lib/related-products";
-import type { FeaturedProduct } from "@/storefront/content/types";
-
-async function loadM365Plans(): Promise<FeaturedProduct[]> {
-  const products = await prisma.product.findMany({
-    where: { active: true },
-    include: {
-      brand: true,
-      variants: { where: { active: true }, orderBy: { priceVnd: "asc" }, take: 1 },
-    },
-    orderBy: { name: "asc" },
-    take: 80,
-  });
-  const scored: { score: number; product: (typeof products)[number] }[] = [];
-  for (const product of products) {
-    if (!product.variants[0]) continue;
-    const cat =
-      product.categoryKey &&
-      (PRODUCT_CATEGORY_KEYS as readonly string[]).includes(product.categoryKey)
-        ? product.categoryKey
-        : inferCategory(product.brand.name, product.name);
-    const name = product.name.toLowerCase();
-    const isM365 =
-      name.includes("365") ||
-      name.includes("office") ||
-      name.includes("outlook") ||
-      name.includes("teams") ||
-      name.includes("onedrive");
-    if (!isM365 || name.includes("windows")) continue;
-    let score = 0;
-    if (name.includes("business")) score += 30;
-    if (name.includes("365")) score += 50;
-    else if (name.includes("office")) score += 20;
-    if (cat === "office") score += 10;
-    scored.push({ score, product });
-  }
-  scored.sort(
-    (a, b) => b.score - a.score || a.product.name.localeCompare(b.product.name, "vi"),
-  );
-  return mapProductsToShopCards(scored.slice(0, 5).map((row) => row.product)).map((card) => {
-    const imageUrl = card.imageUrl ? resolveMediaUrl(card.imageUrl) || card.imageUrl : "";
-    return {
-      id: card.id,
-      brandName: card.brandName,
-      productName: card.productName,
-      packageName: card.packageName,
-      priceVnd: card.priceVnd,
-      receiveLabel: card.receiveLabel,
-      receiveKind: card.receiveKind,
-      deliveryLabel: card.deliveryLabel,
-      mark: card.mark,
-      imageUrl: imageUrl || undefined,
-      href: card.href,
-      ctaLabel: "Xem sản phẩm →",
-    };
-  });
-}
 
 export const revalidate = 60;
 
@@ -126,7 +65,6 @@ export default async function ServiceTopicPage({ params }: Props) {
       { name: "Microsoft 365 & Email doanh nghiệp", path: M365_EMAIL_PATH },
     ]);
     const faqLd = buildFaqPageJsonLd([...M365_EMAIL_FAQ]);
-    const plans = await loadM365Plans();
     return (
       <>
         <script
@@ -143,7 +81,7 @@ export default async function ServiceTopicPage({ params }: Props) {
             dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
           />
         ) : null}
-        <Microsoft365EmailLanding plans={plans} />
+        <Microsoft365EmailLanding />
       </>
     );
   }

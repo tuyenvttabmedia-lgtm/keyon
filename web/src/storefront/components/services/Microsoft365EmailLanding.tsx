@@ -17,8 +17,6 @@ import {
   ShieldCheck,
   Video,
 } from "lucide-react";
-import { ProductCard } from "@/storefront/components/ProductCard";
-import type { FeaturedProduct } from "@/storefront/content/types";
 import {
   LANDING_CRUMB_GAP,
   LANDING_HERO_PAD,
@@ -46,7 +44,6 @@ import {
   CTA_COMPACT_CLASS,
   CTA_LABEL_CLASS,
   HERO_TITLE_CLASS,
-  LINK_ACCENT_CLASS,
   OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
   SECTION_LEAD_CLASS,
@@ -254,7 +251,7 @@ const PANEL_ROWS = [
 
 const card = `group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-white ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/40 ${ELEVATION_CARD_HOVER}`;
 
-export function Microsoft365EmailLanding({ plans }: { plans: FeaturedProduct[] }) {
+export function Microsoft365EmailLanding() {
   return (
     <div className="overflow-x-hidden bg-white">
       <section className="relative overflow-x-clip border-b border-border bg-[#F7FAFC]">
@@ -312,10 +309,10 @@ export function Microsoft365EmailLanding({ plans }: { plans: FeaturedProduct[] }
               Yêu cầu triển khai
             </Link>
             <Link
-              href={plans.length > 0 ? "#goi-pho-bien" : "/solutions/microsoft-365-office"}
+              href="#goi-trien-khai"
               className={`inline-flex h-12 w-full items-center justify-center rounded-xl border border-border bg-white px-6 text-navy sm:w-auto ${CTA_LABEL_CLASS} ${TRANSITION_UI} hover:border-accent hover:bg-accent-soft hover:text-accent`}
             >
-              Xem các gói Microsoft 365
+              Xem gói triển khai
             </Link>
           </div>
           <ul className="mt-8 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
@@ -476,44 +473,7 @@ export function Microsoft365EmailLanding({ plans }: { plans: FeaturedProduct[] }
         </div>
       </section>
 
-      {plans.length > 0 ? (
-        <section id="goi-pho-bien" className="home-section bg-white">
-          <div className="home-container">
-            <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-              <div className="min-w-0 max-w-2xl">
-                <h2 className={SECTION_TITLE_CLASS}>Các gói Microsoft 365 trên KEYON</h2>
-                <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-                  License mua riêng. Giá lấy từ catalog đang bán.
-                </p>
-              </div>
-              <Link href="/solutions/microsoft-365-office" className={`shrink-0 ${LINK_ACCENT_CLASS}`}>
-                Xem tất cả các gói Microsoft 365 →
-              </Link>
-            </header>
-            <div className="-mx-4 px-4 lg:hidden">
-              <div className="home-snap-x gap-2.5 pb-1">
-                {plans.map((plan, index) => (
-                  <div
-                    key={plan.id}
-                    className="w-[calc(50vw-1.35rem)] max-w-[200px] md:w-[calc(38vw-1rem)] md:max-w-[210px]"
-                  >
-                    <ProductCard item={plan} compact priority={index < 2} />
-                  </div>
-                ))}
-              </div>
-            </div>
-            <ul className="mt-6 hidden gap-3.5 lg:grid lg:grid-cols-5">
-              {plans.map((plan, index) => (
-                <li key={plan.id} className="min-w-0">
-                  <ProductCard item={plan} priority={index < 2} />
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      ) : null}
-
-      <section className="home-section bg-[#F7FAFC]">
+      <section className="home-section bg-white">
         <div className="home-container">
           <header className="mx-auto max-w-2xl text-center">
             <h2 className={SECTION_TITLE_CLASS}>Vì sao doanh nghiệp chọn KEYON?</h2>
@@ -539,7 +499,7 @@ export function Microsoft365EmailLanding({ plans }: { plans: FeaturedProduct[] }
         </div>
       </section>
 
-      <section className="home-section bg-white">
+      <section className="home-section bg-[#F7FAFC]">
         <div className="home-container">
           <header className="max-w-2xl">
             <h2 className={SECTION_TITLE_CLASS}>Doanh nghiệp nhận lại sau triển khai</h2>
@@ -560,7 +520,7 @@ export function Microsoft365EmailLanding({ plans }: { plans: FeaturedProduct[] }
         </div>
       </section>
 
-      <section className="home-section bg-[#F7FAFC]">
+      <section className="home-section bg-white">
         <div className="home-container">
           <header className="max-w-2xl">
             <h2 className={SECTION_TITLE_CLASS}>Câu hỏi thường gặp</h2>
