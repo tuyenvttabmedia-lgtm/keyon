@@ -83,6 +83,12 @@ const CONFIRM_TRUST = [
   },
 ] as const;
 
+function payField(value: string | null | undefined, placeholders: string[] = []) {
+  const text = (value ?? "").trim();
+  if (!text || placeholders.includes(text)) return null;
+  return text;
+}
+
 const NEXT_STEP_ICONS = [IconQr, IconCard, IconKey] as const;
 const CONFIRM_TRUST_ICONS = [IconShieldCheck, IconLock, IconHeadset] as const;
 
@@ -98,6 +104,9 @@ export type CheckoutConfirmViewProps = {
     qrImageUrl?: string;
     canConfirm: boolean;
     notice?: string | null;
+    bankName?: string | null;
+    accountName?: string | null;
+    accountNumber?: string | null;
   };
   methodTitle: string;
 };
@@ -318,6 +327,37 @@ export function CheckoutConfirmView({
             </div>
 
             <dl className="mt-5 space-y-4">
+              {payField(payment.bankName, ["Ngân hàng"]) ? (
+                <div className="flex items-start justify-between gap-3">
+                  <dt className={`shrink-0 ${FIELD_CAPTION_CLASS}`}>Ngân hàng</dt>
+                  <dd className={`min-w-0 text-right break-words ${FIELD_VALUE_CLASS}`}>
+                    {payField(payment.bankName, ["Ngân hàng"])}
+                  </dd>
+                </div>
+              ) : null}
+              {payField(payment.accountName) ? (
+                <div className="flex items-start justify-between gap-3">
+                  <dt className={`shrink-0 ${FIELD_CAPTION_CLASS}`}>Người nhận</dt>
+                  <dd className={`min-w-0 text-right break-words ${FIELD_VALUE_CLASS}`}>
+                    {payField(payment.accountName)}
+                  </dd>
+                </div>
+              ) : null}
+              {payField(payment.accountNumber, ["—"]) ? (
+                <div>
+                  <dt className={FIELD_CAPTION_CLASS}>Số tài khoản</dt>
+                  <dd className="mt-1 flex items-center gap-2 rounded-lg bg-surface px-3 py-2">
+                    <code className={`min-w-0 flex-1 break-all ${MONO_VALUE_CLASS}`}>
+                      {payField(payment.accountNumber, ["—"])}
+                    </code>
+                    <CopyButton
+                      value={payField(payment.accountNumber, ["—"]) ?? ""}
+                      label="Sao chép"
+                      copiedLabel="✓ Đã sao chép"
+                    />
+                  </dd>
+                </div>
+              ) : null}
               <div>
                 <dt className={FIELD_CAPTION_CLASS}>Số tiền</dt>
                 <dd className={`mt-0.5 ${SUMMARY_TOTAL_CLASS}`}>{payLabel}</dd>

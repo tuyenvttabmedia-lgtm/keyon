@@ -59,6 +59,9 @@ export default async function CheckoutConfirmPage({
         paymentReference: paymentUi.paymentReference,
         expiresAt: paymentUi.expiresAt,
         qrImageUrl: paymentUi.qrImageUrl,
+        bankName: paymentUi.bankName,
+        accountName: paymentUi.accountName,
+        accountNumber: paymentUi.account,
         canConfirm: paymentUi.canConfirm,
         notice:
           paymentFlag === "cancel"
