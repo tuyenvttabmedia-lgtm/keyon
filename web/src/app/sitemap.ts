@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { defaultBlog, readJsonFile, type BlogPost } from "@/server/cms/store";
 import { loadPublishedStaticPages } from "@/server/cms/static-pages";
 import { MAIN_SEO_PATHS } from "@/lib/seo-main-pages";
+import { SERVICE_TOPICS } from "@/storefront/nav/ia";
 import { ACTIVE_SOLUTION_SLUGS, BUSINESS_PAGES } from "@/storefront/nav/ia-pages";
 import { PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product-cms";
 import {
@@ -45,6 +46,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   for (const slug of ACTIVE_SOLUTION_SLUGS) {
     entries.push({
       url: absoluteUrl(`/solutions/${slug}`),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.65,
+    });
+  }
+  for (const topic of SERVICE_TOPICS) {
+    entries.push({
+      url: absoluteUrl(`/dich-vu/${topic.slug}`),
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.65,

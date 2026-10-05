@@ -111,7 +111,7 @@ export function SiteHeader({
             aria-label={`${name} trang chủ`}
           >
             {logoUrl ? (
-              <span className="relative block h-8 w-[min(180px,42vw)] sm:h-9 sm:w-[200px] lg:h-10 lg:w-[220px]">
+                <span className="relative block h-8 w-[min(180px,42vw)] sm:h-9 sm:w-[200px] lg:h-10 lg:w-[168px] xl:w-[220px]">
                 <Image
                   src={logoUrl}
                   alt={name}
@@ -144,7 +144,7 @@ export function SiteHeader({
 
           <nav
             ref={navRef}
-            className="ml-auto hidden items-center gap-1 text-[14px] font-medium text-muted lg:flex"
+            className="ml-auto hidden min-w-0 items-center gap-0.5 text-[14px] font-medium text-muted lg:flex xl:gap-1"
             aria-label="Điều hướng chính"
           >
             {IA_PRIMARY_NAV.map((item) => (
@@ -259,7 +259,7 @@ function DesktopNavItem({
     >
       <button
         type="button"
-        className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-2 ${triggerClass}`}
+        className={`inline-flex items-center gap-1 rounded-lg px-1.5 py-2 xl:px-2.5 ${triggerClass}`}
         aria-expanded={open}
         aria-controls={panelId}
         onClick={onToggle}

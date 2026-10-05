@@ -13,6 +13,7 @@ export type MainSeoPageKey =
   | "/support"
   | "/how-it-works"
   | "/business"
+  | "/dich-vu"
   | "/solutions"
   | "/kien-thuc"
   | "/kien-thuc/chuyen-sau"
@@ -30,6 +31,7 @@ export const MAIN_SEO_PAGES: {
   { path: "/products", label: "Trang sản phẩm" },
   { path: "/categories", label: "Danh mục sản phẩm" },
   { path: "/business", label: "Doanh nghiệp" },
+  { path: "/dich-vu", label: "Dịch vụ" },
   { path: "/solutions", label: "Giải pháp" },
   { path: "/kien-thuc", label: "Kiến thức" },
   { path: "/kien-thuc/chuyen-sau", label: "Chuyên sâu" },

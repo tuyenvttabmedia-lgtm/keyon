@@ -5,7 +5,8 @@
  * Sản phẩm  = what to buy (`/products`, brands, collections).
  * Giải pháp = what need to solve (`/solutions/*` + hub `/solutions`).
  * Doanh nghiệp = how to buy/renew/consult with KEYON (`/business/*`).
- * The three megas must not list the same destinations.
+ * Dịch vụ = scoped deployment and managed IT (`/dich-vu/*`).
+ * These megas must not list the same destinations.
  */
 
 export type NavLink = {
@@ -254,6 +255,121 @@ export const BUSINESS_SERVICE_LINKS: NavLink[] = [
   ...BUSINESS_ADVISORY_LINKS,
 ];
 
+export type ServiceColumnId = "deploy" | "manage";
+
+export type ServiceTopic = {
+  slug: string;
+  column: ServiceColumnId;
+  label: string;
+  description: string;
+  bullets: string[];
+};
+
+export const SERVICE_COLUMNS: { id: ServiceColumnId; title: string }[] = [
+  { id: "deploy", title: "Triển khai & chuyển đổi" },
+  { id: "manage", title: "Quản lý & bảo mật" },
+];
+
+/** Deployment and managed-IT offerings. Distinct from Giải pháp and Doanh nghiệp. */
+export const SERVICE_TOPICS: ServiceTopic[] = [
+  {
+    slug: "microsoft-365-email",
+    column: "deploy",
+    label: "Microsoft 365 & Email doanh nghiệp",
+    description:
+      "Thiết lập Microsoft 365, email, domain, DNS và tài khoản người dùng.",
+    bullets: [
+      "Thiết lập Microsoft 365, hộp thư và tài khoản người dùng",
+      "Gắn domain và bản ghi DNS cho email doanh nghiệp",
+      "Bàn giao theo phạm vi đã thống nhất",
+    ],
+  },
+  {
+    slug: "email-data-migration",
+    column: "deploy",
+    label: "Di chuyển Email & Dữ liệu",
+    description: "Migration email, dữ liệu và người dùng sang nền tảng mới.",
+    bullets: [
+      "Chuyển email, dữ liệu và người dùng sang nền tảng mới",
+      "Lên kế hoạch cắt chuyển để hạn chế gián đoạn",
+      "Kiểm tra sau khi chuyển xong",
+    ],
+  },
+  {
+    slug: "cloud-server",
+    column: "deploy",
+    label: "Cloud & Server Deployment",
+    description:
+      "Triển khai VPS, Cloud Server, storage và môi trường máy chủ.",
+    bullets: [
+      "Triển khai VPS, Cloud Server và storage",
+      "Dựng môi trường máy chủ theo cấu hình đã chốt",
+      "Bàn giao quyền truy cập cho người phụ trách",
+    ],
+  },
+  {
+    slug: "backup-disaster-recovery",
+    column: "deploy",
+    label: "Backup & Disaster Recovery",
+    description: "Thiết lập backup và phương án khôi phục dữ liệu.",
+    bullets: [
+      "Thiết lập backup cho dữ liệu cần giữ",
+      "Xây phương án khôi phục khi sự cố",
+      "Kiểm tra quy trình phục hồi theo phạm vi dịch vụ",
+    ],
+  },
+  {
+    slug: "security-deployment",
+    column: "manage",
+    label: "Triển khai bảo mật",
+    description:
+      "Cài đặt và cấu hình giải pháp bảo mật cho thiết bị và doanh nghiệp.",
+    bullets: [
+      "Cài đặt giải pháp bảo mật cho thiết bị và doanh nghiệp",
+      "Cấu hình theo phạm vi đã thống nhất",
+      "Hướng dẫn vận hành sau khi triển khai",
+    ],
+  },
+  {
+    slug: "microsoft-365-management",
+    column: "manage",
+    label: "Quản lý Microsoft 365",
+    description:
+      "Quản trị người dùng, license, tenant và cấu hình Microsoft 365.",
+    bullets: [
+      "Quản trị người dùng, license và tenant",
+      "Điều chỉnh cấu hình Microsoft 365 theo nhu cầu",
+      "Hỗ trợ vận hành trong thời hạn dịch vụ",
+    ],
+  },
+  {
+    slug: "managed-it",
+    column: "manage",
+    label: "Managed IT / MSP",
+    description: "Giám sát, hỗ trợ và quản lý hệ thống CNTT theo nhu cầu.",
+    bullets: [
+      "Giám sát và hỗ trợ hệ thống CNTT",
+      "Quản lý theo phạm vi đã thỏa thuận",
+      "Tiếp nhận yêu cầu qua kênh hỗ trợ KEYON",
+    ],
+  },
+];
+
+function serviceNavLinks(column: ServiceColumnId): NavLink[] {
+  return SERVICE_TOPICS.filter((topic) => topic.column === column).map((topic) => ({
+    label: topic.label,
+    href: `/dich-vu/${topic.slug}`,
+    description: topic.description,
+  }));
+}
+
+export const SERVICE_DEPLOY_LINKS: NavLink[] = serviceNavLinks("deploy");
+export const SERVICE_MANAGE_LINKS: NavLink[] = serviceNavLinks("manage");
+
+export function serviceTopicBySlug(slug: string): ServiceTopic | undefined {
+  return SERVICE_TOPICS.find((topic) => topic.slug === slug);
+}
+
 export const RESOURCE_LINKS: NavLink[] = [
   {
     label: "Hướng dẫn",
@@ -342,6 +458,17 @@ export const IA_PRIMARY_NAV: PrimaryNavItem[] = [
       label: "Khám phá dịch vụ doanh nghiệp →",
       href: "/business",
     },
+  },
+  {
+    id: "services",
+    label: "Dịch vụ",
+    href: "/dich-vu",
+    kind: "mega",
+    columns: [
+      { title: "Triển khai & chuyển đổi", links: SERVICE_DEPLOY_LINKS },
+      { title: "Quản lý & bảo mật", links: SERVICE_MANAGE_LINKS },
+    ],
+    footerCta: { label: "Xem tất cả dịch vụ →", href: "/dich-vu" },
   },
   {
     id: "knowledge",

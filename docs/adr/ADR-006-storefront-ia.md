@@ -6,6 +6,7 @@
 **Amended:** 2026-09-20 — Category canonical URL **`/categories/{slug}`** (replaces `/products?cat=`); legacy `?cat=` 301.  
 **Amended:** 2026-09-21 — Knowledge section public slugs Vietnamese (`chuyen-sau` / `huong-dan` / `tin-tuc`); Admin Chuyên mục vs Chủ đề.  
 **Amended:** 2026-09-21 — Hub path **`/kien-thuc`**; topic archives; Tin tức is chuyên mục under Kiến thức. Pre-index: no permanent redirects from `/knowledge` required.  
+**Amended:** 2026-10-05 — Header thêm mega **Dịch vụ** (`/dich-vu`). Vẫn là presentation layer trong `ia.ts`. CMS `nav.json` không điều khiển menu cha hay menu con.  
 **Decisions:** NAV-01 … NAV-05
 
 ---
@@ -24,6 +25,7 @@ KEYON sells software licenses (and later cloud/services). Early nav mixed Catego
 | Category | Catalog taxonomy | `/categories/office` |
 | Collection | Merchandising group in Shop mega | “Windows”, “Backup” (`SHOP_COLLECTIONS`) |
 | Solution | Problem-oriented landing | `/solutions/productivity` |
+| Service | Triển khai / quản lý đã chốt phạm vi | `/dich-vu/{slug}` |
 | Navigation | IA presentation layer | Header mega / footer |
 
 **Navigation must not mirror Product Category 1:1.**
@@ -87,7 +89,7 @@ Solution label: **“Năng suất & Cộng tác”** → `/solutions/productivit
 
 ### Header shape
 
-`KEYON | Sản phẩm⌄ Giải pháp⌄ Doanh nghiệp⌄ Kiến thức⌄ Hỗ trợ⌄ | 🔍 Tài khoản`  
+`KEYON | Sản phẩm⌄ Giải pháp⌄ Doanh nghiệp⌄ Dịch vụ⌄ Kiến thức⌄ Hỗ trợ⌄ | 🔍 Tài khoản`  
 (Admin link staff-only.)
 
 ### Source of truth
@@ -97,7 +99,7 @@ CMS `nav.json` items are **legacy / secondary** (brand logo + tagline still from
 
 ## Consequences
 
-- Routes under `/solutions`, `/business`, `/kien-thuc`, `/support`, `/contact/quote`.
+- Routes under `/solutions`, `/business`, `/dich-vu`, `/kien-thuc`, `/support`, `/contact/quote`.
 - Footer defaults updated in `defaultCmsFooter` (prod CMS JSON may need one-time sync; runtime remap `/resources` and `/knowledge` → `/kien-thuc`).
 - Cloud/Backup landings use “đang mở rộng” tone when catalog is thin — no fake SKU claims.
 - Sitemap emits `/kien-thuc/...` and `/categories/{slug}` URLs.
@@ -107,7 +109,7 @@ CMS `nav.json` items are **legacy / secondary** (brand logo + tagline still from
 
 ### Phase 1
 
-- [x] Desktop mega opens for Sản phẩm / Giải pháp / Doanh nghiệp
+- [x] Desktop mega opens for Sản phẩm / Giải pháp / Doanh nghiệp / Dịch vụ
 - [x] Mobile accordion lists same destinations
 - [x] `/solutions/license-management` and `/business` cross-link correctly
 - [x] No reliance on `/#solutions` for primary nav
