@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -24,9 +25,7 @@ import { IMPLEMENTATION_QUOTE_HREF } from "@/storefront/lib/cta";
 import {
   ELEVATION_CARD_HOVER,
   ELEVATION_CTA_HOVER,
-  ELEVATION_FLOAT,
   ELEVATION_HAIRLINE,
-  ELEVATION_HERO_HOVER,
   HOVER_LIFT_CARD,
   HOVER_LINK_ACCENT,
   TRANSITION_PANEL,
@@ -38,7 +37,6 @@ import {
   BODY_MUTED_CLASS,
   BREADCRUMB_CLASS,
   BREADCRUMB_CURRENT_CLASS,
-  CARD_META_CLASS,
   CARD_TITLE_CLASS,
   CTA_LABEL_CLASS,
   HERO_TITLE_CLASS,
@@ -74,7 +72,7 @@ export const EMAIL_MIGRATION_FAQ = [
       "Có, khi hai phía đã cấp quyền truy cập và danh sách hộp thư cần chuyển đã rõ.",
   },
   {
-    question: "Sau khi di chuyển, ai tiếp nhận hộp thư?",
+    question: "Sau khi di chuyển, KEYON có hỗ trợ kỹ thuật không?",
     answer:
       "Người phụ trách nhận checklist và danh sách đã chuyển. Quản trị tiếp theo thuộc dịch vụ Quản lý Microsoft 365 nếu doanh nghiệp chốt thêm.",
   },
@@ -82,10 +80,21 @@ export const EMAIL_MIGRATION_FAQ = [
 
 const HERO_CHECKS = [
   "Giảm gián đoạn, lịch cắt chuyển được thống nhất trước",
-  "Giữ hộp thư, danh bạ và lịch trong phạm vi đã chốt",
-  "Hỗ trợ Google Workspace, Exchange và IMAP",
-  "Đối soát sau khi chuyển và bàn giao cho người phụ trách",
+  "Giữ hộp thư, thư mục và quyền trong phạm vi đã chốt",
+  "Hỗ trợ di chuyển từ nhiều nền tảng nguồn",
+  "Kỹ thuật KEYON theo dõi và hỗ trợ đến khi bàn giao",
 ];
+
+const TECHS = [
+  { name: "Microsoft", mark: "font-semibold tracking-tight" },
+  { name: "Google Workspace", mark: "font-semibold tracking-tight" },
+  { name: "Adobe", mark: "font-bold tracking-tight" },
+  { name: "Autodesk", mark: "font-semibold tracking-tight" },
+  { name: "Acronis", mark: "font-semibold tracking-tight" },
+  { name: "Bitdefender", mark: "font-semibold tracking-tight" },
+  { name: "ESET", mark: "font-bold tracking-[0.14em]" },
+  { name: "VMware", mark: "font-bold tracking-tight" },
+] as const;
 
 const BENEFITS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
@@ -94,13 +103,13 @@ const BENEFITS: { title: string; body: string; Icon: LucideIcon }[] = [
     Icon: ShieldCheck,
   },
   {
-    title: "Giảm gián đoạn",
+    title: "Giảm gián đoạn công việc",
     body: "Lịch cắt chuyển thống nhất để người dùng vẫn gửi và nhận thư theo kế hoạch.",
     Icon: CalendarClock,
   },
   {
-    title: "Giữ cấu trúc hộp thư",
-    body: "Ánh xạ địa chỉ, nhóm và hộp thư theo sơ đồ nguồn và đích đã thống nhất.",
+    title: "Giữ nguyên cấu trúc",
+    body: "Thư mục, danh bạ và lịch được ánh xạ theo sơ đồ nguồn và đích đã thống nhất.",
     Icon: Waypoints,
   },
   {
@@ -138,12 +147,12 @@ const PLATFORMS: { title: string; body: string; Icon: LucideIcon; tone: string }
 ];
 
 const STEPS: { title: string; body: string; Icon: LucideIcon }[] = [
-  { title: "Khảo sát", body: "Nền tảng nguồn, số hộp thư và dung lượng.", Icon: Search },
-  { title: "Lập phương án", body: "Lịch cắt chuyển và danh sách hộp thư.", Icon: ClipboardList },
-  { title: "Chuẩn bị", body: "Quyền nguồn, đích và domain cần dùng.", Icon: ListChecks },
-  { title: "Di chuyển", body: "Chuyển thư theo phạm vi đã chốt.", Icon: Waypoints },
-  { title: "Kiểm tra", body: "Đối soát mẫu và mục chưa sang được.", Icon: ShieldCheck },
-  { title: "Bàn giao", body: "Checklist cho người phụ trách.", Icon: Mail },
+  { title: "Tư vấn & khảo sát", body: "Nền tảng nguồn, số hộp thư và dung lượng.", Icon: Search },
+  { title: "Lập kế hoạch", body: "Lịch cắt chuyển và danh sách hộp thư.", Icon: ClipboardList },
+  { title: "Chuẩn bị hệ thống", body: "Quyền nguồn, đích và domain cần dùng.", Icon: ListChecks },
+  { title: "Di chuyển dữ liệu", body: "Chuyển thư theo phạm vi đã chốt.", Icon: Waypoints },
+  { title: "Kiểm tra & bàn giao", body: "Đối soát mẫu và mục chưa sang được.", Icon: ShieldCheck },
+  { title: "Hỗ trợ sau chuyển", body: "Checklist và kênh hỗ trợ cho người phụ trách.", Icon: Headphones },
 ];
 
 const SCENARIOS: { from: string; to: string; points: string[] }[] = [
@@ -176,19 +185,19 @@ const REASONS: { title: string; body: string; Icon: LucideIcon }[] = [
     Icon: ListChecks,
   },
   {
-    title: "Kiểm tra sau chuyển",
-    body: "KEYON đối soát mẫu và gửi danh sách mục chưa sang được.",
+    title: "Quy trình rõ ràng",
+    body: "Sáu bước từ khảo sát đến bàn giao, lịch cắt chuyển thống nhất với người phụ trách.",
+    Icon: ClipboardList,
+  },
+  {
+    title: "Đối soát sau chuyển",
+    body: "KEYON kiểm tra mẫu và gửi danh sách mục chưa sang được.",
     Icon: ShieldCheck,
   },
   {
     title: "Hỗ trợ tiếng Việt",
-    body: "Trao đổi, lịch cắt chuyển và hướng dẫn bằng tiếng Việt.",
+    body: "Trao đổi, lịch cắt chuyển và hướng dẫn bàn giao bằng tiếng Việt.",
     Icon: Headphones,
-  },
-  {
-    title: "Nối dịch vụ liền kề",
-    body: "Chưa có tenant thì triển khai Microsoft 365 đi trước. Quản trị sau bàn giao là dịch vụ riêng.",
-    Icon: Cloud,
   },
 ];
 
@@ -207,124 +216,126 @@ const OUTCOMES = [
   },
 ];
 
-const SOURCES = ["Google Workspace", "Exchange", "IMAP / POP3"];
-
 const card = `group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-white ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/40 ${ELEVATION_CARD_HOVER}`;
 
 export function EmailDataMigrationLanding() {
   return (
     <div className="overflow-x-hidden bg-white">
-      <section className="relative overflow-x-clip border-b border-border bg-[#F7FAFC]">
-        <div
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_82%_12%,rgba(14,165,164,0.1),transparent_42%),radial-gradient(ellipse_at_8%_88%,rgba(14,165,233,0.06),transparent_46%)]"
-          aria-hidden
-        />
-        <div className={`home-container relative ${LANDING_HERO_PAD}`}>
-          <nav
-            aria-label="Breadcrumb"
-            className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}
-          >
-            <Link href="/" className={HOVER_LINK_ACCENT}>
-              Trang chủ
-            </Link>
-            <span aria-hidden className="text-muted-soft">
-              ›
-            </span>
-            <Link href="/services" className={HOVER_LINK_ACCENT}>
-              Dịch vụ
-            </Link>
-            <span aria-hidden className="text-muted-soft">
-              ›
-            </span>
-            <span className={BREADCRUMB_CURRENT_CLASS}>Di chuyển Email & Dữ liệu</span>
-          </nav>
+      <section className="border-b border-border bg-white">
+        <div className={`home-container relative min-h-[640px] overflow-hidden lg:min-h-0 ${LANDING_HERO_PAD}`}>
+          <Image
+            src="/services/email-migration-hero.jpg"
+            alt=""
+            fill
+            priority
+            sizes="(min-width: 1200px) 1200px, 100vw"
+            className="pointer-events-none object-cover object-right"
+          />
+          <div aria-hidden className="pointer-events-none absolute inset-0 lg:hidden" style={{ background: "linear-gradient(180deg, #ffffff 0%, #ffffff 42%, rgba(255,255,255,0.8) 62%, rgba(255,255,255,0) 86%)" }} />
+          <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block" style={{ background: "linear-gradient(90deg, #ffffff 0%, #ffffff 34%, rgba(255,255,255,0.9) 48%, rgba(255,255,255,0.3) 64%, rgba(255,255,255,0) 76%)" }} />
+          <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 68%, rgba(255,255,255,0.28) 80%, rgba(255,255,255,0.72) 91%, #ffffff 100%)" }} />
+          <div className="relative">
+            <nav
+              aria-label="Breadcrumb"
+              className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}
+            >
+              <Link href="/" className={HOVER_LINK_ACCENT}>
+                Trang chủ
+              </Link>
+              <span aria-hidden className="text-muted-soft">
+                ›
+              </span>
+              <Link href="/services" className={HOVER_LINK_ACCENT}>
+                Dịch vụ
+              </Link>
+              <span aria-hidden className="text-muted-soft">
+                ›
+              </span>
+              <span className={BREADCRUMB_CURRENT_CLASS}>Di chuyển Email & Dữ liệu</span>
+            </nav>
 
-          <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-10">
-            <div className="min-w-0">
-              <p className={`${OVERLINE_CLASS} text-accent`}>Dịch vụ di chuyển</p>
-              <h1 className={`mt-3 break-words ${HERO_TITLE_CLASS}`}>{EMAIL_MIGRATION_LABEL}</h1>
+            <div className="max-w-xl">
+              <p className={`${OVERLINE_CLASS} text-accent`}>Dịch vụ chuyển đổi & chuyển dữ liệu</p>
+              <h1 className={`mt-3 break-words ${HERO_TITLE_CLASS}`}>
+                Di chuyển Email &
+                <span className="block">Dữ liệu doanh nghiệp</span>
+              </h1>
               <p className={`mt-4 ${PAGE_LEAD_CLASS}`}>
-                Chuyển hộp thư và dữ liệu từ hệ thống hiện tại sang Microsoft 365. Phạm vi và lịch cắt chuyển được chốt trước.
+                Chuyển hộp thư và dữ liệu từ hệ thống hiện tại sang Microsoft 365. KEYON đồng hành từ khảo sát, lập kế hoạch đến bàn giao.
               </p>
-              <ul className="mt-6 grid grid-cols-2 gap-3">
+              <ul className="mt-6 space-y-3">
                 {HERO_CHECKS.map((item) => (
                   <li key={item} className="flex min-w-0 items-start gap-2.5">
-                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent text-white">
-                      <Check size={13} strokeWidth={3} aria-hidden />
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent text-white">
+                      <Check size={12} strokeWidth={3} aria-hidden />
                     </span>
-                    <span className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{item}</span>
+                    <span className={`min-w-0 break-words ${BODY_CLASS}`}>{item}</span>
                   </li>
                 ))}
               </ul>
-              <div className="mt-8 flex w-full min-w-0 flex-col gap-3 sm:flex-row">
+              <div className="mt-8 flex w-full min-w-0 flex-col items-stretch gap-3 sm:flex-row sm:items-center">
                 <Link
                   href={IMPLEMENTATION_QUOTE_HREF}
-                  className={`inline-flex h-12 w-full items-center justify-center rounded-xl bg-accent px-6 text-white sm:w-auto ${CTA_LABEL_CLASS} ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                  className={`inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 text-white sm:w-auto ${CTA_LABEL_CLASS} ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
                 >
                   Yêu cầu di chuyển
+                  <ArrowRight size={16} aria-hidden />
                 </Link>
                 <Link
                   href={`/services/${M365_EMAIL_SERVICE_SLUG}`}
-                  className={`inline-flex h-12 w-full items-center justify-center rounded-xl border border-border bg-white px-6 text-navy sm:w-auto ${CTA_LABEL_CLASS} ${TRANSITION_UI} hover:border-accent hover:bg-accent-soft hover:text-accent`}
+                  className={`inline-flex h-12 w-full items-center justify-center gap-1.5 text-navy sm:w-auto sm:justify-start sm:px-2 ${CTA_LABEL_CLASS} ${HOVER_LINK_ACCENT}`}
                 >
-                  Xem triển khai Microsoft 365
+                  Xem gói Microsoft 365
+                  <ArrowRight size={16} aria-hidden />
                 </Link>
               </div>
             </div>
-            <MigrationBoard />
           </div>
+        </div>
+      </section>
+
+      <section aria-label="Nền tảng thường gặp khi di chuyển" className="border-y border-border bg-[#F8FAFC]">
+        <div className="home-container flex flex-col lg:flex-row lg:items-stretch">
+          <div className="flex items-center py-4 lg:w-56 lg:shrink-0 lg:border-r lg:border-border lg:py-0 lg:pr-6">
+            <p className={`${OVERLINE_CLASS} text-muted`}>Nền tảng thường gặp</p>
+          </div>
+          <ul className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 lg:flex-1">
+            {TECHS.map((item) => (
+              <li key={item.name} className="min-w-0">
+                <span className={`flex h-12 items-center justify-center px-2 text-center font-display text-sm text-muted-soft ${item.mark} ${TRANSITION_UI} hover:text-navy lg:h-[4.25rem]`}>
+                  {item.name}
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
       <section className="home-section bg-white">
         <div className="home-container">
-          <header className="max-w-2xl">
-            <h2 className={SECTION_TITLE_CLASS}>Lợi ích khi di chuyển email và dữ liệu với KEYON</h2>
-            <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Hộp thư được chuyển theo phạm vi đã thống nhất, kèm kiểm tra sau khi sang đích.
+          <header className="grid items-end gap-3 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-10">
+            <h2 className={SECTION_TITLE_CLASS}>Lợi ích khi di chuyển email & dữ liệu cùng KEYON</h2>
+            <p className={SECTION_LEAD_CLASS}>
+              Hộp thư được chuyển theo phạm vi đã thống nhất. KEYON kiểm tra mẫu và bàn giao cho người phụ trách.
             </p>
           </header>
-          <div className="mt-7 grid items-stretch gap-4 lg:grid-cols-2 lg:gap-6">
-            <ul className="grid min-w-0 grid-cols-2 gap-3">
-              {BENEFITS.map((item) => (
-                <li key={item.title} className="min-w-0">
-                  <article className={`${card} p-3 sm:p-5`}>
-                    <div className="flex items-center gap-3">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent transition group-hover:bg-accent group-hover:text-white">
-                        <item.Icon size={18} strokeWidth={1.8} aria-hidden />
-                      </span>
-                      <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{item.title}</h3>
-                    </div>
-                    <p className={`mt-2 ${BODY_MUTED_CLASS}`}>{item.body}</p>
-                  </article>
-                </li>
-              ))}
-            </ul>
-            <aside className={`${card} p-4 sm:p-5`}>
-              <p className={CARD_TITLE_CLASS}>Luồng chuyển</p>
-              <p className={`mt-1 ${BODY_MUTED_CLASS}`}>
-                Nguồn và đích nằm trong phạm vi đã chốt. Quyền truy cập chỉ dùng cho lần di chuyển.
-              </p>
-              <ul className="mt-4 space-y-2">
-                {SOURCES.map((source) => (
-                  <li
-                    key={source}
-                    className={`flex items-center justify-between gap-2 rounded-xl border border-border/80 bg-[#F7FAFC] px-3 py-2.5 ${TRANSITION_UI} hover:border-accent/35 hover:bg-white`}
-                  >
-                    <span className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{source}</span>
-                    <ArrowRight size={14} className="shrink-0 text-accent" aria-hidden />
-                  </li>
-                ))}
-              </ul>
-              <p className={`mt-3 rounded-xl bg-accent-soft px-3 py-2.5 text-accent ${CARD_TITLE_CLASS}`}>
-                Đích: Microsoft 365
-              </p>
-            </aside>
-          </div>
+          <ul className="mt-7 grid grid-cols-2 gap-3 lg:grid-cols-4">
+            {BENEFITS.map((item) => (
+              <li key={item.title} className="min-w-0">
+                <article className={`${card} p-4 sm:p-5`}>
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent transition group-hover:bg-accent group-hover:text-white">
+                    <item.Icon size={20} strokeWidth={1.8} aria-hidden />
+                  </span>
+                  <h3 className={`mt-4 ${CARD_TITLE_CLASS}`}>{item.title}</h3>
+                  <p className={`mt-2 ${BODY_MUTED_CLASS}`}>{item.body}</p>
+                </article>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
-      <section className="home-section bg-[#F4F8FB]">
+      <section className="home-section bg-[#F7FAFC]">
         <div className="home-container">
           <header className="max-w-2xl">
             <h2 className={SECTION_TITLE_CLASS}>Nền tảng hỗ trợ di chuyển</h2>
@@ -335,12 +346,12 @@ export function EmailDataMigrationLanding() {
           <ul className="mt-7 grid grid-cols-2 gap-3 lg:grid-cols-4">
             {PLATFORMS.map((item) => (
               <li key={item.title} className="min-w-0">
-                <article className={`${card} p-3 sm:p-5`}>
+                <article className={`${card} p-4 sm:p-5`}>
                   <span className={`flex h-11 w-11 items-center justify-center rounded-xl ${item.tone} transition group-hover:bg-accent group-hover:text-white`}>
                     <item.Icon size={20} strokeWidth={1.8} aria-hidden />
                   </span>
-                  <h3 className={`mt-3 ${CARD_TITLE_CLASS}`}>{item.title}</h3>
-                  <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{item.body}</p>
+                  <h3 className={`mt-4 ${CARD_TITLE_CLASS}`}>{item.title}</h3>
+                  <p className={`mt-2 ${BODY_MUTED_CLASS}`}>{item.body}</p>
                 </article>
               </li>
             ))}
@@ -350,25 +361,22 @@ export function EmailDataMigrationLanding() {
 
       <section className="home-section bg-white">
         <div className="home-container">
-          <header className="mx-auto max-w-2xl text-center">
+          <header className="max-w-2xl">
             <h2 className={SECTION_TITLE_CLASS}>Quy trình di chuyển dữ liệu</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Sáu bước từ khảo sát đến bàn giao cho người phụ trách.
+              Sáu bước, từ khảo sát đến bàn giao và hỗ trợ sau chuyển.
             </p>
           </header>
-          <ol className="mt-7 grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
+          <ol className="relative mt-7 grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-6">
+            <li aria-hidden className="pointer-events-none absolute left-[6%] right-[6%] top-[3.35rem] hidden h-px bg-border lg:block" />
             {STEPS.map((step, index) => (
-              <li key={step.title} className="min-w-0">
-                <article className={`${card} items-center p-4 text-center`}>
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent transition group-hover:bg-accent group-hover:text-white">
-                    <step.Icon size={18} strokeWidth={1.8} aria-hidden />
-                  </span>
-                  <span className={`mt-3 ${BADGE_CLASS} text-accent`}>
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <h3 className={`mt-1 ${CARD_TITLE_CLASS}`}>{step.title}</h3>
-                  <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{step.body}</p>
-                </article>
+              <li key={step.title} className="group relative min-w-0 text-center">
+                <span className={`${BADGE_CLASS} text-accent`}>{String(index + 1).padStart(2, "0")}</span>
+                <span className="relative z-10 mx-auto mt-3 flex h-12 w-12 items-center justify-center rounded-full bg-accent-soft text-accent ring-8 ring-white transition group-hover:bg-accent group-hover:text-white">
+                  <step.Icon size={18} strokeWidth={1.8} aria-hidden />
+                </span>
+                <h3 className={`mt-3 ${CARD_TITLE_CLASS}`}>{step.title}</h3>
+                <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{step.body}</p>
               </li>
             ))}
           </ol>
@@ -377,7 +385,7 @@ export function EmailDataMigrationLanding() {
 
       <section id="kich-ban" className="home-section bg-[#F7FAFC]">
         <div className="home-container">
-          <header className="mx-auto max-w-2xl text-center">
+          <header className="max-w-2xl">
             <h2 className={SECTION_TITLE_CLASS}>Các kịch bản di chuyển phổ biến</h2>
             <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
               Mỗi kịch bản là một phạm vi. KEYON xác nhận lại nguồn, đích và danh sách hộp thư trước khi làm.
@@ -385,12 +393,19 @@ export function EmailDataMigrationLanding() {
           </header>
           <ul className="mt-7 grid grid-cols-2 gap-3 xl:grid-cols-4">
             {SCENARIOS.map((item) => (
-              <li key={item.from} className="min-w-0">
-                <article className={`${card} p-3 sm:p-5`}>
-                  <p className={`${CARD_META_CLASS} text-accent`}>Từ {item.from}</p>
-                  <h3 className={`mt-1 flex items-center gap-1.5 ${CARD_TITLE_CLASS}`}>
+              <li key={`${item.from}-${item.to}`} className="min-w-0">
+                <article className={`${card} p-4 sm:p-5`}>
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F4F8FB] text-navy">
+                      <Mail size={16} strokeWidth={1.8} aria-hidden />
+                    </span>
                     <ArrowRight size={14} className="shrink-0 text-accent" aria-hidden />
-                    <span className="min-w-0 break-words">{item.to}</span>
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-sky-50 text-sky-700">
+                      <Cloud size={16} strokeWidth={1.8} aria-hidden />
+                    </span>
+                  </div>
+                  <h3 className={`mt-3 ${CARD_TITLE_CLASS}`}>
+                    Từ {item.from} sang {item.to}
                   </h3>
                   <ul className="mt-3 space-y-2">
                     {item.points.map((point) => (
@@ -409,22 +424,20 @@ export function EmailDataMigrationLanding() {
 
       <section className="home-section bg-white">
         <div className="home-container">
-          <header className="mx-auto max-w-2xl text-center">
+          <header className="grid items-end gap-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-10">
             <h2 className={SECTION_TITLE_CLASS}>Vì sao doanh nghiệp chọn KEYON?</h2>
-            <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
-              Di chuyển gắn với phạm vi đã chốt, kiểm tra sau chuyển và bàn giao tiếng Việt.
+            <p className={SECTION_LEAD_CLASS}>
+              Di chuyển gắn với phạm vi đã chốt, kiểm tra sau chuyển và bàn giao bằng tiếng Việt.
             </p>
           </header>
           <ul className="mt-7 grid grid-cols-2 gap-3 lg:grid-cols-4">
             {REASONS.map((item) => (
               <li key={item.title} className="min-w-0">
-                <article className={`${card} p-3 sm:p-5`}>
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent transition group-hover:bg-accent group-hover:text-white">
-                      <item.Icon size={18} strokeWidth={1.8} aria-hidden />
-                    </span>
-                    <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{item.title}</h3>
-                  </div>
+                <article className={`${card} p-4 sm:p-5`}>
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent transition group-hover:bg-accent group-hover:text-white">
+                    <item.Icon size={20} strokeWidth={1.8} aria-hidden />
+                  </span>
+                  <h3 className={`mt-4 ${CARD_TITLE_CLASS}`}>{item.title}</h3>
                   <p className={`mt-2 ${BODY_MUTED_CLASS}`}>{item.body}</p>
                 </article>
               </li>
@@ -441,7 +454,7 @@ export function EmailDataMigrationLanding() {
               Kết quả bàn giao theo phạm vi đã chốt với người phụ trách.
             </p>
           </header>
-          <ul className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <ul className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-3">
             {OUTCOMES.map((item) => (
               <li key={item.title} className="min-w-0">
                 <article className={`${card} p-4 sm:p-5`}>
@@ -462,11 +475,9 @@ export function EmailDataMigrationLanding() {
           <ul className="mt-6 grid grid-cols-2 gap-3">
             {EMAIL_MIGRATION_FAQ.map((item) => (
               <li key={item.question} className="min-w-0">
-                <article
-                  className={`flex h-full flex-col rounded-2xl border border-border/80 bg-white px-3 py-4 sm:px-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/40 ${ELEVATION_CARD_HOVER}`}
-                >
+                <article className={`flex h-full flex-col rounded-2xl border border-border/80 bg-white px-3 py-4 sm:px-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/40 ${ELEVATION_CARD_HOVER}`}>
                   <p className={`break-words ${CARD_TITLE_CLASS}`}>{item.question}</p>
-                  <p className={`mt-2 break-words ${CARD_META_CLASS} ${BODY_CLASS}`}>{item.answer}</p>
+                  <p className={`mt-2 break-words ${BODY_CLASS}`}>{item.answer}</p>
                 </article>
               </li>
             ))}
@@ -474,57 +485,25 @@ export function EmailDataMigrationLanding() {
         </div>
       </section>
 
-      <section className="home-section">
+      <section className="home-section bg-white">
         <div className="home-container">
           <div className="flex flex-col items-stretch gap-5 rounded-2xl bg-navy px-5 py-7 sm:px-8 md:flex-row md:items-center md:justify-between md:px-10 md:py-9">
-            <div className="min-w-0 max-w-xl">
-              <h2 className={`${SECTION_TITLE_CLASS} !text-white`}>Nhận tư vấn phương án di chuyển email</h2>
-              <p className={`mt-2 ${SECTION_LEAD_CLASS} !text-slate-300`}>
-                Gửi nền tảng nguồn, số hộp thư và đầu mối phụ trách. KEYON xác nhận phạm vi trước khi di chuyển.
-              </p>
+            <div className="min-w-0 max-w-2xl">
+              <p className={`${OVERLINE_CLASS} text-accent`}>Sẵn sàng chuyển đổi hệ thống email?</p>
+              <h2 className={`mt-2 ${SECTION_TITLE_CLASS} !text-white`}>
+                Liên hệ KEYON để được tư vấn giải pháp di chuyển phù hợp cho doanh nghiệp của bạn.
+              </h2>
             </div>
             <Link
               href={IMPLEMENTATION_QUOTE_HREF}
-              className={`inline-flex h-12 w-full shrink-0 items-center justify-center rounded-xl bg-accent px-6 text-white md:w-auto ${CTA_LABEL_CLASS} ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+              className={`inline-flex h-12 w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-accent px-6 text-white md:w-auto ${CTA_LABEL_CLASS} ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
             >
               Liên hệ ngay
+              <ArrowRight size={16} aria-hidden />
             </Link>
           </div>
         </div>
       </section>
-    </div>
-  );
-}
-
-function MigrationBoard() {
-  return (
-    <div
-      className={`min-w-0 rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT} ${TRANSITION_PANEL} ${ELEVATION_HERO_HOVER}`}
-    >
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <p className={CARD_TITLE_CLASS}>Sang Microsoft 365</p>
-          <p className={CARD_META_CLASS}>Hộp thư, danh bạ và lịch trong phạm vi</p>
-        </div>
-        <span className={`rounded-md bg-accent-soft px-2 py-1 text-accent ${BADGE_CLASS}`}>KEYON</span>
-      </div>
-      <ul className="mt-4 space-y-2">
-        {SOURCES.map((source) => (
-          <li
-            key={source}
-            className={`flex items-center justify-between gap-3 rounded-xl border border-border/80 bg-[#F7FAFC] px-3 py-3 ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/35 hover:bg-white`}
-          >
-            <span className={CARD_TITLE_CLASS}>{source}</span>
-            <span className={`inline-flex items-center gap-1 text-accent ${CARD_META_CLASS}`}>
-              Microsoft 365
-              <ArrowRight size={14} aria-hidden />
-            </span>
-          </li>
-        ))}
-      </ul>
-      <p className={`mt-3 ${CARD_META_CLASS}`}>
-        Chưa có tenant thì làm dịch vụ triển khai Microsoft 365 trước khi chuyển dữ liệu.
-      </p>
     </div>
   );
 }
