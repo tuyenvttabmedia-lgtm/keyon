@@ -413,33 +413,6 @@ html {
   }
 }
 
-/* Cloud hero chips sit on the illustration from sm up. On a phone they stack. */
-@media (max-width: 639.98px) {
-  .cloud-hero-stage {
-    aspect-ratio: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .cloud-hero-stage > svg {
-    width: 100%;
-    height: auto;
-    max-height: 11rem;
-  }
-
-  .cloud-hero-chip {
-    position: static;
-    top: auto;
-    right: auto;
-    bottom: auto;
-    left: auto;
-    width: 100%;
-    max-width: none;
-    transform: none;
-  }
-}
-
 /* Legacy solutions-hero-hub styles removed — use .solutions-hero-visual below. */
 
 /* Business hub hero — dark skyline + K cluster */

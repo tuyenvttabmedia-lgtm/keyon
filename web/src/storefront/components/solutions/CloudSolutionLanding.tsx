@@ -9,17 +9,15 @@ import {
   CreditCard,
   HardDrive,
   Headphones,
-  Maximize2,
   Monitor,
   Server,
   ShieldCheck,
   ShoppingCart,
   Store,
   TrendingUp,
-  Zap,
   Check,
 } from "lucide-react";
-import { LANDING_CRUMB_GAP } from "@/storefront/components/marketing/hero-shell";
+import { LANDING_CRUMB_GAP, LANDING_HERO_PAD } from "@/storefront/components/marketing/hero-shell";
 import {
   BADGE_CLASS,
   BODY_MUTED_CLASS,
@@ -40,7 +38,6 @@ import {
 import {
   ELEVATION_CARD_HOVER,
   ELEVATION_CTA_HOVER,
-  ELEVATION_FLOAT,
   ELEVATION_HAIRLINE,
   HOVER_LIFT_CARD,
   HOVER_LINK_ACCENT,
@@ -197,12 +194,41 @@ export function CloudSolutionLanding({ featured }: Props) {
   return (
     <div className="bg-white">
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden border-b border-border">
-        <div
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(14,165,164,0.08),_transparent_55%),radial-gradient(ellipse_at_bottom_left,_rgba(14,165,233,0.06),_transparent_50%)]"
-          aria-hidden
-        />
-        <div className="home-container relative pb-5 pt-5 md:pb-4 md:pt-5 lg:pb-6 lg:pt-8">
+      <section className="border-b border-border bg-white">
+        <div className={`home-container relative overflow-hidden ${LANDING_HERO_PAD}`}>
+          <Image
+            src="/services/cloud-hero.jpg"
+            alt=""
+            fill
+            priority
+            sizes="(min-width: 1200px) 1200px, 100vw"
+            className="pointer-events-none object-cover object-right"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 lg:hidden"
+            style={{
+              background:
+                "linear-gradient(180deg, #ffffff 0%, #ffffff 40%, rgba(255,255,255,0.82) 58%, rgba(255,255,255,0) 82%)",
+            }}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 hidden lg:block"
+            style={{
+              background:
+                "linear-gradient(90deg, #ffffff 0%, #ffffff 36%, rgba(255,255,255,0.9) 48%, rgba(255,255,255,0.35) 64%, rgba(255,255,255,0) 78%)",
+            }}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 68%, rgba(255,255,255,0.28) 80%, rgba(255,255,255,0.72) 91%, #ffffff 100%)",
+            }}
+          />
+          <div className="relative">
           <nav className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
             <Link href="/" className={HOVER_LINK_ACCENT}>
               Trang chủ
@@ -219,7 +245,7 @@ export function CloudSolutionLanding({ featured }: Props) {
             <span className={BREADCRUMB_CURRENT_CLASS}>Cloud & Hạ tầng</span>
           </nav>
 
-          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-10 xl:gap-12">
+          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-6">
             <div className="flex min-w-0 flex-col">
               <h1 className={`max-w-xl ${HERO_TITLE_CLASS}`}>
                 Cloud & Hạ tầng cho doanh nghiệp
@@ -268,9 +294,8 @@ export function CloudSolutionLanding({ featured }: Props) {
               </div>
             </div>
 
-            <div className="relative mx-auto hidden w-full max-w-md lg:block lg:max-w-none">
-              <CloudHeroArt />
-            </div>
+            <div className="min-h-[220px] lg:min-h-[420px]" aria-hidden />
+          </div>
           </div>
         </div>
       </section>
@@ -604,151 +629,3 @@ function VeeamMark() {
   );
 }
 
-function CloudHeroArt() {
-  return (
-    <div
-      className={`relative overflow-hidden rounded-[1.75rem] border border-border/80 bg-gradient-to-br from-[#f0f9ff] via-[#ecfeff] to-[#f0fdfa] p-5 sm:p-6 ${ELEVATION_FLOAT}`}
-    >
-      <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_35%,rgba(14,165,164,0.18),transparent_45%)]"
-        aria-hidden
-      />
-
-      <div className="cloud-hero-stage relative mx-auto aspect-[5/4] w-full max-w-[460px]">
-        <svg
-          viewBox="0 0 460 368"
-          className="h-full w-full"
-          role="img"
-          aria-label="Giải pháp cloud trên KEYON"
-        >
-          <defs>
-            <linearGradient id="ckCloud" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#ffffff" />
-              <stop offset="55%" stopColor="#ccfbf1" />
-              <stop offset="100%" stopColor="#5eead4" stopOpacity="0.55" />
-            </linearGradient>
-            <linearGradient id="ckNode" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#ffffff" />
-              <stop offset="100%" stopColor="#e2e8f0" />
-            </linearGradient>
-            <filter id="ckSoft" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="8" stdDeviation="10" floodColor="#0f172a" floodOpacity="0.08" />
-            </filter>
-          </defs>
-
-          <ellipse cx="230" cy="330" rx="130" ry="14" fill="#0f172a" opacity="0.07" />
-
-          <path
-            d="M90 250 L230 190 L370 250 L230 310 Z"
-            fill="#e0f2fe"
-            stroke="#bae6fd"
-            strokeWidth="1.5"
-            opacity="0.9"
-          />
-
-          <g filter="url(#ckSoft)">
-            <path
-              d="M128 200c0-36 28-64 64-64 10-30 40-50 74-50 44 0 78 32 82 74 30 4 54 28 54 58 0 34-28 60-62 60H154c-36 0-66-26-66-58 0-10 2-18 6-26z"
-              fill="url(#ckCloud)"
-              stroke="#0ea5a4"
-              strokeWidth="1.75"
-            />
-            <circle cx="230" cy="208" r="34" fill="#0b1f3a" />
-            <text
-              x="230"
-              y="220"
-              textAnchor="middle"
-              fill="#fff"
-              fontSize="30"
-              fontWeight="700"
-              fontFamily="var(--font-display),system-ui,sans-serif"
-            >
-              K
-            </text>
-          </g>
-
-          <g filter="url(#ckSoft)">
-            <rect x="42" y="120" width="64" height="46" rx="10" fill="url(#ckNode)" stroke="#cbd5e1" />
-            <rect x="52" y="132" width="28" height="4" rx="1" fill="#94a3b8" />
-            <rect x="52" y="142" width="40" height="4" rx="1" fill="#cbd5e1" />
-            <circle cx="92" cy="134" r="3" fill="#0ea5a4" />
-
-            <rect x="352" y="100" width="58" height="42" rx="10" fill="url(#ckNode)" stroke="#cbd5e1" />
-            <rect x="362" y="112" width="24" height="4" rx="1" fill="#94a3b8" />
-            <rect x="362" y="122" width="34" height="4" rx="1" fill="#cbd5e1" />
-
-            <rect x="340" y="250" width="70" height="48" rx="10" fill="url(#ckNode)" stroke="#cbd5e1" />
-            <path d="M354 268h42M354 278h28" stroke="#94a3b8" strokeWidth="3" strokeLinecap="round" />
-
-            <rect x="56" y="250" width="54" height="40" rx="10" fill="url(#ckNode)" stroke="#cbd5e1" />
-            <circle cx="74" cy="270" r="6" fill="#e0f2fe" stroke="#38bdf8" />
-          </g>
-
-          <path
-            d="M106 150c24 12 48 28 84 40"
-            stroke="#94a3b8"
-            strokeWidth="1.4"
-            fill="none"
-            strokeDasharray="5 5"
-          />
-          <path
-            d="M352 130c-24 16-48 36-80 48"
-            stroke="#94a3b8"
-            strokeWidth="1.4"
-            fill="none"
-            strokeDasharray="5 5"
-          />
-        </svg>
-
-        <div
-          className={`cloud-hero-chip absolute left-0 top-[10%] max-w-[10rem] rounded-xl border border-border bg-white/95 px-3 py-2 backdrop-blur-sm ${ELEVATION_HAIRLINE} sm:left-1 sm:max-w-[11rem]`}
-        >
-          <div className="flex items-center gap-2">
-            <span
-              className="flex h-7 w-7 items-center justify-center rounded-lg bg-sky-100 text-sky-700"
-              aria-hidden
-            >
-              <Zap size={14} strokeWidth={2} />
-            </span>
-            <div>
-              <p className={`${BADGE_CLASS} font-semibold text-navy`}>VPS</p>
-              <p className={`mt-0.5 ${CARD_META_CLASS}`}>Cloud · hạ tầng</p>
-            </div>
-          </div>
-        </div>
-        <div
-          className={`cloud-hero-chip absolute right-0 top-[6%] max-w-[10rem] rounded-xl border border-border bg-white/95 px-3 py-2 backdrop-blur-sm ${ELEVATION_HAIRLINE} sm:right-1 sm:max-w-[11rem]`}
-        >
-          <div className="flex items-center gap-2">
-            <span
-              className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-100 text-teal-800"
-              aria-hidden
-            >
-              <ShieldCheck size={14} strokeWidth={2} />
-            </span>
-            <div>
-              <p className={`${BADGE_CLASS} font-semibold text-navy`}>Bàn giao rõ</p>
-              <p className={`mt-0.5 ${CARD_META_CLASS}`}>Theo từng sản phẩm</p>
-            </div>
-          </div>
-        </div>
-        <div
-          className={`cloud-hero-chip absolute bottom-[4%] left-1/2 max-w-[12rem] -translate-x-1/2 rounded-xl border border-border bg-white/95 px-3 py-2 backdrop-blur-sm ${ELEVATION_HAIRLINE}`}
-        >
-          <div className="flex items-center gap-2">
-            <span
-              className="flex h-7 w-7 items-center justify-center rounded-lg bg-violet-100 text-violet-700"
-              aria-hidden
-            >
-              <Maximize2 size={14} strokeWidth={2} />
-            </span>
-            <div>
-              <p className={`${BADGE_CLASS} font-semibold text-navy`}>Hỗ trợ tiếng Việt</p>
-              <p className={`mt-0.5 ${CARD_META_CLASS}`}>Kích hoạt theo gói</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
