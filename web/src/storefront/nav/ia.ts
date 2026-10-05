@@ -273,6 +273,9 @@ export const SERVICE_COLUMNS: { id: ServiceColumnId; title: string }[] = [
 /** Canonical slug for the Microsoft 365 email implementation service. */
 export const M365_EMAIL_SERVICE_SLUG = "microsoft-365-email-deployment" as const;
 
+/** Canonical slug for mailbox and data migration. */
+export const EMAIL_MIGRATION_SERVICE_SLUG = "email-data-migration" as const;
+
 /** Deployment and managed-IT offerings. Distinct from Giải pháp and Doanh nghiệp. */
 export const SERVICE_TOPICS: ServiceTopic[] = [
   {
@@ -288,7 +291,7 @@ export const SERVICE_TOPICS: ServiceTopic[] = [
     ],
   },
   {
-    slug: "email-data-migration",
+    slug: EMAIL_MIGRATION_SERVICE_SLUG,
     column: "deploy",
     label: "Di chuyển Email & Dữ liệu",
     description: "Migration email, dữ liệu và người dùng sang nền tảng mới.",

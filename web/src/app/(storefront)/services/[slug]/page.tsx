@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Microsoft365EmailLanding, M365_EMAIL_FAQ, M365_EMAIL_LABEL, M365_EMAIL_PATH, M365_EMAIL_SEO } from "@/storefront/components/services/Microsoft365EmailLanding";
+import {
+  EmailDataMigrationLanding,
+  EMAIL_MIGRATION_FAQ,
+  EMAIL_MIGRATION_LABEL,
+  EMAIL_MIGRATION_PATH,
+  EMAIL_MIGRATION_SEO,
+} from "@/storefront/components/services/EmailDataMigrationLanding";
 import { ServiceTopicLanding } from "@/storefront/components/services/ServiceTopicLanding";
-import { M365_EMAIL_SERVICE_SLUG, SERVICE_TOPICS, serviceTopicBySlug } from "@/storefront/nav/ia";
+import { EMAIL_MIGRATION_SERVICE_SLUG, M365_EMAIL_SERVICE_SLUG, SERVICE_TOPICS, serviceTopicBySlug } from "@/storefront/nav/ia";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
 import {
   buildBreadcrumbJsonLd,
@@ -38,6 +45,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         ...base.twitter,
         title: M365_EMAIL_SEO.title,
         description: M365_EMAIL_SEO.description,
+      },
+    };
+  }
+  if (slug === EMAIL_MIGRATION_SERVICE_SLUG) {
+    const base = await buildMainPageMetadata(EMAIL_MIGRATION_PATH);
+    return {
+      ...base,
+      title: absoluteTitle(EMAIL_MIGRATION_SEO.title),
+      description: EMAIL_MIGRATION_SEO.description,
+      openGraph: {
+        ...base.openGraph,
+        title: EMAIL_MIGRATION_SEO.title,
+        description: EMAIL_MIGRATION_SEO.description,
+      },
+      twitter: {
+        ...base.twitter,
+        title: EMAIL_MIGRATION_SEO.title,
+        description: EMAIL_MIGRATION_SEO.description,
       },
     };
   }
@@ -82,6 +107,39 @@ export default async function ServiceTopicPage({ params }: Props) {
           />
         ) : null}
         <Microsoft365EmailLanding />
+      </>
+    );
+  }
+  if (slug === EMAIL_MIGRATION_SERVICE_SLUG) {
+    const serviceLd = buildServiceJsonLd({
+      name: EMAIL_MIGRATION_LABEL,
+      description: EMAIL_MIGRATION_SEO.description,
+      path: EMAIL_MIGRATION_PATH,
+      serviceType: EMAIL_MIGRATION_LABEL,
+    });
+    const breadcrumbLd = buildBreadcrumbJsonLd([
+      { name: "Trang chủ", path: "/" },
+      { name: "Dịch vụ", path: "/services" },
+      { name: "Di chuyển Email & Dữ liệu", path: EMAIL_MIGRATION_PATH },
+    ]);
+    const faqLd = buildFaqPageJsonLd([...EMAIL_MIGRATION_FAQ]);
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        />
+        {faqLd ? (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+          />
+        ) : null}
+        <EmailDataMigrationLanding />
       </>
     );
   }
