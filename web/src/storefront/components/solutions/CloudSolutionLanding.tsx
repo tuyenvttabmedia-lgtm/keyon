@@ -196,32 +196,23 @@ export function CloudSolutionLanding({ featured }: Props) {
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="border-b border-border bg-white">
         <div className={`home-container relative overflow-hidden ${LANDING_HERO_PAD}`}>
-          <div aria-hidden className="pointer-events-none absolute inset-0 hidden overflow-hidden lg:block">
+          <div aria-hidden className="pointer-events-none absolute inset-y-0 right-0 hidden w-[54%] overflow-hidden lg:block">
             <Image
-              src="/services/cloud-solution-balanced.jpg"
+              src="/services/cloud-solution-photo.jpg"
               alt=""
               fill
               priority
-              sizes="(min-width: 1200px) 1200px, 100vw"
-              className="object-cover object-right"
+              sizes="(min-width: 1200px) 680px, 54vw"
+              className="object-cover object-center"
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(90deg, #ffffff 0%, rgba(255,255,255,0.94) 14%, rgba(255,255,255,0.45) 28%, rgba(255,255,255,0) 42%), linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 86%, rgba(255,255,255,0.65) 94%, #ffffff 100%)",
+              }}
             />
           </div>
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 hidden lg:block"
-            style={{
-              background:
-                "linear-gradient(90deg, #ffffff 0%, #ffffff 28%, rgba(255,255,255,0.92) 40%, rgba(255,255,255,0.22) 50%, rgba(255,255,255,0) 58%)",
-            }}
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 hidden lg:block"
-            style={{
-              background:
-                "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 90%, rgba(255,255,255,0.55) 96%, #ffffff 100%)",
-            }}
-          />
           <div className="relative">
           <nav className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
             <Link href="/" className={HOVER_LINK_ACCENT}>
