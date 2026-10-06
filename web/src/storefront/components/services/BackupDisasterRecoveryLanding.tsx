@@ -15,10 +15,7 @@ import {
   Settings,
   ShieldCheck,
 } from "lucide-react";
-import {
-  LANDING_CRUMB_GAP,
-  LANDING_HERO_PAD,
-} from "@/storefront/components/marketing/hero-shell";
+import { LANDING_HERO_PAD } from "@/storefront/components/marketing/hero-shell";
 import { BACKUP_DR_SERVICE_SLUG } from "@/storefront/nav/ia";
 import { IMPLEMENTATION_QUOTE_HREF } from "@/storefront/lib/cta";
 import {
@@ -196,7 +193,7 @@ export function BackupDisasterRecoveryLanding({ heroImageUrl }: { heroImageUrl?:
         <div className={`home-container ${LANDING_HERO_PAD}`}>
           <nav
             aria-label="Breadcrumb"
-            className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}
+            className={`mb-3 flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}
           >
             <Link href="/" className={HOVER_LINK_ACCENT}>
               Trang chủ
@@ -213,12 +210,13 @@ export function BackupDisasterRecoveryLanding({ heroImageUrl }: { heroImageUrl?:
             <span className={BREADCRUMB_CURRENT_CLASS}>{BACKUP_DR_LABEL}</span>
           </nav>
 
-          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(320px,360px)] lg:gap-8">
+          <h1 className={`lg:whitespace-nowrap ${HERO_TITLE_CLASS}`}>
+            Backup & Disaster Recovery
+          </h1>
+
+          <div className="mt-4 grid items-start gap-8 lg:grid-cols-[minmax(0,36rem)_minmax(280px,1fr)] lg:gap-6">
             <div className="min-w-0">
-              <h1 className={`lg:whitespace-nowrap ${HERO_TITLE_CLASS}`}>
-                Backup & Disaster Recovery
-              </h1>
-              <p className={`mt-4 max-w-xl ${PAGE_LEAD_CLASS}`}>
+              <p className={`max-w-xl ${PAGE_LEAD_CLASS}`}>
                 Triển khai sao lưu và khôi phục dữ liệu cho doanh nghiệp. KEYON thiết lập chính sách backup và quy trình khôi phục theo phạm vi đã chốt.
               </p>
               <ul className="mt-6 max-w-xl space-y-3">
