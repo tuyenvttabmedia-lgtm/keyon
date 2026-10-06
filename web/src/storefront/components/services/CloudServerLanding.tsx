@@ -317,8 +317,8 @@ export function CloudServerLanding() {
               ))}
             </ul>
           </div>
-          <div className="flex min-h-[240px] items-center justify-end lg:min-h-0">
-            <div className="w-full max-w-[300px]">
+          <div className="flex w-full lg:justify-end">
+            <div className="w-full lg:max-w-[300px]">
               <ScopePanel />
             </div>
           </div>
