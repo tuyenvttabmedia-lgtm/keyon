@@ -177,12 +177,11 @@ export function CloudServerLanding() {
             alt=""
             fill
             priority
-            sizes="(min-width: 1200px) 1200px, 100vw"
-            className="pointer-events-none object-cover object-right"
+            sizes="(min-width: 1024px) 1200px, 0px"
+            className="pointer-events-none hidden object-cover object-right lg:block"
           />
-          <div aria-hidden className="pointer-events-none absolute inset-0 lg:hidden" style={{ background: "linear-gradient(180deg, #ffffff 0%, #ffffff 40%, rgba(255,255,255,0.82) 58%, rgba(255,255,255,0) 82%)" }} />
           <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block" style={{ background: "linear-gradient(90deg, #ffffff 0%, #ffffff 36%, rgba(255,255,255,0.9) 48%, rgba(255,255,255,0.35) 64%, rgba(255,255,255,0) 78%)" }} />
-          <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 68%, rgba(255,255,255,0.28) 80%, rgba(255,255,255,0.72) 91%, #ffffff 100%)" }} />
+          <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block" style={{ background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 68%, rgba(255,255,255,0.28) 80%, rgba(255,255,255,0.72) 91%, #ffffff 100%)" }} />
           <div className="relative">
           <nav
             aria-label="Breadcrumb"
@@ -203,11 +202,10 @@ export function CloudServerLanding() {
             <span className={BREADCRUMB_CURRENT_CLASS}>{CLOUD_SERVER_LABEL}</span>
           </nav>
 
-          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-6">
+          <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(240px,0.85fr)] lg:gap-8">
             <div className="min-w-0">
-              <h1 className={`break-words ${HERO_TITLE_CLASS}`}>
-                Cloud & Server
-                <span className="block">Deployment</span>
+              <h1 className={`lg:whitespace-nowrap ${HERO_TITLE_CLASS}`}>
+                Cloud & Server Deployment
               </h1>
               <p className={`mt-4 max-w-xl ${PAGE_LEAD_CLASS}`}>
                 Triển khai hạ tầng cloud và máy chủ theo nhu cầu đã nêu. KEYON đồng hành từ tư vấn, thiết kế, cấu hình đến bàn giao và hỗ trợ vận hành.
@@ -250,11 +248,11 @@ export function CloudServerLanding() {
           <div className="flex items-center py-4 lg:w-56 lg:shrink-0 lg:border-r lg:border-border lg:py-0 lg:pr-6">
             <p className={`${OVERLINE_CLASS} text-muted`}>Công nghệ thường triển khai</p>
           </div>
-          <ul className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 lg:flex-1">
+          <ul className="grid grid-cols-4 lg:flex-1 lg:grid-cols-8">
             {PLATFORMS.map((item) => (
               <li key={item.name} className="min-w-0">
                 <span
-                  className={`flex h-12 items-center justify-center px-2 text-center font-display text-sm text-muted-soft ${item.mark} ${TRANSITION_UI} hover:text-navy lg:h-[4.25rem]`}
+                  className={`flex h-12 items-center justify-center whitespace-nowrap px-1 text-center font-display text-sm text-muted-soft lg:px-2 ${item.mark} ${TRANSITION_UI} hover:text-navy lg:h-[4.25rem]`}
                 >
                   {item.name}
                 </span>
@@ -413,8 +411,8 @@ export function CloudServerLanding() {
 
 function HeroStage() {
   return (
-    <div className="flex min-h-[260px] items-end justify-end sm:min-h-[300px] lg:min-h-[420px] lg:items-center">
-      <ul className={`w-full max-w-[240px] rounded-2xl border border-white/80 bg-white/95 p-2.5 backdrop-blur-sm ${ELEVATION_FLOAT} ${TRANSITION_PANEL} ${ELEVATION_HERO_HOVER}`}>
+    <div className="flex w-full items-center lg:justify-end">
+      <ul className={`w-full rounded-2xl border border-white/80 bg-white/95 p-2.5 backdrop-blur-sm lg:max-w-[240px] ${ELEVATION_FLOAT} ${TRANSITION_PANEL} ${ELEVATION_HERO_HOVER}`}>
         {HERO_MENU.map((item) => (
           <li key={item.label}>
             <Link
