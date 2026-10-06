@@ -213,11 +213,10 @@ export function BackupDisasterRecoveryLanding({ heroImageUrl }: { heroImageUrl?:
             <span className={BREADCRUMB_CURRENT_CLASS}>{BACKUP_DR_LABEL}</span>
           </nav>
 
-          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-8">
+          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(320px,360px)] lg:gap-8">
             <div className="min-w-0">
-              <h1 className={`max-w-xl break-words ${HERO_TITLE_CLASS}`}>
-                Backup &
-                <span className="block">Disaster Recovery</span>
+              <h1 className={`lg:whitespace-nowrap ${HERO_TITLE_CLASS}`}>
+                Backup & Disaster Recovery
               </h1>
               <p className={`mt-4 max-w-xl ${PAGE_LEAD_CLASS}`}>
                 Triển khai sao lưu và khôi phục dữ liệu cho doanh nghiệp. KEYON thiết lập chính sách backup và quy trình khôi phục theo phạm vi đã chốt.
@@ -258,9 +257,9 @@ export function BackupDisasterRecoveryLanding({ heroImageUrl }: { heroImageUrl?:
           <div className="flex items-center py-4 lg:w-56 lg:shrink-0 lg:border-r lg:border-border lg:py-0 lg:pr-6">
             <p className={`${OVERLINE_CLASS} text-muted`}>Nền tảng thường triển khai</p>
           </div>
-          <ul className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 lg:flex-1">
+          <ul className="flex flex-wrap justify-center lg:grid lg:flex-1 lg:grid-cols-7">
             {PLATFORMS.map((item) => (
-              <li key={item.name} className="min-w-0">
+              <li key={item.name} className="w-1/4 min-w-0 lg:w-auto">
                 <span
                   className={`flex h-12 items-center justify-center px-2 text-center font-display text-sm text-muted-soft ${item.mark} ${TRANSITION_UI} hover:text-navy lg:h-[4.25rem]`}
                 >
@@ -301,7 +300,7 @@ export function BackupDisasterRecoveryLanding({ heroImageUrl }: { heroImageUrl?:
       </section>
 
       <section id="giai-phap" className="home-section scroll-mt-24 bg-[#F7FAFC]">
-        <div className="home-container grid items-center gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-12">
+        <div className="home-container grid items-center gap-8 lg:grid-cols-2 lg:gap-10">
           <div className="min-w-0">
             <h2 className={SECTION_TITLE_CLASS}>Các giải pháp Backup & DR</h2>
             <p className={`mt-2.5 max-w-xl ${SECTION_LEAD_CLASS}`}>
@@ -448,7 +447,7 @@ function HeroStage({ src }: { src?: string }) {
         </div>
       ) : null}
       <ul
-        className={`relative z-10 w-full max-w-[320px] rounded-2xl border border-white/80 bg-white/95 p-2.5 backdrop-blur-sm lg:absolute lg:right-3 lg:top-1/2 lg:-translate-y-1/2 ${ELEVATION_FLOAT} ${TRANSITION_PANEL} ${ELEVATION_HERO_HOVER}`}
+        className={`relative z-10 w-full rounded-2xl border border-white/80 bg-white/95 p-2.5 backdrop-blur-sm lg:absolute lg:right-3 lg:top-1/2 lg:max-w-[320px] lg:-translate-y-1/2 ${ELEVATION_FLOAT} ${TRANSITION_PANEL} ${ELEVATION_HERO_HOVER}`}
       >
         {HERO_MENU.map((item) => (
           <li key={item.title}>
@@ -473,7 +472,7 @@ function HeroStage({ src }: { src?: string }) {
 
 function ProtectPanel() {
   return (
-    <div className="relative mx-auto w-full max-w-[380px] pt-3 lg:ml-auto lg:mr-0" aria-hidden>
+    <div className="relative mx-auto w-full max-w-[380px] pt-3 lg:mx-0 lg:max-w-none" aria-hidden>
       <span className={`absolute right-2 top-0 z-10 inline-flex items-center gap-1.5 rounded-full bg-emerald-500 px-2.5 py-1 text-white ${BADGE_CLASS}`}>
         <Check size={12} strokeWidth={3} />
         All systems protected
