@@ -205,13 +205,13 @@ export function BackupSolutionLanding({ featured, heroImageUrl }: Props) {
             <span aria-hidden className="text-muted-soft">
               ›
             </span>
-            <span className={BREADCRUMB_CURRENT_CLASS}>Backup & Khôi phục</span>
+            <span className={BREADCRUMB_CURRENT_CLASS}>Sao lưu và khôi phục</span>
           </nav>
 
           <div className={LANDING_HERO_GRID}>
             <div className="min-w-0 max-w-[520px]">
               <h1 className={`max-w-xl ${HERO_TITLE_CLASS}`}>
-                Giải pháp Backup & Khôi phục dữ liệu
+                Giải pháp sao lưu và khôi phục dữ liệu
               </h1>
               <p className="mt-3 max-w-xl font-display text-lg font-semibold tracking-tight text-navy sm:text-xl">
                 Dữ liệu của bạn.{" "}

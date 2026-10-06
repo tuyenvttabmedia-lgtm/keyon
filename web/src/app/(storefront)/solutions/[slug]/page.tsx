@@ -88,7 +88,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (slug === "backup") {
     return {
       ...(await buildMainPageMetadata("/solutions/backup")),
-      title: absoluteTitle("Phần mềm Backup & Khôi phục dữ liệu | KEYON"),
+      title: absoluteTitle("Phần mềm sao lưu và khôi phục dữ liệu | KEYON"),
       description:
         "Khám phá phần mềm và license backup cho PC, server, Microsoft 365 và Cloud. KEYON hỗ trợ lựa chọn, bàn giao và hướng dẫn kích hoạt.",
     };

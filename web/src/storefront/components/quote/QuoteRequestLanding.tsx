@@ -103,7 +103,7 @@ const PRODUCT_INTERESTS: ProductOption[] = [
   { name: "Windows" },
   { name: "Windows Server" },
   { name: "Bảo mật" },
-  { name: "Backup & Khôi phục" },
+  { name: "Sao lưu và khôi phục" },
   { name: "Khác" },
 ];
 

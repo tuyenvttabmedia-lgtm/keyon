@@ -17,7 +17,7 @@ const CMS_NAV = [
   { href: "/admin/cms/productivity", label: "Microsoft 365 & Office" },
   { href: "/admin/cms/cloud", label: "Cloud & Hạ tầng" },
   { href: "/admin/cms/security", label: "Bảo mật" },
-  { href: "/admin/cms/backup", label: "Backup & Khôi phục" },
+  { href: "/admin/cms/backup", label: "Sao lưu và khôi phục" },
   { href: "/admin/cms/solutions", label: "Giải pháp" },
   { href: "/admin/cms/checkout", label: "Checkout" },
   { href: "/admin/cms/account", label: "Account" },

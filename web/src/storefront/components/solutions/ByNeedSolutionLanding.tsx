@@ -83,7 +83,7 @@ const MIX_ROWS: { label: string; hint: string; Icon: LucideIcon; tone: string }[
     tone: "bg-emerald-100 text-emerald-800",
   },
   {
-    label: "Backup & Khôi phục",
+    label: "Sao lưu và khôi phục",
     hint: "PC, server, Cloud",
     Icon: HardDrive,
     tone: "bg-amber-100 text-amber-800",

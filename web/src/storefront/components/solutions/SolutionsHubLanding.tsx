@@ -72,7 +72,7 @@ const HERO_CHIP_LABEL: Record<string, string> = {
   "microsoft-365-office": "Microsoft & Productivity",
   cloud: "Cloud & Hạ tầng",
   "license-management": "License Management",
-  backup: "Backup & Khôi phục",
+  backup: "Sao lưu và khôi phục",
   "by-need": "Theo nhu cầu",
 };
 

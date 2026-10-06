@@ -108,8 +108,8 @@ export const HOME_SOLUTION_SHOWCASE: Record<
     ],
   },
   backup: {
-    tabLabel: "Backup & Khôi phục",
-    panelKicker: "Backup & Khôi phục",
+    tabLabel: "Sao lưu và khôi phục",
+    panelKicker: "Sao lưu và khôi phục",
     headline: "Acronis và các gói backup trên catalog",
     lead: "Backup & Storage trên KEYON, gồm Acronis Cyber Protect Cloud. Kích hoạt trên hạ tầng của bạn — KEYON không lưu bản sao dữ liệu.",
     checks: [

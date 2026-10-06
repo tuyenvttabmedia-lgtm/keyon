@@ -10,7 +10,7 @@ export default async function AdminCmsBackupPage() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className={ADMIN_PAGE_TITLE_CLASS}>CMS · Backup & Khôi phục</h1>
+        <h1 className={ADMIN_PAGE_TITLE_CLASS}>CMS · Sao lưu và khôi phục</h1>
         <p className="text-sm text-muted">
           Ảnh nền hero desktop cho <strong>/solutions/backup</strong>.
         </p>

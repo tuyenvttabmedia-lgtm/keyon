@@ -237,7 +237,7 @@ export const homeFixture: HomeContent = {
       },
       {
         id: "backup",
-        title: "Backup & Khôi phục",
+        title: "Sao lưu và khôi phục",
         description: "License backup trên catalog — kích hoạt trên hạ tầng của bạn.",
         href: "/solutions/backup",
         art: "backup",

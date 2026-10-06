@@ -20,7 +20,7 @@ export const INTEREST_OPTIONS = [
   { id: "WINDOWS", label: "Windows" },
   { id: "SECURITY", label: "Security" },
   { id: "CLOUD", label: "Cloud & Hạ tầng" },
-  { id: "BACKUP", label: "Backup & Khôi phục" },
+  { id: "BACKUP", label: "Sao lưu và khôi phục" },
   { id: "NOT_SURE", label: "Chưa xác định" },
 ] as const;
 

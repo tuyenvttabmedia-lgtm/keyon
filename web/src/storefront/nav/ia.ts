@@ -161,7 +161,7 @@ export const SOLUTION_TOPICS: {
   },
   {
     id: "backup",
-    label: "Backup & Khôi phục",
+    label: "Sao lưu và khôi phục",
     href: "/solutions/backup",
     description:
       "Phần mềm và license backup cho PC, máy chủ, Microsoft 365 và dữ liệu Cloud trên KEYON.",

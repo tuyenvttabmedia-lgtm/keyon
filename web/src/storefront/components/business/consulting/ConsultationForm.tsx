@@ -343,7 +343,7 @@ export function ConsultationForm() {
                 </Link>
                 <span aria-hidden> · </span>
                 <Link href="/solutions/backup" className={HOVER_LINK_ACCENT}>
-                  Backup & Khôi phục
+                  Sao lưu và khôi phục
                 </Link>
               </p>
 

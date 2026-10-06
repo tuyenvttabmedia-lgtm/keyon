@@ -125,7 +125,7 @@ const RELATED_LINKS = [
   { label: "Microsoft 365 & Office", href: "/solutions/microsoft-365-office" },
   { label: "Cloud & Hạ tầng", href: "/solutions/cloud" },
   { label: "Bảo mật", href: "/solutions/security" },
-  { label: "Backup & Khôi phục", href: "/solutions/backup" },
+  { label: "Sao lưu và khôi phục", href: "/solutions/backup" },
   { label: "Giải pháp cho doanh nghiệp", href: "/business" },
 ] as const;
 

@@ -95,7 +95,7 @@ export const SOLUTION_PAGES: Record<string, IaPage> = {
   backup: {
     slug: "backup",
     kicker: "Giải pháp",
-    title: "Backup & Khôi phục",
+    title: "Sao lưu và khôi phục",
     subtitle:
       "Khám phá phần mềm và license backup cho PC, máy chủ, Microsoft 365 và dữ liệu Cloud trên KEYON, với thông tin rõ ràng và hỗ trợ kích hoạt tiếng Việt.",
     bullets: [
