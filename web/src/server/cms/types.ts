@@ -246,8 +246,8 @@ export type CmsBanner = {
 
 /**
  * Landing `/solutions/cloud` — ảnh nền hero desktop.
- * Khung hiển thị 648×580 px (cột phải). File xuất 1296×1160 px.
- * Code phủ trắng mép trái ~40% và mép phải ~10%. Mobile không hiện ảnh.
+ * Khung hiển thị 648×578 px (cột phải). File xuất 1296×1156 px, nền trắng.
+ * Mobile không hiện ảnh.
  */
 export type CmsCloudSolution = {
   heroImageUrl: string;

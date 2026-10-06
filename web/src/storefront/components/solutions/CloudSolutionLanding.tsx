@@ -210,13 +210,6 @@ export function CloudSolutionLanding({ featured, heroImageUrl }: Props) {
               sizes="(min-width: 1200px) 680px, 54vw"
               className="object-cover object-center"
             />
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(90deg, #ffffff 0%, rgba(255,255,255,0.94) 14%, rgba(255,255,255,0.45) 28%, rgba(255,255,255,0) 42%), linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 86%, rgba(255,255,255,0.65) 94%, #ffffff 100%)",
-              }}
-            />
           </div>
           <div className="relative">
           <nav className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>

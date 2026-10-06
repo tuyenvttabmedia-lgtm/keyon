@@ -27,16 +27,16 @@ function CloudFields({
     <div className="space-y-6">
       <p className="rounded-xl bg-accent-soft/60 px-3 py-2 text-sm text-navy">
         Ảnh chỉ hiện trên desktop, cột phải hero{" "}
-        <strong>/solutions/cloud</strong>. Mobile không hiện ảnh. Mép trái và mép phải do trang
-        phủ trắng — không cần tự làm mờ trong file.
+        <strong>/solutions/cloud</strong>. Mobile không hiện ảnh. Nền trắng của file sẽ liền với
+        nền trang.
       </p>
 
       <div className="space-y-3 rounded-2xl border border-border bg-card p-5">
         <div>
           <p className="text-sm font-medium text-navy">Ảnh nền hero</p>
           <p className="mt-1 text-xs text-muted">
-            Xuất file <strong>1296 × 1160 px</strong> (JPG hoặc WebP, nền sáng). Đặt máy tính trong
-            khoảng 42%–90% chiều ngang, căn giữa theo chiều dọc. Để trống thì trang giữ ảnh hiện tại.
+            Xuất file <strong>1296 × 1156 px</strong> (JPG hoặc WebP, nền trắng). Để trống thì trang
+            giữ ảnh hiện tại.
           </p>
         </div>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
