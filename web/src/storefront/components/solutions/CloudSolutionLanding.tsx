@@ -196,23 +196,22 @@ export function CloudSolutionLanding({ featured }: Props) {
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="border-b border-border bg-white">
         <div className={`home-container relative overflow-hidden ${LANDING_HERO_PAD}`}>
-          <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div aria-hidden className="pointer-events-none absolute inset-0 hidden overflow-hidden lg:block">
             <Image
-              src="/services/cloud-solution-hero.jpg"
+              src="/services/cloud-solution-laptop.jpg"
               alt=""
-              width={1920}
-              height={1080}
+              fill
               priority
-              sizes="(min-width: 1200px) 1400px, 100vw"
-              className="absolute top-1/2 h-[96%] w-auto max-w-none -translate-y-[46%] left-[-8%] sm:left-[6%] sm:h-full lg:left-[16%] lg:h-[118%]"
+              sizes="(min-width: 1200px) 1200px, 100vw"
+              className="object-cover object-[72%_center]"
             />
           </div>
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 lg:hidden"
+            className="pointer-events-none absolute inset-0 hidden lg:block"
             style={{
               background:
-                "linear-gradient(180deg, #ffffff 0%, #ffffff 40%, rgba(255,255,255,0.82) 58%, rgba(255,255,255,0) 82%)",
+                "linear-gradient(90deg, #ffffff 0%, #ffffff 34%, rgba(255,255,255,0.94) 46%, rgba(255,255,255,0.4) 58%, rgba(255,255,255,0) 70%)",
             }}
           />
           <div
@@ -220,15 +219,7 @@ export function CloudSolutionLanding({ featured }: Props) {
             className="pointer-events-none absolute inset-0 hidden lg:block"
             style={{
               background:
-                "linear-gradient(90deg, #ffffff 0%, #ffffff 30%, rgba(255,255,255,0.92) 42%, rgba(255,255,255,0.28) 54%, rgba(255,255,255,0) 64%)",
-            }}
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 78%, rgba(255,255,255,0.4) 88%, rgba(255,255,255,0.82) 95%, #ffffff 100%)",
+                "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 82%, rgba(255,255,255,0.45) 91%, #ffffff 100%)",
             }}
           />
           <div className="relative">
@@ -297,7 +288,7 @@ export function CloudSolutionLanding({ featured }: Props) {
               </div>
             </div>
 
-            <div className="min-h-[220px] lg:min-h-[420px]" aria-hidden />
+            <div className="hidden lg:block lg:min-h-[420px]" aria-hidden />
           </div>
           </div>
         </div>
