@@ -9,27 +9,39 @@ export function HeroImageFields({
   url,
   onChange,
   extra,
+  lead,
+  spec,
 }: {
   pagePath: string;
   url: string;
   onChange: (url: string) => void;
   extra?: string;
+  lead?: string;
+  spec?: string;
 }) {
   const [picker, setPicker] = useState(false);
 
   return (
     <div className="space-y-6">
       <p className="rounded-xl bg-accent-soft/60 px-3 py-2 text-sm text-navy">
-        Ảnh chỉ hiện trên desktop, cột phải hero <strong>{pagePath}</strong>. Mobile không hiện
-        ảnh. Nền trắng của file sẽ liền với nền trang.
+        {lead ?? (
+          <>
+            Ảnh chỉ hiện trên desktop, cột phải hero <strong>{pagePath}</strong>. Mobile không hiện
+            ảnh. Nền trắng của file sẽ liền với nền trang.
+          </>
+        )}
       </p>
 
       <div className="space-y-3 rounded-2xl border border-border bg-card p-5">
         <div>
           <p className="text-sm font-medium text-navy">Ảnh nền hero</p>
           <p className="mt-1 text-xs text-muted">
-            Xuất file <strong>1296 × 1156 px</strong> (JPG hoặc WebP, nền trắng). Để trống thì
-            trang giữ minh họa hiện tại.
+            {spec ?? (
+              <>
+                Xuất file <strong>1296 × 1156 px</strong> (JPG hoặc WebP, nền trắng). Để trống thì
+                trang giữ minh họa hiện tại.
+              </>
+            )}
             {extra ? ` ${extra}` : ""}
           </p>
         </div>

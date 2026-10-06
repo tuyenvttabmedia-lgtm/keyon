@@ -30,8 +30,25 @@ import {
   buildServiceJsonLd,
 } from "@/server/seo/structured-data";
 import { absoluteTitle } from "@/server/seo/title";
+import { resolveMediaUrl } from "@/lib/media-url";
+import { defaultCmsBackupDrService, readJsonFile } from "@/server/cms/store";
+import { resolveStorage } from "@/server/storage/config";
 
 export const revalidate = 60;
+
+async function readBackupDrHero() {
+  const [cmsRaw, storage] = await Promise.all([
+    readJsonFile("backup-dr-service.json", defaultCmsBackupDrService),
+    resolveStorage(),
+  ]);
+  const mediaBase =
+    storage.driver === "wasabi"
+      ? storage.wasabi.publicBaseUrl ||
+        `${storage.wasabi.endpoint.replace(/\/$/, "")}/${storage.wasabi.bucket}`
+      : "";
+  const cms = { ...defaultCmsBackupDrService, ...cmsRaw };
+  return resolveMediaUrl(cms.heroImageUrl, mediaBase) || cms.heroImageUrl || undefined;
+}
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -247,7 +264,7 @@ export default async function ServiceTopicPage({ params }: Props) {
             dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
           />
         ) : null}
-        <BackupDisasterRecoveryLanding />
+        <BackupDisasterRecoveryLanding heroImageUrl={await readBackupDrHero()} />
       </>
     );
   }

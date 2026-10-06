@@ -1,9 +1,9 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
   Check,
-  ChevronDown,
   Cloud,
   Database,
   HardDrive,
@@ -148,7 +148,12 @@ const SCOPE = [
   "Tư vấn và hỗ trợ kỹ thuật trong thời hạn dịch vụ",
 ];
 
-const PROTECT_ROWS = ["Servers", "Endpoints", "Microsoft 365", "Cloud VMs"] as const;
+const PROTECT_ROWS: { label: string; Icon?: LucideIcon; logo?: string }[] = [
+  { label: "Servers", Icon: Server },
+  { label: "Endpoints", Icon: Monitor },
+  { label: "Microsoft 365", logo: "/brand/microsoft.svg" },
+  { label: "Cloud VMs", Icon: Cloud },
+];
 
 const STEPS: { title: string; body: string; Icon: LucideIcon }[] = [
   { title: "Tư vấn & khảo sát", body: "Nhu cầu, dữ liệu cần giữ và hạ tầng hiện có.", Icon: Search },
@@ -158,36 +163,33 @@ const STEPS: { title: string; body: string; Icon: LucideIcon }[] = [
   { title: "Hỗ trợ & giám sát", body: "Kênh hỗ trợ kỹ thuật trong thời hạn dịch vụ.", Icon: Headphones },
 ];
 
-const PRODUCTS: { title: string; body: string; mark: string; tone: string }[] = [
+const PRODUCTS: { title: string; body: string; logo: string }[] = [
   {
     title: "Acronis Cyber Protect",
     body: "Sao lưu máy tính, máy chủ, máy ảo và Microsoft 365 theo gói đã chọn.",
-    mark: "A",
-    tone: "bg-sky-100 text-sky-800",
+    logo: "/brand/acronis.svg",
   },
   {
     title: "Veeam Backup",
     body: "Sao lưu máy ảo, máy chủ và hạ tầng đã chốt.",
-    mark: "V",
-    tone: "bg-emerald-100 text-emerald-800",
+    logo: "/brand/veeam.svg",
   },
   {
     title: "Synology",
     body: "Sao lưu về NAS và lưu trữ gắn với hệ thống doanh nghiệp.",
-    mark: "S",
-    tone: "bg-amber-100 text-amber-800",
+    logo: "/brand/synology.svg",
   },
   {
     title: "Microsoft 365 Backup",
     body: "Exchange, OneDrive, SharePoint và Teams theo sản phẩm hỗ trợ.",
-    mark: "M",
-    tone: "bg-accent-soft text-accent",
+    logo: "/brand/microsoft.svg",
   },
 ];
 
 const card = `group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-white ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/40 ${ELEVATION_CARD_HOVER}`;
 
-export function BackupDisasterRecoveryLanding() {
+export function BackupDisasterRecoveryLanding({ heroImageUrl }: { heroImageUrl?: string }) {
+  const heroSrc = heroImageUrl?.trim() || "";
   return (
     <div className="overflow-x-hidden bg-white">
       <section className="border-b border-border bg-white">
@@ -213,8 +215,7 @@ export function BackupDisasterRecoveryLanding() {
 
           <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-8">
             <div className="min-w-0">
-              <p className={`${OVERLINE_CLASS} text-accent`}>Dịch vụ triển khai & bảo vệ dữ liệu</p>
-              <h1 className={`mt-3 max-w-xl break-words ${HERO_TITLE_CLASS}`}>
+              <h1 className={`max-w-xl break-words ${HERO_TITLE_CLASS}`}>
                 Backup &
                 <span className="block">Disaster Recovery</span>
               </h1>
@@ -247,7 +248,7 @@ export function BackupDisasterRecoveryLanding() {
                 </Link>
               </div>
             </div>
-            <HeroStage />
+            <HeroStage src={heroSrc} />
           </div>
         </div>
       </section>
@@ -329,22 +330,21 @@ export function BackupDisasterRecoveryLanding() {
               Năm bước, từ tiếp nhận nhu cầu đến bàn giao và hỗ trợ sau triển khai.
             </p>
           </header>
-          <ol className="relative mt-7 grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-5">
+          <ol className="relative mt-7 flex flex-col gap-4 lg:grid lg:grid-cols-5 lg:gap-x-4 lg:gap-y-0">
             <li
               aria-hidden
               className="pointer-events-none absolute left-[8%] right-[8%] top-[3.35rem] hidden h-px bg-border lg:block"
             />
             {STEPS.map((step, index) => (
-              <li
-                key={step.title}
-                className={`group relative min-w-0 text-center ${index === STEPS.length - 1 ? "col-span-2 lg:col-span-1" : ""}`}
-              >
-                <span className={`${BADGE_CLASS} text-accent`}>{String(index + 1).padStart(2, "0")}</span>
-                <span className={`relative z-10 mx-auto mt-3 flex h-12 w-12 items-center justify-center rounded-full bg-accent-soft text-accent ring-8 ring-white ${TRANSITION_UI} group-hover:bg-accent group-hover:text-white`}>
+              <li key={step.title} className="group relative flex min-w-0 items-start gap-3 text-left lg:block lg:text-center">
+                <span className={`relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent lg:mx-auto lg:mt-3 lg:h-12 lg:w-12 lg:ring-8 lg:ring-white ${TRANSITION_UI} group-hover:bg-accent group-hover:text-white`}>
                   <step.Icon size={18} strokeWidth={1.8} aria-hidden />
                 </span>
-                <h3 className={`mt-3 ${CARD_TITLE_CLASS}`}>{step.title}</h3>
-                <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{step.body}</p>
+                <div className="min-w-0 lg:mt-3">
+                  <span className={`${BADGE_CLASS} text-accent`}>{String(index + 1).padStart(2, "0")}</span>
+                  <h3 className={`mt-1 ${CARD_TITLE_CLASS}`}>{step.title}</h3>
+                  <p className={`mt-1 ${BODY_MUTED_CLASS}`}>{step.body}</p>
+                </div>
               </li>
             ))}
           </ol>
@@ -365,14 +365,14 @@ export function BackupDisasterRecoveryLanding() {
               <ArrowRight size={14} aria-hidden />
             </Link>
           </header>
-          <ul className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <ul className="mt-7 grid grid-cols-2 gap-3 lg:grid-cols-4">
             {PRODUCTS.map((item) => (
               <li key={item.title} className="min-w-0">
-                <article className={`${card} p-4 sm:p-5`}>
-                  <span className={`flex h-11 w-11 items-center justify-center rounded-xl font-display text-lg font-bold ${item.tone}`}>
-                    {item.mark}
-                  </span>
-                  <h3 className={`mt-4 ${CARD_TITLE_CLASS}`}>{item.title}</h3>
+                <article className={`${card} p-3 sm:p-5`}>
+                  <div className="flex items-center gap-2.5">
+                    <img src={item.logo} alt="" className="h-7 w-7 shrink-0 object-contain sm:h-8 sm:w-8" />
+                    <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{item.title}</h3>
+                  </div>
                   <p className={`mt-2 flex-1 ${BODY_MUTED_CLASS}`}>{item.body}</p>
                   <Link href="/categories/backup" className={`mt-4 inline-flex items-center gap-1 ${LINK_ACCENT_CLASS}`}>
                     Tìm hiểu thêm
@@ -394,23 +394,18 @@ export function BackupDisasterRecoveryLanding() {
               <ArrowRight size={14} aria-hidden />
             </Link>
           </header>
-          <div className="mt-4 border-t border-border">
+          <ul className="mt-5 grid gap-3 md:grid-cols-2">
             {BACKUP_DR_FAQ.map((item) => (
-              <details key={item.question} className="group border-b border-border">
-                <summary
-                  className={`flex cursor-pointer list-none items-center justify-between gap-4 py-4 ${CARD_TITLE_CLASS} ${TRANSITION_UI} hover:text-accent [&::-webkit-details-marker]:hidden`}
+              <li key={item.question} className="min-w-0">
+                <article
+                  className={`flex h-full flex-col rounded-2xl border border-border/80 bg-white px-3 py-4 sm:px-5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/40 ${ELEVATION_CARD_HOVER}`}
                 >
-                  <span className="min-w-0 break-words">{item.question}</span>
-                  <ChevronDown
-                    size={18}
-                    className={`shrink-0 text-muted ${TRANSITION_UI} group-open:rotate-180 group-hover:text-accent`}
-                    aria-hidden
-                  />
-                </summary>
-                <p className={`max-w-3xl pb-4 ${BODY_MUTED_CLASS}`}>{item.answer}</p>
-              </details>
+                  <p className={`break-words ${CARD_TITLE_CLASS}`}>{item.question}</p>
+                  <p className={`mt-2 line-clamp-3 ${CARD_META_CLASS} ${BODY_CLASS}`}>{item.answer}</p>
+                </article>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
 
@@ -437,27 +432,23 @@ export function BackupDisasterRecoveryLanding() {
   );
 }
 
-function HeroStage() {
+function HeroStage({ src }: { src?: string }) {
   return (
     <div className="relative lg:min-h-[460px]">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-y-4 left-0 right-10 hidden overflow-hidden rounded-[28px] border border-sky-100 bg-gradient-to-br from-sky-50 via-white to-accent-soft lg:block"
-      >
-        <svg viewBox="0 0 320 220" className="absolute left-6 top-10 h-40 w-56 text-sky-300">
-          <path
-            fill="currentColor"
-            d="M96 92c0-22 18-40 40-40 8 0 16 2 22 7 6-16 22-27 40-27 24 0 44 18 44 42v2c18 4 32 18 32 36 0 20-16 36-36 36H84c-20 0-36-16-36-36 0-16 11-30 26-34-1-4-1-6 0-8 6-10 16-16 22-16z"
-            opacity="0.9"
+      {src ? (
+        <div aria-hidden className="pointer-events-none absolute inset-0 hidden overflow-hidden rounded-[28px] lg:block">
+          <Image
+            src={src}
+            alt=""
+            fill
+            priority
+            sizes="(min-width: 1024px) 560px, 0px"
+            className="object-cover object-center"
           />
-          <g fill="none" stroke="#0ea5a4" strokeWidth="6" strokeLinecap="round">
-            <path d="M150 78a36 36 0 1 1-18 30" />
-            <path d="M132 96l-8 14 16-2" />
-          </g>
-        </svg>
-      </div>
+        </div>
+      ) : null}
       <ul
-        className={`relative z-10 w-full max-w-[320px] rounded-2xl border border-white/80 bg-white/95 p-2.5 backdrop-blur-sm lg:absolute lg:right-0 lg:top-1/2 lg:-translate-y-1/2 ${ELEVATION_FLOAT} ${TRANSITION_PANEL} ${ELEVATION_HERO_HOVER}`}
+        className={`relative z-10 w-full max-w-[320px] rounded-2xl border border-white/80 bg-white/95 p-2.5 backdrop-blur-sm lg:absolute lg:right-3 lg:top-1/2 lg:-translate-y-1/2 ${ELEVATION_FLOAT} ${TRANSITION_PANEL} ${ELEVATION_HERO_HOVER}`}
       >
         {HERO_MENU.map((item) => (
           <li key={item.title}>
@@ -482,28 +473,43 @@ function HeroStage() {
 
 function ProtectPanel() {
   return (
-    <div className="relative mx-auto w-full max-w-[360px] pt-4" aria-hidden>
-      <span className={`absolute right-3 top-0 z-10 inline-flex items-center gap-1.5 rounded-full bg-emerald-500 px-2.5 py-1 text-white ${BADGE_CLASS}`}>
+    <div className="relative mx-auto w-full max-w-[380px] pt-3 lg:ml-auto lg:mr-0" aria-hidden>
+      <span className={`absolute right-2 top-0 z-10 inline-flex items-center gap-1.5 rounded-full bg-emerald-500 px-2.5 py-1 text-white ${BADGE_CLASS}`}>
         <Check size={12} strokeWidth={3} />
         All systems protected
       </span>
-      <div className={`rounded-2xl bg-navy p-4 text-white sm:p-5 ${ELEVATION_FLOAT} ${TRANSITION_PANEL} ${ELEVATION_HERO_HOVER}`}>
-        <p className={`${CARD_TITLE_CLASS} !text-white`}>Acronis Cyber Protect</p>
-        <p className={`mt-4 ${OVERLINE_CLASS} text-slate-400`}>Backups</p>
-        <ul className="mt-2 divide-y divide-white/10">
+      <div className={`overflow-hidden rounded-2xl bg-navy ${ELEVATION_FLOAT} ${TRANSITION_PANEL} ${ELEVATION_HERO_HOVER}`}>
+        <div className="flex items-center gap-2.5 px-4 pt-4 sm:px-5">
+          <img src="/brand/acronis.svg" alt="" className="h-8 w-8 shrink-0" />
+          <p className={`${CARD_TITLE_CLASS} !text-white`}>Acronis Cyber Protect</p>
+        </div>
+        <p className={`mt-4 px-4 sm:px-5 ${OVERLINE_CLASS} text-slate-400`}>Backups</p>
+        <ul className="mt-1 px-2 pb-2 sm:px-3">
           {PROTECT_ROWS.map((row) => (
-            <li key={row} className="flex items-center justify-between gap-3 py-2.5">
-              <span className={`${BODY_CLASS} !text-white`}>{row}</span>
-              <span className={`inline-flex items-center gap-1.5 ${CARD_META_CLASS} !text-emerald-300`}>
+            <li
+              key={row.label}
+              className="flex items-center justify-between gap-3 rounded-xl px-2 py-2.5"
+            >
+              <span className="flex min-w-0 items-center gap-2.5">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/10 text-sky-200">
+                  {row.logo ? (
+                    <img src={row.logo} alt="" className="h-4 w-4 object-contain" />
+                  ) : row.Icon ? (
+                    <row.Icon size={15} strokeWidth={1.8} />
+                  ) : null}
+                </span>
+                <span className={`${BODY_CLASS} !text-white`}>{row.label}</span>
+              </span>
+              <span className={`inline-flex shrink-0 items-center gap-1.5 ${CARD_META_CLASS} !text-emerald-300`}>
                 <Check size={14} strokeWidth={2.5} />
                 Protected
               </span>
             </li>
           ))}
         </ul>
-        <div className="mt-3 flex items-center gap-2.5 rounded-xl bg-white/10 px-3 py-2.5">
+        <div className="mx-3 mb-3 flex items-center gap-2.5 rounded-xl bg-sky-400/15 px-3 py-2.5 sm:mx-4">
           <Cloud size={16} className="shrink-0 text-sky-200" />
-          <span className={`${CARD_META_CLASS} !text-slate-300`}>Lịch sao lưu theo chính sách đã chốt</span>
+          <span className={`${CARD_META_CLASS} !text-slate-200`}>Next backup in 2 hours</span>
         </div>
       </div>
     </div>
