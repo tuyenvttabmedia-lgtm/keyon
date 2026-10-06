@@ -194,8 +194,12 @@ export const FIELD_VALUE_CLASS = "text-sm font-medium text-navy" as const;
 export const FIELD_VALUE_NUM_CLASS =
   "text-sm font-bold tabular-nums text-navy" as const;
 
-/** Text inside inputs / textareas / selects. */
-export const INPUT_TEXT_CLASS = "text-sm text-navy" as const;
+/**
+ * Text inside inputs / textareas / selects.
+ * 16px below the md breakpoint so mobile Safari does not zoom the page on focus.
+ * Desktop stays on the 14px form band.
+ */
+export const INPUT_TEXT_CLASS = "text-base text-navy md:text-sm" as const;
 
 /** Validation / request error under a form. */
 export const FORM_ERROR_CLASS = "text-sm text-danger" as const;

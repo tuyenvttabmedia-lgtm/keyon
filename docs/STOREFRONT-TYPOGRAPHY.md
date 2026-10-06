@@ -56,7 +56,7 @@ Thiếu bậc → bổ sung token + cập nhật doc này, rồi mới dùng.
 ├─ Form / hàng thông tin
 │   ├─ Label                         → FORM_LABEL
 │   ├─ Value đọc                    → FIELD_VALUE (số → FIELD_VALUE_NUM)
-│   ├─ Input                        → INPUT_TEXT
+│   ├─ Input                        → INPUT_TEXT (16px dưới md / màn cảm ứng, 14px desktop)
 │   └─ Lỗi / OK                     → FORM_ERROR / FORM_SUCCESS
 │
 ├─ Giá

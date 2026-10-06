@@ -79,6 +79,18 @@ html {
   }
 }
 
+/*
+ * Unlayered on purpose: beats text-sm on inputs.
+ * iOS Safari zooms the page when a focused field is under 16px and leaves it zoomed.
+ */
+@media (pointer: coarse) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="image"]),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
 /* Storefront container — synced to Home audit (1200) */
 .home-container {
   margin-left: auto;
