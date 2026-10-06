@@ -210,13 +210,12 @@ export function BackupDisasterRecoveryLanding({ heroImageUrl }: { heroImageUrl?:
             <span className={BREADCRUMB_CURRENT_CLASS}>{BACKUP_DR_LABEL}</span>
           </nav>
 
-          <h1 className={`lg:whitespace-nowrap ${HERO_TITLE_CLASS}`}>
-            Backup & Disaster Recovery
-          </h1>
-
-          <div className="mt-4 grid items-start gap-8 lg:grid-cols-[minmax(0,36rem)_minmax(280px,1fr)] lg:gap-6">
+          <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,36rem)_minmax(280px,1fr)] lg:gap-6">
             <div className="min-w-0">
-              <p className={`max-w-xl ${PAGE_LEAD_CLASS}`}>
+              <h1 className={`lg:whitespace-nowrap ${HERO_TITLE_CLASS}`}>
+                Backup & Disaster Recovery
+              </h1>
+              <p className={`mt-4 max-w-xl ${PAGE_LEAD_CLASS}`}>
                 Triển khai sao lưu và khôi phục dữ liệu cho doanh nghiệp. KEYON thiết lập chính sách backup và quy trình khôi phục theo phạm vi đã chốt.
               </p>
               <ul className="mt-6 max-w-xl space-y-3">
@@ -431,7 +430,7 @@ export function BackupDisasterRecoveryLanding({ heroImageUrl }: { heroImageUrl?:
 
 function HeroStage({ src }: { src?: string }) {
   return (
-    <div className="relative lg:min-h-[460px]">
+    <div className="relative h-full lg:min-h-[460px]">
       {src ? (
         <div aria-hidden className="pointer-events-none absolute inset-0 hidden overflow-hidden rounded-[28px] lg:block">
           <Image
