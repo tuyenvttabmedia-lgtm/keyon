@@ -45,7 +45,6 @@ import {
   CTA_COMPACT_CLASS,
   CTA_LABEL_CLASS,
   HERO_TITLE_CLASS,
-  OVERLINE_CLASS,
   PAGE_LEAD_CLASS,
   SECTION_LEAD_CLASS,
   SECTION_TITLE_CLASS,
@@ -282,8 +281,7 @@ export function Microsoft365EmailLanding() {
           </nav>
 
           <div className="min-w-0 max-w-3xl">
-            <p className={`${OVERLINE_CLASS} text-accent`}>Dịch vụ triển khai</p>
-            <h1 className={`mt-3 break-words ${HERO_TITLE_CLASS}`}>
+            <h1 className={`break-words ${HERO_TITLE_CLASS}`}>
               {M365_EMAIL_LABEL}
             </h1>
             <p className={`mt-4 ${PAGE_LEAD_CLASS}`}>
