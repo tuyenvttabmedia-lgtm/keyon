@@ -29,7 +29,7 @@ import { parseStringList, PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product
 import { inferCategory } from "@/storefront/components/shop/shop-utils";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
 import { absoluteTitle } from "@/server/seo/title";
-import { defaultCmsProductivity, readJsonFile } from "@/server/cms/store";
+import { defaultCmsCloudSolution, defaultCmsProductivity, readJsonFile } from "@/server/cms/store";
 import { resolveMediaUrl } from "@/lib/media-url";
 import { resolveStorage } from "@/server/storage/config";
 import { customerOrderWhere } from "@/server/org/customer-order-access";
@@ -458,8 +458,20 @@ export default async function SolutionPage({ params }: Props) {
   }
 
   if (slug === "cloud") {
-    const { featured } = await loadCloudFeatured();
-    return <CloudSolutionLanding featured={featured} />;
+    const [{ featured }, cmsRaw, storage] = await Promise.all([
+      loadCloudFeatured(),
+      readJsonFile("cloud-solution.json", defaultCmsCloudSolution),
+      resolveStorage(),
+    ]);
+    const mediaBase =
+      storage.driver === "wasabi"
+        ? storage.wasabi.publicBaseUrl ||
+          `${storage.wasabi.endpoint.replace(/\/$/, "")}/${storage.wasabi.bucket}`
+        : "";
+    const cms = { ...defaultCmsCloudSolution, ...cmsRaw };
+    const heroImageUrl =
+      resolveMediaUrl(cms.heroImageUrl, mediaBase) || cms.heroImageUrl || undefined;
+    return <CloudSolutionLanding featured={featured} heroImageUrl={heroImageUrl} />;
   }
 
   if (slug === "security") {

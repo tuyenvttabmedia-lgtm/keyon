@@ -59,7 +59,11 @@ export type CloudFeaturedProduct = {
 
 type Props = {
   featured: CloudFeaturedProduct[];
+  /** Desktop hero photo. Empty → built-in photo until CMS has an upload. */
+  heroImageUrl?: string;
 };
+
+const CLOUD_HERO_FALLBACK = "/services/cloud-solution-photo.jpg";
 
 const ICON_SM = { size: 18, strokeWidth: 1.85, "aria-hidden": true as const };
 const ICON_MD = { size: 22, strokeWidth: 1.75, "aria-hidden": true as const };
@@ -187,9 +191,10 @@ const PRODUCT_ICONS: Record<NonNullable<CloudFeaturedProduct["icon"]>, LucideIco
   database: HardDrive,
 };
 
-export function CloudSolutionLanding({ featured }: Props) {
+export function CloudSolutionLanding({ featured, heroImageUrl }: Props) {
   const products = featured.slice(0, 4);
   const showFeatured = products.length > 0;
+  const heroSrc = heroImageUrl?.trim() || CLOUD_HERO_FALLBACK;
 
   return (
     <div className="bg-white">
@@ -198,7 +203,7 @@ export function CloudSolutionLanding({ featured }: Props) {
         <div className={`home-container relative overflow-hidden ${LANDING_HERO_PAD}`}>
           <div aria-hidden className="pointer-events-none absolute inset-y-0 right-0 hidden w-[54%] overflow-hidden lg:block">
             <Image
-              src="/services/cloud-solution-photo.jpg"
+              src={heroSrc}
               alt=""
               fill
               priority

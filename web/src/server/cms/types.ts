@@ -244,6 +244,15 @@ export type CmsBanner = {
   visible: boolean;
 };
 
+/**
+ * Landing `/solutions/cloud` — ảnh nền hero desktop.
+ * Khung hiển thị 648×580 px (cột phải). File xuất 1296×1160 px.
+ * Code phủ trắng mép trái ~40% và mép phải ~10%. Mobile không hiện ảnh.
+ */
+export type CmsCloudSolution = {
+  heroImageUrl: string;
+};
+
 /** Landing `/solutions/microsoft-365-office` — ảnh hero blob + tư vấn + scene work-mode. */
 export type CmsProductivity = {
   /** Hero cột phải — banner trong organic blob (khuyến nghị ~960×720). */
@@ -414,6 +423,10 @@ export const defaultCmsBanner: CmsBanner = {
   ctaHref: "/products",
   imageUrl: "",
   visible: true,
+};
+
+export const defaultCmsCloudSolution: CmsCloudSolution = {
+  heroImageUrl: "",
 };
 
 export const defaultCmsProductivity: CmsProductivity = {

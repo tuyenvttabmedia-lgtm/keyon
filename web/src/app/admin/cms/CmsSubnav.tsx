@@ -15,6 +15,7 @@ const CMS_NAV = [
   { href: "/admin/cms/pages", label: "Trang tĩnh" },
   { href: "/admin/cms/ratings", label: "Ratings" },
   { href: "/admin/cms/productivity", label: "Microsoft 365 & Office" },
+  { href: "/admin/cms/cloud", label: "Cloud & Hạ tầng" },
   { href: "/admin/cms/checkout", label: "Checkout" },
   { href: "/admin/cms/account", label: "Account" },
   { href: "/admin/cms/contact", label: "Liên hệ" },

@@ -11,6 +11,7 @@ import { requireStaffSession } from "@/server/auth/require-staff";
 import {
   defaultBlog,
   defaultCmsBanner,
+  defaultCmsCloudSolution,
   defaultCmsProductivity,
   defaultCmsSolutions,
   defaultCmsFaq,
@@ -31,6 +32,7 @@ import {
   writeJsonFile,
   type BlogPost,
   type CmsBanner,
+  type CmsCloudSolution,
   type CmsProductivity,
   type CmsSolutions,
   type CmsCheckout,
@@ -167,6 +169,7 @@ const FILES: Record<string, { file: string; fallback: unknown }> = {
   home: { file: "home.json", fallback: defaultCmsHome },
   blog: { file: "blog.json", fallback: defaultBlog },
   banner: { file: "banner.json", fallback: defaultCmsBanner },
+  "cloud-solution": { file: "cloud-solution.json", fallback: defaultCmsCloudSolution },
   productivity: { file: "productivity.json", fallback: defaultCmsProductivity },
   solutions: { file: "solutions.json", fallback: defaultCmsSolutions },
   faq: { file: "faq.json", fallback: defaultCmsFaq },
@@ -307,6 +310,25 @@ export async function PUT(
       })
       .parse(body) satisfies CmsBanner;
     await writeJsonFile("banner.json", data);
+    return NextResponse.json({ ok: true, data });
+  }
+  if (key === "cloud-solution") {
+    const storage = await resolveStorage();
+    const mediaBase =
+      storage.driver === "wasabi"
+        ? storage.wasabi.publicBaseUrl ||
+          `${storage.wasabi.endpoint.replace(/\/$/, "")}/${storage.wasabi.bucket}`
+        : "";
+    const data = z
+      .object({
+        heroImageUrl: z.string().max(2000),
+      })
+      .parse({
+        heroImageUrl:
+          resolveMediaUrl(String(body?.heroImageUrl ?? ""), mediaBase) ||
+          String(body?.heroImageUrl ?? ""),
+      }) satisfies CmsCloudSolution;
+    await writeJsonFile("cloud-solution.json", data);
     return NextResponse.json({ ok: true, data });
   }
   if (key === "productivity") {
