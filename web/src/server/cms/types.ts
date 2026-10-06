@@ -253,6 +253,16 @@ export type CmsCloudSolution = {
   heroImageUrl: string;
 };
 
+/** Landing `/solutions/security` — ảnh nền hero desktop, cùng khung Cloud. */
+export type CmsSecuritySolution = {
+  heroImageUrl: string;
+};
+
+/** Landing `/solutions/backup` — ảnh nền hero desktop, cùng khung Cloud. */
+export type CmsBackupSolution = {
+  heroImageUrl: string;
+};
+
 /** Landing `/solutions/microsoft-365-office` — ảnh hero blob + tư vấn + scene work-mode. */
 export type CmsProductivity = {
   /** Hero cột phải — banner trong organic blob (khuyến nghị ~960×720). */
@@ -263,8 +273,10 @@ export type CmsProductivity = {
   workSceneImageUrl: string;
 };
 
-/** Landing `/solutions` hub — video giới thiệu hero. */
+/** Landing `/solutions` hub — ảnh nền hero desktop + video giới thiệu. */
 export type CmsSolutions = {
+  /** Cột phải hero desktop. File 1296×1156 px, nền trắng. Trống → giữ minh họa. */
+  heroImageUrl: string;
   /**
    * YouTube / youtu.be / Vimeo URL for hero “Xem video giới thiệu”.
    * Empty → CTA falls back to Cách KEYON hoạt động.
@@ -429,6 +441,14 @@ export const defaultCmsCloudSolution: CmsCloudSolution = {
   heroImageUrl: "",
 };
 
+export const defaultCmsSecuritySolution: CmsSecuritySolution = {
+  heroImageUrl: "",
+};
+
+export const defaultCmsBackupSolution: CmsBackupSolution = {
+  heroImageUrl: "",
+};
+
 export const defaultCmsProductivity: CmsProductivity = {
   heroImageUrl: "",
   consultImageUrl: "",
@@ -436,6 +456,7 @@ export const defaultCmsProductivity: CmsProductivity = {
 };
 
 export const defaultCmsSolutions: CmsSolutions = {
+  heroImageUrl: "",
   introVideoUrl: "",
 };
 

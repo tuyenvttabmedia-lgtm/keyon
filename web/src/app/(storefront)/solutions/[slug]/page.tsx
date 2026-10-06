@@ -29,7 +29,13 @@ import { parseStringList, PRODUCT_CATEGORY_KEYS } from "@/storefront/lib/product
 import { inferCategory } from "@/storefront/components/shop/shop-utils";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
 import { absoluteTitle } from "@/server/seo/title";
-import { defaultCmsCloudSolution, defaultCmsProductivity, readJsonFile } from "@/server/cms/store";
+import {
+  defaultCmsBackupSolution,
+  defaultCmsCloudSolution,
+  defaultCmsProductivity,
+  defaultCmsSecuritySolution,
+  readJsonFile,
+} from "@/server/cms/store";
 import { resolveMediaUrl } from "@/lib/media-url";
 import { resolveStorage } from "@/server/storage/config";
 import { customerOrderWhere } from "@/server/org/customer-order-access";
@@ -448,6 +454,17 @@ function heroAssetStatus(
   return "active";
 }
 
+async function readSolutionHero(file: string, fallback: { heroImageUrl: string }) {
+  const [cmsRaw, storage] = await Promise.all([readJsonFile(file, fallback), resolveStorage()]);
+  const mediaBase =
+    storage.driver === "wasabi"
+      ? storage.wasabi.publicBaseUrl ||
+        `${storage.wasabi.endpoint.replace(/\/$/, "")}/${storage.wasabi.bucket}`
+      : "";
+  const cms = { ...fallback, ...cmsRaw };
+  return resolveMediaUrl(cms.heroImageUrl, mediaBase) || cms.heroImageUrl || undefined;
+}
+
 export default async function SolutionPage({ params }: Props) {
   const { slug } = await params;
   const page = SOLUTION_PAGES[slug];
@@ -475,13 +492,19 @@ export default async function SolutionPage({ params }: Props) {
   }
 
   if (slug === "security") {
-    const { featured } = await loadSecurityFeatured();
-    return <SecuritySolutionLanding featured={featured} />;
+    const [{ featured }, heroImageUrl] = await Promise.all([
+      loadSecurityFeatured(),
+      readSolutionHero("security-solution.json", defaultCmsSecuritySolution),
+    ]);
+    return <SecuritySolutionLanding featured={featured} heroImageUrl={heroImageUrl} />;
   }
 
   if (slug === "backup") {
-    const { featured } = await loadBackupFeatured();
-    return <BackupSolutionLanding featured={featured} />;
+    const [{ featured }, heroImageUrl] = await Promise.all([
+      loadBackupFeatured(),
+      readSolutionHero("backup-solution.json", defaultCmsBackupSolution),
+    ]);
+    return <BackupSolutionLanding featured={featured} heroImageUrl={heroImageUrl} />;
   }
 
   if (slug === "license-management") {

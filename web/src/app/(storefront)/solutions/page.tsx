@@ -3,6 +3,8 @@ import { SolutionsHubLanding } from "@/storefront/components/solutions/Solutions
 import { buildMainPageMetadata } from "@/server/seo/metadata";
 import { absoluteTitle } from "@/server/seo/title";
 import { defaultCmsSolutions, readJsonFile } from "@/server/cms/store";
+import { resolveMediaUrl } from "@/lib/media-url";
+import { resolveStorage } from "@/server/storage/config";
 import { toVideoEmbedUrl } from "@/storefront/components/solutions/intro-video";
 
 export const revalidate = 60;
@@ -17,8 +19,21 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function SolutionsHubPage() {
-  const cms = await readJsonFile("solutions.json", defaultCmsSolutions);
+  const [cmsRaw, storage] = await Promise.all([
+    readJsonFile("solutions.json", defaultCmsSolutions),
+    resolveStorage(),
+  ]);
+  const mediaBase =
+    storage.driver === "wasabi"
+      ? storage.wasabi.publicBaseUrl ||
+        `${storage.wasabi.endpoint.replace(/\/$/, "")}/${storage.wasabi.bucket}`
+      : "";
+  const cms = { ...defaultCmsSolutions, ...cmsRaw };
+  const heroImageUrl = resolveMediaUrl(cms.heroImageUrl, mediaBase) || cms.heroImageUrl || undefined;
   return (
-    <SolutionsHubLanding introEmbedUrl={toVideoEmbedUrl(cms.introVideoUrl)} />
+    <SolutionsHubLanding
+      introEmbedUrl={toVideoEmbedUrl(cms.introVideoUrl)}
+      heroImageUrl={heroImageUrl}
+    />
   );
 }

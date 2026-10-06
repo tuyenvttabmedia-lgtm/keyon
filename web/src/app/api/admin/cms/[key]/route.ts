@@ -11,8 +11,10 @@ import { requireStaffSession } from "@/server/auth/require-staff";
 import {
   defaultBlog,
   defaultCmsBanner,
+  defaultCmsBackupSolution,
   defaultCmsCloudSolution,
   defaultCmsProductivity,
+  defaultCmsSecuritySolution,
   defaultCmsSolutions,
   defaultCmsFaq,
   defaultCmsFooter,
@@ -32,8 +34,10 @@ import {
   writeJsonFile,
   type BlogPost,
   type CmsBanner,
+  type CmsBackupSolution,
   type CmsCloudSolution,
   type CmsProductivity,
+  type CmsSecuritySolution,
   type CmsSolutions,
   type CmsCheckout,
   type CmsAccount,
@@ -164,12 +168,27 @@ const settingsSchema = z.object({
     ),
 });
 
+async function cmsMediaBase() {
+  const storage = await resolveStorage();
+  return storage.driver === "wasabi"
+    ? storage.wasabi.publicBaseUrl ||
+        `${storage.wasabi.endpoint.replace(/\/$/, "")}/${storage.wasabi.bucket}`
+    : "";
+}
+
+function storedHeroUrl(value: unknown, mediaBase: string) {
+  const raw = String(value ?? "");
+  return resolveMediaUrl(raw, mediaBase) || raw;
+}
+
 const FILES: Record<string, { file: string; fallback: unknown }> = {
   settings: { file: "settings.json", fallback: defaultSettings },
   home: { file: "home.json", fallback: defaultCmsHome },
   blog: { file: "blog.json", fallback: defaultBlog },
   banner: { file: "banner.json", fallback: defaultCmsBanner },
+  "backup-solution": { file: "backup-solution.json", fallback: defaultCmsBackupSolution },
   "cloud-solution": { file: "cloud-solution.json", fallback: defaultCmsCloudSolution },
+  "security-solution": { file: "security-solution.json", fallback: defaultCmsSecuritySolution },
   productivity: { file: "productivity.json", fallback: defaultCmsProductivity },
   solutions: { file: "solutions.json", fallback: defaultCmsSolutions },
   faq: { file: "faq.json", fallback: defaultCmsFaq },
@@ -357,9 +376,26 @@ export async function PUT(
     await writeJsonFile("productivity.json", data);
     return NextResponse.json({ ok: true, data });
   }
-  if (key === "solutions") {
+  if (key === "security-solution" || key === "backup-solution") {
+    const mediaBase = await cmsMediaBase();
     const data = z
       .object({
+        heroImageUrl: z.string().max(2000),
+      })
+      .parse({
+        heroImageUrl: storedHeroUrl(body?.heroImageUrl, mediaBase),
+      }) satisfies CmsSecuritySolution;
+    await writeJsonFile(
+      key === "security-solution" ? "security-solution.json" : "backup-solution.json",
+      data,
+    );
+    return NextResponse.json({ ok: true, data });
+  }
+  if (key === "solutions") {
+    const mediaBase = await cmsMediaBase();
+    const data = z
+      .object({
+        heroImageUrl: z.string().max(2000),
         introVideoUrl: z
           .string()
           .max(2000)
@@ -378,6 +414,7 @@ export async function PUT(
           ),
       })
       .parse({
+        heroImageUrl: storedHeroUrl(body?.heroImageUrl, mediaBase),
         introVideoUrl:
           typeof body?.introVideoUrl === "string" ? body.introVideoUrl.trim() : "",
       }) satisfies CmsSolutions;

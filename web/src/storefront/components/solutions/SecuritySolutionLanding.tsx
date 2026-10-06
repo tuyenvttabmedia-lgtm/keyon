@@ -20,6 +20,7 @@ import {
   Zap,
 } from "lucide-react";
 import { LANDING_CRUMB_GAP } from "@/storefront/components/marketing/hero-shell";
+import { SolutionHeroPhoto } from "@/storefront/components/solutions/SolutionHeroPhoto";
 import {
   BADGE_CLASS,
   BODY_MUTED_CLASS,
@@ -71,6 +72,7 @@ export type SecurityFeaturedProduct = {
 
 type Props = {
   featured: SecurityFeaturedProduct[];
+  heroImageUrl?: string;
 };
 
 const ICON_SM = { size: 18, strokeWidth: 1.85, "aria-hidden": true as const };
@@ -194,19 +196,23 @@ const STEPS: { n: string; title: string; body: string; Icon: LucideIcon }[] = [
   },
 ];
 
-export function SecuritySolutionLanding({ featured }: Props) {
+export function SecuritySolutionLanding({ featured, heroImageUrl }: Props) {
   const products = featured.slice(0, 4);
   const showFeatured = products.length > 0;
+  const heroSrc = heroImageUrl?.trim() || "";
 
   return (
     <div className="bg-white">
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden border-b border-border">
-        <div
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_88%_18%,rgba(14,165,164,0.1),transparent_42%),radial-gradient(ellipse_at_8%_88%,rgba(14,165,233,0.06),transparent_48%)]"
-          aria-hidden
-        />
+      <section className="relative overflow-hidden border-b border-border bg-white">
+        {heroSrc ? null : (
+          <div
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_88%_18%,rgba(14,165,164,0.1),transparent_42%),radial-gradient(ellipse_at_8%_88%,rgba(14,165,233,0.06),transparent_48%)]"
+            aria-hidden
+          />
+        )}
         <div className="home-container relative pb-5 pt-5 md:pb-4 md:pt-5 lg:pb-6 lg:pt-8">
+          <SolutionHeroPhoto src={heroSrc} />
           <nav className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
             <Link href="/" className={HOVER_LINK_ACCENT}>
               Trang chủ
@@ -268,7 +274,7 @@ export function SecuritySolutionLanding({ featured }: Props) {
             </div>
 
             <div className="relative mx-auto hidden w-full max-w-[460px] lg:block lg:max-w-none">
-              <SecurityHeroArt />
+              {heroSrc ? <div className="lg:min-h-[420px]" aria-hidden /> : <SecurityHeroArt />}
             </div>
           </div>
         </div>

@@ -20,6 +20,7 @@ import {
   ShieldCheck,
   Zap,
 } from "lucide-react";
+import { SolutionHeroPhoto } from "@/storefront/components/solutions/SolutionHeroPhoto";
 import {
   BADGE_CLASS,
   BODY_MUTED_CLASS,
@@ -73,6 +74,7 @@ type BackupTabId = "endpoint" | "server" | "cloud" | "saas" | "dr";
 
 type Props = {
   featured: BackupFeaturedProduct[];
+  heroImageUrl?: string;
 };
 
 const ICON_SM = { size: 18, strokeWidth: 1.85, "aria-hidden": true as const };
@@ -167,9 +169,10 @@ const FLOW: { title: string; body: string; Icon: LucideIcon; highlight?: boolean
   },
 ];
 
-export function BackupSolutionLanding({ featured }: Props) {
+export function BackupSolutionLanding({ featured, heroImageUrl }: Props) {
   const [tab, setTab] = useState<BackupTabId>("endpoint");
   const showFeatured = featured.length > 0;
+  const heroSrc = heroImageUrl?.trim() || "";
 
   const products = useMemo(() => {
     const filtered = featured.filter((p) => p.tabs.includes(tab));
@@ -180,12 +183,15 @@ export function BackupSolutionLanding({ featured }: Props) {
   return (
     <div className="bg-white">
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="relative overflow-x-clip border-b border-border">
-        <div
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_88%_18%,rgba(14,165,164,0.12),transparent_42%),radial-gradient(ellipse_at_10%_90%,rgba(14,165,233,0.05),transparent_48%)]"
-          aria-hidden
-        />
+      <section className="relative overflow-x-clip border-b border-border bg-white">
+        {heroSrc ? null : (
+          <div
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_88%_18%,rgba(14,165,164,0.12),transparent_42%),radial-gradient(ellipse_at_10%_90%,rgba(14,165,233,0.05),transparent_48%)]"
+            aria-hidden
+          />
+        )}
         <div className={`home-container relative ${LANDING_HERO_PAD}`}>
+          <SolutionHeroPhoto src={heroSrc} />
           <nav className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}>
             <Link href="/" className={HOVER_LINK_ACCENT}>
               Trang chủ
@@ -250,10 +256,14 @@ export function BackupSolutionLanding({ featured }: Props) {
               </div>
             </div>
 
-            <div className="relative w-full min-w-0 lg:justify-self-end">
-              <div className="hidden lg:block">
-                <BackupHeroArt />
-              </div>
+            <div className="relative z-10 w-full min-w-0 lg:justify-self-end">
+              {heroSrc ? (
+                <div className="hidden lg:block lg:min-h-[380px]" aria-hidden />
+              ) : (
+                <div className="hidden lg:block">
+                  <BackupHeroArt />
+                </div>
+              )}
               <div className={`rounded-2xl border border-border bg-white px-4 py-3 lg:mt-3 ${ELEVATION_HAIRLINE}`}>
                 <p className={CARD_TITLE_CLASS}>License trên KEYON, dữ liệu trên hệ thống của bạn</p>
                 <p className={`mt-1 ${CARD_META_CLASS}`}>

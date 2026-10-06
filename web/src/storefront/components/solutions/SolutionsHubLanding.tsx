@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SolutionHeroPhoto } from "@/storefront/components/solutions/SolutionHeroPhoto";
 import type { LucideIcon } from "lucide-react";
 import {
   BadgeCheck,
@@ -113,18 +114,25 @@ const ADVISE_TOPIC_IDS = ["license-management", "by-need"] as const;
 
 type Props = {
   introEmbedUrl: string | null;
+  heroImageUrl?: string;
 };
 
 /** Hub `/solutions` — mockup layout, locked SOLUTION_TOPICS, no fake stats. */
-export function SolutionsHubLanding({ introEmbedUrl }: Props) {
+export function SolutionsHubLanding({ introEmbedUrl, heroImageUrl }: Props) {
+  const heroSrc = heroImageUrl?.trim() || "";
   return (
     <div className="bg-white">
-      <section className="relative overflow-x-clip border-b border-border bg-[#F7FAFC]">
-        <div
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_88%_12%,rgba(14,165,164,0.12),transparent_42%),radial-gradient(ellipse_at_8%_88%,rgba(15,23,42,0.05),transparent_48%)]"
-          aria-hidden
-        />
+      <section
+        className={`relative overflow-x-clip border-b border-border ${heroSrc ? "bg-white" : "bg-[#F7FAFC]"}`}
+      >
+        {heroSrc ? null : (
+          <div
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_88%_12%,rgba(14,165,164,0.12),transparent_42%),radial-gradient(ellipse_at_8%_88%,rgba(15,23,42,0.05),transparent_48%)]"
+            aria-hidden
+          />
+        )}
         <div className={`home-container relative ${LANDING_HERO_PAD}`}>
+          <SolutionHeroPhoto src={heroSrc} />
           <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10 xl:gap-12">
             <div className="min-w-0 max-w-[540px]">
               <SolutionPageChrome
@@ -154,7 +162,10 @@ export function SolutionsHubLanding({ introEmbedUrl }: Props) {
                 <SolutionsIntroVideoButton embedUrl={introEmbedUrl} />
               </div>
             </div>
-            <SolutionsHeroArt />
+            <div className={heroSrc ? "lg:hidden" : undefined}>
+              <SolutionsHeroArt />
+            </div>
+            {heroSrc ? <div className="hidden lg:block lg:min-h-[360px]" aria-hidden /> : null}
           </div>
         </div>
       </section>
