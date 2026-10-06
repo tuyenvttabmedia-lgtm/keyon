@@ -255,8 +255,7 @@ export function EmailDataMigrationLanding() {
             </nav>
 
             <div className="max-w-xl">
-              <p className={`${OVERLINE_CLASS} text-accent`}>Dịch vụ chuyển đổi & chuyển dữ liệu</p>
-              <h1 className={`mt-3 break-words ${HERO_TITLE_CLASS}`}>
+              <h1 className={`break-words ${HERO_TITLE_CLASS}`}>
                 Di chuyển Email &
                 <span className="block">Dữ liệu doanh nghiệp</span>
               </h1>
@@ -299,10 +298,10 @@ export function EmailDataMigrationLanding() {
           <div className="flex items-center py-4 lg:w-56 lg:shrink-0 lg:border-r lg:border-border lg:py-0 lg:pr-6">
             <p className={`${OVERLINE_CLASS} text-muted`}>Nền tảng thường gặp</p>
           </div>
-          <ul className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 lg:flex-1">
+          <ul className="grid grid-cols-4 lg:flex-1 lg:grid-cols-8">
             {TECHS.map((item) => (
               <li key={item.name} className="min-w-0">
-                <span className={`flex h-12 items-center justify-center px-2 text-center font-display text-sm text-muted-soft ${item.mark} ${TRANSITION_UI} hover:text-navy lg:h-[4.25rem]`}>
+                <span className={`flex h-12 items-center justify-center px-1 text-center font-display text-sm text-muted-soft lg:px-2 ${item.mark} ${TRANSITION_UI} hover:text-navy lg:h-[4.25rem]`}>
                   {item.name}
                 </span>
               </li>
@@ -322,12 +321,14 @@ export function EmailDataMigrationLanding() {
           <ul className="mt-7 grid grid-cols-2 gap-3 lg:grid-cols-4">
             {BENEFITS.map((item) => (
               <li key={item.title} className="min-w-0">
-                <article className={`${card} p-4 sm:p-5`}>
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent transition group-hover:bg-accent group-hover:text-white">
-                    <item.Icon size={20} strokeWidth={1.8} aria-hidden />
-                  </span>
-                  <h3 className={`mt-4 ${CARD_TITLE_CLASS}`}>{item.title}</h3>
-                  <p className={`mt-2 ${BODY_MUTED_CLASS}`}>{item.body}</p>
+                <article className={`${card} p-3 sm:p-5`}>
+                  <div className="flex items-center gap-2.5">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent transition group-hover:bg-accent group-hover:text-white sm:h-10 sm:w-10">
+                      <item.Icon size={18} strokeWidth={1.8} aria-hidden />
+                    </span>
+                    <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{item.title}</h3>
+                  </div>
+                  <p className={`mt-3 ${BODY_MUTED_CLASS}`}>{item.body}</p>
                 </article>
               </li>
             ))}
@@ -346,12 +347,14 @@ export function EmailDataMigrationLanding() {
           <ul className="mt-7 grid grid-cols-2 gap-3 lg:grid-cols-4">
             {PLATFORMS.map((item) => (
               <li key={item.title} className="min-w-0">
-                <article className={`${card} p-4 sm:p-5`}>
-                  <span className={`flex h-11 w-11 items-center justify-center rounded-xl ${item.tone} transition group-hover:bg-accent group-hover:text-white`}>
-                    <item.Icon size={20} strokeWidth={1.8} aria-hidden />
-                  </span>
-                  <h3 className={`mt-4 ${CARD_TITLE_CLASS}`}>{item.title}</h3>
-                  <p className={`mt-2 ${BODY_MUTED_CLASS}`}>{item.body}</p>
+                <article className={`${card} p-3 sm:p-5`}>
+                  <div className="flex items-center gap-2.5">
+                    <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl sm:h-10 sm:w-10 ${item.tone} transition group-hover:bg-accent group-hover:text-white`}>
+                      <item.Icon size={18} strokeWidth={1.8} aria-hidden />
+                    </span>
+                    <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{item.title}</h3>
+                  </div>
+                  <p className={`mt-3 ${BODY_MUTED_CLASS}`}>{item.body}</p>
                 </article>
               </li>
             ))}
@@ -433,12 +436,14 @@ export function EmailDataMigrationLanding() {
           <ul className="mt-7 grid grid-cols-2 gap-3 lg:grid-cols-4">
             {REASONS.map((item) => (
               <li key={item.title} className="min-w-0">
-                <article className={`${card} p-4 sm:p-5`}>
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent transition group-hover:bg-accent group-hover:text-white">
-                    <item.Icon size={20} strokeWidth={1.8} aria-hidden />
-                  </span>
-                  <h3 className={`mt-4 ${CARD_TITLE_CLASS}`}>{item.title}</h3>
-                  <p className={`mt-2 ${BODY_MUTED_CLASS}`}>{item.body}</p>
+                <article className={`${card} p-3 sm:p-5`}>
+                  <div className="flex items-center gap-2.5">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent transition group-hover:bg-accent group-hover:text-white sm:h-10 sm:w-10">
+                      <item.Icon size={18} strokeWidth={1.8} aria-hidden />
+                    </span>
+                    <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{item.title}</h3>
+                  </div>
+                  <p className={`mt-3 ${BODY_MUTED_CLASS}`}>{item.body}</p>
                 </article>
               </li>
             ))}
