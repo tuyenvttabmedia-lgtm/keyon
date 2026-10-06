@@ -203,7 +203,7 @@ export function CloudSolutionLanding({ featured }: Props) {
               fill
               priority
               sizes="(min-width: 1200px) 1200px, 100vw"
-              className="object-cover object-[72%_center]"
+              className="origin-left scale-110 object-cover object-center"
             />
           </div>
           <div
@@ -211,7 +211,7 @@ export function CloudSolutionLanding({ featured }: Props) {
             className="pointer-events-none absolute inset-0 hidden lg:block"
             style={{
               background:
-                "linear-gradient(90deg, #ffffff 0%, #ffffff 34%, rgba(255,255,255,0.94) 46%, rgba(255,255,255,0.4) 58%, rgba(255,255,255,0) 70%)",
+                "linear-gradient(90deg, #ffffff 0%, #ffffff 28%, rgba(255,255,255,0.92) 40%, rgba(255,255,255,0.22) 50%, rgba(255,255,255,0) 58%)",
             }}
           />
           <div
@@ -219,7 +219,7 @@ export function CloudSolutionLanding({ featured }: Props) {
             className="pointer-events-none absolute inset-0 hidden lg:block"
             style={{
               background:
-                "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 82%, rgba(255,255,255,0.45) 91%, #ffffff 100%)",
+                "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 90%, rgba(255,255,255,0.55) 96%, #ffffff 100%)",
             }}
           />
           <div className="relative">
