@@ -279,6 +279,9 @@ export const EMAIL_MIGRATION_SERVICE_SLUG = "email-data-migration" as const;
 /** Canonical slug for cloud and server deployment. */
 export const CLOUD_SERVER_SERVICE_SLUG = "cloud-server" as const;
 
+/** Canonical slug for backup and disaster-recovery deployment. */
+export const BACKUP_DR_SERVICE_SLUG = "backup-disaster-recovery" as const;
+
 /** Deployment and managed-IT offerings. Distinct from Giải pháp and Doanh nghiệp. */
 export const SERVICE_TOPICS: ServiceTopic[] = [
   {
@@ -317,14 +320,15 @@ export const SERVICE_TOPICS: ServiceTopic[] = [
     ],
   },
   {
-    slug: "backup-disaster-recovery",
+    slug: BACKUP_DR_SERVICE_SLUG,
     column: "deploy",
     label: "Backup & Disaster Recovery",
-    description: "Thiết lập backup và phương án khôi phục dữ liệu.",
+    description:
+      "Triển khai sao lưu và khôi phục dữ liệu cho máy tính, máy chủ, Microsoft 365 và cloud. KEYON chốt phạm vi trước khi làm.",
     bullets: [
-      "Thiết lập backup cho dữ liệu cần giữ",
-      "Xây phương án khôi phục khi sự cố",
-      "Kiểm tra quy trình phục hồi theo phạm vi dịch vụ",
+      "Sao lưu máy tính, máy chủ, Microsoft 365 và cloud trong phạm vi đã chốt",
+      "Thiết lập chính sách backup và phương án khôi phục",
+      "Hỗ trợ kỹ thuật trong thời hạn dịch vụ",
     ],
   },
   {

@@ -1,0 +1,511 @@
+import Link from "next/link";
+import type { LucideIcon } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  ChevronDown,
+  Cloud,
+  Database,
+  HardDrive,
+  Headphones,
+  Monitor,
+  RefreshCw,
+  Search,
+  Server,
+  Settings,
+  ShieldCheck,
+} from "lucide-react";
+import {
+  LANDING_CRUMB_GAP,
+  LANDING_HERO_PAD,
+} from "@/storefront/components/marketing/hero-shell";
+import { BACKUP_DR_SERVICE_SLUG } from "@/storefront/nav/ia";
+import { IMPLEMENTATION_QUOTE_HREF } from "@/storefront/lib/cta";
+import {
+  ELEVATION_CARD_HOVER,
+  ELEVATION_CTA_HOVER,
+  ELEVATION_FLOAT,
+  ELEVATION_HAIRLINE,
+  ELEVATION_HERO_HOVER,
+  HOVER_LIFT_CARD,
+  HOVER_LINK_ACCENT,
+  HOVER_OUTLINE_FILL,
+  TRANSITION_PANEL,
+  TRANSITION_UI,
+} from "@/storefront/effects";
+import {
+  BADGE_CLASS,
+  BODY_CLASS,
+  BODY_MUTED_CLASS,
+  BREADCRUMB_CLASS,
+  BREADCRUMB_CURRENT_CLASS,
+  CARD_META_CLASS,
+  CARD_TITLE_CLASS,
+  CTA_LABEL_CLASS,
+  HERO_TITLE_CLASS,
+  LINK_ACCENT_CLASS,
+  OVERLINE_CLASS,
+  PAGE_LEAD_CLASS,
+  SECTION_LEAD_CLASS,
+  SECTION_TITLE_CLASS,
+} from "@/storefront/typography";
+
+export const BACKUP_DR_LABEL = "Backup & Disaster Recovery";
+export const BACKUP_DR_PATH = `/services/${BACKUP_DR_SERVICE_SLUG}`;
+
+export const BACKUP_DR_SEO = {
+  title: `${BACKUP_DR_LABEL} | KEYON`,
+  description:
+    "Triển khai sao lưu và khôi phục dữ liệu cho máy tính, máy chủ, Microsoft 365 và cloud. KEYON chốt phạm vi trước khi làm.",
+} as const;
+
+export const BACKUP_DR_FAQ = [
+  {
+    question: "KEYON hỗ trợ backup những loại dữ liệu nào?",
+    answer:
+      "Máy tính, máy chủ, máy ảo, Microsoft 365 và dữ liệu cloud nằm trong phạm vi đã chốt. Mỗi sản phẩm có giới hạn riêng của hãng.",
+  },
+  {
+    question: "Thời gian triển khai giải pháp backup và DR mất bao lâu?",
+    answer:
+      "Phụ thuộc số hệ thống và phạm vi. KEYON xác nhận lịch trước khi triển khai.",
+  },
+  {
+    question: "Dữ liệu được sao lưu ở đâu? Có an toàn không?",
+    answer:
+      "Bản sao nằm trên hạ tầng của doanh nghiệp hoặc nhà cung cấp phần mềm. KEYON không lưu bản sao dữ liệu. Mã hóa và quyền truy cập theo cấu hình của sản phẩm đã chọn.",
+  },
+  {
+    question: "Chi phí triển khai backup và DR được tính như thế nào?",
+    answer:
+      "Theo phạm vi: số máy, sản phẩm, nơi lưu bản sao và hạng mục triển khai. KEYON báo giá sau khi khảo sát.",
+  },
+  {
+    question: "Sau khi triển khai, KEYON có hỗ trợ kỹ thuật không?",
+    answer:
+      "Có, trong thời hạn dịch vụ đã chốt: hướng dẫn vận hành, rà lại chính sách sao lưu và hỗ trợ khi cần khôi phục.",
+  },
+] as const;
+
+const HERO_CHECKS = [
+  "Sao lưu dữ liệu máy tính, máy chủ, Microsoft 365 và cloud",
+  "Thiết lập chính sách backup tự động trong phạm vi đã chốt",
+  "Hỗ trợ mô hình on-premise, cloud hoặc hybrid",
+  "Khôi phục khi sự cố, theo khả năng của phần mềm đã triển khai",
+  "Tư vấn, triển khai và hỗ trợ kỹ thuật trong thời hạn dịch vụ",
+];
+
+const HERO_MENU: { title: string; body: string; Icon: LucideIcon }[] = [
+  { title: "Máy tính & Máy chủ", body: "Windows, Linux", Icon: Monitor },
+  { title: "Microsoft 365", body: "Exchange, OneDrive, SharePoint, Teams", Icon: Cloud },
+  { title: "Cloud & Ứng dụng", body: "Azure, AWS, Google Cloud", Icon: Database },
+  { title: "Máy ảo & Hệ thống", body: "VMware, Hyper-V", Icon: Server },
+  { title: "Khôi phục thảm họa", body: "Off-site, snapshot, replication", Icon: ShieldCheck },
+];
+
+const PLATFORMS = [
+  { name: "Acronis", mark: "font-semibold tracking-tight" },
+  { name: "Microsoft", mark: "font-semibold tracking-tight" },
+  { name: "veeam", mark: "font-bold lowercase tracking-tight" },
+  { name: "Synology", mark: "font-semibold tracking-tight" },
+  { name: "DELL", mark: "font-bold tracking-[0.14em]" },
+  { name: "vmware", mark: "font-bold lowercase tracking-tight" },
+  { name: "QNAP", mark: "font-bold tracking-[0.12em]" },
+] as const;
+
+const BENEFITS: { title: string; body: string; Icon: LucideIcon }[] = [
+  {
+    title: "Bảo vệ dữ liệu quan trọng",
+    body: "Có bản sao cho dữ liệu cần giữ khi xóa nhầm, hỏng thiết bị hoặc sự cố hệ thống.",
+    Icon: ShieldCheck,
+  },
+  {
+    title: "Giảm thời gian gián đoạn",
+    body: "Khôi phục theo điểm sao lưu của phần mềm đã triển khai, để hệ thống hoạt động lại.",
+    Icon: RefreshCw,
+  },
+  {
+    title: "Tuân thủ và an toàn",
+    body: "Lịch sao lưu, nơi lưu và quyền truy cập được ghi trong phạm vi đã thống nhất.",
+    Icon: HardDrive,
+  },
+  {
+    title: "Tối ưu chi phí",
+    body: "Chọn số máy, dung lượng và sản phẩm theo quy mô, không mua dư phần không dùng.",
+    Icon: Settings,
+  },
+];
+
+const SCOPE = [
+  "Máy tính và máy chủ (Windows, Linux)",
+  "Microsoft 365: Exchange, OneDrive, SharePoint, Teams",
+  "Máy ảo VMware và Hyper-V",
+  "Cloud Server trên Azure, AWS hoặc Google Cloud khi đã chốt",
+  "Ứng dụng và cơ sở dữ liệu (SQL, MySQL) trong phạm vi",
+  "Mô hình on-premise, cloud hoặc hybrid",
+  "Phương án khôi phục khi sự cố",
+  "Giám sát, cảnh báo và báo cáo theo sản phẩm đã triển khai",
+  "Tư vấn và hỗ trợ kỹ thuật trong thời hạn dịch vụ",
+];
+
+const PROTECT_ROWS = ["Servers", "Endpoints", "Microsoft 365", "Cloud VMs"] as const;
+
+const STEPS: { title: string; body: string; Icon: LucideIcon }[] = [
+  { title: "Tư vấn & khảo sát", body: "Nhu cầu, dữ liệu cần giữ và hạ tầng hiện có.", Icon: Search },
+  { title: "Thiết kế giải pháp", body: "Phạm vi sao lưu, lịch chạy và nơi lưu bản sao.", Icon: Settings },
+  { title: "Triển khai & cấu hình", body: "Cài phần mềm và chính sách đã chốt.", Icon: Server },
+  { title: "Kiểm tra & bàn giao", body: "Chạy thử khôi phục trong phạm vi và hướng dẫn.", Icon: ShieldCheck },
+  { title: "Hỗ trợ & giám sát", body: "Kênh hỗ trợ kỹ thuật trong thời hạn dịch vụ.", Icon: Headphones },
+];
+
+const PRODUCTS: { title: string; body: string; mark: string; tone: string }[] = [
+  {
+    title: "Acronis Cyber Protect",
+    body: "Sao lưu máy tính, máy chủ, máy ảo và Microsoft 365 theo gói đã chọn.",
+    mark: "A",
+    tone: "bg-sky-100 text-sky-800",
+  },
+  {
+    title: "Veeam Backup",
+    body: "Sao lưu máy ảo, máy chủ và hạ tầng đã chốt.",
+    mark: "V",
+    tone: "bg-emerald-100 text-emerald-800",
+  },
+  {
+    title: "Synology",
+    body: "Sao lưu về NAS và lưu trữ gắn với hệ thống doanh nghiệp.",
+    mark: "S",
+    tone: "bg-amber-100 text-amber-800",
+  },
+  {
+    title: "Microsoft 365 Backup",
+    body: "Exchange, OneDrive, SharePoint và Teams theo sản phẩm hỗ trợ.",
+    mark: "M",
+    tone: "bg-accent-soft text-accent",
+  },
+];
+
+const card = `group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-white ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/40 ${ELEVATION_CARD_HOVER}`;
+
+export function BackupDisasterRecoveryLanding() {
+  return (
+    <div className="overflow-x-hidden bg-white">
+      <section className="border-b border-border bg-white">
+        <div className={`home-container ${LANDING_HERO_PAD}`}>
+          <nav
+            aria-label="Breadcrumb"
+            className={`${LANDING_CRUMB_GAP} flex flex-wrap items-center gap-1.5 ${BREADCRUMB_CLASS}`}
+          >
+            <Link href="/" className={HOVER_LINK_ACCENT}>
+              Trang chủ
+            </Link>
+            <span aria-hidden className="text-muted-soft">
+              ›
+            </span>
+            <Link href="/services" className={HOVER_LINK_ACCENT}>
+              Dịch vụ
+            </Link>
+            <span aria-hidden className="text-muted-soft">
+              ›
+            </span>
+            <span className={BREADCRUMB_CURRENT_CLASS}>{BACKUP_DR_LABEL}</span>
+          </nav>
+
+          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-8">
+            <div className="min-w-0">
+              <p className={`${OVERLINE_CLASS} text-accent`}>Dịch vụ triển khai & bảo vệ dữ liệu</p>
+              <h1 className={`mt-3 max-w-xl break-words ${HERO_TITLE_CLASS}`}>
+                Backup &
+                <span className="block">Disaster Recovery</span>
+              </h1>
+              <p className={`mt-4 max-w-xl ${PAGE_LEAD_CLASS}`}>
+                Triển khai sao lưu và khôi phục dữ liệu cho doanh nghiệp. KEYON thiết lập chính sách backup và quy trình khôi phục theo phạm vi đã chốt.
+              </p>
+              <ul className="mt-6 max-w-xl space-y-3">
+                {HERO_CHECKS.map((item) => (
+                  <li key={item} className="flex min-w-0 items-start gap-2.5">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent text-white">
+                      <Check size={12} strokeWidth={3} aria-hidden />
+                    </span>
+                    <span className={`min-w-0 break-words ${BODY_CLASS}`}>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-8 flex w-full min-w-0 flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+                <Link
+                  href={IMPLEMENTATION_QUOTE_HREF}
+                  className={`inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 text-white sm:w-auto ${CTA_LABEL_CLASS} ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+                >
+                  Yêu cầu tư vấn triển khai
+                  <ArrowRight size={16} aria-hidden />
+                </Link>
+                <Link
+                  href="/solutions/backup"
+                  className={`inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border bg-white px-6 text-navy sm:w-auto ${CTA_LABEL_CLASS} ${TRANSITION_UI} ${HOVER_OUTLINE_FILL}`}
+                >
+                  Xem các giải pháp Backup
+                </Link>
+              </div>
+            </div>
+            <HeroStage />
+          </div>
+        </div>
+      </section>
+
+      <section aria-label="Nền tảng thường triển khai" className="border-y border-border bg-[#F8FAFC]">
+        <div className="home-container flex flex-col lg:flex-row lg:items-stretch">
+          <div className="flex items-center py-4 lg:w-56 lg:shrink-0 lg:border-r lg:border-border lg:py-0 lg:pr-6">
+            <p className={`${OVERLINE_CLASS} text-muted`}>Nền tảng thường triển khai</p>
+          </div>
+          <ul className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 lg:flex-1">
+            {PLATFORMS.map((item) => (
+              <li key={item.name} className="min-w-0">
+                <span
+                  className={`flex h-12 items-center justify-center px-2 text-center font-display text-sm text-muted-soft ${item.mark} ${TRANSITION_UI} hover:text-navy lg:h-[4.25rem]`}
+                >
+                  {item.name}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="home-section bg-white">
+        <div className="home-container">
+          <header className="grid items-end gap-3 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-10">
+            <h2 className={SECTION_TITLE_CLASS}>
+              Vì sao doanh nghiệp cần Backup & Disaster Recovery?
+            </h2>
+            <p className={SECTION_LEAD_CLASS}>
+              Dữ liệu vận hành cần bản sao và cách khôi phục khi sự cố. KEYON thiết kế phương án sao lưu theo hệ thống đang dùng, rồi triển khai trong phạm vi đã thống nhất.
+            </p>
+          </header>
+          <ul className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {BENEFITS.map((item) => (
+              <li key={item.title} className="min-w-0">
+                <article className={`${card} p-4 sm:p-5`}>
+                  <div className="flex items-center gap-3">
+                    <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent ${TRANSITION_UI} group-hover:bg-accent group-hover:text-white`}>
+                      <item.Icon size={18} strokeWidth={1.8} aria-hidden />
+                    </span>
+                    <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{item.title}</h3>
+                  </div>
+                  <p className={`mt-3 ${BODY_MUTED_CLASS}`}>{item.body}</p>
+                </article>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section id="giai-phap" className="home-section scroll-mt-24 bg-[#F7FAFC]">
+        <div className="home-container grid items-center gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-12">
+          <div className="min-w-0">
+            <h2 className={SECTION_TITLE_CLASS}>Các giải pháp Backup & DR</h2>
+            <p className={`mt-2.5 max-w-xl ${SECTION_LEAD_CLASS}`}>
+              KEYON triển khai các hạng mục dưới đây khi doanh nghiệp cần sao lưu và phương án khôi phục. Bản sao không lưu trên KEYON.
+            </p>
+            <ul className="mt-5 max-w-xl space-y-2.5">
+              {SCOPE.map((line) => (
+                <li key={line} className={`flex min-w-0 items-start gap-2.5 ${BODY_CLASS}`}>
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent text-white">
+                    <Check size={12} strokeWidth={2.5} aria-hidden />
+                  </span>
+                  <span className="min-w-0 break-words">{line}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <ProtectPanel />
+        </div>
+      </section>
+
+      <section className="home-section bg-white">
+        <div className="home-container">
+          <header className="max-w-2xl">
+            <h2 className={SECTION_TITLE_CLASS}>Quy trình triển khai</h2>
+            <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
+              Năm bước, từ tiếp nhận nhu cầu đến bàn giao và hỗ trợ sau triển khai.
+            </p>
+          </header>
+          <ol className="relative mt-7 grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-5">
+            <li
+              aria-hidden
+              className="pointer-events-none absolute left-[8%] right-[8%] top-[3.35rem] hidden h-px bg-border lg:block"
+            />
+            {STEPS.map((step, index) => (
+              <li
+                key={step.title}
+                className={`group relative min-w-0 text-center ${index === STEPS.length - 1 ? "col-span-2 lg:col-span-1" : ""}`}
+              >
+                <span className={`${BADGE_CLASS} text-accent`}>{String(index + 1).padStart(2, "0")}</span>
+                <span className={`relative z-10 mx-auto mt-3 flex h-12 w-12 items-center justify-center rounded-full bg-accent-soft text-accent ring-8 ring-white ${TRANSITION_UI} group-hover:bg-accent group-hover:text-white`}>
+                  <step.Icon size={18} strokeWidth={1.8} aria-hidden />
+                </span>
+                <h3 className={`mt-3 ${CARD_TITLE_CLASS}`}>{step.title}</h3>
+                <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{step.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section id="nen-tang" className="home-section scroll-mt-24 bg-[#F7FAFC]">
+        <div className="home-container">
+          <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div className="max-w-2xl">
+              <h2 className={SECTION_TITLE_CLASS}>Các nền tảng & sản phẩm hỗ trợ</h2>
+              <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
+                KEYON triển khai backup trên các nền tảng này, theo gói và phạm vi doanh nghiệp đã chọn.
+              </p>
+            </div>
+            <Link href="/categories/backup" className={`inline-flex shrink-0 items-center gap-1 ${LINK_ACCENT_CLASS}`}>
+              Xem tất cả sản phẩm
+              <ArrowRight size={14} aria-hidden />
+            </Link>
+          </header>
+          <ul className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {PRODUCTS.map((item) => (
+              <li key={item.title} className="min-w-0">
+                <article className={`${card} p-4 sm:p-5`}>
+                  <span className={`flex h-11 w-11 items-center justify-center rounded-xl font-display text-lg font-bold ${item.tone}`}>
+                    {item.mark}
+                  </span>
+                  <h3 className={`mt-4 ${CARD_TITLE_CLASS}`}>{item.title}</h3>
+                  <p className={`mt-2 flex-1 ${BODY_MUTED_CLASS}`}>{item.body}</p>
+                  <Link href="/categories/backup" className={`mt-4 inline-flex items-center gap-1 ${LINK_ACCENT_CLASS}`}>
+                    Tìm hiểu thêm
+                    <ArrowRight size={14} aria-hidden />
+                  </Link>
+                </article>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="home-section bg-white">
+        <div className="home-container">
+          <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <h2 className={SECTION_TITLE_CLASS}>Câu hỏi thường gặp</h2>
+            <Link href="/faq" className={`inline-flex shrink-0 items-center gap-1 ${LINK_ACCENT_CLASS}`}>
+              Xem tất cả câu hỏi
+              <ArrowRight size={14} aria-hidden />
+            </Link>
+          </header>
+          <div className="mt-4 border-t border-border">
+            {BACKUP_DR_FAQ.map((item) => (
+              <details key={item.question} className="group border-b border-border">
+                <summary
+                  className={`flex cursor-pointer list-none items-center justify-between gap-4 py-4 ${CARD_TITLE_CLASS} ${TRANSITION_UI} hover:text-accent [&::-webkit-details-marker]:hidden`}
+                >
+                  <span className="min-w-0 break-words">{item.question}</span>
+                  <ChevronDown
+                    size={18}
+                    className={`shrink-0 text-muted ${TRANSITION_UI} group-open:rotate-180 group-hover:text-accent`}
+                    aria-hidden
+                  />
+                </summary>
+                <p className={`max-w-3xl pb-4 ${BODY_MUTED_CLASS}`}>{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="home-section">
+        <div className="home-container">
+          <div className="flex flex-col items-stretch gap-5 rounded-2xl bg-navy px-5 py-7 sm:px-8 md:flex-row md:items-center md:justify-between md:px-10 md:py-9">
+            <div className="min-w-0 max-w-2xl">
+              <p className={`${OVERLINE_CLASS} text-accent`}>Bảo vệ dữ liệu · Giảm rủi ro mất dữ liệu</p>
+              <h2 className={`mt-2 ${SECTION_TITLE_CLASS} !text-white`}>
+                Liên hệ KEYON để được tư vấn giải pháp Backup & Disaster Recovery phù hợp cho doanh nghiệp của bạn.
+              </h2>
+            </div>
+            <Link
+              href={IMPLEMENTATION_QUOTE_HREF}
+              className={`inline-flex h-12 w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-accent px-6 text-white md:w-auto ${CTA_LABEL_CLASS} ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
+            >
+              Liên hệ ngay
+              <ArrowRight size={16} aria-hidden />
+            </Link>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function HeroStage() {
+  return (
+    <div className="relative lg:min-h-[460px]">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-y-4 left-0 right-10 hidden overflow-hidden rounded-[28px] border border-sky-100 bg-gradient-to-br from-sky-50 via-white to-accent-soft lg:block"
+      >
+        <svg viewBox="0 0 320 220" className="absolute left-6 top-10 h-40 w-56 text-sky-300">
+          <path
+            fill="currentColor"
+            d="M96 92c0-22 18-40 40-40 8 0 16 2 22 7 6-16 22-27 40-27 24 0 44 18 44 42v2c18 4 32 18 32 36 0 20-16 36-36 36H84c-20 0-36-16-36-36 0-16 11-30 26-34-1-4-1-6 0-8 6-10 16-16 22-16z"
+            opacity="0.9"
+          />
+          <g fill="none" stroke="#0ea5a4" strokeWidth="6" strokeLinecap="round">
+            <path d="M150 78a36 36 0 1 1-18 30" />
+            <path d="M132 96l-8 14 16-2" />
+          </g>
+        </svg>
+      </div>
+      <ul
+        className={`relative z-10 w-full max-w-[320px] rounded-2xl border border-white/80 bg-white/95 p-2.5 backdrop-blur-sm lg:absolute lg:right-0 lg:top-1/2 lg:-translate-y-1/2 ${ELEVATION_FLOAT} ${TRANSITION_PANEL} ${ELEVATION_HERO_HOVER}`}
+      >
+        {HERO_MENU.map((item) => (
+          <li key={item.title}>
+            <Link
+              href="#giai-phap"
+              className={`group flex items-center gap-2.5 rounded-xl px-2 py-2 ${TRANSITION_UI} hover:bg-accent-soft`}
+            >
+              <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent ${TRANSITION_UI} group-hover:bg-accent group-hover:text-white`}>
+                <item.Icon size={16} strokeWidth={1.8} aria-hidden />
+              </span>
+              <span className="min-w-0">
+                <span className={`block break-words ${CARD_TITLE_CLASS}`}>{item.title}</span>
+                <span className={`block ${CARD_META_CLASS}`}>{item.body}</span>
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function ProtectPanel() {
+  return (
+    <div className="relative mx-auto w-full max-w-[360px] pt-4" aria-hidden>
+      <span className={`absolute right-3 top-0 z-10 inline-flex items-center gap-1.5 rounded-full bg-emerald-500 px-2.5 py-1 text-white ${BADGE_CLASS}`}>
+        <Check size={12} strokeWidth={3} />
+        All systems protected
+      </span>
+      <div className={`rounded-2xl bg-navy p-4 text-white sm:p-5 ${ELEVATION_FLOAT} ${TRANSITION_PANEL} ${ELEVATION_HERO_HOVER}`}>
+        <p className={`${CARD_TITLE_CLASS} !text-white`}>Acronis Cyber Protect</p>
+        <p className={`mt-4 ${OVERLINE_CLASS} text-slate-400`}>Backups</p>
+        <ul className="mt-2 divide-y divide-white/10">
+          {PROTECT_ROWS.map((row) => (
+            <li key={row} className="flex items-center justify-between gap-3 py-2.5">
+              <span className={`${BODY_CLASS} !text-white`}>{row}</span>
+              <span className={`inline-flex items-center gap-1.5 ${CARD_META_CLASS} !text-emerald-300`}>
+                <Check size={14} strokeWidth={2.5} />
+                Protected
+              </span>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-3 flex items-center gap-2.5 rounded-xl bg-white/10 px-3 py-2.5">
+          <Cloud size={16} className="shrink-0 text-sky-200" />
+          <span className={`${CARD_META_CLASS} !text-slate-300`}>Lịch sao lưu theo chính sách đã chốt</span>
+        </div>
+      </div>
+    </div>
+  );
+}

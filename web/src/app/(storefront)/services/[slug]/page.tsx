@@ -14,8 +14,15 @@ import {
   CLOUD_SERVER_PATH,
   CLOUD_SERVER_SEO,
 } from "@/storefront/components/services/CloudServerLanding";
+import {
+  BackupDisasterRecoveryLanding,
+  BACKUP_DR_FAQ,
+  BACKUP_DR_LABEL,
+  BACKUP_DR_PATH,
+  BACKUP_DR_SEO,
+} from "@/storefront/components/services/BackupDisasterRecoveryLanding";
 import { ServiceTopicLanding } from "@/storefront/components/services/ServiceTopicLanding";
-import { CLOUD_SERVER_SERVICE_SLUG, EMAIL_MIGRATION_SERVICE_SLUG, M365_EMAIL_SERVICE_SLUG, SERVICE_TOPICS, serviceTopicBySlug } from "@/storefront/nav/ia";
+import { BACKUP_DR_SERVICE_SLUG, CLOUD_SERVER_SERVICE_SLUG, EMAIL_MIGRATION_SERVICE_SLUG, M365_EMAIL_SERVICE_SLUG, SERVICE_TOPICS, serviceTopicBySlug } from "@/storefront/nav/ia";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
 import {
   buildBreadcrumbJsonLd,
@@ -87,6 +94,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         ...base.twitter,
         title: CLOUD_SERVER_SEO.title,
         description: CLOUD_SERVER_SEO.description,
+      },
+    };
+  }
+  if (slug === BACKUP_DR_SERVICE_SLUG) {
+    const base = await buildMainPageMetadata(BACKUP_DR_PATH);
+    return {
+      ...base,
+      title: absoluteTitle(BACKUP_DR_SEO.title),
+      description: BACKUP_DR_SEO.description,
+      openGraph: {
+        ...base.openGraph,
+        title: BACKUP_DR_SEO.title,
+        description: BACKUP_DR_SEO.description,
+      },
+      twitter: {
+        ...base.twitter,
+        title: BACKUP_DR_SEO.title,
+        description: BACKUP_DR_SEO.description,
       },
     };
   }
@@ -190,6 +215,39 @@ export default async function ServiceTopicPage({ params }: Props) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
         />
         <CloudServerLanding />
+      </>
+    );
+  }
+  if (slug === BACKUP_DR_SERVICE_SLUG) {
+    const serviceLd = buildServiceJsonLd({
+      name: BACKUP_DR_LABEL,
+      description: BACKUP_DR_SEO.description,
+      path: BACKUP_DR_PATH,
+      serviceType: BACKUP_DR_LABEL,
+    });
+    const breadcrumbLd = buildBreadcrumbJsonLd([
+      { name: "Trang chủ", path: "/" },
+      { name: "Dịch vụ", path: "/services" },
+      { name: BACKUP_DR_LABEL, path: BACKUP_DR_PATH },
+    ]);
+    const faqLd = buildFaqPageJsonLd([...BACKUP_DR_FAQ]);
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        />
+        {faqLd ? (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+          />
+        ) : null}
+        <BackupDisasterRecoveryLanding />
       </>
     );
   }
