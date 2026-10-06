@@ -198,12 +198,12 @@ export function CloudSolutionLanding({ featured }: Props) {
         <div className={`home-container relative overflow-hidden ${LANDING_HERO_PAD}`}>
           <div aria-hidden className="pointer-events-none absolute inset-0 hidden overflow-hidden lg:block">
             <Image
-              src="/services/cloud-solution-laptop.jpg"
+              src="/services/cloud-solution-balanced.jpg"
               alt=""
               fill
               priority
               sizes="(min-width: 1200px) 1200px, 100vw"
-              className="origin-left scale-110 object-cover object-center"
+              className="object-cover object-right"
             />
           </div>
           <div
