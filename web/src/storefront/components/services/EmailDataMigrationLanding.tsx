@@ -222,18 +222,17 @@ export function EmailDataMigrationLanding() {
   return (
     <div className="overflow-x-hidden bg-white">
       <section className="border-b border-border bg-white">
-        <div className={`home-container relative min-h-[640px] overflow-hidden lg:min-h-0 ${LANDING_HERO_PAD}`}>
+        <div className={`home-container relative overflow-hidden ${LANDING_HERO_PAD}`}>
           <Image
             src="/services/email-migration-hero.jpg"
             alt=""
             fill
             priority
-            sizes="(min-width: 1200px) 1200px, 100vw"
-            className="pointer-events-none object-cover object-right"
+            sizes="(min-width: 1024px) 1200px, 0px"
+            className="pointer-events-none hidden object-cover object-right lg:block"
           />
-          <div aria-hidden className="pointer-events-none absolute inset-0 lg:hidden" style={{ background: "linear-gradient(180deg, #ffffff 0%, #ffffff 42%, rgba(255,255,255,0.8) 62%, rgba(255,255,255,0) 86%)" }} />
           <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block" style={{ background: "linear-gradient(90deg, #ffffff 0%, #ffffff 34%, rgba(255,255,255,0.9) 48%, rgba(255,255,255,0.3) 64%, rgba(255,255,255,0) 76%)" }} />
-          <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 68%, rgba(255,255,255,0.28) 80%, rgba(255,255,255,0.72) 91%, #ffffff 100%)" }} />
+          <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block" style={{ background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 68%, rgba(255,255,255,0.28) 80%, rgba(255,255,255,0.72) 91%, #ffffff 100%)" }} />
           <div className="relative">
             <nav
               aria-label="Breadcrumb"
