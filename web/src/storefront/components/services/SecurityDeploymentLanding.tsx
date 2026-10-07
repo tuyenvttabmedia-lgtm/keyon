@@ -6,12 +6,7 @@ import {
   Check,
   ChevronDown,
   ClipboardList,
-  Database,
   Headphones,
-  Lock,
-  Mail,
-  Monitor,
-  Network,
   Search,
   Settings,
   ShieldCheck,
@@ -83,14 +78,22 @@ const HERO_CHECKS = [
   "Hỗ trợ kỹ thuật trong thời hạn dịch vụ",
 ];
 
-const HERO_CHIPS: { label: string; href: string; Icon: LucideIcon; place: string }[] = [
-  { label: "Endpoint Security", href: "#endpoint", Icon: Monitor, place: "left-[8%] top-[12%]" },
-  { label: "Email Security", href: "#email", Icon: Mail, place: "right-[6%] top-[16%]" },
-  { label: "Data Protection", href: "#data", Icon: Database, place: "left-[6%] bottom-[18%]" },
-  { label: "Network Security", href: "#network", Icon: Network, place: "right-[8%] bottom-[14%]" },
+const HERO_CHIPS: { label: string; href: string; logo: string; place: string }[] = [
+  { label: "Endpoint Security", href: "#endpoint", logo: "/brand/bitdefender.svg", place: "left-[8%] top-[12%]" },
+  { label: "Email Security", href: "#email", logo: "/brand/microsoft.svg", place: "right-[6%] top-[16%]" },
+  { label: "Data Protection", href: "#data", logo: "/brand/acronis.svg", place: "left-[6%] bottom-[18%]" },
+  { label: "Network Security", href: "#network", logo: "/brand/fortinet.svg", place: "right-[8%] bottom-[14%]" },
 ];
 
-const PLATFORMS = ["Bitdefender", "Kaspersky", "ESET", "Microsoft", "Acronis", "Sophos", "Fortinet"] as const;
+const PLATFORMS = [
+  { name: "Bitdefender", logo: "/brand/bitdefender.svg" },
+  { name: "Kaspersky", logo: "/brand/kaspersky.svg" },
+  { name: "ESET", logo: "/brand/eset.svg" },
+  { name: "Microsoft", logo: "/brand/microsoft.svg" },
+  { name: "Acronis", logo: "/brand/acronis.svg" },
+  { name: "Sophos", logo: "/brand/sophos.svg" },
+  { name: "Fortinet", logo: "/brand/fortinet.svg" },
+] as const;
 
 const BENEFITS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
@@ -115,29 +118,29 @@ const BENEFITS: { title: string; body: string; Icon: LucideIcon }[] = [
   },
 ];
 
-const SOLUTIONS: { id: string; title: string; points: string[]; Icon: LucideIcon }[] = [
+const SOLUTIONS: { id: string; title: string; points: string[]; logo: string }[] = [
   {
     id: "endpoint",
     title: "Bảo mật thiết bị",
-    Icon: Monitor,
+    logo: "/brand/bitdefender.svg",
     points: ["Máy tính, laptop và máy chủ", "Cài đặt sản phẩm đã chọn", "Bàn giao cho người phụ trách"],
   },
   {
     id: "email",
     title: "Bảo mật email",
-    Icon: Mail,
+    logo: "/brand/microsoft.svg",
     points: ["Lọc thư theo khả năng của sản phẩm", "Áp dụng cho hộp thư trong phạm vi", "Hướng dẫn vận hành sau cấu hình"],
   },
   {
     id: "data",
     title: "Bảo vệ dữ liệu",
-    Icon: Lock,
+    logo: "/brand/acronis.svg",
     points: ["Mã hóa hoặc phân quyền khi sản phẩm hỗ trợ", "Chỉ dữ liệu nằm trong phạm vi", "KEYON không lưu dữ liệu doanh nghiệp"],
   },
   {
     id: "network",
     title: "Bảo mật mạng",
-    Icon: Network,
+    logo: "/brand/fortinet.svg",
     points: ["Tường lửa hoặc VPN khi đã chốt", "Phân đoạn theo sơ đồ đã thống nhất", "Kiểm tra sau khi cấu hình"],
   },
 ];
@@ -190,7 +193,8 @@ const HANDOFF = [
 
 const card = `group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-white ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/40 ${ELEVATION_CARD_HOVER}`;
 
-export function SecurityDeploymentLanding() {
+export function SecurityDeploymentLanding({ heroImageUrl }: { heroImageUrl?: string }) {
+  const heroSrc = heroImageUrl?.trim() || "";
   return (
     <div className="overflow-x-hidden bg-white">
       <section className="border-b border-border bg-white">
@@ -244,7 +248,7 @@ export function SecurityDeploymentLanding() {
                 </Link>
               </div>
             </div>
-            <HeroArt />
+            <HeroArt src={heroSrc} />
           </div>
         </div>
       </section>
@@ -252,12 +256,10 @@ export function SecurityDeploymentLanding() {
       <section aria-label="Nền tảng thường triển khai" className="border-b border-border bg-[#F8FAFC]">
         <div className="home-container py-6 lg:py-8">
           <p className={`text-center ${SECTION_LEAD_CLASS}`}>Nền tảng thường triển khai</p>
-          <ul className="mt-4 flex flex-wrap justify-center lg:grid lg:grid-cols-7">
-            {PLATFORMS.map((name) => (
-              <li key={name} className="w-1/2 min-w-0 sm:w-1/4 lg:w-auto">
-                <span className={`flex h-12 items-center justify-center px-2 text-center font-display text-sm font-semibold tracking-tight text-muted-soft ${TRANSITION_UI} hover:text-navy`}>
-                  {name}
-                </span>
+          <ul className="mt-4 flex flex-wrap items-center justify-center">
+            {PLATFORMS.map((item) => (
+              <li key={item.name} className="flex h-16 w-1/4 min-w-0 items-center justify-center px-2 lg:h-[4.5rem] lg:w-auto lg:flex-1">
+                <img src={item.logo} alt={item.name} className="h-8 w-auto max-w-full object-contain sm:h-9" />
               </li>
             ))}
           </ul>
@@ -272,7 +274,7 @@ export function SecurityDeploymentLanding() {
               KEYON làm đúng hạng mục đã chốt, từ khảo sát đến bàn giao cho người phụ trách.
             </p>
           </header>
-          <ul className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mt-7 grid grid-cols-2 gap-3 lg:grid-cols-4">
             {BENEFITS.map((item) => (
               <li key={item.title} className="min-w-0">
                 <article className={`${card} p-4 sm:p-5`}>
@@ -298,13 +300,13 @@ export function SecurityDeploymentLanding() {
               Mỗi hạng mục chỉ được làm khi đã nằm trong phạm vi. Sản phẩm do doanh nghiệp chọn trên KEYON.
             </p>
           </header>
-          <ul className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mt-7 grid grid-cols-2 gap-3 lg:grid-cols-4">
             {SOLUTIONS.map((item) => (
               <li key={item.id} id={item.id} className="min-w-0 scroll-mt-24">
-                <article className={`${card} p-4 sm:p-5`}>
+                <article className={`${card} p-3 sm:p-5`}>
                   <div className="flex items-center gap-2.5">
-                    <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent sm:h-10 sm:w-10 ${TRANSITION_UI} group-hover:bg-accent group-hover:text-white`}>
-                      <item.Icon size={18} strokeWidth={1.8} aria-hidden />
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white sm:h-10 sm:w-10">
+                      <img src={item.logo} alt="" className="h-6 w-6 object-contain sm:h-7 sm:w-7" />
                     </span>
                     <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{item.title}</h3>
                   </div>
@@ -361,7 +363,7 @@ export function SecurityDeploymentLanding() {
               Phạm vi, người nhận bàn giao và kênh hỗ trợ được nói rõ trước khi triển khai.
             </p>
           </header>
-          <ul className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mt-7 grid grid-cols-2 gap-3 lg:grid-cols-4">
             {REASONS.map((item) => (
               <li key={item.title} className="min-w-0">
                 <article className={`${card} p-4 sm:p-5`}>
@@ -387,7 +389,7 @@ export function SecurityDeploymentLanding() {
               Kết quả bàn giao gắn với phạm vi đã chốt cùng người phụ trách.
             </p>
           </header>
-          <ul className="mt-7 grid grid-cols-1 gap-3 md:grid-cols-3">
+          <ul className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-3">
             {HANDOFF.map((item) => (
               <li key={item.title} className="min-w-0">
                 <article className={`${card} p-4 sm:p-5`}>
@@ -409,7 +411,7 @@ export function SecurityDeploymentLanding() {
               <ArrowRight size={14} aria-hidden />
             </Link>
           </header>
-          <div className="mt-5 grid gap-3">
+          <div className="mt-5 grid gap-3 lg:grid-cols-2">
             {SECURITY_DEPLOYMENT_FAQ.map((item) => (
               <details
                 key={item.question}
@@ -449,18 +451,20 @@ export function SecurityDeploymentLanding() {
   );
 }
 
-function HeroArt() {
+function HeroArt({ src }: { src?: string }) {
   return (
     <div className="relative hidden h-full lg:block">
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden rounded-[28px] bg-[#F4F7FB]">
-        <Image
-          src="/services/cloud-solution-laptop.jpg"
-          alt=""
-          fill
-          priority
-          sizes="(min-width: 1024px) 560px, 0px"
-          className="object-contain object-center p-6"
-        />
+        {src ? (
+          <Image
+            src={src}
+            alt=""
+            fill
+            priority
+            sizes="(min-width: 1024px) 560px, 0px"
+            className="object-cover object-center"
+          />
+        ) : null}
       </div>
       {HERO_CHIPS.map((chip) => (
         <Link
@@ -468,9 +472,7 @@ function HeroArt() {
           href={chip.href}
           className={`group absolute ${chip.place} flex items-center gap-2 rounded-2xl border border-white/80 bg-white/95 px-3 py-2 backdrop-blur-sm ${ELEVATION_FLOAT} ${TRANSITION_PANEL} ${ELEVATION_FLOAT_HOVER} ${HOVER_LIFT_CARD}`}
         >
-          <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent ${TRANSITION_UI} group-hover:bg-accent group-hover:text-white`}>
-            <chip.Icon size={15} strokeWidth={1.8} aria-hidden />
-          </span>
+          <img src={chip.logo} alt="" className="h-6 w-6 shrink-0 object-contain" />
           <span className={`whitespace-nowrap ${CARD_TITLE_CLASS}`}>{chip.label}</span>
         </Link>
       ))}

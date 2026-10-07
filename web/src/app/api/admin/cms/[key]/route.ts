@@ -12,6 +12,7 @@ import {
   defaultBlog,
   defaultCmsBanner,
   defaultCmsBackupDrService,
+  defaultCmsSecurityDeploymentService,
   defaultCmsBackupSolution,
   defaultCmsCloudSolution,
   defaultCmsProductivity,
@@ -187,6 +188,10 @@ const FILES: Record<string, { file: string; fallback: unknown }> = {
   blog: { file: "blog.json", fallback: defaultBlog },
   banner: { file: "banner.json", fallback: defaultCmsBanner },
   "backup-dr-service": { file: "backup-dr-service.json", fallback: defaultCmsBackupDrService },
+  "security-deployment-service": {
+    file: "security-deployment-service.json",
+    fallback: defaultCmsSecurityDeploymentService,
+  },
   "backup-solution": { file: "backup-solution.json", fallback: defaultCmsBackupSolution },
   "cloud-solution": { file: "cloud-solution.json", fallback: defaultCmsCloudSolution },
   "security-solution": { file: "security-solution.json", fallback: defaultCmsSecuritySolution },
@@ -377,7 +382,12 @@ export async function PUT(
     await writeJsonFile("productivity.json", data);
     return NextResponse.json({ ok: true, data });
   }
-  if (key === "security-solution" || key === "backup-solution" || key === "backup-dr-service") {
+  if (
+    key === "security-solution" ||
+    key === "backup-solution" ||
+    key === "backup-dr-service" ||
+    key === "security-deployment-service"
+  ) {
     const mediaBase = await cmsMediaBase();
     const data = z
       .object({
@@ -391,7 +401,9 @@ export async function PUT(
         ? "security-solution.json"
         : key === "backup-solution"
           ? "backup-solution.json"
-          : "backup-dr-service.json";
+          : key === "security-deployment-service"
+            ? "security-deployment-service.json"
+            : "backup-dr-service.json";
     await writeJsonFile(file, data);
     return NextResponse.json({ ok: true, data });
   }
