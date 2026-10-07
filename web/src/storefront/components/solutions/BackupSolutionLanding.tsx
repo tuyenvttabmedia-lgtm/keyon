@@ -442,27 +442,25 @@ export function BackupSolutionLanding({ featured, heroImageUrl }: Props) {
             {FLOW.map((s, i) => (
               <li
                 key={s.title}
-                className={`flex items-start gap-3 rounded-2xl border bg-white p-3.5 sm:flex-col sm:p-4 ${
+                className={`flex h-full flex-col rounded-2xl border bg-white p-3.5 lg:p-4 ${
                   s.highlight ? "border-accent bg-accent-soft/40" : "border-border"
                 } ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER} ${
                   i === FLOW.length - 1 ? "sm:col-span-2 lg:col-span-1" : ""
                 }`}
               >
-                <span
-                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl font-display text-base font-bold ${
-                    s.highlight ? "bg-accent text-white" : "bg-navy text-white"
-                  }`}
-                  aria-hidden
-                >
-                  {i + 1}
-                </span>
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <s.Icon size={16} strokeWidth={1.85} className="shrink-0 text-accent" aria-hidden />
-                    <p className={CARD_TITLE_CLASS}>{s.title}</p>
-                  </div>
-                  <p className={`mt-1.5 ${BODY_MUTED_CLASS}`}>{s.body}</p>
+                <div className="flex items-center gap-2">
+                  <s.Icon size={18} strokeWidth={2} className="shrink-0 text-accent" aria-hidden />
+                  <span
+                    className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg font-display text-sm font-bold ${
+                      s.highlight ? "bg-accent text-white" : "bg-navy text-white"
+                    }`}
+                    aria-hidden
+                  >
+                    {i + 1}
+                  </span>
+                  <p className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{s.title}</p>
                 </div>
+                <p className={`mt-2 ${BODY_MUTED_CLASS}`}>{s.body}</p>
               </li>
             ))}
           </ol>
