@@ -21,6 +21,14 @@ import {
   BACKUP_DR_PATH,
   BACKUP_DR_SEO,
 } from "@/storefront/components/services/BackupDisasterRecoveryLanding";
+import {
+  SecurityDeploymentLanding,
+  SECURITY_DEPLOYMENT_FAQ,
+  SECURITY_DEPLOYMENT_LABEL,
+  SECURITY_DEPLOYMENT_PATH,
+  SECURITY_DEPLOYMENT_SEO,
+  SECURITY_DEPLOYMENT_SLUG,
+} from "@/storefront/components/services/SecurityDeploymentLanding";
 import { ServiceTopicLanding } from "@/storefront/components/services/ServiceTopicLanding";
 import { BACKUP_DR_SERVICE_SLUG, CLOUD_SERVER_SERVICE_SLUG, EMAIL_MIGRATION_SERVICE_SLUG, M365_EMAIL_SERVICE_SLUG, SERVICE_TOPICS, serviceTopicBySlug } from "@/storefront/nav/ia";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
@@ -111,6 +119,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         ...base.twitter,
         title: CLOUD_SERVER_SEO.title,
         description: CLOUD_SERVER_SEO.description,
+      },
+    };
+  }
+  if (slug === SECURITY_DEPLOYMENT_SLUG) {
+    const base = await buildMainPageMetadata(SECURITY_DEPLOYMENT_PATH);
+    return {
+      ...base,
+      title: absoluteTitle(SECURITY_DEPLOYMENT_SEO.title),
+      description: SECURITY_DEPLOYMENT_SEO.description,
+      openGraph: {
+        ...base.openGraph,
+        title: SECURITY_DEPLOYMENT_SEO.title,
+        description: SECURITY_DEPLOYMENT_SEO.description,
+      },
+      twitter: {
+        ...base.twitter,
+        title: SECURITY_DEPLOYMENT_SEO.title,
+        description: SECURITY_DEPLOYMENT_SEO.description,
       },
     };
   }
@@ -232,6 +258,39 @@ export default async function ServiceTopicPage({ params }: Props) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
         />
         <CloudServerLanding />
+      </>
+    );
+  }
+  if (slug === SECURITY_DEPLOYMENT_SLUG) {
+    const serviceLd = buildServiceJsonLd({
+      name: SECURITY_DEPLOYMENT_LABEL,
+      description: SECURITY_DEPLOYMENT_SEO.description,
+      path: SECURITY_DEPLOYMENT_PATH,
+      serviceType: SECURITY_DEPLOYMENT_LABEL,
+    });
+    const breadcrumbLd = buildBreadcrumbJsonLd([
+      { name: "Trang chủ", path: "/" },
+      { name: "Dịch vụ", path: "/services" },
+      { name: SECURITY_DEPLOYMENT_LABEL, path: SECURITY_DEPLOYMENT_PATH },
+    ]);
+    const faqLd = buildFaqPageJsonLd([...SECURITY_DEPLOYMENT_FAQ]);
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        />
+        {faqLd ? (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+          />
+        ) : null}
+        <SecurityDeploymentLanding />
       </>
     );
   }
