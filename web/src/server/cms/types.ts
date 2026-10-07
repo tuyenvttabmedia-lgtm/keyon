@@ -273,6 +273,11 @@ export type CmsSecurityDeploymentService = {
   heroImageUrl: string;
 };
 
+/** Service `/services/microsoft-365-management` — ảnh nền hero desktop, các thẻ đè lên. */
+export type CmsM365ManagementService = {
+  heroImageUrl: string;
+};
+
 /** Landing `/solutions/microsoft-365-office` — ảnh hero blob + tư vấn + scene work-mode. */
 export type CmsProductivity = {
   /** Hero cột phải — banner trong organic blob (khuyến nghị ~960×720). */
@@ -464,6 +469,10 @@ export const defaultCmsBackupDrService: CmsBackupDrService = {
 };
 
 export const defaultCmsSecurityDeploymentService: CmsSecurityDeploymentService = {
+  heroImageUrl: "",
+};
+
+export const defaultCmsM365ManagementService: CmsM365ManagementService = {
   heroImageUrl: "",
 };
 

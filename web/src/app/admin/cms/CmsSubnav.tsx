@@ -20,6 +20,7 @@ const CMS_NAV = [
   { href: "/admin/cms/backup", label: "Sao lưu và khôi phục" },
   { href: "/admin/cms/backup-dr", label: "Backup & Disaster Recovery" },
   { href: "/admin/cms/security-deployment", label: "Triển khai bảo mật" },
+  { href: "/admin/cms/m365-management", label: "Quản lý Microsoft 365" },
   { href: "/admin/cms/solutions", label: "Giải pháp" },
   { href: "/admin/cms/checkout", label: "Checkout" },
   { href: "/admin/cms/account", label: "Account" },

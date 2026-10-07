@@ -29,6 +29,14 @@ import {
   SECURITY_DEPLOYMENT_SEO,
   SECURITY_DEPLOYMENT_SLUG,
 } from "@/storefront/components/services/SecurityDeploymentLanding";
+import {
+  Microsoft365ManagementLanding,
+  M365_MANAGEMENT_FAQ,
+  M365_MANAGEMENT_LABEL,
+  M365_MANAGEMENT_PATH,
+  M365_MANAGEMENT_SEO,
+  M365_MANAGEMENT_SLUG,
+} from "@/storefront/components/services/Microsoft365ManagementLanding";
 import { ServiceTopicLanding } from "@/storefront/components/services/ServiceTopicLanding";
 import { BACKUP_DR_SERVICE_SLUG, CLOUD_SERVER_SERVICE_SLUG, EMAIL_MIGRATION_SERVICE_SLUG, M365_EMAIL_SERVICE_SLUG, SERVICE_TOPICS, serviceTopicBySlug } from "@/storefront/nav/ia";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
@@ -41,6 +49,7 @@ import { absoluteTitle } from "@/server/seo/title";
 import { resolveMediaUrl } from "@/lib/media-url";
 import {
   defaultCmsBackupDrService,
+  defaultCmsM365ManagementService,
   defaultCmsSecurityDeploymentService,
   readJsonFile,
 } from "@/server/cms/store";
@@ -120,6 +129,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         ...base.twitter,
         title: CLOUD_SERVER_SEO.title,
         description: CLOUD_SERVER_SEO.description,
+      },
+    };
+  }
+  if (slug === M365_MANAGEMENT_SLUG) {
+    const base = await buildMainPageMetadata(M365_MANAGEMENT_PATH);
+    return {
+      ...base,
+      title: absoluteTitle(M365_MANAGEMENT_SEO.title),
+      description: M365_MANAGEMENT_SEO.description,
+      openGraph: {
+        ...base.openGraph,
+        title: M365_MANAGEMENT_SEO.title,
+        description: M365_MANAGEMENT_SEO.description,
+      },
+      twitter: {
+        ...base.twitter,
+        title: M365_MANAGEMENT_SEO.title,
+        description: M365_MANAGEMENT_SEO.description,
       },
     };
   }
@@ -259,6 +286,44 @@ export default async function ServiceTopicPage({ params }: Props) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
         />
         <CloudServerLanding />
+      </>
+    );
+  }
+  if (slug === M365_MANAGEMENT_SLUG) {
+    const serviceLd = buildServiceJsonLd({
+      name: M365_MANAGEMENT_LABEL,
+      description: M365_MANAGEMENT_SEO.description,
+      path: M365_MANAGEMENT_PATH,
+      serviceType: M365_MANAGEMENT_LABEL,
+    });
+    const breadcrumbLd = buildBreadcrumbJsonLd([
+      { name: "Trang chủ", path: "/" },
+      { name: "Dịch vụ", path: "/services" },
+      { name: M365_MANAGEMENT_LABEL, path: M365_MANAGEMENT_PATH },
+    ]);
+    const faqLd = buildFaqPageJsonLd([...M365_MANAGEMENT_FAQ]);
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        />
+        {faqLd ? (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+          />
+        ) : null}
+        <Microsoft365ManagementLanding
+          heroImageUrl={await readServiceHero(
+            "m365-management-service.json",
+            defaultCmsM365ManagementService,
+          )}
+        />
       </>
     );
   }
