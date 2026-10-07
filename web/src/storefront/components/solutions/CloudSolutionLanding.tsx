@@ -2,12 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
+  BadgeCheck,
   Building2,
   Cloud,
   CloudUpload,
   CreditCard,
   HardDrive,
   Headphones,
+  Headset,
   Monitor,
   Server,
   ShieldCheck,
@@ -169,17 +171,17 @@ const HERO_VALUES: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Gói trên catalog",
     body: "Đăng ký VPS hoặc thuê Dedicated Server đang được KEYON cung cấp.",
-    Icon: ShoppingCart,
+    Icon: Server,
   },
   {
     title: "Loại nhận rõ ràng",
     body: "Biết trước cấu hình, thời hạn và thông tin bàn giao.",
-    Icon: ShieldCheck,
+    Icon: BadgeCheck,
   },
   {
     title: "Hỗ trợ tiếng Việt",
     body: "Hỗ trợ kỹ thuật từ KEYON trong phạm vi gói.",
-    Icon: Headphones,
+    Icon: Headset,
   },
 ];
 
@@ -240,17 +242,17 @@ export function CloudSolutionLanding({ featured, heroImageUrl }: Props) {
 
               <ul className="order-3 mt-5 grid gap-3 sm:order-none sm:mt-7 sm:grid-cols-3 sm:gap-5">
                 {HERO_VALUES.map((item) => (
-                  <li key={item.title} className="flex items-start gap-3 sm:flex-col sm:gap-2">
-                    <span
-                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-accent/20 bg-accent-soft text-accent"
-                      aria-hidden
-                    >
-                      <item.Icon {...ICON_SM} />
-                    </span>
-                    <span className="min-w-0">
-                      <span className={`block ${CARD_TITLE_CLASS}`}>{item.title}</span>
-                      <span className={`mt-0.5 block ${CARD_META_CLASS}`}>{item.body}</span>
-                    </span>
+                  <li key={item.title} className="min-w-0">
+                    <div className="flex items-center gap-2.5">
+                      <span
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-accent/20 bg-accent-soft text-accent"
+                        aria-hidden
+                      >
+                        <item.Icon size={18} strokeWidth={2} />
+                      </span>
+                      <span className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{item.title}</span>
+                    </div>
+                    <p className={`mt-1.5 ${CARD_META_CLASS}`}>{item.body}</p>
                   </li>
                 ))}
               </ul>

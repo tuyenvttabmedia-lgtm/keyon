@@ -6,16 +6,17 @@ import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
   AlertTriangle,
-  AppWindow,
   Check,
   Cloud,
   CloudUpload,
+  Database,
   FolderOpen,
+  HardDrive,
   Headphones,
+  Headset,
   History,
   Laptop,
   Lock,
-  RefreshCw,
   Server,
   ShieldCheck,
   Zap,
@@ -84,21 +85,21 @@ const HERO_POINTS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "License phần mềm backup",
     body: "Chọn sản phẩm và license backup phù hợp với thiết bị hoặc hạ tầng.",
-    Icon: CloudUpload,
+    Icon: HardDrive,
   },
   {
     title: "Tính năng theo vendor",
     body: "Lịch sao lưu, lưu trữ, mã hóa và khôi phục tùy theo sản phẩm và gói license.",
-    Icon: Lock,
+    Icon: ShieldCheck,
   },
   {
     title: "Hỗ trợ chọn gói",
     body: "Tư vấn tiếng Việt khi cần lựa chọn backup cho PC, server, Microsoft 365 hoặc Cloud.",
-    Icon: RefreshCw,
+    Icon: Headset,
   },
 ];
 
-const DATA_PILLARS: { title: string; body: string; Icon: LucideIcon }[] = [
+const DATA_PILLARS: { title: string; body: string; Icon: LucideIcon; logo?: string }[] = [
   {
     title: "Thiết bị",
     body: "Gói endpoint cho PC / laptop — sao lưu file hoặc image theo phần mềm vendor.",
@@ -112,12 +113,13 @@ const DATA_PILLARS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Dữ liệu quan trọng",
     body: "Bảo vệ tài liệu, ảnh, database trên hạ tầng do bạn hoặc IT quản lý.",
-    Icon: FolderOpen,
+    Icon: Database,
   },
   {
     title: "Ứng dụng & SaaS",
     body: "Backup dữ liệu Microsoft 365 và các nền tảng SaaS theo phạm vi hỗ trợ của từng sản phẩm.",
-    Icon: AppWindow,
+    Icon: Cloud,
+    logo: "m365",
   },
   {
     title: "Dữ liệu đám mây",
@@ -225,17 +227,17 @@ export function BackupSolutionLanding({ featured, heroImageUrl }: Props) {
 
               <ul className="mt-5 grid gap-3 sm:grid-cols-3 sm:gap-2.5">
                 {HERO_POINTS.map((p) => (
-                  <li key={p.title} className="flex gap-2.5 sm:flex-col sm:items-start sm:gap-1.5">
-                    <span
-                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent"
-                      aria-hidden
-                    >
-                      <p.Icon {...ICON_SM} />
-                    </span>
-                    <div className="min-w-0">
-                      <p className={CARD_TITLE_CLASS}>{p.title}</p>
-                      <p className={`mt-0.5 ${CARD_META_CLASS}`}>{p.body}</p>
+                  <li key={p.title} className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"
+                        aria-hidden
+                      >
+                        <p.Icon size={16} strokeWidth={2} />
+                      </span>
+                      <p className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{p.title}</p>
                     </div>
+                    <p className={`mt-1.5 ${CARD_META_CLASS}`}>{p.body}</p>
                   </li>
                 ))}
               </ul>
@@ -291,18 +293,22 @@ export function BackupSolutionLanding({ featured, heroImageUrl }: Props) {
                 className={i === DATA_PILLARS.length - 1 ? "sm:col-span-2 lg:col-span-1" : undefined}
               >
                 <article
-                  className={`flex h-full items-start gap-3 rounded-2xl border border-border bg-white p-3.5 lg:flex-col lg:p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
+                  className={`flex h-full flex-col rounded-2xl border border-border bg-white p-3.5 lg:p-4 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} ${ELEVATION_CARD_HOVER}`}
                 >
-                  <span
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"
-                    aria-hidden
-                  >
-                    <p.Icon size={18} strokeWidth={1.75} />
-                  </span>
-                  <div className="min-w-0">
-                    <h3 className={CARD_TITLE_CLASS}>{p.title}</h3>
-                    <p className={`mt-1 ${BODY_MUTED_CLASS}`}>{p.body}</p>
+                  <div className="flex items-center gap-2.5">
+                    <span
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"
+                      aria-hidden
+                    >
+                      {p.logo ? (
+                        <BrandLogo name={p.logo} size={20} />
+                      ) : (
+                        <p.Icon size={18} strokeWidth={2} />
+                      )}
+                    </span>
+                    <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{p.title}</h3>
                   </div>
+                  <p className={`mt-2 ${BODY_MUTED_CLASS}`}>{p.body}</p>
                 </article>
               </li>
             ))}
