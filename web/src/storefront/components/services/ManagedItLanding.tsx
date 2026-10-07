@@ -301,12 +301,14 @@ export function ManagedItLanding({ heroImageUrl }: { heroImageUrl?: string }) {
             {SERVICES.map((item) => (
               <li key={item.id} id={item.id} className="min-w-0 scroll-mt-24">
                 <article className={`${card} p-4 sm:p-5`}>
-                  <span className={`flex h-10 w-10 items-center justify-center rounded-xl bg-accent-soft text-accent ${TRANSITION_UI} group-hover:bg-accent group-hover:text-white`}>
-                    <item.Icon size={18} strokeWidth={1.8} aria-hidden />
-                  </span>
-                  <h3 className={`mt-3 break-words ${CARD_TITLE_CLASS}`}>{item.title}</h3>
-                  <p className={`mt-2 ${BODY_MUTED_CLASS}`}>{item.body}</p>
-                  <Link href={item.href} className={`mt-4 inline-flex items-center gap-1 ${LINK_ACCENT_CLASS}`}>
+                  <div className="flex items-center gap-2.5">
+                    <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent sm:h-10 sm:w-10 ${TRANSITION_UI} group-hover:bg-accent group-hover:text-white`}>
+                      <item.Icon size={18} strokeWidth={1.8} aria-hidden />
+                    </span>
+                    <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{item.title}</h3>
+                  </div>
+                  <p className={`mt-3 ${BODY_MUTED_CLASS}`}>{item.body}</p>
+                  <Link href={item.href} className={`mt-auto inline-flex items-center gap-1 pt-4 ${LINK_ACCENT_CLASS}`}>
                     Tìm hiểu thêm
                     <ArrowRight size={14} aria-hidden />
                   </Link>
@@ -348,7 +350,7 @@ export function ManagedItLanding({ heroImageUrl }: { heroImageUrl?: string }) {
 
       <section className="home-section bg-[#F7FAFC]">
         <div className="home-container">
-          <div className="grid items-stretch overflow-hidden rounded-[28px] lg:grid-cols-2">
+          <div className="grid items-stretch overflow-hidden rounded-[28px] lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
             <div className="bg-navy px-5 py-7 sm:px-8 sm:py-9">
               <p className={`${OVERLINE_CLASS} text-accent`}>Cam kết dịch vụ</p>
               <h2 className={`mt-2 ${SECTION_TITLE_CLASS} !text-white`}>Cam kết dịch vụ của KEYON</h2>
@@ -358,16 +360,18 @@ export function ManagedItLanding({ heroImageUrl }: { heroImageUrl?: string }) {
               <ul className="mt-6 grid grid-cols-2 gap-3">
                 {COMMITMENTS.map((item) => (
                   <li key={item.title} className="min-w-0 rounded-2xl border border-white/10 bg-white/5 p-3 sm:p-4">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 text-accent">
-                      <item.Icon size={18} strokeWidth={1.8} aria-hidden />
-                    </span>
-                    <h3 className={`mt-3 break-words !text-white ${CARD_TITLE_CLASS}`}>{item.title}</h3>
-                    <p className={`mt-1 ${BODY_MUTED_CLASS} !text-white/70`}>{item.body}</p>
+                    <div className="flex items-center gap-2.5">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-accent">
+                        <item.Icon size={18} strokeWidth={1.8} aria-hidden />
+                      </span>
+                      <h3 className={`min-w-0 break-words !text-white ${CARD_TITLE_CLASS}`}>{item.title}</h3>
+                    </div>
+                    <p className={`mt-2 ${BODY_MUTED_CLASS} !text-white/70`}>{item.body}</p>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="flex flex-col justify-center bg-white px-5 py-7 sm:px-8 sm:py-9 lg:px-10">
+            <div className="flex h-full flex-col justify-center bg-white px-5 py-7 sm:px-8 sm:py-9 lg:px-10">
               <h2 className={SECTION_TITLE_CLASS}>Một hệ thống IT ổn định là nền tảng để vận hành</h2>
               <p className={`mt-2.5 ${SECTION_LEAD_CLASS}`}>
                 KEYON nhận các hạng mục đã chốt, để doanh nghiệp giữ đầu mối phụ trách và biết việc nào đang được theo dõi.
