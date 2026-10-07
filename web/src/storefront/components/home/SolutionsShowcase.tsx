@@ -312,24 +312,37 @@ function SolutionVisual({
         </div>
       </div>
 
-      <ul className="grid flex-1 grid-cols-2 gap-2 content-stretch sm:gap-2.5">
-        {chips.map((chip) => (
-          <li
-            key={chip.id}
-            className={`flex min-h-[4.5rem] flex-col justify-center gap-2 rounded-xl border border-border/80 bg-white px-3 py-3 ${cardFx}`}
-          >
-            <span
-              className={`inline-flex h-8 w-8 items-center justify-center rounded-lg ${
-                TONE_WELL[chip.tone ?? "teal"]
-              }`}
+      <ul className="grid flex-1 grid-cols-2 content-stretch gap-2 sm:gap-2.5">
+        {chips.map((chip) => {
+          const logo = CHIP_LOGO[chip.id];
+          return (
+            <li
+              key={chip.id}
+              className={`flex min-h-[3.25rem] items-center gap-2.5 rounded-xl border border-border/80 bg-white px-3 py-2.5 ${cardFx}`}
             >
-              <ChipIcon id={chip.id} size="sm" />
-            </span>
-            <span className={`${CARD_TITLE_CLASS} !font-semibold leading-snug`}>
-              {chip.label}
-            </span>
-          </li>
-        ))}
+              {logo ? (
+                <img
+                  src={logo}
+                  alt=""
+                  className="h-8 w-8 shrink-0 object-contain"
+                />
+              ) : (
+                <span
+                  className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
+                    TONE_WELL[chip.tone ?? "teal"]
+                  }`}
+                >
+                  <ChipIcon id={chip.id} size="sm" />
+                </span>
+              )}
+              <span
+                className={`min-w-0 break-words ${CARD_TITLE_CLASS} !font-semibold leading-snug`}
+              >
+                {chip.label}
+              </span>
+            </li>
+          );
+        })}
       </ul>
 
       <div
@@ -418,6 +431,13 @@ function SolutionTopicIcon({
       );
   }
 }
+
+const CHIP_LOGO: Record<string, string> = {
+  m365: "/brand/microsoft.svg",
+  windows: "/brand/windows.svg",
+  office: "/brand/office.svg",
+  teams: "/brand/teams.svg",
+};
 
 function ChipIcon({ id, size = "sm" }: { id: string; size?: IconSize }) {
   const props: SVGProps<SVGSVGElement> = {
