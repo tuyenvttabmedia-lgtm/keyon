@@ -91,13 +91,13 @@ const HERO_CHIPS: { label: string; href: string; Icon: LucideIcon }[] = [
 ];
 
 const WORKLOADS = [
-  { name: "Microsoft 365", logo: "/brand/microsoft.svg" },
-  { name: "Exchange", logo: "/brand/exchange.svg" },
-  { name: "SharePoint", logo: "/brand/sharepoint.svg" },
-  { name: "OneDrive", logo: "/brand/onedrive.svg" },
-  { name: "Teams", logo: "/brand/teams.svg" },
-  { name: "Intune", logo: "/brand/intune.svg" },
-  { name: "Entra ID", logo: "/brand/entra.svg" },
+  { name: "Microsoft 365", logo: "/brand/microsoft.svg", note: "" },
+  { name: "Exchange", logo: "/brand/exchange.svg", note: "Hộp thư trong tenant" },
+  { name: "SharePoint", logo: "/brand/sharepoint.svg", note: "Site và thư viện tài liệu" },
+  { name: "OneDrive", logo: "/brand/onedrive.svg", note: "Tệp của người dùng" },
+  { name: "Teams", logo: "/brand/teams.svg", note: "Nhóm và cuộc họp" },
+  { name: "Intune", logo: "/brand/intune.svg", note: "Thiết bị trong phạm vi" },
+  { name: "Entra ID", logo: "/brand/entra.svg", note: "Tài khoản và đăng nhập" },
 ] as const;
 
 const BENEFITS: { title: string; body: string; Icon: LucideIcon }[] = [
@@ -303,8 +303,8 @@ export function Microsoft365ManagementLanding({ heroImageUrl }: { heroImageUrl?:
               KEYON chỉ làm các hạng mục đã chốt trên tenant của doanh nghiệp.
             </p>
           </header>
-          <div className="mt-7 grid items-start gap-6 lg:grid-cols-2 lg:gap-10">
-            <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+          <div className="mt-7 grid items-stretch gap-6 lg:grid-cols-2 lg:gap-8">
+            <ul className="grid content-start gap-3 sm:grid-cols-2 lg:grid-cols-1">
               {SCOPES.map((item) => (
                 <li key={item.id} id={item.id} className="scroll-mt-24">
                   <article className={rowCard}>
@@ -429,9 +429,10 @@ export function Microsoft365ManagementLanding({ heroImageUrl }: { heroImageUrl?:
 }
 
 function WorkloadPanel() {
+  const tiles = WORKLOADS.filter((item) => item.name !== "Microsoft 365");
   return (
-    <div className={`rounded-[28px] border border-border bg-[#F4F7FB] p-4 sm:p-6 ${ELEVATION_HAIRLINE}`}>
-      <div className={`rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_HAIRLINE}`}>
+    <div className={`flex h-full min-h-0 flex-col rounded-[28px] border border-border bg-[#F4F7FB] p-4 sm:p-5 ${ELEVATION_HAIRLINE}`}>
+      <div className={`flex min-h-0 flex-1 flex-col rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_HAIRLINE}`}>
         <div className="flex items-center gap-3">
           <img src="/brand/microsoft.svg" alt="" className="h-8 w-8 shrink-0 object-contain" />
           <div className="min-w-0">
@@ -439,14 +440,17 @@ function WorkloadPanel() {
             <p className={BODY_MUTED_CLASS}>Các dịch vụ có thể nằm trong phạm vi quản lý.</p>
           </div>
         </div>
-        <ul className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {WORKLOADS.filter((item) => item.name !== "Microsoft 365").map((item) => (
+        <ul className="mt-4 grid flex-1 grid-cols-2 gap-3 lg:grid-rows-3">
+          {tiles.map((item) => (
             <li
               key={item.name}
-              className={`flex min-w-0 items-center gap-2 rounded-xl border border-border bg-[#F8FAFC] px-2.5 py-2.5 ${TRANSITION_UI} hover:border-accent/40`}
+              className={`flex min-h-0 min-w-0 items-center gap-2.5 rounded-xl border border-border bg-[#F8FAFC] px-3 py-3 ${TRANSITION_UI} hover:border-accent/40`}
             >
-              <img src={item.logo} alt="" className="h-6 w-6 shrink-0 object-contain" />
-              <span className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{item.name}</span>
+              <img src={item.logo} alt="" className="h-7 w-7 shrink-0 object-contain" />
+              <span className="min-w-0">
+                <span className={`block break-words ${CARD_TITLE_CLASS}`}>{item.name}</span>
+                <span className={`mt-0.5 block break-words ${BODY_MUTED_CLASS}`}>{item.note}</span>
+              </span>
             </li>
           ))}
         </ul>
