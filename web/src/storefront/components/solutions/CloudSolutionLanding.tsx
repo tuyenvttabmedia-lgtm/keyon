@@ -339,7 +339,7 @@ export function CloudSolutionLanding({ featured, heroImageUrl }: Props) {
                 className={`flex min-w-0 items-center gap-2.5 rounded-xl border border-border bg-white px-3 py-2.5 sm:min-w-[7.5rem] sm:px-3.5 ${ELEVATION_HAIRLINE} ${TRANSITION_UI} hover:border-accent/40`}
               >
                 <span className="flex h-8 min-w-8 items-center justify-center" aria-hidden>
-                  <BrandLogo name={p.logo} size={p.wide ? 18 : 28} wide={p.wide} />
+                  <BrandLogo name={p.logo} size={28} wide={p.wide} />
                 </span>
                 <span className={`min-w-0 ${CARD_TITLE_CLASS} text-muted`}>{p.name}</span>
               </li>
