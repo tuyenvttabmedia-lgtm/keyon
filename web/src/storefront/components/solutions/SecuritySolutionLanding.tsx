@@ -48,6 +48,7 @@ import {
   TRANSITION_UI,
 } from "@/storefront/effects";
 import { SolutionFinalCta } from "./SolutionFinalCta";
+import { BrandLogo, BRAND_LOGO } from "@/storefront/brand-logo";
 
 export type SecurityBrand =
   | "bitdefender"
@@ -589,38 +590,6 @@ function SecurityHeroArt() {
 }
 
 function SecurityBrandMark({ brand, size = 36 }: { brand: SecurityBrand; size?: number }) {
-  const label =
-    brand === "bitdefender"
-      ? "BD"
-      : brand === "kaspersky"
-        ? "KS"
-        : brand === "eset"
-          ? "ES"
-          : brand === "symantec"
-            ? "NT"
-            : brand === "acronis"
-              ? "AC"
-              : "SEC";
-  const tone =
-    brand === "bitdefender"
-      ? "bg-[#E31C23] text-white"
-      : brand === "kaspersky"
-        ? "bg-[#006D5B] text-white"
-        : brand === "eset"
-          ? "bg-[#00843D] text-white"
-          : brand === "symantec"
-            ? "bg-[#FFC72C] text-navy"
-            : brand === "acronis"
-              ? "bg-[#1A73E8] text-white"
-              : "bg-accent-soft text-accent";
-
-  return (
-    <span
-      className={`inline-flex items-center justify-center rounded-lg font-display text-xs font-bold ${tone}`}
-      style={{ width: size, height: size }}
-      aria-hidden
-    >
-      {label}
-    </span>
-  );
+  if (brand === "generic" || !BRAND_LOGO[brand]) return null;
+  return <BrandLogo name={brand} size={size} />;
 }

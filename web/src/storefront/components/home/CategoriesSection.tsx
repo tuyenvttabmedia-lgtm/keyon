@@ -10,6 +10,7 @@ import {
   TRANSITION_PANEL,
 } from "@/storefront/effects";
 import { HomeSectionHeading } from "../HomeSectionHeading";
+import { BrandLogo, BRAND_LOGO } from "@/storefront/brand-logo";
 import { Reveal } from "./Reveal";
 
 type Categories = HomeContent["categories"];
@@ -183,6 +184,8 @@ function CategoryCard({
                   : "h-10 w-10 object-contain"
               }
             />
+          ) : BRAND_LOGO[item.icon] ? (
+            <BrandLogo name={item.icon} size={isDesktop ? 48 : 40} />
           ) : (
             <CategoryIcon icon={item.icon} size={isDesktop ? "lg" : "md"} />
           )}

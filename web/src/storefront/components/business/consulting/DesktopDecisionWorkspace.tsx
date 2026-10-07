@@ -15,15 +15,17 @@ import {
   TRANSITION_UI,
 } from "@/storefront/effects";
 import { goToConsultation, SURFACE, type InterestId } from "./shared";
+import { BrandLogo } from "@/storefront/brand-logo";
 
 const PRODUCTS: {
   id: InterestId;
   label: string;
+  logo?: string;
   Icon: LucideIcon;
 }[] = [
-  { id: "MICROSOFT_365", label: "Microsoft 365", Icon: Cloud },
-  { id: "OFFICE", label: "Office", Icon: AppWindow },
-  { id: "WINDOWS", label: "Windows", Icon: Monitor },
+  { id: "MICROSOFT_365", label: "Microsoft 365", logo: "m365", Icon: Cloud },
+  { id: "OFFICE", label: "Office", logo: "office", Icon: AppWindow },
+  { id: "WINDOWS", label: "Windows", logo: "windows", Icon: Monitor },
   { id: "SECURITY", label: "Security", Icon: Shield },
 ];
 
@@ -33,15 +35,15 @@ export function DesktopDecisionWorkspace() {
     <div className="hidden lg:block">
       <div className={`overflow-hidden ${SURFACE} p-4 sm:p-5 ${ELEVATION_FLOAT}`}>
         <div className="grid grid-cols-2 gap-3">
-          {PRODUCTS.map(({ id, label, Icon }) => (
+          {PRODUCTS.map(({ id, label, logo, Icon }) => (
             <button
               key={id}
               type="button"
               onClick={() => goToConsultation(id)}
               className={`flex items-center gap-3 rounded-xl border border-border bg-[#F7FAFC] px-3.5 py-3 text-left ${TRANSITION_PANEL} hover:border-accent/40 hover:bg-accent-soft/40`}
             >
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-accent shadow-sm">
-                <Icon size={18} strokeWidth={1.85} aria-hidden />
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-accent">
+                {logo ? <BrandLogo name={logo} size={24} /> : <Icon size={18} strokeWidth={1.85} aria-hidden />}
               </span>
               <span className="min-w-0 text-[13px] font-semibold text-navy">{label}</span>
             </button>

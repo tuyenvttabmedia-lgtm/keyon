@@ -32,6 +32,7 @@ import {
   TRANSITION_PANEL,
   TRANSITION_UI,
 } from "@/storefront/effects";
+import { BrandLogo } from "@/storefront/brand-logo";
 import {
   HOME_SOLUTIONS_SECTION_COPY,
   HOME_SOLUTION_SHOWCASE,
@@ -393,14 +394,7 @@ function SolutionTopicIcon({
   };
   switch (topic) {
     case "microsoft-365-office":
-      return (
-        <svg {...props} fill="currentColor">
-          <rect x="3" y="3" width="8" height="8" rx="1.5" />
-          <rect x="13" y="3" width="8" height="8" rx="1.5" opacity="0.85" />
-          <rect x="3" y="13" width="8" height="8" rx="1.5" opacity="0.85" />
-          <rect x="13" y="13" width="8" height="8" rx="1.5" opacity="0.7" />
-        </svg>
-      );
+      return <BrandLogo name="microsoft" size={size === "lg" ? 40 : size === "md" ? 28 : 20} />;
     case "cloud":
       return (
         <svg {...props} fill="currentColor">
@@ -435,8 +429,10 @@ function SolutionTopicIcon({
 const CHIP_LOGO: Record<string, string> = {
   m365: "/brand/microsoft.svg",
   windows: "/brand/windows.svg",
+  "vps-win": "/brand/windows.svg",
   office: "/brand/office.svg",
   teams: "/brand/teams.svg",
+  acronis: "/brand/acronis.svg",
 };
 
 function ChipIcon({ id, size = "sm" }: { id: string; size?: IconSize }) {

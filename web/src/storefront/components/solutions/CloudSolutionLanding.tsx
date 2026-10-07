@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   Building2,
@@ -18,6 +17,7 @@ import {
   Check,
 } from "lucide-react";
 import { LANDING_CRUMB_GAP, LANDING_HERO_PAD } from "@/storefront/components/marketing/hero-shell";
+import { BrandLogo } from "@/storefront/brand-logo";
 import {
   BADGE_CLASS,
   BODY_MUTED_CLASS,
@@ -98,13 +98,13 @@ const SERVICES: {
   },
 ];
 
-const PLATFORMS: { name: string; tint: string; Logo: () => ReactNode }[] = [
-  { name: "Microsoft Azure", tint: "bg-[#0078D4]/10 text-[#0078D4]", Logo: AzureMark },
-  { name: "AWS", tint: "bg-[#FF9900]/10 text-[#FF9900]", Logo: AwsMark },
-  { name: "Google Cloud", tint: "bg-[#4285F4]/10 text-[#4285F4]", Logo: GcpMark },
-  { name: "Acronis", tint: "bg-[#1A73E8]/10 text-[#1A73E8]", Logo: AcronisMark },
-  { name: "Cloudflare", tint: "bg-[#F6821F]/10 text-[#F6821F]", Logo: CloudflareMark },
-  { name: "Veeam", tint: "bg-[#00B336]/10 text-[#00B336]", Logo: VeeamMark },
+const PLATFORMS: { name: string; logo: string; wide?: boolean }[] = [
+  { name: "Microsoft Azure", logo: "azure" },
+  { name: "AWS", logo: "aws", wide: true },
+  { name: "Google Cloud", logo: "googlecloud" },
+  { name: "Acronis", logo: "acronis" },
+  { name: "Cloudflare", logo: "cloudflare" },
+  { name: "Veeam", logo: "veeam", wide: true },
 ];
 
 const SEGMENTS: {
@@ -338,11 +338,8 @@ export function CloudSolutionLanding({ featured, heroImageUrl }: Props) {
                 key={p.name}
                 className={`flex min-w-0 items-center gap-2.5 rounded-xl border border-border bg-white px-3 py-2.5 sm:min-w-[7.5rem] sm:px-3.5 ${ELEVATION_HAIRLINE} ${TRANSITION_UI} hover:border-accent/40`}
               >
-                <span
-                  className={`flex h-8 w-8 items-center justify-center rounded-lg ${p.tint}`}
-                  aria-hidden
-                >
-                  <p.Logo />
+                <span className="flex h-8 min-w-8 items-center justify-center" aria-hidden>
+                  <BrandLogo name={p.logo} size={p.wide ? 18 : 28} wide={p.wide} />
                 </span>
                 <span className={`min-w-0 ${CARD_TITLE_CLASS} text-muted`}>{p.name}</span>
               </li>
@@ -548,67 +545,4 @@ export function CloudSolutionLanding({ featured, heroImageUrl }: Props) {
   );
 }
 
-/* ── Brand marks (simplified, recognizable) ─────────────────────────────── */
-
-function AzureMark() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M13.05 4.24 6.28 18.81h5.12l6.89-14.57H13.05Zm1.66 4.28L9.9 19.76h8.88L22 8.52h-7.29Z" />
-    </svg>
-  );
-}
-
-function AwsMark() {
-  return (
-    <svg width="18" height="11" viewBox="0 0 24 14" fill="none" aria-hidden>
-      <path
-        d="M6.8 5.1c0 .4.1.7.3.9.2.2.6.4 1.1.6l1.5.6c.9.3 1.5.7 1.9 1.2.4.5.6 1.1.6 1.9 0 .8-.2 1.5-.7 2.1-.5.6-1.2 1-2.2 1.1v1.1H7.7V13c-1.1-.1-2-.5-2.6-1.2-.6-.7-.9-1.5-.9-2.5h1.7c0 .5.2.9.5 1.2.3.3.8.5 1.3.5.6 0 1-.1 1.3-.4.3-.3.4-.6.4-1 0-.4-.2-.7-.5-.9-.3-.2-.8-.5-1.4-.7L6.6 7.5C5.8 7.2 5.2 6.7 4.9 6.1c-.3-.6-.5-1.2-.5-1.9 0-.8.3-1.5.8-2 .5-.6 1.3-.9 2.2-1v-1h1.6v1c1 .1 1.7.4 2.3 1 .5.6.8 1.3.8 2.2H10.4c0-.5-.1-.8-.4-1.1-.3-.2-.7-.4-1.2-.4-.5 0-.9.1-1.1.4-.3.2-.4.5-.4.9Z"
-        fill="currentColor"
-      />
-      <path
-        d="M18.2 1.2c1.1 0 2 .3 2.7 1 .7.6 1.1 1.5 1.2 2.6h-1.7c-.1-.6-.3-1-.7-1.3-.4-.3-.9-.4-1.5-.4-.9 0-1.6.3-2.1 1-.5.7-.8 1.6-.8 2.8s.3 2.1.8 2.8c.5.7 1.2 1 2.1 1 .6 0 1.1-.1 1.5-.4.4-.3.6-.8.7-1.3h1.7c-.1 1.1-.5 2-1.2 2.6-.7.6-1.6 1-2.7 1-1.5 0-2.7-.5-3.6-1.5-.9-1-1.3-2.3-1.3-4s.4-3 1.3-4c.9-1 2.1-1.5 3.6-1.5Z"
-        fill="currentColor"
-      />
-      <path
-        d="M1.2 12.6c2.2 1.3 5.1 2 8 2 3.4 0 6.7-.8 9.3-2.4.3-.2.6.1.4.4-2.1 2.8-5.9 4.4-10 4.4-4.2 0-7.9-1.7-9.8-4.2-.2-.3.2-.6.5-.4.5.3 1 .5 1.6.6Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
-function GcpMark() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden>
-      <path fill="#4285F4" d="M12 11.5 7.2 4.2A9.9 9.9 0 0 1 12 3c2.5 0 4.8.9 6.5 2.5L15 9.2A5 5 0 0 0 12 8.5c-.9 0-1.7.2-2.4.6L12 11.5Z" />
-      <path fill="#EA4335" d="m12 11.5 2.4-2.4A5 5 0 0 1 17 12c0 1.1-.4 2.2-1 3L12 11.5Z" />
-      <path fill="#FBBC04" d="M16 15a5 5 0 0 1-8.3 1.7L4.2 19A9.9 9.9 0 0 0 22 12c0-1.4-.3-2.7-.8-3.9L16 15Z" />
-      <path fill="#34A853" d="M7.7 16.7A5 5 0 0 1 7 12c0-1.3.5-2.5 1.4-3.4L4.9 5.1A9.9 9.9 0 0 0 2 12c0 2.7 1.1 5.1 2.8 6.9l2.9-2.2Z" />
-    </svg>
-  );
-}
-
-function AcronisMark() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M12 3.2 3.5 18.5h3.4L12 8.4l5.1 10.1h3.4L12 3.2Zm0 8.6-2.7 5.3h5.4L12 11.8Z" />
-    </svg>
-  );
-}
-
-function CloudflareMark() {
-  return (
-    <svg width="18" height="10" viewBox="0 0 24 14" fill="currentColor" aria-hidden>
-      <path d="M16.4 10.8H4.2c-.5 0-.9-.2-1.2-.6-.3-.4-.3-.9-.1-1.3l.3-.6c.2-.3.5-.5.9-.5h.2c-.1-.2-.1-.4-.1-.6 0-1.5 1.2-2.7 2.7-2.7.4 0 .8.1 1.2.3C8.7 3.4 10.1 2.2 12 2.2c1.8 0 3.3 1.2 3.7 2.9h.3c1.3 0 2.4 1 2.5 2.3.6.2 1 1 1 1.7 0 1-.8 1.7-1.7 1.7h-1.4Zm-10-2.2h10.7c.3 0 .5-.2.5-.5s-.1-.4-.3-.5c-.1-.3-.5-.6-1-.6h-1.7l-.2-.9c-.2-1.1-1.2-1.9-2.3-1.9-1 0-1.9.6-2.2 1.5l-.2.6-.6-.2c-.2-.1-.5-.1-.7-.1-.8 0-1.5.7-1.5 1.5 0 .1 0 .2.1.3l.3.7H6.4l-.3.5c-.1.1 0 .3.1.3h.2Z" />
-    </svg>
-  );
-}
-
-function VeeamMark() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M3.2 5.2h4.1L12 15.4l4.7-10.2h4.1L13.6 19.6h-3.2L3.2 5.2Z" />
-    </svg>
-  );
-}
 

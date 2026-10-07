@@ -4,9 +4,6 @@ import {
   Check,
   ClipboardList,
   Cloud,
-  FileSpreadsheet,
-  FileText,
-  FolderSync,
   Headphones,
   LifeBuoy,
   ListChecks,
@@ -15,7 +12,6 @@ import {
   Search,
   Settings,
   ShieldCheck,
-  Video,
 } from "lucide-react";
 import {
   LANDING_CRUMB_GAP,
@@ -23,6 +19,7 @@ import {
 } from "@/storefront/components/marketing/hero-shell";
 import { M365_EMAIL_SERVICE_SLUG } from "@/storefront/nav/ia";
 import { IMPLEMENTATION_QUOTE_HREF } from "@/storefront/lib/cta";
+import { BrandLogo } from "@/storefront/brand-logo";
 import {
   ELEVATION_CARD_HOVER,
   ELEVATION_CTA_HOVER,
@@ -234,13 +231,13 @@ const HANDOVER_NOTES = [
   },
 ];
 
-const APPS: { label: string; Icon: LucideIcon; tone: string }[] = [
-  { label: "Outlook", Icon: Mail, tone: "bg-sky-50 text-sky-700" },
-  { label: "Teams", Icon: Video, tone: "bg-violet-50 text-violet-700" },
-  { label: "Word", Icon: FileText, tone: "bg-blue-50 text-blue-700" },
-  { label: "Excel", Icon: FileSpreadsheet, tone: "bg-emerald-50 text-emerald-700" },
-  { label: "OneDrive", Icon: FolderSync, tone: "bg-cyan-50 text-cyan-700" },
-  { label: "SharePoint", Icon: Cloud, tone: "bg-teal-50 text-teal-700" },
+const APPS: { label: string; logo: string }[] = [
+  { label: "Outlook", logo: "outlook" },
+  { label: "Teams", logo: "teams" },
+  { label: "Word", logo: "word" },
+  { label: "Excel", logo: "excel" },
+  { label: "OneDrive", logo: "onedrive" },
+  { label: "SharePoint", logo: "sharepoint" },
 ];
 
 const PANEL_ROWS = [
@@ -321,9 +318,7 @@ export function Microsoft365EmailLanding() {
                 key={app.label}
                 className={`flex min-w-0 items-center gap-2 rounded-xl border border-border/80 bg-white px-2.5 py-2.5 ${ELEVATION_HAIRLINE} ${TRANSITION_PANEL} ${HOVER_LIFT_CARD} hover:border-accent/35`}
               >
-                <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${app.tone}`}>
-                  <app.Icon size={15} strokeWidth={1.8} aria-hidden />
-                </span>
+                <BrandLogo name={app.logo} size={28} />
                 <span className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{app.label}</span>
               </li>
             ))}
@@ -366,9 +361,7 @@ export function Microsoft365EmailLanding() {
                     key={app.label}
                     className={`flex items-center gap-2 rounded-xl border border-border/80 bg-[#F7FAFC] px-2.5 py-2 ${TRANSITION_UI} hover:border-accent/35 hover:bg-white`}
                   >
-                    <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${app.tone}`}>
-                      <app.Icon size={15} strokeWidth={1.8} aria-hidden />
-                    </span>
+                    <BrandLogo name={app.logo} size={28} />
                     <span className={CARD_TITLE_CLASS}>{app.label}</span>
                   </li>
                 ))}

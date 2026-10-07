@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Reveal } from "@/storefront/components/home/Reveal";
+import { BrandLogo, brandLogoIdFromName } from "@/storefront/brand-logo";
 import {
   LANDING_CRUMB_GAP,
   LANDING_HERO_PAD,
@@ -288,6 +289,10 @@ function BrandCard({ brand }: { brand: BrandListItem }) {
 }
 
 function BrandInitial({ name }: { name: string }) {
+  const logo = brandLogoIdFromName(name);
+  if (logo) {
+    return <BrandLogo name={logo} size={48} wide={logo === "veeam" || logo === "aws"} />;
+  }
   const initials = name
     .split(/\s+/)
     .filter(Boolean)

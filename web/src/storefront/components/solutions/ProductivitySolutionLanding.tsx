@@ -44,6 +44,7 @@ import {
   TRANSITION_UI,
 } from "@/storefront/effects";
 import { SolutionFinalCta } from "./SolutionFinalCta";
+import { BrandLogo, BRAND_LOGO } from "@/storefront/brand-logo";
 import {
   LANDING_CRUMB_GAP,
   LANDING_HERO_GRID,
@@ -679,109 +680,8 @@ function ConsultPortrait({ imageUrl }: { imageUrl?: string }) {
 /* ── Brand marks ────────────────────────────────────────────────────────── */
 
 function ProductBrandMark({ brand, size = 40 }: { brand: ProductivityBrand; size?: number }) {
-  switch (brand) {
-    case "m365":
-      return <M365Mark size={size} />;
-    case "teams":
-      return <TeamsMark size={size} />;
-    case "office":
-      return <OfficeMark size={size} />;
-    case "outlook":
-      return <OutlookMark size={size} />;
-    case "onedrive":
-      return <OneDriveMark size={size} />;
-    case "onenote":
-      return <OneNoteMark size={size} />;
-    case "todo":
-      return <ToDoMark size={size} />;
-    default:
-      return <M365Mark size={size} />;
-  }
-}
-
-function M365Mark({ size = 40 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 40 40" aria-hidden>
-      <rect width="40" height="40" rx="8" fill="#EB3C00" />
-      <path
-        fill="#fff"
-        d="M11 12h7.2v7.2H11V12Zm10.8 0H29v7.2h-7.2V12ZM11 22.8h7.2V30H11v-7.2Zm10.8 0H29V30h-7.2v-7.2Z"
-      />
-    </svg>
-  );
-}
-
-function TeamsMark({ size = 40 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 40 40" aria-hidden>
-      <rect width="40" height="40" rx="8" fill="#5059C9" />
-      <circle cx="27.5" cy="13.5" r="3.2" fill="#fff" opacity="0.95" />
-      <rect x="9" y="14" width="14" height="15" rx="2.5" fill="#fff" />
-      <rect x="21" y="17" width="10" height="12" rx="2" fill="#B6BAF0" />
-    </svg>
-  );
-}
-
-function OfficeMark({ size = 40 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 40 40" aria-hidden>
-      <rect width="40" height="40" rx="8" fill="#D83B01" />
-      <path
-        fill="#fff"
-        d="M22.5 10.5 12 13.2v13.6l10.5 2.7 10-2.5V13l-10-2.5Zm0 2.2 7.2 1.8v11l-7.2 1.8V12.7Zm-1.6 1.1v12.4L13.6 24.5V15.5l7.3-1.7Z"
-      />
-    </svg>
-  );
-}
-
-function OutlookMark({ size = 40 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 40 40" aria-hidden>
-      <rect width="40" height="40" rx="8" fill="#0078D4" />
-      <path
-        fill="#fff"
-        d="M10 13.5h11.5c.8 0 1.5.7 1.5 1.5v10c0 .8-.7 1.5-1.5 1.5H10c-.8 0-1.5-.7-1.5-1.5v-10c0-.8.7-1.5 1.5-1.5Zm1.8 2.2v8.6l5.2-3.6 5.2 3.6v-8.6H11.8Z"
-      />
-    </svg>
-  );
-}
-
-function OneDriveMark({ size = 40 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 40 40" aria-hidden>
-      <rect width="40" height="40" rx="8" fill="#0078D4" />
-      <path
-        fill="#fff"
-        d="M24.2 15.2c-1.1-2.2-3.4-3.6-5.9-3.6-2.8 0-5.2 1.7-6.2 4.2-2.4.3-4.3 2.4-4.3 4.9 0 2.7 2.2 4.9 4.9 4.9h15.4c2.5 0 4.5-2 4.5-4.5 0-2.3-1.7-4.2-3.9-4.5-.6-2.2-2.5-3.9-4.5-1.4Z"
-        opacity="0.95"
-      />
-    </svg>
-  );
-}
-
-function OneNoteMark({ size = 40 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 40 40" aria-hidden>
-      <rect width="40" height="40" rx="8" fill="#7719AA" />
-      <path fill="#fff" d="M12 10h7l9 20h-7.2L18.2 22H12v8h-4V10h4Zm0 8.5h5.2l-2.4-5.4h-.2L12 18.5Z" />
-    </svg>
-  );
-}
-
-function ToDoMark({ size = 40 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 40 40" aria-hidden>
-      <rect width="40" height="40" rx="8" fill="#2564CF" />
-      <path
-        fill="none"
-        stroke="#fff"
-        strokeWidth="3.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M10 20.5 16.5 27 30 12"
-      />
-    </svg>
-  );
+  if (brand === "generic" || !BRAND_LOGO[brand]) return null;
+  return <BrandLogo name={brand} size={size} />;
 }
 
 function EcoMark({
@@ -793,12 +693,7 @@ function EcoMark({
   if (kind === "windows") {
     return (
       <span className={wrap} title="Windows" aria-label="Windows">
-        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden>
-          <path
-            fill="#0078D4"
-            d="M3 5.5 11 4.3v7.2H3V5.5Zm9-.9 9-1.3v9.4h-9V4.6ZM3 13.5h8V21l-8-1.2v-6.3Zm9 0h9v8.7l-9-1.3v-7.4Z"
-          />
-        </svg>
+        <BrandLogo name="windows" size={22} />
       </span>
     );
   }
@@ -886,10 +781,10 @@ function ProductivityHeroArt({ imageUrl }: { imageUrl?: string }) {
   }
 
   const apps = [
-    { label: "Microsoft 365", Icon: Cloud, tone: "bg-sky-100 text-sky-800" },
-    { label: "Teams", Icon: Video, tone: "bg-violet-100 text-violet-800" },
-    { label: "Office", Icon: Zap, tone: "bg-amber-100 text-amber-800" },
-    { label: "OneDrive", Icon: ShieldCheck, tone: "bg-emerald-100 text-emerald-800" },
+    { label: "Microsoft 365", logo: "m365" },
+    { label: "Teams", logo: "teams" },
+    { label: "Office", logo: "office" },
+    { label: "OneDrive", logo: "onedrive" },
   ] as const;
 
   return (
@@ -919,11 +814,7 @@ function ProductivityHeroArt({ imageUrl }: { imageUrl?: string }) {
               key={a.label}
               className="flex min-w-0 items-center gap-2 rounded-xl border border-border/80 bg-[#F7FAFC] px-2.5 py-2"
             >
-              <span
-                className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${a.tone}`}
-              >
-                <a.Icon size={14} strokeWidth={1.85} />
-              </span>
+              <BrandLogo name={a.logo} size={28} />
               <p className={`min-w-0 ${CARD_TITLE_CLASS}`}>{a.label}</p>
             </li>
           ))}

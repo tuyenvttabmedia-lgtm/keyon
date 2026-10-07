@@ -38,6 +38,7 @@ import {
   TRANSITION_UI,
 } from "@/storefront/effects";
 import { SolutionFinalCta } from "./SolutionFinalCta";
+import { BrandLogo, BRAND_LOGO } from "@/storefront/brand-logo";
 
 const ICON_SM = { size: 18, strokeWidth: 1.85, "aria-hidden": true as const };
 
@@ -537,60 +538,6 @@ function AssetsHeroArt({
 }
 
 function BrandMark({ brand, size = 40 }: { brand: BrandId; size?: number }) {
-  if (brand === "windows") {
-    return (
-      <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden>
-        <path
-          fill="#0078D4"
-          d="M3 5.5 11 4.3v7.2H3V5.5Zm9-.9 9-1.3v9.4h-9V4.6ZM3 13.5h8V21l-8-1.2v-6.3Zm9 0h9v8.7l-9-1.3v-7.4Z"
-        />
-      </svg>
-    );
-  }
-  if (brand === "m365") {
-    return (
-      <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden>
-        <path fill="#D83B01" d="M3 4.5 14 2v20L3 19.5V4.5Z" />
-        <path fill="#A4262C" d="M14 2h7v20h-7V2Z" opacity="0.85" />
-        <path
-          fill="#fff"
-          d="M6.2 8.2h5.2v1.4H8.1v1.6h3v1.3H8.1v1.8h3.4v1.4H6.2V8.2Z"
-        />
-      </svg>
-    );
-  }
-  if (brand === "adobe") {
-    return (
-      <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden>
-        <rect width="24" height="24" rx="5" fill="#EB1000" />
-        <path
-          fill="#fff"
-          d="M8.2 17.5 12 6.5l3.8 11H14l-.7-2.1H10.7l-.7 2.1H8.2Zm3-7.8-.95 2.9h1.9L11.2 9.7Z"
-        />
-      </svg>
-    );
-  }
-  if (brand === "acronis") {
-    return (
-      <span
-        className="inline-flex items-center justify-center rounded-lg bg-[#1A73E8] font-display text-xs font-bold text-white"
-        style={{ width: size, height: size }}
-        aria-hidden
-      >
-        AC
-      </span>
-    );
-  }
-  if (brand === "autodesk") {
-    return (
-      <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden>
-        <rect width="24" height="24" rx="5" fill="#0696D7" />
-        <path
-          fill="#fff"
-          d="M5 17.5 10.2 6.5h3.2L18.6 17.5h-3.1l-.9-2.2H9l-.9 2.2H5Zm4.8-4.4h3.8l-1.9-4.6-1.9 4.6Z"
-        />
-      </svg>
-    );
-  }
-  return null;
+  if (!BRAND_LOGO[brand]) return null;
+  return <BrandLogo name={brand} size={size} />;
 }

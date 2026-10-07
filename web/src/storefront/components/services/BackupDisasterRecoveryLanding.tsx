@@ -18,6 +18,7 @@ import {
 import { LANDING_HERO_PAD } from "@/storefront/components/marketing/hero-shell";
 import { BACKUP_DR_SERVICE_SLUG } from "@/storefront/nav/ia";
 import { IMPLEMENTATION_QUOTE_HREF } from "@/storefront/lib/cta";
+import { BrandLogo } from "@/storefront/brand-logo";
 import {
   ELEVATION_CARD_HOVER,
   ELEVATION_CTA_HOVER,
@@ -92,9 +93,9 @@ const HERO_CHECKS = [
   "Tư vấn, triển khai và hỗ trợ kỹ thuật trong thời hạn dịch vụ",
 ];
 
-const HERO_MENU: { title: string; body: string; Icon: LucideIcon }[] = [
+const HERO_MENU: { title: string; body: string; Icon: LucideIcon; logo?: string }[] = [
   { title: "Máy tính & Máy chủ", body: "Windows, Linux", Icon: Monitor },
-  { title: "Microsoft 365", body: "Exchange, OneDrive, SharePoint, Teams", Icon: Cloud },
+  { title: "Microsoft 365", body: "Exchange, OneDrive, SharePoint, Teams", Icon: Cloud, logo: "m365" },
   { title: "Cloud & Ứng dụng", body: "Azure, AWS, Google Cloud", Icon: Database },
   { title: "Máy ảo & Hệ thống", body: "VMware, Hyper-V", Icon: Server },
   { title: "Khôi phục thảm họa", body: "Off-site, snapshot, replication", Icon: ShieldCheck },
@@ -452,8 +453,14 @@ function HeroStage({ src }: { src?: string }) {
               href="#giai-phap"
               className={`group flex items-center gap-2.5 rounded-xl px-2 py-2 ${TRANSITION_UI} hover:bg-accent-soft`}
             >
-              <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent ${TRANSITION_UI} group-hover:bg-accent group-hover:text-white`}>
-                <item.Icon size={16} strokeWidth={1.8} aria-hidden />
+              <span
+                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${item.logo ? "" : `bg-accent-soft text-accent ${TRANSITION_UI} group-hover:bg-accent group-hover:text-white`}`}
+              >
+                {item.logo ? (
+                  <BrandLogo name={item.logo} size={22} />
+                ) : (
+                  <item.Icon size={16} strokeWidth={1.8} aria-hidden />
+                )}
               </span>
               <span className="min-w-0">
                 <span className={`block break-words ${CARD_TITLE_CLASS}`}>{item.title}</span>

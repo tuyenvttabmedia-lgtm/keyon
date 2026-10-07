@@ -22,6 +22,7 @@ import {
 } from "@/storefront/components/marketing/hero-shell";
 import { EMAIL_MIGRATION_SERVICE_SLUG, M365_EMAIL_SERVICE_SLUG } from "@/storefront/nav/ia";
 import { IMPLEMENTATION_QUOTE_HREF } from "@/storefront/lib/cta";
+import { BrandLogo } from "@/storefront/brand-logo";
 import {
   ELEVATION_CARD_HOVER,
   ELEVATION_CTA_HOVER,
@@ -119,22 +120,25 @@ const BENEFITS: { title: string; body: string; Icon: LucideIcon }[] = [
   },
 ];
 
-const PLATFORMS: { title: string; body: string; Icon: LucideIcon; tone: string }[] = [
+const PLATFORMS: { title: string; body: string; logo?: string; Icon: LucideIcon; tone: string }[] = [
   {
     title: "Microsoft 365",
     body: "Điểm đến, hoặc nguồn khi doanh nghiệp chuyển giữa hai tenant.",
+    logo: "m365",
     Icon: Cloud,
     tone: "bg-sky-50 text-sky-700",
   },
   {
     title: "Google Workspace",
     body: "Gmail, danh bạ và lịch khi tài khoản quản trị đã cấp quyền.",
+    logo: "google",
     Icon: Mail,
     tone: "bg-amber-50 text-amber-700",
   },
   {
     title: "Exchange Server",
     body: "Hộp thư Exchange nội bộ hoặc Exchange Online trong phạm vi đã chốt.",
+    logo: "exchange",
     Icon: Server,
     tone: "bg-blue-50 text-blue-700",
   },
@@ -348,8 +352,18 @@ export function EmailDataMigrationLanding() {
               <li key={item.title} className="min-w-0">
                 <article className={`${card} p-3 sm:p-5`}>
                   <div className="flex items-center gap-2.5">
-                    <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl sm:h-10 sm:w-10 ${item.tone} transition group-hover:bg-accent group-hover:text-white`}>
-                      <item.Icon size={18} strokeWidth={1.8} aria-hidden />
+                    <span
+                      className={
+                        item.logo
+                          ? "flex h-9 w-9 shrink-0 items-center justify-center sm:h-10 sm:w-10"
+                          : `flex h-9 w-9 shrink-0 items-center justify-center rounded-xl sm:h-10 sm:w-10 ${item.tone} transition group-hover:bg-accent group-hover:text-white`
+                      }
+                    >
+                      {item.logo ? (
+                        <BrandLogo name={item.logo} size={28} />
+                      ) : (
+                        <item.Icon size={18} strokeWidth={1.8} aria-hidden />
+                      )}
                     </span>
                     <h3 className={`min-w-0 break-words ${CARD_TITLE_CLASS}`}>{item.title}</h3>
                   </div>

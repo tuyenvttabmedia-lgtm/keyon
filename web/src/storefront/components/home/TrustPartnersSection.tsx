@@ -5,6 +5,7 @@ import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import type { PartnerItem, HomeContent } from "@/storefront/content/types";
 import { HomeSectionHeading } from "../HomeSectionHeading";
 import { usePrefersReducedMotion } from "@/storefront/hooks/use-prefers-reduced-motion";
+import { BrandLogo, brandLogoIdFromName } from "@/storefront/brand-logo";
 import {
   EASE_STANDARD,
   ELEVATION_CARD_HOVER,
@@ -227,51 +228,12 @@ function PartnerSlide({ item }: { item: PartnerItem }) {
 }
 
 function BrandMark({ name, color }: { name: string; color?: string }) {
-  const key = name.trim().toLowerCase();
-  const c = color || "#0F172A";
-
-  if (key === "microsoft") {
-    return (
-      <svg viewBox="0 0 128 28" className="h-7 w-auto" aria-label="Microsoft">
-        <rect x="0" y="2" width="10" height="10" fill="#F25022" />
-        <rect x="12" y="2" width="10" height="10" fill="#7FBA00" />
-        <rect x="0" y="14" width="10" height="10" fill="#00A4EF" />
-        <rect x="12" y="14" width="10" height="10" fill="#FFB900" />
-        <text x="30" y="19" fill="#737373" fontFamily="Segoe UI, Arial, sans-serif" fontSize="14" fontWeight="600">
-          Microsoft
-        </text>
-      </svg>
-    );
+  const logo = brandLogoIdFromName(name);
+  if (logo) {
+    return <BrandLogo name={logo} size={28} wide={logo === "veeam" || logo === "aws"} />;
   }
-  if (key === "adobe") {
-    return (
-      <svg viewBox="0 0 88 28" className="h-7 w-auto" aria-label="Adobe">
-        <path d="M14 3 2 25h5l2.2-5.2h9.6L21 25h5L14 3Zm.1 6.2 3.1 7.2h-6.2l3.1-7.2Z" fill="#EB1000" />
-        <text x="32" y="19" fill="#EB1000" fontFamily="Arial, sans-serif" fontSize="14" fontWeight="700">
-          Adobe
-        </text>
-      </svg>
-    );
-  }
-  if (key === "autodesk") {
-    return (
-      <svg viewBox="0 0 120 28" className="h-7 w-auto" aria-label="Autodesk">
-        <path d="M10 4 2 24h4.2l1.6-3.6h7.4L16.8 24H21L13 4h-3Zm2 5 2.6 5.8H9.4L12 9Z" fill="#0696D7" />
-        <text x="26" y="19" fill="#0696D7" fontFamily="Arial, sans-serif" fontSize="13" fontWeight="700" letterSpacing="0.4">
-          AUTODESK
-        </text>
-      </svg>
-    );
-  }
-
   return (
-    <span className="inline-flex items-center gap-2 text-sm font-bold" style={{ color: c }}>
-      <span
-        className="inline-flex h-7 w-7 items-center justify-center rounded-lg text-xs font-extrabold text-white"
-        style={{ background: c }}
-      >
-        {name.slice(0, 2).toUpperCase()}
-      </span>
+    <span className="truncate text-sm font-bold text-navy" style={color ? { color } : undefined}>
       {name}
     </span>
   );

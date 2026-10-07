@@ -52,6 +52,7 @@ import {
   LANDING_HERO_PAD,
 } from "@/storefront/components/marketing/hero-shell";
 import { SolutionFinalCta } from "./SolutionFinalCta";
+import { BrandLogo, BRAND_LOGO } from "@/storefront/brand-logo";
 
 export type BackupBrand = "acronis" | "aomei" | "veeam" | "microsoft" | "generic";
 
@@ -599,34 +600,6 @@ function BackupHeroArt() {
 }
 
 function BackupBrandMark({ brand, size = 36 }: { brand: BackupBrand; size?: number }) {
-  const label =
-    brand === "acronis"
-      ? "AC"
-      : brand === "aomei"
-        ? "AO"
-        : brand === "veeam"
-          ? "VE"
-          : brand === "microsoft"
-            ? "MS"
-            : "BK";
-  const tone =
-    brand === "acronis"
-      ? "bg-[#1A73E8] text-white"
-      : brand === "aomei"
-        ? "bg-[#E85D04] text-white"
-        : brand === "veeam"
-          ? "bg-[#00B336] text-white"
-          : brand === "microsoft"
-            ? "bg-[#0078D4] text-white"
-            : "bg-accent-soft text-accent";
-
-  return (
-    <span
-      className={`inline-flex items-center justify-center rounded-lg font-display text-xs font-bold ${tone}`}
-      style={{ width: size, height: size }}
-      aria-hidden
-    >
-      {label}
-    </span>
-  );
+  if (brand === "generic" || brand === "aomei" || !BRAND_LOGO[brand]) return null;
+  return <BrandLogo name={brand} size={size} wide={brand === "veeam"} />;
 }
