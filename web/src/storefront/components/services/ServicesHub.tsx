@@ -175,16 +175,16 @@ const GROUPS: { title: string; points: string[]; Icon: LucideIcon }[] = [
   },
 ];
 
-const PLATFORMS: { name: string; logo?: string; mark?: string }[] = [
-  { name: "Microsoft", logo: "/brand/microsoft.svg" },
-  { name: "Google Cloud", mark: "font-semibold tracking-tight" },
-  { name: "VMware", mark: "font-bold tracking-tight" },
-  { name: "Acronis", logo: "/brand/acronis.svg" },
-  { name: "veeam", logo: "/brand/veeam.svg" },
-  { name: "Synology", logo: "/brand/synology.svg" },
-  { name: "DELL", mark: "font-bold tracking-[0.14em]" },
-  { name: "Lenovo", mark: "font-semibold tracking-tight" },
-];
+const PLATFORMS = [
+  "Microsoft",
+  "Google Cloud",
+  "VMware",
+  "Acronis",
+  "veeam",
+  "Synology",
+  "DELL",
+  "Lenovo",
+] as const;
 
 const HANDOFF = [
   {
@@ -391,14 +391,12 @@ export function ServicesHub() {
             </p>
           </header>
           <ul className="mt-4 grid grid-cols-4 lg:mt-2 lg:grid-cols-8">
-            {PLATFORMS.map((item) => (
-              <li key={item.name} className="min-w-0">
-                <span className={`flex h-14 items-center justify-center px-1 text-center font-display text-sm text-muted-soft lg:h-[4.25rem] lg:px-2 ${item.mark ?? ""} ${TRANSITION_UI} hover:text-navy`}>
-                  {item.logo ? (
-                    <img src={item.logo} alt={item.name} className="h-6 w-auto max-w-[4.5rem] object-contain sm:h-7" />
-                  ) : (
-                    item.name
-                  )}
+            {PLATFORMS.map((name) => (
+              <li key={name} className="min-w-0">
+                <span
+                  className={`flex h-14 items-center justify-center px-1 text-center font-display text-xs font-semibold tracking-tight text-muted-soft sm:text-sm lg:h-[4.25rem] lg:px-2 ${TRANSITION_UI} hover:text-navy`}
+                >
+                  {name}
                 </span>
               </li>
             ))}
