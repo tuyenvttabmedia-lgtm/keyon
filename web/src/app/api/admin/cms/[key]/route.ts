@@ -14,6 +14,7 @@ import {
   defaultCmsBackupDrService,
   defaultCmsSecurityDeploymentService,
   defaultCmsM365ManagementService,
+  defaultCmsManagedItService,
   defaultCmsBackupSolution,
   defaultCmsCloudSolution,
   defaultCmsProductivity,
@@ -196,6 +197,10 @@ const FILES: Record<string, { file: string; fallback: unknown }> = {
   "m365-management-service": {
     file: "m365-management-service.json",
     fallback: defaultCmsM365ManagementService,
+  },
+  "managed-it-service": {
+    file: "managed-it-service.json",
+    fallback: defaultCmsManagedItService,
   },
   "backup-solution": { file: "backup-solution.json", fallback: defaultCmsBackupSolution },
   "cloud-solution": { file: "cloud-solution.json", fallback: defaultCmsCloudSolution },
@@ -392,7 +397,8 @@ export async function PUT(
     key === "backup-solution" ||
     key === "backup-dr-service" ||
     key === "security-deployment-service" ||
-    key === "m365-management-service"
+    key === "m365-management-service" ||
+    key === "managed-it-service"
   ) {
     const mediaBase = await cmsMediaBase();
     const data = z
@@ -411,7 +417,9 @@ export async function PUT(
             ? "security-deployment-service.json"
             : key === "m365-management-service"
               ? "m365-management-service.json"
-              : "backup-dr-service.json";
+              : key === "managed-it-service"
+                ? "managed-it-service.json"
+                : "backup-dr-service.json";
     await writeJsonFile(file, data);
     return NextResponse.json({ ok: true, data });
   }

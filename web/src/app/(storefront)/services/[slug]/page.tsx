@@ -37,6 +37,14 @@ import {
   M365_MANAGEMENT_SEO,
   M365_MANAGEMENT_SLUG,
 } from "@/storefront/components/services/Microsoft365ManagementLanding";
+import {
+  ManagedItLanding,
+  MANAGED_IT_FAQ,
+  MANAGED_IT_LABEL,
+  MANAGED_IT_PATH,
+  MANAGED_IT_SEO,
+  MANAGED_IT_SLUG,
+} from "@/storefront/components/services/ManagedItLanding";
 import { ServiceTopicLanding } from "@/storefront/components/services/ServiceTopicLanding";
 import { BACKUP_DR_SERVICE_SLUG, CLOUD_SERVER_SERVICE_SLUG, EMAIL_MIGRATION_SERVICE_SLUG, M365_EMAIL_SERVICE_SLUG, SERVICE_TOPICS, serviceTopicBySlug } from "@/storefront/nav/ia";
 import { buildMainPageMetadata } from "@/server/seo/metadata";
@@ -50,6 +58,7 @@ import { resolveMediaUrl } from "@/lib/media-url";
 import {
   defaultCmsBackupDrService,
   defaultCmsM365ManagementService,
+  defaultCmsManagedItService,
   defaultCmsSecurityDeploymentService,
   readJsonFile,
 } from "@/server/cms/store";
@@ -129,6 +138,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         ...base.twitter,
         title: CLOUD_SERVER_SEO.title,
         description: CLOUD_SERVER_SEO.description,
+      },
+    };
+  }
+  if (slug === MANAGED_IT_SLUG) {
+    const base = await buildMainPageMetadata(MANAGED_IT_PATH);
+    return {
+      ...base,
+      title: absoluteTitle(MANAGED_IT_SEO.title),
+      description: MANAGED_IT_SEO.description,
+      openGraph: {
+        ...base.openGraph,
+        title: MANAGED_IT_SEO.title,
+        description: MANAGED_IT_SEO.description,
+      },
+      twitter: {
+        ...base.twitter,
+        title: MANAGED_IT_SEO.title,
+        description: MANAGED_IT_SEO.description,
       },
     };
   }
@@ -286,6 +313,41 @@ export default async function ServiceTopicPage({ params }: Props) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
         />
         <CloudServerLanding />
+      </>
+    );
+  }
+  if (slug === MANAGED_IT_SLUG) {
+    const serviceLd = buildServiceJsonLd({
+      name: MANAGED_IT_LABEL,
+      description: MANAGED_IT_SEO.description,
+      path: MANAGED_IT_PATH,
+      serviceType: MANAGED_IT_LABEL,
+    });
+    const breadcrumbLd = buildBreadcrumbJsonLd([
+      { name: "Trang chủ", path: "/" },
+      { name: "Dịch vụ", path: "/services" },
+      { name: MANAGED_IT_LABEL, path: MANAGED_IT_PATH },
+    ]);
+    const faqLd = buildFaqPageJsonLd([...MANAGED_IT_FAQ]);
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        />
+        {faqLd ? (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+          />
+        ) : null}
+        <ManagedItLanding
+          heroImageUrl={await readServiceHero("managed-it-service.json", defaultCmsManagedItService)}
+        />
       </>
     );
   }
