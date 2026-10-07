@@ -329,10 +329,13 @@ export function Microsoft365ManagementLanding({ heroImageUrl }: { heroImageUrl?:
               Năm bước, từ khảo sát tenant đến vận hành và báo cáo trong thời hạn dịch vụ.
             </p>
           </header>
-          <ol className="relative mt-7 flex flex-col gap-4 lg:grid lg:grid-cols-5 lg:gap-x-4">
+          <ol className="relative mt-7 grid grid-cols-2 items-stretch gap-3 lg:grid-cols-5 lg:gap-x-4">
             <li aria-hidden className="pointer-events-none absolute left-[10%] right-[10%] top-9 hidden border-t border-dashed border-border lg:block" />
             {STEPS.map((step, index) => (
-              <li key={step.title} className="group relative flex min-w-0 items-start gap-3 text-left lg:block lg:text-center">
+              <li
+                key={step.title}
+                className={`group relative flex min-w-0 items-start gap-2.5 rounded-2xl border border-border bg-white p-3 text-left ${ELEVATION_HAIRLINE} lg:block lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:text-center lg:shadow-none ${index === STEPS.length - 1 ? "col-span-2 w-[calc(50%-0.375rem)] justify-self-center lg:col-span-1 lg:w-auto lg:justify-self-auto" : ""}`}
+              >
                 <span className={`relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent lg:mx-auto lg:mt-3 lg:h-12 lg:w-12 lg:ring-8 lg:ring-white ${TRANSITION_UI} group-hover:bg-accent group-hover:text-white`}>
                   <step.Icon size={18} strokeWidth={1.8} aria-hidden />
                 </span>
