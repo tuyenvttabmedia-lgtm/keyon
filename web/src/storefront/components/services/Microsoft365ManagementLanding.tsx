@@ -334,7 +334,7 @@ export function Microsoft365ManagementLanding({ heroImageUrl }: { heroImageUrl?:
             {STEPS.map((step, index) => (
               <li
                 key={step.title}
-                className={`group relative flex min-w-0 items-start gap-2.5 rounded-2xl border border-border bg-white p-3 text-left ${ELEVATION_HAIRLINE} lg:block lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:text-center lg:shadow-none ${index === STEPS.length - 1 ? "col-span-2 w-[calc(50%-0.375rem)] justify-self-center lg:col-span-1 lg:w-auto lg:justify-self-auto" : ""}`}
+                className={`group relative flex min-w-0 flex-col items-center gap-2 rounded-2xl border border-border bg-white p-3 text-center ${ELEVATION_HAIRLINE} lg:block lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none ${index === STEPS.length - 1 ? "col-span-2 w-[calc(50%-0.375rem)] justify-self-center lg:col-span-1 lg:w-auto lg:justify-self-auto" : ""}`}
               >
                 <span className={`relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent lg:mx-auto lg:mt-3 lg:h-12 lg:w-12 lg:ring-8 lg:ring-white ${TRANSITION_UI} group-hover:bg-accent group-hover:text-white`}>
                   <step.Icon size={18} strokeWidth={1.8} aria-hidden />
