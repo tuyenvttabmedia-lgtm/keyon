@@ -225,10 +225,9 @@ export function ServicesHub() {
             <span className={BREADCRUMB_CURRENT_CLASS}>Dịch vụ</span>
           </nav>
 
-          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(280px,0.95fr)] lg:gap-8">
-            <div className="min-w-0">
-              <p className={`${OVERLINE_CLASS} text-accent`}>Dịch vụ triển khai và hỗ trợ doanh nghiệp</p>
-              <h1 className={`mt-3 max-w-xl ${HERO_TITLE_CLASS}`}>Dịch vụ triển khai và quản lý giải pháp số</h1>
+          <div className="grid items-stretch gap-8 lg:grid-cols-2 lg:gap-8">
+            <div className="flex min-w-0 flex-col">
+              <h1 className={`max-w-xl ${HERO_TITLE_CLASS}`}>Dịch vụ triển khai và quản lý giải pháp số</h1>
               <p className={`mt-4 max-w-xl ${PAGE_LEAD_CLASS}`}>
                 Từ triển khai, di chuyển dữ liệu đến cấu hình và vận hành. KEYON đưa phần mềm, cloud và hạ tầng vào hoạt động theo phạm vi đã chốt.
               </p>
@@ -450,7 +449,7 @@ export function ServicesHub() {
 
 function HeroArt() {
   return (
-    <div className="relative hidden min-h-[460px] lg:block">
+    <div className="relative hidden h-full lg:block">
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden rounded-[28px]">
         <Image
           src="/services/cloud-hero.jpg"
