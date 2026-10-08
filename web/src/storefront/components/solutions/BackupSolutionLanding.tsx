@@ -211,7 +211,7 @@ export function BackupSolutionLanding({ featured, heroImageUrl }: Props) {
           </nav>
 
           <div className="grid items-stretch gap-8 lg:grid-cols-2 lg:gap-10 xl:gap-12">
-            <div className="flex h-full min-w-0 max-w-[520px] flex-col">
+            <div className="flex h-full min-w-0 flex-col">
               <h1 className={`max-w-xl ${HERO_TITLE_CLASS}`}>
                 Giải pháp sao lưu và khôi phục dữ liệu
               </h1>
