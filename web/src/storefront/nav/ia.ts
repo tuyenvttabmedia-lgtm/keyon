@@ -96,29 +96,6 @@ export const SHOP_COLLECTIONS: NavLink[] = [
   ...INFRA_COLLECTIONS,
 ];
 
-/** Featured brands — only brands with catalog coverage (Wave 5). */
-export const FEATURED_BRANDS: NavLink[] = [
-  {
-    label: "Microsoft",
-    href: "/brands/microsoft",
-    description: "Windows, Office, Microsoft 365",
-  },
-  {
-    label: "Adobe",
-    href: "/brands/adobe",
-    description: "Creative Cloud, Acrobat",
-  },
-  {
-    label: "Autodesk",
-    href: "/brands/autodesk",
-    description: "AutoCAD, kỹ thuật",
-  },
-  {
-    label: "Xem tất cả thương hiệu →",
-    href: "/brands",
-  },
-];
-
 export type SolutionTopicArt =
   | "bars"
   | "trend"
@@ -443,7 +420,6 @@ export const IA_PRIMARY_NAV: PrimaryNavItem[] = [
     columns: [
       { title: "Bản quyền", links: LICENSE_COLLECTIONS },
       { title: "Hạ tầng thuê", links: INFRA_COLLECTIONS },
-      { title: "Thương hiệu nổi bật", links: FEATURED_BRANDS },
     ],
     footerCta: { label: "Xem tất cả sản phẩm →", href: "/products" },
   },

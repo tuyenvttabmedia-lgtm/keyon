@@ -226,8 +226,8 @@ export function VolumeLicensingLanding() {
             <span className={BREADCRUMB_CURRENT_CLASS}>Mua bản quyền số lượng lớn</span>
           </nav>
 
-          <div className="grid w-full min-w-0 items-start gap-8 lg:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] lg:gap-12">
-            <div className="min-w-0 max-w-full lg:max-w-[540px]">
+          <div className="grid w-full min-w-0 items-stretch gap-8 lg:grid-cols-2 lg:gap-12">
+            <div className="flex h-full min-w-0 max-w-full flex-col">
               <h1 className={`max-w-full break-words ${HERO_TITLE_CLASS}`}>
                 Mua bản quyền phần mềm số lượng lớn cho doanh nghiệp
               </h1>
@@ -253,7 +253,7 @@ export function VolumeLicensingLanding() {
                 ))}
               </ul>
 
-              <div className="mt-8 flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+              <div className="mt-auto flex w-full min-w-0 flex-col gap-3 pt-8 sm:flex-row sm:flex-wrap sm:items-center">
                 <Link
                   href={quoteHref(volume)}
                   className={`inline-flex h-12 w-full min-w-0 items-center justify-center rounded-xl bg-accent px-6 sm:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
@@ -269,7 +269,7 @@ export function VolumeLicensingLanding() {
               </div>
             </div>
 
-            <div className="hidden min-w-0 w-full lg:block">
+            <div className="hidden h-full min-w-0 w-full lg:flex lg:flex-col">
               <VolumeHeroArt />
             </div>
           </div>
@@ -506,9 +506,9 @@ function VolumeHeroArt() {
   ] as const;
 
   return (
-    <div className="relative mx-auto w-full max-w-[480px] lg:max-w-none">
+    <div className="relative mx-auto flex h-full w-full max-w-[480px] flex-col lg:max-w-none">
       <div
-        className={`relative rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
+        className={`relative flex flex-1 flex-col rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
       >
         <div className="flex items-center justify-between gap-3">
           <div className="flex min-w-0 flex-1 items-center gap-2.5">
@@ -525,7 +525,7 @@ function VolumeHeroArt() {
           </span>
         </div>
 
-        <ul className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+        <ul className="mt-4 grid flex-1 grid-cols-1 content-start gap-2.5 sm:grid-cols-2">
           {rows.map((r) => (
             <li
               key={r.label}

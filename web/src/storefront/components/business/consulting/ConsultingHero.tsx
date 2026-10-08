@@ -66,8 +66,8 @@ export function ConsultingHero() {
           <span className={BREADCRUMB_CURRENT_CLASS}>Tư vấn bản quyền</span>
         </nav>
 
-        <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] lg:gap-10 xl:gap-12">
-          <div className="min-w-0 max-w-full">
+        <div className="grid items-stretch gap-8 lg:grid-cols-2 lg:gap-10 xl:gap-12">
+          <div className="flex h-full min-w-0 max-w-full flex-col">
             <h1 className={`max-w-full break-words lg:max-w-xl ${HERO_TITLE_CLASS}`}>
               Tư vấn chọn bản quyền phần mềm phù hợp
             </h1>
@@ -93,7 +93,7 @@ export function ConsultingHero() {
               ))}
             </ul>
 
-            <div className="mt-7 flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="mt-auto flex w-full min-w-0 flex-col gap-3 pt-7 sm:flex-row sm:items-center">
               <button
                 type="button"
                 onClick={() => goToConsultation()}
@@ -110,7 +110,7 @@ export function ConsultingHero() {
             </div>
           </div>
 
-          <div className="hidden min-w-0 lg:block">
+          <div className="hidden h-full min-w-0 lg:flex lg:flex-col">
             <DesktopDecisionWorkspace />
           </div>
         </div>

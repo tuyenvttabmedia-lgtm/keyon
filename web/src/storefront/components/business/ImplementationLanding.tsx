@@ -44,7 +44,6 @@ import { IMPLEMENTATION_QUOTE_HREF } from "@/storefront/lib/cta";
 import { SERVICE_HANDOVER_HREF } from "@/storefront/lib/service-sku";
 import {
   LANDING_CRUMB_GAP,
-  LANDING_HERO_GRID,
   LANDING_HERO_PAD,
 } from "@/storefront/components/marketing/hero-shell";
 
@@ -153,8 +152,8 @@ export function ImplementationLanding() {
             <span className={BREADCRUMB_CURRENT_CLASS}>Dịch vụ triển khai</span>
           </nav>
 
-          <div className={LANDING_HERO_GRID}>
-            <div className="min-w-0 max-w-full lg:max-w-[540px]">
+          <div className="grid items-stretch gap-8 lg:grid-cols-2 lg:gap-10 xl:gap-12">
+            <div className="flex h-full min-w-0 max-w-full flex-col">
               <h1 className={`max-w-full break-words ${HERO_TITLE_CLASS}`}>
                 Triển khai và bàn giao bản quyền cho doanh nghiệp
               </h1>
@@ -180,7 +179,7 @@ export function ImplementationLanding() {
                 ))}
               </ul>
 
-              <div className="mt-8 flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <div className="mt-auto flex w-full min-w-0 flex-col gap-3 pt-8 sm:flex-row sm:flex-wrap">
                 <Link
                   href={SERVICE_HANDOVER_HREF}
                   className={`inline-flex h-12 w-full min-w-0 items-center justify-center rounded-xl bg-accent px-6 sm:w-auto ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
@@ -196,7 +195,7 @@ export function ImplementationLanding() {
               </div>
             </div>
 
-            <div className="hidden min-w-0 lg:block">
+            <div className="hidden h-full min-w-0 lg:flex lg:flex-col">
               <ImplementationHeroArt />
             </div>
           </div>
@@ -368,9 +367,9 @@ function ImplementationHeroArt() {
   ] as const;
 
   return (
-    <div className="mx-auto w-full max-w-[440px] lg:max-w-none">
+    <div className="mx-auto flex h-full w-full max-w-[440px] flex-col lg:max-w-none">
       <div
-        className={`rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
+        className={`flex flex-1 flex-col rounded-2xl border border-border bg-white p-4 sm:p-5 ${ELEVATION_FLOAT}`}
       >
         <div className="flex items-center justify-between gap-3">
           <div className="flex min-w-0 flex-1 items-center gap-2.5">
@@ -387,7 +386,7 @@ function ImplementationHeroArt() {
           </span>
         </div>
 
-        <ol className="mt-4 space-y-2">
+        <ol className="mt-4 flex-1 space-y-2">
           {steps.map((s, i) => (
             <li
               key={s.label}

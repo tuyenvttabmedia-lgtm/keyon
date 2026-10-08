@@ -211,9 +211,9 @@ export function BackupDisasterRecoveryLanding({ heroImageUrl }: { heroImageUrl?:
             <span className={BREADCRUMB_CURRENT_CLASS}>{BACKUP_DR_LABEL}</span>
           </nav>
 
-          <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,36rem)_minmax(280px,1fr)] lg:gap-6">
-            <div className="min-w-0">
-              <h1 className={`lg:whitespace-nowrap ${HERO_TITLE_CLASS}`}>
+          <div className="grid items-stretch gap-8 lg:grid-cols-2 lg:gap-6">
+            <div className="flex h-full min-w-0 flex-col">
+              <h1 className={HERO_TITLE_CLASS}>
                 Backup & Disaster Recovery
               </h1>
               <p className={`mt-4 max-w-xl ${PAGE_LEAD_CLASS}`}>
@@ -229,7 +229,7 @@ export function BackupDisasterRecoveryLanding({ heroImageUrl }: { heroImageUrl?:
                   </li>
                 ))}
               </ul>
-              <div className="mt-8 flex w-full min-w-0 flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+              <div className="mt-auto flex w-full min-w-0 flex-col items-stretch gap-3 pt-8 sm:flex-row sm:flex-wrap sm:items-center">
                 <Link
                   href={IMPLEMENTATION_QUOTE_HREF}
                   className={`inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 text-white sm:w-auto ${CTA_LABEL_CLASS} ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
@@ -431,7 +431,7 @@ export function BackupDisasterRecoveryLanding({ heroImageUrl }: { heroImageUrl?:
 
 function HeroStage({ src }: { src?: string }) {
   return (
-    <div className="relative h-full lg:min-h-[460px]">
+    <div className="relative flex h-full min-h-0 flex-col">
       {src ? (
         <div aria-hidden className="pointer-events-none absolute inset-0 hidden overflow-hidden rounded-[28px] lg:block">
           <Image
@@ -445,7 +445,7 @@ function HeroStage({ src }: { src?: string }) {
         </div>
       ) : null}
       <ul
-        className={`relative z-10 w-full rounded-2xl border border-white/80 bg-white/95 p-2.5 backdrop-blur-sm lg:absolute lg:right-3 lg:top-1/2 lg:max-w-[320px] lg:-translate-y-1/2 ${ELEVATION_FLOAT} ${TRANSITION_PANEL} ${ELEVATION_HERO_HOVER}`}
+        className={`relative z-10 flex h-full w-full flex-col justify-between rounded-2xl border border-white/80 bg-white/95 p-2.5 backdrop-blur-sm lg:ml-auto lg:max-w-[360px] ${ELEVATION_FLOAT} ${TRANSITION_PANEL} ${ELEVATION_HERO_HOVER}`}
       >
         {HERO_MENU.map((item) => (
           <li key={item.title}>

@@ -49,7 +49,6 @@ import {
 } from "@/storefront/effects";
 import {
   LANDING_CRUMB_GAP,
-  LANDING_HERO_GRID,
   LANDING_HERO_PAD,
 } from "@/storefront/components/marketing/hero-shell";
 import { SolutionFinalCta } from "./SolutionFinalCta";
@@ -211,8 +210,8 @@ export function BackupSolutionLanding({ featured, heroImageUrl }: Props) {
             <span className={BREADCRUMB_CURRENT_CLASS}>Sao lưu và khôi phục</span>
           </nav>
 
-          <div className={LANDING_HERO_GRID}>
-            <div className="min-w-0 max-w-[520px]">
+          <div className="grid items-stretch gap-8 lg:grid-cols-2 lg:gap-10 xl:gap-12">
+            <div className="flex h-full min-w-0 max-w-[520px] flex-col">
               <h1 className={`max-w-xl ${HERO_TITLE_CLASS}`}>
                 Giải pháp sao lưu và khôi phục dữ liệu
               </h1>
@@ -242,7 +241,7 @@ export function BackupSolutionLanding({ featured, heroImageUrl }: Props) {
                 ))}
               </ul>
 
-              <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
+              <div className="mt-auto flex flex-col gap-2.5 pt-6 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/categories/backup"
                   className={`inline-flex h-11 items-center justify-center rounded-xl bg-accent px-5 ${CTA_LABEL_CLASS} text-white ${TRANSITION_UI} hover:bg-accent-hover ${ELEVATION_CTA_HOVER}`}
@@ -259,15 +258,13 @@ export function BackupSolutionLanding({ featured, heroImageUrl }: Props) {
               </div>
             </div>
 
-            <div className="relative z-10 w-full min-w-0 lg:justify-self-end">
-              {heroSrc ? (
-                <div className="hidden lg:block lg:min-h-[380px]" aria-hidden />
-              ) : (
-                <div className="hidden lg:block">
+            <div className="relative z-10 flex h-full w-full min-w-0 flex-col lg:justify-self-end">
+              {heroSrc ? null : (
+                <div className="hidden min-h-0 flex-1 lg:block">
                   <BackupHeroArt />
                 </div>
               )}
-              <div className={`rounded-2xl border border-border bg-white px-4 py-3 lg:mt-3 ${ELEVATION_HAIRLINE}`}>
+              <div className={`rounded-2xl border border-border bg-white px-4 py-3 ${heroSrc ? "mt-auto" : "mt-3"} ${ELEVATION_HAIRLINE}`}>
                 <p className={CARD_TITLE_CLASS}>License trên KEYON, dữ liệu trên hệ thống của bạn</p>
                 <p className={`mt-1 ${CARD_META_CLASS}`}>
                   KEYON bàn giao license phần mềm backup. Bản sao lưu nằm trên hạ tầng của bạn hoặc nhà

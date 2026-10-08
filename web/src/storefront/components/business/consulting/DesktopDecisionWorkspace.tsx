@@ -32,8 +32,8 @@ const PRODUCTS: {
 /** Desktop decision workspace — CSS grid, not absolute floating cards. */
 export function DesktopDecisionWorkspace() {
   return (
-    <div className="hidden lg:block">
-      <div className={`overflow-hidden ${SURFACE} p-4 sm:p-5 ${ELEVATION_FLOAT}`}>
+    <div className="flex h-full flex-col">
+      <div className={`flex h-full flex-col overflow-hidden ${SURFACE} p-4 sm:p-5 ${ELEVATION_FLOAT}`}>
         <div className="grid grid-cols-2 gap-3">
           {PRODUCTS.map(({ id, label, logo, Icon }) => (
             <button
@@ -73,7 +73,7 @@ export function DesktopDecisionWorkspace() {
             Bắt đầu →
           </button>
         </div>
-        <p className={`mt-3 ${CARD_META_CLASS}`}>
+        <p className={`mt-auto pt-3 ${CARD_META_CLASS}`}>
           KEYON hỏi sản phẩm bạn cần, số người dùng và hình thức cấp phép — mua một lần hay
           subscription — trước khi đề xuất.
         </p>
