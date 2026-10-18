@@ -168,15 +168,15 @@ if [[ "${AK_COUNT:-0}" -gt 2 ]]; then
   append_alert warn ssh_keys_many "Unexpected number of SSH keys: $AK_COUNT"
 fi
 
-# Deleted exe after apt upgrade is common for long-lived daemons (fail2ban, etc.).
-# Only alert when the binary path is outside known system locations.
+# Deleted exe after apt upgrade is common for long-lived daemons (fail2ban, sudo, etc.).
+# Alert only when the path looks unusual (not a standard package binary under /usr).
 while IFS= read -r line; do
   [[ -z "$line" ]] && continue
   append_finding high deleted_exe "$line"
   append_alert warn deleted_binary "Running deleted binary: $line"
 done < <(
   ls -l /proc/[0-9]*/exe 2>/dev/null | grep '(deleted)' \
-    | grep -vE 'next-server| /usr/bin/node|pm2|redis|postgres|nginx|docker|containerd|systemd|sshd|tailscaled| /usr/bin/python3(\.[0-9]+)? \(deleted\)| /usr/bin/python \(deleted\)' \
+    | grep -vE 'next-server| /usr/bin/node|pm2|redis|postgres|nginx|docker|containerd|systemd|sshd|tailscaled| /usr/bin/sudo \(deleted\)| /usr/sbin/[^ ]+ \(deleted\)| /usr/bin/(python3(\.[0-9]+)?|python|bash|dash|perl|ruby|php[0-9.]*|fail2ban-server) \(deleted\)' \
     | head -15 || true
 )
 
