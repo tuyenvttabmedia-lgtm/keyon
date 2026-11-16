@@ -205,6 +205,17 @@ Reconcile (khi có job Sprint 1.5): chạy từ Admin hoặc CLI theo cửa sổ
 
 ---
 
+## 7a. FPT / TechData (PO + email — không API)
+
+Distributor `MANUAL_OPS`: đệm Instant qua Stock Import **hoặc** Manual qua Inbox.  
+Chi tiết: [`OPS-FPT-TECHDATA.md`](./OPS-FPT-TECHDATA.md).
+
+```bash
+cd web && npm run catalog:ensure-distributors
+```
+
+---
+
 ## 7b. Đổi Pax8 / NCC API
 
 **Khuyến nghị (Admin):** Cài đặt → **NCC / Pax8** — driver (`stub`/`sandbox`/`http`), base URL, client id/secret (AES), company id. PACISOFT: slot credential dự phòng.

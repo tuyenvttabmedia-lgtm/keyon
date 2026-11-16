@@ -22,8 +22,17 @@ export type InboxJobRow = {
   variantSku: string;
   deliverableType: string;
   receiveLabel: string;
+  quantity: number;
+  supplierId: string | null;
   supplierName: string | null;
+  supplierType: string | null;
+  supplierIntegrationMode: string | null;
+  supplierContactEmail: string | null;
+  /** DISTRIBUTOR + MANUAL_OPS (FPT / TechData class) */
+  isManualOpsDistributor: boolean;
   isPax8: boolean;
+  commercialPo: string | null;
+  commercialContract: string | null;
   priority: InboxPriority;
   waitingMs: number;
   waitingLabel: string;
@@ -42,6 +51,8 @@ export type InboxKpi = {
   waiting: number;
   overdue: number;
   manual: number;
+  /** MANUAL_OPS distributor jobs (FPT / TechData / PACISOFT) */
+  distributorManual: number;
   pax8: number;
   completedToday: number;
 };

@@ -28,6 +28,8 @@
     "test:org": "tsx --env-file=.env.local --env-file=.env scripts/org-exit.ts",
     "test:commercial-ref": "tsx --env-file=.env.local --env-file=.env scripts/commercial-ref-exit.ts",
     "catalog:ensure-service-sku": "tsx --env-file=.env.local --env-file=.env scripts/ensure-service-sku.ts",
+    "catalog:ensure-distributors": "tsx --env-file=.env.local --env-file=.env scripts/ensure-distributor-suppliers.ts",
+    "test:distributor-po": "tsx scripts/distributor-po-exit.ts",
     "catalog:remap-categories": "tsx --env-file=.env.local --env-file=.env scripts/remap-product-categories.ts",
     "test:service-sku": "tsx --env-file=.env.local --env-file=.env scripts/service-sku-exit.ts",
     "test:agreements": "tsx --env-file=.env.local --env-file=.env scripts/agreement-exit.ts",

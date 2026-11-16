@@ -116,7 +116,25 @@ async function main() {
       name: "PACISOFT",
       supplierType: SupplierType.DISTRIBUTOR,
       integrationMode: IntegrationMode.MANUAL_OPS,
-      notes: "Distributor manual / báo giá",
+      notes: "Distributor manual / báo giá (legacy)",
+    },
+  });
+  const techdata = await prisma.supplier.create({
+    data: {
+      name: "TechData",
+      supplierType: SupplierType.DISTRIBUTOR,
+      integrationMode: IntegrationMode.MANUAL_OPS,
+      notes:
+        "Distributor VN — PO/email. Path A Instant đệm kho · Path B Manual Inbox",
+    },
+  });
+  await prisma.supplier.create({
+    data: {
+      name: "FPT",
+      supplierType: SupplierType.DISTRIBUTOR,
+      integrationMode: IntegrationMode.MANUAL_OPS,
+      notes:
+        "Distributor VN — PO/email. Ưu tiên Manual / volume; Instant khi có đệm",
     },
   });
 
@@ -262,7 +280,7 @@ async function main() {
       license: LicenseModel.SUBSCRIPTION,
       sales: SalesMotion.SELF_SERVE,
       sla: "2–8 giờ làm việc",
-      supplierId: external.id,
+      supplierId: techdata.id,
       price: 390_000,
       cost: 250_000,
     },
@@ -278,7 +296,7 @@ async function main() {
       license: LicenseModel.SUBSCRIPTION,
       sales: SalesMotion.SELF_SERVE,
       sla: "2–8 giờ làm việc",
-      supplierId: external.id,
+      supplierId: techdata.id,
       price: 520_000,
       cost: 340_000,
     },
@@ -294,7 +312,7 @@ async function main() {
       license: LicenseModel.SUBSCRIPTION,
       sales: SalesMotion.SELF_SERVE,
       sla: "2–8 giờ làm việc",
-      supplierId: external.id,
+      supplierId: techdata.id,
       price: 320_000,
       cost: 210_000,
     },
@@ -310,7 +328,7 @@ async function main() {
       license: LicenseModel.SUBSCRIPTION,
       sales: SalesMotion.SELF_SERVE,
       sla: "2–8 giờ làm việc",
-      supplierId: external.id,
+      supplierId: techdata.id,
       price: 480_000,
       cost: 310_000,
     },
@@ -326,7 +344,7 @@ async function main() {
       license: LicenseModel.SUBSCRIPTION,
       sales: SalesMotion.SELF_SERVE,
       sla: "2–8 giờ làm việc",
-      supplierId: external.id,
+      supplierId: techdata.id,
       price: 690_000,
       cost: 450_000,
     },

@@ -31,6 +31,10 @@ export default async function AdminSupplierDetailPage({
 
   const variantIds = supplier.variants.map((v) => v.id);
 
+  const instantVariantIds = supplier.variants
+    .filter((v) => v.fulfillmentStrategy === "INSTANT")
+    .map((v) => v.id);
+
   const [waitingHumanCount, invRows, apiPublic] = await Promise.all([
     variantIds.length
       ? prisma.fulfillmentJob.count({
@@ -40,7 +44,7 @@ export default async function AdminSupplierDetailPage({
           },
         })
       : Promise.resolve(0),
-    supplier.supplierType === "INTERNAL"
+    instantVariantIds.length > 0
       ? InventoryReadModel.listInstantSkus().catch(() => [])
       : Promise.resolve([]),
     supplier.integrationMode === "API"
@@ -48,10 +52,10 @@ export default async function AdminSupplierDetailPage({
       : Promise.resolve(null),
   ]);
 
-  const variantIdSet = new Set(variantIds);
+  const instantSet = new Set(instantVariantIds);
   let inventory: { available: number; reserved: number } | null = null;
-  if (supplier.supplierType === "INTERNAL") {
-    const mine = invRows.filter((r) => variantIdSet.has(r.variantId));
+  if (instantVariantIds.length > 0) {
+    const mine = invRows.filter((r) => instantSet.has(r.variantId));
     inventory = {
       available: mine.reduce((a, r) => a + r.available, 0),
       reserved: mine.reduce((a, r) => a + r.reserved, 0),

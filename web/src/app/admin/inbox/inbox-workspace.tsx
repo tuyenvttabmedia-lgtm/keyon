@@ -14,6 +14,11 @@ import {
   type InboxPriority,
 } from "@/lib/admin-inbox";
 import { OrderNotesForm } from "@/app/admin/orders/order-notes-form";
+import { CommercialRefForm } from "@/app/admin/orders/commercial-ref-form";
+import {
+  buildPoMailtoHref,
+  distributorOpsHint,
+} from "@/lib/distributor-po";
 import {
   BADGE_CLASS,
   FIELD_CAPTION_CLASS,
@@ -61,7 +66,7 @@ export function InboxWorkspace({ jobs, kpi, staffLabel }: Props) {
   const [age, setAge] = useState<InboxAgeBucket>("all");
   const [skipped, setSkipped] = useState<Set<string>>(() => new Set());
   const [kpiFocus, setKpiFocus] = useState<
-    "waiting" | "overdue" | "manual" | "pax8" | null
+    "waiting" | "overdue" | "manual" | "distributor" | "pax8" | null
   >(null);
 
   const [payload, setPayload] = useState("");
@@ -88,6 +93,7 @@ export function InboxWorkspace({ jobs, kpi, staffLabel }: Props) {
       if (kpiFocus === "waiting" && j.status !== "WAITING_HUMAN") return false;
       if (kpiFocus === "overdue" && !j.overdue) return false;
       if (kpiFocus === "manual" && j.strategy !== "MANUAL") return false;
+      if (kpiFocus === "distributor" && !j.isManualOpsDistributor) return false;
       if (kpiFocus === "pax8" && !j.isPax8) return false;
       if (provider !== "all" && (j.supplierName ?? "") !== provider) return false;
       if (deliveryType !== "all" && j.deliverableType !== deliveryType) return false;
@@ -158,6 +164,32 @@ export function InboxWorkspace({ jobs, kpi, staffLabel }: Props) {
     if (!selected) return { ok: false as const, error: "" };
     return validateDeliverablePayload(selected.deliverableType, payload);
   }, [selected, payload]);
+
+  const poMailto = useMemo(() => {
+    if (!selected?.isManualOpsDistributor) return null;
+    return buildPoMailtoHref({
+      orderCode: selected.orderCode,
+      productName: selected.productName,
+      variantName: selected.variantName,
+      variantSku: selected.variantSku,
+      quantity: selected.quantity,
+      deliverableType: selected.deliverableType,
+      supplierName: selected.supplierName,
+      supplierEmail: selected.supplierContactEmail,
+      customerEmail: selected.orderEmail,
+      poNumber: selected.commercialPo,
+    });
+  }, [selected]);
+
+  const opsHint = useMemo(() => {
+    if (!selected) return null;
+    return distributorOpsHint({
+      strategy: selected.strategy,
+      status: selected.status,
+      supplierType: selected.supplierType,
+      integrationMode: selected.supplierIntegrationMode,
+    });
+  }, [selected]);
 
   async function retryInstant() {
     if (!selected || selected.status !== "WAITING_STOCK") return;
@@ -244,7 +276,7 @@ export function InboxWorkspace({ jobs, kpi, staffLabel }: Props) {
   }
 
   const kpiCards: {
-    key: "waiting" | "overdue" | "manual" | "pax8" | "done";
+    key: "waiting" | "overdue" | "manual" | "distributor" | "pax8" | "done";
     label: string;
     value: number;
     tone: string;
@@ -272,6 +304,13 @@ export function InboxWorkspace({ jobs, kpi, staffLabel }: Props) {
       ring: "ring-slate-100",
     },
     {
+      key: "distributor",
+      label: "FPT / TechData",
+      value: kpi.distributorManual,
+      tone: "text-amber-800",
+      ring: "ring-amber-100",
+    },
+    {
       key: "pax8",
       label: "Pax8",
       value: kpi.pax8,
@@ -293,7 +332,7 @@ export function InboxWorkspace({ jobs, kpi, staffLabel }: Props) {
 
       {/* Sticky KPI + filters */}
       <div className="sticky top-0 z-20 -mx-4 space-y-2.5 border-b border-border bg-[#f5f7fa]/95 px-4 py-3 backdrop-blur md:-mx-6 md:px-6">
-        <div className="grid gap-2 sm:grid-cols-3 xl:grid-cols-5">
+        <div className="grid gap-2 sm:grid-cols-3 xl:grid-cols-6">
           {kpiCards.map((c) => {
             const clickable = c.key !== "done";
             const active = clickable && kpiFocus === c.key;
@@ -315,7 +354,12 @@ export function InboxWorkspace({ jobs, kpi, staffLabel }: Props) {
                 key={c.key}
                 type="button"
                 onClick={() => {
-                  const key = c.key as "waiting" | "overdue" | "manual" | "pax8";
+                  const key = c.key as
+                    | "waiting"
+                    | "overdue"
+                    | "manual"
+                    | "distributor"
+                    | "pax8";
                   setKpiFocus((prev) => (prev === key ? null : key));
                 }}
                 className={`rounded-xl border bg-card px-3 py-2 text-left ring-1 transition ${c.ring} ${
@@ -505,8 +549,12 @@ export function InboxWorkspace({ jobs, kpi, staffLabel }: Props) {
                     </h2>
                     <p className="text-sm text-muted">
                       {jobStatusVi(selected.status)}
+                      {selected.isManualOpsDistributor
+                        ? ` · ${selected.supplierName ?? "NCC PO/email"}`
+                        : ""}
                       {selected.isPax8 ? " · Pax8" : ""}
                       {selected.strategy === "MANUAL" ? " · Thủ công" : ""}
+                      {selected.strategy === "INSTANT" ? " · Instant" : ""}
                     </p>
                   </div>
                   <Link
@@ -592,6 +640,70 @@ export function InboxWorkspace({ jobs, kpi, staffLabel }: Props) {
                 </ol>
               </section>
 
+              {selected.isManualOpsDistributor && opsHint ? (
+                <section className="rounded-2xl border border-amber-200 bg-amber-50/70 p-4 sm:p-5">
+                  <h3 className="text-sm font-semibold text-amber-950">
+                    PO / email — {selected.supplierName}
+                  </h3>
+                  <p className="mt-1 text-xs text-amber-900/90">{opsHint}</p>
+                  {(selected.commercialPo || selected.commercialContract) && (
+                    <p className="mt-2 text-xs text-navy">
+                      {selected.commercialPo
+                        ? `PO ${selected.commercialPo}`
+                        : null}
+                      {selected.commercialPo && selected.commercialContract
+                        ? " · "
+                        : null}
+                      {selected.commercialContract
+                        ? `HĐ ${selected.commercialContract}`
+                        : null}
+                    </p>
+                  )}
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {poMailto ? (
+                      <a
+                        href={poMailto}
+                        className="rounded-xl bg-amber-700 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-800"
+                      >
+                        Soạn email PO
+                      </a>
+                    ) : null}
+                    {selected.supplierId ? (
+                      <Link
+                        href={`/admin/suppliers/${selected.supplierId}`}
+                        className="rounded-xl border border-border bg-white px-4 py-2 text-sm font-medium text-navy"
+                      >
+                        Hồ sơ NCC
+                      </Link>
+                    ) : null}
+                    {selected.strategy === "INSTANT" ? (
+                      <Link
+                        href="/admin/stock"
+                        className="rounded-xl border border-border bg-white px-4 py-2 text-sm font-medium text-navy"
+                      >
+                        Stock Import
+                      </Link>
+                    ) : null}
+                  </div>
+                  {!selected.supplierContactEmail ? (
+                    <p className="mt-2 text-xs text-amber-900/80">
+                      Chưa có email NCC — bổ sung tại Nhà cung cấp để mailto
+                      điền sẵn người nhận.
+                    </p>
+                  ) : null}
+                  <div className="mt-4 border-t border-amber-200/80 pt-3">
+                    <p className="mb-2 text-xs font-semibold text-navy">
+                      Ghi số PO / HĐ (OrderNote)
+                    </p>
+                    <CommercialRefForm
+                      orderId={selected.orderId}
+                      poNumber={selected.commercialPo ?? ""}
+                      contractRef={selected.commercialContract ?? ""}
+                    />
+                  </div>
+                </section>
+              ) : null}
+
               {selected.actionable &&
               selected.status === "WAITING_STOCK" &&
               selected.strategy === "INSTANT" ? (
@@ -600,8 +712,9 @@ export function InboxWorkspace({ jobs, kpi, staffLabel }: Props) {
                     Instant — hết kho (WAITING_STOCK)
                   </h3>
                   <p className="mt-1 text-xs text-amber-900/80">
-                    Nhập key vào License Pool (Admin → Stock), rồi bấm Retry.
-                    Không gọi lại NCC / buyCard.
+                    {selected.isManualOpsDistributor
+                      ? "Gửi PO/email NCC → nhận key → nhập License Pool (Stock) → Retry. Không gọi API NCC."
+                      : "Nhập key vào License Pool (Admin → Stock), rồi bấm Retry. Không gọi lại NCC / buyCard."}
                   </p>
                   {error ? (
                     <p className="mt-2 text-sm text-danger">{error}</p>

@@ -9,6 +9,10 @@ import {
   waitingLabelFromMs,
 } from "@/lib/admin-inbox";
 import { receiveFromDeliverable } from "@/storefront/lib/customer-labels";
+import {
+  latestCommercialRef,
+} from "@/server/admin/commercial-ref";
+import { isManualOpsDistributor } from "@/lib/distributor-po";
 import type { DeliverableType } from "@prisma/client";
 
 function startOfToday() {
@@ -115,9 +119,15 @@ export async function loadInboxWorkspace(): Promise<{
       status: job.status,
       waitingMs,
     });
-    const supplierName = variant.supplier?.name ?? null;
+    const supplier = variant.supplier;
+    const supplierName = supplier?.name ?? null;
     const pax8 = isPax8Job(job.strategy, supplierName);
+    const manualOpsDist = isManualOpsDistributor({
+      supplierType: supplier?.supplierType ?? null,
+      integrationMode: supplier?.integrationMode ?? null,
+    });
     const orderNotes = notesByOrder.get(job.orderId) ?? [];
+    const commercial = latestCommercialRef(orderNotes);
 
     return {
       id: job.id,
@@ -136,8 +146,16 @@ export async function loadInboxWorkspace(): Promise<{
       variantSku: variant.sku,
       deliverableType,
       receiveLabel: receive.label,
+      quantity: job.orderItem.quantity,
+      supplierId: supplier?.id ?? null,
       supplierName,
+      supplierType: supplier?.supplierType ?? null,
+      supplierIntegrationMode: supplier?.integrationMode ?? null,
+      supplierContactEmail: supplier?.contactEmail ?? null,
+      isManualOpsDistributor: manualOpsDist,
       isPax8: pax8,
+      commercialPo: commercial?.poNumber || null,
+      commercialContract: commercial?.contractRef || null,
       priority,
       waitingMs,
       waitingLabel: waitingLabelFromMs(waitingMs, job.createdAt),
@@ -166,6 +184,7 @@ export async function loadInboxWorkspace(): Promise<{
     waiting: jobs.filter((j) => j.status === "WAITING_HUMAN").length,
     overdue: jobs.filter((j) => j.overdue).length,
     manual: jobs.filter((j) => j.strategy === "MANUAL").length,
+    distributorManual: jobs.filter((j) => j.isManualOpsDistributor).length,
     pax8: jobs.filter((j) => j.isPax8).length,
     completedToday,
   };

@@ -63,6 +63,9 @@ export function SupplierDetail({
   const isInternal = supplier.supplierType === "INTERNAL";
   const isApi = supplier.integrationMode === "API";
   const isManual = supplier.integrationMode === "MANUAL_OPS";
+  const isManualDistributor =
+    supplier.supplierType === "DISTRIBUTOR" && isManual;
+  const hasInstantBuffer = inventory != null;
 
   const tabs = useMemo(() => {
     const list: { id: Tab; label: string }[] = [
@@ -139,7 +142,7 @@ export function SupplierDetail({
             : ""}
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
-          {isInternal ? (
+          {isInternal || hasInstantBuffer ? (
             <>
               <Link
                 href="/admin/stock"
@@ -228,7 +231,55 @@ export function SupplierDetail({
             </section>
           ) : null}
 
-          {isManual ? (
+          {isManualDistributor ? (
+            <section className="rounded-2xl border border-amber-200 bg-amber-50/70 px-4 py-4">
+              <p className="font-semibold text-navy">
+                Phân phối PO / email (FPT · TechData class)
+              </p>
+              <p className="mt-1 text-sm text-amber-950">
+                Không dùng API. Path A — SKU Instant: gửi PO đệm → Stock Import
+                → License Pool. Path B — SKU Manual: Inbox theo đơn → PO/email
+                → Complete.
+              </p>
+              {hasInstantBuffer ? (
+                <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                  <Stat
+                    label="SKU Instant"
+                    value={
+                      variants.filter((v) => v.strategyLabel === "Giao ngay")
+                        .length
+                    }
+                  />
+                  <Stat
+                    label="License khả dụng"
+                    value={inventory!.available}
+                  />
+                  <Stat label="Đang giữ" value={inventory!.reserved} />
+                </div>
+              ) : null}
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Link
+                  href="/admin/inbox"
+                  className="rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-bold text-white"
+                >
+                  Inbox
+                  {waitingHumanCount > 0 ? ` (${waitingHumanCount})` : ""} →
+                </Link>
+                <Link
+                  href="/admin/stock"
+                  className="rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-xs font-semibold text-navy"
+                >
+                  Stock Import →
+                </Link>
+                <Link
+                  href="/admin/inventory"
+                  className="rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-xs font-semibold text-navy"
+                >
+                  Tồn kho →
+                </Link>
+              </div>
+            </section>
+          ) : isManual ? (
             <section className="rounded-2xl border border-amber-200 bg-amber-50/70 px-4 py-4">
               <p className="font-semibold text-navy">Xử lý thủ công</p>
               <p className="mt-1 text-sm text-amber-950">
